@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: mdvne-with-iflye
+Bundle-ManifestVersion: 2
+Bundle-Name: mdvne-with-iflye
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: mdvne-with-iflye; singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-16

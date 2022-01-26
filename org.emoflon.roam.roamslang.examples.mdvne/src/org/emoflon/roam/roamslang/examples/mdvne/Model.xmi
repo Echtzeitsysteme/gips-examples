@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roamSLang:EditorGTFile xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:gT="http://www.emoflon.org/ibex/gt/editor/GT" xmlns:roamSLang="http://www.emoflon.org/roam/roamslang/RoamSLang" xsi:schemaLocation="http://www.eclipse.org/emf/2002/Ecore java://org.eclipse.emf.ecore.EcorePackage http://www.emoflon.org/ibex/gt/editor/GT java://org.emoflon.ibex.gt.editor.gT.GTPackage http://www.emoflon.org/roam/roamslang/RoamSLang java://org.emoflon.roam.roamslang.roamSLang.RoamSLangPackage">
+  <imports xmi:type="gT:EditorImport" name="platform:/resource/network.model/model/Model.ecore"/>
+  <patterns xmi:type="gT:EditorPattern" type="rule" name="serverMatchPositive">
+    <nodes xmi:type="gT:EditorNode" name="root">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//Root"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.0/@nodes.3">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Root/networks"/>
+      </references>
+      <references xmi:type="gT:EditorReference" target="//@patterns.0/@nodes.4">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Root/networks"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="substrateNode">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer"/>
+      <attributes xmi:type="gT:EditorAttributeAssignment">
+        <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualCpu"/>
+        <value xmi:type="gT:ArithmeticCalculationExpression">
+          <expression xmi:type="gT:AddExpression" addOperator="-">
+            <left xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.1">
+              <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualCpu"/>
+            </left>
+            <right xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.2">
+              <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/cpu"/>
+            </right>
+          </expression>
+        </value>
+      </attributes>
+      <attributes xmi:type="gT:EditorAttributeAssignment">
+        <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualMemory"/>
+        <value xmi:type="gT:ArithmeticCalculationExpression">
+          <expression xmi:type="gT:AddExpression" addOperator="-">
+            <left xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.1">
+              <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualMemory"/>
+            </left>
+            <right xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.2">
+              <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/memory"/>
+            </right>
+          </expression>
+        </value>
+      </attributes>
+      <attributes xmi:type="gT:EditorAttributeAssignment">
+        <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualStorage"/>
+        <value xmi:type="gT:ArithmeticCalculationExpression">
+          <expression xmi:type="gT:AddExpression" addOperator="-">
+            <left xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.1">
+              <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualStorage"/>
+            </left>
+            <right xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.2">
+              <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/storage"/>
+            </right>
+          </expression>
+        </value>
+      </attributes>
+      <references xmi:type="gT:EditorReference" operator="++" target="//@patterns.0/@nodes.2">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/guestServers"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="virtualNode">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer"/>
+      <references xmi:type="gT:EditorReference" operator="++" target="//@patterns.0/@nodes.1">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer/host"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="substrateNetwork">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateNetwork"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.0/@nodes.1">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Network/nodes"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="virtualNetwork">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualNetwork"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.0/@nodes.2">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Network/nodes"/>
+      </references>
+    </nodes>
+    <attributeConstraints xmi:type="gT:EditorAttributeConstraint" relation="&lt;=">
+      <lhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.2">
+          <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/cpu"/>
+        </expression>
+      </lhs>
+      <rhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.1">
+          <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualCpu"/>
+        </expression>
+      </rhs>
+    </attributeConstraints>
+    <attributeConstraints xmi:type="gT:EditorAttributeConstraint" relation="&lt;=">
+      <lhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.2">
+          <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/memory"/>
+        </expression>
+      </lhs>
+      <rhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.1">
+          <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualMemory"/>
+        </expression>
+      </rhs>
+    </attributeConstraints>
+    <attributeConstraints xmi:type="gT:EditorAttributeConstraint" relation="&lt;=">
+      <lhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.2">
+          <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/storage"/>
+        </expression>
+      </lhs>
+      <rhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorAttributeExpression" node="//@patterns.0/@nodes.1">
+          <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualStorage"/>
+        </expression>
+      </rhs>
+    </attributeConstraints>
+  </patterns>
+  <patterns xmi:type="gT:EditorPattern" type="rule" name="switchNodeMatchPositive">
+    <nodes xmi:type="gT:EditorNode" name="root">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//Root"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.1/@nodes.3">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Root/networks"/>
+      </references>
+      <references xmi:type="gT:EditorReference" target="//@patterns.1/@nodes.4">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Root/networks"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="substrateNode">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateNode"/>
+      <references xmi:type="gT:EditorReference" operator="++" target="//@patterns.1/@nodes.2">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateNode/guestSwitches"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="virtualSwitch">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch"/>
+      <references xmi:type="gT:EditorReference" operator="++" target="//@patterns.1/@nodes.1">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch/host"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="substrateNetwork">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateNetwork"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.1/@nodes.1">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Network/nodes"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="virtualNetwork">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualNetwork"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.1/@nodes.2">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Network/nodes"/>
+      </references>
+    </nodes>
+  </patterns>
+  <patterns xmi:type="gT:EditorPattern" type="rule" name="linkPathMatchPositive">
+    <nodes xmi:type="gT:EditorNode" name="root">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//Root"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.2/@nodes.3">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Root/networks"/>
+      </references>
+      <references xmi:type="gT:EditorReference" target="//@patterns.2/@nodes.4">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Root/networks"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="substratePath">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath"/>
+      <attributes xmi:type="gT:EditorAttributeAssignment">
+        <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/residualBandwidth"/>
+        <value xmi:type="gT:ArithmeticCalculationExpression">
+          <expression xmi:type="gT:AddExpression" addOperator="-">
+            <left xmi:type="gT:EditorAttributeExpression" node="//@patterns.2/@nodes.1">
+              <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/residualBandwidth"/>
+            </left>
+            <right xmi:type="gT:EditorAttributeExpression" node="//@patterns.2/@nodes.2">
+              <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Link/bandwidth"/>
+            </right>
+          </expression>
+        </value>
+      </attributes>
+      <references xmi:type="gT:EditorReference" operator="++" target="//@patterns.2/@nodes.2">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateHostLink/guestLinks"/>
+      </references>
+      <iterators xmi:type="gT:EditorReferenceIterator" name="l">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/links"/>
+        <iteratorAttributes xmi:type="gT:EditorIteratorAttributeAssignmentItr">
+          <value xmi:type="gT:ArithmeticCalculationExpression">
+            <expression xmi:type="gT:AddExpression" addOperator="-">
+              <left xmi:type="gT:EditorIteratorAttributeExpression" iterator="//@patterns.2/@nodes.1/@iterators.0">
+                <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateLink/residualBandwidth"/>
+              </left>
+              <right xmi:type="gT:EditorAttributeExpression" node="//@patterns.2/@nodes.2">
+                <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Link/bandwidth"/>
+              </right>
+            </expression>
+          </value>
+          <iteratorAttribute xmi:type="gT:EditorIteratorAttributeExpression" iterator="//@patterns.2/@nodes.1/@iterators.0">
+            <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateLink/residualBandwidth"/>
+          </iteratorAttribute>
+        </iteratorAttributes>
+      </iterators>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="virtualLink">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualLink"/>
+      <references xmi:type="gT:EditorReference" operator="++" target="//@patterns.2/@nodes.1">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualLink/host"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="substrateNetwork">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateNetwork"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.2/@nodes.1">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateNetwork/paths"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="virtualNetwork">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualNetwork"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.2/@nodes.2">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Network/links"/>
+      </references>
+    </nodes>
+    <attributeConstraints xmi:type="gT:EditorAttributeConstraint" relation="&lt;=">
+      <lhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorAttributeExpression" node="//@patterns.2/@nodes.2">
+          <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Link/bandwidth"/>
+        </expression>
+      </lhs>
+      <rhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorAttributeExpression" node="//@patterns.2/@nodes.1">
+          <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/residualBandwidth"/>
+        </expression>
+      </rhs>
+    </attributeConstraints>
+    <attributeConstraints xmi:type="gT:EditorAttributeConstraint">
+      <lhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorAttributeExpression" node="//@patterns.2/@nodes.1">
+          <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/residualBandwidth"/>
+        </expression>
+      </lhs>
+      <rhs xmi:type="gT:ArithmeticCalculationExpression">
+        <expression xmi:type="gT:EditorLiteralExpression" value="0"/>
+      </rhs>
+    </attributeConstraints>
+  </patterns>
+  <patterns xmi:type="gT:EditorPattern" type="rule" name="linkServerMatchPositive">
+    <nodes xmi:type="gT:EditorNode" name="root">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//Root"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.3/@nodes.3">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Root/networks"/>
+      </references>
+      <references xmi:type="gT:EditorReference" target="//@patterns.3/@nodes.4">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Root/networks"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="substrateServer">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer"/>
+      <references xmi:type="gT:EditorReference" operator="++" target="//@patterns.3/@nodes.2">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateHostLink/guestLinks"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="virtualLink">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualLink"/>
+      <references xmi:type="gT:EditorReference" operator="++" target="//@patterns.3/@nodes.1">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualLink/host"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="substrateNetwork">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateNetwork"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.3/@nodes.1">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Network/nodes"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="virtualNetwork">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualNetwork"/>
+      <references xmi:type="gT:EditorReference" target="//@patterns.3/@nodes.2">
+        <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Network/links"/>
+      </references>
+    </nodes>
+  </patterns>
+  <mappings xmi:type="roamSLang:RoamMapping" name="srv2srv" rule="//@patterns.0"/>
+  <mappings xmi:type="roamSLang:RoamMapping" name="sw2node" rule="//@patterns.1"/>
+  <mappings xmi:type="roamSLang:RoamMapping" name="l2p" rule="//@patterns.2"/>
+  <mappings xmi:type="roamSLang:RoamMapping" name="l2s" rule="//@patterns.3"/>
+  <constraints xmi:type="roamSLang:RoamConstraint">
+    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.0"/>
+    <expr xmi:type="roamSLang:RoamBool">
+      <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+        <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+          <expr xmi:type="roamSLang:RoamStreamNavigation">
+            <left xmi:type="roamSLang:RoamStreamSet">
+              <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                  <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+                  </left>
+                  <right xmi:type="roamSLang:RoamContextExpr">
+                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+                  </right>
+                </expr>
+              </lambda>
+            </left>
+            <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+          </expr>
+        </left>
+        <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+      </expr>
+    </expr>
+  </constraints>
+  <constraints xmi:type="roamSLang:RoamConstraint">
+    <context xmi:type="roamSLang:RoamTypeContext">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer"/>
+    </context>
+    <expr xmi:type="roamSLang:RoamBool">
+      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+        <left xmi:type="roamSLang:RoamBinaryBoolExpr">
+          <left xmi:type="roamSLang:RoamRelExpr" operator="&lt;=">
+            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                      </left>
+                      <right xmi:type="roamSLang:RoamContextExpr"/>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamArithmetic">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamRelExpr">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2">
+                          <expr xmi:type="roamSLang:RoamFeatureLit">
+                            <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/cpu"/>
+                          </expr>
+                        </expr>
+                      </left>
+                    </expr>
+                  </lambda>
+                </right>
+              </expr>
+            </left>
+            <right xmi:type="roamSLang:RoamContextExpr">
+              <expr xmi:type="roamSLang:RoamFeatureLit">
+                <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualCpu"/>
+              </expr>
+            </right>
+          </left>
+          <right xmi:type="roamSLang:RoamRelExpr" operator="&lt;=">
+            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                      </left>
+                      <right xmi:type="roamSLang:RoamContextExpr"/>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamArithmetic">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamRelExpr">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2">
+                          <expr xmi:type="roamSLang:RoamFeatureLit">
+                            <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/memory"/>
+                          </expr>
+                        </expr>
+                      </left>
+                    </expr>
+                  </lambda>
+                </right>
+              </expr>
+            </left>
+            <right xmi:type="roamSLang:RoamContextExpr">
+              <expr xmi:type="roamSLang:RoamFeatureLit">
+                <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualMemory"/>
+              </expr>
+            </right>
+          </right>
+        </left>
+        <right xmi:type="roamSLang:RoamRelExpr" operator="&lt;=">
+          <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+            <expr xmi:type="roamSLang:RoamStreamNavigation">
+              <left xmi:type="roamSLang:RoamStreamSet">
+                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                    </left>
+                    <right xmi:type="roamSLang:RoamContextExpr"/>
+                  </expr>
+                </lambda>
+              </left>
+              <right xmi:type="roamSLang:RoamStreamArithmetic">
+                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <expr xmi:type="roamSLang:RoamRelExpr">
+                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2">
+                        <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/storage"/>
+                        </expr>
+                      </expr>
+                    </left>
+                  </expr>
+                </lambda>
+              </right>
+            </expr>
+          </left>
+          <right xmi:type="roamSLang:RoamContextExpr">
+            <expr xmi:type="roamSLang:RoamFeatureLit">
+              <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualStorage"/>
+            </expr>
+          </right>
+        </right>
+      </expr>
+    </expr>
+  </constraints>
+  <constraints xmi:type="roamSLang:RoamConstraint">
+    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.1"/>
+    <expr xmi:type="roamSLang:RoamBool">
+      <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+        <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
+          <expr xmi:type="roamSLang:RoamStreamNavigation">
+            <left xmi:type="roamSLang:RoamStreamSet">
+              <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                  <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+                  </left>
+                  <right xmi:type="roamSLang:RoamContextExpr">
+                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+                  </right>
+                </expr>
+              </lambda>
+            </left>
+            <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+          </expr>
+        </left>
+        <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+      </expr>
+    </expr>
+  </constraints>
+  <constraints xmi:type="roamSLang:RoamConstraint">
+    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.2"/>
+    <expr xmi:type="roamSLang:RoamBool">
+      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+          <left xmi:type="roamSLang:RoamSumArithmeticExpr">
+            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                      </left>
+                      <right xmi:type="roamSLang:RoamContextExpr">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                          <expr xmi:type="roamSLang:RoamFeatureNavigation">
+                            <left xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
+                              <typeCast xmi:type="roamSLang:RoamTypeCast">
+                                <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer"/>
+                              </typeCast>
+                            </left>
+                            <right xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer/host"/>
+                            </right>
+                          </expr>
+                        </expr>
+                      </right>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              </expr>
+            </left>
+            <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                      </left>
+                      <right xmi:type="roamSLang:RoamContextExpr">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                          <expr xmi:type="roamSLang:RoamFeatureNavigation">
+                            <left xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
+                              <typeCast xmi:type="roamSLang:RoamTypeCast">
+                                <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch"/>
+                              </typeCast>
+                            </left>
+                            <right xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch/host"/>
+                            </right>
+                          </expr>
+                        </expr>
+                      </right>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              </expr>
+            </right>
+          </left>
+          <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+        </left>
+        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+          <left xmi:type="roamSLang:RoamSumArithmeticExpr">
+            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                      </left>
+                      <right xmi:type="roamSLang:RoamContextExpr">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                          <expr xmi:type="roamSLang:RoamFeatureNavigation">
+                            <left xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
+                              <typeCast xmi:type="roamSLang:RoamTypeCast">
+                                <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer"/>
+                              </typeCast>
+                            </left>
+                            <right xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer/host"/>
+                            </right>
+                          </expr>
+                        </expr>
+                      </right>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              </expr>
+            </left>
+            <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                      </left>
+                      <right xmi:type="roamSLang:RoamContextExpr">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                          <expr xmi:type="roamSLang:RoamFeatureNavigation">
+                            <left xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
+                              <typeCast xmi:type="roamSLang:RoamTypeCast">
+                                <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch"/>
+                              </typeCast>
+                            </left>
+                            <right xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch/host"/>
+                            </right>
+                          </expr>
+                        </expr>
+                      </right>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              </expr>
+            </right>
+          </left>
+          <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+        </right>
+      </expr>
+    </expr>
+  </constraints>
+  <constraints xmi:type="roamSLang:RoamConstraint">
+    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.2"/>
+    <expr xmi:type="roamSLang:RoamBool">
+      <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+        <left xmi:type="roamSLang:RoamSumArithmeticExpr">
+          <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.2">
+            <expr xmi:type="roamSLang:RoamStreamNavigation">
+              <left xmi:type="roamSLang:RoamStreamSet">
+                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
+                    </left>
+                    <right xmi:type="roamSLang:RoamContextExpr">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
+                    </right>
+                  </expr>
+                </lambda>
+              </left>
+              <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+            </expr>
+          </left>
+          <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.3">
+            <expr xmi:type="roamSLang:RoamStreamNavigation">
+              <left xmi:type="roamSLang:RoamStreamSet">
+                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
+                    </left>
+                    <right xmi:type="roamSLang:RoamContextExpr">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
+                    </right>
+                  </expr>
+                </lambda>
+              </left>
+              <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+            </expr>
+          </right>
+        </left>
+        <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+      </expr>
+    </expr>
+  </constraints>
+  <constraints xmi:type="roamSLang:RoamConstraint">
+    <context xmi:type="roamSLang:RoamTypeContext">
+      <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath"/>
+    </context>
+    <expr xmi:type="roamSLang:RoamBool">
+      <expr xmi:type="roamSLang:RoamRelExpr" operator="&lt;=">
+        <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.2">
+          <expr xmi:type="roamSLang:RoamStreamNavigation">
+            <left xmi:type="roamSLang:RoamStreamSet">
+              <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                  <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1"/>
+                  </left>
+                  <right xmi:type="roamSLang:RoamContextExpr"/>
+                </expr>
+              </lambda>
+            </left>
+            <right xmi:type="roamSLang:RoamStreamArithmetic">
+              <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                <expr xmi:type="roamSLang:RoamRelExpr">
+                  <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                      <expr xmi:type="roamSLang:RoamFeatureLit">
+                        <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Link/bandwidth"/>
+                      </expr>
+                    </expr>
+                  </left>
+                </expr>
+              </lambda>
+            </right>
+          </expr>
+        </left>
+        <right xmi:type="roamSLang:RoamContextExpr">
+          <expr xmi:type="roamSLang:RoamFeatureLit">
+            <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/residualBandwidth"/>
+          </expr>
+        </right>
+      </expr>
+    </expr>
+  </constraints>
+  <constraints xmi:type="roamSLang:RoamConstraint">
+    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.3"/>
+    <expr xmi:type="roamSLang:RoamBool">
+      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+          <left xmi:type="roamSLang:RoamSumArithmeticExpr">
+            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+                      <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                            <expr xmi:type="roamSLang:RoamFeatureNavigation">
+                              <left xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
+                                <typeCast xmi:type="roamSLang:RoamTypeCast">
+                                  <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer"/>
+                                </typeCast>
+                              </left>
+                              <right xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer/host"/>
+                              </right>
+                            </expr>
+                          </expr>
+                        </right>
+                      </left>
+                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                            <expr xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
+                            </expr>
+                          </expr>
+                        </right>
+                      </right>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              </expr>
+            </left>
+            <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+                      <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                            <expr xmi:type="roamSLang:RoamFeatureNavigation">
+                              <left xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
+                                <typeCast xmi:type="roamSLang:RoamTypeCast">
+                                  <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch"/>
+                                </typeCast>
+                              </left>
+                              <right xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch/host"/>
+                              </right>
+                            </expr>
+                          </expr>
+                        </right>
+                      </left>
+                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                            <expr xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
+                            </expr>
+                          </expr>
+                        </right>
+                      </right>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              </expr>
+            </right>
+          </left>
+          <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+        </left>
+        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+          <left xmi:type="roamSLang:RoamSumArithmeticExpr">
+            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+                      <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                            <expr xmi:type="roamSLang:RoamFeatureNavigation">
+                              <left xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
+                                <typeCast xmi:type="roamSLang:RoamTypeCast">
+                                  <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer"/>
+                                </typeCast>
+                              </left>
+                              <right xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer/host"/>
+                              </right>
+                            </expr>
+                          </expr>
+                        </right>
+                      </left>
+                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                            <expr xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
+                            </expr>
+                          </expr>
+                        </right>
+                      </right>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              </expr>
+            </left>
+            <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
+              <expr xmi:type="roamSLang:RoamStreamNavigation">
+                <left xmi:type="roamSLang:RoamStreamSet">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                    <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+                      <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                            <expr xmi:type="roamSLang:RoamFeatureNavigation">
+                              <left xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
+                                <typeCast xmi:type="roamSLang:RoamTypeCast">
+                                  <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch"/>
+                                </typeCast>
+                              </left>
+                              <right xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch/host"/>
+                              </right>
+                            </expr>
+                          </expr>
+                        </right>
+                      </left>
+                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                            <expr xmi:type="roamSLang:RoamFeatureLit">
+                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
+                            </expr>
+                          </expr>
+                        </right>
+                      </right>
+                    </expr>
+                  </lambda>
+                </left>
+                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              </expr>
+            </right>
+          </left>
+          <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+        </right>
+      </expr>
+    </expr>
+  </constraints>
+  <constraints xmi:type="roamSLang:RoamConstraint">
+    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.3"/>
+    <expr xmi:type="roamSLang:RoamBool">
+      <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+        <left xmi:type="roamSLang:RoamSumArithmeticExpr">
+          <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.3">
+            <expr xmi:type="roamSLang:RoamStreamNavigation">
+              <left xmi:type="roamSLang:RoamStreamSet">
+                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
+                    </left>
+                    <right xmi:type="roamSLang:RoamContextExpr">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
+                    </right>
+                  </expr>
+                </lambda>
+              </left>
+              <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+            </expr>
+          </left>
+          <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.2">
+            <expr xmi:type="roamSLang:RoamStreamNavigation">
+              <left xmi:type="roamSLang:RoamStreamSet">
+                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
+                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
+                    </left>
+                    <right xmi:type="roamSLang:RoamContextExpr">
+                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
+                    </right>
+                  </expr>
+                </lambda>
+              </left>
+              <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+            </expr>
+          </right>
+        </left>
+        <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+      </expr>
+    </expr>
+  </constraints>
+  <objectives xmi:type="roamSLang:RoamObjective" name="srvObj">
+    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.0"/>
+    <expr xmi:type="roamSLang:RoamSumArithmeticExpr">
+      <left xmi:type="roamSLang:RoamSumArithmeticExpr">
+        <left xmi:type="roamSLang:RoamProductArithmeticExpr" operator="/">
+          <left xmi:type="roamSLang:RoamContextExpr">
+            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+              <expr xmi:type="roamSLang:RoamFeatureLit">
+                <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualCpu"/>
+              </expr>
+            </expr>
+          </left>
+          <right xmi:type="roamSLang:RoamContextExpr">
+            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+              <expr xmi:type="roamSLang:RoamFeatureLit">
+                <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/cpu"/>
+              </expr>
+            </expr>
+          </right>
+        </left>
+        <right xmi:type="roamSLang:RoamProductArithmeticExpr" operator="/">
+          <left xmi:type="roamSLang:RoamContextExpr">
+            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+              <expr xmi:type="roamSLang:RoamFeatureLit">
+                <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualMemory"/>
+              </expr>
+            </expr>
+          </left>
+          <right xmi:type="roamSLang:RoamContextExpr">
+            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+              <expr xmi:type="roamSLang:RoamFeatureLit">
+                <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/memory"/>
+              </expr>
+            </expr>
+          </right>
+        </right>
+      </left>
+      <right xmi:type="roamSLang:RoamProductArithmeticExpr" operator="/">
+        <left xmi:type="roamSLang:RoamContextExpr">
+          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+            <expr xmi:type="roamSLang:RoamFeatureLit">
+              <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualStorage"/>
+            </expr>
+          </expr>
+        </left>
+        <right xmi:type="roamSLang:RoamContextExpr">
+          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+            <expr xmi:type="roamSLang:RoamFeatureLit">
+              <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/storage"/>
+            </expr>
+          </expr>
+        </right>
+      </right>
+    </expr>
+  </objectives>
+  <objectives xmi:type="roamSLang:RoamObjective" name="lpObj">
+    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.2"/>
+    <expr xmi:type="roamSLang:RoamProductArithmeticExpr">
+      <left xmi:type="roamSLang:RoamContextExpr">
+        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+          <expr xmi:type="roamSLang:RoamFeatureLit">
+            <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Link/bandwidth"/>
+          </expr>
+        </expr>
+      </left>
+      <right xmi:type="roamSLang:RoamContextExpr">
+        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+          <expr xmi:type="roamSLang:RoamFeatureLit">
+            <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/hops"/>
+          </expr>
+        </expr>
+      </right>
+    </expr>
+  </objectives>
+  <globalObjective xmi:type="roamSLang:RoamGlobalObjective">
+    <expr xmi:type="roamSLang:RoamSumArithmeticExpr">
+      <left xmi:type="roamSLang:RoamObjectiveExpression" objective="//@objectives.0"/>
+      <right xmi:type="roamSLang:RoamObjectiveExpression" objective="//@objectives.1"/>
+    </expr>
+  </globalObjective>
+</roamSLang:EditorGTFile>
