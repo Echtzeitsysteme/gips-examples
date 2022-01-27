@@ -1,0 +1,29 @@
+import "http://www.eclipse.org/emf/2002/Ecore"
+// ^import a metamodel here
+
+// specify an example rule
+rule exampleRule {
+	clazz : EClass {
+		++ -eAllOperations -> op
+	}
+	
+	op : EOperation
+}
+
+// create a mapping on the rule
+mapping mapNode with exampleRule;
+
+// create a constraint on the mapping
+constraint -> mapping::mapNode {
+	mappings.mapNode->filter(m | m.nodes().clazz.^abstract)->exists()
+}
+
+// create an objective for the mapping
+objective nodeObj -> mapping::mapNode {
+	1
+}
+
+// create an overall objective
+global objective : min {
+	2 * nodeObj
+}

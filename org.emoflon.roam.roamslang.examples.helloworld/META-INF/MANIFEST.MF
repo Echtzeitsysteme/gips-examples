@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.emoflon.roam.roamslang.examples.helloworld
+Bundle-ManifestVersion: 2
+Bundle-Name: org.emoflon.roam.roamslang.examples.helloworld
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.emoflon.roam.roamslang.examples.helloworld; singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-16
