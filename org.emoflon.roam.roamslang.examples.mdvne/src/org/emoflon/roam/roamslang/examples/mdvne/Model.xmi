@@ -274,7 +274,7 @@
   <mappings xmi:type="roamSLang:RoamMapping" name="l2p" rule="//@patterns.2"/>
   <mappings xmi:type="roamSLang:RoamMapping" name="l2s" rule="//@patterns.3"/>
   <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.0"/>
+    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.0"/>
     <expr xmi:type="roamSLang:RoamBool">
       <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
         <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
@@ -412,7 +412,7 @@
     </expr>
   </constraints>
   <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.1"/>
+    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.1"/>
     <expr xmi:type="roamSLang:RoamBool">
       <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
         <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
@@ -437,7 +437,7 @@
     </expr>
   </constraints>
   <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.2"/>
+    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.2"/>
     <expr xmi:type="roamSLang:RoamBool">
       <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
         <left xmi:type="roamSLang:RoamRelExpr" operator="==">
@@ -570,7 +570,7 @@
     </expr>
   </constraints>
   <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.2"/>
+    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.2"/>
     <expr xmi:type="roamSLang:RoamBool">
       <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
         <left xmi:type="roamSLang:RoamSumArithmeticExpr">
@@ -655,7 +655,7 @@
     </expr>
   </constraints>
   <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.3"/>
+    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.3"/>
     <expr xmi:type="roamSLang:RoamBool">
       <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
         <left xmi:type="roamSLang:RoamRelExpr" operator="==">
@@ -844,7 +844,7 @@
     </expr>
   </constraints>
   <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.3"/>
+    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.3"/>
     <expr xmi:type="roamSLang:RoamBool">
       <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
         <left xmi:type="roamSLang:RoamSumArithmeticExpr">
