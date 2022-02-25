@@ -2,34 +2,34 @@ import "platform:/resource/network.model/model/Model.ecore"
 // you need a working iflye workspace to use this metamodel
 // check out: https://github.com/Echtzeitsysteme/iflye
 
-rule serverMatchPositive {
+rule serverMatchPositive() {
 	root: Root {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
 	
-	substrateNode: SubstrateServer {
-		.residualCpu := substrateNode.residualCpu - virtualNode.cpu
-		.residualMemory := substrateNode.residualMemory - virtualNode.memory
-		.residualStorage := substrateNode.residualStorage - virtualNode.storage
+	substrateServer: SubstrateServer {
+		.residualCpu := substrateServer.residualCpu - virtualNode.cpu
+		.residualMemory := substrateServer.residualMemory - virtualNode.memory
+		.residualStorage := substrateServer.residualStorage - virtualNode.storage
 		++ -guestServers -> virtualNode
 	}
 	
 	virtualNode: VirtualServer {
-		++ -host -> substrateNode
+		++ -host -> substrateServer
 	}
 	
 	substrateNetwork: SubstrateNetwork {
-		-nodes -> substrateNode
+		-nodes -> substrateServer
 	}
 	
 	virtualNetwork: VirtualNetwork {
 		-nodes -> virtualNode
 	}
 	
-	# virtualNode.cpu <= substrateNode.residualCpu
-	# virtualNode.memory <= substrateNode.residualMemory
-	# virtualNode.storage <= substrateNode.residualStorage
+	# virtualNode.cpu <= substrateServer.residualCpu
+	# virtualNode.memory <= substrateServer.residualMemory
+	# virtualNode.storage <= substrateServer.residualStorage
 }
 
 rule switchNodeMatchPositive {
@@ -122,15 +122,15 @@ constraint -> match::serverMatchPositive {
 	mappings.srv2srv->filter(match | match.nodes().virtualNode == self.nodes().virtualNode)->count() == 1
 }
 objective srvObj -> mapping::srv2srv {
-    self.nodes().substrateNode.residualCpu / self.nodes().substrateNode.cpu + 
-    self.nodes().substrateNode.residualMemory / self.nodes().substrateNode.memory + 
-    self.nodes().substrateNode.residualStorage / self.nodes().substrateNode.storage
+    self.nodes().substrateServer.residualCpu / self.nodes().substrateServer.cpu + 
+    self.nodes().substrateServer.residualMemory / self.nodes().substrateServer.memory + 
+    self.nodes().substrateServer.residualStorage / self.nodes().substrateServer.storage
 }
 
 constraint -> class::SubstrateServer {
-	mappings.srv2srv->filter(match | match.nodes().substrateNode == self)->sum(match | match.nodes().virtualNode.cpu) <= self.residualCpu &
-    mappings.srv2srv->filter(match | match.nodes().substrateNode == self)->sum(match | match.nodes().virtualNode.memory) <= self.residualMemory &
-    mappings.srv2srv->filter(match | match.nodes().substrateNode == self)->sum(match | match.nodes().virtualNode.storage) <= self.residualStorage
+	mappings.srv2srv->filter(match | match.nodes().substrateServer == self)->sum(match | match.nodes().virtualNode.cpu) <= self.residualCpu &
+    mappings.srv2srv->filter(match | match.nodes().substrateServer == self)->sum(match | match.nodes().virtualNode.memory) <= self.residualMemory &
+    mappings.srv2srv->filter(match | match.nodes().substrateServer == self)->sum(match | match.nodes().virtualNode.storage) <= self.residualStorage
 }
 
 // Switch 2 Node
@@ -138,18 +138,17 @@ mapping sw2node with switchNodeMatchPositive;
 constraint -> match::switchNodeMatchPositive {
 	mappings.sw2node->filter(match | match.nodes().virtualSwitch == self.nodes().virtualSwitch)->count() == 1
 }
-//objective swObj -> mapping::sw2node {
-//	0
-//}
 
 // Link 2 Path
 mapping l2p with linkPathMatchPositive;
 constraint -> match::linkPathMatchPositive {
-	mappings.srv2srv->filter(match | match.nodes().substrateNode == self.nodes().virtualLink.source.toType(VirtualServer).host)->count() +
-	mappings.sw2node->filter(match | match.nodes().substrateNode == self.nodes().virtualLink.source.toType(VirtualSwitch).host)->count() == 1 &
-	mappings.srv2srv->filter(match | match.nodes().substrateNode == self.nodes().virtualLink.target.toType(VirtualServer).host)->count() +
-	mappings.sw2node->filter(match | match.nodes().substrateNode == self.nodes().virtualLink.target.toType(VirtualSwitch).host)->count() == 1
+	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substratePath.source)->count() +
+		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substratePath.source)->count()) +
+	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substratePath.target)->count() +
+		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.target & mpp.nodes().substrateNode == self.nodes().substratePath.target)->count())
+	>= 2 * mappings.l2p->filter(mpp | mpp.nodes().substratePath == self.nodes().substratePath & mpp.nodes().virtualLink == self.nodes().virtualLink)->count()
 }
+
 constraint -> match::linkPathMatchPositive {
 	mappings.l2p->filter(match | match.nodes().virtualLink == self.nodes().virtualLink)->count() +
 	mappings.l2s->filter(match | match.nodes().virtualLink == self.nodes().virtualLink)->count() == 1
@@ -165,18 +164,15 @@ constraint -> class::SubstratePath {
 // Link 2 Server
 mapping l2s with linkServerMatchPositive;
 constraint -> match::linkServerMatchPositive {
-	mappings.srv2srv->filter(match | match.nodes().substrateNode == self.nodes().virtualLink.source.toType(VirtualServer).host & match.nodes().virtualNode == self.nodes().virtualLink.source)->count() +
-	mappings.sw2node->filter(match | match.nodes().substrateNode == self.nodes().virtualLink.source.toType(VirtualSwitch).host & match.nodes().virtualSwitch == self.nodes().virtualLink.source)->count() == 1 &
-	mappings.srv2srv->filter(match | match.nodes().substrateNode == self.nodes().virtualLink.target.toType(VirtualServer).host & match.nodes().virtualNode == self.nodes().virtualLink.target)->count() +
-	mappings.sw2node->filter(match | match.nodes().substrateNode == self.nodes().virtualLink.target.toType(VirtualSwitch).host & match.nodes().virtualSwitch == self.nodes().virtualLink.target)->count() == 1
+	mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substrateServer)->count() +
+	mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substrateServer)->count() == 1 &
+	mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substrateServer)->count() +
+	mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.target & mpp.nodes().substrateNode == self.nodes().substrateServer)->count() == 1
 }
 constraint -> match::linkServerMatchPositive {
 	mappings.l2s->filter(match | match.nodes().virtualLink == self.nodes().virtualLink)->count() +
 	mappings.l2p->filter(match | match.nodes().virtualLink == self.nodes().virtualLink)->count() == 1
 }
-//objective lsObj -> mapping::l2s {
-//	0
-//}
 
 // Global objective
 global objective : min {

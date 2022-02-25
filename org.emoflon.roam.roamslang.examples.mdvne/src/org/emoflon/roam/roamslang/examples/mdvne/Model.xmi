@@ -11,7 +11,7 @@
         <type xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Root/networks"/>
       </references>
     </nodes>
-    <nodes xmi:type="gT:EditorNode" name="substrateNode">
+    <nodes xmi:type="gT:EditorNode" name="substrateServer">
       <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer"/>
       <attributes xmi:type="gT:EditorAttributeAssignment">
         <attribute xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualCpu"/>
@@ -439,132 +439,186 @@
   <constraints xmi:type="roamSLang:RoamConstraint">
     <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.2"/>
     <expr xmi:type="roamSLang:RoamBool">
-      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-          <left xmi:type="roamSLang:RoamSumArithmeticExpr">
-            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-              <expr xmi:type="roamSLang:RoamStreamNavigation">
-                <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
-                      </left>
-                      <right xmi:type="roamSLang:RoamContextExpr">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-                          <expr xmi:type="roamSLang:RoamFeatureNavigation">
-                            <left xmi:type="roamSLang:RoamFeatureLit">
-                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
-                              <typeCast xmi:type="roamSLang:RoamTypeCast">
-                                <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer"/>
-                              </typeCast>
-                            </left>
-                            <right xmi:type="roamSLang:RoamFeatureLit">
-                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer/host"/>
-                            </right>
-                          </expr>
-                        </expr>
-                      </right>
-                    </expr>
-                  </lambda>
-                </left>
-                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
-              </expr>
-            </left>
-            <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
-              <expr xmi:type="roamSLang:RoamStreamNavigation">
-                <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
-                      </left>
-                      <right xmi:type="roamSLang:RoamContextExpr">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-                          <expr xmi:type="roamSLang:RoamFeatureNavigation">
-                            <left xmi:type="roamSLang:RoamFeatureLit">
-                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
-                              <typeCast xmi:type="roamSLang:RoamTypeCast">
-                                <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch"/>
-                              </typeCast>
-                            </left>
-                            <right xmi:type="roamSLang:RoamFeatureLit">
-                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch/host"/>
-                            </right>
-                          </expr>
-                        </expr>
-                      </right>
-                    </expr>
-                  </lambda>
-                </left>
-                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
-              </expr>
-            </right>
+      <expr xmi:type="roamSLang:RoamRelExpr" operator=">=">
+        <left xmi:type="roamSLang:RoamSumArithmeticExpr">
+          <left xmi:type="roamSLang:RoamBracketExpr">
+            <operand xmi:type="roamSLang:RoamSumArithmeticExpr">
+              <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+                <expr xmi:type="roamSLang:RoamStreamNavigation">
+                  <left xmi:type="roamSLang:RoamStreamSet">
+                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+                          </left>
+                          <right xmi:type="roamSLang:RoamContextExpr">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
+                              </expr>
+                            </expr>
+                          </right>
+                        </left>
+                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                          </left>
+                          <right xmi:type="roamSLang:RoamContextExpr">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/source"/>
+                              </expr>
+                            </expr>
+                          </right>
+                        </right>
+                      </expr>
+                    </lambda>
+                  </left>
+                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                </expr>
+              </left>
+              <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
+                <expr xmi:type="roamSLang:RoamStreamNavigation">
+                  <left xmi:type="roamSLang:RoamStreamSet">
+                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+                          </left>
+                          <right xmi:type="roamSLang:RoamContextExpr">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
+                              </expr>
+                            </expr>
+                          </right>
+                        </left>
+                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                          </left>
+                          <right xmi:type="roamSLang:RoamContextExpr">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/source"/>
+                              </expr>
+                            </expr>
+                          </right>
+                        </right>
+                      </expr>
+                    </lambda>
+                  </left>
+                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                </expr>
+              </right>
+            </operand>
           </left>
-          <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+          <right xmi:type="roamSLang:RoamBracketExpr">
+            <operand xmi:type="roamSLang:RoamSumArithmeticExpr">
+              <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
+                <expr xmi:type="roamSLang:RoamStreamNavigation">
+                  <left xmi:type="roamSLang:RoamStreamSet">
+                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+                          </left>
+                          <right xmi:type="roamSLang:RoamContextExpr">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
+                              </expr>
+                            </expr>
+                          </right>
+                        </left>
+                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                          </left>
+                          <right xmi:type="roamSLang:RoamContextExpr">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/target"/>
+                              </expr>
+                            </expr>
+                          </right>
+                        </right>
+                      </expr>
+                    </lambda>
+                  </left>
+                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                </expr>
+              </left>
+              <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
+                <expr xmi:type="roamSLang:RoamStreamNavigation">
+                  <left xmi:type="roamSLang:RoamStreamSet">
+                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+                          </left>
+                          <right xmi:type="roamSLang:RoamContextExpr">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
+                              </expr>
+                            </expr>
+                          </right>
+                        </left>
+                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                          </left>
+                          <right xmi:type="roamSLang:RoamContextExpr">
+                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/target"/>
+                              </expr>
+                            </expr>
+                          </right>
+                        </right>
+                      </expr>
+                    </lambda>
+                  </left>
+                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                </expr>
+              </right>
+            </operand>
+          </right>
         </left>
-        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-          <left xmi:type="roamSLang:RoamSumArithmeticExpr">
-            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-              <expr xmi:type="roamSLang:RoamStreamNavigation">
-                <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+        <right xmi:type="roamSLang:RoamProductArithmeticExpr">
+          <left xmi:type="roamSLang:RoamArithmeticLiteral" value="2"/>
+          <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.2">
+            <expr xmi:type="roamSLang:RoamStreamNavigation">
+              <left xmi:type="roamSLang:RoamStreamSet">
+                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
+                  <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
+                    <left xmi:type="roamSLang:RoamRelExpr" operator="==">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1"/>
                       </left>
                       <right xmi:type="roamSLang:RoamContextExpr">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-                          <expr xmi:type="roamSLang:RoamFeatureNavigation">
-                            <left xmi:type="roamSLang:RoamFeatureLit">
-                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
-                              <typeCast xmi:type="roamSLang:RoamTypeCast">
-                                <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer"/>
-                              </typeCast>
-                            </left>
-                            <right xmi:type="roamSLang:RoamFeatureLit">
-                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer/host"/>
-                            </right>
-                          </expr>
-                        </expr>
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1"/>
                       </right>
-                    </expr>
-                  </lambda>
-                </left>
-                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
-              </expr>
-            </left>
-            <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
-              <expr xmi:type="roamSLang:RoamStreamNavigation">
-                <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                    </left>
+                    <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
                       </left>
                       <right xmi:type="roamSLang:RoamContextExpr">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-                          <expr xmi:type="roamSLang:RoamFeatureNavigation">
-                            <left xmi:type="roamSLang:RoamFeatureLit">
-                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
-                              <typeCast xmi:type="roamSLang:RoamTypeCast">
-                                <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch"/>
-                              </typeCast>
-                            </left>
-                            <right xmi:type="roamSLang:RoamFeatureLit">
-                              <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch/host"/>
-                            </right>
-                          </expr>
-                        </expr>
+                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
                       </right>
-                    </expr>
-                  </lambda>
-                </left>
-                <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
-              </expr>
-            </right>
-          </left>
-          <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+                    </right>
+                  </expr>
+                </lambda>
+              </left>
+              <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+            </expr>
+          </right>
         </right>
       </expr>
     </expr>
@@ -663,30 +717,10 @@
             <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
               <expr xmi:type="roamSLang:RoamStreamNavigation">
                 <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
                     <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
                       <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
-                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
-                        </left>
-                        <right xmi:type="roamSLang:RoamContextExpr">
-                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
-                            <expr xmi:type="roamSLang:RoamFeatureNavigation">
-                              <left xmi:type="roamSLang:RoamFeatureLit">
-                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
-                                <typeCast xmi:type="roamSLang:RoamTypeCast">
-                                  <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer"/>
-                                </typeCast>
-                              </left>
-                              <right xmi:type="roamSLang:RoamFeatureLit">
-                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer/host"/>
-                              </right>
-                            </expr>
-                          </expr>
-                        </right>
-                      </left>
-                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
                           <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
                         </left>
                         <right xmi:type="roamSLang:RoamContextExpr">
@@ -695,6 +729,14 @@
                               <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
                             </expr>
                           </expr>
+                        </right>
+                      </left>
+                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                         </right>
                       </right>
                     </expr>
@@ -706,30 +748,10 @@
             <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
               <expr xmi:type="roamSLang:RoamStreamNavigation">
                 <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
                     <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
                       <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
-                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
-                        </left>
-                        <right xmi:type="roamSLang:RoamContextExpr">
-                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
-                            <expr xmi:type="roamSLang:RoamFeatureNavigation">
-                              <left xmi:type="roamSLang:RoamFeatureLit">
-                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
-                                <typeCast xmi:type="roamSLang:RoamTypeCast">
-                                  <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch"/>
-                                </typeCast>
-                              </left>
-                              <right xmi:type="roamSLang:RoamFeatureLit">
-                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch/host"/>
-                              </right>
-                            </expr>
-                          </expr>
-                        </right>
-                      </left>
-                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
                           <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
                         </left>
                         <right xmi:type="roamSLang:RoamContextExpr">
@@ -738,6 +760,14 @@
                               <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
                             </expr>
                           </expr>
+                        </right>
+                      </left>
+                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                         </right>
                       </right>
                     </expr>
@@ -754,30 +784,10 @@
             <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
               <expr xmi:type="roamSLang:RoamStreamNavigation">
                 <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
                     <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
                       <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
-                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
-                        </left>
-                        <right xmi:type="roamSLang:RoamContextExpr">
-                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
-                            <expr xmi:type="roamSLang:RoamFeatureNavigation">
-                              <left xmi:type="roamSLang:RoamFeatureLit">
-                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
-                                <typeCast xmi:type="roamSLang:RoamTypeCast">
-                                  <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer"/>
-                                </typeCast>
-                              </left>
-                              <right xmi:type="roamSLang:RoamFeatureLit">
-                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualServer/host"/>
-                              </right>
-                            </expr>
-                          </expr>
-                        </right>
-                      </left>
-                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
                           <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
                         </left>
                         <right xmi:type="roamSLang:RoamContextExpr">
@@ -786,6 +796,14 @@
                               <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
                             </expr>
                           </expr>
+                        </right>
+                      </left>
+                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                         </right>
                       </right>
                     </expr>
@@ -797,30 +815,10 @@
             <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
               <expr xmi:type="roamSLang:RoamStreamNavigation">
                 <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
+                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
                     <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
                       <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
-                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
-                        </left>
-                        <right xmi:type="roamSLang:RoamContextExpr">
-                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
-                            <expr xmi:type="roamSLang:RoamFeatureNavigation">
-                              <left xmi:type="roamSLang:RoamFeatureLit">
-                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
-                                <typeCast xmi:type="roamSLang:RoamTypeCast">
-                                  <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch"/>
-                                </typeCast>
-                              </left>
-                              <right xmi:type="roamSLang:RoamFeatureLit">
-                                <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//VirtualSwitch/host"/>
-                              </right>
-                            </expr>
-                          </expr>
-                        </right>
-                      </left>
-                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
                           <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
                         </left>
                         <right xmi:type="roamSLang:RoamContextExpr">
@@ -829,6 +827,14 @@
                               <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
                             </expr>
                           </expr>
+                        </right>
+                      </left>
+                      <right xmi:type="roamSLang:RoamRelExpr" operator="==">
+                        <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                        </left>
+                        <right xmi:type="roamSLang:RoamContextExpr">
+                          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                         </right>
                       </right>
                     </expr>
