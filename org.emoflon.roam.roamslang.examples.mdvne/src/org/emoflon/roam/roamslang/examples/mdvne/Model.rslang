@@ -2,6 +2,15 @@ import "platform:/resource/network.model/model/Model.ecore"
 // you need a working iflye workspace to use this metamodel
 // check out: https://github.com/Echtzeitsysteme/iflye
 
+config {
+	solver := GUROBI [home:="fu", license:="bar"];
+	launchConfig := true [main := "org.emoflon.roam.roamslang.examples.mdvne.ExampleMdVNE"];
+	timeLimit := true [value := 5.0];
+	randomSeed := true [value := 42];
+	presolve := true;
+	debugOutput := true;
+}
+
 rule serverMatchPositive() {
 	root: Root {
 		-networks -> substrateNetwork
