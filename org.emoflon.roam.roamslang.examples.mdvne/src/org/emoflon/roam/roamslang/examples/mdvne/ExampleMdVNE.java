@@ -24,6 +24,9 @@ public class ExampleMdVNE {
 		api.getL2p().applyNonZeroMappings();
 		api.getL2s().applyNonZeroMappings();
 
+		// Apply network to network mappings
+		api.getNet2net().applyNonZeroMappings();
+
 		try {
 			api.saveResult("model-out.xmi");
 		} catch (final IOException e) {
