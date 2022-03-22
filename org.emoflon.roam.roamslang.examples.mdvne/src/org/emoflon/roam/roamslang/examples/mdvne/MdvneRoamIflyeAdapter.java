@@ -1,5 +1,7 @@
 package org.emoflon.roam.roamslang.examples.mdvne;
 
+import java.io.IOException;
+
 import org.eclipse.emf.common.util.URI;
 import org.emoflon.roam.core.ilp.ILPSolverOutput;
 import org.emoflon.roam.core.ilp.ILPSolverStatus;
@@ -44,6 +46,14 @@ public class MdvneRoamIflyeAdapter {
 		api.getSw2node().applyNonZeroMappings();
 		api.getL2p().applyNonZeroMappings();
 		api.getL2s().applyNonZeroMappings();
+
+//		ModelFacade.getInstance().validateModel();
+
+		try {
+			api.saveResult(modelPath);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
 
 		// Terminate API
 //		api.terminate();
