@@ -2,15 +2,44 @@ import "platform:/resource/network.model/model/Model.ecore"
 // you need a working iflye workspace to use this metamodel
 // check out: https://github.com/Echtzeitsysteme/iflye
 
-config {
+config { 
 	solver := GUROBI [home:="fu", license:="bar"];
-	launchConfig := true [main := "org.emoflon.roam.roamslang.examples.mdvne.ExampleMdVNE"];
-	timeLimit := true [value := 5.0];
-	randomSeed := true [value := 42];
-	presolve := true;
-	debugOutput := true;
+	launchConfig := true [main := "org.emoflon.roam.roamslang.examples.mdvne.ExampleMdVNE"]; 
+	timeLimit := true [value := 120.0]; 
+	randomSeed := true [value := 0]; 
+	presolve := true; 
+	debugOutput := true; 
+} 
+
+// NACS
+condition serverNotMapped = forbid serverIsMapped
+pattern serverIsMapped {
+	host: SubstrateServer
+	
+	virtualNode: VirtualServer {
+		-host -> host
+	}
 }
 
+condition switchNotMapped = forbid switchIsMapped
+pattern switchIsMapped {
+	host: SubstrateNode
+	
+	virtualSwitch: VirtualSwitch {
+		-host -> host
+	}
+}
+
+condition linkNotMapped = forbid linkIsMapped
+pattern linkIsMapped {
+	host: SubstrateHostLink
+	
+	virtualLink: VirtualLink {
+		-host -> host
+	}
+}
+
+// Actual rules
 rule serverMatchPositive() {
 	root: Root {
 		-networks -> substrateNetwork
@@ -40,6 +69,7 @@ rule serverMatchPositive() {
 	# virtualNode.memory <= substrateServer.residualMemory
 	# virtualNode.storage <= substrateServer.residualStorage
 }
+when serverNotMapped
 
 rule switchNodeMatchPositive {
 	root: Root {
@@ -63,6 +93,7 @@ rule switchNodeMatchPositive {
 		-nodes -> virtualSwitch
 	}
 }
+when switchNotMapped
 
 rule linkPathMatchPositive {
 	root: Root {
@@ -97,6 +128,7 @@ rule linkPathMatchPositive {
 	// Explicitly exclude substrate paths with a residual bandwidth equals to 0
 	# substratePath.residualBandwidth > 0
 }
+when linkNotMapped
 
 rule linkServerMatchPositive {
 	root: Root {
@@ -120,6 +152,7 @@ rule linkServerMatchPositive {
 		-links -> virtualLink
 	}
 }
+when linkNotMapped
 
 // TODO: Future work: Network embedding
 //rule networkRule {
@@ -201,9 +234,20 @@ constraint -> match::linkServerMatchPositive {
 	>= 2 * mappings.l2s->filter(mpp | mpp.nodes().substrateServer == self.nodes().substrateServer & mpp.nodes().virtualLink == self.nodes().virtualLink)->count()
 }
 
-constraint -> class::VirtualLink {
-	mappings.l2p->filter(m | m.nodes().virtualLink == self)->count() +
-	mappings.l2s->filter(m | m.nodes().virtualLink == self)->count() == 1
+//constraint -> class::VirtualLink {
+//	mappings.l2p->filter(m | m.nodes().virtualLink == self)->count() +
+//	mappings.l2s->filter(m | m.nodes().virtualLink == self)->count() == 1
+//}
+// TODO: ^this is only possible if the MdVNE algorithm does not have to embed multiple VNs after each other.
+// If this constraint is active, the ILP problem gets infeasible because the previously embedded virtual
+// links produce a constraint like this: <nothing> = 1
+constraint -> match::linkPathMatchPositive { 
+	mappings.l2p->filter(match | match.nodes().virtualLink == self.nodes().virtualLink)->count() + 
+	mappings.l2s->filter(match | match.nodes().virtualLink == self.nodes().virtualLink)->count() == 1 
+}
+constraint -> match::linkServerMatchPositive { 
+	mappings.l2s->filter(match | match.nodes().virtualLink == self.nodes().virtualLink)->count() + 
+	mappings.l2p->filter(match | match.nodes().virtualLink == self.nodes().virtualLink)->count() == 1 
 }
 
 // Global objective

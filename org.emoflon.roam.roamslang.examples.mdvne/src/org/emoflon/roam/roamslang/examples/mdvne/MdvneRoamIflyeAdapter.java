@@ -8,8 +8,9 @@ import org.emoflon.roam.core.ilp.ILPSolverStatus;
 import org.emoflon.roam.roamslang.examples.mdvne.api.roam.MdvneRoamAPI;
 
 /**
- * Implementation adapter for Roam and iflye. This is used to run the Roab-based
- * MdVNE adapter from the iflye framework.
+ * Implementation adapter for Roam and iflye. This is used to run the Roam-based
+ * MdVNE adapter from the iflye framework. Basically, this is an external entry
+ * point to trigger the Roam-based MdVNE implementation from other frameworks.
  *
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
@@ -47,8 +48,7 @@ public class MdvneRoamIflyeAdapter {
 		api.getL2p().applyNonZeroMappings();
 		api.getL2s().applyNonZeroMappings();
 
-//		ModelFacade.getInstance().validateModel();
-
+		// The solution must currently be written as a file to be read by iflye
 		try {
 			api.saveResult(modelPath);
 		} catch (final IOException e) {
@@ -56,7 +56,17 @@ public class MdvneRoamIflyeAdapter {
 		}
 
 		// Terminate API
-//		api.terminate();
+		// api.terminate();
+		// TODO: Currently, this throws an Exception:
+		//
+		// java.lang.IllegalArgumentException: Cannot remove a consumer which was not
+		// registered before!
+		// at
+		// org.emoflon.ibex.gt.api.GraphTransformationPattern.unsubscribeAppearing(GraphTransformationPattern.java:310)
+		// at org.emoflon.roam.core.gt.GTMapper.terminate(GTMapper.java:69)
+		// at org.emoflon.roam.core.RoamEngine.lambda$1(RoamEngine.java:71)
+		// at java.base/java.util.HashMap.forEach(HashMap.java:1421)
+		// at org.emoflon.roam.core.RoamEngine.terminate(RoamEngine.java:71)
 
 		return (output.status() == ILPSolverStatus.OPTIMAL || output.status() == ILPSolverStatus.TIME_OUT);
 	}
