@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
-import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipslAPI;
+import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 
 public class ExampleMdVNE {
 
 	public static void main(final String[] args) {
-		// Create new MdVNE Gipsl API and load a model
-		final MdvneGipslAPI api = new MdvneGipslAPI();
+		// Create new MdVNE Gips API and load a model
+		final MdvneGipsAPI api = new MdvneGipsAPI();
 		api.init(URI.createFileURI("model-in.xmi"));
 
 		// Build the ILP problem (including updates)
