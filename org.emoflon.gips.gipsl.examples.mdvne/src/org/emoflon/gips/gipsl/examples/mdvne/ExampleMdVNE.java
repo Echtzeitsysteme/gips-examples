@@ -1,16 +1,16 @@
-package org.emoflon.roam.roamslang.examples.mdvne;
+package org.emoflon.gips.gipsl.examples.mdvne;
 
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
-import org.emoflon.roam.core.ilp.ILPSolverOutput;
-import org.emoflon.roam.roamslang.examples.mdvne.api.roam.MdvneRoamAPI;
+import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipslAPI;
 
 public class ExampleMdVNE {
 
 	public static void main(final String[] args) {
-		// Create new MdVNE Roam API and load a model
-		final MdvneRoamAPI api = new MdvneRoamAPI();
+		// Create new MdVNE Gipsl API and load a model
+		final MdvneGipslAPI api = new MdvneGipslAPI();
 		api.init(URI.createFileURI("model-in.xmi"));
 
 		// Build the ILP problem (including updates)
@@ -30,7 +30,7 @@ public class ExampleMdVNE {
 			e.printStackTrace();
 		}
 
-		System.out.println("Roam run finished.");
+		System.out.println("Gipsl run finished.");
 		System.exit(0);
 	}
 

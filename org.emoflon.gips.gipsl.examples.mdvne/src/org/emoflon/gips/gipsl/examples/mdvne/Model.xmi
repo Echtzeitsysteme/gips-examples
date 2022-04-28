@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<roamSLang:EditorGTFile xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:gT="http://www.emoflon.org/ibex/gt/editor/GT" xmlns:roamSLang="http://www.emoflon.org/roam/roamslang/RoamSLang" xsi:schemaLocation="http://www.eclipse.org/emf/2002/Ecore java://org.eclipse.emf.ecore.EcorePackage http://www.emoflon.org/ibex/gt/editor/GT java://org.emoflon.ibex.gt.editor.gT.GTPackage http://www.emoflon.org/roam/roamslang/RoamSLang java://org.emoflon.roam.roamslang.roamSLang.RoamSLangPackage">
+<Gipsl:EditorGTFile xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:gT="http://www.emoflon.org/ibex/gt/editor/GT" xmlns:Gipsl="http://www.emoflon.org/gips/gipslang/Gipsl" xsi:schemaLocation="http://www.eclipse.org/emf/2002/Ecore java://org.eclipse.emf.ecore.EcorePackage http://www.emoflon.org/ibex/gt/editor/GT java://org.emoflon.ibex.gt.editor.gT.GTPackage http://www.emoflon.org/gips/gipslang/Gipsl java://org.emoflon.gips.gipslang.Gipsl.GipslPackage">
   <imports xmi:type="gT:EditorImport" name="platform:/resource/network.model/model/Model.ecore"/>
   <patterns xmi:type="gT:EditorPattern" type="rule" name="serverMatchPositive">
     <nodes xmi:type="gT:EditorNode" name="root">
@@ -292,62 +292,62 @@
       </references>
     </nodes>
   </patterns>
-  <config xmi:type="roamSLang:RoamConfig" home="&quot;C:\gurobi950\win64&quot;" license="&quot;C:\Users\mkratz\gurobi.lic&quot;" enableLaunchConfig="true" mainLoc="&quot;org.emoflon.roam.roamslang.examples.mdvne.ExampleMdVNE&quot;" enableLimit="true" timeLimit="5.0" enableSeed="true" rndSeed="42" enablePresolve="true" enableDebugOutput="true"/>
-  <mappings xmi:type="roamSLang:RoamMapping" name="srv2srv" rule="//@patterns.0"/>
-  <mappings xmi:type="roamSLang:RoamMapping" name="sw2node" rule="//@patterns.1"/>
-  <mappings xmi:type="roamSLang:RoamMapping" name="l2p" rule="//@patterns.2"/>
-  <mappings xmi:type="roamSLang:RoamMapping" name="l2s" rule="//@patterns.3"/>
-  <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.0"/>
-    <expr xmi:type="roamSLang:RoamBool">
-      <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-        <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-          <expr xmi:type="roamSLang:RoamStreamNavigation">
-            <left xmi:type="roamSLang:RoamStreamSet">
-              <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                  <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
-                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+  <config xmi:type="Gipsl:RoamConfig" home="&quot;C:\gurobi950\win64&quot;" license="&quot;C:\Users\mkratz\gurobi.lic&quot;" enableLaunchConfig="true" mainLoc="&quot;org.emoflon.gips.gipslang.examples.mdvne.ExampleMdVNE&quot;" enableLimit="true" timeLimit="5.0" enableSeed="true" rndSeed="42" enablePresolve="true" enableDebugOutput="true"/>
+  <mappings xmi:type="Gipsl:RoamMapping" name="srv2srv" rule="//@patterns.0"/>
+  <mappings xmi:type="Gipsl:RoamMapping" name="sw2node" rule="//@patterns.1"/>
+  <mappings xmi:type="Gipsl:RoamMapping" name="l2p" rule="//@patterns.2"/>
+  <mappings xmi:type="Gipsl:RoamMapping" name="l2s" rule="//@patterns.3"/>
+  <constraints xmi:type="Gipsl:RoamConstraint">
+    <context xmi:type="Gipsl:RoamMatchContext" pattern="//@patterns.0"/>
+    <expr xmi:type="Gipsl:RoamBool">
+      <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+        <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.0">
+          <expr xmi:type="Gipsl:RoamStreamNavigation">
+            <left xmi:type="Gipsl:RoamStreamSet">
+              <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+                  <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                    <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
                   </left>
-                  <right xmi:type="roamSLang:RoamContextExpr">
-                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+                  <right xmi:type="Gipsl:RoamContextExpr">
+                    <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
                   </right>
                 </expr>
               </lambda>
             </left>
-            <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+            <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
           </expr>
         </left>
-        <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+        <right xmi:type="Gipsl:RoamArithmeticLiteral" value="1"/>
       </expr>
     </expr>
   </constraints>
-  <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamTypeContext">
+  <constraints xmi:type="Gipsl:RoamConstraint">
+    <context xmi:type="Gipsl:RoamTypeContext">
       <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer"/>
     </context>
-    <expr xmi:type="roamSLang:RoamBool">
-      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-        <left xmi:type="roamSLang:RoamBinaryBoolExpr">
-          <left xmi:type="roamSLang:RoamRelExpr" operator="&lt;=">
-            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-              <expr xmi:type="roamSLang:RoamStreamNavigation">
-                <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@left/@left/@left/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+    <expr xmi:type="Gipsl:RoamBool">
+      <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+        <left xmi:type="Gipsl:RoamBinaryBoolExpr">
+          <left xmi:type="Gipsl:RoamRelExpr" operator="&lt;=">
+            <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.0">
+              <expr xmi:type="Gipsl:RoamStreamNavigation">
+                <left xmi:type="Gipsl:RoamStreamSet">
+                  <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                    <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+                      <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@left/@left/@left/@expr/@left/@lambda">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
                       </left>
-                      <right xmi:type="roamSLang:RoamContextExpr"/>
+                      <right xmi:type="Gipsl:RoamContextExpr"/>
                     </expr>
                   </lambda>
                 </left>
-                <right xmi:type="roamSLang:RoamStreamArithmetic">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                    <expr xmi:type="roamSLang:RoamRelExpr">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@left/@left/@left/@expr/@right/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2">
-                          <expr xmi:type="roamSLang:RoamFeatureLit">
+                <right xmi:type="Gipsl:RoamStreamArithmetic">
+                  <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                    <expr xmi:type="Gipsl:RoamRelExpr">
+                      <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@left/@left/@left/@expr/@right/@lambda">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2">
+                          <expr xmi:type="Gipsl:RoamFeatureLit">
                             <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/cpu"/>
                           </expr>
                         </expr>
@@ -357,31 +357,31 @@
                 </right>
               </expr>
             </left>
-            <right xmi:type="roamSLang:RoamContextExpr">
-              <expr xmi:type="roamSLang:RoamFeatureLit">
+            <right xmi:type="Gipsl:RoamContextExpr">
+              <expr xmi:type="Gipsl:RoamFeatureLit">
                 <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualCpu"/>
               </expr>
             </right>
           </left>
-          <right xmi:type="roamSLang:RoamRelExpr" operator="&lt;=">
-            <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-              <expr xmi:type="roamSLang:RoamStreamNavigation">
-                <left xmi:type="roamSLang:RoamStreamSet">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                    <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@left/@right/@left/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+          <right xmi:type="Gipsl:RoamRelExpr" operator="&lt;=">
+            <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.0">
+              <expr xmi:type="Gipsl:RoamStreamNavigation">
+                <left xmi:type="Gipsl:RoamStreamSet">
+                  <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                    <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+                      <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@left/@right/@left/@expr/@left/@lambda">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
                       </left>
-                      <right xmi:type="roamSLang:RoamContextExpr"/>
+                      <right xmi:type="Gipsl:RoamContextExpr"/>
                     </expr>
                   </lambda>
                 </left>
-                <right xmi:type="roamSLang:RoamStreamArithmetic">
-                  <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                    <expr xmi:type="roamSLang:RoamRelExpr">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@left/@right/@left/@expr/@right/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2">
-                          <expr xmi:type="roamSLang:RoamFeatureLit">
+                <right xmi:type="Gipsl:RoamStreamArithmetic">
+                  <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                    <expr xmi:type="Gipsl:RoamRelExpr">
+                      <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@left/@right/@left/@expr/@right/@lambda">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2">
+                          <expr xmi:type="Gipsl:RoamFeatureLit">
                             <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/memory"/>
                           </expr>
                         </expr>
@@ -391,32 +391,32 @@
                 </right>
               </expr>
             </left>
-            <right xmi:type="roamSLang:RoamContextExpr">
-              <expr xmi:type="roamSLang:RoamFeatureLit">
+            <right xmi:type="Gipsl:RoamContextExpr">
+              <expr xmi:type="Gipsl:RoamFeatureLit">
                 <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualMemory"/>
               </expr>
             </right>
           </right>
         </left>
-        <right xmi:type="roamSLang:RoamRelExpr" operator="&lt;=">
-          <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-            <expr xmi:type="roamSLang:RoamStreamNavigation">
-              <left xmi:type="roamSLang:RoamStreamSet">
-                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                  <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@right/@left/@expr/@left/@lambda">
-                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+        <right xmi:type="Gipsl:RoamRelExpr" operator="&lt;=">
+          <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.0">
+            <expr xmi:type="Gipsl:RoamStreamNavigation">
+              <left xmi:type="Gipsl:RoamStreamSet">
+                <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                  <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+                    <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@right/@left/@expr/@left/@lambda">
+                      <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
                     </left>
-                    <right xmi:type="roamSLang:RoamContextExpr"/>
+                    <right xmi:type="Gipsl:RoamContextExpr"/>
                   </expr>
                 </lambda>
               </left>
-              <right xmi:type="roamSLang:RoamStreamArithmetic">
-                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                  <expr xmi:type="roamSLang:RoamRelExpr">
-                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@right/@left/@expr/@right/@lambda">
-                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2">
-                        <expr xmi:type="roamSLang:RoamFeatureLit">
+              <right xmi:type="Gipsl:RoamStreamArithmetic">
+                <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                  <expr xmi:type="Gipsl:RoamRelExpr">
+                    <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.1/@expr/@expr/@right/@left/@expr/@right/@lambda">
+                      <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2">
+                        <expr xmi:type="Gipsl:RoamFeatureLit">
                           <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/storage"/>
                         </expr>
                       </expr>
@@ -426,8 +426,8 @@
               </right>
             </expr>
           </left>
-          <right xmi:type="roamSLang:RoamContextExpr">
-            <expr xmi:type="roamSLang:RoamFeatureLit">
+          <right xmi:type="Gipsl:RoamContextExpr">
+            <expr xmi:type="Gipsl:RoamFeatureLit">
               <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualStorage"/>
             </expr>
           </right>
@@ -435,62 +435,62 @@
       </expr>
     </expr>
   </constraints>
-  <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.1"/>
-    <expr xmi:type="roamSLang:RoamBool">
-      <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-        <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
-          <expr xmi:type="roamSLang:RoamStreamNavigation">
-            <left xmi:type="roamSLang:RoamStreamSet">
-              <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                  <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.2/@expr/@expr/@left/@expr/@left/@lambda">
-                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+  <constraints xmi:type="Gipsl:RoamConstraint">
+    <context xmi:type="Gipsl:RoamMatchContext" pattern="//@patterns.1"/>
+    <expr xmi:type="Gipsl:RoamBool">
+      <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+        <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.1">
+          <expr xmi:type="Gipsl:RoamStreamNavigation">
+            <left xmi:type="Gipsl:RoamStreamSet">
+              <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+                  <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.2/@expr/@expr/@left/@expr/@left/@lambda">
+                    <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
                   </left>
-                  <right xmi:type="roamSLang:RoamContextExpr">
-                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+                  <right xmi:type="Gipsl:RoamContextExpr">
+                    <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
                   </right>
                 </expr>
               </lambda>
             </left>
-            <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+            <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
           </expr>
         </left>
-        <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+        <right xmi:type="Gipsl:RoamArithmeticLiteral" value="1"/>
       </expr>
     </expr>
   </constraints>
-  <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.2"/>
-    <expr xmi:type="roamSLang:RoamBool">
-      <expr xmi:type="roamSLang:RoamRelExpr" operator=">=">
-        <left xmi:type="roamSLang:RoamSumArithmeticExpr">
-          <left xmi:type="roamSLang:RoamBracketExpr">
-            <operand xmi:type="roamSLang:RoamSumArithmeticExpr">
-              <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-                <expr xmi:type="roamSLang:RoamStreamNavigation">
-                  <left xmi:type="roamSLang:RoamStreamSet">
-                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+  <constraints xmi:type="Gipsl:RoamConstraint">
+    <context xmi:type="Gipsl:RoamMatchContext" pattern="//@patterns.2"/>
+    <expr xmi:type="Gipsl:RoamBool">
+      <expr xmi:type="Gipsl:RoamRelExpr" operator=">=">
+        <left xmi:type="Gipsl:RoamSumArithmeticExpr">
+          <left xmi:type="Gipsl:RoamBracketExpr">
+            <operand xmi:type="Gipsl:RoamSumArithmeticExpr">
+              <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.0">
+                <expr xmi:type="Gipsl:RoamStreamNavigation">
+                  <left xmi:type="Gipsl:RoamStreamSet">
+                    <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                        <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
                               </expr>
                             </expr>
                           </right>
                         </left>
-                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                        <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/source"/>
                               </expr>
                             </expr>
@@ -499,33 +499,33 @@
                       </expr>
                     </lambda>
                   </left>
-                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                  <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
                 </expr>
               </left>
-              <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
-                <expr xmi:type="roamSLang:RoamStreamNavigation">
-                  <left xmi:type="roamSLang:RoamStreamSet">
-                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@right/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+              <right xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.1">
+                <expr xmi:type="Gipsl:RoamStreamNavigation">
+                  <left xmi:type="Gipsl:RoamStreamSet">
+                    <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                        <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@right/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
                               </expr>
                             </expr>
                           </right>
                         </left>
-                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@right/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                        <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@left/@operand/@right/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/source"/>
                               </expr>
                             </expr>
@@ -534,37 +534,37 @@
                       </expr>
                     </lambda>
                   </left>
-                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                  <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
                 </expr>
               </right>
             </operand>
           </left>
-          <right xmi:type="roamSLang:RoamBracketExpr">
-            <operand xmi:type="roamSLang:RoamSumArithmeticExpr">
-              <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-                <expr xmi:type="roamSLang:RoamStreamNavigation">
-                  <left xmi:type="roamSLang:RoamStreamSet">
-                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@right/@operand/@left/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+          <right xmi:type="Gipsl:RoamBracketExpr">
+            <operand xmi:type="Gipsl:RoamSumArithmeticExpr">
+              <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.0">
+                <expr xmi:type="Gipsl:RoamStreamNavigation">
+                  <left xmi:type="Gipsl:RoamStreamSet">
+                    <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                        <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@right/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
                               </expr>
                             </expr>
                           </right>
                         </left>
-                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@right/@operand/@left/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                        <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@right/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/target"/>
                               </expr>
                             </expr>
@@ -573,33 +573,33 @@
                       </expr>
                     </lambda>
                   </left>
-                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                  <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
                 </expr>
               </left>
-              <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
-                <expr xmi:type="roamSLang:RoamStreamNavigation">
-                  <left xmi:type="roamSLang:RoamStreamSet">
-                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@right/@operand/@right/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+              <right xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.1">
+                <expr xmi:type="Gipsl:RoamStreamNavigation">
+                  <left xmi:type="Gipsl:RoamStreamSet">
+                    <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                        <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@right/@operand/@right/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
                               </expr>
                             </expr>
                           </right>
                         </left>
-                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@right/@operand/@right/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                        <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@left/@right/@operand/@right/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/target"/>
                               </expr>
                             </expr>
@@ -608,69 +608,69 @@
                       </expr>
                     </lambda>
                   </left>
-                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                  <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
                 </expr>
               </right>
             </operand>
           </right>
         </left>
-        <right xmi:type="roamSLang:RoamProductArithmeticExpr">
-          <left xmi:type="roamSLang:RoamArithmeticLiteral" value="2"/>
-          <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.2">
-            <expr xmi:type="roamSLang:RoamStreamNavigation">
-              <left xmi:type="roamSLang:RoamStreamSet">
-                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                  <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                    <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@right/@right/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1"/>
+        <right xmi:type="Gipsl:RoamProductArithmeticExpr">
+          <left xmi:type="Gipsl:RoamArithmeticLiteral" value="2"/>
+          <right xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.2">
+            <expr xmi:type="Gipsl:RoamStreamNavigation">
+              <left xmi:type="Gipsl:RoamStreamSet">
+                <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                  <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                    <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                      <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@right/@right/@expr/@left/@lambda">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1"/>
                       </left>
-                      <right xmi:type="roamSLang:RoamContextExpr">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1"/>
+                      <right xmi:type="Gipsl:RoamContextExpr">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1"/>
                       </right>
                     </left>
-                    <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@right/@right/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
+                    <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                      <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.3/@expr/@expr/@right/@right/@expr/@left/@lambda">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
                       </left>
-                      <right xmi:type="roamSLang:RoamContextExpr">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
+                      <right xmi:type="Gipsl:RoamContextExpr">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
                       </right>
                     </right>
                   </expr>
                 </lambda>
               </left>
-              <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
             </expr>
           </right>
         </right>
       </expr>
     </expr>
   </constraints>
-  <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamTypeContext">
+  <constraints xmi:type="Gipsl:RoamConstraint">
+    <context xmi:type="Gipsl:RoamTypeContext">
       <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath"/>
     </context>
-    <expr xmi:type="roamSLang:RoamBool">
-      <expr xmi:type="roamSLang:RoamRelExpr" operator="&lt;=">
-        <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.2">
-          <expr xmi:type="roamSLang:RoamStreamNavigation">
-            <left xmi:type="roamSLang:RoamStreamSet">
-              <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                  <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.4/@expr/@expr/@left/@expr/@left/@lambda">
-                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1"/>
+    <expr xmi:type="Gipsl:RoamBool">
+      <expr xmi:type="Gipsl:RoamRelExpr" operator="&lt;=">
+        <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.2">
+          <expr xmi:type="Gipsl:RoamStreamNavigation">
+            <left xmi:type="Gipsl:RoamStreamSet">
+              <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+                  <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.4/@expr/@expr/@left/@expr/@left/@lambda">
+                    <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1"/>
                   </left>
-                  <right xmi:type="roamSLang:RoamContextExpr"/>
+                  <right xmi:type="Gipsl:RoamContextExpr"/>
                 </expr>
               </lambda>
             </left>
-            <right xmi:type="roamSLang:RoamStreamArithmetic">
-              <lambda xmi:type="roamSLang:RoamLambdaExpression" name="match">
-                <expr xmi:type="roamSLang:RoamRelExpr">
-                  <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.4/@expr/@expr/@left/@expr/@right/@lambda">
-                    <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-                      <expr xmi:type="roamSLang:RoamFeatureLit">
+            <right xmi:type="Gipsl:RoamStreamArithmetic">
+              <lambda xmi:type="Gipsl:RoamLambdaExpression" name="match">
+                <expr xmi:type="Gipsl:RoamRelExpr">
+                  <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.4/@expr/@expr/@left/@expr/@right/@lambda">
+                    <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+                      <expr xmi:type="Gipsl:RoamFeatureLit">
                         <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Link/bandwidth"/>
                       </expr>
                     </expr>
@@ -680,275 +680,275 @@
             </right>
           </expr>
         </left>
-        <right xmi:type="roamSLang:RoamContextExpr">
-          <expr xmi:type="roamSLang:RoamFeatureLit">
+        <right xmi:type="Gipsl:RoamContextExpr">
+          <expr xmi:type="Gipsl:RoamFeatureLit">
             <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/residualBandwidth"/>
           </expr>
         </right>
       </expr>
     </expr>
   </constraints>
-  <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamMatchContext" pattern="//@patterns.3"/>
-    <expr xmi:type="roamSLang:RoamBool">
-      <expr xmi:type="roamSLang:RoamRelExpr" operator=">=">
-        <left xmi:type="roamSLang:RoamSumArithmeticExpr">
-          <left xmi:type="roamSLang:RoamBracketExpr">
-            <operand xmi:type="roamSLang:RoamSumArithmeticExpr">
-              <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-                <expr xmi:type="roamSLang:RoamStreamNavigation">
-                  <left xmi:type="roamSLang:RoamStreamSet">
-                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+  <constraints xmi:type="Gipsl:RoamConstraint">
+    <context xmi:type="Gipsl:RoamMatchContext" pattern="//@patterns.3"/>
+    <expr xmi:type="Gipsl:RoamBool">
+      <expr xmi:type="Gipsl:RoamRelExpr" operator=">=">
+        <left xmi:type="Gipsl:RoamSumArithmeticExpr">
+          <left xmi:type="Gipsl:RoamBracketExpr">
+            <operand xmi:type="Gipsl:RoamSumArithmeticExpr">
+              <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.0">
+                <expr xmi:type="Gipsl:RoamStreamNavigation">
+                  <left xmi:type="Gipsl:RoamStreamSet">
+                    <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                        <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
                               </expr>
                             </expr>
                           </right>
                         </left>
-                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                        <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@left/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                           </right>
                         </right>
                       </expr>
                     </lambda>
                   </left>
-                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                  <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
                 </expr>
               </left>
-              <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
-                <expr xmi:type="roamSLang:RoamStreamNavigation">
-                  <left xmi:type="roamSLang:RoamStreamSet">
-                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@left/@operand/@right/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+              <right xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.1">
+                <expr xmi:type="Gipsl:RoamStreamNavigation">
+                  <left xmi:type="Gipsl:RoamStreamSet">
+                    <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                        <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@left/@operand/@right/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/source"/>
                               </expr>
                             </expr>
                           </right>
                         </left>
-                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@left/@operand/@right/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                        <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@left/@operand/@right/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                           </right>
                         </right>
                       </expr>
                     </lambda>
                   </left>
-                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                  <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
                 </expr>
               </right>
             </operand>
           </left>
-          <right xmi:type="roamSLang:RoamBracketExpr">
-            <operand xmi:type="roamSLang:RoamSumArithmeticExpr">
-              <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.0">
-                <expr xmi:type="roamSLang:RoamStreamNavigation">
-                  <left xmi:type="roamSLang:RoamStreamSet">
-                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@right/@operand/@left/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
+          <right xmi:type="Gipsl:RoamBracketExpr">
+            <operand xmi:type="Gipsl:RoamSumArithmeticExpr">
+              <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.0">
+                <expr xmi:type="Gipsl:RoamStreamNavigation">
+                  <left xmi:type="Gipsl:RoamStreamSet">
+                    <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                        <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@right/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.2"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
                               </expr>
                             </expr>
                           </right>
                         </left>
-                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@right/@operand/@left/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
+                        <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@right/@operand/@left/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                           </right>
                         </right>
                       </expr>
                     </lambda>
                   </left>
-                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                  <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
                 </expr>
               </left>
-              <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.1">
-                <expr xmi:type="roamSLang:RoamStreamNavigation">
-                  <left xmi:type="roamSLang:RoamStreamSet">
-                    <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                      <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                        <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@right/@operand/@right/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
+              <right xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.1">
+                <expr xmi:type="Gipsl:RoamStreamNavigation">
+                  <left xmi:type="Gipsl:RoamStreamSet">
+                    <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                      <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                        <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@right/@operand/@right/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.2"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
-                              <expr xmi:type="roamSLang:RoamFeatureLit">
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2">
+                              <expr xmi:type="Gipsl:RoamFeatureLit">
                                 <feature xmi:type="ecore:EReference" href="../../../../../../../../network.model/model/Model.ecore#//Link/target"/>
                               </expr>
                             </expr>
                           </right>
                         </left>
-                        <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                          <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@right/@operand/@right/@expr/@left/@lambda">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
+                        <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                          <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@left/@right/@operand/@right/@expr/@left/@lambda">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.1/@nodes.1"/>
                           </left>
-                          <right xmi:type="roamSLang:RoamContextExpr">
-                            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
+                          <right xmi:type="Gipsl:RoamContextExpr">
+                            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                           </right>
                         </right>
                       </expr>
                     </lambda>
                   </left>
-                  <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+                  <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
                 </expr>
               </right>
             </operand>
           </right>
         </left>
-        <right xmi:type="roamSLang:RoamProductArithmeticExpr">
-          <left xmi:type="roamSLang:RoamArithmeticLiteral" value="2"/>
-          <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.3">
-            <expr xmi:type="roamSLang:RoamStreamNavigation">
-              <left xmi:type="roamSLang:RoamStreamSet">
-                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="mpp">
-                  <expr xmi:type="roamSLang:RoamBinaryBoolExpr">
-                    <left xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@right/@right/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
+        <right xmi:type="Gipsl:RoamProductArithmeticExpr">
+          <left xmi:type="Gipsl:RoamArithmeticLiteral" value="2"/>
+          <right xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.3">
+            <expr xmi:type="Gipsl:RoamStreamNavigation">
+              <left xmi:type="Gipsl:RoamStreamSet">
+                <lambda xmi:type="Gipsl:RoamLambdaExpression" name="mpp">
+                  <expr xmi:type="Gipsl:RoamBinaryBoolExpr">
+                    <left xmi:type="Gipsl:RoamRelExpr" operator="==">
+                      <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@right/@right/@expr/@left/@lambda">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                       </left>
-                      <right xmi:type="roamSLang:RoamContextExpr">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
+                      <right xmi:type="Gipsl:RoamContextExpr">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.1"/>
                       </right>
                     </left>
-                    <right xmi:type="roamSLang:RoamRelExpr" operator="==">
-                      <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@right/@right/@expr/@left/@lambda">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
+                    <right xmi:type="Gipsl:RoamRelExpr" operator="==">
+                      <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.5/@expr/@expr/@right/@right/@expr/@left/@lambda">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
                       </left>
-                      <right xmi:type="roamSLang:RoamContextExpr">
-                        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
+                      <right xmi:type="Gipsl:RoamContextExpr">
+                        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
                       </right>
                     </right>
                   </expr>
                 </lambda>
               </left>
-              <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
             </expr>
           </right>
         </right>
       </expr>
     </expr>
   </constraints>
-  <constraints xmi:type="roamSLang:RoamConstraint">
-    <context xmi:type="roamSLang:RoamTypeContext">
+  <constraints xmi:type="Gipsl:RoamConstraint">
+    <context xmi:type="Gipsl:RoamTypeContext">
       <type xmi:type="ecore:EClass" href="../../../../../../../../network.model/model/Model.ecore#//VirtualLink"/>
     </context>
-    <expr xmi:type="roamSLang:RoamBool">
-      <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-        <left xmi:type="roamSLang:RoamSumArithmeticExpr">
-          <left xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.2">
-            <expr xmi:type="roamSLang:RoamStreamNavigation">
-              <left xmi:type="roamSLang:RoamStreamSet">
-                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="m">
-                  <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.6/@expr/@expr/@left/@left/@expr/@left/@lambda">
-                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
+    <expr xmi:type="Gipsl:RoamBool">
+      <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+        <left xmi:type="Gipsl:RoamSumArithmeticExpr">
+          <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.2">
+            <expr xmi:type="Gipsl:RoamStreamNavigation">
+              <left xmi:type="Gipsl:RoamStreamSet">
+                <lambda xmi:type="Gipsl:RoamLambdaExpression" name="m">
+                  <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+                    <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.6/@expr/@expr/@left/@left/@expr/@left/@lambda">
+                      <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2"/>
                     </left>
-                    <right xmi:type="roamSLang:RoamContextExpr"/>
+                    <right xmi:type="Gipsl:RoamContextExpr"/>
                   </expr>
                 </lambda>
               </left>
-              <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
             </expr>
           </left>
-          <right xmi:type="roamSLang:RoamMappingAttributeExpr" mapping="//@mappings.3">
-            <expr xmi:type="roamSLang:RoamStreamNavigation">
-              <left xmi:type="roamSLang:RoamStreamSet">
-                <lambda xmi:type="roamSLang:RoamLambdaExpression" name="m">
-                  <expr xmi:type="roamSLang:RoamRelExpr" operator="==">
-                    <left xmi:type="roamSLang:RoamLambdaAttributeExpression" var="//@constraints.6/@expr/@expr/@left/@right/@expr/@left/@lambda">
-                      <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
+          <right xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.3">
+            <expr xmi:type="Gipsl:RoamStreamNavigation">
+              <left xmi:type="Gipsl:RoamStreamSet">
+                <lambda xmi:type="Gipsl:RoamLambdaExpression" name="m">
+                  <expr xmi:type="Gipsl:RoamRelExpr" operator="==">
+                    <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.6/@expr/@expr/@left/@right/@expr/@left/@lambda">
+                      <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.3/@nodes.2"/>
                     </left>
-                    <right xmi:type="roamSLang:RoamContextExpr"/>
+                    <right xmi:type="Gipsl:RoamContextExpr"/>
                   </expr>
                 </lambda>
               </left>
-              <right xmi:type="roamSLang:RoamStreamBoolExpr" operator="count()"/>
+              <right xmi:type="Gipsl:RoamStreamBoolExpr" operator="count()"/>
             </expr>
           </right>
         </left>
-        <right xmi:type="roamSLang:RoamArithmeticLiteral" value="1"/>
+        <right xmi:type="Gipsl:RoamArithmeticLiteral" value="1"/>
       </expr>
     </expr>
   </constraints>
-  <objectives xmi:type="roamSLang:RoamObjective" name="srvObj">
-    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.0"/>
-    <expr xmi:type="roamSLang:RoamSumArithmeticExpr">
-      <left xmi:type="roamSLang:RoamSumArithmeticExpr">
-        <left xmi:type="roamSLang:RoamProductArithmeticExpr" operator="/">
-          <left xmi:type="roamSLang:RoamContextExpr">
-            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
-              <expr xmi:type="roamSLang:RoamFeatureLit">
+  <objectives xmi:type="Gipsl:RoamObjective" name="srvObj">
+    <context xmi:type="Gipsl:RoamMappingContext" mapping="//@mappings.0"/>
+    <expr xmi:type="Gipsl:RoamSumArithmeticExpr">
+      <left xmi:type="Gipsl:RoamSumArithmeticExpr">
+        <left xmi:type="Gipsl:RoamProductArithmeticExpr" operator="/">
+          <left xmi:type="Gipsl:RoamContextExpr">
+            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+              <expr xmi:type="Gipsl:RoamFeatureLit">
                 <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualCpu"/>
               </expr>
             </expr>
           </left>
-          <right xmi:type="roamSLang:RoamContextExpr">
-            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
-              <expr xmi:type="roamSLang:RoamFeatureLit">
+          <right xmi:type="Gipsl:RoamContextExpr">
+            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+              <expr xmi:type="Gipsl:RoamFeatureLit">
                 <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/cpu"/>
               </expr>
             </expr>
           </right>
         </left>
-        <right xmi:type="roamSLang:RoamProductArithmeticExpr" operator="/">
-          <left xmi:type="roamSLang:RoamContextExpr">
-            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
-              <expr xmi:type="roamSLang:RoamFeatureLit">
+        <right xmi:type="Gipsl:RoamProductArithmeticExpr" operator="/">
+          <left xmi:type="Gipsl:RoamContextExpr">
+            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+              <expr xmi:type="Gipsl:RoamFeatureLit">
                 <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualMemory"/>
               </expr>
             </expr>
           </left>
-          <right xmi:type="roamSLang:RoamContextExpr">
-            <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
-              <expr xmi:type="roamSLang:RoamFeatureLit">
+          <right xmi:type="Gipsl:RoamContextExpr">
+            <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+              <expr xmi:type="Gipsl:RoamFeatureLit">
                 <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/memory"/>
               </expr>
             </expr>
           </right>
         </right>
       </left>
-      <right xmi:type="roamSLang:RoamProductArithmeticExpr" operator="/">
-        <left xmi:type="roamSLang:RoamContextExpr">
-          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
-            <expr xmi:type="roamSLang:RoamFeatureLit">
+      <right xmi:type="Gipsl:RoamProductArithmeticExpr" operator="/">
+        <left xmi:type="Gipsl:RoamContextExpr">
+          <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+            <expr xmi:type="Gipsl:RoamFeatureLit">
               <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstrateServer/residualStorage"/>
             </expr>
           </expr>
         </left>
-        <right xmi:type="roamSLang:RoamContextExpr">
-          <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
-            <expr xmi:type="roamSLang:RoamFeatureLit">
+        <right xmi:type="Gipsl:RoamContextExpr">
+          <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.1">
+            <expr xmi:type="Gipsl:RoamFeatureLit">
               <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Server/storage"/>
             </expr>
           </expr>
@@ -956,29 +956,29 @@
       </right>
     </expr>
   </objectives>
-  <objectives xmi:type="roamSLang:RoamObjective" name="lpObj">
-    <context xmi:type="roamSLang:RoamMappingContext" mapping="//@mappings.2"/>
-    <expr xmi:type="roamSLang:RoamProductArithmeticExpr">
-      <left xmi:type="roamSLang:RoamContextExpr">
-        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
-          <expr xmi:type="roamSLang:RoamFeatureLit">
+  <objectives xmi:type="Gipsl:RoamObjective" name="lpObj">
+    <context xmi:type="Gipsl:RoamMappingContext" mapping="//@mappings.2"/>
+    <expr xmi:type="Gipsl:RoamProductArithmeticExpr">
+      <left xmi:type="Gipsl:RoamContextExpr">
+        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.2">
+          <expr xmi:type="Gipsl:RoamFeatureLit">
             <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//Link/bandwidth"/>
           </expr>
         </expr>
       </left>
-      <right xmi:type="roamSLang:RoamContextExpr">
-        <expr xmi:type="roamSLang:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
-          <expr xmi:type="roamSLang:RoamFeatureLit">
+      <right xmi:type="Gipsl:RoamContextExpr">
+        <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.2/@nodes.1">
+          <expr xmi:type="Gipsl:RoamFeatureLit">
             <feature xmi:type="ecore:EAttribute" href="../../../../../../../../network.model/model/Model.ecore#//SubstratePath/hops"/>
           </expr>
         </expr>
       </right>
     </expr>
   </objectives>
-  <globalObjective xmi:type="roamSLang:RoamGlobalObjective">
-    <expr xmi:type="roamSLang:RoamSumArithmeticExpr">
-      <left xmi:type="roamSLang:RoamObjectiveExpression" objective="//@objectives.0"/>
-      <right xmi:type="roamSLang:RoamObjectiveExpression" objective="//@objectives.1"/>
+  <globalObjective xmi:type="Gipsl:RoamGlobalObjective">
+    <expr xmi:type="Gipsl:RoamSumArithmeticExpr">
+      <left xmi:type="Gipsl:RoamObjectiveExpression" objective="//@objectives.0"/>
+      <right xmi:type="Gipsl:RoamObjectiveExpression" objective="//@objectives.1"/>
     </expr>
   </globalObjective>
-</roamSLang:EditorGTFile>
+</Gipsl:EditorGTFile>
