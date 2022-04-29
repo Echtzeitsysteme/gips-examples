@@ -28,9 +28,11 @@ public class MdvneRoamIflyeAdapter {
 			throw new IllegalArgumentException("Model path was invalid.");
 		}
 
+		final URI absPath = URI.createFileURI(System.getProperty("user.dir") + "/" + modelPath);
+
 		// Create new MdVNE Roam API and load the model
 		final MdvneRoamAPI api = new MdvneRoamAPI();
-		api.init(URI.createFileURI(modelPath));
+		api.init(absPath);
 
 		// Build the ILP problem (including updates)
 		api.buildILPProblem(true);
@@ -50,7 +52,7 @@ public class MdvneRoamIflyeAdapter {
 
 		// The solution must currently be written as a file to be read by iflye
 		try {
-			api.saveResult(modelPath);
+			api.saveResult(absPath.toFileString());
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
