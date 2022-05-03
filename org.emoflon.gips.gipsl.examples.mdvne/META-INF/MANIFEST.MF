@@ -14,4 +14,4 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt.hipe,
  network.model,
  org.emoflon.ibex.gt.viatra
-Export-Package: org.emoflon.roam.roamslang.examples.mdvne
+Export-Package: org.emoflon.gips.gipsl.examples.mdvne
