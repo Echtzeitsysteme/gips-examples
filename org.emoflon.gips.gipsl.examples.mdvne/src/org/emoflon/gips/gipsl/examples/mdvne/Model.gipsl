@@ -3,7 +3,7 @@ import "platform:/resource/network.model/model/Model.ecore"
 // check out: https://github.com/Echtzeitsysteme/iflye 
  
 config {  
-	solver := GUROBI [home:="C:\gurobi950\win64", license:="C:\Users\mkratz\gurobi.lic"]; 
+	solver := GUROBI [home:="fu", license:="bar"]; 
 	launchConfig := true [main := "org.emoflon.gips.gipsl.examples.mdvne.ExampleMdVNE"];  
 	timeLimit := true [value := 120.0];  
 	randomSeed := true [value := 0];  
@@ -14,7 +14,7 @@ config {
 // NACS 
 condition serverNotMapped = forbid serverIsMapped 
 pattern serverIsMapped { 
-	host: SubstrateServer 
+	host: SubstrateServer
 	 
 	virtualNode: VirtualServer { 
 		-host -> host 
@@ -210,7 +210,7 @@ constraint -> class::VirtualSwitch {
  
 // Link 2 Path 
 mapping l2p with linkPathMatchPositive; 
-constraint -> match::linkPathMatchPositive { 
+constraint -> pattern::linkPathMatchPositive { 
 	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substratePath.source)->count() + 
 		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substratePath.source)->count()) + 
 	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substratePath.target)->count() + 
@@ -227,7 +227,7 @@ constraint -> class::SubstratePath {
  
 // Link 2 Server 
 mapping l2s with linkServerMatchPositive; 
-constraint -> match::linkServerMatchPositive { 
+constraint -> pattern::linkServerMatchPositive { 
 	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substrateServer)->count() + 
 		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substrateServer)->count()) + 
 	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substrateServer)->count() + 
