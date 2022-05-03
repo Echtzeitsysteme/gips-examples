@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Gipsl:EditorGTFile xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:gT="http://www.emoflon.org/ibex/gt/editor/GT" xmlns:Gipsl="http://www.emoflon.org/gips/gipsl/Gipsl" xsi:schemaLocation="http://www.eclipse.org/emf/2002/Ecore java://org.eclipse.emf.ecore.EcorePackage http://www.emoflon.org/ibex/gt/editor/GT java://org.emoflon.ibex.gt.editor.gT.GTPackage http://www.emoflon.org/gips/gipsl/Gipsl java://org.emoflon.gips.gipsl.Gipsl.GipslPackage">
+  <imports xmi:type="gT:EditorImport" name="http://www.eclipse.org/emf/2002/Ecore"/>
+  <patterns xmi:type="gT:EditorPattern" type="rule" name="exampleRule">
+    <nodes xmi:type="gT:EditorNode" name="clazz">
+      <type xmi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EClass"/>
+      <references xmi:type="gT:EditorReference" operator="++" target="//@patterns.0/@nodes.1">
+        <type xmi:type="ecore:EReference" href="http://www.eclipse.org/emf/2002/Ecore#//EClass/eAllOperations"/>
+      </references>
+    </nodes>
+    <nodes xmi:type="gT:EditorNode" name="op">
+      <type xmi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EOperation"/>
+    </nodes>
+  </patterns>
+  <mappings xmi:type="Gipsl:RoamMapping" name="mapNode" rule="//@patterns.0"/>
+  <constraints xmi:type="Gipsl:RoamConstraint">
+    <context xmi:type="Gipsl:RoamMappingContext" mapping="//@mappings.0"/>
+    <expr xmi:type="Gipsl:RoamBool">
+      <expr xmi:type="Gipsl:RoamRelExpr">
+        <left xmi:type="Gipsl:RoamMappingAttributeExpr" mapping="//@mappings.0">
+          <expr xmi:type="Gipsl:RoamStreamNavigation">
+            <left xmi:type="Gipsl:RoamStreamSet">
+              <lambda xmi:type="Gipsl:RoamLambdaExpression" name="m">
+                <expr xmi:type="Gipsl:RoamRelExpr">
+                  <left xmi:type="Gipsl:RoamLambdaAttributeExpression" var="//@constraints.0/@expr/@expr/@left/@expr/@left/@lambda">
+                    <expr xmi:type="Gipsl:RoamNodeAttributeExpr" node="//@patterns.0/@nodes.0">
+                      <expr xmi:type="Gipsl:RoamFeatureLit">
+                        <feature xmi:type="ecore:EAttribute" href="http://www.eclipse.org/emf/2002/Ecore#//EClass/abstract"/>
+                      </expr>
+                    </expr>
+                  </left>
+                </expr>
+              </lambda>
+            </left>
+            <right xmi:type="Gipsl:RoamStreamBoolExpr"/>
+          </expr>
+        </left>
+      </expr>
+    </expr>
+  </constraints>
+  <objectives xmi:type="Gipsl:RoamObjective" name="nodeObj">
+    <context xmi:type="Gipsl:RoamMappingContext" mapping="//@mappings.0"/>
+    <expr xmi:type="Gipsl:RoamArithmeticLiteral" value="1"/>
+  </objectives>
+  <globalObjective xmi:type="Gipsl:RoamGlobalObjective">
+    <expr xmi:type="Gipsl:RoamProductArithmeticExpr">
+      <left xmi:type="Gipsl:RoamArithmeticLiteral" value="2"/>
+      <right xmi:type="Gipsl:RoamObjectiveExpression" objective="//@objectives.0"/>
+    </expr>
+  </globalObjective>
+</Gipsl:EditorGTFile>

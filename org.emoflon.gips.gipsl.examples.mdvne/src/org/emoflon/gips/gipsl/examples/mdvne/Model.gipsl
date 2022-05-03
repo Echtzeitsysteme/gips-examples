@@ -4,7 +4,7 @@ import "platform:/resource/network.model/model/Model.ecore"
 
 config {
 	solver := GUROBI [home:="fu", license:="bar"];
-	launchConfig := true [main := "org.emoflon.roam.roamslang.examples.mdvne.ExampleMdVNE"];
+	launchConfig := true [main := "org.emoflon.gips.gipsl.examples.mdvne.ExampleMdVNE"];
 	timeLimit := true [value := 5.0];
 	randomSeed := true [value := 42];
 	presolve := true;
@@ -138,7 +138,7 @@ rule linkServerMatchPositive {
 //}
 
 //
-// RoamSLang starts here!
+// Gipsl starts here!
 //
 
 // TODO: Future work: Network embedding
