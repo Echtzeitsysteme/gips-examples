@@ -49,6 +49,7 @@ public class MdvneGipsIflyeAdapter {
 		api.getSw2node().applyNonZeroMappings();
 		api.getL2p().applyNonZeroMappings();
 		api.getL2s().applyNonZeroMappings();
+		api.getNet2net().applyNonZeroMappings();
 
 		// The solution must currently be written as a file to be read by iflye
 		try {

@@ -37,7 +37,39 @@ pattern linkIsMapped {
 	virtualLink: VirtualLink { 
 		-host -> host 
 	} 
-} 
+}
+
+condition networkNotMapped = forbid networkIsMapped && forbid networkIsMappedSrv
+pattern networkIsMapped {
+	host: SubstrateNetwork
+	
+	virtualNetwork: VirtualNetwork {
+		-host -> host
+	}
+}
+pattern networkIsMappedSrv {
+	host: SubstrateServer
+	
+	virtualNetwork: VirtualNetwork {
+		-hostServer -> host
+	}
+}
+
+// Patterns for finding non embedded virtual elements
+pattern vsrvNotMapped {
+	virtualServer: VirtualServer
+}
+when serverNotMapped
+
+pattern vswNotMapped {
+	virtualSwitch: VirtualSwitch
+}
+when switchNotMapped
+
+pattern vlNotMapped {
+	virtualLink: VirtualLink
+}
+when linkNotMapped
  
 // Actual rules 
 rule serverMatchPositive() { 
@@ -150,45 +182,56 @@ rule linkServerMatchPositive {
 	 
 	virtualNetwork: VirtualNetwork { 
 		-links -> virtualLink 
+	}
+}
+when linkNotMapped
+
+rule networkRule { 
+	root: Root { 
+		-networks -> substrateNetwork 
+		-networks -> virtualNetwork 
 	} 
-} 
-when linkNotMapped 
- 
-// TODO: Future work: Network embedding 
-//rule networkRule { 
-//	root: Root { 
-//		-networks -> substrateNetwork 
-//		-networks -> virtualNetwork 
-//	} 
-//	 
-//	substrateNetwork: SubstrateNetwork { 
-//		++ -guests -> virtualNetwork 
-//	} 
-//	 
-//	virtualNetwork: VirtualNetwork { 
-//		++ -host -> substrateNetwork 
-//	} 
-//} 
+	 
+	substrateNetwork: SubstrateNetwork { 
+		++ -guests -> virtualNetwork 
+	} 
+	 
+	virtualNetwork: VirtualNetwork { 
+		++ -host -> substrateNetwork 
+	} 
+}
+when networkNotMapped
  
 // 
 // GIPSL starts here! 
 // 
  
-// TODO: Future work: Network embedding 
-//mapping net2net with networkRule; 
-////constraint -> class::VirtualNetwork { 
-////	self.nodes->filter(n | n.nodes().)->count() == 0 
-////} 
-//constraint -> match::networkRule { 
-////	mappings.srv2srv->filter(s | s.nodes().virtualServer == self.nodes().virtualNetwork.nodes) 
-//	self.nodes().virtualNetwork.nodes->filter(n | n == ) 
-//} 
+// Network embedding 
+mapping net2net with networkRule;
+// All links must be embedded
+constraint -> pattern::networkRule {
+	mappings.l2p->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
+	+ mappings.l2s->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
+	== self.nodes().virtualNetwork.links->count()
+}
+
+// All nodes must be embedded
+constraint -> pattern::networkRule {
+	mappings.srv2srv->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
+	+ mappings.sw2node->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
+	== self.nodes().virtualNetwork.nodes->count()
+}
+
+// Each virtual network must be embedded
+constraint -> pattern::networkRule {
+	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualNetwork)->count() == 1
+}
  
 // Server 2 Server 
 mapping srv2srv with serverMatchPositive; 
-constraint -> class::VirtualServer { 
-	mappings.srv2srv->filter(m | m.nodes().virtualNode == self)->count() == 1 
-} 
+constraint -> pattern::vsrvNotMapped {
+	mappings.srv2srv->filter(m | m.nodes().virtualNode == self.nodes().virtualServer)->count() == 1
+}
  
 objective srvObj -> mapping::srv2srv { 
     self.nodes().substrateServer.residualCpu / self.nodes().substrateServer.cpu +  
@@ -204,9 +247,9 @@ constraint -> class::SubstrateServer {
  
 // Switch 2 Node 
 mapping sw2node with switchNodeMatchPositive; 
-constraint -> class::VirtualSwitch { 
-	mappings.sw2node->filter(match | match.nodes().virtualSwitch == self)->count() == 1 
-} 
+constraint -> pattern::vswNotMapped {
+	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->count() == 1
+}
  
 // Link 2 Path 
 mapping l2p with linkPathMatchPositive; 
@@ -235,10 +278,10 @@ constraint -> pattern::linkServerMatchPositive {
 	>= 2 * mappings.l2s->filter(mpp | mpp.nodes().substrateServer == self.nodes().substrateServer & mpp.nodes().virtualLink == self.nodes().virtualLink)->count() 
 } 
  
-constraint -> class::VirtualLink { 
-	mappings.l2p->filter(m | m.nodes().virtualLink == self)->count() + 
-	mappings.l2s->filter(m | m.nodes().virtualLink == self)->count() == 1 
-} 
+constraint -> pattern::vlNotMapped {
+	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->count() +
+	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->count() == 1
+}
  
 // Global objective 
 global objective : min { 
