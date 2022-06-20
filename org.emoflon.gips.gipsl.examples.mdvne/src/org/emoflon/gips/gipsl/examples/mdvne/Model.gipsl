@@ -72,7 +72,7 @@ pattern vlNotMapped {
 when linkNotMapped
 
 // Actual rules
-rule serverMatchPositive() {
+rule serverMatchPositive {
 	root: Root {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
