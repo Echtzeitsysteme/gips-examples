@@ -209,18 +209,18 @@ when networkNotMapped
 // Network embedding
 mapping net2net with networkRule;
 // All links must be embedded
-constraint -> pattern::networkRule {
-	mappings.l2p->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
-	+ mappings.l2s->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
-	== self.nodes().virtualNetwork.links->count()
-}
+//constraint -> pattern::networkRule {
+//	mappings.l2p->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
+//	+ mappings.l2s->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
+//	== self.nodes().virtualNetwork.links->count()
+//}
 
 // All nodes must be embedded
-constraint -> pattern::networkRule {
-	mappings.srv2srv->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
-	+ mappings.sw2node->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
-	== self.nodes().virtualNetwork.nodes->count()
-}
+//constraint -> pattern::networkRule {
+//	mappings.srv2srv->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
+//	+ mappings.sw2node->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
+//	== self.nodes().virtualNetwork.nodes->count()
+//}
 
 // Each virtual network must be embedded
 constraint -> pattern::networkRule {
