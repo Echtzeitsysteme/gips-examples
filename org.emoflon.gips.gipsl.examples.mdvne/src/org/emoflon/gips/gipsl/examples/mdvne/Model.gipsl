@@ -40,7 +40,7 @@ pattern linkIsMapped {
 } 
  
 // Actual rules 
-rule serverMatchPositive() { 
+rule serverMatchPositive { 
 	root: Root { 
 		-networks -> substrateNetwork 
 		-networks -> virtualNetwork 
