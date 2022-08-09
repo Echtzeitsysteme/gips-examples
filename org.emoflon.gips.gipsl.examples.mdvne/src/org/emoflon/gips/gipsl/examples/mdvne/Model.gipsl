@@ -210,38 +210,26 @@ when networkNotMapped
 mapping net2net with networkRule;
 // All links must be embedded
 constraint -> pattern::networkRule {
-//	mappings.l2p->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
-//	+ mappings.l2s->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
-//	== self.nodes().virtualNetwork.links->count()
-	// Variation to remove `count()` call for the example
 	mappings.l2p->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
 	+ mappings.l2s->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
-	== self.nodes().virtualNetwork.links->sum(m | m.value())
+	== self.nodes().virtualNetwork.links->count()
 }
 
 // All nodes must be embedded
 constraint -> pattern::networkRule {
-//	mappings.srv2srv->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
-//	+ mappings.sw2node->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->count()
-//	== self.nodes().virtualNetwork.nodes->count()
-	// Variation to remove `count()` call for the example
 	mappings.srv2srv->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
 	+ mappings.sw2node->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
-	== self.nodes().virtualNetwork.nodes->sum(m | m.value())
+	== self.nodes().virtualNetwork.nodes->count()
 }
 
 // Each virtual network must be embedded
 constraint -> pattern::networkRule {
-//	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualNetwork)->count() == 1
-	// Variation to remove `count()` call for the example
 	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value()) == 1
 }
  
 // Server 2 Server
 mapping srv2srv with serverMatchPositive;
 constraint -> pattern::vsrvNotMapped {
-//	mappings.srv2srv->filter(m | m.nodes().virtualNode == self.nodes().virtualServer)->count() == 1
-	// Variation to remove `count()` call for the example
 	mappings.srv2srv->filter(m | m.nodes().virtualNode == self.nodes().virtualServer)->sum(m | m.value()) == 1
 }
 
@@ -260,20 +248,12 @@ constraint -> class::SubstrateServer {
 // Switch 2 Node
 mapping sw2node with switchNodeMatchPositive;
 constraint -> pattern::vswNotMapped {
-//	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->count() == 1
-	// Variation to remove `count()` call for the example
 	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->sum(m | m.value()) == 1
 }
 
 // Link 2 Path
 mapping l2p with linkPathMatchPositive;
 constraint -> pattern::linkPathMatchPositive {
-//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substratePath.source)->count() +
-//		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substratePath.source)->count()) +
-//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substratePath.target)->count() +
-//		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.target & mpp.nodes().substrateNode == self.nodes().substratePath.target)->count())
-//	>= 2 * mappings.l2p->filter(mpp | mpp.nodes().substratePath == self.nodes().substratePath & mpp.nodes().virtualLink == self.nodes().virtualLink)->count()
-	// Variation to remove `count()` call for the example
 	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substratePath.source)->sum(m | m.value()) +
 		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substratePath.source)->sum(m | m.value())) +
 	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substratePath.target)->sum(m | m.value())+
@@ -291,12 +271,6 @@ constraint -> class::SubstratePath {
 // Link 2 Server
 mapping l2s with linkServerMatchPositive;
 constraint -> pattern::linkServerMatchPositive {
-//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substrateServer)->count() +
-//		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substrateServer)->count()) +
-//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substrateServer)->count() +
-//		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.target & mpp.nodes().substrateNode == self.nodes().substrateServer)->count())
-//	>= 2 * mappings.l2s->filter(mpp | mpp.nodes().substrateServer == self.nodes().substrateServer & mpp.nodes().virtualLink == self.nodes().virtualLink)->count()
-	// Variation to remove `count()` call for the example
 	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
 		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.value())) +
 	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
@@ -305,9 +279,6 @@ constraint -> pattern::linkServerMatchPositive {
 }
 
 constraint -> pattern::vlNotMapped {
-//	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->count() +
-//	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->count() == 1
-	// Variation to remove `count()` call for the example
 	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) +
 	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) == 1
 }
