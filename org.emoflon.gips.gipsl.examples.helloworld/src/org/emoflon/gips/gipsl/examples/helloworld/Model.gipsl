@@ -1,3 +1,4 @@
+package "org.emoflon.gips.gipsl.examples.helloworld"
 import "http://www.eclipse.org/emf/2002/Ecore"
 // ^import a metamodel here
 

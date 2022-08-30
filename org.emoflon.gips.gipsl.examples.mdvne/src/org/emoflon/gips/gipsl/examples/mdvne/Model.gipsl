@@ -1,3 +1,4 @@
+package "org.emoflon.gips.gipsl.examples.mdvne"
 import "platform:/resource/network.model/model/Model.ecore"
 // you need a working iflye workspace to use this metamodel
 // check out: https://github.com/Echtzeitsysteme/iflye
