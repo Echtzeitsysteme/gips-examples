@@ -1,0 +1,305 @@
+package "org.emoflon.gips.gipsl.examples.mdvne.migration"
+import "platform:/resource/network.model/model/Model.ecore"
+// you need a working iflye workspace to use this metamodel
+// check out: https://github.com/Echtzeitsysteme/iflye
+
+config {
+	solver := GUROBI [home:="fu", license:="bar"];
+	launchConfig := false [main := "org.emoflon.gips.gipsl.examples.mdvne.migration.ExampleMdVNE"];
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.000001];
+}
+
+//// NACS
+//condition serverNotMapped = forbid serverIsMapped
+//pattern serverIsMapped {
+//	host: SubstrateServer
+//	
+//	virtualNode: VirtualServer {
+//		-host -> host
+//	}
+//}
+//
+//condition switchNotMapped = forbid switchIsMapped
+//pattern switchIsMapped {
+//	host: SubstrateNode
+//	
+//	virtualSwitch: VirtualSwitch {
+//		-host -> host
+//	}
+//}
+//
+//condition linkNotMapped = forbid linkIsMapped
+//pattern linkIsMapped {
+//	host: SubstrateHostLink
+//	
+//	virtualLink: VirtualLink {
+//		-host -> host
+//	}
+//}
+//
+//condition networkNotMapped = forbid networkIsMapped && forbid networkIsMappedSrv
+//pattern networkIsMapped {
+//	host: SubstrateNetwork
+//	
+//	virtualNetwork: VirtualNetwork {
+//		-host -> host
+//	}
+//}
+//pattern networkIsMappedSrv {
+//	host: SubstrateServer
+//	
+//	virtualNetwork: VirtualNetwork {
+//		-hostServer -> host
+//	}
+//}
+
+//// Patterns for finding non embedded virtual elements
+//pattern vsrvNotMapped {
+//	virtualServer: VirtualServer
+//}
+//when serverNotMapped
+//
+//pattern vswNotMapped {
+//	virtualSwitch: VirtualSwitch
+//}
+//when switchNotMapped
+//
+//pattern vlNotMapped {
+//	virtualLink: VirtualLink
+//}
+//when linkNotMapped
+
+// Patterns for finding virtual elements (including embedded ones)
+pattern findVsrv {
+	virtualServer: VirtualServer
+}
+
+pattern findVsw {
+	virtualSwitch: VirtualSwitch
+}
+
+pattern findVl {
+	virtualLink: VirtualLink
+}
+
+// Actual rules
+rule embedServer {
+	root: Root {
+		-networks -> substrateNetwork
+		-networks -> virtualNetwork
+	}
+	
+	substrateServer: SubstrateServer {
+		.residualCpu := substrateServer.residualCpu - virtualNode.cpu
+		.residualMemory := substrateServer.residualMemory - virtualNode.memory
+		.residualStorage := substrateServer.residualStorage - virtualNode.storage
+		++ -guestServers -> virtualNode
+	}
+	
+	virtualNode: VirtualServer {
+		++ -host -> substrateServer
+	}
+	
+	substrateNetwork: SubstrateNetwork {
+		-nodes -> substrateServer
+	}
+	
+	virtualNetwork: VirtualNetwork {
+		-nodes -> virtualNode
+	}
+	
+	# virtualNode.cpu <= substrateServer.residualCpu
+	# virtualNode.memory <= substrateServer.residualMemory
+	# virtualNode.storage <= substrateServer.residualStorage
+}
+//when serverNotMapped
+
+rule embedSwitch {
+	root: Root {
+		-networks -> substrateNetwork
+		-networks -> virtualNetwork
+	}
+	
+	substrateNode: SubstrateNode {
+		++ -guestSwitches -> virtualSwitch
+	}
+	
+	virtualSwitch : VirtualSwitch {
+		++ -host -> substrateNode
+	}
+	
+	substrateNetwork: SubstrateNetwork {
+		-nodes -> substrateNode
+	}
+	
+	virtualNetwork: VirtualNetwork {
+		-nodes -> virtualSwitch
+	}
+}
+//when switchNotMapped
+
+rule embedLinkPath {
+	root: Root {
+		-networks -> substrateNetwork
+		-networks -> virtualNetwork
+	}
+	
+	substratePath: SubstratePath {
+		++ -guestLinks -> virtualLink
+		.residualBandwidth := substratePath.residualBandwidth - virtualLink.bandwidth
+		
+		// Update all substrate links
+		forEach links->l {
+			iterator::l.residualBandwidth := iterator::l.residualBandwidth - virtualLink.bandwidth
+		}
+	}
+	
+	virtualLink: VirtualLink {
+		++ -host -> substratePath
+	}
+	
+	substrateNetwork: SubstrateNetwork {
+		-paths -> substratePath
+	}
+	
+	virtualNetwork: VirtualNetwork {
+		-links -> virtualLink
+	}
+	
+	# virtualLink.bandwidth <= substratePath.residualBandwidth
+	
+	// Explicitly exclude substrate paths with a residual bandwidth equals to 0
+	# substratePath.residualBandwidth > 0
+}
+//when linkNotMapped
+
+rule embedLinkServer {
+	root: Root {
+		-networks -> substrateNetwork
+		-networks -> virtualNetwork
+	}
+	
+	substrateServer: SubstrateServer {
+		++ -guestLinks -> virtualLink
+	}
+	
+	virtualLink: VirtualLink {
+		++ -host -> substrateServer
+	}
+	
+	substrateNetwork: SubstrateNetwork {
+		-nodes -> substrateServer
+	}
+	
+	virtualNetwork: VirtualNetwork {
+		-links -> virtualLink
+	}
+}
+//when linkNotMapped
+
+rule networkRule {
+	root: Root {
+		-networks -> substrateNetwork
+		-networks -> virtualNetwork
+	}
+	
+	substrateNetwork: SubstrateNetwork {
+		++ -guests -> virtualNetwork
+	}
+	
+	virtualNetwork: VirtualNetwork {
+		++ -host -> substrateNetwork
+	}
+}
+//when networkNotMapped
+
+//
+// GIPSL starts here!
+//
+
+// Network embedding
+mapping net2net with networkRule;
+// All links must be embedded
+constraint -> pattern::networkRule {
+	mappings.l2p->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
+	+ mappings.l2s->filter(l | l.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
+	== self.nodes().virtualNetwork.links->count()
+}
+
+// All nodes must be embedded
+constraint -> pattern::networkRule {
+	mappings.srv2srv->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
+	+ mappings.sw2node->filter(s | s.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
+	== self.nodes().virtualNetwork.nodes->count()
+}
+
+// Each virtual network must be embedded
+constraint -> pattern::networkRule {
+	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value()) == 1
+}
+ 
+// Server 2 Server
+mapping srv2srv with embedServer;
+constraint -> pattern::findVsrv {
+	mappings.srv2srv->filter(m | m.nodes().virtualNode == self.nodes().virtualServer)->sum(m | m.value()) == 1
+}
+
+objective srvObj -> mapping::srv2srv {
+//    self.nodes().substrateServer.residualCpu / self.nodes().substrateServer.cpu +
+//    self.nodes().substrateServer.residualMemory / self.nodes().substrateServer.memory +
+//    self.nodes().substrateServer.residualStorage / self.nodes().substrateServer.storage
+	1
+}
+
+constraint -> class::SubstrateServer {
+	mappings.srv2srv->filter(match | match.nodes().substrateServer == self)->sum(match | match.nodes().virtualNode.cpu) <= self.cpu &
+    mappings.srv2srv->filter(match | match.nodes().substrateServer == self)->sum(match | match.nodes().virtualNode.memory) <= self.memory &
+    mappings.srv2srv->filter(match | match.nodes().substrateServer == self)->sum(match | match.nodes().virtualNode.storage) <= self.storage
+}
+
+// Switch 2 Node
+mapping sw2node with embedSwitch;
+constraint -> pattern::findVsw {
+	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->sum(m | m.value()) == 1
+}
+
+// Link 2 Path
+mapping l2p with embedLinkPath;
+constraint -> pattern::embedLinkPath {
+	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substratePath.source)->sum(m | m.value()) +
+		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substratePath.source)->sum(m | m.value())) +
+	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substratePath.target)->sum(m | m.value())+
+		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.target & mpp.nodes().substrateNode == self.nodes().substratePath.target)->sum(m | m.value()))
+	>= 2 * mappings.l2p->filter(mpp | mpp.nodes().substratePath == self.nodes().substratePath & mpp.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value())
+}
+objective lpObj -> mapping::l2p {
+	self.nodes().virtualLink.bandwidth * self.nodes().substratePath.hops
+}
+
+constraint -> class::SubstratePath {
+	mappings.l2p->filter(match | match.nodes().substratePath == self)->sum(match | match.nodes().virtualLink.bandwidth) <= self.bandwidth
+}
+
+// Link 2 Server
+mapping l2s with embedLinkServer;
+constraint -> pattern::embedLinkServer {
+	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
+		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.value())) +
+	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
+		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.target & mpp.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.value()))
+	>= 2 * mappings.l2s->filter(mpp | mpp.nodes().substrateServer == self.nodes().substrateServer & mpp.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value())
+}
+
+constraint -> pattern::findVl {
+	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) +
+	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) == 1
+}
+
+// Global objective
+global objective : min {
+	srvObj + lpObj
+}
