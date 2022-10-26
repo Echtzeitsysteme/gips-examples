@@ -112,9 +112,9 @@ rule embedServer {
 		-nodes -> virtualNode
 	}
 	
-	# virtualNode.cpu <= substrateServer.residualCpu
-	# virtualNode.memory <= substrateServer.residualMemory
-	# virtualNode.storage <= substrateServer.residualStorage
+	# virtualNode.cpu <= substrateServer.cpu
+	# virtualNode.memory <= substrateServer.memory
+	# virtualNode.storage <= substrateServer.storage
 }
 //when serverNotMapped
 
@@ -170,7 +170,7 @@ rule embedLinkPath {
 		-links -> virtualLink
 	}
 	
-	# virtualLink.bandwidth <= substratePath.residualBandwidth
+	# virtualLink.bandwidth <= substratePath.bandwidth
 	
 	// Explicitly exclude substrate paths with a residual bandwidth equals to 0
 	# substratePath.residualBandwidth > 0
