@@ -13,66 +13,6 @@ config {
 	tolerance := true [value := 0.000001];
 }
 
-//// NACS
-//condition serverNotMapped = forbid serverIsMapped
-//pattern serverIsMapped {
-//	host: SubstrateServer
-//	
-//	virtualNode: VirtualServer {
-//		-host -> host
-//	}
-//}
-//
-//condition switchNotMapped = forbid switchIsMapped
-//pattern switchIsMapped {
-//	host: SubstrateNode
-//	
-//	virtualSwitch: VirtualSwitch {
-//		-host -> host
-//	}
-//}
-//
-//condition linkNotMapped = forbid linkIsMapped
-//pattern linkIsMapped {
-//	host: SubstrateHostLink
-//	
-//	virtualLink: VirtualLink {
-//		-host -> host
-//	}
-//}
-//
-//condition networkNotMapped = forbid networkIsMapped && forbid networkIsMappedSrv
-//pattern networkIsMapped {
-//	host: SubstrateNetwork
-//	
-//	virtualNetwork: VirtualNetwork {
-//		-host -> host
-//	}
-//}
-//pattern networkIsMappedSrv {
-//	host: SubstrateServer
-//	
-//	virtualNetwork: VirtualNetwork {
-//		-hostServer -> host
-//	}
-//}
-
-//// Patterns for finding non embedded virtual elements
-//pattern vsrvNotMapped {
-//	virtualServer: VirtualServer
-//}
-//when serverNotMapped
-//
-//pattern vswNotMapped {
-//	virtualSwitch: VirtualSwitch
-//}
-//when switchNotMapped
-//
-//pattern vlNotMapped {
-//	virtualLink: VirtualLink
-//}
-//when linkNotMapped
-
 // Patterns for finding virtual elements (including embedded ones)
 pattern findVsrv {
 	virtualServer: VirtualServer
@@ -116,7 +56,6 @@ rule embedServer {
 	# virtualNode.memory <= substrateServer.memory
 	# virtualNode.storage <= substrateServer.storage
 }
-//when serverNotMapped
 
 rule embedSwitch {
 	root: Root {
@@ -140,7 +79,6 @@ rule embedSwitch {
 		-nodes -> virtualSwitch
 	}
 }
-//when switchNotMapped
 
 rule embedLinkPath {
 	root: Root {
@@ -171,11 +109,7 @@ rule embedLinkPath {
 	}
 	
 	# virtualLink.bandwidth <= substratePath.bandwidth
-	
-	// Explicitly exclude substrate paths with a residual bandwidth equals to 0
-	# substratePath.residualBandwidth > 0
 }
-//when linkNotMapped
 
 rule embedLinkServer {
 	root: Root {
@@ -199,7 +133,6 @@ rule embedLinkServer {
 		-links -> virtualLink
 	}
 }
-//when linkNotMapped
 
 rule networkRule {
 	root: Root {
@@ -215,7 +148,6 @@ rule networkRule {
 		++ -host -> substrateNetwork
 	}
 }
-//when networkNotMapped
 
 //
 // GIPSL starts here!
@@ -253,6 +185,7 @@ objective srvObj -> mapping::srv2srv {
 //    self.nodes().substrateServer.residualMemory / self.nodes().substrateServer.memory +
 //    self.nodes().substrateServer.residualStorage / self.nodes().substrateServer.storage
 	1
+	// ^The total communication cost c (metric) does not make any sense since all embeddings will be removed before running the algorithm again.
 }
 
 constraint -> class::SubstrateServer {
