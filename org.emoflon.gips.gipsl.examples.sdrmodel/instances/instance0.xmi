@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.emoflon.gips.gipsl.examples.sdrmodel:Root
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:org.emoflon.gips.gipsl.examples.sdrmodel="platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore">
+  <cpus name="cpu0">
+    <threads
+        name="thread0"
+        processResource="2"/>
+  </cpus>
+  <jobs name="job0">
+    <blocks
+        name="block0"
+        outputs="//@jobs.0/@flows.0"
+        processDemand="1"/>
+    <blocks
+        name="block1"
+        inputs="//@jobs.0/@flows.0"
+        processDemand="1"/>
+    <flows name="flow0to1"
+        rate="1"
+        start="//@jobs.0/@blocks.0"
+        target="//@jobs.0/@blocks.1"/>
+  </jobs>
+</org.emoflon.gips.gipsl.examples.sdrmodel:Root>

@@ -14,5 +14,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi,
  org.emoflon.smartemf
 Export-Package: sdrmodel,
- sdrmodel.impl
+ sdrmodel.impl,
+ sdrmodel.util
 
