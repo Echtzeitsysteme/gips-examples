@@ -14,9 +14,15 @@
   <eClassifiers xsi:type="ecore:EClass" name="CPU">
     <eStructuralFeatures xsi:type="ecore:EReference" name="threads" upperBound="-1"
         eType="#//Thread" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guests" upperBound="-1"
+        eType="#//Job" eOpposite="#//Job/hosts"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intercoms" upperBound="-1"
+        eType="#//Interthreadcom" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Thread">
+  <eClassifiers xsi:type="ecore:EClass" name="Thread" eSuperTypes="#//Flowhost">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="processResource" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guests" upperBound="-1"
+        eType="#//Block" eOpposite="#//Block/host"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Job">
     <eStructuralFeatures xsi:type="ecore:EReference" name="blocks" upperBound="-1"
@@ -24,7 +30,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="flows" upperBound="-1"
         eType="#//Flow" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hosts" upperBound="-1"
-        eType="#//CPU"/>
+        eType="#//CPU" eOpposite="#//CPU/guests"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Block">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" upperBound="-1"
@@ -32,8 +38,21 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="outputs" upperBound="-1"
         eType="#//Flow"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="processDemand" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="host" eType="#//Thread"
+        eOpposite="#//Thread/guests"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Flow">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="host" eType="#//Flowhost"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="start" eType="#//Thread"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Thread"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Interthreadcom" eSuperTypes="#//Flowhost">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="start" eType="#//Thread"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Thread"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Flowhost">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="flowGuests" upperBound="-1"
+        eType="#//Flow"/>
   </eClassifiers>
 </ecore:EPackage>

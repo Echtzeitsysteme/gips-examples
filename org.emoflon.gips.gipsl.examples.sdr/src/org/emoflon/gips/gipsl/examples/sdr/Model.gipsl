@@ -1,40 +1,140 @@
 package "org.emoflon.gips.gipsl.examples.sdr"
-import "http://www.eclipse.org/emf/2002/Ecore"
-// import a metamodel here
+import "platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore"
 
 config {  
-	solver := GLPK [home:="fu", license:="bar"];
+	solver := GUROBI [home:="fu", license:="bar"];
 	launchConfig := true [main := "TODO"];
-	timeLimit := true [value := 42.0];
-	randomSeed := true [value := 73];
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
-	tolerance := true [value := 0.00001 ];
 }
 
-// specify an example rule
-rule exampleRule {
-	clazz : EClass {
-		++ -eAllOperations -> op
+rule block2thread {
+	root: Root {
+		-cpus -> cpu
+		-jobs -> job
 	}
 	
-	op : EOperation
+	cpu: CPU {
+		-threads -> thread
+		++ -guests -> job
+	}
+	
+	job: Job {
+		-blocks -> block
+		++ -hosts -> cpu
+	}
+	
+	thread: Thread {
+		++ -guests -> block
+	}
+	
+	block: Block {
+		++ -host -> thread
+	}
+	
+	# thread.processResource > 0
+	# thread.processResource >= block.processDemand
 }
 
-// create a mapping on the rule
-mapping mapNode with exampleRule;
-
-// create a constraint on one class
-constraint -> class::EOperation {
-	mappings.mapNode->filter(m | m.nodes().clazz.^abstract)->count() > self.lowerBound
+rule flow2intercom {
+	root: Root {
+		-cpus -> cpu
+		-jobs -> job
+	}
+	
+	cpu: CPU {
+		-intercoms -> intercom
+	}
+	
+	job: Job {
+		-flows -> flow
+	}
+	
+	flow: Flow {
+		++ -host -> intercom
+	}
+	
+	intercom: Interthreadcom {
+		++ -flowGuests -> flow
+	}
 }
 
-// create an objective for the mapping
-objective nodeObj -> mapping::mapNode {
-	self.nodes().op.upperBound * sin(73)
+rule flow2thread {
+		root: Root {
+		-cpus -> cpu
+		-jobs -> job
+	}
+	
+	cpu: CPU {
+		-threads -> thread
+	}
+	
+	job: Job {
+		-flows -> flow
+	}
+	
+	flow: Flow {
+		++ -host -> thread
+	}
+	
+	thread: Thread {
+		++ -flowGuests -> flow
+	}
 }
 
-// create an overall objective
+//
+// GIPSL starts here!
+//
+
+mapping b2t with block2thread;
+mapping f2i with flow2intercom;
+mapping f2t with flow2thread;
+
+// Every block must be mapped to a thread
+constraint -> class::Block {
+	mappings.b2t->filter(m | m.nodes().block == self)->count() == 1
+}
+
+//constraint -> class::Job {
+//	mappings.b2t->filter(m | m.nodes().job == self)->count() == 1
+//}
+
+// Thread process resources must not be over subscribed
+constraint -> class::Thread {
+	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.processDemand) <= self.processResource
+}
+
+// Every flow must be mapped to an intercom or a thread
+constraint -> class::Flow {
+	mappings.f2i->filter(m | m.nodes().flow == self)->count() +
+	mappings.f2t->filter(m | m.nodes().flow == self)->count()
+	 == 1
+}
+
+// Start and target of a flow must be embedded on its host counter parts (1)
+constraint -> pattern::flow2intercom {
+	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.start & m.nodes().thread == self.nodes().intercom.start)->count()
+	>= 2 * mappings.f2i->filter(m | m.nodes().intercom == self.nodes().intercom & m.nodes().flow == self.nodes().flow)->count()
+}
+
+// Start and target of a flow must be embedded on its host counter parts (2)
+constraint -> pattern::flow2thread {
+	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.start & m.nodes().thread == self.nodes().thread)->count()
+	>= 2 * mappings.f2t->filter(m | m.nodes().thread == self.nodes().thread & m.nodes().flow == self.nodes().flow)->count()
+}
+
+// Sanity check: All blocks must demand <= all threads resources
+constraint -> class::Job {
+	self.blocks->sum(b | b.processDemand) <= classes.Thread->sum(t | t.processResource)
+}
+
+// Objective = inter-thread communication
+objective b2tcost -> class::Interthreadcom {
+	mappings.f2i->filter(m | m.nodes().intercom == self)->sum(m | m.nodes().flow.rate)
+}
+
 global objective : min {
-	2 * nodeObj
+	b2tcost
 }
