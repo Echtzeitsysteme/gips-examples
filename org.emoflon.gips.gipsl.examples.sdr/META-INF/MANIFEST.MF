@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.emoflon.gips.gipsl.examples.sdr
+Bundle-ManifestVersion: 2
+Bundle-Name: org.emoflon.gips.gipsl.examples.sdr
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.sdr; singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-17

@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.emoflon.gips.gipsl.examples.sdrmodel
+Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.sdrmodel;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: 
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-16
+Automatic-Module-Name: org.emoflon.gips.gipsl.examples.sdrmodel
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi
+
