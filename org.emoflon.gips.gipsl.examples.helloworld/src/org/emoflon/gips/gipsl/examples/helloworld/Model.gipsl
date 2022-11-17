@@ -1,4 +1,4 @@
-package "org.emoflon.gips.gipsl.examples.helloworld"
+package org.emoflon.gips.gipsl.examples.helloworld
 import "http://www.eclipse.org/emf/2002/Ecore"
 // ^import a metamodel here
 
@@ -14,12 +14,12 @@ config {
 
 // specify an example rule
 rule exampleRule {
-	clazz : EClass {
-		++ -eAllOperations -> op
+	[=] clazz : EClass {
+		[+] -eAllOperations -> op
 	}
 	
-	op : EOperation
-}
+	[=] op : EOperation
+};
 
 // create a mapping on the rule
 mapping mapNode with exampleRule;
@@ -30,11 +30,11 @@ constraint -> class::EOperation {
 }
 
 // create an objective for the mapping
-objective nodeObj -> mapping::mapNode {
-	self.nodes().op.upperBound * sin(73)
+objective nodeObj -> mapping::mapNode {        
+	self.nodes().op.upperBound * sin(73) 
 }
 
 // create an overall objective
 global objective : min {
-	2 * nodeObj
+	2 * nodeObj 
 }
