@@ -115,20 +115,22 @@ constraint -> class::Flow {
 
 // Start and target of a flow must be embedded on its host counter parts (1)
 constraint -> pattern::flow2intercom {
-	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.start & m.nodes().thread == self.nodes().intercom.start)->count()
+	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.start & m.nodes().thread == self.nodes().intercom.start)->count() +
+	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.target & m.nodes().thread == self.nodes().intercom.target)->count()
 	>= 2 * mappings.f2i->filter(m | m.nodes().intercom == self.nodes().intercom & m.nodes().flow == self.nodes().flow)->count()
 }
 
 // Start and target of a flow must be embedded on its host counter parts (2)
 constraint -> pattern::flow2thread {
-	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.start & m.nodes().thread == self.nodes().thread)->count()
+	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.start & m.nodes().thread == self.nodes().thread)->count() +
+	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.target & m.nodes().thread == self.nodes().thread)->count()
 	>= 2 * mappings.f2t->filter(m | m.nodes().thread == self.nodes().thread & m.nodes().flow == self.nodes().flow)->count()
 }
 
 // Sanity check: All blocks must demand <= all threads resources
-constraint -> class::Job {
-	self.blocks->sum(b | b.processDemand) <= classes.Thread->sum(t | t.processResource)
-}
+//constraint -> class::Job {
+//	self.blocks->sum(b | b.processDemand) <= classes.Thread->sum(t | t.processResource)
+//}
 
 // Objective = inter-thread communication
 objective b2tcost -> class::Interthreadcom {
