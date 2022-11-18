@@ -13,8 +13,6 @@ config {
 	tolerance := true [value := 0.000001];
 }
 
-// NACS
-//condition serverNotMapped = forbid serverIsMapped
 pattern serverIsMapped {
 	[=] host: SubstrateServer
 	
@@ -23,7 +21,6 @@ pattern serverIsMapped {
 	}
 };
 
-//condition switchNotMapped = forbid switchIsMapped
 pattern switchIsMapped {
 	[=] host: SubstrateNode
 	
@@ -32,7 +29,6 @@ pattern switchIsMapped {
 	}
 };
 
-//condition linkNotMapped = forbid linkIsMapped
 pattern linkIsMapped {
 	[=] host: SubstrateHostLink
 	
@@ -41,7 +37,6 @@ pattern linkIsMapped {
 	}
 };
 
-//condition networkNotMapped = forbid networkIsMapped && forbid networkIsMappedSrv
 pattern networkIsMapped {
 	[=] host: SubstrateNetwork
 	
@@ -60,18 +55,18 @@ pattern networkIsMappedSrv {
 // Patterns for finding non embedded virtual elements
 pattern vsrvNotMapped {
 	[=] virtualServer: VirtualServer
+	forbid(serverIsMapped)[virtualServer=virtualNode]
 };
-//when serverNotMapped
 
 pattern vswNotMapped {
 	[=] virtualSwitch: VirtualSwitch
+	forbid(switchIsMapped)[virtualSwitch=virtualSwitch]
 };
-//when switchNotMapped
 
 pattern vlNotMapped {
 	[=] virtualLink: VirtualLink
+	forbid(linkIsMapped)[virtualLink=virtualLink]
 };
-//when linkNotMapped
 
 // Actual rules
 rule serverMatchPositive {
@@ -102,8 +97,8 @@ rule serverMatchPositive {
 	[#] virtualNode.cpu <= substrateServer.residualCpu;
 	[#] virtualNode.memory <= substrateServer.residualMemory;
 	[#] virtualNode.storage <= substrateServer.residualStorage;
+	forbid(serverIsMapped)[virtualNode=virtualNode]
 };
-//when serverNotMapped
 
 rule switchNodeMatchPositive {
 	[=] root: Root {
@@ -126,8 +121,8 @@ rule switchNodeMatchPositive {
 	[=] virtualNetwork: VirtualNetwork {
 		[=] -nodes -> virtualSwitch
 	}
+	forbid(switchIsMapped)[virtualSwitch=virtualSwitch]
 };
-//when switchNotMapped
 
 rule linkPathMatchPositive {
 	[=] root: Root { 
@@ -161,8 +156,8 @@ rule linkPathMatchPositive {
 	
 	// Explicitly exclude substrate paths with a residual bandwidth equals to 0
 	[#] substratePath.residualBandwidth > 0;
+	forbid(linkIsMapped)[virtualLink=virtualLink]
 };
-//when linkNotMapped
 
 rule linkServerMatchPositive {
 	[=] root: Root {
@@ -185,8 +180,8 @@ rule linkServerMatchPositive {
 	[=] virtualNetwork: VirtualNetwork {
 		[=] -links -> virtualLink
 	}
+	forbid(linkIsMapped)[virtualLink=virtualLink]
 };
-//when linkNotMapped
 
 rule networkRule {
 	[=] root: Root {
@@ -201,8 +196,9 @@ rule networkRule {
 	[=] virtualNetwork: VirtualNetwork {
 		[+] -host -> substrateNetwork
 	}
+	forbid(networkIsMapped)[virtualNetwork=virtualNetwork]
+	forbid(networkIsMappedSrv)[virtualNetwork=virtualNetwork]
 };
-//when networkNotMapped
 
 //
 // GIPSL starts here!

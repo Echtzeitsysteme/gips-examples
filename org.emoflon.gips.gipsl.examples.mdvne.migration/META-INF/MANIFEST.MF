@@ -4,7 +4,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.emoflon.gips.gipsl.examples.mdvne.migration
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
-Export-Package: org.emoflon.gips.gipsl.examples.mdvne.migration
+Export-Package: org.emoflon.gips.gipsl.examples.mdvne.migration,
+ org.emoflon.gips.gipsl.examples.mdvne.migration.api,
+ org.emoflon.gips.gipsl.examples.mdvne.migration.api.match,
+ org.emoflon.gips.gipsl.examples.mdvne.migration.api.pattern,
+ org.emoflon.gips.gipsl.examples.mdvne.migration.api.rule,
+ org.emoflon.gips.gipsl.examples.mdvne.migration.gips
 Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.mdvne.migration; singleton:=true
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-16
@@ -13,4 +18,6 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.gips.core,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
- network.model;bundle-version="0.0.3"
+ network.model;bundle-version="0.0.3",
+ org.emoflon.ibex.gt.gtmodel,
+ org.eclipse.emf.ecore

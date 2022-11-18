@@ -1,4 +1,4 @@
-package "org.emoflon.gips.gipsl.examples.mdvne.migration"
+package org.emoflon.gips.gipsl.examples.mdvne.migration
 import "platform:/resource/network.model/model/Model.ecore"
 // you need a working iflye workspace to use this metamodel
 // check out: https://github.com/Echtzeitsysteme/iflye
@@ -15,139 +15,139 @@ config {
 
 // Patterns for finding virtual elements (including embedded ones)
 pattern findVsrv {
-	virtualServer: VirtualServer
-}
+	[=] virtualServer: VirtualServer
+};
 
 pattern findVsw {
-	virtualSwitch: VirtualSwitch
-}
+	[=] virtualSwitch: VirtualSwitch
+};
 
 pattern findVl {
-	virtualLink: VirtualLink
-}
+	[=] virtualLink: VirtualLink
+};
 
 // Actual rules
 rule embedServer {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root {
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substrateServer: SubstrateServer {
-		.residualCpu := substrateServer.residualCpu - virtualNode.cpu
-		.residualMemory := substrateServer.residualMemory - virtualNode.memory
-		.residualStorage := substrateServer.residualStorage - virtualNode.storage
-		++ -guestServers -> virtualNode
+	[=] substrateServer: SubstrateServer {
+		.residualCpu := substrateServer.residualCpu - virtualNode.cpu;
+		.residualMemory := substrateServer.residualMemory - virtualNode.memory;
+		.residualStorage := substrateServer.residualStorage - virtualNode.storage;
+		[+] -guestServers -> virtualNode
 	}
 	
-	virtualNode: VirtualServer {
-		++ -host -> substrateServer
+	[=] virtualNode: VirtualServer {
+		[+] -host -> substrateServer
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		-nodes -> substrateServer
+	[=] substrateNetwork: SubstrateNetwork {
+		[=] -nodes -> substrateServer
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		-nodes -> virtualNode
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -nodes -> virtualNode
 	}
 	
-	# virtualNode.cpu <= substrateServer.cpu
-	# virtualNode.memory <= substrateServer.memory
-	# virtualNode.storage <= substrateServer.storage
-}
+	[#] virtualNode.cpu <= substrateServer.cpu;
+	[#] virtualNode.memory <= substrateServer.memory;
+	[#] virtualNode.storage <= substrateServer.storage;
+};
 
 rule embedSwitch {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root {
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substrateNode: SubstrateNode {
-		++ -guestSwitches -> virtualSwitch
+	[=] substrateNode: SubstrateNode {
+		[+] -guestSwitches -> virtualSwitch
 	}
 	
-	virtualSwitch : VirtualSwitch {
-		++ -host -> substrateNode
+	[=] virtualSwitch : VirtualSwitch {
+		[+] -host -> substrateNode
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		-nodes -> substrateNode
+	[=] substrateNetwork: SubstrateNetwork {
+		[=] -nodes -> substrateNode
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		-nodes -> virtualSwitch
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -nodes -> virtualSwitch
 	}
-}
+};
 
 rule embedLinkPath {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root {
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substratePath: SubstratePath {
-		++ -guestLinks -> virtualLink
-		.residualBandwidth := substratePath.residualBandwidth - virtualLink.bandwidth
+	[=] substratePath: SubstratePath {
+		[+] -guestLinks -> virtualLink
+		.residualBandwidth := substratePath.residualBandwidth - virtualLink.bandwidth;
 		
 		// Update all substrate links
-		forEach links->l {
-			iterator::l.residualBandwidth := iterator::l.residualBandwidth - virtualLink.bandwidth
+		forEach(links->l) {
+			iterator.residualBandwidth := iterator.residualBandwidth - virtualLink.bandwidth;
 		}
 	}
 	
-	virtualLink: VirtualLink {
-		++ -host -> substratePath
+	[=] virtualLink: VirtualLink {
+		[+] -host -> substratePath
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		-paths -> substratePath
+	[=] substrateNetwork: SubstrateNetwork {
+		[=] -paths -> substratePath
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		-links -> virtualLink
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -links -> virtualLink
 	}
 	
-	# virtualLink.bandwidth <= substratePath.bandwidth
-}
+	[#] virtualLink.bandwidth <= substratePath.bandwidth;
+};
 
 rule embedLinkServer {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root {
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substrateServer: SubstrateServer {
-		++ -guestLinks -> virtualLink
+	[=] substrateServer: SubstrateServer {
+		[+] -guestLinks -> virtualLink
 	}
 	
-	virtualLink: VirtualLink {
-		++ -host -> substrateServer
+	[=] virtualLink: VirtualLink {
+		[+] -host -> substrateServer
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		-nodes -> substrateServer
+	[=] substrateNetwork: SubstrateNetwork {
+		[=] -nodes -> substrateServer
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		-links -> virtualLink
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -links -> virtualLink
 	}
-}
+};
 
 rule networkRule {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root {
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		++ -guests -> virtualNetwork
+	[=] substrateNetwork: SubstrateNetwork {
+		[+] -guests -> virtualNetwork
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		++ -host -> substrateNetwork
+	[=] virtualNetwork: VirtualNetwork {
+		[+] -host -> substrateNetwork
 	}
-}
+};
 
 //
 // GIPSL starts here!
