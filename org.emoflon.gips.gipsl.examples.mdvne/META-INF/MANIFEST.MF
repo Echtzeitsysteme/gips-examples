@@ -12,5 +12,12 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.gips.core,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
- network.model
-Export-Package: org.emoflon.gips.gipsl.examples.mdvne
+ network.model,
+ org.emoflon.ibex.gt.gtmodel,
+ org.eclipse.emf.ecore
+Export-Package: org.emoflon.gips.gipsl.examples.mdvne,
+ org.emoflon.gips.gipsl.examples.mdvne.api,
+ org.emoflon.gips.gipsl.examples.mdvne.api.match,
+ org.emoflon.gips.gipsl.examples.mdvne.api.pattern,
+ org.emoflon.gips.gipsl.examples.mdvne.api.rule,
+ org.emoflon.gips.gipsl.examples.mdvne.gips

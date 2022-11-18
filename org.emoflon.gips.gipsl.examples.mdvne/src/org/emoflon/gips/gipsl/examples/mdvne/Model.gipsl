@@ -1,4 +1,4 @@
-package "org.emoflon.gips.gipsl.examples.mdvne"
+package org.emoflon.gips.gipsl.examples.mdvne
 import "platform:/resource/network.model/model/Model.ecore"
 // you need a working iflye workspace to use this metamodel
 // check out: https://github.com/Echtzeitsysteme/iflye
@@ -14,195 +14,195 @@ config {
 }
 
 // NACS
-condition serverNotMapped = forbid serverIsMapped
+//condition serverNotMapped = forbid serverIsMapped
 pattern serverIsMapped {
-	host: SubstrateServer
+	[=] host: SubstrateServer
 	
-	virtualNode: VirtualServer {
-		-host -> host
+	[=] virtualNode: VirtualServer {
+		[=] -host -> host
 	}
-}
+};
 
-condition switchNotMapped = forbid switchIsMapped
+//condition switchNotMapped = forbid switchIsMapped
 pattern switchIsMapped {
-	host: SubstrateNode
+	[=] host: SubstrateNode
 	
-	virtualSwitch: VirtualSwitch {
-		-host -> host
+	[=] virtualSwitch: VirtualSwitch {
+		[=] -host -> host
 	}
-}
+};
 
-condition linkNotMapped = forbid linkIsMapped
+//condition linkNotMapped = forbid linkIsMapped
 pattern linkIsMapped {
-	host: SubstrateHostLink
+	[=] host: SubstrateHostLink
 	
-	virtualLink: VirtualLink {
-		-host -> host
+	[=] virtualLink: VirtualLink {
+		[=] -host -> host
 	}
-}
+};
 
-condition networkNotMapped = forbid networkIsMapped && forbid networkIsMappedSrv
+//condition networkNotMapped = forbid networkIsMapped && forbid networkIsMappedSrv
 pattern networkIsMapped {
-	host: SubstrateNetwork
+	[=] host: SubstrateNetwork
 	
-	virtualNetwork: VirtualNetwork {
-		-host -> host
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -host -> host
 	}
-}
+};
 pattern networkIsMappedSrv {
-	host: SubstrateServer
+	[=] host: SubstrateServer
 	
-	virtualNetwork: VirtualNetwork {
-		-hostServer -> host
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -hostServer -> host
 	}
-}
+};
 
 // Patterns for finding non embedded virtual elements
 pattern vsrvNotMapped {
-	virtualServer: VirtualServer
-}
-when serverNotMapped
+	[=] virtualServer: VirtualServer
+};
+//when serverNotMapped
 
 pattern vswNotMapped {
-	virtualSwitch: VirtualSwitch
-}
-when switchNotMapped
+	[=] virtualSwitch: VirtualSwitch
+};
+//when switchNotMapped
 
 pattern vlNotMapped {
-	virtualLink: VirtualLink
-}
-when linkNotMapped
+	[=] virtualLink: VirtualLink
+};
+//when linkNotMapped
 
 // Actual rules
 rule serverMatchPositive {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root {
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substrateServer: SubstrateServer {
-		.residualCpu := substrateServer.residualCpu - virtualNode.cpu
-		.residualMemory := substrateServer.residualMemory - virtualNode.memory
-		.residualStorage := substrateServer.residualStorage - virtualNode.storage
-		++ -guestServers -> virtualNode
+	[=] substrateServer: SubstrateServer {
+		.residualCpu := substrateServer.residualCpu - virtualNode.cpu;
+		.residualMemory := substrateServer.residualMemory - virtualNode.memory;
+		.residualStorage := substrateServer.residualStorage - virtualNode.storage;
+		[+] -guestServers -> virtualNode
 	}
 	
-	virtualNode: VirtualServer {
-		++ -host -> substrateServer
+	[=] virtualNode: VirtualServer {
+		[+] -host -> substrateServer
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		-nodes -> substrateServer
+	[=] substrateNetwork: SubstrateNetwork {
+		[=] -nodes -> substrateServer
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		-nodes -> virtualNode
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -nodes -> virtualNode
 	}
 	
-	# virtualNode.cpu <= substrateServer.residualCpu
-	# virtualNode.memory <= substrateServer.residualMemory
-	# virtualNode.storage <= substrateServer.residualStorage
-}
-when serverNotMapped
+	[#] virtualNode.cpu <= substrateServer.residualCpu;
+	[#] virtualNode.memory <= substrateServer.residualMemory;
+	[#] virtualNode.storage <= substrateServer.residualStorage;
+};
+//when serverNotMapped
 
 rule switchNodeMatchPositive {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root {
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substrateNode: SubstrateNode {
-		++ -guestSwitches -> virtualSwitch
+	[=] substrateNode: SubstrateNode {
+		[+] -guestSwitches -> virtualSwitch
 	}
 	
-	virtualSwitch : VirtualSwitch {
-		++ -host -> substrateNode
+	[=] virtualSwitch : VirtualSwitch {
+		[+] -host -> substrateNode
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		-nodes -> substrateNode
+	[=] substrateNetwork: SubstrateNetwork {
+		[=] -nodes -> substrateNode
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		-nodes -> virtualSwitch
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -nodes -> virtualSwitch
 	}
-}
-when switchNotMapped
+};
+//when switchNotMapped
 
 rule linkPathMatchPositive {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root { 
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substratePath: SubstratePath {
-		++ -guestLinks -> virtualLink
-		.residualBandwidth := substratePath.residualBandwidth - virtualLink.bandwidth
+	[=] substratePath: SubstratePath {
+		[+] -guestLinks -> virtualLink
+		.residualBandwidth := substratePath.residualBandwidth - virtualLink.bandwidth;
 		
 		// Update all substrate links
-		forEach links->l {
-			iterator::l.residualBandwidth := iterator::l.residualBandwidth - virtualLink.bandwidth
+		forEach(links->l) {
+			iterator.residualBandwidth := iterator.residualBandwidth - virtualLink.bandwidth;
 		}
 	}
 	
-	virtualLink: VirtualLink {
-		++ -host -> substratePath
+	[=] virtualLink: VirtualLink {
+		[+] -host -> substratePath
+	}
+	 
+	[=] substrateNetwork: SubstrateNetwork {
+		[=] -paths -> substratePath
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		-paths -> substratePath
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -links -> virtualLink
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		-links -> virtualLink
-	}
-	
-	# virtualLink.bandwidth <= substratePath.residualBandwidth
+	[#] virtualLink.bandwidth <= substratePath.residualBandwidth;
 	
 	// Explicitly exclude substrate paths with a residual bandwidth equals to 0
-	# substratePath.residualBandwidth > 0
-}
-when linkNotMapped
+	[#] substratePath.residualBandwidth > 0;
+};
+//when linkNotMapped
 
 rule linkServerMatchPositive {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root {
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substrateServer: SubstrateServer {
-		++ -guestLinks -> virtualLink
+	[=] substrateServer: SubstrateServer {
+		[+] -guestLinks -> virtualLink
 	}
 	
-	virtualLink: VirtualLink {
-		++ -host -> substrateServer
+	[=] virtualLink: VirtualLink {
+		[+] -host -> substrateServer
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		-nodes -> substrateServer
+	[=] substrateNetwork: SubstrateNetwork {
+		[=] -nodes -> substrateServer
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		-links -> virtualLink
+	[=] virtualNetwork: VirtualNetwork {
+		[=] -links -> virtualLink
 	}
-}
-when linkNotMapped
+};
+//when linkNotMapped
 
 rule networkRule {
-	root: Root {
-		-networks -> substrateNetwork
-		-networks -> virtualNetwork
+	[=] root: Root {
+		[=] -networks -> substrateNetwork
+		[=] -networks -> virtualNetwork
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		++ -guests -> virtualNetwork
+	[=] substrateNetwork: SubstrateNetwork {
+		[+] -guests -> virtualNetwork
 	}
 	
-	virtualNetwork: VirtualNetwork {
-		++ -host -> substrateNetwork
+	[=] virtualNetwork: VirtualNetwork {
+		[+] -host -> substrateNetwork
 	}
-}
-when networkNotMapped
+};
+//when networkNotMapped
 
 //
 // GIPSL starts here!

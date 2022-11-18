@@ -34,7 +34,7 @@ objective nodeObj -> mapping::mapNode {
 	self.nodes().op.upperBound * sin(73) 
 }
 
-// create an overall objective
+// create an overall objective 
 global objective : min {
 	2 * nodeObj 
 }

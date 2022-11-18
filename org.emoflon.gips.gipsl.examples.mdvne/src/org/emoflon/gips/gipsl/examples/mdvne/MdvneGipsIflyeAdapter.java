@@ -5,7 +5,8 @@ import java.io.IOException;
 import org.eclipse.emf.common.util.URI;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.core.ilp.ILPSolverStatus;
-import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
+import org.emoflon.gips.gipsl.examples.mdvne.gips.MdvneGipsApi;
+import org.emoflon.gips.gipsl.examples.mdvne.gips.MdvneHiPEGipsApi;
 
 /**
  * Implementation adapter for GIPS and iflye. This is used to run the GIPS-based
@@ -31,7 +32,7 @@ public class MdvneGipsIflyeAdapter {
 		final URI absPath = URI.createFileURI(System.getProperty("user.dir") + "/" + modelPath);
 
 		// Create new MdVNE GIPS API and load the model
-		final MdvneGipsAPI api = new MdvneGipsAPI();
+		final MdvneGipsApi<?> api = new MdvneHiPEGipsApi();
 		api.init(absPath);
 
 		// Build the ILP problem (including updates)
