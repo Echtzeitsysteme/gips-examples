@@ -4,22 +4,41 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:org.emoflon.gips.gipsl.examples.sdrmodel="platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore">
   <cpus name="cpu0">
-    <threads
-        name="thread0"
-        processResource="2"/>
+    <cores name="core0">
+      <threads
+          name="thread0"/>
+    </cores>
   </cpus>
   <jobs name="job0">
     <blocks
         name="block0"
         outputs="//@jobs.0/@flows.0"
-        processDemand="1"/>
+        cycles="1"/>
     <blocks
         name="block1"
         inputs="//@jobs.0/@flows.0"
-        processDemand="1"/>
+        outputs="//@jobs.0/@flows.1"
+        cycles="1"/>
+    <blocks
+        name="block2"
+        inputs="//@jobs.0/@flows.1"
+        outputs="//@jobs.0/@flows.2"
+        cycles="1"/>
+    <blocks
+        name="block3"
+        inputs="//@jobs.0/@flows.2"
+        cycles="1"/>
     <flows name="flow0to1"
         rate="1"
-        start="//@jobs.0/@blocks.0"
+        source="//@jobs.0/@blocks.0"
         target="//@jobs.0/@blocks.1"/>
+    <flows name="flow1to2"
+        rate="1"
+        source="//@jobs.0/@blocks.1"
+        target="//@jobs.0/@blocks.2"/>
+    <flows name="flow2to3"
+        rate="1"
+        source="//@jobs.0/@blocks.2"
+        target="//@jobs.0/@blocks.3"/>
   </jobs>
 </org.emoflon.gips.gipsl.examples.sdrmodel:Root>

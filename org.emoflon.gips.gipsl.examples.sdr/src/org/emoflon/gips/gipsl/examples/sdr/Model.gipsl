@@ -143,7 +143,9 @@ constraint -> pattern::flow2thread {
 
 // Objective = inter-thread communication
 objective intercomcost -> class::Interthreadcom {
-	mappings.f2i->filter(m | m.nodes().intercom == self)->sum(m | m.nodes().flow.rate)
+//	mappings.f2i->filter(m | m.nodes().intercom == self)->sum(m | m.nodes().flow.rate)
+	mappings.f2i->filter(m | m.nodes().intercom.source.core == m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 1 +
+	mappings.f2i->filter(m | m.nodes().intercom.source.core != m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 3
 }
 
 // Each thread wants to minimize its used cycles

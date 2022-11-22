@@ -10,7 +10,7 @@ public class ExampleSdr {
 
 	public static void main(final String[] args) {
 		final SdrGipsAPI api = new SdrGipsAPI();
-		api.init(URI.createFileURI("../org.emoflon.gips.gipsl.examples.sdrmodel/instances/instance0.xmi"));
+		api.init(URI.createFileURI("../org.emoflon.gips.gipsl.examples.sdrmodel/instances/instance1.xmi"));
 		
 		api.buildILPProblem(true);
 		final ILPSolverOutput output = api.solveILPProblem();
