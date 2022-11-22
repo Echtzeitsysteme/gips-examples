@@ -4,7 +4,7 @@ import "platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmod
 config {  
 	solver := GUROBI [home:="fu", license:="bar"];
 	launchConfig := true [main := "TODO"];
-	timeLimit := true [value := 120.0];
+	timeLimit := true [value := 30.0];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
@@ -17,13 +17,18 @@ rule block2thread {
 	}
 	
 	cpu: CPU {
-		-threads -> thread
+		-cores -> core
 		++ -guests -> job
 	}
 	
+	// Also pins the job to a CPU
 	job: Job {
 		-blocks -> block
 		++ -hosts -> cpu
+	}
+	
+	core: Core {
+		-threads -> thread
 	}
 	
 	thread: Thread {
@@ -34,8 +39,8 @@ rule block2thread {
 		++ -host -> thread
 	}
 	
-	# thread.processResource > 0
-	# thread.processResource >= block.processDemand
+//	# thread.processResource > 0
+//	# thread.processResource >= block.processDemand
 }
 
 rule flow2intercom {
@@ -68,11 +73,15 @@ rule flow2thread {
 	}
 	
 	cpu: CPU {
-		-threads -> thread
+		-cores -> core
 	}
 	
 	job: Job {
 		-flows -> flow
+	}
+	
+	core: Core {
+		-threads -> thread
 	}
 	
 	flow: Flow {
@@ -92,7 +101,7 @@ mapping b2t with block2thread;
 mapping f2i with flow2intercom;
 mapping f2t with flow2thread;
 
-// Every block must be mapped to a thread
+// Every block must be mapped to a (=1) thread
 constraint -> class::Block {
 	mappings.b2t->filter(m | m.nodes().block == self)->count() == 1
 }
@@ -101,28 +110,28 @@ constraint -> class::Block {
 //	mappings.b2t->filter(m | m.nodes().job == self)->count() == 1
 //}
 
-// Thread process resources must not be over subscribed
-constraint -> class::Thread {
-	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.processDemand) <= self.processResource
-}
+//// Thread process resources must not be over subscribed
+//constraint -> class::Thread {
+//	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.processDemand) <= self.processResource
+//}
 
 // Every flow must be mapped to an intercom or a thread
 constraint -> class::Flow {
 	mappings.f2i->filter(m | m.nodes().flow == self)->count() +
 	mappings.f2t->filter(m | m.nodes().flow == self)->count()
-	 == 1
+	== 1
 }
 
-// Start and target of a flow must be embedded on its host counter parts (1)
+// Start and target of a flow must be embedded on its host counter parts (1, intercom)
 constraint -> pattern::flow2intercom {
-	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.start & m.nodes().thread == self.nodes().intercom.start)->count() +
+	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.source & m.nodes().thread == self.nodes().intercom.source)->count() +
 	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.target & m.nodes().thread == self.nodes().intercom.target)->count()
 	>= 2 * mappings.f2i->filter(m | m.nodes().intercom == self.nodes().intercom & m.nodes().flow == self.nodes().flow)->count()
 }
 
-// Start and target of a flow must be embedded on its host counter parts (2)
+// Start and target of a flow must be embedded on its host counter parts (2, thread)
 constraint -> pattern::flow2thread {
-	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.start & m.nodes().thread == self.nodes().thread)->count() +
+	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.source & m.nodes().thread == self.nodes().thread)->count() +
 	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.target & m.nodes().thread == self.nodes().thread)->count()
 	>= 2 * mappings.f2t->filter(m | m.nodes().thread == self.nodes().thread & m.nodes().flow == self.nodes().flow)->count()
 }
@@ -133,10 +142,15 @@ constraint -> pattern::flow2thread {
 //}
 
 // Objective = inter-thread communication
-objective b2tcost -> class::Interthreadcom {
+objective intercomcost -> class::Interthreadcom {
 	mappings.f2i->filter(m | m.nodes().intercom == self)->sum(m | m.nodes().flow.rate)
 }
 
+// Each thread wants to minimize its used cycles
+objective b2tcost -> class::Thread {
+	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.cycles)
+}
+
 global objective : min {
-	b2tcost
+	intercomcost + b2tcost
 }
