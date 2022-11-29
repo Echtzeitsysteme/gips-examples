@@ -10,6 +10,7 @@ config {
 	debugOutput := true;
 }
 
+// Rule to map a block to a thread
 rule block2thread {
 	root: Root {
 		-cpus -> cpu
@@ -38,11 +39,9 @@ rule block2thread {
 	block: Block {
 		++ -host -> thread
 	}
-	
-//	# thread.processResource > 0
-//	# thread.processResource >= block.processDemand
 }
 
+// Rule to map a flow to an inter-thread communication
 rule flow2intercom {
 	root: Root {
 		-cpus -> cpu
@@ -66,6 +65,7 @@ rule flow2intercom {
 	}
 }
 
+// Rule to map a flow to a thread
 rule flow2thread {
 	root: Root {
 		-cpus -> cpu
@@ -105,96 +105,44 @@ mapping b2t with block2thread;
 mapping f2i with flow2intercom;
 mapping f2t with flow2thread;
 
+// Utility mapping that must be 1 if the corresponding thread will be used, 0 otherwise
 mapping usedThread with thread;
 
-//constraint -> pattern::thread {
-////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() > 0
-////	& mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() > 0
 //
-//	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 0.1
-//	=> [mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() <= 1
-//		& mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 1
-//	]
+// General remarks for the two following constraints:
+// The mapping 'usedThread' can only be 0 or 1 because there is at most one match per thread.
+// Therefore, it is sufficient to only limit one side of the arithmetic expression.
 //
-////	&
-////	
-////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count()
-////	>= mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count()
-//	
-//	
-//	// 1 => 1 = 1
-//	// 1 => 0 = 0
-//	// 0 => 1 = 1
-//	// 0 => 0 = 1
-//	
-//	// 1 => 1 = 1
-//	// 1 => 0 = 0
-//	// 0 => 1 = 0
-//	// 0 => 0 = 1
-//}
-//
-//constraint -> pattern::thread {
-//	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count()
-//	>= mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count()
-//}
 
+// Implication table
+// 1 => 1 = 1
+// 1 => 0 = 0
+// 0 => 1 = 1
+// 0 => 0 = 1
+
+// Ensures that the implication for the 'usedThread' mapping holds
 constraint -> class::Thread {
 	mappings.b2t->filter(m | m.nodes().thread == self)->count() >= 1
 	=> mappings.usedThread->filter(m | m.nodes().thread == self)->count() >= 1
 }
+
+// Our modified table
+// 1 => 1 = 1
+// 1 => 0 = 0
+// 0 => 1 = 0
+// 0 => 0 = 1
+
+// This constraints forbids the case in line 3 of the normal implication table
+// -> It changes it to line 3 of our modified table
 constraint -> class::Thread {
 	mappings.b2t->filter(m | m.nodes().thread == self)->count()
 	>= mappings.usedThread->filter(m | m.nodes().thread == self)->count()
 }
 
-//constraint -> pattern::thread {
-////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() > 0
-////	& mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() > 0
-//
-////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 0.1
-////	=> [mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() <= 1
-////		& mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 1
-////	]
-////	
-////	&
-////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count()
-////	>= mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count()
-//
-//	[mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 0.1]
-//	==
-//	[mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() == 1]
-//	
-//	
-//	// 1 => 1 = 1
-//	// 1 => 0 = 0
-//	// 0 => 1 = 1
-//	// 0 => 0 = 1
-//	
-//	// 1 => 1 = 1
-//	// 1 => 0 = 0
-//	// 0 => 1 = 0
-//	// 0 => 0 = 1
-//}
-//
-//constraint -> class::Block {
-//	[1 == self.cycles]
-//	==
-//	[2 == self.cycles]
-//}
-
-// Every block must be mapped to a (=1) thread
+// Every block must be mapped to exactly one thread
 constraint -> class::Block {
 	mappings.b2t->filter(m | m.nodes().block == self)->count() == 1
 }
-
-//constraint -> class::Job {
-//	mappings.b2t->filter(m | m.nodes().job == self)->count() == 1
-//}
-
-//// Thread process resources must not be over subscribed
-//constraint -> class::Thread {
-//	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.processDemand) <= self.processResource
-//}
 
 // Every flow must be mapped to an intercom or a thread
 constraint -> class::Flow {
@@ -217,57 +165,24 @@ constraint -> pattern::flow2thread {
 	>= 2 * mappings.f2t->filter(m | m.nodes().thread == self.nodes().thread & m.nodes().flow == self.nodes().flow)->count()
 }
 
-// Sanity check: All blocks must demand <= all threads resources
-//constraint -> class::Job {
-//	self.blocks->sum(b | b.processDemand) <= classes.Thread->sum(t | t.processResource)
-//}
-
 // Objective = inter-thread communication
 objective intercomcost -> class::Interthreadcom {
-//	mappings.f2i->filter(m | m.nodes().intercom == self)->sum(m | m.nodes().flow.rate)
 	mappings.f2i->filter(m | m.nodes().intercom.source.core == m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 2 +
 	mappings.f2i->filter(m | m.nodes().intercom.source.core != m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 6
 }
 
+// Objective = flow to thread mapping (constant)
 objective f2tcost -> mapping::f2t {
 	1
 }
 
-// Each thread wants to minimize its used cycles
-//objective b2tcost -> class::Thread {
-//	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.cycles)
-//}
-
-//objective b2tcost -> class::Thread {
-//	mappings.b2t->filter(m | m.nodes().thread == self)->count()
-//}
-
+// Objective for used threads:
+// In  general, we want to maximize the number of used threads.
 objective glob -> class::Root {
-//	classes.Block->count() - mappings.usedThread->count()
 	-(mappings.usedThread->count())
 }
 
-//objective to -> class::Thread {
-//	mappings.b2t->filter(m | m.nodes().thread == self)->count()
-//}
-
-//constraint -> 
-
-//objective b2tcostb -> class::Root {
-////	mappings.b2t->sum(m | m.nodes().block.cycles)
-//	classes.Thread->
-//}
-
-//objective b2tcostb -> class::Thread {
-//	classes.Block->sum(m | m.cycles) - mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.cycles)
-//}
-
+// Combine the local objectives and give the maximization of used threads a large head start.
 global objective : min {
 	intercomcost + f2tcost + glob * 100
-//	glob
 }
-
-//global objective : max {
-////	glob
-//	to
-//}
