@@ -67,7 +67,7 @@ rule flow2intercom {
 }
 
 rule flow2thread {
-		root: Root {
+	root: Root {
 		-cpus -> cpu
 		-jobs -> job
 	}
@@ -93,6 +93,10 @@ rule flow2thread {
 	}
 }
 
+pattern thread {
+	thread: Thread
+}
+
 //
 // GIPSL starts here!
 //
@@ -100,6 +104,83 @@ rule flow2thread {
 mapping b2t with block2thread;
 mapping f2i with flow2intercom;
 mapping f2t with flow2thread;
+
+mapping usedThread with thread;
+
+//constraint -> pattern::thread {
+////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() > 0
+////	& mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() > 0
+//
+//	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 0.1
+//	=> [mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() <= 1
+//		& mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 1
+//	]
+//
+////	&
+////	
+////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count()
+////	>= mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count()
+//	
+//	
+//	// 1 => 1 = 1
+//	// 1 => 0 = 0
+//	// 0 => 1 = 1
+//	// 0 => 0 = 1
+//	
+//	// 1 => 1 = 1
+//	// 1 => 0 = 0
+//	// 0 => 1 = 0
+//	// 0 => 0 = 1
+//}
+//
+//constraint -> pattern::thread {
+//	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count()
+//	>= mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count()
+//}
+
+constraint -> class::Thread {
+	mappings.b2t->filter(m | m.nodes().thread == self)->count() >= 1
+	=> mappings.usedThread->filter(m | m.nodes().thread == self)->count() >= 1
+}
+constraint -> class::Thread {
+	mappings.b2t->filter(m | m.nodes().thread == self)->count()
+	>= mappings.usedThread->filter(m | m.nodes().thread == self)->count()
+}
+
+//constraint -> pattern::thread {
+////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() > 0
+////	& mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() > 0
+//
+////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 0.1
+////	=> [mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() <= 1
+////		& mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 1
+////	]
+////	
+////	&
+////	mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count()
+////	>= mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count()
+//
+//	[mappings.b2t->filter(m | m.nodes().thread == self.nodes().thread)->count() >= 0.1]
+//	==
+//	[mappings.usedThread->filter(m | m.nodes().thread == self.nodes().thread)->count() == 1]
+//	
+//	
+//	// 1 => 1 = 1
+//	// 1 => 0 = 0
+//	// 0 => 1 = 1
+//	// 0 => 0 = 1
+//	
+//	// 1 => 1 = 1
+//	// 1 => 0 = 0
+//	// 0 => 1 = 0
+//	// 0 => 0 = 1
+//}
+//
+//constraint -> class::Block {
+//	[1 == self.cycles]
+//	==
+//	[2 == self.cycles]
+//}
 
 // Every block must be mapped to a (=1) thread
 constraint -> class::Block {
@@ -144,15 +225,49 @@ constraint -> pattern::flow2thread {
 // Objective = inter-thread communication
 objective intercomcost -> class::Interthreadcom {
 //	mappings.f2i->filter(m | m.nodes().intercom == self)->sum(m | m.nodes().flow.rate)
-	mappings.f2i->filter(m | m.nodes().intercom.source.core == m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 1 +
-	mappings.f2i->filter(m | m.nodes().intercom.source.core != m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 3
+	mappings.f2i->filter(m | m.nodes().intercom.source.core == m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 2 +
+	mappings.f2i->filter(m | m.nodes().intercom.source.core != m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 6
+}
+
+objective f2tcost -> mapping::f2t {
+	1
 }
 
 // Each thread wants to minimize its used cycles
-objective b2tcost -> class::Thread {
-	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.cycles)
+//objective b2tcost -> class::Thread {
+//	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.cycles)
+//}
+
+//objective b2tcost -> class::Thread {
+//	mappings.b2t->filter(m | m.nodes().thread == self)->count()
+//}
+
+objective glob -> class::Root {
+//	classes.Block->count() - mappings.usedThread->count()
+	-(mappings.usedThread->count())
 }
 
+//objective to -> class::Thread {
+//	mappings.b2t->filter(m | m.nodes().thread == self)->count()
+//}
+
+//constraint -> 
+
+//objective b2tcostb -> class::Root {
+////	mappings.b2t->sum(m | m.nodes().block.cycles)
+//	classes.Thread->
+//}
+
+//objective b2tcostb -> class::Thread {
+//	classes.Block->sum(m | m.cycles) - mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.cycles)
+//}
+
 global objective : min {
-	intercomcost + b2tcost
+	intercomcost + f2tcost + glob * 100
+//	glob
 }
+
+//global objective : max {
+////	glob
+//	to
+//}
