@@ -10,5 +10,6 @@ Automatic-Module-Name: PersonTaskAssignments
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.emoflon.smartemf
-Export-Package: PersonTaskAssignments.impl,
- PersonTaskAssignments
+Export-Package: PersonTaskAssignments,
+ PersonTaskAssignments.impl,
+ pta.generator
