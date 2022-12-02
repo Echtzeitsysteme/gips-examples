@@ -13,7 +13,7 @@ config {
 }
 
 
-rule assignOffer{
+rule assignOffer {
 	skillType : SkillType
 	skill : Skill {
 		-type->skillType
@@ -37,8 +37,33 @@ rule assignOffer{
 		++ - weeks -> week
 	}
 	
+	project : Project {
+		- tasks -> task
+		++ -persons -> worker
+		++ -weeks -> week
+	}
+	
 	# skill.level >= requirement.skillLevel
+	# worker.overtimeBonus <= requirement.overtimeBonus
+	# worker.salary <= requirement.salary
 }
+
+pattern taskSequence {
+	week : Week
+	task : Task {
+		- next -> next
+	}
+	
+	next : Task
+}
+
+pattern projectInitialWeek {
+	week : Week
+	project : Project {
+		- start -> week
+	}
+}
+
 
 
 mapping assignOfferMapping with assignOffer;
@@ -48,7 +73,36 @@ constraint -> class::Offer {
 	mappings.assignOfferMapping->filter(m | m.nodes().offer == self)->count() <= 1
 }
 
-// The sum of hourse over all accepted offers must be at least as high as the requirement's hours, including overtime flexibility
+// The sum of hours over all accepted offers must be at least as high as the requirement's hours, including overtime flexibility
 constraint -> class::Requirement {
 	mappings.assignOfferMapping->filter(m | m.nodes().requirement == self)->sum(m | m.nodes().offer.hours * m.nodes().worker.overtimeFlexibility) >= self.hours
+}
+
+constraint -> pattern::taskSequence {
+	// A: Precondition -> The current week gets assigned to the current task
+	// B: Then -> There must be no week with a smaller number assigned to the subsequent task
+	// A => B : If week is a week of the current task assignment, then there must not exist a task assignment to a subsequent task with the identical week number or a lesser week number.
+	// 1 => 1 = 1 : Week is part of the current task assignment & no smaller week number in subsequent task exists -> true
+	// 1 => 0 = 0 : Week is part of the current task assignment & a smaller week number in subsequent task exists -> false
+	// 0 => 1 = 1 : Week is not part of the current task assignment & a smaller week number in subsequent task exists -> true
+	// 0 => 0 = 1 : Week is not part of the current task assignment & no smaller week number in subsequent task exists -> true
+	mappings.assignOfferMapping->filter(m | m.nodes().task == self.nodes().task & m.nodes().week == self.nodes().week)->count() >= 1 =>
+	mappings.assignOfferMapping->filter(m | m.nodes().task == self.nodes().next)->filter(m | m.nodes().week.number <= self.nodes().week.number)->count() <= 0
+}
+
+// This constraint makes any loss-based solution infeasible
+constraint -> pattern::projectInitialWeek {
+	mappings.assignOfferMapping->filter(m | m.nodes().project == self.nodes().project)->filter(m | m.nodes().week.number >= self.nodes().week.number + self.nodes().project.weeksUntilLoss)->count() <= 0
+}
+
+objective minWorkers -> mapping::assignOfferMapping {
+	self.nodes().worker.salary * self.nodes().offer.hours
+}
+
+objective minOvertime -> class::Requirement {
+	mappings.assignOfferMapping->filter(m | m.nodes().requirement == self)->sum(m | m.nodes().offer.hours * self.overtimeBonus) - self.hours * self.overtimeBonus
+}
+
+global objective : min {
+	minWorkers + minOvertime
 }
