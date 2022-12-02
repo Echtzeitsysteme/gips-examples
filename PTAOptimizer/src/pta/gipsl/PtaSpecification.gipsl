@@ -1,0 +1,54 @@
+package "pta.gipsl"
+
+import "platform:/resource/PersonTaskAssignments/model/PersonTaskAssignments.ecore"
+
+config {
+	solver := GUROBI [home:="fu", license:="bar"];
+	launchConfig := true [main := "pta.example.house.HouseConstructionExample"];
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.000001];
+}
+
+
+rule assignOffer{
+	skillType : SkillType
+	skill : Skill {
+		-type->skillType
+	}
+	worker : Person {
+		-offers->offer
+		-skills->skill
+	}
+	week : Week
+	offer : Offer {
+		++ -requirements-> requirement
+		- week -> week
+	}
+	
+	requirement : Requirement {
+		-skillType->skillType
+	}
+	
+	task : Task {
+		-requirements->requirement
+		++ - weeks -> week
+	}
+	
+	# skill.level >= requirement.skillLevel
+}
+
+
+mapping assignOfferMapping with assignOffer;
+
+// An person's offer might only be mapped once
+constraint -> class::Offer {
+	mappings.assignOfferMapping->filter(m | m.nodes().offer == self)->count() <= 1
+}
+
+// The sum of hourse over all accepted offers must be at least as high as the requirement's hours, including overtime flexibility
+constraint -> class::Requirement {
+	mappings.assignOfferMapping->filter(m | m.nodes().requirement == self)->sum(m | m.nodes().offer.hours * m.nodes().worker.overtimeFlexibility) >= self.hours
+}
