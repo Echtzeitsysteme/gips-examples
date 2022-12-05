@@ -65,7 +65,6 @@ pattern projectInitialWeek {
 }
 
 
-
 mapping assignOfferMapping with assignOffer;
 
 // An person's offer might only be mapped once
@@ -92,11 +91,11 @@ constraint -> pattern::taskSequence {
 
 // This constraint makes any loss-based solution infeasible
 constraint -> pattern::projectInitialWeek {
-	mappings.assignOfferMapping->filter(m | m.nodes().project == self.nodes().project)->filter(m | m.nodes().week.number >= self.nodes().week.number + self.nodes().project.weeksUntilLoss)->count() <= 0
+	mappings.assignOfferMapping->filter(m | m.nodes().project == self.nodes().project)->filter(m | m.nodes().week.number >= self.nodes().week.number + self.nodes().project.weeksUntilLoss)->count() == 0
 }
 
-objective minWorkers -> mapping::assignOfferMapping {
-	self.nodes().worker.salary * self.nodes().offer.hours
+objective minWorkers -> class::Requirement {
+	mappings.assignOfferMapping->filter(m | m.nodes().requirement == self)->sum(m | m.nodes().offer.hours * self.salary)
 }
 
 objective minOvertime -> class::Requirement {
