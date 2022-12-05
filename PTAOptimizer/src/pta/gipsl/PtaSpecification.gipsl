@@ -94,6 +94,11 @@ constraint -> pattern::projectInitialWeek {
 	mappings.assignOfferMapping->filter(m | m.nodes().project == self.nodes().project)->filter(m | m.nodes().week.number >= self.nodes().week.number + self.nodes().project.weeksUntilLoss)->count() == 0
 }
 
+// All mapped weeks must at least have a higher number than the start week's number
+constraint -> pattern::projectInitialWeek {
+	mappings.assignOfferMapping->filter(m | m.nodes().project == self.nodes().project)->filter(m | m.nodes().week.number < self.nodes().project.start.number)->count() == 0
+}
+
 objective minWorkers -> class::Requirement {
 	mappings.assignOfferMapping->filter(m | m.nodes().requirement == self)->sum(m | m.nodes().offer.hours * self.salary)
 }
