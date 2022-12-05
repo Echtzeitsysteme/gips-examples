@@ -96,6 +96,7 @@ public class PTAModelGenerator {
 			if(type == null) {
 				type = addSkillType(sName);
 			}
+			skill.setName(type.getName());
 			skill.setType(skillTypes.get(sName));
 			skill.setLevel(sLevel);
 			p.getSkills().add(skill);
@@ -104,12 +105,13 @@ public class PTAModelGenerator {
 		return p;
 	}
 	
-	public Collection<Offer> addOffer(String person, int ... hours) {
+	public Collection<Offer> addOffer(String person, int week, int ... hours) {
 		Collection<Offer> os = new LinkedHashSet<>();
 		for(int hour : hours) {
 			Offer offer = factory.createOffer();
 			offer.setHours(hour);
 			os.add(offer);
+			offer.setWeek(weeks.get(week));
 		}
 		persons.get(person).getOffers().addAll(os);
 		return os;
@@ -147,6 +149,7 @@ public class PTAModelGenerator {
 		Task t = tasks.get(project).get(task);
 		t.getRequirements().add(r);
 		r.setSkillType(skillTypes.get(skill));
+		r.setName(r.getSkillType().getName());
 		r.setHours(hours);
 		r.setSkillLevel(skillLevel);
 		r.setSalary(salary);
@@ -156,11 +159,16 @@ public class PTAModelGenerator {
 	
 	public Collection<Week> addWeeks(int start, int end) {
 		Collection<Week> ws = new LinkedHashSet<>();
+		Week prev = null;
 		for(int i = start; i<=end; i++) {
 			Week w = factory.createWeek();
 			w.setNumber(i);
 			weeks.put(i, w);
 			ws.add(w);
+			if(prev != null)
+				w.setPrevious(prev);
+			
+			prev = w;
 		}
 
 		return ws;
