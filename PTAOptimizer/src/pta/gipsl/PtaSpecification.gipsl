@@ -14,10 +14,7 @@ config {
 
 
 rule assignOffer {
-	skillType : SkillType
-	skill : Skill {
-		-type->skillType
-	}
+	skill : Skill
 	worker : Person {
 		-offers->offer
 		-skills->skill
@@ -28,9 +25,7 @@ rule assignOffer {
 		- week -> week
 	}
 	
-	requirement : Requirement {
-		-skillType->skillType
-	}
+	requirement : Requirement
 	
 	task : Task {
 		-requirements->requirement
@@ -42,7 +37,10 @@ rule assignOffer {
 		++ -persons -> worker
 		++ -weeks -> week
 	}
-
+	
+	# skill.name == requirement.name
+	# week.number >= project.initialWeekNumber
+	# week.number <= project.initialWeekNumber + project.weeksUntilLoss
 	# skill.level >= requirement.skillLevel
 	# worker.overtimeBonus <= requirement.overtimeBonus
 	# worker.salary <= requirement.salary
