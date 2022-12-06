@@ -231,6 +231,9 @@ public class HouseConstructionGenerator extends PTAModelGenerator{
 			"Tilley"
 	};
 	
+	final static double WORKHOURS_PER_DAY = 8;
+	final static int WORKDAYS_PER_WEEK = 5;
+	
 	final static double HOURS_APPRENTICE = 20;
 	final static double HOURS_JOURNEYMAN = 38;
 	final static double HOURS_MASTER = 38;
@@ -278,174 +281,185 @@ public class HouseConstructionGenerator extends PTAModelGenerator{
 	public PersonTaskAssignmentModel constructProject1(){
 		addWeeks(1, 52);
 		final String projectName = "ConstructHouse";
-		addProject("ConstructHouse", 500000, 25, 10000, 1);
+		Project project = addProject("ConstructHouse", 500000, 25, 10000, 1);
 		Task aushub = addTask(projectName, "Aushub", new String[0]);
 		SkillType baggern = addSkillType("Baggerfahren");
 		SkillType graben = addSkillType("Erdarbeiten");
-		addRequirement(projectName, aushub.getName(), 30, 2, baggern.getName(), SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, aushub.getName(), 30, 1, graben.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
+		addRequirement(project, aushub, baggern, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*4*1);
+		addRequirement(project, aushub, graben, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*4*1);
+		addRequirement(project, aushub, graben, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*4*2);
 			
 		Task kanal = addTask(projectName, "Kanalarbeiten", new String[0]);
 		SkillType klempnern = addSkillType("Klempnern");
-		addRequirement(projectName, kanal.getName(), 8, SKILL_JOURNEYMAN, baggern.getName(), SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, kanal.getName(), 8, 1, graben.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, kanal.getName(), 8, SKILL_JOURNEYMAN, klempnern.getName(), SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, kanal.getName(), 4, 3, klempnern.getName(), SALARY_MASTER, BONUS_MASTER);
+		addRequirement(project, kanal, baggern, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*3*1);
+		addRequirement(project, kanal, klempnern, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*3*1);
+		addRequirement(project, kanal, klempnern, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*3*1);
+		addRequirement(project, kanal, klempnern, WorkerLevel.MASTER, WORKHOURS_PER_DAY*1*1);
 		
 		Task dachstuhl = addTask(projectName, "Dachstuhl", new String[0]);
 		SkillType schreinern = addSkillType("Schreinern");
-		addRequirement(projectName, dachstuhl.getName(), 120, 1, schreinern.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, dachstuhl.getName(), 120, SKILL_JOURNEYMAN, schreinern.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, dachstuhl.getName(), 40, 3, schreinern.getName(), SALARY_MASTER, BONUS_MASTER);
+		addRequirement(project, dachstuhl, schreinern, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*20*1);
+		addRequirement(project, dachstuhl, schreinern, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*20*2);
+		addRequirement(project, dachstuhl, schreinern, WorkerLevel.MASTER, WORKHOURS_PER_DAY*20*1);
 		
 		Task fundament = addTask(projectName, "Fundament", aushub.getName(), kanal.getName());
 		SkillType mischer = addSkillType("Betonmischerfahren");
 		SkillType fundamente = addSkillType("Fundamentarbeiten");
 		SkillType noop = addSkillType("NO_OP");
-		addRequirement(projectName, fundament.getName(), 20, SKILL_JOURNEYMAN, mischer.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, fundament.getName(), 20, SKILL_JOURNEYMAN, fundamente.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, fundament.getName(), 8, 3, fundamente.getName(), SALARY_MASTER, BONUS_MASTER);
-		addRequirement(projectName, fundament.getName(), 20*24, 1, noop.getName(), 0, 0);
+		addRequirement(project, fundament, mischer, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*1*1);
+		addRequirement(project, fundament, fundamente, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*1*2);
+		addRequirement(project, fundament, fundamente, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*1*1);
+		addRequirement(project, fundament, noop, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*20);
 		
 		Task rohbau = addTask(projectName, "Rohbau", fundament.getName());
 		SkillType mauern = addSkillType("Mauern");
 		SkillType kran = addSkillType("Kranfahren");
-		addRequirement(projectName, rohbau.getName(), 40, 1, mauern.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, rohbau.getName(), 100, SKILL_JOURNEYMAN, mauern.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, rohbau.getName(), 40, 3, mauern.getName(), SALARY_MASTER, BONUS_MASTER);
-		addRequirement(projectName, rohbau.getName(), 100, SKILL_JOURNEYMAN, kran.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
+		addRequirement(project, rohbau, kran, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*20*1);
+		addRequirement(project, rohbau, mauern, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*20*2);
+		addRequirement(project, rohbau, mauern, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*20*5);
+		addRequirement(project, rohbau, mauern, WorkerLevel.MASTER, WORKHOURS_PER_DAY*20*1);
 		
 		Task dach = addTask(projectName, "Dachdecken", rohbau.getName(), dachstuhl.getName());
 		SkillType dachdecken = addSkillType("Dachdecken");
-		addRequirement(projectName, dach.getName(), 70, SKILL_JOURNEYMAN, dachdecken.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, dach.getName(), 20, 3, dachdecken.getName(), SALARY_MASTER, BONUS_MASTER);
-		addRequirement(projectName, dach.getName(), 70, SKILL_JOURNEYMAN, kran.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
+		addRequirement(project, dach, kran, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*4*1);
+		addRequirement(project, dach, dachdecken, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*4*2);
+		addRequirement(project, dach, dachdecken, WorkerLevel.MASTER, WORKHOURS_PER_DAY*4*1);
 		
 		Task gws = addTask(projectName, "GasWasserAbwasser", dach.getName());
-		addRequirement(projectName, gws.getName(), 8, SKILL_JOURNEYMAN, klempnern.getName(), SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, gws.getName(), 4, 3, klempnern.getName(), SALARY_MASTER, BONUS_MASTER);
+		addRequirement(project, gws, klempnern, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*14*2);
+		addRequirement(project, gws, klempnern, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*14*1);
+		addRequirement(project, gws, klempnern, WorkerLevel.MASTER, WORKHOURS_PER_DAY*4*1);
 		
 		Task strom = addTask(projectName, "Strom", dach.getName());
 		SkillType elektro = addSkillType("Elektrikerarbeit");
-		addRequirement(projectName, strom.getName(), 40, 1, elektro.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, strom.getName(), 100, SKILL_JOURNEYMAN, elektro.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, strom.getName(), 40, 3, elektro.getName(), SALARY_MASTER, BONUS_MASTER);
+		addRequirement(project, strom, elektro, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*8*1);
+		addRequirement(project, strom, elektro, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*8*1);
+		addRequirement(project, strom, elektro, WorkerLevel.MASTER, WORKHOURS_PER_DAY*8*1);
 		
 		Task fenster = addTask(projectName, "Fenster", dach.getName());
 		SkillType fb = addSkillType("Fensterbau");
-		addRequirement(projectName, fenster.getName(), 40, 1, fb.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, fenster.getName(), 100, SKILL_JOURNEYMAN, fb.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
+		addRequirement(project, fenster, fb, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*7*1);
+		addRequirement(project, fenster, fb, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*7*2);
+		addRequirement(project, fenster, fb, WorkerLevel.MASTER, WORKHOURS_PER_DAY*1*1);
 		
 		Task innen = addTask(projectName, "Innenausbau", gws.getName(), strom.getName(), fenster.getName());
 		SkillType trockenbau = addSkillType("Trockenbau");
 		SkillType malern = addSkillType("Malerarbeiten");
 		SkillType fußboden = addSkillType("Fußbodenlegen");
-		addRequirement(projectName, innen.getName(), 40, 1, trockenbau.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, innen.getName(), 100, SKILL_JOURNEYMAN, trockenbau.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, innen.getName(), 40, 1, malern.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, innen.getName(), 100, SKILL_JOURNEYMAN, malern.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, innen.getName(), 40, 1, fußboden.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, innen.getName(), 100, SKILL_JOURNEYMAN, fußboden.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, innen.getName(), 40, 1, schreinern.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, innen.getName(), 100, SKILL_JOURNEYMAN, schreinern.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
+		addRequirement(project, innen, trockenbau, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*10*1);
+		addRequirement(project, innen, trockenbau, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*10*2);
+		
+		addRequirement(project, innen, malern, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*10*1);
+		addRequirement(project, innen, malern, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*10*1);
+		addRequirement(project, innen, malern, WorkerLevel.MASTER, WORKHOURS_PER_DAY*10*1);
+		
+		addRequirement(project, innen, fußboden, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*10*1);
+		addRequirement(project, innen, fußboden, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*10*1);
+		addRequirement(project, innen, fußboden, WorkerLevel.MASTER, WORKHOURS_PER_DAY*10*1);
+		
+		addRequirement(project, innen, schreinern, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*10*1);
+		addRequirement(project, innen, schreinern, WorkerLevel.MASTER, WORKHOURS_PER_DAY*10*1);
 		
 		Task daemmung = addTask(projectName, "Daemmung", gws.getName(), strom.getName(), fenster.getName());
-		SkillType daemmen= addSkillType("Daemmen");
-		addRequirement(projectName, daemmung.getName(), 40, 1, daemmen.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, daemmung.getName(), 100, SKILL_JOURNEYMAN, daemmen.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
+		SkillType daemmen = addSkillType("Daemmen");
+		addRequirement(project, daemmung, daemmen, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*2*1);
+		addRequirement(project, daemmung, daemmen, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*2*3);
 		
 		Task putz = addTask(projectName, "Verputzen", daemmung.getName());
 		SkillType verputzen = addSkillType("Verputzen");
-		addRequirement(projectName, putz.getName(), 40, 1, malern.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, putz.getName(), 100, SKILL_JOURNEYMAN, malern.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
-		addRequirement(projectName, putz.getName(), 40, 1, verputzen.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
-		addRequirement(projectName, putz.getName(), 100, SKILL_JOURNEYMAN, verputzen.getName(),  SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
+		addRequirement(project, putz, verputzen, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*10*1);
+		addRequirement(project, putz, verputzen, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*10*2);
+		addRequirement(project, putz, verputzen, WorkerLevel.MASTER, WORKHOURS_PER_DAY*10*1);
+		
+		addRequirement(project, putz, malern, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY*10*1);
+		addRequirement(project, putz, malern, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY*10*2);
+		addRequirement(project, putz, malern, WorkerLevel.MASTER, WORKHOURS_PER_DAY*10*1);
 		
 		Task abnahme = addTask(projectName, "Abnahme", innen.getName(), putz.getName());
 		SkillType architektur = addSkillType("Architektur");
 		SkillType statik = addSkillType("Statik");
-		addRequirement(projectName, abnahme.getName(), 40, 3, architektur.getName(), SALARY_MASTER, BONUS_MASTER);
-		addRequirement(projectName, abnahme.getName(), 40, 3, statik.getName(), SALARY_MASTER, BONUS_MASTER);
-		addRequirement(projectName, abnahme.getName(), 40, 3, elektro.getName(), SALARY_MASTER, BONUS_MASTER);
-		addRequirement(projectName, abnahme.getName(), 40, 3, klempnern.getName(), SALARY_MASTER, BONUS_MASTER);
+		addRequirement(project, abnahme, architektur, WorkerLevel.MASTER, WORKHOURS_PER_DAY*1*1);
+		addRequirement(project, abnahme, statik, WorkerLevel.MASTER, WORKHOURS_PER_DAY*1*1);
+		addRequirement(project, abnahme, elektro, WorkerLevel.MASTER, WORKHOURS_PER_DAY*1*1);
+		addRequirement(project, abnahme, klempnern, WorkerLevel.MASTER, WORKHOURS_PER_DAY*1*1);
 		
 		// Create generic construction workers
-		createApprentices(5, 5,
+		createApprentices(5, WORKDAYS_PER_WEEK,
 				List.of(graben.getName(),
 						fundamente.getName(),
 						mauern.getName()));
-		createJourneymen(5, 5, 
+		createJourneymen(5, WORKDAYS_PER_WEEK, 
 				List.of(graben.getName(),
 						fundamente.getName(),
 						mauern.getName()));
-		createMasters(1, 5, 
+		createMasters(1, WORKDAYS_PER_WEEK, 
 				List.of(graben.getName(),
 						fundamente.getName(),
 						mauern.getName()));
 		
 		// Create machinists
-		createJourneymen(2, 5, 
+		createJourneymen(2, WORKDAYS_PER_WEEK, 
 				List.of(baggern.getName(),
 						mischer.getName(),
 						kran.getName()));
 		
 		// Create carpenters and roofers
-		createApprentices(4, 5, 
+		createApprentices(4, WORKDAYS_PER_WEEK, 
 				List.of(schreinern.getName(),
 						dachdecken.getName(),
 						fußboden.getName()));
-		createJourneymen(4, 5, 
+		createJourneymen(4, WORKDAYS_PER_WEEK, 
 				List.of(schreinern.getName(),
 						dachdecken.getName(),
 						fußboden.getName()));
-		createMasters(2, 5, 
+		createMasters(2, WORKDAYS_PER_WEEK, 
 				List.of(schreinern.getName(),
 						dachdecken.getName(),
 						fußboden.getName()));
 		
 		// Create plumbers
-		createApprentices(2, 5, 
+		createApprentices(2, WORKDAYS_PER_WEEK, 
 				List.of(klempnern.getName()));
-		createJourneymen(4, 5, 
+		createJourneymen(4, WORKDAYS_PER_WEEK, 
 				List.of(klempnern.getName()));
-		createMasters(1, 5, 
+		createMasters(1, WORKDAYS_PER_WEEK, 
 				List.of(klempnern.getName()));
 
 		// Create electricians
-		createApprentices(2, 5,
+		createApprentices(2, WORKDAYS_PER_WEEK,
 				List.of(elektro.getName()));
-		createJourneymen(4, 5, 
+		createJourneymen(4, WORKDAYS_PER_WEEK, 
 				List.of(elektro.getName()));
-		createMasters(1, 5, 
+		createMasters(1, WORKDAYS_PER_WEEK, 
 				List.of(elektro.getName()));
 		
 		// Create drywall builders
-		createApprentices(2, 5, 
+		createApprentices(2, WORKDAYS_PER_WEEK, 
 				List.of(trockenbau.getName(),
 						fb.getName()));
-		createJourneymen(4, 5, 
+		createJourneymen(4, WORKDAYS_PER_WEEK, 
 				List.of(trockenbau.getName(),
 						fb.getName()));
-		createMasters(2, 5, 
+		createMasters(2, WORKDAYS_PER_WEEK, 
 				List.of(trockenbau.getName(),
 						fb.getName()));
 		
 		// Create painters
-		createApprentices(2, 5, 
+		createApprentices(2, WORKDAYS_PER_WEEK, 
 				List.of(daemmen.getName(),
 						verputzen.getName(),
 						malern.getName()));
-		createJourneymen(4, 5, 
+		createJourneymen(4, WORKDAYS_PER_WEEK, 
 				List.of(daemmen.getName(),
 						verputzen.getName(),
 						malern.getName()));
-		createMasters(2, 5, 
+		createMasters(2, WORKDAYS_PER_WEEK, 
 				List.of(daemmen.getName(),
 						verputzen.getName(),
 						malern.getName()));
 		
 		// Create architect
-		createMasters(4, 5, 
+		createMasters(4, WORKDAYS_PER_WEEK, 
 				List.of(architektur.getName(),
 						statik.getName()));
 		
@@ -453,6 +467,24 @@ public class HouseConstructionGenerator extends PTAModelGenerator{
 		createWorkers(1, 0.0, 10.0, 0.0, Map.of(noop.getName(), 1), 70, 7);
 		
 		return generate();
+	}
+	
+	public void addRequirement(Project project, Task task, SkillType skill, WorkerLevel worker, double hours) {
+		switch(worker) {
+		case APPRENTICE:
+			addRequirement(project.getName(), task.getName(), (int)hours, SKILL_APPRENTICE, skill.getName(), SALARY_APPRENTICE, BONUS_APPRENTICE);
+			break;
+		case JOURNEYMAN:
+			addRequirement(project.getName(), task.getName(), (int)hours, SKILL_JOURNEYMAN, skill.getName(), SALARY_JOURNEYMAN, BONUS_JOURNEYMAN);
+			break;
+		case MASTER:
+			addRequirement(project.getName(), task.getName(), (int)hours, SKILL_MASTER, skill.getName(), SALARY_MASTER, BONUS_MASTER);
+			break;
+		default:
+			break;
+		
+		}
+		
 	}
 	
 	public void createApprentices(int num, int offersPerWeek, List<String> skills) {
@@ -508,4 +540,8 @@ public class HouseConstructionGenerator extends PTAModelGenerator{
 			
 		}
 	}
+}
+
+enum WorkerLevel {
+	APPRENTICE, JOURNEYMAN, MASTER;
 }

@@ -124,6 +124,7 @@ public class PTAModelGenerator {
 		p.setReward(reward);
 		p.setWeeksUntilLoss(weeksUntilLoss);
 		p.setLossPerWeek(lossPerWeek);
+		p.setInitialWeekNumber(start);
 		projects.put(name, p);
 		return p;
 	}
