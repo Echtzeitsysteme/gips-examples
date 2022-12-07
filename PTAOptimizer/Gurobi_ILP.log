@@ -1,0 +1,717 @@
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 11:15:29 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 11:17:12 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 11:20:46 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 11:41:17 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 14:28:41 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 34758 rows, 32819 columns and 2487622 nonzeros
+Model fingerprint: 0xeee54cad
+Variable types: 3536 continuous, 29283 integer (29283 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 11058 rows and 23979 columns
+Presolve time: 0.24s
+
+Explored 0 nodes (0 simplex iterations) in 0.40 seconds (0.54 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 14:34:10 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7354 rows, 18675 columns and 74700 nonzeros
+Model fingerprint: 0x5b6157d7
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Presolve removed 1300 rows and 18675 columns
+Presolve time: 0.00s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.02 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 14:47:02 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7354 rows, 18675 columns and 74700 nonzeros
+Model fingerprint: 0x4d064fc1
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Presolve removed 1300 rows and 18675 columns
+Presolve time: 0.00s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.02 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 14:53:13 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7354 rows, 18675 columns and 74700 nonzeros
+Model fingerprint: 0xd38efe8f
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Presolve removed 1300 rows and 18675 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.02 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 14:59:00 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7354 rows, 18675 columns and 74700 nonzeros
+Model fingerprint: 0x1d6eab4e
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Presolve removed 1300 rows and 18675 columns
+Presolve time: 0.00s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.02 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 15:07:40 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7354 rows, 18675 columns and 74700 nonzeros
+Model fingerprint: 0xd7269cad
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Presolve removed 1300 rows and 18675 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.02 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 15:08:42 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7353 rows, 18675 columns and 56025 nonzeros
+Model fingerprint: 0x0244cb65
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Presolve removed 1300 rows and 18675 columns
+Presolve time: 0.00s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.01 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 15:09:32 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7352 rows, 18675 columns and 37350 nonzeros
+Model fingerprint: 0x6ffdfd1b
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Found heuristic solution: objective 147105.00000
+Presolve removed 6848 rows and 16675 columns
+Presolve time: 0.12s
+Presolved: 504 rows, 2000 columns, 4000 nonzeros
+Variable types: 0 continuous, 2000 integer (2000 binary)
+
+Root relaxation: cutoff, 4 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0     cutoff    0      147105.000 147105.000  0.00%     -    0s
+
+Explored 1 nodes (4 simplex iterations) in 0.13 seconds (0.10 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 15:10:22 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7353 rows, 18675 columns and 56025 nonzeros
+Model fingerprint: 0xf168b3c8
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Presolve removed 1300 rows and 18675 columns
+Presolve time: 0.00s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.01 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 15:10:43 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7353 rows, 18675 columns and 56025 nonzeros
+Model fingerprint: 0xafa89148
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Presolve removed 1300 rows and 18675 columns
+Presolve time: 0.01s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.01 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 15:11:00 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 34756 rows, 32819 columns and 2450272 nonzeros
+Model fingerprint: 0x2ec6ea73
+Variable types: 3536 continuous, 29283 integer (29283 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 26418 rows and 17897 columns
+Presolve time: 3.19s
+
+Explored 0 nodes (0 simplex iterations) in 3.34 seconds (4.78 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 15:14:03 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7353 rows, 18675 columns and 56025 nonzeros
+Model fingerprint: 0xdb2cf420
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Presolve removed 1300 rows and 18675 columns
+Presolve time: 0.00s
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.01 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 15:31:17 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 7352 rows, 18675 columns and 37350 nonzeros
+Model fingerprint: 0x37dcd7f7
+Variable types: 0 continuous, 18675 integer (18675 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 8e+02]
+Found heuristic solution: objective 147105.00000
+Presolve removed 6848 rows and 16675 columns
+Presolve time: 0.09s
+Presolved: 504 rows, 2000 columns, 4000 nonzeros
+Variable types: 0 continuous, 2000 integer (2000 binary)
+
+Root relaxation: cutoff, 4 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0     cutoff    0      147105.000 147105.000  0.00%     -    0s
+
+Explored 1 nodes (4 simplex iterations) in 0.09 seconds (0.10 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 15:33:27 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 34756 rows, 32819 columns and 1918072 nonzeros
+Model fingerprint: 0x5b9c850c
+Variable types: 3536 continuous, 29283 integer (29283 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 27395 rows and 16925 columns
+Presolve time: 3.60s
+Presolved: 7361 rows, 15894 columns, 470090 nonzeros
+Variable types: 0 continuous, 15894 integer (15731 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root relaxation: objective 1.471050e+05, 907 iterations, 0.13 seconds (0.18 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0   88          - 147105.000      -     -    4s
+     0     0 147105.000    0  142          - 147105.000      -     -    4s
+     0     0 147105.000    0  145          - 147105.000      -     -    4s
+     0     0 147105.000    0   37          - 147105.000      -     -    6s
+     0     0 147105.000    0   80          - 147105.000      -     -    7s
+     0     0 147105.000    0   76          - 147105.000      -     -    7s
+     0     0 147105.000    0   74          - 147105.000      -     -    7s
+     0     0 147105.000    0   72          - 147105.000      -     -    7s
+     0     0 147105.000    0  139          - 147105.000      -     -    8s
+     0     0 147105.000    0  139          - 147105.000      -     -    8s
+     0     0 147105.000    0  446          - 147105.000      -     -    8s
+     0     0 147105.000    0  344          - 147105.000      -     -    8s
+     0     0 147105.000    0  336          - 147105.000      -     -    8s
+     0     0 147105.000    0   66          - 147105.000      -     -   10s
+     0     0 147105.000    0   59          - 147105.000      -     -   10s
+H    0     0                    147105.00000 147105.000  0.00%     -   10s
+     0     0 147105.000    0  283 147105.000 147105.000  0.00%     -   10s
+
+Cutting planes:
+  Learned: 1
+  Gomory: 2
+  Cover: 22
+  Implied bound: 16
+  Clique: 1651
+  MIR: 16
+  StrongCG: 3
+  Flow cover: 1
+  RLT: 7
+
+Explored 1 nodes (10940 simplex iterations) in 10.48 seconds (13.02 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 2: 147105 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 16:38:24 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 34756 rows, 32819 columns and 1918072 nonzeros
+Model fingerprint: 0x46121472
+Variable types: 3536 continuous, 29283 integer (29283 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 27391 rows and 16923 columns
+Presolve time: 3.63s
+Presolved: 7365 rows, 15896 columns, 470068 nonzeros
+Variable types: 0 continuous, 15896 integer (15734 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root relaxation: objective 1.471050e+05, 839 iterations, 0.13 seconds (0.18 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0   88          - 147105.000      -     -    4s
+     0     0 147105.000    0  144          - 147105.000      -     -    4s
+     0     0 147105.000    0  165          - 147105.000      -     -    4s
+     0     0 147105.000    0   57          - 147105.000      -     -    6s
+H    0     0                    147105.00000 147105.000  0.00%     -    6s
+
+Explored 1 nodes (4762 simplex iterations) in 6.53 seconds (9.89 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 18:13:02 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 34756 rows, 32819 columns and 1918072 nonzeros
+Model fingerprint: 0x431e1b69
+Variable types: 3536 continuous, 29283 integer (29283 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 27398 rows and 16908 columns
+Presolve time: 3.75s
+Presolved: 7358 rows, 15911 columns, 466430 nonzeros
+Variable types: 0 continuous, 15911 integer (15753 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root relaxation: objective 1.471050e+05, 870 iterations, 0.13 seconds (0.18 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0  102          - 147105.000      -     -    4s
+     0     0 147105.000    0  123          - 147105.000      -     -    4s
+     0     0 147105.000    0  139          - 147105.000      -     -    4s
+     0     0 147105.000    0   36          - 147105.000      -     -    6s
+     0     0 147105.000    0  181          - 147105.000      -     -    7s
+     0     0 147105.000    0  181          - 147105.000      -     -    7s
+H    0     0                    147105.00000 147105.000  0.00%     -    7s
+     0     0 147105.000    0  268 147105.000 147105.000  0.00%     -    7s
+
+Cutting planes:
+  Learned: 5
+  Gomory: 3
+  Cover: 20
+  Implied bound: 5
+  Clique: 1258
+  MIR: 12
+  StrongCG: 6
+  Flow cover: 5
+  GUB cover: 1
+  Zero half: 1
+  RLT: 5
+
+Explored 1 nodes (5811 simplex iterations) in 7.82 seconds (10.76 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Wed Dec  7 18:56:48 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 35049 rows, 33566 columns and 1970429 nonzeros
+Model fingerprint: 0x914e9b58
+Variable types: 3536 continuous, 30030 integer (30030 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 28012 rows and 18457 columns
+Presolve time: 3.83s
+Presolved: 7037 rows, 15109 columns, 436875 nonzeros
+Variable types: 0 continuous, 15109 integer (14929 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root relaxation: objective 1.471050e+05, 901 iterations, 0.11 seconds (0.17 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0  136          - 147105.000      -     -    4s
+     0     0 147105.000    0  135          - 147105.000      -     -    4s
+     0     0 147105.000    0  149          - 147105.000      -     -    4s
+     0     0 147105.000    0   58          - 147105.000      -     -    6s
+     0     0 147105.000    0   86          - 147105.000      -     -    6s
+     0     0 147105.000    0   84          - 147105.000      -     -    6s
+H    0     0                    147105.00000 147105.000  0.00%     -    7s
+
+Cutting planes:
+  Learned: 2
+  Gomory: 12
+  Cover: 34
+  Implied bound: 1
+  Clique: 1196
+  MIR: 5
+  StrongCG: 9
+  Flow cover: 4
+  Zero half: 4
+  RLT: 3
+  BQP: 45
+
+Explored 1 nodes (3269 simplex iterations) in 7.70 seconds (10.58 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
