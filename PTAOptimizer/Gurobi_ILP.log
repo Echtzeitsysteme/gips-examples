@@ -715,3 +715,406 @@ Solution count 1: 147105
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Thu Dec  8 11:56:49 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 35049 rows, 33566 columns and 1970429 nonzeros
+Model fingerprint: 0x8dbf084c
+Variable types: 3536 continuous, 30030 integer (30030 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 28007 rows and 18491 columns
+Presolve time: 4.69s
+Presolved: 7042 rows, 15075 columns, 442776 nonzeros
+Variable types: 0 continuous, 15075 integer (14893 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0   -3.1619500e+05   8.455731e+01   8.701514e+08      5s
+     155    1.4710500e+05   0.000000e+00   0.000000e+00      5s
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+     166    1.4710500e+05   0.000000e+00   0.000000e+00      5s
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root crossover log...
+
+       0 DPushes remaining with DInf 0.0000000e+00                 5s
+
+     627 PPushes remaining with PInf 0.0000000e+00                 5s
+       0 PPushes remaining with PInf 0.0000000e+00                 5s
+
+  Push phase complete: Pinf 0.0000000e+00, Dinf 0.0000000e+00      5s
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+     797    1.4710500e+05   0.000000e+00   0.000000e+00      5s
+
+Root relaxation: objective 1.471050e+05, 797 iterations, 0.15 seconds (0.17 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0   72          - 147105.000      -     -    5s
+     0     0 147105.000    0  160          - 147105.000      -     -    5s
+     0     0 147105.000    0  162          - 147105.000      -     -    5s
+     0     0 147105.000    0   54          - 147105.000      -     -    8s
+H    0     0                    147105.00000 147105.000  0.00%     -    8s
+
+Explored 1 nodes (4540 simplex iterations) in 8.33 seconds (11.08 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Thu Dec  8 12:07:44 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 35048 rows, 33566 columns and 1969682 nonzeros
+Model fingerprint: 0xc841f9ad
+Variable types: 3536 continuous, 30030 integer (30030 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 27623 rows and 17578 columns
+Presolve time: 4.27s
+Presolved: 7425 rows, 15988 columns, 487321 nonzeros
+Variable types: 0 continuous, 15988 integer (15807 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root relaxation: objective 1.471050e+05, 822 iterations, 0.13 seconds (0.19 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0   96          - 147105.000      -     -    5s
+     0     0 147105.000    0  153          - 147105.000      -     -    5s
+     0     0 147105.000    0  167          - 147105.000      -     -    5s
+     0     0 147105.000    0   47          - 147105.000      -     -    7s
+     0     0 147105.000    0   49          - 147105.000      -     -    7s
+H    0     0                    147105.00000 147105.000  0.00%     -    7s
+
+Explored 1 nodes (4669 simplex iterations) in 7.88 seconds (10.70 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Thu Dec  8 12:09:38 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 34756 rows, 32819 columns and 1918072 nonzeros
+Model fingerprint: 0x13147eb9
+Variable types: 3536 continuous, 29283 integer (29283 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 27938 rows and 18306 columns
+Presolve time: 4.16s
+Presolved: 6818 rows, 14513 columns, 430251 nonzeros
+Variable types: 0 continuous, 14513 integer (14321 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root relaxation: objective 1.471050e+05, 1029 iterations, 0.12 seconds (0.17 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0   94          - 147105.000      -     -    4s
+     0     0 147105.000    0  134          - 147105.000      -     -    4s
+     0     0 147105.000    0  244          - 147105.000      -     -    5s
+     0     0 147105.000    0  228          - 147105.000      -     -    5s
+     0     0 147105.000    0  320          - 147105.000      -     -    6s
+     0     0 147105.000    0  275          - 147105.000      -     -    6s
+H    0     0                    147105.00000 147105.000  0.00%     -    6s
+
+Cutting planes:
+  Learned: 3
+  Gomory: 11
+  Lift-and-project: 1
+  Cover: 105
+  Implied bound: 8
+  Clique: 2398
+  MIR: 82
+  StrongCG: 12
+  Flow cover: 22
+  Zero half: 4
+  RLT: 33
+  Relax-and-lift: 6
+
+Explored 1 nodes (2862 simplex iterations) in 6.71 seconds (7.64 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Thu Dec  8 14:34:53 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+
+Gurobi 10.0.0 (win64, Java) logging started Thu Dec  8 14:35:27 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 34756 rows, 32819 columns and 1918072 nonzeros
+Model fingerprint: 0x91adb6a2
+Variable types: 3536 continuous, 29283 integer (29283 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 27602 rows and 17516 columns
+Presolve time: 4.30s
+Presolved: 7154 rows, 15303 columns, 446612 nonzeros
+Variable types: 0 continuous, 15303 integer (15125 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root relaxation: objective 1.471050e+05, 853 iterations, 0.13 seconds (0.17 work units)
+Total elapsed time = 5.01s
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0   80          - 147105.000      -     -    5s
+     0     0 147105.000    0   88          - 147105.000      -     -    5s
+     0     0 147105.000    0  220          - 147105.000      -     -    6s
+     0     0 147105.000    0  168          - 147105.000      -     -    6s
+H    0     0                    147105.00000 147105.000  0.00%     -    6s
+     0     0 147105.000    0  253 147105.000 147105.000  0.00%     -    6s
+
+Cutting planes:
+  Gomory: 5
+  Cover: 26
+  Implied bound: 5
+  Clique: 2208
+  MIR: 17
+  StrongCG: 8
+  Flow cover: 9
+  RLT: 2
+
+Explored 1 nodes (2562 simplex iterations) in 6.53 seconds (7.15 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Thu Dec  8 14:53:42 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 34756 rows, 32819 columns and 1918072 nonzeros
+Model fingerprint: 0xd8b257c9
+Variable types: 3536 continuous, 29283 integer (29283 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 27653 rows and 17660 columns
+Presolve time: 3.84s
+Presolved: 7103 rows, 15159 columns, 443930 nonzeros
+Variable types: 0 continuous, 15159 integer (14979 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root relaxation: objective 1.471050e+05, 1040 iterations, 0.11 seconds (0.17 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0   59          - 147105.000      -     -    4s
+     0     0 147105.000    0  165          - 147105.000      -     -    4s
+     0     0 147105.000    0  164          - 147105.000      -     -    4s
+     0     0 147105.000    0  164          - 147105.000      -     -    4s
+     0     0 147105.000    0  164          - 147105.000      -     -    4s
+     0     0 147105.000    0  164          - 147105.000      -     -    4s
+     0     0 147105.000    0  161          - 147105.000      -     -    4s
+H    0     0                    147105.00000 147105.000  0.00%     -    5s
+
+Cutting planes:
+  Learned: 9
+  Gomory: 2
+  Cover: 66
+  Implied bound: 5
+  Clique: 1239
+  MIR: 10
+  StrongCG: 4
+  Flow cover: 1
+  Zero half: 10
+  RLT: 10
+
+Explored 1 nodes (4247 simplex iterations) in 5.37 seconds (7.06 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Thu Dec  8 14:56:03 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 34756 rows, 32819 columns and 1918072 nonzeros
+Model fingerprint: 0x071c2a1b
+Variable types: 3536 continuous, 29283 integer (29283 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [4e+02, 2e+03]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e-04, 8e+02]
+Presolve removed 27706 rows and 17748 columns
+Presolve time: 4.19s
+Presolved: 7050 rows, 15071 columns, 445032 nonzeros
+Variable types: 0 continuous, 15071 integer (14893 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Use crossover to convert LP symmetric solution to basic solution...
+
+Root relaxation: objective 1.471050e+05, 796 iterations, 0.12 seconds (0.17 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 147105.000    0  118          - 147105.000      -     -    5s
+     0     0 147105.000    0  154          - 147105.000      -     -    5s
+     0     0 147105.000    0  156          - 147105.000      -     -    5s
+     0     0 147105.000    0   71          - 147105.000      -     -    6s
+H    0     0                    147105.00000 147105.000  0.00%     -    7s
+
+Cutting planes:
+  Learned: 2
+  Gomory: 3
+  Cover: 20
+  Implied bound: 6
+  Clique: 1238
+  MIR: 11
+  StrongCG: 13
+  Flow cover: 2
+  GUB cover: 2
+  Zero half: 5
+  RLT: 3
+
+Explored 1 nodes (6752 simplex iterations) in 7.90 seconds (10.77 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 1: 147105 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.471050000000e+05, best bound 1.471050000000e+05, gap 0.0000%

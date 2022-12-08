@@ -40,7 +40,7 @@ rule assignOffer {
 	
 	# skill.name == requirement.name
 	# week.number >= project.initialWeekNumber
-	# week.number <= project.initialWeekNumber + project.weeksUntilLoss
+	# week.number < project.initialWeekNumber + project.weeksUntilLoss
 	# skill.level >= requirement.skillLevel
 	# worker.overtimeBonus <= requirement.overtimeBonus
 	# worker.salary <= requirement.salary
@@ -87,15 +87,15 @@ constraint -> pattern::taskSequence {
 	mappings.aom->filter(m | m.nodes().task == self.nodes().next & m.nodes().week.number <= self.nodes().week.number)->count() <= 0
 }
 
-// This constraint makes any loss-based solution infeasible
-constraint -> pattern::projectInitialWeek {
-	mappings.aom->filter(m | m.nodes().project == self.nodes().project & m.nodes().week.number >= self.nodes().week.number + self.nodes().project.weeksUntilLoss)->count() == 0
-}
-
-// All mapped weeks must an equal or higher number than the start week's number
-constraint -> pattern::projectInitialWeek {
-	mappings.aom->filter(m | m.nodes().project == self.nodes().project & m.nodes().week.number < self.nodes().project.initialWeekNumber)->count() == 0
-}
+//// This constraint makes any loss-based solution infeasible
+//constraint -> pattern::projectInitialWeek {
+//	mappings.aom->filter(m | m.nodes().project == self.nodes().project & m.nodes().week.number >= self.nodes().week.number + self.nodes().project.weeksUntilLoss)->count() == 0
+//}
+//
+//// All mapped weeks must an equal or higher number than the start week's number
+//constraint -> pattern::projectInitialWeek {
+//	mappings.aom->filter(m | m.nodes().project == self.nodes().project & m.nodes().week.number < self.nodes().project.initialWeekNumber)->count() == 0
+//}
 
 objective minWorkers -> class::Requirement {
 	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.nodes().offer.hours * self.salary)
