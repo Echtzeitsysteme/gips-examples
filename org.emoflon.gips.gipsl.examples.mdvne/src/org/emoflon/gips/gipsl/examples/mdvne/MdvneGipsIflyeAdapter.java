@@ -3,6 +3,9 @@ package org.emoflon.gips.gipsl.examples.mdvne;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.core.ilp.ILPSolverStatus;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
@@ -15,25 +18,38 @@ import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
 public class MdvneGipsIflyeAdapter {
+	
+	/**
+	 * MdVNE GIPS API object.
+	 */
+	final static MdvneGipsAPI api = new MdvneGipsAPI();
+	
+	/**
+	 * If true, the API was already initialized.
+	 */
+	static boolean init = false;
 
 	/**
 	 * Executes the embedding GIPS-based VNE algorithm.
 	 * 
-	 * @param modelPath Path to the input model (XMI) that should be used for the
-	 *                  embedding.
+	 * @param model Resource set that contains the model (= the root node of the model).
 	 * @return True if embedding was successful.
 	 */
-	public static boolean execute(final String modelPath) {
-		if (modelPath == null || modelPath.isBlank()) {
-			throw new IllegalArgumentException("Model path was invalid.");
+	public static boolean execute(final ResourceSet model) {
+		if (model == null) {
+			throw new IllegalArgumentException("Model was null.");
 		}
-
-		final URI absPath = URI.createFileURI(System.getProperty("user.dir") + "/" + modelPath);
-
-		// Create new MdVNE GIPS API and load the model
-		final MdvneGipsAPI api = new MdvneGipsAPI();
-		api.init(absPath);
-
+		
+		if (model.getResources() == null || model.getResources().isEmpty()) {
+			throw new IllegalArgumentException("Model resource set was null or empty.");
+		}
+		
+		// Init if not already initialized
+		if (!init) {
+			api.init(model);
+			init = true;
+		}
+		
 		// Build the ILP problem (including updates)
 		api.buildILPProblem(true);
 
@@ -50,13 +66,6 @@ public class MdvneGipsIflyeAdapter {
 		api.getL2p().applyNonZeroMappings();
 		api.getL2s().applyNonZeroMappings();
 		api.getNet2net().applyNonZeroMappings();
-
-		// The solution must currently be written as a file to be read by iflye
-		try {
-			api.saveResult(absPath.toFileString());
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
 
 		// Terminate API
 		// api.terminate();
