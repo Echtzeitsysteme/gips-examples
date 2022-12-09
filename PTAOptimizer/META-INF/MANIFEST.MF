@@ -12,4 +12,6 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.gips.core,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
- PersonTaskAssignments;bundle-version="0.0.1"
+ PersonTaskAssignments;bundle-version="0.0.1",
+ JavaFxDependencies
+Import-Package: com.google.common.collect
