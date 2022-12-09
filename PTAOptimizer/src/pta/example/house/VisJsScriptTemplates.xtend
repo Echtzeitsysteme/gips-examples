@@ -11,7 +11,7 @@ class VisJsScriptTemplates {
 		<!DOCTYPE html>
 		<html lang="en">
 		  <head>
-		    <title>Vis Network | Basic usage</title>
+		    <title>PTA-Example: House Construction</title>
 		
 		    <script type="text/javascript">
 		    /**
@@ -65,19 +65,26 @@ class VisJsScriptTemplates {
 		    </script>
 		
 		    <style type="text/css">
+			    html{
+			        width:100%;
+			        height:100%;
+			    }
+			    body{
+			        width:100%;
+			        height:100%;
+			        background-color:#DDD;
+			    }
 		      #mynetwork {
-		        width: 2450px;
-		        height: 850px;
-		        border: 1px solid lightgray;
+		        width: 90%;
+		        height: 95%;
 		      }
 		    </style>
 		  </head>
 		  <body>
-		    <p>Create a simple network with some nodes and edges.</p>
-		
 		    <div id="mynetwork"></div>
 		
 		    <script type="text/javascript">
+		    
 		    
 		      // create an array with nodes
 		      var nodes = new vis.DataSet();
@@ -121,50 +128,33 @@ class VisJsScriptTemplates {
 			 };
 			 
 			 var options2 = {
-		        layout: {
-		          hierarchical: {
-		            direction: "DU",
-		            sortMethod: "directed",
-		            shakeTowards: 'root',
-		            nodeSpacing : 50,
-		            levelSeparation: 800,
-		            improvedLayout: false,
-		            blockShifting: false,
-		            edgeMinimization: false,
-		            parentCentralization: false
-		          },
-		        },
-		        interaction: { 
-		        	dragNodes: true 
-		        },
-		        physics: {
-		          enabled: false
-		        },
-		        adaptiveTimestep : false
+			  nodes: {},
+			  physics: false
 			 };
 		    </script>
 		  </body>
 		</html>
 		'''
 	}
-	def static String addNode(String id, String label) {
-		return ''' nodes.add({ id: «id», label: "«label»"});'''
+	
+	def static String addNodes(Map<String, String> nodes) {
+		return '''«FOR node : nodes.keySet SEPARATOR "\n"»nodes.add({ id: «node», label: "«nodes.get(node)»"});«ENDFOR»'''
 	}
 	
-		def static String addNodes(Map<String, String> nodes) {
-		return '''«FOR node : nodes.keySet SEPARATOR "\n"»nodes.add({ id: «node», label: "«nodes.get(node)»"});«ENDFOR»'''
+	def static String configureNode(String id, Collection<String> properties) {
+		return ''' nodes.update({id: «id», «FOR prop : properties SEPARATOR ", "»«prop»«ENDFOR»});'''
 	}
 	
 	def static String removeNode(String id) {
 		return ''' nodes.remove(«id»)'''
 	}
 	
-	def static String addEdge(String srcId, String trgId) {
-		return '''edges.add({ from: «srcId», to: «trgId» })'''
+	def static String removeEdge(String id) {
+		return ''' edges.remove(«id»)'''
 	}
 	
-	def static String addEdges(Collection<Entry<String, String>> edges) {
-		return '''«FOR edge : edges SEPARATOR "\n"»edges.add({ from: «edge.key», to: «edge.value» });«ENDFOR»'''
+	def static String addEdges(Map<String, Entry<String, String>> edges) {
+		return '''«FOR edge : edges.keySet SEPARATOR "\n"»edges.add({id: «edge», from: «edges.get(edge).key», to: «edges.get(edge).value», smooth: {enabled : true, type: 'dynamic' }});«ENDFOR»'''
 	}
 	
 	def static String insertListener(String eventType, String function) {
@@ -178,13 +168,83 @@ class VisJsScriptTemplates {
 	def static String createDeletionOnClick() {
 		val eventType = "click"
 		val params = new LinkedList<String>()
-		params.add("properties")
+		params.add("network")
 		val impl =  '''
-			var ids = properties.nodes;
+			var ids = network.nodes;
 			var clickedNodes = nodes.get(ids);
 			jfx.deleteNode(ids[0]);
 		'''
 		
 		return insertListener(eventType, createJSFunction(params, impl))
+	}
+	
+	def static String createMoveOnDragStart() {
+		val eventType = "dragStart"
+		val params = new LinkedList<String>()
+		params.add("network")
+		val impl =  '''
+			var ids = network.nodes;
+			var clickedNodes = nodes.get(ids);
+			nodes.update({id: clickedNodes[0], allowedToMoveX: true, allowedToMoveY: true});
+		'''
+		
+		return insertListener(eventType, createJSFunction(params, impl))
+	}
+	
+	def static String createMoveOnDragEnd() {
+		val eventType = "dragEnd"
+		val params = new LinkedList<String>()
+		params.add("network")
+		val impl =  '''
+			var ids = network.nodes;
+			var clickedNodes = nodes.get(ids);
+			nodes.update({id: clickedNodes[0], allowedToMoveX: false, allowedToMoveY: false});
+		'''
+		
+		return insertListener(eventType, createJSFunction(params, impl))
+	}
+	
+	def static String getFixLayout() {
+		return'''		      var initialLayout = false;
+				      var lastFixTime = 0;
+				      var dragging = false;
+				      
+				      network.on('dragStart', function(params) {
+				          dragging = true;
+				          releaseNodes(params.nodeIds);
+				      });
+				      network.on('stabilized', function (params) {
+				      		if(initialLayout == false) {
+				      			initialLayout = true;
+				      			return;
+				      		}
+				          if (dragging == false) {
+				              fixNodes();
+				          }
+				      });
+				      network.on('dragEnd', function (params) {
+				          dragging = false;
+				          fixNodes(params.nodeIds);
+				      });
+				      
+				      function fixNodes(nodeIds) {
+				          if (new Date() - lastFixTime > 100) {
+				              network.storePositions();
+				              lastFixTime = new Date();
+				              var update = [];
+				              if (nodeIds !== undefined) {
+				                  for (var i = 0; i < nodeIds.length; i++) {
+				                      var nodeId = nodeIds[i];
+				                      update.push({id:nodeId,allowedToMoveX:false, allowedToMoveY:false})
+				                  }
+				              }
+				              else {
+				                  for (var i = 0; i < 25; i++) {
+				                      update.push({id:i,allowedToMoveX:false, allowedToMoveY:false})
+				                  }
+				              }
+				              nodes.update(update);
+				          }
+				      }'''
 	}
 }
