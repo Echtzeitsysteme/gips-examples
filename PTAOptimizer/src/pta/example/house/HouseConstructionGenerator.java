@@ -383,6 +383,8 @@ public class HouseConstructionGenerator extends PTAModelGenerator{
 		addRequirement(project, abnahme, elektro, WorkerLevel.MASTER, WORKHOURS_PER_DAY*1*1);
 		addRequirement(project, abnahme, klempnern, WorkerLevel.MASTER, WORKHOURS_PER_DAY*1*1);
 		
+//		Task endOfTasks = addTask(projectName, "END_OF_TASKS", abnahme.getName());
+		
 		// Create generic construction workers
 		createApprentices(5, WORKDAYS_PER_WEEK,
 				List.of(graben.getName(),

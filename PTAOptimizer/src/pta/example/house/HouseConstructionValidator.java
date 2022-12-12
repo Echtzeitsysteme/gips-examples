@@ -87,6 +87,12 @@ public class HouseConstructionValidator {
 				valid &= checkAssignmentsTask(t);
 			}
 			
+			if(valid) {
+				System.out.println("INFO: All tasks are assigned according to constraints.");
+			} else {
+				System.out.println("INFO: Some tasks are not assigned according to constraints.");
+			}
+			
 			valid &= p.getTasks().stream()
 					.flatMap(t -> t.getWeeks().stream())
 					.distinct()
@@ -112,6 +118,13 @@ public class HouseConstructionValidator {
 				System.out.println("INFO: The project will stay within the time limit and will take " + numOfWeeks + " weeks.");
 			} else {
 				System.out.println("INFO: The project exceeds the time limit and will take " + numOfWeeks + " weeks.");
+			}
+			
+			valid &= (weeks.get(weeks.size()-1).getNumber() == p.getInitialWeekNumber());
+			if(valid) {
+				System.out.println("INFO: The project will start at the initial project week: KW#" + p.getInitialWeekNumber()+ ".");
+			} else {
+				System.out.println("INFO: The project does not start at the required initial week: " + p.getInitialWeekNumber()+ ", but starts at: " + weeks.get(weeks.size()-1).getNumber() + ".");
 			}
 			
 			double totalCost = p.getTasks().stream()
@@ -143,8 +156,13 @@ public class HouseConstructionValidator {
 	}
 	
 	public boolean checkAssignmentsTask(final Task task) {
-		if(task.getWeeks() == null || task.getWeeks().isEmpty())
-			return false;
+		if(task.getWeeks() == null || task.getWeeks().isEmpty()) {
+			if(task.getRequirements() == null || task.getRequirements().isEmpty()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 		
 		boolean valid = true;
 		for(Requirement requirement : task.getRequirements()) {
@@ -168,6 +186,7 @@ public class HouseConstructionValidator {
 			});
 			
 			valid &= previousWeeks.get(0).getNumber() < currentWeeks.get(0).getNumber();
+//			System.out.println(valid);
 		}
 		
 		return valid;
