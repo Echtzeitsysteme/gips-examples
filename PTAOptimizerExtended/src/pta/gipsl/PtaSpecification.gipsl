@@ -11,6 +11,7 @@ config {
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.000001];
+	lpOutput := true [path :=".\gurobi.lp"];
 }
 
 
@@ -163,6 +164,8 @@ constraint -> mapping::aom {
 	// 1 => 0 & 0 => 1 = 0 : -> false
 	// 0 => 1 & 1 => 0 = 0 : -> false
 	// 0 => 0 & 0 => 0 = 1 : -> true
+	& self.variables().hours >= 0
+	& self.variables().overTime >= 0
 }
  
 constraint -> pattern::taskSequence {
@@ -208,17 +211,17 @@ constraint -> pattern::finalTaskSequence {
 //}
 
 objective minWorkers -> class::Requirement {
-	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().hours * m.nodes().worker.salary) * 0.00001
+	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().hours * m.nodes().worker.salary) //* 0.00001
 }
 
 objective minOvertime -> class::Requirement {
-	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().overTime * m.nodes().worker.overtimeBonus) * 0.00001
+	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().overTime * m.nodes().worker.overtimeBonus) //* 0.00001
 }
 
-//objective finishEarly -> class::Project {
-//	mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.nodes().week.number)
-//} 
+objective finishEarly -> class::Project {
+	mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.nodes().week.number) * 0.001
+} 
 
 global objective : min {
-	minWorkers + minOvertime //+ finishEarly
+	minWorkers + minOvertime + finishEarly
 }
