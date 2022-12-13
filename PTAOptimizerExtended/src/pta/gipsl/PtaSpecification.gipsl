@@ -11,7 +11,7 @@ config {
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.000001];
-	lpOutput := true [path :=".\gurobi.lp"];
+//	lpOutput := true [path :=".\gurobi.lp"];
 }
 
 
@@ -125,10 +125,10 @@ mapping aom with assignOffer {
 //	var hours : EDouble bind hours
 //};
 
-// An person's offer might only be mapped once
-constraint -> class::Offer {
-	mappings.aom->filter(m | m.nodes().offer == self)->count() <= 1
-}
+//// An person's offer might only be mapped once
+//constraint -> class::Offer {
+//	mappings.aom->filter(m | m.nodes().offer == self)->count() <= 1
+//}
 
 //The sum of hours over all accepted offers must be at least as high as the requirement's hours, including overtime flexibility
 constraint -> class::Requirement {
