@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="sdrmodel" nsURI="platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore"
+    nsPrefix="org.emoflon.gips.gipsl.examples.sdrmodel">
+  <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+    <details key="documentation" value="TODO: Add documentation for sdrmodel. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ..."/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Root">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cpus" upperBound="-1" eType="#//CPU"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jobs" upperBound="-1" eType="#//Job"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CPU" eSuperTypes="#//Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guests" upperBound="-1"
+        eType="#//Job" eOpposite="#//Job/hosts"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intercoms" upperBound="-1"
+        eType="#//Interthreadcom" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cores" upperBound="-1"
+        eType="#//Core" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Flowhost" eSuperTypes="#//Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="flowGuests" upperBound="-1"
+        eType="#//Flow"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Thread" eSuperTypes="#//Flowhost">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guests" upperBound="-1"
+        eType="#//Block" eOpposite="#//Block/host"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="core" eType="#//Core" eOpposite="#//Core/threads"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Job" eSuperTypes="#//Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="blocks" upperBound="-1"
+        eType="#//Block" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="flows" upperBound="-1"
+        eType="#//Flow" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hosts" upperBound="-1"
+        eType="#//CPU" eOpposite="#//CPU/guests"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Block" eSuperTypes="#//Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" upperBound="-1"
+        eType="#//Flow" eOpposite="#//Flow/target"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputs" upperBound="-1"
+        eType="#//Flow" eOpposite="#//Flow/source"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cycles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="host" eType="#//Thread"
+        eOpposite="#//Thread/guests"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Flow" eSuperTypes="#//Element">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="host" eType="#//Flowhost"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Block"
+        eOpposite="#//Block/outputs"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Block"
+        eOpposite="#//Block/inputs"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Interthreadcom" eSuperTypes="#//Flowhost">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Thread"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Thread"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Core" eSuperTypes="#//Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="threads" upperBound="-1"
+        eType="#//Thread" containment="true" eOpposite="#//Thread/core"/>
+  </eClassifiers>
+</ecore:EPackage>
