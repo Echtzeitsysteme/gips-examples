@@ -22,6 +22,7 @@ public class HouseConstructionExample {
 		gipsApi.buildILPProblem(true);
 		ILPSolverOutput output = gipsApi.solveILPProblem();
 		gipsApi.getAom().applyNonZeroMappings();
+		gipsApi.getProjectCost().applyNonZeroMappings();
 		
 		String outputFile = instancesFolder + "/ConstructionProject1_solved.xmi";
 		try {

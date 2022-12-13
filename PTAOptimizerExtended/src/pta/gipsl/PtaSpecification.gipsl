@@ -6,12 +6,11 @@ import "http://www.eclipse.org/emf/2002/Ecore"
 config {
 	solver := GUROBI [home:="c:\gurobi1000\win64", license:="c:\gurobi1000\win64\gurobi.lic"];
 	launchConfig := true [main := "pta.extended.example.house.HouseConstructionExample"];
-	timeLimit := true [value := 600.0];
+	timeLimit := true [value := 6000.0];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.000001];
-//	lpOutput := true [path :=".\gurobi.lp"];
 }
 
 
@@ -56,11 +55,11 @@ pattern personToOffer {
 	offer : Offer
 }
 
-//rule updateRequirements(hours : EDouble) {
-//	requirement : Requirement {
-//		.hoursPerPerson := param::hours
-//	}
-//}
+rule updateProject(salary : EDouble) {
+	project : Project {
+		.sumSalary := param::salary
+	}
+}
 
 pattern taskSequence {
 	week : Week 
@@ -117,22 +116,24 @@ mapping aom with assignOffer {
 	var overTime : EInt
 };
 
-//mapping offers with updateOffer {
-//	var hours : EDouble bind hours
-//};
 
-//mapping requirements with updateRequirements {
-//	var hours : EDouble bind hours
-//};
-
-//// An person's offer might only be mapped once
-//constraint -> class::Offer {
-//	mappings.aom->filter(m | m.nodes().offer == self)->count() <= 1
-//}
+mapping projectCost with updateProject {
+	var salary : EDouble bind salary
+};
 
 //The sum of hours over all accepted offers must be at least as high as the requirement's hours, including overtime flexibility
 constraint -> class::Requirement {
 	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().hours) + mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().overTime) >= self.hours
+}
+
+constraint -> class::Project {
+	mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.variables().hours * m.nodes().worker.salary) + mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().overTime * m.nodes().worker.overtimeBonus) ==
+	mappings.projectCost->filter(m | m.nodes().project == self)->sum(m | m.variables().salary)
+}
+
+constraint -> mapping::projectCost {
+	self.variables().salary >= 0 &
+	self.value() >= 1
 }
 
 constraint -> pattern::personToOffer {
@@ -192,30 +193,12 @@ constraint -> pattern::finalTaskSequence {
 	mappings.aom->filter(m | m.nodes().task == self.nodes().previous & m.nodes().week.number >= self.nodes().week.number)->count() <= 0
 }
 
-//// This constraint makes any loss-based solution infeasible
-//constraint -> pattern::projectInitialWeek {
-//	mappings.aom->filter(m | m.nodes().project == self.nodes().project & m.nodes().week.number >= self.nodes().week.number + self.nodes().project.weeksUntilLoss)->count() == 0
-//}
-//
-//// All mapped weeks must an equal or higher number than the start week's number
-//constraint -> pattern::projectInitialWeek {
-//	mappings.aom->filter(m | m.nodes().project == self.nodes().project & m.nodes().week.number < self.nodes().project.initialWeekNumber)->count() == 0
-//}
-
-//objective minWorkers -> class::Requirement {
-//	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.nodes().offer.hours * m.nodes().worker.salary)
-//}
-//
-//objective minOvertime -> class::Requirement {
-//	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.nodes().offer.hours * m.nodes().worker.overtimeBonus) - self.hours * self.overtimeBonus
-//}
-
 objective minWorkers -> class::Requirement {
-	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().hours * m.nodes().worker.salary) //* 0.00001
+	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().hours * m.nodes().worker.salary)
 }
 
 objective minOvertime -> class::Requirement {
-	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().overTime * m.nodes().worker.overtimeBonus) //* 0.00001
+	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().overTime * m.nodes().worker.overtimeBonus)
 }
 
 objective finishEarly -> class::Project {
