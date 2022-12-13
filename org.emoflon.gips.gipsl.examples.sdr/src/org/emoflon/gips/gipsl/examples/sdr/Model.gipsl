@@ -19,22 +19,19 @@ rule block2thread {
 	
 	cpu: CPU {
 		-cores -> core
-		++ -guests -> job
 	}
 	
 	// Also pins the job to a CPU
 	job: Job {
 		-blocks -> block
-		++ -hosts -> cpu
+		++ -hosts->cpu
 	}
 	
 	core: Core {
 		-threads -> thread
 	}
 	
-	thread: Thread {
-		++ -guests -> block
-	}
+	thread: Thread
 	
 	block: Block {
 		++ -host -> thread
@@ -60,9 +57,7 @@ rule flow2intercom {
 		++ -host -> intercom
 	}
 	
-	intercom: Interthreadcom {
-		++ -flowGuests -> flow
-	}
+	intercom: Interthreadcom
 }
 
 // Rule to map a flow to a thread
@@ -88,9 +83,7 @@ rule flow2thread {
 		++ -host -> thread
 	}
 	
-	thread: Thread {
-		++ -flowGuests -> flow
-	}
+	thread: Thread
 }
 
 pattern thread {

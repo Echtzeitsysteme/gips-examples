@@ -3,7 +3,10 @@
     xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:org.emoflon.gips.gipsl.examples.sdrmodel="platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore">
-  <cpus name="cpu0">
+  <cpus name="cpu0"
+      threadsPerCore="2"
+      numOfThreads="2"
+      inverseThreadCount="0.5">
     <intercoms
         name="intercom0to1"
         source="//@cpus.0/@cores.0/@threads.0"

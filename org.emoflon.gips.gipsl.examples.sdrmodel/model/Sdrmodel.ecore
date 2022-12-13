@@ -21,15 +21,21 @@
         eType="#//Interthreadcom" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cores" upperBound="-1"
         eType="#//Core" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="threadsPerCore" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numOfThreads" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="inverseThreadCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Flowhost" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="flowGuests" upperBound="-1"
-        eType="#//Flow"/>
+        eType="#//Flow" eOpposite="#//Flow/host"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Thread" eSuperTypes="#//Flowhost">
     <eStructuralFeatures xsi:type="ecore:EReference" name="guests" upperBound="-1"
         eType="#//Block" eOpposite="#//Block/host"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="core" eType="#//Core" eOpposite="#//Core/threads"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allocatedCycles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="diff" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="absDiff" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Job" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="blocks" upperBound="-1"
@@ -50,7 +56,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Flow" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="host" eType="#//Flowhost"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="host" eType="#//Flowhost"
+        eOpposite="#//Flowhost/flowGuests"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Block"
         eOpposite="#//Block/outputs"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Block"
@@ -63,5 +70,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="Core" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="threads" upperBound="-1"
         eType="#//Thread" containment="true" eOpposite="#//Thread/core"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numOfThreads" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 </ecore:EPackage>

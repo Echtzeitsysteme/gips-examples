@@ -1,7 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.sdrmodel;singleton:=true
+Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.sdrmodel;singleto
+ n:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
@@ -15,4 +16,3 @@ Require-Bundle: org.eclipse.core.runtime,
  org.emoflon.smartemf
 Export-Package: sdrmodel,
  sdrmodel.impl
-
