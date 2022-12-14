@@ -219,11 +219,10 @@ objective f2tcost -> mapping::f2t {
 //}
 
 objective glob -> class::Thread {
-	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().absDiff) * 100
+	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().absDiff)
 }
 
 // Combine the local objectives and give the maximization of used threads a large head start.
 global objective : min {
-	//intercomcost + f2tcost +
-	 glob
+	intercomcost + f2tcost + glob
 }
