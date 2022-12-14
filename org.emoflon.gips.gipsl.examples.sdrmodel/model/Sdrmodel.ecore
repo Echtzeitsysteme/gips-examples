@@ -25,9 +25,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numOfThreads" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="inverseThreadCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Core" eSuperTypes="#//Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="threads" upperBound="-1"
+        eType="#//Thread" containment="true" eOpposite="#//Thread/core"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numOfThreads" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Flowhost" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="flowGuests" upperBound="-1"
         eType="#//Flow" eOpposite="#//Flow/host"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Interthreadcom" eSuperTypes="#//Flowhost">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Thread"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Thread"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Thread" eSuperTypes="#//Flowhost">
     <eStructuralFeatures xsi:type="ecore:EReference" name="guests" upperBound="-1"
@@ -62,14 +71,5 @@
         eOpposite="#//Block/outputs"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Block"
         eOpposite="#//Block/inputs"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Interthreadcom" eSuperTypes="#//Flowhost">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Thread"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Thread"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Core" eSuperTypes="#//Element">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="threads" upperBound="-1"
-        eType="#//Thread" containment="true" eOpposite="#//Thread/core"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numOfThreads" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 </ecore:EPackage>
