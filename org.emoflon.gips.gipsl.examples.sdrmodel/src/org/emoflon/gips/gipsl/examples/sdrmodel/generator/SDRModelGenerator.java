@@ -46,17 +46,18 @@ public class SDRModelGenerator {
 		}
 		
 		SDRModelGenerator gen = new SDRModelGenerator("FunSeed123".hashCode());
-		Root root = gen.generateSimpleModel(15, 100, 50, true);
+//		Root root = gen.generateSimpleRndModel(15, 100, 50, true);
+		Root root = gen.generateSimpleUniformModel(8, 50, 20, true);
 		
 		try {
-			save(root, instancesFolder + "/CPU_4_8-B15_C100_R50.xmi");
+			save(root, instancesFolder + "/CPU_4_8-B8_C50_R20_UNI.xmi");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public Root generateSimpleModel(int maxNumOfBlocks, int maxCycles, int maxRate, boolean directed) {
+	public Root generateSimpleRndModel(int maxNumOfBlocks, int maxCycles, int maxRate, boolean directed) {
 		addCPU("CPU", 4, 2);
 		Job job = addJob("Job");
 		int numOfBlocks = rnd.nextInt(maxNumOfBlocks);
@@ -79,6 +80,36 @@ public class SDRModelGenerator {
 						continue;
 					
 					addFlow(job, block1, block2, rnd.nextInt(maxRate));
+				}
+			}
+		}
+		
+		return generate();
+	}
+	
+	public Root generateSimpleUniformModel(int maxNumOfBlocks, int maxCycles, int maxRate, boolean directed) {
+		addCPU("CPU", 4, 2);
+		Job job = addJob("Job");
+		int numOfBlocks = maxNumOfBlocks;
+		LinkedList<Block> blocks = new LinkedList<>();
+		for(int i=0; i<numOfBlocks; i++) {
+			blocks.add(addBlock(job, job.getName() + "_Block#" + i, maxCycles));
+		}
+		
+		if(directed) {
+			Block current = blocks.poll();
+			while(!blocks.isEmpty()) {
+				Block next = blocks.poll();
+				addFlow(job, current, next, maxRate);
+				current = next;
+			}
+		} else {
+			for(Block block1 : blocks) {
+				for(Block block2 : blocks) {
+					if(block1.equals(block2))
+						continue;
+					
+					addFlow(job, block1, block2, maxRate);
 				}
 			}
 		}
