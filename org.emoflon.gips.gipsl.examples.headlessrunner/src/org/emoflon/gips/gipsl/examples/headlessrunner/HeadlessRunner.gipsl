@@ -2,7 +2,7 @@ package "org.emoflon.gips.gipsl.examples.headlessrunner"
 import "platform:/resource/org.emoflon.gips.gipsl.examples.headlessrunnermodel/model/Headlessrunnermodel.ecore"
 
 config {  
-	solver := GLPK [home:="fu", license:="bar"];
+	solver := GUROBI [home:="fu", license:="bar"];
 	timeLimit := true [value := 10.0];
 	randomSeed := true [value := 0];
 	presolve := true;
