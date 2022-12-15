@@ -17,7 +17,7 @@ public class SDRModelValidator {
 	public static void main(String[] args) {
 		String projectFolder = System.getProperty("user.dir");
 		String instancesFolder = projectFolder + "/../org.emoflon.gips.gipsl.examples.sdr.extended";
-		String file = instancesFolder + "/model-out3.xmi";
+		String file = instancesFolder + "/CPU_4_8@B8_C1-00_R1-00_UNI_solved.xmi";
 		ResourceSet rs = new ResourceSetImpl();
 		rs.getResourceFactoryRegistry().getExtensionToFactoryMap()
 		.put(Resource.Factory.Registry.DEFAULT_EXTENSION, new SmartEMFResourceFactoryImpl("../"));
@@ -64,8 +64,8 @@ public class SDRModelValidator {
 				.flatMap(cpu -> cpu.getCores().stream()
 						.flatMap(core -> core.getThreads().stream()))
 				.flatMap(thread -> thread.getGuests().stream())
-				.map(block -> (double) block.getCycles())
-				.reduce(0.0, (sum, cycles) -> sum + cycles);
+				.map(block -> block.getRelativeComplexity())
+				.reduce(0.0, (sum, complexity) -> sum + complexity);
 		sqOfSums = Math.pow(sqOfSums, 2);
 		
 		// Step 2: sumOfSquares
@@ -73,8 +73,8 @@ public class SDRModelValidator {
 				.flatMap(cpu -> cpu.getCores().stream()
 						.flatMap(core -> core.getThreads().stream()))
 				.map(thread -> Math.pow(thread.getGuests().stream()
-						.map(block -> (double) block.getCycles())
-						.reduce(0.0, (sum, cycles) -> sum + cycles), 2))
+						.map(block -> block.getRelativeComplexity())
+						.reduce(0.0, (sum, complexity) -> sum + complexity), 2))
 				.reduce(0.0, (sum, cycles) -> sum + cycles);
 		
 		// Step 2: numOf

@@ -1181,3 +1181,131 @@ Solution count 4: 520 562 604 883
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 5.200000000000e+02, best bound 5.200000000000e+02, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Thu Dec 15 12:38:06 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 1983 rows, 1312 columns and 5056 nonzeros
+Model fingerprint: 0x91860c9c
+Variable types: 216 continuous, 1096 integer (1096 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+04]
+  Objective range  [1e+00, 6e+00]
+  Bounds range     [1e+00, 1e+06]
+  RHS range        [1e-04, 1e+00]
+Presolve removed 1304 rows and 696 columns
+Presolve time: 0.02s
+Presolved: 679 rows, 616 columns, 2464 nonzeros
+Variable types: 8 continuous, 608 integer (592 binary)
+Found heuristic solution: objective 35.0000000
+
+Root relaxation: objective 7.000000e+00, 126 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    7.00000    0   23   35.00000    7.00000  80.0%     -    0s
+     0     0    7.00000    0   26   35.00000    7.00000  80.0%     -    0s
+H    0     0                      24.0000000    7.00000  70.8%     -    0s
+H    0     0                      23.0000000    7.00000  69.6%     -    0s
+H    0     0                      20.0000000    7.00000  65.0%     -    0s
+     0     0    7.00000    0   14   20.00000    7.00000  65.0%     -    0s
+     0     0    7.00000    0  120   20.00000    7.00000  65.0%     -    0s
+     0     0   10.44167    0  121   20.00000   10.44167  47.8%     -    0s
+     0     0   10.63925    0  123   20.00000   10.63925  46.8%     -    0s
+     0     0   10.83683    0  130   20.00000   10.83683  45.8%     -    0s
+     0     0   14.00000    0   98   20.00000   14.00000  30.0%     -    0s
+     0     0   14.00000    0   99   20.00000   14.00000  30.0%     -    0s
+     0     0   14.00000    0   86   20.00000   14.00000  30.0%     -    0s
+     0     0   14.00000    0   88   20.00000   14.00000  30.0%     -    0s
+     0     0   14.00000    0   88   20.00000   14.00000  30.0%     -    0s
+     0     0   14.00000    0   88   20.00000   14.00000  30.0%     -    0s
+     0     1   14.00000    0   76   20.00000   14.00000  30.0%     -    0s
+*   34     8               8      19.9999984   14.41667  27.9%  61.9    0s
+
+Cutting planes:
+  Learned: 1
+  Gomory: 16
+  MIR: 4
+
+Explored 68 nodes (4395 simplex iterations) in 0.26 seconds (0.27 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 5: 20 20 23 ... 35
+
+Optimal solution found (tolerance 1.00e-04)
+Warning: max constraint violation (1.5556e-06) exceeds tolerance
+Best objective 1.999999844444e+01, best bound 1.999999844444e+01, gap 0.0000%
+
+Gurobi 10.0.0 (win64, Java) logging started Thu Dec 15 12:39:36 2022
+
+Set parameter Username
+Academic license - for non-commercial use only - expires 2023-12-01
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 10.0.0 build v10.0.0rc2 (win64)
+
+CPU model: AMD Ryzen 9 5900X 12-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 12 physical cores, 24 logical processors, using up to 24 threads
+
+Optimize a model with 1983 rows, 1312 columns and 5056 nonzeros
+Model fingerprint: 0x207e72d8
+Variable types: 216 continuous, 1096 integer (1096 binary)
+Coefficient statistics:
+  Matrix range     [1e-01, 1e+04]
+  Objective range  [1e+00, 1e+02]
+  Bounds range     [1e+00, 1e+06]
+  RHS range        [1e-04, 1e+00]
+Presolve removed 1304 rows and 696 columns
+Presolve time: 0.01s
+Presolved: 679 rows, 616 columns, 2464 nonzeros
+Variable types: 8 continuous, 608 integer (592 binary)
+Found heuristic solution: objective 1407.0000000
+Found heuristic solution: objective 442.0000000
+
+Root relaxation: objective 7.000000e+00, 116 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    7.00000    0   33  442.00000    7.00000  98.4%     -    0s
+     0     0    7.00000    0   19  442.00000    7.00000  98.4%     -    0s
+H    0     0                      42.0000000    7.00000  83.3%     -    0s
+H    0     0                      34.0000000    7.00000  79.4%     -    0s
+     0     0    7.00000    0   14   34.00000    7.00000  79.4%     -    0s
+     0     0    7.00000    0  120   34.00000    7.00000  79.4%     -    0s
+H    0     0                      30.0000000    7.00000  76.7%     -    0s
+H    0     0                      26.0000000    8.50000  67.3%     -    0s
+     0     0   15.60000    0   60   26.00000   15.60000  40.0%     -    0s
+     0     0   18.41758    0   80   26.00000   18.41758  29.2%     -    0s
+     0     0   20.00000    0   68   26.00000   20.00000  23.1%     -    0s
+     0     0   20.00000    0   60   26.00000   20.00000  23.1%     -    0s
+     0     0   23.17647    0   87   26.00000   23.17647  10.9%     -    0s
+     0     0   23.33333    0   42   26.00000   23.33333  10.3%     -    0s
+     0     0   23.72727    0   77   26.00000   23.72727  8.74%     -    0s
+     0     0   23.72727    0   58   26.00000   23.72727  8.74%     -    0s
+     0     0   23.72727    0   90   26.00000   23.72727  8.74%     -    0s
+     0     0   23.72727    0   72   26.00000   23.72727  8.74%     -    0s
+     0     0   24.66667    0   44   26.00000   24.66667  5.13%     -    0s
+
+Cutting planes:
+  Gomory: 4
+  Clique: 3
+  MIR: 1
+  Zero half: 25
+
+Explored 1 nodes (2638 simplex iterations) in 0.18 seconds (0.14 work units)
+Thread count was 24 (of 24 available processors)
+
+Solution count 6: 26 30 34 ... 1407
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.600000000000e+01, best bound 2.600000000000e+01, gap 0.0000%

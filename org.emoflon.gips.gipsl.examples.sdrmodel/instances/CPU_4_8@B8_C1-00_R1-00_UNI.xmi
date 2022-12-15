@@ -58,37 +58,37 @@
     <intercoms name="CPU_core#3_thread#1-(itc)-&gt;CPU_core#2_thread#1" target="//@cpus.0/@cores.2/@threads.1" source="//@cpus.0/@cores.3/@threads.1" />
     <intercoms name="CPU_core#3_thread#1-(itc)-&gt;CPU_core#3_thread#0" target="//@cpus.0/@cores.3/@threads.0" source="//@cpus.0/@cores.3/@threads.1" />
     <cores name="CPU_core#0" numOfThreads="0">
-      <threads core="//@cpus.0/@cores.0" name="CPU_core#0_thread#0" allocatedCycles="0" diff="0.0" absDiff="0.0" />
-      <threads core="//@cpus.0/@cores.0" name="CPU_core#0_thread#1" allocatedCycles="0" diff="0.0" absDiff="0.0" />
+      <threads core="//@cpus.0/@cores.0" name="CPU_core#0_thread#0" allocatedComplexity="0.0" diff="0.0" absDiff="0.0" />
+      <threads core="//@cpus.0/@cores.0" name="CPU_core#0_thread#1" allocatedComplexity="0.0" diff="0.0" absDiff="0.0" />
     </cores>
     <cores name="CPU_core#1" numOfThreads="0">
-      <threads core="//@cpus.0/@cores.1" name="CPU_core#1_thread#0" allocatedCycles="0" diff="0.0" absDiff="0.0" />
-      <threads core="//@cpus.0/@cores.1" name="CPU_core#1_thread#1" allocatedCycles="0" diff="0.0" absDiff="0.0" />
+      <threads core="//@cpus.0/@cores.1" name="CPU_core#1_thread#0" allocatedComplexity="0.0" diff="0.0" absDiff="0.0" />
+      <threads core="//@cpus.0/@cores.1" name="CPU_core#1_thread#1" allocatedComplexity="0.0" diff="0.0" absDiff="0.0" />
     </cores>
     <cores name="CPU_core#2" numOfThreads="0">
-      <threads core="//@cpus.0/@cores.2" name="CPU_core#2_thread#0" allocatedCycles="0" diff="0.0" absDiff="0.0" />
-      <threads core="//@cpus.0/@cores.2" name="CPU_core#2_thread#1" allocatedCycles="0" diff="0.0" absDiff="0.0" />
+      <threads core="//@cpus.0/@cores.2" name="CPU_core#2_thread#0" allocatedComplexity="0.0" diff="0.0" absDiff="0.0" />
+      <threads core="//@cpus.0/@cores.2" name="CPU_core#2_thread#1" allocatedComplexity="0.0" diff="0.0" absDiff="0.0" />
     </cores>
     <cores name="CPU_core#3" numOfThreads="0">
-      <threads core="//@cpus.0/@cores.3" name="CPU_core#3_thread#0" allocatedCycles="0" diff="0.0" absDiff="0.0" />
-      <threads core="//@cpus.0/@cores.3" name="CPU_core#3_thread#1" allocatedCycles="0" diff="0.0" absDiff="0.0" />
+      <threads core="//@cpus.0/@cores.3" name="CPU_core#3_thread#0" allocatedComplexity="0.0" diff="0.0" absDiff="0.0" />
+      <threads core="//@cpus.0/@cores.3" name="CPU_core#3_thread#1" allocatedComplexity="0.0" diff="0.0" absDiff="0.0" />
     </cores>
   </cpus>
   <jobs name="Job">
-    <blocks name="Job_Block#0" cycles="50" outputs="//@jobs.0/@flows.0" />
-    <blocks name="Job_Block#1" cycles="50" inputs="//@jobs.0/@flows.0" outputs="//@jobs.0/@flows.1" />
-    <blocks name="Job_Block#2" cycles="50" inputs="//@jobs.0/@flows.1" outputs="//@jobs.0/@flows.2" />
-    <blocks name="Job_Block#3" cycles="50" inputs="//@jobs.0/@flows.2" outputs="//@jobs.0/@flows.3" />
-    <blocks name="Job_Block#4" cycles="50" inputs="//@jobs.0/@flows.3" outputs="//@jobs.0/@flows.4" />
-    <blocks name="Job_Block#5" cycles="50" inputs="//@jobs.0/@flows.4" outputs="//@jobs.0/@flows.5" />
-    <blocks name="Job_Block#6" cycles="50" inputs="//@jobs.0/@flows.5" outputs="//@jobs.0/@flows.6" />
-    <blocks name="Job_Block#7" cycles="50" inputs="//@jobs.0/@flows.6" />
-    <flows source="//@jobs.0/@blocks.0" target="//@jobs.0/@blocks.1" rate="20" />
-    <flows source="//@jobs.0/@blocks.1" target="//@jobs.0/@blocks.2" rate="20" />
-    <flows source="//@jobs.0/@blocks.2" target="//@jobs.0/@blocks.3" rate="20" />
-    <flows source="//@jobs.0/@blocks.3" target="//@jobs.0/@blocks.4" rate="20" />
-    <flows source="//@jobs.0/@blocks.4" target="//@jobs.0/@blocks.5" rate="20" />
-    <flows source="//@jobs.0/@blocks.5" target="//@jobs.0/@blocks.6" rate="20" />
-    <flows source="//@jobs.0/@blocks.6" target="//@jobs.0/@blocks.7" rate="20" />
+    <blocks name="Job_Block#0" relativeComplexity="1.0" outputRateMultiplier="0.0" inputRate="0.0" outputRate="0.0" outputs="//@jobs.0/@flows.0" />
+    <blocks name="Job_Block#1" relativeComplexity="1.0" outputRateMultiplier="0.0" inputRate="0.0" outputRate="0.0" inputs="//@jobs.0/@flows.0" outputs="//@jobs.0/@flows.1" />
+    <blocks name="Job_Block#2" relativeComplexity="1.0" outputRateMultiplier="0.0" inputRate="0.0" outputRate="0.0" inputs="//@jobs.0/@flows.1" outputs="//@jobs.0/@flows.2" />
+    <blocks name="Job_Block#3" relativeComplexity="1.0" outputRateMultiplier="0.0" inputRate="0.0" outputRate="0.0" inputs="//@jobs.0/@flows.2" outputs="//@jobs.0/@flows.3" />
+    <blocks name="Job_Block#4" relativeComplexity="1.0" outputRateMultiplier="0.0" inputRate="0.0" outputRate="0.0" inputs="//@jobs.0/@flows.3" outputs="//@jobs.0/@flows.4" />
+    <blocks name="Job_Block#5" relativeComplexity="1.0" outputRateMultiplier="0.0" inputRate="0.0" outputRate="0.0" inputs="//@jobs.0/@flows.4" outputs="//@jobs.0/@flows.5" />
+    <blocks name="Job_Block#6" relativeComplexity="1.0" outputRateMultiplier="0.0" inputRate="0.0" outputRate="0.0" inputs="//@jobs.0/@flows.5" outputs="//@jobs.0/@flows.6" />
+    <blocks name="Job_Block#7" relativeComplexity="1.0" outputRateMultiplier="0.0" inputRate="0.0" outputRate="0.0" inputs="//@jobs.0/@flows.6" />
+    <flows source="//@jobs.0/@blocks.0" target="//@jobs.0/@blocks.1" rate="1.0" />
+    <flows source="//@jobs.0/@blocks.1" target="//@jobs.0/@blocks.2" rate="1.0" />
+    <flows source="//@jobs.0/@blocks.2" target="//@jobs.0/@blocks.3" rate="1.0" />
+    <flows source="//@jobs.0/@blocks.3" target="//@jobs.0/@blocks.4" rate="1.0" />
+    <flows source="//@jobs.0/@blocks.4" target="//@jobs.0/@blocks.5" rate="1.0" />
+    <flows source="//@jobs.0/@blocks.5" target="//@jobs.0/@blocks.6" rate="1.0" />
+    <flows source="//@jobs.0/@blocks.6" target="//@jobs.0/@blocks.7" rate="1.0" />
   </jobs>
 </sdrmodel:Root>

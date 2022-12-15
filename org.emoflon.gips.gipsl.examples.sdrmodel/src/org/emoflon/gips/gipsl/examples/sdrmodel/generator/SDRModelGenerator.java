@@ -2,6 +2,7 @@ package org.emoflon.gips.gipsl.examples.sdrmodel.generator;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -24,6 +25,11 @@ import sdrmodel.SdrmodelFactory;
 import sdrmodel.SdrmodelPackage;
 
 public class SDRModelGenerator {
+	public static final DecimalFormat df = new DecimalFormat("0.00");
+	
+	public static String projectFolder = System.getProperty("user.dir");
+	public static String instancesFolder = projectFolder + "/instances";
+	
 	protected SdrmodelFactory factory = SdrmodelFactory.eINSTANCE;
 	
 	protected Map<String, CPU> cpus = new LinkedHashMap<>();
@@ -38,87 +44,107 @@ public class SDRModelGenerator {
 	protected Random rnd;
 	
 	public static void main(String[] args) {
-		String projectFolder = System.getProperty("user.dir");
-		String instancesFolder = projectFolder + "/instances";
-		File iF = new File(instancesFolder);
-		if(!iF.exists()) {
-			iF.mkdirs();
-		}
-		
-		SDRModelGenerator gen = new SDRModelGenerator("FunSeed123".hashCode());
-//		Root root = gen.generateSimpleRndModel(15, 100, 50, true);
-		Root root = gen.generateSimpleUniformModel(8, 50, 20, true);
-		
-		try {
-			save(root, instancesFolder + "/CPU_4_8-B8_C50_R20_UNI.xmi");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public Root generateSimpleRndModel(int maxNumOfBlocks, int maxCycles, int maxRate, boolean directed) {
-		addCPU("CPU", 4, 2);
-		Job job = addJob("Job");
-		int numOfBlocks = rnd.nextInt(maxNumOfBlocks);
-		LinkedList<Block> blocks = new LinkedList<>();
-		for(int i=0; i<numOfBlocks; i++) {
-			blocks.add(addBlock(job, job.getName() + "_Block#" + i, rnd.nextInt(maxCycles)));
-		}
-		
-		if(directed) {
-			Block current = blocks.poll();
-			while(!blocks.isEmpty()) {
-				Block next = blocks.poll();
-				addFlow(job, current, next, rnd.nextInt(maxRate));
-				current = next;
-			}
-		} else {
-			for(Block block1 : blocks) {
-				for(Block block2 : blocks) {
-					if(block1.equals(block2))
-						continue;
-					
-					addFlow(job, block1, block2, rnd.nextInt(maxRate));
-				}
-			}
-		}
-		
-		return generate();
-	}
-	
-	public Root generateSimpleUniformModel(int maxNumOfBlocks, int maxCycles, int maxRate, boolean directed) {
-		addCPU("CPU", 4, 2);
-		Job job = addJob("Job");
-		int numOfBlocks = maxNumOfBlocks;
-		LinkedList<Block> blocks = new LinkedList<>();
-		for(int i=0; i<numOfBlocks; i++) {
-			blocks.add(addBlock(job, job.getName() + "_Block#" + i, maxCycles));
-		}
-		
-		if(directed) {
-			Block current = blocks.poll();
-			while(!blocks.isEmpty()) {
-				Block next = blocks.poll();
-				addFlow(job, current, next, maxRate);
-				current = next;
-			}
-		} else {
-			for(Block block1 : blocks) {
-				for(Block block2 : blocks) {
-					if(block1.equals(block2))
-						continue;
-					
-					addFlow(job, block1, block2, maxRate);
-				}
-			}
-		}
-		
-		return generate();
+		initFileSystem();
+		generateSimpleUniformModel(4, 2, 8, 1, 1, true);
 	}
 	
 	public SDRModelGenerator(int seed) {
 		rnd = new Random(seed);
+	}
+	
+	public static void initFileSystem() {
+		File iF = new File(instancesFolder);
+		if(!iF.exists()) {
+			iF.mkdirs();
+		}
+	}
+	
+	public static Root generateSimpleUniformModel(int cores, int threadsPerCore, int blocks, double blockComplexity, double rate, boolean directed) {
+		SDRModelGenerator gen = new SDRModelGenerator("FunSeed123".hashCode());
+//		Root root = gen.generateSimpleRndModel(15, 100, 50, true);
+		gen.generateSimpleCPUModel(cores, threadsPerCore);
+		gen.generateSimpleUniformJobModel(blocks, blockComplexity, rate, directed);
+		Root root = gen.generate();
+		
+		StringBuilder fileName = new StringBuilder();
+		fileName.append("/CPU_");
+		fileName.append(cores);
+		fileName.append("_");
+		fileName.append(cores*threadsPerCore);
+		fileName.append("@B");
+		fileName.append(blocks);
+		fileName.append("_C");
+		fileName.append(df.format(blockComplexity).replace(",", "-"));
+		fileName.append("_R");
+		fileName.append(df.format(rate).replace(",", "-"));
+		fileName.append("_UNI.xmi");
+		
+		try {
+			save(root, instancesFolder + fileName.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return root;
+	}
+	
+	public void generateSimpleCPUModel(int numOfCores, int threadsPerCore) {
+		addCPU("CPU", numOfCores, threadsPerCore);
+	}
+	
+	public void generateSimpleRndJobModel(int maxNumOfBlocks, double minComplexity, double maxComplexity, double minRate, double maxRate, boolean directed) {
+		Job job = addJob("Job");
+		int numOfBlocks = rnd.nextInt(maxNumOfBlocks);
+		LinkedList<Block> blocks = new LinkedList<>();
+		for(int i=0; i<numOfBlocks; i++) {
+			blocks.add(addBlock(job, job.getName() + "_Block#" + i, rnd.nextDouble(minComplexity, maxComplexity)));
+		}
+		
+		if(directed) {
+			Block current = blocks.poll();
+			while(!blocks.isEmpty()) {
+				Block next = blocks.poll();
+				addFlow(job, current, next, rnd.nextDouble(minRate, maxRate));
+				current = next;
+			}
+		} else {
+			for(Block block1 : blocks) {
+				for(Block block2 : blocks) {
+					if(block1.equals(block2))
+						continue;
+					
+					addFlow(job, block1, block2, rnd.nextDouble(minRate, maxRate));
+				}
+			}
+		}
+	}
+	
+	public void generateSimpleUniformJobModel(int maxNumOfBlocks, double complexity, double rate, boolean directed) {
+		Job job = addJob("Job");
+		int numOfBlocks = maxNumOfBlocks;
+		LinkedList<Block> blocks = new LinkedList<>();
+		for(int i=0; i<numOfBlocks; i++) {
+			blocks.add(addBlock(job, job.getName() + "_Block#" + i, complexity));
+		}
+		
+		if(directed) {
+			Block current = blocks.poll();
+			while(!blocks.isEmpty()) {
+				Block next = blocks.poll();
+				addFlow(job, current, next, rate);
+				current = next;
+			}
+		} else {
+			for(Block block1 : blocks) {
+				for(Block block2 : blocks) {
+					if(block1.equals(block2))
+						continue;
+					
+					addFlow(job, block1, block2, rate);
+				}
+			}
+		}
 	}
 	
 	public Root generate() {
@@ -127,28 +153,6 @@ public class SDRModelGenerator {
 		root.getJobs().addAll(jobs.values());
 		
 		return root;
-	}
-	
-	public static void save(Root model, String path) throws IOException {
-		URI uri = URI.createFileURI(path);
-		ResourceSet rs = new ResourceSetImpl();
-		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		rs.getPackageRegistry().put(SdrmodelPackage.eNS_URI, SdrmodelPackage.eINSTANCE);
-		Resource r = rs.createResource(uri);
-		r.getContents().add(model);
-		r.save(null);
-		r.unload();
-	}
-	
-	public static Resource saveAndReturn(Root model, String path) throws IOException {
-		URI uri = URI.createFileURI(path);
-		ResourceSet rs = new ResourceSetImpl();
-		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		rs.getPackageRegistry().put(SdrmodelPackage.eNS_URI, SdrmodelPackage.eINSTANCE);
-		Resource r = rs.createResource(uri);
-		r.getContents().add(model);
-		r.save(null);
-		return r;
 	}
 	
 	public CPU addCPU(String name, int numOfCores, int threadsPerCore) {
@@ -217,20 +221,20 @@ public class SDRModelGenerator {
 		return job;
 	}
 	
-	public Block addBlock(final Job job, String name, int cycles) {
+	public Block addBlock(final Job job, String name, double complexity) {
 		if(!(jobs.containsKey(job.getName()) && jobs.get(job.getName()).equals(job)))
 			return null;
 		
 		Block block = factory.createBlock();
 		block.setName(name);
-		block.setCycles(cycles);
+		block.setRelativeComplexity(complexity);
 		job.getBlocks().add(block);
 		blocks.put(name, block);
 		
 		return block;
 	}
 	
-	public Flow addFlow(final Job job, final Block src, final Block trg, int rate) {
+	public Flow addFlow(final Job job, final Block src, final Block trg, double rate) {
 		if(!(jobs.containsKey(job.getName()) && jobs.get(job.getName()).equals(job)))
 			return null;
 		
@@ -249,4 +253,25 @@ public class SDRModelGenerator {
 		return flow;
 	}
 	
+	public static void save(Root model, String path) throws IOException {
+		URI uri = URI.createFileURI(path);
+		ResourceSet rs = new ResourceSetImpl();
+		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
+		rs.getPackageRegistry().put(SdrmodelPackage.eNS_URI, SdrmodelPackage.eINSTANCE);
+		Resource r = rs.createResource(uri);
+		r.getContents().add(model);
+		r.save(null);
+		r.unload();
+	}
+	
+	public static Resource saveAndReturn(Root model, String path) throws IOException {
+		URI uri = URI.createFileURI(path);
+		ResourceSet rs = new ResourceSetImpl();
+		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
+		rs.getPackageRegistry().put(SdrmodelPackage.eNS_URI, SdrmodelPackage.eINSTANCE);
+		Resource r = rs.createResource(uri);
+		r.getContents().add(model);
+		r.save(null);
+		return r;
+	}
 }

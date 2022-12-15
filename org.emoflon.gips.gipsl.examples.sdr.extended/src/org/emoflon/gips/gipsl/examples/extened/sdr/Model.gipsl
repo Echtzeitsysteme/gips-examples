@@ -87,7 +87,7 @@ rule flow2thread {
 	thread: Thread
 }
 
-rule thread (cycles : EInt, diff : EDouble, absDiff : EDouble){
+rule thread (cycles : EDouble, diff : EDouble, absDiff : EDouble){
 	cpu :CPU {
 		- cores -> core
 	}
@@ -97,7 +97,7 @@ rule thread (cycles : EInt, diff : EDouble, absDiff : EDouble){
 	}
 	
 	thread: Thread {
-		.allocatedCycles := param::cycles
+		.allocatedComplexity := param::cycles
 		.diff := param::diff
 		.absDiff := param::absDiff
 	}
@@ -112,7 +112,7 @@ mapping f2i with flow2intercom;
 mapping f2t with flow2thread;
 
 mapping usedThread with thread {
-	var cycles : EInt bind cycles
+	var cycles : EDouble bind cycles
 	var diff : EDouble bind diff
 	var absDiff : EDouble bind absDiff
 };
@@ -127,7 +127,7 @@ constraint -> mapping::usedThread {
 // This constraints forbids the case in line 3 of the normal implication table
 // -> It changes it to line 3 of our modified table
 constraint -> class::Thread {
-	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.cycles) == 
+	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.relativeComplexity) == 
 	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().cycles)
 }
 
@@ -224,5 +224,5 @@ objective glob -> class::Thread {
 
 // Combine the local objectives and give the maximization of used threads a large head start.
 global objective : min {
-	intercomcost + f2tcost + glob
+	intercomcost + f2tcost + glob*100
 }

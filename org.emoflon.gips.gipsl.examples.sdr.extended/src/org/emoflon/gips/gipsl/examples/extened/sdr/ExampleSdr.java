@@ -10,7 +10,7 @@ public class ExampleSdr {
 
 	public static void main(final String[] args) {
 		final ExtendedGipsAPI api = new ExtendedGipsAPI();
-		api.init(URI.createFileURI("../org.emoflon.gips.gipsl.examples.sdrmodel/instances/CPU_4_8-B8_C50_R20_UNI.xmi"));
+		api.init(URI.createFileURI("../org.emoflon.gips.gipsl.examples.sdrmodel/instances/CPU_4_8@B8_C1-00_R1-00_UNI.xmi"));
 		
 		api.buildILPProblem(true);
 		final ILPSolverOutput output = api.solveILPProblem();
@@ -23,7 +23,7 @@ public class ExampleSdr {
 		api.getUsedThread().applyNonZeroMappings();
 		
 		try {
-			api.saveResult("./model-out3.xmi");
+			api.saveResult("./CPU_4_8@B8_C1-00_R1-00_UNI_solved.xmi");
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
