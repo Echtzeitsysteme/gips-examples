@@ -87,7 +87,7 @@ rule flow2thread {
 	thread: Thread
 }
 
-rule thread (cycles : EDouble, diff : EDouble, absDiff : EDouble){
+rule thread (complexity : EDouble, diff : EDouble, absDiff : EDouble){
 	cpu :CPU {
 		- cores -> core
 	}
@@ -97,7 +97,7 @@ rule thread (cycles : EDouble, diff : EDouble, absDiff : EDouble){
 	}
 	
 	thread: Thread {
-		.allocatedComplexity := param::cycles
+		.allocatedComplexity := param::complexity
 		.diff := param::diff
 		.absDiff := param::absDiff
 	}
@@ -112,29 +112,29 @@ mapping f2i with flow2intercom;
 mapping f2t with flow2thread;
 
 mapping usedThread with thread {
-	var cycles : EDouble bind cycles
+	var complexity : EDouble bind complexity
 	var diff : EDouble bind diff
 	var absDiff : EDouble bind absDiff
 };
 
 constraint -> mapping::usedThread {
-	[self.variables().cycles >= 1 => self.value() >= 1] &
-	[self.value() >= 1 => self.variables().cycles >= 1 ] &
-	self.variables().cycles >= 0 &
+	[self.variables().complexity >= 0.0001 => self.value() >= 1] &
+	[self.value() >= 1 => self.variables().complexity >= 0.0001 ] &
+	self.variables().complexity >= 0 &
 	self.variables().absDiff >= 0
 }
 
 // This constraints forbids the case in line 3 of the normal implication table
 // -> It changes it to line 3 of our modified table
 constraint -> class::Thread {
-	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.relativeComplexity) == 
-	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().cycles)
+	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.relativeComplexity * m.nodes().block.inputRate) == 
+	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().complexity)
 }
 
 constraint -> class::Thread {
 	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().diff) == 
-	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().cycles) - 
-	mappings.usedThread->sum(m | m.variables().cycles * m.nodes().cpu.inverseThreadCount)
+	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().complexity) - 
+	mappings.usedThread->sum(m | m.variables().complexity * m.nodes().cpu.inverseThreadCount)
 }
 
 constraint -> mapping::usedThread {
@@ -152,8 +152,8 @@ constraint -> mapping::usedThread {
 	// A => B
 	// 1 => 1 = 1 : diff < 0 & abs_diff == -diff -> true
 	// 1 => 0 = 0 : diff < 0 & abs_diff != -diff -> false
-	// 0 => 1 = 1 : diff > 0 & abs_diff == diff -> true
-	// 0 => 0 = 1 : diff > 0 & abs_diff != diff -> true
+	// 0 => 1 = 1 : diff >= 0 & abs_diff == diff -> true
+	// 0 => 0 = 1 : diff >= 0 & abs_diff != diff -> true
 	[self.variables().diff <= -0.0001 =>
 	[self.variables().absDiff >= (self.variables().diff * -1.0) & self.variables().absDiff <= (self.variables().diff * -1.0)]]
 	// A => B & C => D
@@ -203,14 +203,18 @@ constraint -> pattern::flow2thread {
 
 // Objective = inter-thread communication
 objective intercomcost -> class::Interthreadcom {
-	mappings.f2i->filter(m | m.nodes().intercom.source.core == m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 2 +
-	mappings.f2i->filter(m | m.nodes().intercom.source.core != m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 6
+//	mappings.f2i->filter(m | m.nodes().intercom.source.core == m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 2 +
+	mappings.f2i->filter(m | m.nodes().intercom.source.core != m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate)
 }
 
-// Objective = flow to thread mapping (constant)
-objective f2tcost -> mapping::f2t {
-	1
-}
+//objective computecost -> class::Block {
+//	mappings.b2t->filter(m | m.nodes().block == self)->sum(m | m.nodes().block.relativeComplexity) * self.inputs->sum(in | in.rate)
+//}
+
+//// Objective = flow to thread mapping (constant)
+//objective f2tcost -> mapping::f2t {
+//	1
+//}
  
 // Objective for used threads:
 // In  general, we want to maximize the number of used threads.
@@ -223,6 +227,6 @@ objective glob -> class::Thread {
 }
 
 // Combine the local objectives and give the maximization of used threads a large head start.
-global objective : min {
-	intercomcost + f2tcost + glob*100
+global objective : min { 
+	intercomcost + glob*0.025
 }

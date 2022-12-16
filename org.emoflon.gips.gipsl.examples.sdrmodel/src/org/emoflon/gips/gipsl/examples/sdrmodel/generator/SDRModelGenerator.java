@@ -3,6 +3,7 @@ package org.emoflon.gips.gipsl.examples.sdrmodel.generator;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -45,7 +46,8 @@ public class SDRModelGenerator {
 	
 	public static void main(String[] args) {
 		initFileSystem();
-		generateSimpleUniformModel(4, 2, 8, 1, 1, true);
+//		generateSimpleUniformModel(4, 2, 8, 1, 1, true);
+		generateSimpleChainedModel(4, 2, 8, 1, 2, 1, 10, 0.5);
 	}
 	
 	public SDRModelGenerator(int seed) {
@@ -61,7 +63,6 @@ public class SDRModelGenerator {
 	
 	public static Root generateSimpleUniformModel(int cores, int threadsPerCore, int blocks, double blockComplexity, double rate, boolean directed) {
 		SDRModelGenerator gen = new SDRModelGenerator("FunSeed123".hashCode());
-//		Root root = gen.generateSimpleRndModel(15, 100, 50, true);
 		gen.generateSimpleCPUModel(cores, threadsPerCore);
 		gen.generateSimpleUniformJobModel(blocks, blockComplexity, rate, directed);
 		Root root = gen.generate();
@@ -89,16 +90,98 @@ public class SDRModelGenerator {
 		return root;
 	}
 	
+	public static Root generateSimpleChainedModel(int cores, int threadsPerCore, int chains, double inputRate, double m, int kF, double fC, double n) {
+		SDRModelGenerator gen = new SDRModelGenerator("FunSeed123".hashCode());
+		gen.generateSimpleCPUModel(cores, threadsPerCore);
+		gen.generateChainedJobModel(chains, inputRate, m, kF, fC, n);
+		Root root = gen.generate();
+		
+		StringBuilder fileName = new StringBuilder();
+		fileName.append("/CPU_");
+		fileName.append(cores);
+		fileName.append("_");
+		fileName.append(cores*threadsPerCore);
+		fileName.append("@m");
+		fileName.append(df.format(m).replace(",", "-"));
+		fileName.append("_kF");
+		fileName.append(kF);
+		fileName.append("_fC");
+		fileName.append(df.format(fC).replace(",", "-"));
+		fileName.append("_N");
+		fileName.append(df.format(n).replace(",", "-"));
+		fileName.append("_SimpleChain.xmi");
+		
+		try {
+			save(root, instancesFolder + fileName.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return root;
+	}
+	
 	public void generateSimpleCPUModel(int numOfCores, int threadsPerCore) {
 		addCPU("CPU", numOfCores, threadsPerCore);
 	}
 	
+	/* 	Creates a chain that consists of: 
+	 * 	(1) one repeat block (1 < multiplier == m, complexity == 1), 
+	 * 	(2) kF filters (multiplier == 1, complexity == fC) and 
+	 * 	(3) one keep-N Block (1 > multiplier == n > 0, complexity == 1)
+	 * 
+	 */
+	public void generateChainedJobModel(int chains, double inputRate, double m, int kF, double fC, double n) {
+		Job job = addJob("Job(M,kFc,N)", inputRate);
+		LinkedList<Block> chain = null;
+		double outputRate = 0.0;
+		for(int i = 0; i<chains; i++) {
+			if(chain == null) {
+				chain = generateChain_M_kFc_kN(job, inputRate, m, kF, fC, n);
+			} else {
+				Block kN = chain.getLast();
+				chain = generateChain_M_kFc_kN(job, outputRate, m, kF, fC, n);
+				Block M = chain.getFirst();
+				addFlow(job, kN, M, outputRate);
+				
+			}
+			outputRate = calcChainOutput(chain);
+		}
+	}
+
+	public LinkedList<Block> generateChain_M_kFc_kN(final Job job, double inputRate, double m, int kF, double fC, double n) {
+		LinkedList<Block> chain = new LinkedList<>();
+		Block M = addBlock(job, "M("+df.format(m)+")#"+blocks.size(), 1, m);
+		double mOutputRate = inputRate*m;
+		M.setInputRate(inputRate);
+		M.setOutputRate(mOutputRate);
+		chain.add(M);
+		
+		Block kN = addBlock(job, "kN("+df.format(n)+")#"+blocks.size()+kF+1, 1, n);
+		
+		for(int i = 0; i<kF; i++ ) {
+			Block F = addBlock(job, "fC("+df.format(fC)+")#"+blocks.size(), fC, 1);
+			chain.add(F);
+			F.setInputRate(mOutputRate);
+			F.setOutputRate(mOutputRate);
+			
+			kN.setInputRate(kN.getInputRate() + F.getOutputRate());
+			
+			addFlow(job, M, F, mOutputRate);
+			addFlow(job, F, kN, mOutputRate);
+		}
+		
+		kN.setOutputRate(kN.getInputRate()*n);
+		chain.add(kN);
+		return chain;
+	}
+	
 	public void generateSimpleRndJobModel(int maxNumOfBlocks, double minComplexity, double maxComplexity, double minRate, double maxRate, boolean directed) {
-		Job job = addJob("Job");
+		Job job = addJob("Job", 1);
 		int numOfBlocks = rnd.nextInt(maxNumOfBlocks);
 		LinkedList<Block> blocks = new LinkedList<>();
 		for(int i=0; i<numOfBlocks; i++) {
-			blocks.add(addBlock(job, job.getName() + "_Block#" + i, rnd.nextDouble(minComplexity, maxComplexity)));
+			blocks.add(addBlock(job, job.getName() + "_Block#" + i, rnd.nextDouble(minComplexity, maxComplexity), 1.0));
 		}
 		
 		if(directed) {
@@ -121,11 +204,11 @@ public class SDRModelGenerator {
 	}
 	
 	public void generateSimpleUniformJobModel(int maxNumOfBlocks, double complexity, double rate, boolean directed) {
-		Job job = addJob("Job");
+		Job job = addJob("Job", 1);
 		int numOfBlocks = maxNumOfBlocks;
 		LinkedList<Block> blocks = new LinkedList<>();
 		for(int i=0; i<numOfBlocks; i++) {
-			blocks.add(addBlock(job, job.getName() + "_Block#" + i, complexity));
+			blocks.add(addBlock(job, job.getName() + "_Block#" + i, complexity, 1.0));
 		}
 		
 		if(directed) {
@@ -213,21 +296,24 @@ public class SDRModelGenerator {
 		return itc;
 	}
 	
-	public Job addJob(String name) {
+	public Job addJob(String name, double inputRate) {
 		Job job = factory.createJob();
 		job.setName(name);
+		job.setInputRate(inputRate);
 		jobs.put(name, job);
 		
 		return job;
 	}
 	
-	public Block addBlock(final Job job, String name, double complexity) {
+	
+	public Block addBlock(final Job job, String name, double complexity, double rateMultiplier) {
 		if(!(jobs.containsKey(job.getName()) && jobs.get(job.getName()).equals(job)))
 			return null;
 		
 		Block block = factory.createBlock();
 		block.setName(name);
 		block.setRelativeComplexity(complexity);
+		block.setOutputRateMultiplier(rateMultiplier);
 		job.getBlocks().add(block);
 		blocks.put(name, block);
 		
@@ -251,6 +337,12 @@ public class SDRModelGenerator {
 		job.getFlows().add(flow);
 		
 		return flow;
+	}
+	
+	public static double calcChainOutput(LinkedList<Block> chain) {
+		Block M = chain.getFirst();
+		Block kN = chain.getLast();
+		return M.getOutputs().stream().map(flow -> flow.getRate()).reduce(0.0, (sum, rate) -> sum + rate) * kN.getOutputRateMultiplier();
 	}
 	
 	public static void save(Root model, String path) throws IOException {
