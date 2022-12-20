@@ -1,10 +1,5 @@
 package org.emoflon.gips.gipsl.examples.mdvne;
 
-import java.io.IOException;
-
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.core.ilp.ILPSolverStatus;
@@ -18,12 +13,12 @@ import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
 public class MdvneGipsIflyeAdapter {
-	
+
 	/**
 	 * MdVNE GIPS API object.
 	 */
 	final static MdvneGipsAPI api = new MdvneGipsAPI();
-	
+
 	/**
 	 * If true, the API was already initialized.
 	 */
@@ -32,24 +27,25 @@ public class MdvneGipsIflyeAdapter {
 	/**
 	 * Executes the embedding GIPS-based VNE algorithm.
 	 * 
-	 * @param model Resource set that contains the model (= the root node of the model).
+	 * @param model Resource set that contains the model (= the root node of the
+	 *              model).
 	 * @return True if embedding was successful.
 	 */
 	public static boolean execute(final ResourceSet model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model was null.");
 		}
-		
+
 		if (model.getResources() == null || model.getResources().isEmpty()) {
 			throw new IllegalArgumentException("Model resource set was null or empty.");
 		}
-		
+
 		// Init if not already initialized
 		if (!init) {
 			api.init(model);
 			init = true;
 		}
-		
+
 		// Build the ILP problem (including updates)
 		api.buildILPProblem(true);
 
