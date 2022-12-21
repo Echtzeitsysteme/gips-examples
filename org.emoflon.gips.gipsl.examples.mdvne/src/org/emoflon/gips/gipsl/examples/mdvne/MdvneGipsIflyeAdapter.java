@@ -76,7 +76,7 @@ public class MdvneGipsIflyeAdapter {
 		// at java.base/java.util.HashMap.forEach(HashMap.java:1421)
 		// at org.emoflon.gips.core.GipsEngine.terminate(GIPSEngine.java:71)
 
-		return (output.status() == ILPSolverStatus.OPTIMAL || output.status() == ILPSolverStatus.TIME_OUT);
+		return output.solutionCount() > 0;
 	}
 
 }
