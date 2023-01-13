@@ -15,6 +15,17 @@ This repository holds some GIPS example projects.
     * Launch `MdvneLauncher.launch` with a right click -> _Run As_ -> _MdvneLauncher_.
 
 
+## Example Overview
+
+| **Name**                                           | **Description**                                                                         |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `org.emoflon.gips.gipsl.examples.headlessrunner.*` | Example on how to build and use a GIPS project headlessly - export it to JAR and run it |
+| `org.emoflon.gips.gipsl.examples.helloworld`       | Very simple hello world example for the GIPS language - can not be executed             | 
+| `org.emoflon.gips.gipsl.examples.mdvne.*`          | Model-driven Virtual Network Embedding example with and without migration functionality |
+
+For more projects, refer to the [GIPS test repository](https://github.com/Echtzeitsysteme/gips-examples).
+
+
 ## License
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE.md) file for more details.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for more details.
