@@ -116,7 +116,6 @@ mapping aom with assignOffer {
 	var overTime : EInt
 };
 
-
 mapping projectCost with updateProject {
 	var salary : EDouble bind salary
 };
@@ -127,7 +126,7 @@ constraint -> class::Requirement {
 }
 
 constraint -> class::Project {
-	mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.variables().hours * m.nodes().worker.salary) + mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().overTime * m.nodes().worker.overtimeBonus) ==
+	mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.variables().hours * m.nodes().worker.salary) + mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.variables().overTime * m.nodes().worker.overtimeBonus) ==
 	mappings.projectCost->filter(m | m.nodes().project == self)->sum(m | m.variables().salary)
 }
 
