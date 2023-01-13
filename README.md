@@ -9,6 +9,7 @@ This repository holds some GIPS example projects.
 * Install [GIPS](https://github.com/Echtzeitsysteme/gips) as described in its [repository](https://github.com/Echtzeitsysteme/gips).
 * Launch a runtime workspace (while using a runtime Eclipse) as stated in the eMoflon::IBeX installation steps. (Please refer to the installation steps of GIPS above.)
 * Clone this Git repository to your local machine and import it into Eclipse: *File -> Import -> General -> Existing Projects into Workspace*. Import all projects.
+    * As an alternative, you can use this [PDF file](https://raw.githubusercontent.com/Echtzeitsysteme/gips-examples/main/projectSet.psf) for the import.
 * Build all your projects with the black eMoflon hammer. Sometimes, it is required to trigger a cleaning in Eclipse (*Project -> Clean... -> Clean all projects*).
 * You can now launch a GIPS project like `org.emoflon.gips.gipsl.examples.mdvne`:
     * Go to `org.emoflon.gips.gipsl.examples.mdvne` -> `src-gen` -> `org.emoflon.gips.gipsl.examples.mdvne.api.gips` in the project explorer.
