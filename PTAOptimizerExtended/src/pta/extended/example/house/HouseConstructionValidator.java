@@ -1,4 +1,4 @@
-package pta.example.house;
+package pta.extended.example.house;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -126,21 +126,22 @@ public class HouseConstructionValidator {
 			} else {
 				System.out.println("INFO: The project does not start at the required initial week: " + p.getInitialWeekNumber()+ ", but starts at: " + weeks.get(weeks.size()-1).getNumber() + ".");
 			}
-			
-			double totalCost = p.getTasks().stream()
-				.flatMap(t -> t.getRequirements().stream())
-				.map(r -> {
-					int offeredHours = r.getOffers().stream().map(offer -> offer.getHours())
-					.reduce(0, (sum, hours) -> sum + hours);
-					if(offeredHours < r.getHours()) {
-						// pay wages and add overtime bonus
-						int diff = r.getHours() - offeredHours;
-						return  r.getHours()*r.getSalary() + diff * r.getOvertimeBonus();
-					} else {
-						// pay only the required amount of hours ignore "over offers"
-						return r.getHours()*r.getSalary();
-					}
-				}).reduce(0.0, (sum, cost) -> sum + cost);
+//			
+//			double totalCost = p.getTasks().stream()
+//				.flatMap(t -> t.getRequirements().stream())
+//				.map(r -> {
+//					int offeredHours = r.getOffers().stream().map(offer -> offer.getHours())
+//					.reduce(0, (sum, hours) -> sum + hours);
+//					if(offeredHours < r.getHours()) {
+//						// pay wages and add overtime bonus
+//						int diff = r.getHours() - offeredHours;
+//						return  r.getHours()*r.getSalary() + diff * r.getOvertimeBonus();
+//					} else {
+//						// pay only the required amount of hours ignore "over offers"
+//						return r.getHours()*r.getSalary();
+//					}
+//				}).reduce(0.0, (sum, cost) -> sum + cost);
+			double totalCost = p.getSumSalary();
 			
 			if(totalCost <= p.getReward()) {
 				System.out.println("INFO: Project planning is within budget. Total salary is: " + totalCost + "€, while the planned spending limit was: " + p.getReward() + "€.");

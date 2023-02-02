@@ -140,7 +140,7 @@ public class PTAModelGenerator {
 		}
 		pTasks.put(name, t);
 		for(String prevTask : previousTasks) {
-			t.getNext().add(pTasks.get(prevTask));
+			t.getPrevious().add(pTasks.get(prevTask));
 		}
 		return t;
 	}
