@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdrmodel:Root xmlns:sdrmodel="platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
+  <cpus name="CPU" threadsPerCore="2" numOfThreads="8" inverseThreadCount="0.125" guests="//@jobs.0">
+    <intercoms name="CPU_core#0_thread#0-(itc)-&gt;CPU_core#0_thread#1" source="//@cpus.0/@cores.0/@threads.0" target="//@cpus.0/@cores.0/@threads.1" flowGuests="//@jobs.0/@flows.12" />
+    <intercoms name="CPU_core#0_thread#0-(itc)-&gt;CPU_core#1_thread#0" source="//@cpus.0/@cores.0/@threads.0" target="//@cpus.0/@cores.1/@threads.0" />
+    <intercoms name="CPU_core#0_thread#0-(itc)-&gt;CPU_core#1_thread#1" source="//@cpus.0/@cores.0/@threads.0" target="//@cpus.0/@cores.1/@threads.1" flowGuests="//@jobs.0/@flows.19" />
+    <intercoms name="CPU_core#0_thread#0-(itc)-&gt;CPU_core#2_thread#0" source="//@cpus.0/@cores.0/@threads.0" target="//@cpus.0/@cores.2/@threads.0" />
+    <intercoms name="CPU_core#0_thread#0-(itc)-&gt;CPU_core#2_thread#1" source="//@cpus.0/@cores.0/@threads.0" target="//@cpus.0/@cores.2/@threads.1" />
+    <intercoms name="CPU_core#0_thread#0-(itc)-&gt;CPU_core#3_thread#0" source="//@cpus.0/@cores.0/@threads.0" target="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#0_thread#0-(itc)-&gt;CPU_core#3_thread#1" source="//@cpus.0/@cores.0/@threads.0" target="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#0_thread#1-(itc)-&gt;CPU_core#0_thread#0" target="//@cpus.0/@cores.0/@threads.0" source="//@cpus.0/@cores.0/@threads.1" flowGuests="//@jobs.0/@flows.15" />
+    <intercoms name="CPU_core#0_thread#1-(itc)-&gt;CPU_core#1_thread#0" source="//@cpus.0/@cores.0/@threads.1" target="//@cpus.0/@cores.1/@threads.0" />
+    <intercoms name="CPU_core#0_thread#1-(itc)-&gt;CPU_core#1_thread#1" source="//@cpus.0/@cores.0/@threads.1" target="//@cpus.0/@cores.1/@threads.1" />
+    <intercoms name="CPU_core#0_thread#1-(itc)-&gt;CPU_core#2_thread#0" source="//@cpus.0/@cores.0/@threads.1" target="//@cpus.0/@cores.2/@threads.0" />
+    <intercoms name="CPU_core#0_thread#1-(itc)-&gt;CPU_core#2_thread#1" source="//@cpus.0/@cores.0/@threads.1" target="//@cpus.0/@cores.2/@threads.1" />
+    <intercoms name="CPU_core#0_thread#1-(itc)-&gt;CPU_core#3_thread#0" source="//@cpus.0/@cores.0/@threads.1" target="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#0_thread#1-(itc)-&gt;CPU_core#3_thread#1" source="//@cpus.0/@cores.0/@threads.1" target="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#1_thread#0-(itc)-&gt;CPU_core#0_thread#0" target="//@cpus.0/@cores.0/@threads.0" source="//@cpus.0/@cores.1/@threads.0" />
+    <intercoms name="CPU_core#1_thread#0-(itc)-&gt;CPU_core#0_thread#1" target="//@cpus.0/@cores.0/@threads.1" source="//@cpus.0/@cores.1/@threads.0" />
+    <intercoms name="CPU_core#1_thread#0-(itc)-&gt;CPU_core#1_thread#1" source="//@cpus.0/@cores.1/@threads.0" target="//@cpus.0/@cores.1/@threads.1" flowGuests="//@jobs.0/@flows.20" />
+    <intercoms name="CPU_core#1_thread#0-(itc)-&gt;CPU_core#2_thread#0" source="//@cpus.0/@cores.1/@threads.0" target="//@cpus.0/@cores.2/@threads.0" />
+    <intercoms name="CPU_core#1_thread#0-(itc)-&gt;CPU_core#2_thread#1" source="//@cpus.0/@cores.1/@threads.0" target="//@cpus.0/@cores.2/@threads.1" />
+    <intercoms name="CPU_core#1_thread#0-(itc)-&gt;CPU_core#3_thread#0" source="//@cpus.0/@cores.1/@threads.0" target="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#1_thread#0-(itc)-&gt;CPU_core#3_thread#1" source="//@cpus.0/@cores.1/@threads.0" target="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#1_thread#1-(itc)-&gt;CPU_core#0_thread#0" target="//@cpus.0/@cores.0/@threads.0" source="//@cpus.0/@cores.1/@threads.1" />
+    <intercoms name="CPU_core#1_thread#1-(itc)-&gt;CPU_core#0_thread#1" target="//@cpus.0/@cores.0/@threads.1" source="//@cpus.0/@cores.1/@threads.1" />
+    <intercoms name="CPU_core#1_thread#1-(itc)-&gt;CPU_core#1_thread#0" target="//@cpus.0/@cores.1/@threads.0" source="//@cpus.0/@cores.1/@threads.1" flowGuests="//@jobs.0/@flows.17" />
+    <intercoms name="CPU_core#1_thread#1-(itc)-&gt;CPU_core#2_thread#0" source="//@cpus.0/@cores.1/@threads.1" target="//@cpus.0/@cores.2/@threads.0" />
+    <intercoms name="CPU_core#1_thread#1-(itc)-&gt;CPU_core#2_thread#1" source="//@cpus.0/@cores.1/@threads.1" target="//@cpus.0/@cores.2/@threads.1" />
+    <intercoms name="CPU_core#1_thread#1-(itc)-&gt;CPU_core#3_thread#0" source="//@cpus.0/@cores.1/@threads.1" target="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#1_thread#1-(itc)-&gt;CPU_core#3_thread#1" source="//@cpus.0/@cores.1/@threads.1" target="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#2_thread#0-(itc)-&gt;CPU_core#0_thread#0" target="//@cpus.0/@cores.0/@threads.0" source="//@cpus.0/@cores.2/@threads.0" />
+    <intercoms name="CPU_core#2_thread#0-(itc)-&gt;CPU_core#0_thread#1" target="//@cpus.0/@cores.0/@threads.1" source="//@cpus.0/@cores.2/@threads.0" />
+    <intercoms name="CPU_core#2_thread#0-(itc)-&gt;CPU_core#1_thread#0" target="//@cpus.0/@cores.1/@threads.0" source="//@cpus.0/@cores.2/@threads.0" />
+    <intercoms name="CPU_core#2_thread#0-(itc)-&gt;CPU_core#1_thread#1" target="//@cpus.0/@cores.1/@threads.1" source="//@cpus.0/@cores.2/@threads.0" />
+    <intercoms name="CPU_core#2_thread#0-(itc)-&gt;CPU_core#2_thread#1" source="//@cpus.0/@cores.2/@threads.0" target="//@cpus.0/@cores.2/@threads.1" flowGuests="//@jobs.0/@flows.8" />
+    <intercoms name="CPU_core#2_thread#0-(itc)-&gt;CPU_core#3_thread#0" source="//@cpus.0/@cores.2/@threads.0" target="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#2_thread#0-(itc)-&gt;CPU_core#3_thread#1" source="//@cpus.0/@cores.2/@threads.0" target="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#2_thread#1-(itc)-&gt;CPU_core#0_thread#0" target="//@cpus.0/@cores.0/@threads.0" source="//@cpus.0/@cores.2/@threads.1" flowGuests="//@jobs.0/@flows.13" />
+    <intercoms name="CPU_core#2_thread#1-(itc)-&gt;CPU_core#0_thread#1" target="//@cpus.0/@cores.0/@threads.1" source="//@cpus.0/@cores.2/@threads.1" />
+    <intercoms name="CPU_core#2_thread#1-(itc)-&gt;CPU_core#1_thread#0" target="//@cpus.0/@cores.1/@threads.0" source="//@cpus.0/@cores.2/@threads.1" />
+    <intercoms name="CPU_core#2_thread#1-(itc)-&gt;CPU_core#1_thread#1" target="//@cpus.0/@cores.1/@threads.1" source="//@cpus.0/@cores.2/@threads.1" />
+    <intercoms name="CPU_core#2_thread#1-(itc)-&gt;CPU_core#2_thread#0" target="//@cpus.0/@cores.2/@threads.0" source="//@cpus.0/@cores.2/@threads.1" flowGuests="//@jobs.0/@flows.5" />
+    <intercoms name="CPU_core#2_thread#1-(itc)-&gt;CPU_core#3_thread#0" source="//@cpus.0/@cores.2/@threads.1" target="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#2_thread#1-(itc)-&gt;CPU_core#3_thread#1" source="//@cpus.0/@cores.2/@threads.1" target="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#3_thread#0-(itc)-&gt;CPU_core#0_thread#0" target="//@cpus.0/@cores.0/@threads.0" source="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#3_thread#0-(itc)-&gt;CPU_core#0_thread#1" target="//@cpus.0/@cores.0/@threads.1" source="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#3_thread#0-(itc)-&gt;CPU_core#1_thread#0" target="//@cpus.0/@cores.1/@threads.0" source="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#3_thread#0-(itc)-&gt;CPU_core#1_thread#1" target="//@cpus.0/@cores.1/@threads.1" source="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#3_thread#0-(itc)-&gt;CPU_core#2_thread#0" target="//@cpus.0/@cores.2/@threads.0" source="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#3_thread#0-(itc)-&gt;CPU_core#2_thread#1" target="//@cpus.0/@cores.2/@threads.1" source="//@cpus.0/@cores.3/@threads.0" />
+    <intercoms name="CPU_core#3_thread#0-(itc)-&gt;CPU_core#3_thread#1" source="//@cpus.0/@cores.3/@threads.0" target="//@cpus.0/@cores.3/@threads.1" flowGuests="//@jobs.0/@flows.3 //@jobs.0/@flows.0 //@jobs.0/@flows.4" />
+    <intercoms name="CPU_core#3_thread#1-(itc)-&gt;CPU_core#0_thread#0" target="//@cpus.0/@cores.0/@threads.0" source="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#3_thread#1-(itc)-&gt;CPU_core#0_thread#1" target="//@cpus.0/@cores.0/@threads.1" source="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#3_thread#1-(itc)-&gt;CPU_core#1_thread#0" target="//@cpus.0/@cores.1/@threads.0" source="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#3_thread#1-(itc)-&gt;CPU_core#1_thread#1" target="//@cpus.0/@cores.1/@threads.1" source="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#3_thread#1-(itc)-&gt;CPU_core#2_thread#0" target="//@cpus.0/@cores.2/@threads.0" source="//@cpus.0/@cores.3/@threads.1" />
+    <intercoms name="CPU_core#3_thread#1-(itc)-&gt;CPU_core#2_thread#1" target="//@cpus.0/@cores.2/@threads.1" source="//@cpus.0/@cores.3/@threads.1" flowGuests="//@jobs.0/@flows.7" />
+    <intercoms name="CPU_core#3_thread#1-(itc)-&gt;CPU_core#3_thread#0" target="//@cpus.0/@cores.3/@threads.0" source="//@cpus.0/@cores.3/@threads.1" flowGuests="//@jobs.0/@flows.2 //@jobs.0/@flows.1" />
+    <cores name="CPU_core#0" numOfThreads="0">
+      <threads core="//@cpus.0/@cores.0" name="CPU_core#0_thread#0" allocatedComplexity="23.0" diff="0.0" absDiff="0.0" guests="//@jobs.0/@blocks.12 //@jobs.0/@blocks.16 //@jobs.0/@blocks.14" flowGuests="//@jobs.0/@flows.11" />
+      <threads core="//@cpus.0/@cores.0" name="CPU_core#0_thread#1" allocatedComplexity="23.000000000000004" diff="0.0" absDiff="0.0" guests="//@jobs.0/@blocks.17 //@jobs.0/@blocks.13 //@jobs.0/@blocks.15" flowGuests="//@jobs.0/@flows.16 //@jobs.0/@flows.14" />
+    </cores>
+    <cores name="CPU_core#1" numOfThreads="0">
+      <threads core="//@cpus.0/@cores.1" name="CPU_core#1_thread#0" allocatedComplexity="23.0" diff="0.0" absDiff="0.0" guests="//@jobs.0/@blocks.19 //@jobs.0/@blocks.21 //@jobs.0/@blocks.20" flowGuests="//@jobs.0/@flows.18 //@jobs.0/@flows.22" />
+      <threads core="//@cpus.0/@cores.1" name="CPU_core#1_thread#1" allocatedComplexity="23.0" diff="0.0" absDiff="0.0" guests="//@jobs.0/@blocks.23 //@jobs.0/@blocks.18 //@jobs.0/@blocks.22" flowGuests="//@jobs.0/@flows.21" />
+    </cores>
+    <cores name="CPU_core#2" numOfThreads="0">
+      <threads core="//@cpus.0/@cores.2" name="CPU_core#2_thread#0" allocatedComplexity="22.999999999999993" diff="0.0" absDiff="0.0" guests="//@jobs.0/@blocks.9 //@jobs.0/@blocks.7 //@jobs.0/@blocks.8" flowGuests="//@jobs.0/@flows.6 //@jobs.0/@flows.10" />
+      <threads core="//@cpus.0/@cores.2" name="CPU_core#2_thread#1" allocatedComplexity="23.000000000000014" diff="0.0" absDiff="0.0" guests="//@jobs.0/@blocks.11 //@jobs.0/@blocks.10 //@jobs.0/@blocks.6" flowGuests="//@jobs.0/@flows.9" />
+    </cores>
+    <cores name="CPU_core#3" numOfThreads="0">
+      <threads core="//@cpus.0/@cores.3" name="CPU_core#3_thread#0" allocatedComplexity="23.0" diff="0.0" absDiff="0.0" guests="//@jobs.0/@blocks.1 //@jobs.0/@blocks.0 //@jobs.0/@blocks.5" />
+      <threads core="//@cpus.0/@cores.3" name="CPU_core#3_thread#1" allocatedComplexity="23.0" diff="0.0" absDiff="0.0" guests="//@jobs.0/@blocks.4 //@jobs.0/@blocks.3 //@jobs.0/@blocks.2" />
+    </cores>
+  </cpus>
+  <jobs hosts="//@cpus.0" name="Job(M,kFc,N)" inputRate="1.0">
+    <blocks host="//@cpus.0/@cores.3/@threads.0" name="M(2,00)#0" relativeComplexity="1.0" outputRateMultiplier="2.0" inputRate="1.0" outputRate="2.0" outputs="//@jobs.0/@flows.0" />
+    <blocks host="//@cpus.0/@cores.3/@threads.0" name="kN(0,50)#111" relativeComplexity="1.0" outputRateMultiplier="0.5" inputRate="2.0" outputRate="1.0" inputs="//@jobs.0/@flows.1" outputs="//@jobs.0/@flows.4" />
+    <blocks host="//@cpus.0/@cores.3/@threads.1" name="fC(10,00)#2" relativeComplexity="10.0" outputRateMultiplier="1.0" inputRate="2.0" outputRate="2.0" inputs="//@jobs.0/@flows.0" outputs="//@jobs.0/@flows.1" />
+    <blocks host="//@cpus.0/@cores.3/@threads.1" name="M(2,00)#3" relativeComplexity="1.0" outputRateMultiplier="2.0" inputRate="1.0" outputRate="2.0" outputs="//@jobs.0/@flows.2" inputs="//@jobs.0/@flows.4" />
+    <blocks host="//@cpus.0/@cores.3/@threads.1" name="kN(0,50)#411" relativeComplexity="1.0" outputRateMultiplier="0.5" inputRate="2.0" outputRate="1.0" inputs="//@jobs.0/@flows.3" outputs="//@jobs.0/@flows.7" />
+    <blocks host="//@cpus.0/@cores.3/@threads.0" name="fC(10,00)#5" relativeComplexity="10.0" outputRateMultiplier="1.0" inputRate="2.0" outputRate="2.0" inputs="//@jobs.0/@flows.2" outputs="//@jobs.0/@flows.3" />
+    <blocks host="//@cpus.0/@cores.2/@threads.1" name="M(2,00)#6" relativeComplexity="1.0" outputRateMultiplier="2.0" inputRate="1.0" outputRate="2.0" outputs="//@jobs.0/@flows.5" inputs="//@jobs.0/@flows.7" />
+    <blocks host="//@cpus.0/@cores.2/@threads.0" name="kN(0,50)#711" relativeComplexity="1.0" outputRateMultiplier="0.5" inputRate="2.0" outputRate="1.0" inputs="//@jobs.0/@flows.6" outputs="//@jobs.0/@flows.10" />
+    <blocks host="//@cpus.0/@cores.2/@threads.0" name="fC(10,00)#8" relativeComplexity="10.0" outputRateMultiplier="1.0" inputRate="2.0" outputRate="2.0" inputs="//@jobs.0/@flows.5" outputs="//@jobs.0/@flows.6" />
+    <blocks host="//@cpus.0/@cores.2/@threads.0" name="M(2,00)#9" relativeComplexity="1.0" outputRateMultiplier="2.0" inputRate="1.0" outputRate="2.0" outputs="//@jobs.0/@flows.8" inputs="//@jobs.0/@flows.10" />
+    <blocks host="//@cpus.0/@cores.2/@threads.1" name="kN(0,50)#1011" relativeComplexity="1.0" outputRateMultiplier="0.5" inputRate="2.0" outputRate="1.0" inputs="//@jobs.0/@flows.9" outputs="//@jobs.0/@flows.13" />
+    <blocks host="//@cpus.0/@cores.2/@threads.1" name="fC(10,00)#11" relativeComplexity="10.0" outputRateMultiplier="1.0" inputRate="2.0" outputRate="2.0" inputs="//@jobs.0/@flows.8" outputs="//@jobs.0/@flows.9" />
+    <blocks host="//@cpus.0/@cores.0/@threads.0" name="M(2,00)#12" relativeComplexity="1.0" outputRateMultiplier="2.0" inputRate="1.0" outputRate="2.0" outputs="//@jobs.0/@flows.11" inputs="//@jobs.0/@flows.13" />
+    <blocks host="//@cpus.0/@cores.0/@threads.1" name="kN(0,50)#1311" relativeComplexity="1.0" outputRateMultiplier="0.5" inputRate="2.0" outputRate="1.0" inputs="//@jobs.0/@flows.12" outputs="//@jobs.0/@flows.16" />
+    <blocks host="//@cpus.0/@cores.0/@threads.0" name="fC(10,00)#14" relativeComplexity="10.0" outputRateMultiplier="1.0" inputRate="2.0" outputRate="2.0" inputs="//@jobs.0/@flows.11" outputs="//@jobs.0/@flows.12" />
+    <blocks host="//@cpus.0/@cores.0/@threads.1" name="M(2,00)#15" relativeComplexity="1.0" outputRateMultiplier="2.0" inputRate="1.0" outputRate="2.0" outputs="//@jobs.0/@flows.14" inputs="//@jobs.0/@flows.16" />
+    <blocks host="//@cpus.0/@cores.0/@threads.0" name="kN(0,50)#1611" relativeComplexity="1.0" outputRateMultiplier="0.5" inputRate="2.0" outputRate="1.0" inputs="//@jobs.0/@flows.15" outputs="//@jobs.0/@flows.19" />
+    <blocks host="//@cpus.0/@cores.0/@threads.1" name="fC(10,00)#17" relativeComplexity="10.0" outputRateMultiplier="1.0" inputRate="2.0" outputRate="2.0" inputs="//@jobs.0/@flows.14" outputs="//@jobs.0/@flows.15" />
+    <blocks host="//@cpus.0/@cores.1/@threads.1" name="M(2,00)#18" relativeComplexity="1.0" outputRateMultiplier="2.0" inputRate="1.0" outputRate="2.0" outputs="//@jobs.0/@flows.17" inputs="//@jobs.0/@flows.19" />
+    <blocks host="//@cpus.0/@cores.1/@threads.0" name="kN(0,50)#1911" relativeComplexity="1.0" outputRateMultiplier="0.5" inputRate="2.0" outputRate="1.0" inputs="//@jobs.0/@flows.18" outputs="//@jobs.0/@flows.22" />
+    <blocks host="//@cpus.0/@cores.1/@threads.0" name="fC(10,00)#20" relativeComplexity="10.0" outputRateMultiplier="1.0" inputRate="2.0" outputRate="2.0" inputs="//@jobs.0/@flows.17" outputs="//@jobs.0/@flows.18" />
+    <blocks host="//@cpus.0/@cores.1/@threads.0" name="M(2,00)#21" relativeComplexity="1.0" outputRateMultiplier="2.0" inputRate="1.0" outputRate="2.0" outputs="//@jobs.0/@flows.20" inputs="//@jobs.0/@flows.22" />
+    <blocks host="//@cpus.0/@cores.1/@threads.1" name="kN(0,50)#2211" relativeComplexity="1.0" outputRateMultiplier="0.5" inputRate="2.0" outputRate="1.0" inputs="//@jobs.0/@flows.21" />
+    <blocks host="//@cpus.0/@cores.1/@threads.1" name="fC(10,00)#23" relativeComplexity="10.0" outputRateMultiplier="1.0" inputRate="2.0" outputRate="2.0" inputs="//@jobs.0/@flows.20" outputs="//@jobs.0/@flows.21" />
+    <flows host="//@cpus.0/@intercoms.48" source="//@jobs.0/@blocks.0" target="//@jobs.0/@blocks.2" rate="2.0" />
+    <flows host="//@cpus.0/@intercoms.55" source="//@jobs.0/@blocks.2" target="//@jobs.0/@blocks.1" rate="2.0" />
+    <flows host="//@cpus.0/@intercoms.55" source="//@jobs.0/@blocks.3" target="//@jobs.0/@blocks.5" rate="2.0" />
+    <flows host="//@cpus.0/@intercoms.48" source="//@jobs.0/@blocks.5" target="//@jobs.0/@blocks.4" rate="2.0" />
+    <flows host="//@cpus.0/@intercoms.48" source="//@jobs.0/@blocks.1" target="//@jobs.0/@blocks.3" rate="1.0" />
+    <flows host="//@cpus.0/@intercoms.39" source="//@jobs.0/@blocks.6" target="//@jobs.0/@blocks.8" rate="2.0" />
+    <flows host="//@cpus.0/@cores.2/@threads.0" source="//@jobs.0/@blocks.8" target="//@jobs.0/@blocks.7" rate="2.0" />
+    <flows host="//@cpus.0/@intercoms.54" source="//@jobs.0/@blocks.4" target="//@jobs.0/@blocks.6" rate="1.0" />
+    <flows host="//@cpus.0/@intercoms.32" source="//@jobs.0/@blocks.9" target="//@jobs.0/@blocks.11" rate="2.0" />
+    <flows host="//@cpus.0/@cores.2/@threads.1" source="//@jobs.0/@blocks.11" target="//@jobs.0/@blocks.10" rate="2.0" />
+    <flows host="//@cpus.0/@cores.2/@threads.0" source="//@jobs.0/@blocks.7" target="//@jobs.0/@blocks.9" rate="1.0" />
+    <flows host="//@cpus.0/@cores.0/@threads.0" source="//@jobs.0/@blocks.12" target="//@jobs.0/@blocks.14" rate="2.0" />
+    <flows host="//@cpus.0/@intercoms.0" source="//@jobs.0/@blocks.14" target="//@jobs.0/@blocks.13" rate="2.0" />
+    <flows host="//@cpus.0/@intercoms.35" source="//@jobs.0/@blocks.10" target="//@jobs.0/@blocks.12" rate="1.0" />
+    <flows host="//@cpus.0/@cores.0/@threads.1" source="//@jobs.0/@blocks.15" target="//@jobs.0/@blocks.17" rate="2.0" />
+    <flows host="//@cpus.0/@intercoms.7" source="//@jobs.0/@blocks.17" target="//@jobs.0/@blocks.16" rate="2.0" />
+    <flows host="//@cpus.0/@cores.0/@threads.1" source="//@jobs.0/@blocks.13" target="//@jobs.0/@blocks.15" rate="1.0" />
+    <flows host="//@cpus.0/@intercoms.23" source="//@jobs.0/@blocks.18" target="//@jobs.0/@blocks.20" rate="2.0" />
+    <flows host="//@cpus.0/@cores.1/@threads.0" source="//@jobs.0/@blocks.20" target="//@jobs.0/@blocks.19" rate="2.0" />
+    <flows host="//@cpus.0/@intercoms.2" source="//@jobs.0/@blocks.16" target="//@jobs.0/@blocks.18" rate="1.0" />
+    <flows host="//@cpus.0/@intercoms.16" source="//@jobs.0/@blocks.21" target="//@jobs.0/@blocks.23" rate="2.0" />
+    <flows host="//@cpus.0/@cores.1/@threads.1" source="//@jobs.0/@blocks.23" target="//@jobs.0/@blocks.22" rate="2.0" />
+    <flows host="//@cpus.0/@cores.1/@threads.0" source="//@jobs.0/@blocks.19" target="//@jobs.0/@blocks.21" rate="1.0" />
+  </jobs>
+</sdrmodel:Root>
