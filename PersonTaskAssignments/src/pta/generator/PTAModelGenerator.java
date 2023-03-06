@@ -26,15 +26,15 @@ import PersonTaskAssignments.Week;
 
 public class PTAModelGenerator {
 	protected PersonTaskAssignmentsFactory factory = PersonTaskAssignmentsFactory.eINSTANCE;
-	
+
 	protected Map<String, SkillType> skillTypes = new LinkedHashMap<>();
 	protected Map<String, Person> persons = new LinkedHashMap<>();
 	protected Map<Integer, Week> weeks = new LinkedHashMap<>();
 	protected Map<String, Project> projects = new LinkedHashMap<>();
-	protected Map<String, Map<String, Task>> tasks = new LinkedHashMap<>(); 
-	
+	protected Map<String, Map<String, Task>> tasks = new LinkedHashMap<>();
+
 	protected PersonTaskAssignmentModel root;
-	
+
 	public PersonTaskAssignmentModel generate() {
 		root = factory.createPersonTaskAssignmentModel();
 		root.getSkillTypes().addAll(skillTypes.values());
@@ -43,7 +43,7 @@ public class PTAModelGenerator {
 		root.getProjects().addAll(projects.values());
 		return root;
 	}
-	
+
 	public static void save(PersonTaskAssignmentModel model, String path) throws IOException {
 		URI uri = URI.createFileURI(path);
 		ResourceSet rs = new ResourceSetImpl();
@@ -54,7 +54,7 @@ public class PTAModelGenerator {
 		r.save(null);
 		r.unload();
 	}
-	
+
 	public static Resource saveAndReturn(PersonTaskAssignmentModel model, String path) throws IOException {
 		URI uri = URI.createFileURI(path);
 		ResourceSet rs = new ResourceSetImpl();
@@ -65,17 +65,17 @@ public class PTAModelGenerator {
 		r.save(null);
 		return r;
 	}
-	
+
 	public SkillType addSkillType(String name) {
 		SkillType type = factory.createSkillType();
 		type.setName(name);
 		skillTypes.put(name, type);
 		return type;
 	}
-	
-	public Collection<SkillType> addSkillType(String ... names) {
+
+	public Collection<SkillType> addSkillType(String... names) {
 		Collection<SkillType> st = new LinkedHashSet<>();
-		for(String name : names) {
+		for (String name : names) {
 			SkillType type = factory.createSkillType();
 			type.setName(name);
 			skillTypes.put(name, type);
@@ -83,8 +83,9 @@ public class PTAModelGenerator {
 		}
 		return st;
 	}
-	
-	public Person addPerson(String name, double salary, double flexibility, double overtimeSalary, Map<String, Integer> skills) {
+
+	public Person addPerson(String name, double salary, double flexibility, double overtimeSalary,
+			Map<String, Integer> skills) {
 		Person p = factory.createPerson();
 		p.setName(name);
 		p.setSalary(salary);
@@ -93,7 +94,7 @@ public class PTAModelGenerator {
 		skills.forEach((sName, sLevel) -> {
 			Skill skill = factory.createSkill();
 			SkillType type = skillTypes.get(sName);
-			if(type == null) {
+			if (type == null) {
 				type = addSkillType(sName);
 			}
 			skill.setName(type.getName());
@@ -104,10 +105,10 @@ public class PTAModelGenerator {
 		persons.put(name, p);
 		return p;
 	}
-	
-	public Collection<Offer> addOffer(String person, int week, int ... hours) {
+
+	public Collection<Offer> addOffer(String person, int week, int... hours) {
 		Collection<Offer> os = new LinkedHashSet<>();
-		for(int hour : hours) {
+		for (int hour : hours) {
 			Offer offer = factory.createOffer();
 			offer.setHours(hour);
 			os.add(offer);
@@ -116,7 +117,7 @@ public class PTAModelGenerator {
 		persons.get(person).getOffers().addAll(os);
 		return os;
 	}
-	
+
 	public Project addProject(String name, double reward, int weeksUntilLoss, double lossPerWeek, int start) {
 		Project p = factory.createProject();
 		p.setName(name);
@@ -128,24 +129,25 @@ public class PTAModelGenerator {
 		projects.put(name, p);
 		return p;
 	}
-	
-	public Task addTask(String project, String name, String ... previousTasks) {
+
+	public Task addTask(String project, String name, String... previousTasks) {
 		Task t = factory.createTask();
 		t.setName(name);
 		projects.get(project).getTasks().add(t);
 		Map<String, Task> pTasks = tasks.get(project);
-		if(pTasks == null) {
+		if (pTasks == null) {
 			pTasks = new LinkedHashMap<>();
 			tasks.put(project, pTasks);
 		}
 		pTasks.put(name, t);
-		for(String prevTask : previousTasks) {
+		for (String prevTask : previousTasks) {
 			t.getPrevious().add(pTasks.get(prevTask));
 		}
 		return t;
 	}
-	
-	public Requirement addRequirement(String project, String task, int hours, int skillLevel, String skill, double salary, double overtimebonus) {
+
+	public Requirement addRequirement(String project, String task, int hours, int skillLevel, String skill,
+			double salary, double overtimebonus) {
 		Requirement r = factory.createRequirement();
 		Task t = tasks.get(project).get(task);
 		t.getRequirements().add(r);
@@ -157,18 +159,18 @@ public class PTAModelGenerator {
 		r.setOvertimeBonus(overtimebonus);
 		return r;
 	}
-	
+
 	public Collection<Week> addWeeks(int start, int end) {
 		Collection<Week> ws = new LinkedHashSet<>();
 		Week prev = null;
-		for(int i = start; i<=end; i++) {
+		for (int i = start; i <= end; i++) {
 			Week w = factory.createWeek();
 			w.setNumber(i);
 			weeks.put(i, w);
 			ws.add(w);
-			if(prev != null)
+			if (prev != null)
 				w.setPrevious(prev);
-			
+
 			prev = w;
 		}
 
