@@ -5,11 +5,7 @@ import java.io.IOException;
 import org.eclipse.emf.common.util.URI;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 
-import PTAOptimizer.api.PTAOptimizerAPI;
-import PTAOptimizer.api.PTAOptimizerApp;
-import PTAOptimizer.api.PTAOptimizerHiPEApp;
 import PTAOptimizer.api.gips.PTAOptimizerGipsAPI;
-import PersonTaskAssignments.PersonTaskAssignmentModel;
 
 public class HouseConstructionExample {
 

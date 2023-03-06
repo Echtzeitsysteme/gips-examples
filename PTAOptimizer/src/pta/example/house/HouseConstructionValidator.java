@@ -13,13 +13,13 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
+import PersonTaskAssignments.Person;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
 import PersonTaskAssignments.PersonTaskAssignmentsPackage;
 import PersonTaskAssignments.Project;
 import PersonTaskAssignments.Requirement;
 import PersonTaskAssignments.Task;
 import PersonTaskAssignments.Week;
-import PersonTaskAssignments.Person;
 
 public class HouseConstructionValidator {
 

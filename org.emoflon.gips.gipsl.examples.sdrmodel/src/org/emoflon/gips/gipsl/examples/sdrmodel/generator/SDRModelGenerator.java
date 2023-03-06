@@ -3,7 +3,6 @@ package org.emoflon.gips.gipsl.examples.sdrmodel.generator;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
