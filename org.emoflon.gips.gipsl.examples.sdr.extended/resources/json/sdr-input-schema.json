@@ -1,0 +1,66 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "cores": {
+            "type": "integer"
+        },
+        "threadsPerCore": {
+            "type": "integer"
+        },
+        "interThreadCommunicationFactor": {
+            "type": "number"
+        },
+        "blocks": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer"
+                        },
+                        "complextity": {
+                            "type": "integer"
+                        },
+                        "inToOut": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "complextity",
+                        "inToOut"
+                    ]
+                }
+            ]
+        },
+        "flows": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "sourceId": {
+                            "type": "integer"
+                        },
+                        "targetId": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "sourceId",
+                        "targetId"
+                    ]
+                }
+            ]
+        }
+    },
+    "required": [
+        "cores",
+        "threadsPerCore",
+        "interThreadCommunicationFactor",
+        "blocks",
+        "flows"
+    ]
+}
