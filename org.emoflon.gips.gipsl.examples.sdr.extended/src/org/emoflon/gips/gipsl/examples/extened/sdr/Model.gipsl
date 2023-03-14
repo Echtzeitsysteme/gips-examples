@@ -88,11 +88,11 @@ rule flow2thread {
 }
 
 rule thread (complexity : EDouble, diff : EDouble, absDiff : EDouble){
-	cpu :CPU {
+	cpu: CPU {
 		- cores -> core
 	}
 	
-	core : Core {
+	core: Core {
 		- threads -> thread
 	}
 	
@@ -102,6 +102,10 @@ rule thread (complexity : EDouble, diff : EDouble, absDiff : EDouble){
 		.absDiff := param::absDiff
 	}
 }
+
+//pattern findRoot {
+//	root: Root
+//}
 
 //
 // GIPSL starts here!
@@ -227,6 +231,8 @@ objective glob -> class::Thread {
 }
 
 // Combine the local objectives and give the maximization of used threads a large head start.
-global objective : min { 
-	intercomcost + glob*0.025
+global objective : min {
+	intercomcost + glob * 0.025
+	// TODO: Use weight from model
+	// patterns.findRoot->sum(p | p.nodes().root.interThreadCommunicationFactor)
 }

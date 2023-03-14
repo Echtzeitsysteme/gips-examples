@@ -112,7 +112,6 @@ public class JsonSdrRunner {
 		final int cores = outerJsonObject.get("cores").getAsInt();
 		final int threadPerCores = outerJsonObject.get("threadsPerCore").getAsInt();
 		final double interTCF = outerJsonObject.get("interThreadCommunicationFactor").getAsDouble();
-		// TODO: ^must be placed in model instance!
 
 		// Arrays
 		final JsonArray blocks = outerJsonObject.get("blocks").getAsJsonArray();
@@ -159,6 +158,7 @@ public class JsonSdrRunner {
 
 		// Generate root element and save it as XMI file
 		final Root root = gen.generate();
+		root.setInterThreadCommunicationFactor(interTCF);
 		try {
 			SDRModelGenerator.save(root, JSON_MODEL_URI);
 		} catch (final IOException e) {
