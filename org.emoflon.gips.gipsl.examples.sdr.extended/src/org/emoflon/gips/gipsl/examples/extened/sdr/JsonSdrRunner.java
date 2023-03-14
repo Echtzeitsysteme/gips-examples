@@ -31,6 +31,9 @@ import sdrmodel.Flow;
 import sdrmodel.Job;
 import sdrmodel.Root;
 
+/**
+ * JSON-based GIPS SDR example runner.
+ */
 public class JsonSdrRunner {
 
 	/**
@@ -44,26 +47,25 @@ public class JsonSdrRunner {
 	public static final String JSON_MODEL_RESULT_URI = "./json-model-result.xmi";
 
 	/**
-	 * JSON input file path. (Will be set by the argument passing method).
-	 */
-	private static String jsonInputPathString = "";
-
-	/**
 	 * Method to run the JSON-based SDR runner. Input arguments must contain the
 	 * JSON file location (input file).
 	 * 
-	 * @param args
+	 * @param args Array of string arguments to parse.
 	 */
 	public static void main(final String[] args) {
-		parseArgs(args);
-		convertJsonToXmiModel();
-//		runGips();
-//		System.out.println("GIPS run finished.");
-//
-//		// TODO: Convert XMI model to JSON output
-//		System.exit(0);
+		final String inputPath = parseArgs(args);
+		convertJsonToXmiModel(inputPath);
+		runGips();
+		System.out.println("GIPS run finished.");
+
+		// TODO: Convert XMI model to JSON output
+		System.exit(0);
 	}
 
+	/**
+	 * Runs the GIPS calculation. Uses the `JSON_MODEL_URI` as input model and saves
+	 * the result as XMI file to `JSON_MODEL_RESULT_URI`.
+	 */
 	private static void runGips() {
 		// Create the API
 		final ExtendedGipsAPI api = new ExtendedGipsAPI();
@@ -86,13 +88,20 @@ public class JsonSdrRunner {
 		}
 	}
 
-	private static void convertJsonToXmiModel() {
+	/**
+	 * Loads the JSON file provided as inputPath and constructs a XMI model instance
+	 * according to the input data. The XMI model instance will be saved to
+	 * `JSON_MODEL_URI`.
+	 * 
+	 * @param inputPath Path as string to load the JSON file from.
+	 */
+	private static void convertJsonToXmiModel(final String inputPath) {
 		// Load JSON model/configuration file
 		String jsonData = null;
 		try {
-			jsonData = new String(Files.readAllBytes(Paths.get(jsonInputPathString)));
+			jsonData = new String(Files.readAllBytes(Paths.get(inputPath)));
 		} catch (final IOException e) {
-			System.err.println("File " + jsonInputPathString + " could not be read.");
+			System.err.println("File " + inputPath + " could not be read.");
 			System.exit(1);
 		}
 
@@ -141,25 +150,14 @@ public class JsonSdrRunner {
 		// Set input rate for the first Block to 1
 		final Block firstBlock = findFirstBlock(modelBlocks, modelFlows);
 		firstBlock.setInputRate(1);
-		
+
 		// Set output rate for the first Block
 		firstBlock.setOutputRate(firstBlock.getInputRate() * firstBlock.getOutputRateMultiplier());
 
-//		// Set input rate and output rate of all remaining Blocks
-//		modelBlocks.forEach((id, block) -> {
-//			block.setOutputRate(block.getInputRate() * block.getOutputRateMultiplier());
-//			
-//			// Skip input calculation for the first block
-//			if (firstBlock.equals(block)) {
-//				return;
-//			}
-//			
-//			// All other blocks
-//			// TODO: Input
-//		});
-		
+		// Calculate all output/flow rates beginning with the first block
 		propagateRatesFromBlock(firstBlock);
 
+		// Generate root element and save it as XMI file
 		final Root root = gen.generate();
 		try {
 			SDRModelGenerator.save(root, JSON_MODEL_URI);
@@ -167,19 +165,41 @@ public class JsonSdrRunner {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Calculates all following rates for a given Block b and all of its outgoing
+	 * flows. Can be called recursively to propagate all rates for a whole network.
+	 * 
+	 * This method adds every incoming flow of a block and multiplies it with the
+	 * block's in-to-out rate.
+	 * 
+	 * Please notice that this method is unable to calculate flows if the whole
+	 * graph is not contiguous.
+	 * 
+	 * @param b Block to start the calculations from.
+	 */
 	private static void propagateRatesFromBlock(final Block b) {
-		if(!b.getInputs().isEmpty()) {
-			final double inputSum = b.getInputs().stream().map(flow -> flow.getRate()).reduce(0.0, (sum, rate) -> sum + rate);
+		if (!b.getInputs().isEmpty()) {
+			final double inputSum = b.getInputs().stream().map(flow -> flow.getRate()).reduce(0.0,
+					(sum, rate) -> sum + rate);
 			b.setOutputRate(inputSum * b.getOutputRateMultiplier());
 		}
-		
+
 		b.getOutputs().forEach(f -> {
 			f.setRate(b.getOutputRate());
 			propagateRatesFromBlock(f.getTarget());
 		});
 	}
 
+	/**
+	 * Finds the first block for all given model blocks and model flows. I.e., this
+	 * method searches for the first occurrence for a block that does not have any
+	 * incoming flows.
+	 * 
+	 * @param modelBlocks All model blocks.
+	 * @param modelFlows  All model flows.
+	 * @return First found block that does not have any incoming flows.
+	 */
 	private static Block findFirstBlock(final Map<Integer, Block> modelBlocks, final Set<Flow> modelFlows) {
 		// Get all target IDs/names
 		final Set<String> targetIds = new HashSet<String>();
@@ -201,28 +221,13 @@ public class JsonSdrRunner {
 		return null;
 	}
 
-//	private static Block findLastBlock(final Map<Integer, Block> modelBlocks, final Set<Flow> modelFlows) {
-//		// Get all source IDs/names
-//		final Set<String> sourceIds = new HashSet<String>();
-//		final Iterator<Flow> flowIt = modelFlows.iterator();
-//		while (flowIt.hasNext()) {
-//			final Flow f = flowIt.next();
-//			sourceIds.add(f.getSource().getName());
-//		}
-//
-//		// Find the block that is not contained in source IDs/names
-//		final Iterator<Integer> blockIt = modelBlocks.keySet().iterator();
-//		while (blockIt.hasNext()) {
-//			final Block b = modelBlocks.get(blockIt.next());
-//			if (!sourceIds.contains(b.getName())) {
-//				return b;
-//			}
-//		}
-//
-//		return null;
-//	}
-
-	private static void parseArgs(final String[] args) {
+	/**
+	 * Parses the given array of string arguments to the JSON input path.
+	 * 
+	 * @param args Array of string arguments.
+	 * @return JSON input path as string.
+	 */
+	private static String parseArgs(final String[] args) {
 		final Options options = new Options();
 		final Option jsonInputPath = new Option("i", "input", true, "JSON input file path to use");
 		jsonInputPath.setRequired(true);
@@ -241,7 +246,8 @@ public class JsonSdrRunner {
 			System.exit(1);
 		}
 
-		jsonInputPathString = cmd.getOptionValue("input");
+		// Return path
+		return cmd.getOptionValue("input");
 	}
 
 }
