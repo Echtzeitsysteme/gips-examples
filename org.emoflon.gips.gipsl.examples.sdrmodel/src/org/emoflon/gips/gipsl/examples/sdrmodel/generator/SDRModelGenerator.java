@@ -235,6 +235,12 @@ public class SDRModelGenerator {
 
 	public Root generate() {
 		root = factory.createRoot();
+		
+		// Add root to all threads
+		threads.forEach((k, t) -> {
+			t.setRoot(root);
+		});
+		
 		root.getCpus().addAll(cpus.values());
 		root.getJobs().addAll(jobs.values());
 

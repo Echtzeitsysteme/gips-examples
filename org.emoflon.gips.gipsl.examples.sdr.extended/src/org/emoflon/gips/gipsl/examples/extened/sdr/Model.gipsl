@@ -103,10 +103,6 @@ rule thread (complexity : EDouble, diff : EDouble, absDiff : EDouble){
 	}
 }
 
-//pattern findRoot {
-//	root: Root
-//}
-
 //
 // GIPSL starts here!
 //
@@ -227,12 +223,11 @@ objective intercomcost -> class::Interthreadcom {
 //}
 
 objective glob -> class::Thread {
-	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().absDiff)
+	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().absDiff) * self.root.interThreadCommunicationFactor
 }
 
 // Combine the local objectives and give the maximization of used threads a large head start.
 global objective : min {
-	intercomcost + glob * 0.025
-	// TODO: Use weight from model
-	// patterns.findRoot->sum(p | p.nodes().root.interThreadCommunicationFactor)
+	intercomcost + glob
+	// ^weight is included in `glob`
 }
