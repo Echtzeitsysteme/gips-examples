@@ -6,3 +6,5 @@ bin
 *.log
 /**/*.log
 
+
+org.emoflon.gips.gipsl.examples.sdr.extended/json-model.xmi
