@@ -21,10 +21,10 @@
                             "type": "integer"
                         },
                         "complextity": {
-                            "type": "integer"
+                            "type": "number"
                         },
                         "inToOut": {
-                            "type": "integer"
+                            "type": "number"
                         }
                     },
                     "required": [
