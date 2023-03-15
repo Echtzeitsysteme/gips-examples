@@ -1,11 +1,15 @@
 package org.emoflon.gips.gipsl.examples.extened.sdr;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,12 +21,15 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.gipsl.examples.sdr.extended.api.gips.ExtendedGipsAPI;
 import org.emoflon.gips.gipsl.examples.sdrmodel.generator.SDRModelGenerator;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -55,18 +62,42 @@ public class JsonSdrRunner {
 	public static void main(final String[] args) {
 		final String inputPath = parseArgs(args);
 		convertJsonToXmiModel(inputPath);
-		runGips();
+		final Collection<SolutionMapping> mappings = runGips();
+		convertSolutionToJson("./solution.json", mappings);
 		System.out.println("GIPS run finished.");
-
-		// TODO: Convert XMI model to JSON output
 		System.exit(0);
+	}
+
+	private static void convertSolutionToJson(final String outputPath, final Collection<SolutionMapping> mappings) {		
+		final List<SolutionMapping> block2Thread = mappings.stream().filter(m -> m.type == MappingType.BLOCK_TO_THREAD).toList();
+		final List<Block2ThreadMapping> block2ThreadJson = new ArrayList<>();
+		
+		block2Thread.forEach(m -> {
+			final int blockId = Integer.valueOf(((Block) m.guest).getName());
+			final String threadId = ((sdrmodel.Thread) m.host).getName();
+			block2ThreadJson.add(new Block2ThreadMapping(blockId, threadId));
+		});
+		
+//		final List<SolutionMapping> flow2Thread = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_THREAD).toList();
+//		final List<SolutionMapping> flow2Intercom = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_INTERCOM).toList();
+		
+		final Gson gson = new Gson();
+		try {
+//			gson.toJson(block2ThreadJson, new FileWriter(outputPath));
+			gson.toJson(new Block2ThreadMapping(1, "test"), new FileWriter("./test.json"));
+		} catch (final JsonIOException | IOException e) {
+			System.err.println("File " + outputPath + " could not be written.");
+			System.exit(1);
+		}
 	}
 
 	/**
 	 * Runs the GIPS calculation. Uses the `JSON_MODEL_URI` as input model and saves
 	 * the result as XMI file to `JSON_MODEL_RESULT_URI`.
+	 * 
+	 * @return Collection of all chosen solution mappings.
 	 */
-	private static void runGips() {
+	private static Collection<SolutionMapping> runGips() {
 		// Create the API
 		final ExtendedGipsAPI api = new ExtendedGipsAPI();
 		api.init(URI.createFileURI(JSON_MODEL_URI));
@@ -76,9 +107,35 @@ public class JsonSdrRunner {
 		System.out.println("Solver status: " + output.status());
 		System.out.println("Objective value: " + output.objectiveValue());
 
-		api.getB2t().applyNonZeroMappings();
-		api.getF2i().applyNonZeroMappings();
-		api.getF2t().applyNonZeroMappings();
+		final Collection<SolutionMapping> allMappings = new HashSet<SolutionMapping>();
+
+		api.getB2t().applyNonZeroMappings().forEach(m -> {
+			if (m.isPresent()) {
+				allMappings.add(new SolutionMapping( //
+						MappingType.BLOCK_TO_THREAD, //
+						m.get().getBlock(), //
+						m.get().getThread() //
+				));
+			}
+		});
+		api.getF2i().applyNonZeroMappings().forEach(m -> {
+			if (m.isPresent()) {
+				allMappings.add(new SolutionMapping( //
+						MappingType.FLOW_TO_INTERCOM, //
+						m.get().getFlow(), //
+						m.get().getIntercom() //
+				));
+			}
+		});
+		api.getF2t().applyNonZeroMappings().forEach(m -> {
+			if (m.isPresent()) {
+				allMappings.add(new SolutionMapping( //
+						MappingType.FLOW_TO_THREAD, //
+						m.get().getFlow(), //
+						m.get().getThread() //
+				));
+			}
+		});
 		api.getUsedThread().applyNonZeroMappings();
 
 		try {
@@ -86,6 +143,8 @@ public class JsonSdrRunner {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+		
+		return allMappings;
 	}
 
 	/**
@@ -250,4 +309,17 @@ public class JsonSdrRunner {
 		return cmd.getOptionValue("input");
 	}
 
+	// Utility types
+
+	private record SolutionMapping(MappingType type, EObject guest, EObject host) {
+
+	}
+	
+	private record Block2ThreadMapping(int blockId, String threadId) {
+		
+	}
+
+	private enum MappingType {
+		BLOCK_TO_THREAD, FLOW_TO_THREAD, FLOW_TO_INTERCOM;
+	}
 }
