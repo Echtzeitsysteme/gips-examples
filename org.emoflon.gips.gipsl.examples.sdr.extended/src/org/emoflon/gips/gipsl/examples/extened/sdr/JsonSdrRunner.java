@@ -73,7 +73,6 @@ public class JsonSdrRunner {
 	private static void convertSolutionToJson(final String outputPath, final Collection<SolutionMapping> mappings) {		
 		final List<SolutionMapping> block2Thread = mappings.stream().filter(m -> m.type == MappingType.BLOCK_TO_THREAD).toList();
 		final List<Block2ThreadMapping> block2ThreadJson = new ArrayList<>();
-		
 		block2Thread.forEach(m -> {
 			final int blockId = Integer.valueOf(((Block) m.guest).getName());
 			final String threadId = ((sdrmodel.Thread) m.host).getName();
@@ -99,16 +98,12 @@ public class JsonSdrRunner {
 			flow2IntercomJson.add(new Flow2IntercomMapping(flowSourceId, flowTargetId, intercomSourceId, intercomTargetId));
 		});
 		
-		final List<List> combinedSolutions = new ArrayList<List>();
-		combinedSolutions.add(block2ThreadJson);
-		combinedSolutions.add(flow2ThreadJson);
-		combinedSolutions.add(flow2IntercomJson);
-		
 		// Create and write JSON file
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		try {
 			final FileWriter writer = new FileWriter(outputPath);
-			gson.toJson(combinedSolutions, writer);
+//			gson.toJson(combinedSolutions, writer);
+			gson.toJson(new OutputRecord(block2ThreadJson, flow2ThreadJson, flow2IntercomJson), writer);
 			writer.flush();
 			writer.close();
 		} catch (final JsonIOException | IOException e) {
@@ -341,17 +336,13 @@ public class JsonSdrRunner {
 
 	}
 	
-	private record Block2ThreadMapping(int blockId, String threadId) {
-		
-	}
+	private record Block2ThreadMapping(int blockId, String threadId) {}
 	
-	private record Flow2ThreadMapping(int flowSourceId, int flowTargetId, String threadId) {
-		
-	}
+	private record Flow2ThreadMapping(int flowSourceId, int flowTargetId, String threadId) {}
 	
-	private record Flow2IntercomMapping(int flowSourceId, int flowTargetId, int intercomSourceId, int intercomTargetId) {
-		
-	}
+	private record Flow2IntercomMapping(int flowSourceId, int flowTargetId, int intercomSourceId, int intercomTargetId) {}
+
+	private record OutputRecord(List<Block2ThreadMapping> block2Thread, List<Flow2ThreadMapping> flow2Thread, List<Flow2IntercomMapping> flow2Intercom) {}
 
 	private enum MappingType {
 		BLOCK_TO_THREAD, FLOW_TO_THREAD, FLOW_TO_INTERCOM;
