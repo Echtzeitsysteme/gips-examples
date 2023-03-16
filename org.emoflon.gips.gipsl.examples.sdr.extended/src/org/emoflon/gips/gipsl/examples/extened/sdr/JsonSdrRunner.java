@@ -70,16 +70,26 @@ public class JsonSdrRunner {
 		System.exit(0);
 	}
 
-	private static void convertSolutionToJson(final String outputPath, final Collection<SolutionMapping> mappings) {		
-		final List<SolutionMapping> block2Thread = mappings.stream().filter(m -> m.type == MappingType.BLOCK_TO_THREAD).toList();
+	/**
+	 * Converts all solution mappings to the specified JSON output schema and writes
+	 * it to the given path.
+	 * 
+	 * @param outputPath JSON output file path.
+	 * @param mappings   Collection of all solution mappings to get the solutions
+	 *                   from.
+	 */
+	private static void convertSolutionToJson(final String outputPath, final Collection<SolutionMapping> mappings) {
+		final List<SolutionMapping> block2Thread = mappings.stream().filter(m -> m.type == MappingType.BLOCK_TO_THREAD)
+				.toList();
 		final List<Block2ThreadMapping> block2ThreadJson = new ArrayList<>();
 		block2Thread.forEach(m -> {
 			final int blockId = Integer.valueOf(((Block) m.guest).getName());
 			final String threadId = ((sdrmodel.Thread) m.host).getName();
 			block2ThreadJson.add(new Block2ThreadMapping(blockId, threadId));
 		});
-		
-		final List<SolutionMapping> flow2Thread = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_THREAD).toList();
+
+		final List<SolutionMapping> flow2Thread = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_THREAD)
+				.toList();
 		final List<Flow2ThreadMapping> flow2ThreadJson = new ArrayList<>();
 		flow2Thread.forEach(m -> {
 			final int flowSourceId = Integer.valueOf(((Flow) m.guest).getSource().getName());
@@ -87,17 +97,19 @@ public class JsonSdrRunner {
 			final String threadId = ((sdrmodel.Thread) m.host).getName();
 			flow2ThreadJson.add(new Flow2ThreadMapping(flowSourceId, flowTargetId, threadId));
 		});
-		
-		final List<SolutionMapping> flow2Intercom = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_INTERCOM).toList();
+
+		final List<SolutionMapping> flow2Intercom = mappings.stream()
+				.filter(m -> m.type == MappingType.FLOW_TO_INTERCOM).toList();
 		final List<Flow2IntercomMapping> flow2IntercomJson = new ArrayList<>();
 		flow2Intercom.forEach(m -> {
 			final int flowSourceId = Integer.valueOf(((Flow) m.guest).getSource().getName());
 			final int flowTargetId = Integer.valueOf(((Flow) m.guest).getTarget().getName());
 			final int intercomSourceId = Integer.valueOf(((Interthreadcom) m.host).getSource().getName());
 			final int intercomTargetId = Integer.valueOf(((Interthreadcom) m.host).getTarget().getName());
-			flow2IntercomJson.add(new Flow2IntercomMapping(flowSourceId, flowTargetId, intercomSourceId, intercomTargetId));
+			flow2IntercomJson
+					.add(new Flow2IntercomMapping(flowSourceId, flowTargetId, intercomSourceId, intercomTargetId));
 		});
-		
+
 		// Create and write JSON file
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		try {
@@ -164,7 +176,7 @@ public class JsonSdrRunner {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return allMappings;
 	}
 
@@ -330,21 +342,51 @@ public class JsonSdrRunner {
 		return cmd.getOptionValue("input");
 	}
 
+	//
 	// Utility types
+	//
 
+	/**
+	 * Record as solution mapping for a given mapping type, from a guest to a host
+	 * EObject.
+	 */
 	private record SolutionMapping(MappingType type, EObject guest, EObject host) {
-
 	}
-	
-	private record Block2ThreadMapping(int blockId, String threadId) {}
-	
-	private record Flow2ThreadMapping(int flowSourceId, int flowTargetId, String threadId) {}
-	
-	private record Flow2IntercomMapping(int flowSourceId, int flowTargetId, int intercomSourceId, int intercomTargetId) {}
 
-	private record OutputRecord(List<Block2ThreadMapping> block2Thread, List<Flow2ThreadMapping> flow2Thread, List<Flow2IntercomMapping> flow2Intercom) {}
+	/**
+	 * Record for a block to thread mapping.
+	 */
+	private record Block2ThreadMapping(int blockId, String threadId) {
+	}
 
+	/**
+	 * Record for a flow to thread mapping. The flow is defined by a source ID and a
+	 * target ID.
+	 */
+	private record Flow2ThreadMapping(int flowSourceId, int flowTargetId, String threadId) {
+	}
+
+	/**
+	 * Record for a flow to intercom mapping. The flow is defined by a source ID and
+	 * a target ID. The intercom is defined by a source ID and a target ID.
+	 */
+	private record Flow2IntercomMapping(int flowSourceId, int flowTargetId, int intercomSourceId,
+			int intercomTargetId) {
+	}
+
+	/**
+	 * Output record that combines all three mapping lists.
+	 */
+	private record OutputRecord(List<Block2ThreadMapping> block2Thread, List<Flow2ThreadMapping> flow2Thread,
+			List<Flow2IntercomMapping> flow2Intercom) {
+	}
+
+	/**
+	 * Enum for the mapping types: Block to thread, flow to thread, flow to
+	 * intercom.
+	 */
 	private enum MappingType {
 		BLOCK_TO_THREAD, FLOW_TO_THREAD, FLOW_TO_INTERCOM;
 	}
+	
 }
