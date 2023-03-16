@@ -62,10 +62,10 @@ public class JsonSdrRunner {
 	 * @param args Array of string arguments to parse.
 	 */
 	public static void main(final String[] args) {
-		final String inputPath = parseArgs(args);
-		convertJsonToXmiModel(inputPath);
+		final FilePaths paths = parseArgs(args);
+		convertJsonToXmiModel(paths.input);
 		final Collection<SolutionMapping> mappings = runGips();
-		convertSolutionToJson("./solution.json", mappings);
+		convertSolutionToJson(paths.output, mappings);
 		System.out.println("GIPS run finished.");
 		System.exit(0);
 	}
@@ -314,16 +314,19 @@ public class JsonSdrRunner {
 	}
 
 	/**
-	 * Parses the given array of string arguments to the JSON input path.
+	 * Parses the given array of string arguments to the JSON input and output path.
 	 * 
 	 * @param args Array of string arguments.
-	 * @return JSON input path as string.
+	 * @return JSON input and output paths as record.
 	 */
-	private static String parseArgs(final String[] args) {
+	private static FilePaths parseArgs(final String[] args) {
 		final Options options = new Options();
 		final Option jsonInputPath = new Option("i", "input", true, "JSON input file path to use");
+		final Option jsonOutputPath = new Option("o", "output", true, "JSON output file path to use");
 		jsonInputPath.setRequired(true);
+		jsonOutputPath.setRequired(true);
 		options.addOption(jsonInputPath);
+		options.addOption(jsonOutputPath);
 
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
@@ -338,13 +341,19 @@ public class JsonSdrRunner {
 			System.exit(1);
 		}
 
-		// Return path
-		return cmd.getOptionValue("input");
+		// Return paths
+		return new FilePaths(cmd.getOptionValue("input"), cmd.getOptionValue("output"));
 	}
 
 	//
 	// Utility types
 	//
+
+	/**
+	 * Input and output paths combined into one record.
+	 */
+	public record FilePaths(String input, String output) {
+	}
 
 	/**
 	 * Record as solution mapping for a given mapping type, from a guest to a host
@@ -388,5 +397,5 @@ public class JsonSdrRunner {
 	private enum MappingType {
 		BLOCK_TO_THREAD, FLOW_TO_THREAD, FLOW_TO_INTERCOM;
 	}
-	
+
 }
