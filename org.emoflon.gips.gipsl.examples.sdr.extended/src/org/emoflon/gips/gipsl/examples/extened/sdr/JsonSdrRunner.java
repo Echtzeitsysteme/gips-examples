@@ -27,6 +27,7 @@ import org.emoflon.gips.gipsl.examples.sdr.extended.api.gips.ExtendedGipsAPI;
 import org.emoflon.gips.gipsl.examples.sdrmodel.generator.SDRModelGenerator;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
@@ -35,6 +36,7 @@ import com.google.gson.JsonParser;
 
 import sdrmodel.Block;
 import sdrmodel.Flow;
+import sdrmodel.Interthreadcom;
 import sdrmodel.Job;
 import sdrmodel.Root;
 
@@ -78,13 +80,37 @@ public class JsonSdrRunner {
 			block2ThreadJson.add(new Block2ThreadMapping(blockId, threadId));
 		});
 		
-//		final List<SolutionMapping> flow2Thread = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_THREAD).toList();
-//		final List<SolutionMapping> flow2Intercom = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_INTERCOM).toList();
+		final List<SolutionMapping> flow2Thread = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_THREAD).toList();
+		final List<Flow2ThreadMapping> flow2ThreadJson = new ArrayList<>();
+		flow2Thread.forEach(m -> {
+			final int flowSourceId = Integer.valueOf(((Flow) m.guest).getSource().getName());
+			final int flowTargetId = Integer.valueOf(((Flow) m.guest).getTarget().getName());
+			final String threadId = ((sdrmodel.Thread) m.host).getName();
+			flow2ThreadJson.add(new Flow2ThreadMapping(flowSourceId, flowTargetId, threadId));
+		});
 		
-		final Gson gson = new Gson();
+		final List<SolutionMapping> flow2Intercom = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_INTERCOM).toList();
+		final List<Flow2IntercomMapping> flow2IntercomJson = new ArrayList<>();
+		flow2Intercom.forEach(m -> {
+			final int flowSourceId = Integer.valueOf(((Flow) m.guest).getSource().getName());
+			final int flowTargetId = Integer.valueOf(((Flow) m.guest).getTarget().getName());
+			final int intercomSourceId = Integer.valueOf(((Interthreadcom) m.host).getSource().getName());
+			final int intercomTargetId = Integer.valueOf(((Interthreadcom) m.host).getTarget().getName());
+			flow2IntercomJson.add(new Flow2IntercomMapping(flowSourceId, flowTargetId, intercomSourceId, intercomTargetId));
+		});
+		
+		final List<List> combinedSolutions = new ArrayList<List>();
+		combinedSolutions.add(block2ThreadJson);
+		combinedSolutions.add(flow2ThreadJson);
+		combinedSolutions.add(flow2IntercomJson);
+		
+		// Create and write JSON file
+		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		try {
-//			gson.toJson(block2ThreadJson, new FileWriter(outputPath));
-			gson.toJson(new Block2ThreadMapping(1, "test"), new FileWriter("./test.json"));
+			final FileWriter writer = new FileWriter(outputPath);
+			gson.toJson(combinedSolutions, writer);
+			writer.flush();
+			writer.close();
 		} catch (final JsonIOException | IOException e) {
 			System.err.println("File " + outputPath + " could not be written.");
 			System.exit(1);
@@ -316,6 +342,14 @@ public class JsonSdrRunner {
 	}
 	
 	private record Block2ThreadMapping(int blockId, String threadId) {
+		
+	}
+	
+	private record Flow2ThreadMapping(int flowSourceId, int flowTargetId, String threadId) {
+		
+	}
+	
+	private record Flow2IntercomMapping(int flowSourceId, int flowTargetId, int intercomSourceId, int intercomTargetId) {
 		
 	}
 
