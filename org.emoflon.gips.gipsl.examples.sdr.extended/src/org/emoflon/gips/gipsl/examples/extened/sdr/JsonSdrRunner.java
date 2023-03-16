@@ -104,8 +104,8 @@ public class JsonSdrRunner {
 		flow2Intercom.forEach(m -> {
 			final int flowSourceId = Integer.valueOf(((Flow) m.guest).getSource().getName());
 			final int flowTargetId = Integer.valueOf(((Flow) m.guest).getTarget().getName());
-			final int intercomSourceId = Integer.valueOf(((Interthreadcom) m.host).getSource().getName());
-			final int intercomTargetId = Integer.valueOf(((Interthreadcom) m.host).getTarget().getName());
+			final String intercomSourceId = ((Interthreadcom) m.host).getSource().getName();
+			final String intercomTargetId = ((Interthreadcom) m.host).getTarget().getName();
 			flow2IntercomJson
 					.add(new Flow2IntercomMapping(flowSourceId, flowTargetId, intercomSourceId, intercomTargetId));
 		});
@@ -114,7 +114,6 @@ public class JsonSdrRunner {
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		try {
 			final FileWriter writer = new FileWriter(outputPath);
-//			gson.toJson(combinedSolutions, writer);
 			gson.toJson(new OutputRecord(block2ThreadJson, flow2ThreadJson, flow2IntercomJson), writer);
 			writer.flush();
 			writer.close();
@@ -274,6 +273,7 @@ public class JsonSdrRunner {
 		if (!b.getInputs().isEmpty()) {
 			final double inputSum = b.getInputs().stream().map(flow -> flow.getRate()).reduce(0.0,
 					(sum, rate) -> sum + rate);
+			b.setInputRate(inputSum);
 			b.setOutputRate(inputSum * b.getOutputRateMultiplier());
 		}
 
@@ -379,8 +379,8 @@ public class JsonSdrRunner {
 	 * Record for a flow to intercom mapping. The flow is defined by a source ID and
 	 * a target ID. The intercom is defined by a source ID and a target ID.
 	 */
-	private record Flow2IntercomMapping(int flowSourceId, int flowTargetId, int intercomSourceId,
-			int intercomTargetId) {
+	private record Flow2IntercomMapping(int flowSourceId, int flowTargetId, String intercomSourceId,
+			String intercomTargetId) {
 	}
 
 	/**
