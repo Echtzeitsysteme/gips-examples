@@ -16,20 +16,5 @@
             "blockId": 4,
             "threadId": 100
         }
-    ],
-    "flow2Thread": [
-        {
-            "flowSourceId": 1,
-            "flowTargetId": 2,
-            "threadId": 42
-        }
-    ],
-    "flow2Intercom": [
-        {
-            "flowSourceId": 3,
-            "flowTargetId": 4,
-            "intercomSourceId": 73,
-            "intercomTargetId": 100
-        }
     ]
 }

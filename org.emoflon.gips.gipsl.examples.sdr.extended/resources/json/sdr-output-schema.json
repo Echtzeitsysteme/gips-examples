@@ -21,63 +21,9 @@
                     ]
                 }
             ]
-        },
-        "flow2Thread": {
-            "type": "array",
-            "items": [
-                {
-                    "type": "object",
-                    "properties": {
-                        "flowSourceId": {
-                            "type": "integer"
-                        },
-                        "flowTargetId": {
-                            "type": "integer"
-                        },
-                        "threadId": {
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "flowSourceId",
-                        "flowTargetId",
-                        "threadId"
-                    ]
-                }
-            ]
-        },
-        "flow2Intercom": {
-            "type": "array",
-            "items": [
-                {
-                    "type": "object",
-                    "properties": {
-                        "flowSourceId": {
-                            "type": "integer"
-                        },
-                        "flowTargetId": {
-                            "type": "integer"
-                        },
-                        "intercomSourceId": {
-                            "type": "string"
-                        },
-                        "intercomTargetId": {
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "flowSourceId",
-                        "flowTargetId",
-                        "intercomSourceId",
-                        "intercomTargetId"
-                    ]
-                }
-            ]
         }
     },
     "required": [
-        "block2Thread",
-        "flow2Thread",
-        "flow2Intercom"
+        "block2Thread"
     ]
 }

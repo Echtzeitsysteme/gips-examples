@@ -36,7 +36,6 @@ import com.google.gson.JsonParser;
 
 import sdrmodel.Block;
 import sdrmodel.Flow;
-import sdrmodel.Interthreadcom;
 import sdrmodel.Job;
 import sdrmodel.Root;
 
@@ -71,16 +70,15 @@ public class JsonSdrRunner {
 	}
 
 	/**
-	 * Converts all solution mappings to the specified JSON output schema and writes
+	 * Converts the solution mappings to the specified JSON output schema and writes
 	 * it to the given path.
 	 * 
 	 * @param outputPath JSON output file path.
-	 * @param mappings   Collection of all solution mappings to get the solutions
+	 * @param mappings   Collection of the solution mappings to get the solutions
 	 *                   from.
 	 */
 	private static void convertSolutionToJson(final String outputPath, final Collection<SolutionMapping> mappings) {
-		final List<SolutionMapping> block2Thread = mappings.stream().filter(m -> m.type == MappingType.BLOCK_TO_THREAD)
-				.toList();
+		final List<SolutionMapping> block2Thread = mappings.stream().toList();
 		final List<Block2ThreadMapping> block2ThreadJson = new ArrayList<>();
 		block2Thread.forEach(m -> {
 			final int blockId = Integer.valueOf(((Block) m.guest).getName());
@@ -88,33 +86,11 @@ public class JsonSdrRunner {
 			block2ThreadJson.add(new Block2ThreadMapping(blockId, threadId));
 		});
 
-		final List<SolutionMapping> flow2Thread = mappings.stream().filter(m -> m.type == MappingType.FLOW_TO_THREAD)
-				.toList();
-		final List<Flow2ThreadMapping> flow2ThreadJson = new ArrayList<>();
-		flow2Thread.forEach(m -> {
-			final int flowSourceId = Integer.valueOf(((Flow) m.guest).getSource().getName());
-			final int flowTargetId = Integer.valueOf(((Flow) m.guest).getTarget().getName());
-			final String threadId = ((sdrmodel.Thread) m.host).getName();
-			flow2ThreadJson.add(new Flow2ThreadMapping(flowSourceId, flowTargetId, threadId));
-		});
-
-		final List<SolutionMapping> flow2Intercom = mappings.stream()
-				.filter(m -> m.type == MappingType.FLOW_TO_INTERCOM).toList();
-		final List<Flow2IntercomMapping> flow2IntercomJson = new ArrayList<>();
-		flow2Intercom.forEach(m -> {
-			final int flowSourceId = Integer.valueOf(((Flow) m.guest).getSource().getName());
-			final int flowTargetId = Integer.valueOf(((Flow) m.guest).getTarget().getName());
-			final String intercomSourceId = ((Interthreadcom) m.host).getSource().getName();
-			final String intercomTargetId = ((Interthreadcom) m.host).getTarget().getName();
-			flow2IntercomJson
-					.add(new Flow2IntercomMapping(flowSourceId, flowTargetId, intercomSourceId, intercomTargetId));
-		});
-
 		// Create and write JSON file
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		try {
 			final FileWriter writer = new FileWriter(outputPath);
-			gson.toJson(new OutputRecord(block2ThreadJson, flow2ThreadJson, flow2IntercomJson), writer);
+			gson.toJson(new OutputRecord(block2ThreadJson), writer);
 			writer.flush();
 			writer.close();
 		} catch (final JsonIOException | IOException e) {
@@ -144,30 +120,13 @@ public class JsonSdrRunner {
 		api.getB2t().applyNonZeroMappings().forEach(m -> {
 			if (m.isPresent()) {
 				allMappings.add(new SolutionMapping( //
-						MappingType.BLOCK_TO_THREAD, //
 						m.get().getBlock(), //
 						m.get().getThread() //
 				));
 			}
 		});
-		api.getF2i().applyNonZeroMappings().forEach(m -> {
-			if (m.isPresent()) {
-				allMappings.add(new SolutionMapping( //
-						MappingType.FLOW_TO_INTERCOM, //
-						m.get().getFlow(), //
-						m.get().getIntercom() //
-				));
-			}
-		});
-		api.getF2t().applyNonZeroMappings().forEach(m -> {
-			if (m.isPresent()) {
-				allMappings.add(new SolutionMapping( //
-						MappingType.FLOW_TO_THREAD, //
-						m.get().getFlow(), //
-						m.get().getThread() //
-				));
-			}
-		});
+		api.getF2i().applyNonZeroMappings();
+		api.getF2t().applyNonZeroMappings();
 		api.getUsedThread().applyNonZeroMappings();
 
 		try {
@@ -356,10 +315,10 @@ public class JsonSdrRunner {
 	}
 
 	/**
-	 * Record as solution mapping for a given mapping type, from a guest to a host
-	 * EObject.
+	 * Record as solution mapping for a given mapping from a guest to a host
+	 * EObject. This was used to combine more than one possible object type.
 	 */
-	private record SolutionMapping(MappingType type, EObject guest, EObject host) {
+	private record SolutionMapping(EObject guest, EObject host) {
 	}
 
 	/**
@@ -369,33 +328,9 @@ public class JsonSdrRunner {
 	}
 
 	/**
-	 * Record for a flow to thread mapping. The flow is defined by a source ID and a
-	 * target ID.
+	 * Output record that packages the block2thread list.
 	 */
-	private record Flow2ThreadMapping(int flowSourceId, int flowTargetId, String threadId) {
-	}
-
-	/**
-	 * Record for a flow to intercom mapping. The flow is defined by a source ID and
-	 * a target ID. The intercom is defined by a source ID and a target ID.
-	 */
-	private record Flow2IntercomMapping(int flowSourceId, int flowTargetId, String intercomSourceId,
-			String intercomTargetId) {
-	}
-
-	/**
-	 * Output record that combines all three mapping lists.
-	 */
-	private record OutputRecord(List<Block2ThreadMapping> block2Thread, List<Flow2ThreadMapping> flow2Thread,
-			List<Flow2IntercomMapping> flow2Intercom) {
-	}
-
-	/**
-	 * Enum for the mapping types: Block to thread, flow to thread, flow to
-	 * intercom.
-	 */
-	private enum MappingType {
-		BLOCK_TO_THREAD, FLOW_TO_THREAD, FLOW_TO_INTERCOM;
+	private record OutputRecord(List<Block2ThreadMapping> block2Thread) {
 	}
 
 }
