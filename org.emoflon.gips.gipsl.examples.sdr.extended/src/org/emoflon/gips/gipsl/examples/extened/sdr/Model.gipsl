@@ -88,11 +88,11 @@ rule flow2thread {
 }
 
 rule thread (complexity : EDouble, diff : EDouble, absDiff : EDouble){
-	cpu :CPU {
+	cpu: CPU {
 		- cores -> core
 	}
 	
-	core : Core {
+	core: Core {
 		- threads -> thread
 	}
 	
@@ -223,10 +223,11 @@ objective intercomcost -> class::Interthreadcom {
 //}
 
 objective glob -> class::Thread {
-	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().absDiff)
+	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().absDiff) * self.root.interThreadCommunicationFactor
 }
 
 // Combine the local objectives and give the maximization of used threads a large head start.
-global objective : min { 
-	intercomcost + glob*0.025
+global objective : min {
+	intercomcost + glob
+	// ^weight is included in `glob`
 }

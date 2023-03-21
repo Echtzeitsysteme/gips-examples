@@ -1,0 +1,20 @@
+{
+    "block2Thread": [
+        {
+            "blockId": 1,
+            "threadId": 42
+        },
+        {
+            "blockId": 2,
+            "threadId": 42
+        },
+        {
+            "blockId": 3,
+            "threadId": 73
+        },
+        {
+            "blockId": 4,
+            "threadId": 100
+        }
+    ]
+}

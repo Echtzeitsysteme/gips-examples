@@ -13,6 +13,8 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="jobs" upperBound="-1" eType="#//Job"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="interThreadCommunicationFactor"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CPU" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="guests" upperBound="-1"
@@ -45,6 +47,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="allocatedComplexity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="diff" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="absDiff" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="root" eType="#//Root"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Job" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="blocks" upperBound="-1"
