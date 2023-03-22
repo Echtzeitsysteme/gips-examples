@@ -1,4 +1,4 @@
-package "org.emoflon.gips.gipsl.examples.extened.sdr"
+package "org.emoflon.gips.gipsl.examples.extended.sdr"
 import "platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore"
 import "http://www.eclipse.org/emf/2002/Ecore"
 
