@@ -1,4 +1,4 @@
-package org.emoflon.gips.gipsl.examples.extened.sdr;
+package org.emoflon.gips.gipsl.examples.extended.sdr;
 
 import java.io.IOException;
 
