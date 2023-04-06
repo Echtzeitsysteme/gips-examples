@@ -84,7 +84,6 @@ rule serverMatchPositive {
 		.residualCpu := substrateServer.residualCpu - virtualNode.cpu
 		.residualMemory := substrateServer.residualMemory - virtualNode.memory
 		.residualStorage := substrateServer.residualStorage - virtualNode.storage
-		++ -guestServers -> virtualNode
 	}
 	
 	virtualNode: VirtualServer {
@@ -111,9 +110,7 @@ rule switchNodeMatchPositive {
 		-networks -> virtualNetwork
 	}
 	
-	substrateNode: SubstrateNode {
-		++ -guestSwitches -> virtualSwitch
-	}
+	substrateNode: SubstrateNode
 	
 	virtualSwitch : VirtualSwitch {
 		++ -host -> substrateNode
@@ -136,7 +133,6 @@ rule linkPathMatchPositive {
 	}
 	
 	substratePath: SubstratePath {
-		++ -guestLinks -> virtualLink
 		.residualBandwidth := substratePath.residualBandwidth - virtualLink.bandwidth
 		
 		// Update all substrate links
@@ -170,9 +166,7 @@ rule linkServerMatchPositive {
 		-networks -> virtualNetwork
 	}
 	
-	substrateServer: SubstrateServer {
-		++ -guestLinks -> virtualLink
-	}
+	substrateServer: SubstrateServer
 	
 	virtualLink: VirtualLink {
 		++ -host -> substrateServer
@@ -194,9 +188,7 @@ rule networkRule {
 		-networks -> virtualNetwork
 	}
 	
-	substrateNetwork: SubstrateNetwork {
-		++ -guests -> virtualNetwork
-	}
+	substrateNetwork: SubstrateNetwork
 	
 	virtualNetwork: VirtualNetwork {
 		++ -host -> substrateNetwork
