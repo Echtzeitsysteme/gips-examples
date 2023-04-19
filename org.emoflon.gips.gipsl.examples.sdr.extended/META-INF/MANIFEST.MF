@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.emoflon.gips.gipsl.examples.sdr.extended
+Bundle-ManifestVersion: 2
+Bundle-Name: org.emoflon.gips.gipsl.examples.sdr.extended
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.sdr.extended; singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/commons-cli/commons-cli-1.5.0.jar,
+ lib/commons-cli/commons-cli-1.5.0-javadoc.jar,
+ lib/commons-cli/commons-cli-1.5.0-sources.jar,
+ lib/gson/gson-2.10.1.jar,
+ lib/gson/gson-2.10.1-javadoc.jar,
+ lib/gson/gson-2.10.1-sources.jar,
+ .
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: org.emoflon.ibex.common,
+ org.emoflon.ibex.gt,
+ org.emoflon.gips.core,
+ org.emoflon.ibex.gt.democles,
+ org.emoflon.ibex.gt.hipe,
+ org.emoflon.gips.gipsl.examples.sdrmodel;bundle-version="0.0.1"

@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "blocks2Thread": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "guestId": {
+                            "type": "integer"
+                        },
+                        "hostId": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "blockId",
+                        "threadId"
+                    ]
+                }
+            ]
+        }
+    },
+    "required": [
+        "block2Thread"
+    ]
+}

@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PersonTaskAssignments
+Bundle-SymbolicName: PersonTaskAssignments;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: 
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Automatic-Module-Name: PersonTaskAssignments
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.emoflon.smartemf
+Export-Package: PersonTaskAssignments,
+ PersonTaskAssignments.impl,
+ pta.generator
+

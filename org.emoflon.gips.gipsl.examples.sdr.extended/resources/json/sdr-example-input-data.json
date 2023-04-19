@@ -1,0 +1,23 @@
+{
+    "cores": 4,
+    "threadsPerCore": 1,
+    "interThreadCommunicationFactor": 0.025,
+    "blocks": [
+        {
+            "id": 1,
+            "complexity": 42.0,
+            "inToOut": 2.0
+        },
+        {
+            "id": 2,
+            "complexity": 73.0,
+            "inToOut": 4.0
+        }
+    ],
+    "flows": [
+        {
+            "sourceId": 1,
+            "targetId": 2
+        }
+    ]
+}
