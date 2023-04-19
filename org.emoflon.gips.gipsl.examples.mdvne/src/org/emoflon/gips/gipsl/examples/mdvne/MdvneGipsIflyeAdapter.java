@@ -17,10 +17,10 @@ public class MdvneGipsIflyeAdapter {
 	/**
 	 * MdVNE GIPS API object.
 	 */
-	final static MdvneGipsAPI api = new MdvneGipsAPI();
+	static MdvneGipsAPI api;
 
 	/**
-	 * If true, the API was already initialized.
+	 * If false, the API must be initialized.
 	 */
 	static boolean init = false;
 
@@ -40,8 +40,9 @@ public class MdvneGipsIflyeAdapter {
 			throw new IllegalArgumentException("Model resource set was null or empty.");
 		}
 
-		// Init if not already initialized
+		// Initialize the API, if necessary
 		if (!init) {
+			api = new MdvneGipsAPI();
 			api.init(model);
 			init = true;
 		}
@@ -77,6 +78,13 @@ public class MdvneGipsIflyeAdapter {
 		// at org.emoflon.gips.core.GipsEngine.terminate(GIPSEngine.java:71)
 
 		return output.solutionCount() > 0;
+	}
+	
+	/**
+	 * Resets the initialized state of the GIPS API.
+	 */
+	public static void resetInit() {
+		init = false;
 	}
 
 }
