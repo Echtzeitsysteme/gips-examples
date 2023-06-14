@@ -140,30 +140,10 @@ constraint -> pattern::personToOffer {
 }
 
 constraint -> mapping::aom {
-	// A: Precondition -> The hour variables of a mapping are non-zero
-	// B: Then -> The corresponding mapping variable is non-zero
-	// A => B : If hour variables of a mapping are non-zero, then the corresponding mapping variable must also be non-zero
-	// 1 => 1 = 1 : Variables are assigned some hour values and the correspond mapping variable is 1 -> true
-	// 1 => 0 = 0 : Variables are assigned some hour values and the correspond mapping variable is 0 -> false
-	// 0 => 1 = 1 : Variables are assigned no hour values and the correspond mapping variable is 1 -> true
-	// 0 => 0 = 1 : Variables are assigned no hour values and the correspond mapping variable is 0 -> true
-	[self.variables().hours + self.variables().overTime >= 1 =>
-	self.value() >= 1] & 
-	// B: Precondition -> The corresponding mapping variable is non-zero
-	// A: Then -> The hour variables of a mapping are non-zero
-	// B => A : If a mapping variable is non-zero, then the corresponding hour variables must also be non-zero.
-	// 1 => 1 = 1 : Mapping variable > 0 and hour variables > 0 -> true
-	// 1 => 0 = 0 : Mapping variable > 0 and hour variables <= 0 -> false
-	// 0 => 1 = 1 : Mapping variables == 0 and hour variables > 0 -> true
-	// 0 => 0 = 1 : mapping variables == 0 and hour variables <= 0 -> true
-	[self.value() >= 1 =>
-	self.variables().hours + self.variables().overTime >= 1]
+	// A <=> B : If hour variables of a mapping are non-zero, then the corresponding mapping variable must also be non-zero (and the other way around)
+	[self.variables().hours + self.variables().overTime >= 1 <=> self.value() >= 1]
 	
-	// A => B & B => A : If a mapping variable is non-zero, then the corresponding hour variables must also be non-zero.
-	// 1 => 1 & 1 => 1 = 1 : -> true
-	// 1 => 0 & 0 => 1 = 0 : -> false
-	// 0 => 1 & 1 => 0 = 0 : -> false
-	// 0 => 0 & 0 => 0 = 1 : -> true
+	// The variables for hours and overTime must be non-negative
 	& self.variables().hours >= 0
 	& self.variables().overTime >= 0
 }
