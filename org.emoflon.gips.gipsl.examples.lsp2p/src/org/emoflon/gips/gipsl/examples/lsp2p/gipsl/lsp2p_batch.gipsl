@@ -1,0 +1,91 @@
+package "org.emoflon.gips.gipsl.examples.lsp2p.gipsl.batch"
+
+import "platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
+import "http://www.eclipse.org/emf/2002/Ecore"
+
+config {
+	solver := GUROBI [home:="c:\gurobi1000\win64", license:="c:\gurobi1000\win64\gurobi.lic"];
+	launchConfig := true [main := "org.emoflon.gips.gipsl.examples.lsp2p.run.LSp2pBatch"];
+	timeLimit := true [value := 6000.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.000001];
+}
+
+condition clientIsWaiting = enforce ls2client
+pattern ls2client {
+	ls : LectureStudioServer {
+		-waitingClients->client
+	}
+	client : Client
+}
+
+rule addClient(bw: EDouble) {
+	relay : Node {
+		++ -clientConnection->connection
+	}
+	
+	client : Client
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+	
+	# relay.sendBandwidth >= client.sendBandwidth
+} when clientIsWaiting
+
+pattern node {
+	node : Node
+}
+
+mapping ac with addClient {
+	var hasRoot:EInt
+	var connectionBW:EDouble bind bw
+};
+
+mapping nde with node {
+	var allocatedBW:EDouble
+};
+
+constraint -> pattern::ls2client {
+	mappings.ac->filter(m | m.nodes().client == self.nodes().client)->sum(m | m.value()) == 1
+}
+
+constraint -> mapping::ac {
+	self.value() >= 1 <=> self.variables().hasRoot >= 1 &
+	self.variables().hasRoot >= 0 &
+	self.variables().hasRoot <= 1 &
+	self.variables().hasRoot >= classes.LectureStudioServer->filter(m | m.id == self.nodes().relay.id )->count()     
+}
+
+constraint -> pattern::addClient {
+	mappings.ac->filter(m | m.nodes().client == self.nodes().client & m.nodes().relay == self.nodes().relay)->sum(m | m.variables().hasRoot) >= 1 <=>
+	mappings.ac->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().hasRoot) >= 1
+}
+
+constraint -> mapping::ac {
+	self.value() >= 1 <=> self.variables().connectionBW >= 0.1 &
+	self.variables().hasRoot >= 0 &
+	self.variables().hasRoot <= self.nodes().client.receiveBandwidth  
+}
+
+constraint -> mapping::nde {
+	self.value() >= 1 <=> self.variables().allocatedBW >= 0.1 &
+	self.variables().allocatedBW >= 0 &
+	self.variables().allocatedBW <= self.nodes().node.sendBandwidth 
+}
+
+constraint -> pattern::addClient {
+	mappings.ac->filter(m | m.nodes().client == self.nodes().client & m.nodes().relay == self.nodes().relay)->sum(m | m.value()) >= 1 <=>
+	mappings.nde->filter(m | m.nodes().node == self.nodes().relay)->sum(m | m.value()) >= 1
+}
+
+constraint -> pattern::node {
+	mappings.nde->filter(m | m.nodes().node == self.nodes().node)->sum(m | m.variables().allocatedBW) == 
+	mappings.ac->filter(m | m.nodes().relay == self.nodes().node)->sum(m | m.variables().connectionBW)
+}
+
+// TODO: Add accumulated transfer time and objective function!
