@@ -5,7 +5,7 @@ Bundle-SymbolicName: PersonTaskAssignments;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: 
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-16
 Automatic-Module-Name: PersonTaskAssignments
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
@@ -13,4 +13,3 @@ Require-Bundle: org.eclipse.emf.ecore,
 Export-Package: PersonTaskAssignments,
  PersonTaskAssignments.impl,
  pta.generator
-
