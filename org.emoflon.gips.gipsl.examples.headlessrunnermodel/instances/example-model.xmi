@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.emoflon.gips.gipsl.examples.headlessrunnermodel:Root
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:org.emoflon.gips.gipsl.examples.headlessrunnermodel="platform:/resource/org.emoflon.gips.gipsl.examples.headlessrunnermodel/model/Headlessrunnermodel.ecore">
+  <nodes name="a"
+      cost="10"/>
+</org.emoflon.gips.gipsl.examples.headlessrunnermodel:Root>
