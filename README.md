@@ -24,6 +24,7 @@ This repository holds some GIPS example projects.
 | `org.emoflon.gips.gipsl.examples.headlessrunner.*` | Example on how to build and use a GIPS project headlessly - export it to JAR and run it |
 | `org.emoflon.gips.gipsl.examples.helloworld`       | Very simple hello world example for the GIPS language - can not be executed             | 
 | `org.emoflon.gips.gipsl.examples.mdvne.*`          | Model-driven Virtual Network Embedding example with and without migration functionality |
+| `network.model`                                    | Network (meta)model with converters and a manipulator for the MdVNE example             |
 | `org.emoflon.gips.gipsl.examples.sdr.*`            | Software-Defined Radio task scheduling on CPUs                                          |
 | `PersonTaskAssignments`/`PTA*`                     | Person-to-Task Assignments for construction purposes                                    |
 
