@@ -21,12 +21,17 @@ pattern ls2client {
 	client : Client
 }
 
-rule addClient(bw: EDouble) {
+rule addClient(hasRoot: EInt, bw: EDouble, tt: EDouble) {
 	relay : Node {
 		++ -clientConnection->connection
+		++ -activeClients->client
+		.isRelayClient := 1
 	}
 	
-	client : Client
+	client : Client {
+		.transferTime := param::tt
+		.isHasRoot := param::hasRoot
+	}
 	
 	++ connection : Connection { 
 		++ -server-> relay
@@ -34,58 +39,123 @@ rule addClient(bw: EDouble) {
 		.transferRate := param::bw
 	}
 	
-	# relay.sendBandwidth >= client.sendBandwidth
+	# relay.txBW > client.txBW
 } when clientIsWaiting
 
-pattern node {
-	node : Node
+rule node(abw: EDouble) {
+	node : Node {
+		.allocatedTxBW := param::abw
+	} 
 }
 
 mapping ac with addClient {
-	var hasRoot:EInt
-	var connectionBW:EDouble bind bw
+	var hasRoot:EInt bind hasRoot					// Zeigt an, ob es eine Verbindung zum LS Server gibt.
+	var connectionBW:EDouble bind bw	// Gibt an wie viel BW für Client reserviert wird.
+	var transferTime:EDouble bind tt	// Gibt die Zeit an, die es braucht um das File bis zum Client zu transportieren.
 };
 
 mapping nde with node {
-	var allocatedBW:EDouble
+	var allocatedBW:EDouble	bind abw			// Gibt die gesamte Upload-BW Auslastung aus sich eines (Relay) Clients an.
 };
 
+/*	Setzt die Konfluenzbedingung für die Einbettung: Es darf maximal und es muss mindestens eine Mappingvariable ausgewählt werden.	
+ */
 constraint -> pattern::ls2client {
 	mappings.ac->filter(m | m.nodes().client == self.nodes().client)->sum(m | m.value()) == 1
 }
 
+
+/*	Setzt die Randbedingungen für die Belegungsvariable und die hasRoot-Hilfsvariable:
+ * 	self.value():	Darf nur 1 sein, wenn es eine direkte oder indirekte Verbindung zum LS Server gibt und umgekehrt.
+ * 					Muss 0 sein, wenn es keine direkte oder indirekte Verbindung zum LS Server und umgekehrt.
+ *  hasRoot:		Darf nur zwischen 0 und 1 liegen, darf nur 1 sein, wenn self.value() 1 ist und umgekehrt.
+ * 					Muss 1 sein, wenn eine direkte Verbindung zum LS Server besteht.	
+ */
+//constraint -> mapping::ac {
+//	[self.value() >= 1 <=> self.variables().hasRoot >= 1] &
+//	[self.value() <= 0 <=> self.variables().hasRoot <= 0] &
+//	self.variables().hasRoot >= 0 &
+//	self.variables().hasRoot <= 1 //&
+//	// Das tut irgendwie nicht. Wir muessen irgendwie eine Moeglichkeit einbauen um Anfangswerte fuer Variablen zu setzen.
+//	//self.variables().hasRoot >= classes.LectureStudioServer->filter(m | m.id == self.nodes().relay.id )->count()
+//	//self.variables().hasRoot >= self.nodes().relay.isLsServer
+//}
+
+/*	Setzt die positive Randbedingung für die hasRoot Variable:
+ * 	hasRoot:		Muss 1 sein, wenn es eine indirekte Verbindung zum LS Server gibt.	
+ */
+//constraint -> pattern::addClient {
+//	mappings.ac->filter(m | m.nodes().client == self.nodes().client & m.nodes().relay == self.nodes().relay)->sum(m | m.variables().hasRoot) >= 1 <=>
+//	[mappings.ac->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().hasRoot) >= 1 |
+//	self.nodes().relay.isHasRoot >= 1]
+//}
+
+/*	Setzt die negative Randbedingung für die hasRoot Variable:
+ * 	hasRoot:		Muss 0 sein, wenn es weder eine indirekte Verbindung noch eine direkte Verbindung zum LS Server gibt.	
+ */
+//constraint -> pattern::addClient {
+//	mappings.ac->filter(m | m.nodes().client == self.nodes().client & m.nodes().relay == self.nodes().relay)->sum(m | m.variables().hasRoot) <= 0 <=>
+//	[mappings.ac->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().hasRoot) <= 0 &
+//	self.nodes().relay.isHasRoot <= 0]
+//}
+
+/*	Setzt die Randbedingungen für die Belegungsvariable und die connectionBW-Hilfsvariable:
+ * 	self.value():	Darf nur 1 sein, wenn Bandbreite allokiert wird und umgekehrt.
+ * 					Muss 0 sein, wenn es keine Bandbreite allokiert wird und umgekehrt.
+ *  connectionBW:	Muss positiv sein.	
+ */
 constraint -> mapping::ac {
-	self.value() >= 1 <=> self.variables().hasRoot >= 1 &
-	self.variables().hasRoot >= 0 &
-	self.variables().hasRoot <= 1 &
-	self.variables().hasRoot >= classes.LectureStudioServer->filter(m | m.id == self.nodes().relay.id )->count()     
+	[self.value() >= 1 <=> self.variables().connectionBW >= 0.0001] &
+	[self.value() <= 0 <=> self.variables().connectionBW <= 0] &
+	self.variables().connectionBW >= 0 &
+	self.variables().connectionBW <= self.nodes().client.residualRxBW
 }
 
-constraint -> pattern::addClient {
-	mappings.ac->filter(m | m.nodes().client == self.nodes().client & m.nodes().relay == self.nodes().relay)->sum(m | m.variables().hasRoot) >= 1 <=>
-	mappings.ac->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().hasRoot) >= 1
-}
-
-constraint -> mapping::ac {
-	self.value() >= 1 <=> self.variables().connectionBW >= 0.1 &
-	self.variables().hasRoot >= 0 &
-	self.variables().hasRoot <= self.nodes().client.receiveBandwidth  
-}
-
+/*	Setzt die Randbedingungen für die Belegungsvariable und die connectionBW-Hilfsvariable:
+ * 	self.value():	Darf nur 1 sein, wenn Sende-Bandbreite allokiert wird und umgekehrt.
+ * 					Muss 0 sein, wenn es keine Sende-Bandbreite Bandbreite allokiert wird und umgekehrt.
+ *  allocatedBW:	Muss positiv und nicht größer als die noch verfügbare txBW sein.
+ */
 constraint -> mapping::nde {
-	self.value() >= 1 <=> self.variables().allocatedBW >= 0.1 &
+	[self.value() >= 1 <=> self.variables().allocatedBW >= 0.0001] &
+	[self.value() <= 0 <=> self.variables().allocatedBW <= 0] &
 	self.variables().allocatedBW >= 0 &
-	self.variables().allocatedBW <= self.nodes().node.sendBandwidth 
+	self.variables().allocatedBW <= self.nodes().node.residualTxBW &
+	[self.variables().allocatedBW >= 0.0001 <=> self.variables().allocatedBW >= self.nodes().node.residualTxBW]
 }
 
-constraint -> pattern::addClient {
-	mappings.ac->filter(m | m.nodes().client == self.nodes().client & m.nodes().relay == self.nodes().relay)->sum(m | m.value()) >= 1 <=>
-	mappings.nde->filter(m | m.nodes().node == self.nodes().relay)->sum(m | m.value()) >= 1
-}
-
+/*	Setzt die allokierte Sendebandbreite auf die Summe aller reservierten Teilbandbreiten.
+ * 	Hier wird auch die Mapping-Variable von nde indirekt an die Mapping-Variable von ac gekoppelt. 
+ */
 constraint -> pattern::node {
 	mappings.nde->filter(m | m.nodes().node == self.nodes().node)->sum(m | m.variables().allocatedBW) == 
 	mappings.ac->filter(m | m.nodes().relay == self.nodes().node)->sum(m | m.variables().connectionBW)
 }
 
-// TODO: Add accumulated transfer time and objective function!
+/*	Setzt die Randbedingungen für die transferTime-Hilfsvariable:
+ *  connectionBW:	Muss positiv sein.	
+ */
+//constraint -> mapping::ac {
+//	[self.value() >= 1 <=> self.variables().transferTime >= 0.0001] &
+//	[self.value() <= 0 <=> self.variables().transferTime <= 0] &
+//	self.variables().transferTime >= 0
+//}
+
+/*	Setzt den transfertTime Wert auf die Summe aus der Zeit die es zwischen Relay zu Client braucht und die Zeit, die es von Root (LS) zum Relay bräuchte.
+ * 	Notiz: 	Eigentlich müsste man sich die Datengröße vom Server holen. Das geht hier leider nicht, da die arithmetische Umformung so explodiert. 
+ * 			Dann sagt halt eben der Requester jetzt wie groß der Request ist. Ist ja wumms, so lange die Dateien alle gleich groß sind.
+ */
+//constraint -> pattern::addClient {
+//	mappings.ac->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) == 
+//	mappings.ac->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW / m.nodes().client.data)  +
+//	mappings.ac->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().transferTime)  
+//}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+objective transfertime -> mapping::ac {
+	self.nodes().relay.txBW - self.variables().connectionBW
+}
+
+global objective : min {
+	transfertime
+}

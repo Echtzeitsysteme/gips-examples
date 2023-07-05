@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LectureStudioModel:Network xmlns:LectureStudioModel="platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" time="0.0" xmi:version="2.0">
+  <lectureStudioServer id="LS0" depth="0" data="500.0" isRelayClient="1" isHasRoot="1" transferTime="0.0" txBW="100.0" rxBW="100.0" residualTxBW="100.0" residualRxBW="100.0" allocatedTxBW="100.0" allocatedRxBW="0.0">
+    <activeClients id="CL7" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <activeClients id="CL3" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <activeClients id="CL8" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <activeClients id="CL6" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <activeClients id="CL10" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <activeClients id="CL9" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <activeClients id="CL4" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <activeClients id="CL1" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <activeClients id="CL5" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <activeClients id="CL2" depth="-1" data="500.0" isRelayClient="0" isHasRoot="-10000" transferTime="-1000000.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.0" transferRate="1.0E-4" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.1" transferRate="1.0E-4" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.2" transferRate="1.0E-4" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.3" transferRate="99.9991" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.4" transferRate="1.0E-4" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.5" transferRate="1.0E-4" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.6" transferRate="1.0E-4" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.7" transferRate="1.0E-4" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.8" transferRate="1.0E-4" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.9" transferRate="1.0E-4" />
+  </lectureStudioServer>
+</LectureStudioModel:Network>
