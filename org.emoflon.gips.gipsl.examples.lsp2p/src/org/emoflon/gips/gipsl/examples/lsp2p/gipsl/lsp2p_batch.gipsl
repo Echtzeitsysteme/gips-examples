@@ -105,10 +105,8 @@ constraint -> pattern::ls2client {
  *  connectionBW:	Muss positiv sein.	
  */
 constraint -> mapping::ac {
-	[self.value() >= 1 <=> self.variables().connectionBW >= 0.0001] &
-	[self.value() <= 0 <=> self.variables().connectionBW <= 0] &
-	self.variables().connectionBW >= 0 &
-	self.variables().connectionBW <= self.nodes().client.residualRxBW
+	[self.value() >= 1 <=> self.variables().connectionBW >= 1.0/self.nodes().client.residualRxBW] &
+	[self.value() <= 0 <=> self.variables().connectionBW <= 0]
 }
 
 /*	Setzt die Randbedingungen für die Belegungsvariable und die connectionBW-Hilfsvariable:
@@ -117,43 +115,41 @@ constraint -> mapping::ac {
  *  allocatedBW:	Muss positiv und nicht größer als die noch verfügbare txBW sein.
  */
 constraint -> mapping::nde {
-	[self.value() >= 1 <=> self.variables().allocatedBW >= 0.0001] &
-	[self.value() <= 0 <=> self.variables().allocatedBW <= 0] &
-	self.variables().allocatedBW >= 0 &
-	self.variables().allocatedBW <= self.nodes().node.residualTxBW &
-	[self.variables().allocatedBW >= 0.0001 <=> self.variables().allocatedBW >= self.nodes().node.residualTxBW]
+	[self.value() >= 1 <=> self.variables().allocatedBW >= 1.0/self.nodes().node.residualTxBW] &
+	[self.value() >= 1 <=> self.variables().allocatedBW <= 1.0/self.nodes().node.residualTxBW] &
+	[self.value() <= 0 <=> self.variables().allocatedBW <= 0]
+	//& [self.variables().allocatedBW >= 0.0001 <=> self.variables().allocatedBW <= 1.0/self.nodes().node.residualTxBW]
 }
 
 /*	Setzt die allokierte Sendebandbreite auf die Summe aller reservierten Teilbandbreiten.
  * 	Hier wird auch die Mapping-Variable von nde indirekt an die Mapping-Variable von ac gekoppelt. 
  */
 constraint -> pattern::node {
-	mappings.nde->filter(m | m.nodes().node == self.nodes().node)->sum(m | m.variables().allocatedBW) == 
-	mappings.ac->filter(m | m.nodes().relay == self.nodes().node)->sum(m | m.variables().connectionBW)
+	mappings.nde->filter(m | m.nodes().node == self.nodes().node)->sum(m | m.variables().allocatedBW * m.nodes().node.data) == 
+	mappings.ac->filter(m | m.nodes().relay == self.nodes().node)->sum(m | m.variables().transferTime)
 }
 
 /*	Setzt die Randbedingungen für die transferTime-Hilfsvariable:
  *  connectionBW:	Muss positiv sein.	
  */
-//constraint -> mapping::ac {
-//	[self.value() >= 1 <=> self.variables().transferTime >= 0.0001] &
-//	[self.value() <= 0 <=> self.variables().transferTime <= 0] &
-//	self.variables().transferTime >= 0
-//}
+constraint -> mapping::ac {
+	[self.value() >= 1 <=> self.variables().transferTime >= 0.0001] &
+	[self.value() <= 0 <=> self.variables().transferTime <= 0]
+}
 
 /*	Setzt den transfertTime Wert auf die Summe aus der Zeit die es zwischen Relay zu Client braucht und die Zeit, die es von Root (LS) zum Relay bräuchte.
  * 	Notiz: 	Eigentlich müsste man sich die Datengröße vom Server holen. Das geht hier leider nicht, da die arithmetische Umformung so explodiert. 
  * 			Dann sagt halt eben der Requester jetzt wie groß der Request ist. Ist ja wumms, so lange die Dateien alle gleich groß sind.
  */
-//constraint -> pattern::addClient {
-//	mappings.ac->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) == 
-//	mappings.ac->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW / m.nodes().client.data)  +
-//	mappings.ac->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().transferTime)  
-//}
+constraint -> pattern::addClient {
+	mappings.ac->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) == 
+	mappings.ac->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW * m.nodes().client.data)  
+	+ mappings.ac->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().transferTime)  
+}
 
 // Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
 objective transfertime -> mapping::ac {
-	self.nodes().relay.txBW - self.variables().connectionBW
+	self.variables().transferTime
 }
 
 global objective : min {
