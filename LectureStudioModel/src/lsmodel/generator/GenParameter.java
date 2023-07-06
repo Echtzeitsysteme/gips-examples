@@ -47,7 +47,7 @@ public record GenParameter(GenDistribution dist, double[] parameters) {
 				if(parameters.length != 2)
 					throw new IllegalArgumentException("Expected parameters size 2, got " + parameters.length + ".");
 				
-				yield rnd.nextDouble(parameters[0], parameters[0]);
+				yield rnd.nextDouble(parameters[0], parameters[1]);
 			}
 			default -> {
 				throw new IllegalArgumentException("Unknown enumerator.");

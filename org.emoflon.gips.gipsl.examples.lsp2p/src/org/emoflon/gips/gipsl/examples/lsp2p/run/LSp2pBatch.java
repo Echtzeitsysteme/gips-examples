@@ -18,8 +18,8 @@ public class LSp2pBatch {
 
 		gipsApi.buildILPProblem(true);
 		ILPSolverOutput output = gipsApi.solveILPProblem();
-		gipsApi.getAc().applyNonZeroMappings();
-		gipsApi.getNde().applyNonZeroMappings();
+		gipsApi.getRelay2Client().applyNonZeroMappings();
+		gipsApi.getNode2Cfg().applyNonZeroMappings();
 		
 		String outputFile = instancesFolder + "/lsp2p_10clients_solved.xmi";
 		try {

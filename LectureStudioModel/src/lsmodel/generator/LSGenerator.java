@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import LectureStudioModel.Client;
+import LectureStudioModel.Configuration;
 import LectureStudioModel.LectureStudioModelFactory;
 import LectureStudioModel.LectureStudioModelPackage;
 import LectureStudioModel.LectureStudioServer;
@@ -43,17 +44,17 @@ public class LSGenerator {
 	
 	public static Network simpleInitial() {
 		LSGenerator gen = new LSGenerator("FunSeed123".hashCode());
-		double fileSize = 500;
-		double lsBW = 100;
-		int clients = 10;
-		double clientsUp = 20;
-		double clientsDown = 100;
+		double fileSize = 50;
+		double lsBW = 500;
+		int clients = 25;
+		double clientsUp = 50;
+		double clientsDown = 150;
 		
 		Network net = gen.generateInitial(
 				new GenParameter(GenDistribution.CONST, fileSize), 
 				new GenParameter(GenDistribution.CONST, lsBW), 
 				new GenParameter(GenDistribution.CONST, clients), 
-				new GenParameter(GenDistribution.CONST, clientsUp),
+				new GenParameter(GenDistribution.UNI, 10, clientsUp),
 				new GenParameter(GenDistribution.CONST, clientsDown));
 		
 		StringBuilder fileName = new StringBuilder();
@@ -102,37 +103,56 @@ public class LSGenerator {
 		
 		LectureStudioServer ls = factory.createLectureStudioServer();
 		ls.setData(data.getParam(rnd));
-		ls.setId("LS"+id++);
+		ls.setId(""+id++);
 		ls.setTxBW(lsBwUp.getParam(rnd));
+		ls.setMinTxBW(ls.getTxBW()/20.0);
 		// Rx is actually not needed.
 		ls.setRxBW(lsBwUp.getParam(rnd));
-		ls.setResidualTxBW(ls.getTxBW());
-		// Same here.
-		ls.setResidualRxBW(ls.getRxBW());
-		ls.setAllocatedTxBW(0);
-		// Same here.
-		ls.setAllocatedRxBW(0);
+		ls.setInvTxBW(1.0/ls.getTxBW());
+		// Rx is actually not needed.
+		ls.setInvRxBW(1.0/ls.getRxBW());
+//		ls.setResidualTxBW(ls.getTxBW());
+//		// Same here.
+//		ls.setResidualRxBW(ls.getRxBW());
+//		ls.setAllocatedTxBW(0);
+//		// Same here.
+//		ls.setAllocatedRxBW(0);
 		ls.setTransferTime(0);
 		ls.setIsRelayClient(1);
 		ls.setIsHasRoot(1);
+		ls.setClients(0);
 		net.getLectureStudioServer().add(ls);
+		
+		List<Configuration> configs = new LinkedList<>();
+		for(int i = 1; i<=(int)nodes.getParam(rnd); i++) {
+			Configuration config = factory.createConfiguration();
+			config.setClients(i);
+			config.setSlowDown(i);
+			config.setBwSplit(1.0/i);
+			configs.add(config);
+		}
+		net.getConfigurations().addAll(configs);
 		
 		List<Client> clients = new LinkedList<>();
 		for(int i = (int)nodes.getParam(rnd); i>0; i--) {
 			Client client = factory.createClient();
 			client.setData(ls.getData());
 			client.setDepth(-1);
-			client.setId("CL"+id++);
+			client.setId(""+id++);
 			client.setIsRelayClient(0);
 			client.setTxBW(nodeBwUp.getParam(rnd));
+			client.setMinTxBW(client.getTxBW()/2.0);
 			client.setRxBW(nodeBwDown.getParam(rnd));
-			client.setResidualTxBW(client.getTxBW());
-			client.setResidualRxBW(client.getRxBW());
-			client.setAllocatedTxBW(0);
-			client.setAllocatedRxBW(0);
+//			client.setResidualTxBW(client.getTxBW());
+//			client.setResidualRxBW(client.getRxBW());
+//			client.setAllocatedTxBW(0);
+//			client.setAllocatedRxBW(0);
+			client.setInvTxBW(1.0/client.getTxBW());
+			client.setInvRxBW(1.0/client.getRxBW());
 			client.setTransferTime(0);
 			client.setIsRelayClient(0);
 			client.setIsHasRoot(0);
+			client.setClients(0);
 			clients.add(client);
 		}
 		ls.getWaitingClients().addAll(clients);

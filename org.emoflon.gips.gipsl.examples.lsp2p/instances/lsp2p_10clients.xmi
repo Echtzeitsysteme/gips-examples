@@ -1,15 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LectureStudioModel:Network xmlns:LectureStudioModel="platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" time="0.0" xmi:version="2.0">
-  <lectureStudioServer id="LS0" depth="0" data="500.0" isRelayClient="1" isHasRoot="1" transferTime="0.0" txBW="100.0" rxBW="100.0" residualTxBW="100.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0">
-    <waitingClients id="CL1" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
-    <waitingClients id="CL2" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
-    <waitingClients id="CL3" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
-    <waitingClients id="CL4" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
-    <waitingClients id="CL5" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
-    <waitingClients id="CL6" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
-    <waitingClients id="CL7" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
-    <waitingClients id="CL8" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
-    <waitingClients id="CL9" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
-    <waitingClients id="CL10" depth="-1" data="500.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" />
+  <lectureStudioServer id="0" depth="0" clients="0" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="0.0" txBW="500.0" rxBW="500.0" minTxBW="25.0" invTxBW="0.002" invRxBW="0.002">
+    <waitingClients id="1" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="25.136340730754483" rxBW="150.0" minTxBW="12.568170365377242" invTxBW="0.03978303806076647" invRxBW="0.006666666666666667" />
+    <waitingClients id="2" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="12.29633207809865" rxBW="150.0" minTxBW="6.148166039049325" invTxBW="0.08132506455165835" invRxBW="0.006666666666666667" />
+    <waitingClients id="3" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="27.85335550495398" rxBW="150.0" minTxBW="13.92667775247699" invTxBW="0.03590231704119601" invRxBW="0.006666666666666667" />
+    <waitingClients id="4" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="15.995351815142836" rxBW="150.0" minTxBW="7.997675907571418" invTxBW="0.06251816224844131" invRxBW="0.006666666666666667" />
+    <waitingClients id="5" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="16.231015872951033" rxBW="150.0" minTxBW="8.115507936475517" invTxBW="0.061610438177594214" invRxBW="0.006666666666666667" />
+    <waitingClients id="6" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="17.05162653852436" rxBW="150.0" minTxBW="8.52581326926218" invTxBW="0.05864543172703919" invRxBW="0.006666666666666667" />
+    <waitingClients id="7" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="42.33025149013952" rxBW="150.0" minTxBW="21.16512574506976" invTxBW="0.02362376704123626" invRxBW="0.006666666666666667" />
+    <waitingClients id="8" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="48.48484644396886" rxBW="150.0" minTxBW="24.24242322198443" invTxBW="0.020625000868171095" invRxBW="0.006666666666666667" />
+    <waitingClients id="9" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="14.22508685081131" rxBW="150.0" minTxBW="7.112543425405655" invTxBW="0.07029834056464591" invRxBW="0.006666666666666667" />
+    <waitingClients id="10" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="27.552220176801043" rxBW="150.0" minTxBW="13.776110088400522" invTxBW="0.036294715764575644" invRxBW="0.006666666666666667" />
+    <waitingClients id="11" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="12.280916129725084" rxBW="150.0" minTxBW="6.140458064862542" invTxBW="0.08142715001363547" invRxBW="0.006666666666666667" />
+    <waitingClients id="12" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="33.23293313547837" rxBW="150.0" minTxBW="16.616466567739185" invTxBW="0.03009063316570253" invRxBW="0.006666666666666667" />
+    <waitingClients id="13" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="30.484087322379597" rxBW="150.0" minTxBW="15.242043661189799" invTxBW="0.032803999982832344" invRxBW="0.006666666666666667" />
+    <waitingClients id="14" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="19.16104212514307" rxBW="150.0" minTxBW="9.580521062571535" invTxBW="0.052189228199013386" invRxBW="0.006666666666666667" />
+    <waitingClients id="15" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="11.581554279137297" rxBW="150.0" minTxBW="5.7907771395686485" invTxBW="0.08634419663355318" invRxBW="0.006666666666666667" />
+    <waitingClients id="16" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="24.164397380802967" rxBW="150.0" minTxBW="12.082198690401484" invTxBW="0.04138319628837236" invRxBW="0.006666666666666667" />
+    <waitingClients id="17" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="46.04076453932658" rxBW="150.0" minTxBW="23.02038226966329" invTxBW="0.021719882586785266" invRxBW="0.006666666666666667" />
+    <waitingClients id="18" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="37.477014792801555" rxBW="150.0" minTxBW="18.738507396400777" invTxBW="0.026683021727549022" invRxBW="0.006666666666666667" />
+    <waitingClients id="19" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="19.511724094043196" rxBW="150.0" minTxBW="9.755862047021598" invTxBW="0.05125123721410624" invRxBW="0.006666666666666667" />
+    <waitingClients id="20" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="15.995213598840113" rxBW="150.0" minTxBW="7.997606799420057" invTxBW="0.06251870247437738" invRxBW="0.006666666666666667" />
+    <waitingClients id="21" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.66692695909197" rxBW="150.0" minTxBW="10.333463479545985" invTxBW="0.04838648735631552" invRxBW="0.006666666666666667" />
+    <waitingClients id="22" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="22.307841973321267" rxBW="150.0" minTxBW="11.153920986660633" invTxBW="0.04482728545396436" invRxBW="0.006666666666666667" />
+    <waitingClients id="23" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="35.7371498040756" rxBW="150.0" minTxBW="17.8685749020378" invTxBW="0.027982086022035148" invRxBW="0.006666666666666667" />
+    <waitingClients id="24" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="20.937125740472567" rxBW="150.0" minTxBW="10.468562870236283" invTxBW="0.04776204778036688" invRxBW="0.006666666666666667" />
+    <waitingClients id="25" depth="-1" clients="0" data="50.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="18.103472762816104" rxBW="150.0" minTxBW="9.051736381408052" invTxBW="0.05523802052244721" invRxBW="0.006666666666666667" />
   </lectureStudioServer>
+  <configurations clients="1" slowDown="1.0" bwSplit="1.0" />
+  <configurations clients="2" slowDown="2.0" bwSplit="0.5" />
+  <configurations clients="3" slowDown="3.0" bwSplit="0.3333333333333333" />
+  <configurations clients="4" slowDown="4.0" bwSplit="0.25" />
+  <configurations clients="5" slowDown="5.0" bwSplit="0.2" />
+  <configurations clients="6" slowDown="6.0" bwSplit="0.16666666666666666" />
+  <configurations clients="7" slowDown="7.0" bwSplit="0.14285714285714285" />
+  <configurations clients="8" slowDown="8.0" bwSplit="0.125" />
+  <configurations clients="9" slowDown="9.0" bwSplit="0.1111111111111111" />
+  <configurations clients="10" slowDown="10.0" bwSplit="0.1" />
+  <configurations clients="11" slowDown="11.0" bwSplit="0.09090909090909091" />
+  <configurations clients="12" slowDown="12.0" bwSplit="0.08333333333333333" />
+  <configurations clients="13" slowDown="13.0" bwSplit="0.07692307692307693" />
+  <configurations clients="14" slowDown="14.0" bwSplit="0.07142857142857142" />
+  <configurations clients="15" slowDown="15.0" bwSplit="0.06666666666666667" />
+  <configurations clients="16" slowDown="16.0" bwSplit="0.0625" />
+  <configurations clients="17" slowDown="17.0" bwSplit="0.058823529411764705" />
+  <configurations clients="18" slowDown="18.0" bwSplit="0.05555555555555555" />
+  <configurations clients="19" slowDown="19.0" bwSplit="0.05263157894736842" />
+  <configurations clients="20" slowDown="20.0" bwSplit="0.05" />
+  <configurations clients="21" slowDown="21.0" bwSplit="0.047619047619047616" />
+  <configurations clients="22" slowDown="22.0" bwSplit="0.045454545454545456" />
+  <configurations clients="23" slowDown="23.0" bwSplit="0.043478260869565216" />
+  <configurations clients="24" slowDown="24.0" bwSplit="0.041666666666666664" />
+  <configurations clients="25" slowDown="25.0" bwSplit="0.04" />
 </LectureStudioModel:Network>
