@@ -44,9 +44,9 @@ public class LSGenerator {
 	
 	public static Network simpleInitial() {
 		LSGenerator gen = new LSGenerator("FunSeed123".hashCode());
-		double fileSize = 50;
-		double lsBW = 500;
-		int clients = 25;
+		double fileSize = 10;
+		double lsBW = 250;
+		int clients = 5;
 		double clientsUp = 50;
 		double clientsDown = 150;
 		

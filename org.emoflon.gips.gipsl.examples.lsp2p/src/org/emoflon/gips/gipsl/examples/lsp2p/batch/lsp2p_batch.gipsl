@@ -1,4 +1,4 @@
-package "org.emoflon.gips.gipsl.examples.lsp2p.gipsl.batch"
+package "org.emoflon.gips.gipsl.examples.lsp2p.batch"
 
 import "platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
 import "http://www.eclipse.org/emf/2002/Ecore"
@@ -11,7 +11,7 @@ config {
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.000001];
-}
+} 
 
 condition clientIsWaiting = enforce ls2client
 pattern ls2client {
@@ -19,7 +19,7 @@ pattern ls2client {
 		-waitingClients->client
 	}
 	client : Client
-}
+} 
 
 rule addClient(hasRoot: EInt, bw: EDouble, tt: EDouble) {
 	relay : Node {
@@ -45,7 +45,7 @@ rule addClient(hasRoot: EInt, bw: EDouble, tt: EDouble) {
 	
 	# relay.txBW >= client.txBW
 //	# client.id > relay.id
-	# cfg.bwSplit * relay.txBW >= relay.minTxBW
+	# cfg.bwSplit * relay.txBW >= relay.minTxBW 
 } when clientIsWaiting
 
 rule node {
