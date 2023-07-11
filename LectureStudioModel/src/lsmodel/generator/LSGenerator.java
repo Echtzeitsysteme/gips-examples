@@ -39,10 +39,10 @@ public class LSGenerator {
 
 	public static void main(String[] args) {
 		initFileSystem();
-		simpleInitial();
+		simpleInitialBatch();
 	}
 	
-	public static Network simpleInitial() {
+	public static Network simpleInitialBatch() {
 		LSGenerator gen = new LSGenerator("FunSeed123".hashCode());
 		double fileSize = 10;
 		double lsBW = 250;

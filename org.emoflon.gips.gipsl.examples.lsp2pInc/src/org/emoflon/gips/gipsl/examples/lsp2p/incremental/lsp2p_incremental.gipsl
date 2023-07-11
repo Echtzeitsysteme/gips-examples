@@ -146,10 +146,14 @@ rule addClient(bw: EDouble, tt: EDouble) {
 rule updateTransferTime(tt: EDouble) {
 	relay : Node {
 		- activeClients -> client
+		- configuration -> oldCfg
 	}
 	client : Client {
 		.transferTime := param::tt
 	}
+	oldCfg : Configuration
+	newCfg : Configuration
+	#oldCfg.clients + 1 == newCfg.clients
 }
 
 mapping initRoot2Client with addClientRootInit {
@@ -197,9 +201,7 @@ constraint -> pattern::ls2Waiting {
 }
 
 constraint -> pattern::updateTransferTime {
-	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) +
-		mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) + 
-		mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) +
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) +
 		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) >= 1 
 		| mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.value()) >= 1 
 	] =>
@@ -207,13 +209,62 @@ constraint -> pattern::updateTransferTime {
 }
 
 constraint -> pattern::updateTransferTime {
-	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) +
-		mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) + 
-		mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) +
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) + 
 		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) <= 0 
 		& mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.value()) <= 0 
 	] =>
 	mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) <= 0 
+}
+ 
+constraint -> mapping::updateTT {
+	[self.value() >= 1 => self.variables().transferTime >= 0.0001] &
+	[self.value() <= 0 => self.variables().transferTime <= self.nodes().client.transferTime] &
+	[self.value() <= 0 => self.variables().transferTime >= self.nodes().client.transferTime]
+}
+
+constraint -> pattern::updateTransferTime {
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client != self.nodes().client)->sum(m | m.value()) >= 1 &
+		mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1
+	] =>
+	[mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) <= 
+		self.nodes().client.transferTime * self.nodes().newCfg.slowDown / self.nodes().oldCfg.slowDown &
+	 mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) >= 
+		self.nodes().client.transferTime * self.nodes().newCfg.slowDown / self.nodes().oldCfg.slowDown
+	]
+}
+
+constraint -> pattern::updateTransferTime {
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client != self.nodes().client)->sum(m | m.value()) >= 1 &
+		mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.value()) >= 0 &
+		mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1
+	] =>
+	[mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) <=
+		self.nodes().relay.transferTime + 
+		(self.nodes().client.transferTime - self.nodes().relay.transferTime) * (self.nodes().newCfg.slowDown/self.nodes().oldCfg.slowDown) &
+	 mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) >=
+		self.nodes().relay.transferTime + 
+		(self.nodes().client.transferTime - self.nodes().relay.transferTime) * (self.nodes().newCfg.slowDown/self.nodes().oldCfg.slowDown)
+	]
+}
+
+constraint -> pattern::updateTransferTime {
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client != self.nodes().client)->sum(m | m.value()) >= 1 &
+		mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.value()) >= 1 &
+		mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1
+	] =>
+	[mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) <=
+		mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().transferTime) + 
+		(self.nodes().client.transferTime - self.nodes().relay.transferTime) * (self.nodes().newCfg.slowDown/self.nodes().oldCfg.slowDown) &
+	 mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) >=
+		mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().transferTime) + 
+		(self.nodes().client.transferTime - self.nodes().relay.transferTime) * (self.nodes().newCfg.slowDown/self.nodes().oldCfg.slowDown)
+	]
 }
 
 constraint -> mapping::initRoot2Client {
