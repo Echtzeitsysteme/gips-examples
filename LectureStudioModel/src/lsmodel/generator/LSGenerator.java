@@ -39,10 +39,10 @@ public class LSGenerator {
 
 	public static void main(String[] args) {
 		initFileSystem();
-		simpleInitialBatch();
+		simpleInitialBatch(10);
 	}
 	
-	public static Network simpleInitialBatch() {
+	public static Network simpleInitialBatch(int numOfConfigs) {
 		LSGenerator gen = new LSGenerator("FunSeed123".hashCode());
 		double fileSize = 10;
 		double lsBW = 250;
@@ -51,6 +51,7 @@ public class LSGenerator {
 		double clientsDown = 150;
 		
 		Network net = gen.generateInitial(
+				numOfConfigs,
 				new GenParameter(GenDistribution.CONST, fileSize), 
 				new GenParameter(GenDistribution.CONST, lsBW), 
 				new GenParameter(GenDistribution.CONST, clients), 
@@ -96,7 +97,7 @@ public class LSGenerator {
 		rnd = new Random(seed);
 	}
 	
-	public Network generateInitial(GenParameter data, GenParameter lsBwUp, GenParameter nodes, GenParameter nodeBwUp, GenParameter nodeBwDown) {
+	public Network generateInitial(int numOfConfigs, GenParameter data, GenParameter lsBwUp, GenParameter nodes, GenParameter nodeBwUp, GenParameter nodeBwDown) {
 		int id = 0;
 		Network net = factory.createNetwork();
 		net.setTime(0);
@@ -124,7 +125,7 @@ public class LSGenerator {
 		net.getLectureStudioServer().add(ls);
 		
 		List<Configuration> configs = new LinkedList<>();
-		for(int i = 1; i<=(int)nodes.getParam(rnd); i++) {
+		for(int i = 0; i<numOfConfigs; i++) {
 			Configuration config = factory.createConfiguration();
 			config.setClients(i);
 			config.setSlowDown(i);
@@ -156,8 +157,38 @@ public class LSGenerator {
 			clients.add(client);
 		}
 		ls.getWaitingClients().addAll(clients);
+		net.setNextId(id);
 		
 		return net;
+	}
+	
+	public void insertRndClients(final LectureStudioServer ls, GenParameter nodes, GenParameter nodeBwUp, GenParameter nodeBwDown) {
+		Network network = (Network) ls.eContainer();
+		int id = network.getNextId();
+		List<Client> clients = new LinkedList<>();
+		for(int i = (int)nodes.getParam(rnd); i>0; i--) {
+			Client client = factory.createClient();
+			client.setData(ls.getData());
+			client.setDepth(-1);
+			client.setId(""+id++);
+			client.setIsRelayClient(0);
+			client.setTxBW(nodeBwUp.getParam(rnd));
+			client.setMinTxBW(client.getTxBW()/2.0);
+			client.setRxBW(nodeBwDown.getParam(rnd));
+//			client.setResidualTxBW(client.getTxBW());
+//			client.setResidualRxBW(client.getRxBW());
+//			client.setAllocatedTxBW(0);
+//			client.setAllocatedRxBW(0);
+			client.setInvTxBW(1.0/client.getTxBW());
+			client.setInvRxBW(1.0/client.getRxBW());
+			client.setTransferTime(0);
+			client.setIsRelayClient(0);
+			client.setIsHasRoot(0);
+			client.setClients(0);
+			clients.add(client);
+		}
+		ls.getWaitingClients().addAll(clients);
+		network.setNextId(id);
 	}
 }
 

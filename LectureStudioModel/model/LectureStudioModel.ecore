@@ -12,6 +12,7 @@
         defaultValueLiteral="0"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="configurations" upperBound="-1"
         eType="#//Configuration" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Configuration">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="clients" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>

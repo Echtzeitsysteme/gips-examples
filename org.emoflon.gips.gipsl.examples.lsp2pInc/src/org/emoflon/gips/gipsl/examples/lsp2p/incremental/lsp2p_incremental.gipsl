@@ -20,12 +20,12 @@ pattern ls2Waiting {
 	waiting : Client
 }
 
-condition hasNoConfig = enforce node2config
+condition hasNoConfig = forbid node2config
 pattern node2config {
 	relay : Node {
-		-configuration->cfg 
+		-configuration->other 
 	}
-	cfg : Configuration
+	other : Configuration
 }
 
 rule addClientRootInit(bw: EDouble, tt: EDouble) {
@@ -99,6 +99,11 @@ rule addClientInit(bw: EDouble, tt: EDouble) {
 	cfg : Configuration 
 	
 	#cfg.clients == 1
+	#relay.isHasRoot >= 1
+	
+	// Heuristics
+	#relay.isHasRoot <= 3
+	#relay.txBW >= client.txBW
 	
 	client : Client {
 		.transferTime := param::tt
@@ -129,6 +134,12 @@ rule addClient(bw: EDouble, tt: EDouble) {
 	newCfg : Configuration
 	
 	#oldCfg.clients + 1 == newCfg.clients
+	#relay.isHasRoot >= 1
+	
+	// Heuristics
+	#relay.isHasRoot <= 3
+	#relay.txBW >= client.txBW
+	#newCfg.clients <= 2
 	
 	client : Client {
 		.transferTime := param::tt
@@ -143,13 +154,13 @@ rule addClient(bw: EDouble, tt: EDouble) {
 	}
 }
 
-rule updateTransferTime(tt: EDouble) {
+rule updateTransferTime(ttu: EDouble) {
 	relay : Node {
 		- activeClients -> client
 		- configuration -> oldCfg
 	}
 	client : Client {
-		.transferTime := param::tt
+		.transferTime := param::ttu
 	}
 	oldCfg : Configuration
 	newCfg : Configuration
@@ -181,7 +192,7 @@ mapping relay2Client with addClient {
 };
 
 mapping updateTT with updateTransferTime {
-	var transferTime:EDouble bind tt
+	var transferTime:EDouble bind ttu
 };
 
 // Set this to n = #waiting_clients in the future
@@ -217,7 +228,7 @@ constraint -> pattern::updateTransferTime {
 }
  
 constraint -> mapping::updateTT {
-	[self.value() >= 1 => self.variables().transferTime >= 0.0001] &
+	[self.value() >= 1 => self.variables().transferTime >= self.nodes().client.transferTime] &
 	[self.value() <= 0 => self.variables().transferTime <= self.nodes().client.transferTime] &
 	[self.value() <= 0 => self.variables().transferTime >= self.nodes().client.transferTime]
 }
@@ -413,7 +424,7 @@ constraint -> pattern::addClientInit {
 	]
 }
 
-constraint -> pattern::addClientRootInit {
+constraint -> pattern::addClientInit {
 	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
 		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
 	] =>
@@ -423,7 +434,7 @@ constraint -> pattern::addClientRootInit {
 		self.nodes().client.rxBW]
 }
 
-constraint -> pattern::addClientRootInit {
+constraint -> pattern::addClientInit {
 	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
 		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
 	] =>
@@ -434,7 +445,7 @@ constraint -> pattern::addClientRootInit {
 	]
 }
 
-constraint -> pattern::addClientRootInit {
+constraint -> pattern::addClientInit {
 	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
 		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
 	] =>
@@ -556,7 +567,7 @@ objective transfertime4 -> mapping::initRelay2Client {
 }
 
 objective transfertime5 -> mapping::updateTT {
-	self.variables().transferTime - self.nodes().client.transferTime
+	self.variables().transferTime
 }
 
 global objective : min {

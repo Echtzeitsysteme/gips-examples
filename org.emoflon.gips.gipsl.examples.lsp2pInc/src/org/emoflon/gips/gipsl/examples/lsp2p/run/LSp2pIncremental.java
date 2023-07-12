@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.ilp.ILPSolverStatus;
 import org.emoflon.gips.gipsl.examples.lsp2pInc.api.gips.Lsp2pIncGipsAPI;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
@@ -29,22 +30,50 @@ public class LSp2pIncremental {
 		
 		LSGenerator gen = new LSGenerator("FunSeed123".hashCode());
 		Network net = gen.generateInitial(
+				81,
+				new GenParameter(GenDistribution.CONST, 1), 
 				new GenParameter(GenDistribution.CONST, 500), 
-				new GenParameter(GenDistribution.CONST, 100), 
-				new GenParameter(GenDistribution.CONST, 10), 
-				new GenParameter(GenDistribution.UNI, 10, 50),
+				new GenParameter(GenDistribution.CONST, 8), 
+				new GenParameter(GenDistribution.UNI, 10, 100),
 				new GenParameter(GenDistribution.CONST, 150));
 		rs.getResources().get(0).getContents().add(net);
 		
-		gipsApi.init(rs);
-		gipsApi.buildILPProblem(true);
-		ILPSolverOutput output = gipsApi.solveILPProblem();
+		double tick = System.currentTimeMillis();
 		
-		gipsApi.getInitRoot2Client().applyNonZeroMappings();
-		gipsApi.getRoot2Client().applyNonZeroMappings();
-		gipsApi.getInitRelay2Client().applyNonZeroMappings();
-		gipsApi.getRelay2Client().applyNonZeroMappings();
-		gipsApi.getUpdateTT().applyNonZeroMappings();
+		gipsApi.init(rs);
+		int i = 0;
+		int limit = 10;
+		ILPSolverOutput output = null;
+		do {
+			if(i != 0) {
+				gen.insertRndClients(net.getLectureStudioServer().get(0), 
+						new GenParameter(GenDistribution.CONST, 8), 
+						new GenParameter(GenDistribution.UNI, 10, 100), 
+						new GenParameter(GenDistribution.CONST, 150));
+			}
+			
+			do {
+				gipsApi.buildILPProblem(true);
+				output = gipsApi.solveILPProblem();
+				
+				gipsApi.getInitRoot2Client().applyNonZeroMappings(false);
+				gipsApi.getRoot2Client().applyNonZeroMappings(false);
+				gipsApi.getInitRelay2Client().applyNonZeroMappings(false);
+				gipsApi.getRelay2Client().applyNonZeroMappings(false);
+				gipsApi.getUpdateTT().applyNonZeroMappings(false);
+			} while(gipsApi.getEMoflonAPI().ls2Waiting().hasMatches(true) && output != null && output.status() == ILPSolverStatus.OPTIMAL);
+			
+			if(output == null || output.status() != ILPSolverStatus.OPTIMAL)
+				break;
+			
+			i++;
+			
+		} while(i<limit);
+		
+		double tock = System.currentTimeMillis();
+		
+		System.out.println("\n\n****** Took: " + (tock-tick) + "ms");
+		System.out.println(output);
 		
 		String outputFile = instancesFolder + "/lsp2p_10clients_solved.xmi";
 		try {
