@@ -40,8 +40,8 @@ rule assignOffer {
 	}
 	
 	# skill.name == requirement.name
-	# week.number >= project.initialWeekNumber
-	# week.number < project.initialWeekNumber + project.weeksUntilLoss
+	# week.number >= project.start
+	# week.number < project.start + project.deadline
 	# skill.level >= requirement.skillLevel
 //	# worker.overtimeBonus <= requirement.overtimeBonus
 //	# worker.salary <= requirement.salary
@@ -73,8 +73,8 @@ pattern taskSequence {
 		- tasks -> task
 	}
 	
-	# week.number >= project.initialWeekNumber
-	# week.number < project.initialWeekNumber + project.weeksUntilLoss
+	# week.number >= project.start
+	# week.number < project.start + project.deadline
 }
 
 pattern finalTaskSequence {
@@ -89,8 +89,8 @@ pattern finalTaskSequence {
 		- tasks -> finalTask
 	}
 	
-	# week.number >= project.initialWeekNumber
-	# week.number < project.initialWeekNumber + project.weeksUntilLoss
+	# week.number >= project.start
+	# week.number < project.start + project.deadline
 	
 } when noNextTask
 
@@ -106,7 +106,7 @@ pattern taskHasNext {
 pattern projectInitialWeek {
 	week : Week
 	project : Project {
-		- start -> week
+		- startWeek -> week
 	}
 }
 

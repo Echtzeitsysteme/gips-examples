@@ -118,14 +118,14 @@ public class PTAModelGenerator {
 		return os;
 	}
 
-	public Project addProject(String name, double reward, int weeksUntilLoss, double lossPerWeek, int start) {
+	public Project addProject(String name, double reward, int deadline, double lossPerWeek, int start) {
 		Project p = factory.createProject();
 		p.setName(name);
-		p.setStart(weeks.get(start));
+		p.setStartWeek(weeks.get(start));
 		p.setReward(reward);
-		p.setWeeksUntilLoss(weeksUntilLoss);
+		p.setDeadline(deadline);
 		p.setLossPerWeek(lossPerWeek);
-		p.setInitialWeekNumber(start);
+		p.setStart(start);
 		projects.put(name, p);
 		return p;
 	}

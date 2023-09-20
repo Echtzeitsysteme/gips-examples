@@ -94,12 +94,12 @@ public class HouseConstructionValidator {
 			}
 
 			valid &= p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct().filter(
-					week -> week.getNumber() < p.getInitialWeekNumber() || week.getNumber() < p.getStart().getNumber())
+					week -> week.getNumber() < p.getStart() || week.getNumber() < p.getStartWeek().getNumber())
 					.findAny().isEmpty();
 
 			valid &= p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct()
-					.filter(week -> week.getNumber() > p.getInitialWeekNumber() + p.getWeeksUntilLoss()
-							|| week.getNumber() > p.getStart().getNumber() + p.getWeeksUntilLoss())
+					.filter(week -> week.getNumber() > p.getStart() + p.getDeadline()
+							|| week.getNumber() > p.getStartWeek().getNumber() + p.getDeadline())
 					.findAny().isEmpty();
 
 			List<Week> weeks = p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct()
@@ -111,7 +111,7 @@ public class HouseConstructionValidator {
 				}
 			});
 
-			int numOfWeeks = 1 + weeks.get(0).getNumber() - p.getInitialWeekNumber();
+			int numOfWeeks = 1 + weeks.get(0).getNumber() - p.getStart();
 			if (valid) {
 				System.out.println(
 						"INFO: The project will stay within the time limit and will take " + numOfWeeks + " weeks.");
@@ -119,13 +119,13 @@ public class HouseConstructionValidator {
 				System.out.println("INFO: The project exceeds the time limit and will take " + numOfWeeks + " weeks.");
 			}
 
-			valid &= (weeks.get(weeks.size() - 1).getNumber() == p.getInitialWeekNumber());
+			valid &= (weeks.get(weeks.size() - 1).getNumber() == p.getStart());
 			if (valid) {
 				System.out.println("INFO: The project will start at the initial project week: KW#"
-						+ p.getInitialWeekNumber() + ".");
+						+ p.getStart() + ".");
 			} else {
 				System.out.println(
-						"INFO: The project does not start at the required initial week: " + p.getInitialWeekNumber()
+						"INFO: The project does not start at the required initial week: " + p.getStart()
 								+ ", but starts at: " + weeks.get(weeks.size() - 1).getNumber() + ".");
 			}
 
