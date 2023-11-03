@@ -274,15 +274,15 @@ public class HouseConstructionGenerator extends PTAModelGenerator {
 	
 	public PersonTaskAssignmentModel constructSimpleProject() {
 		addWeeks(1, 3);
-		final String projectName = "ConstructHouse";
-		final Project project = addProject(projectName, 450000, 3, 10000, 1);
+		final String projectName = "Shed";
+		final Project project = addProject(projectName, 20000, 3, 500, 1);
 		
 		// Tasks
 		final Task excavation = addTask(projectName, "Excavation", new String[0]);
 		final SkillType dredging = addSkillType("Dredging");
 		final SkillType digging = addSkillType("Digging");
-		addRequirement(project, excavation, dredging, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 4 * 1);
-		addRequirement(project, excavation, digging, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 4 * 1);
+		addRequirement(project, excavation, dredging, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 1);
+		addRequirement(project, excavation, digging, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 1);
 		
 		final Task basement = addTask(projectName, "Basement", excavation.getName());
 		final SkillType concreteMixer = addSkillType("Concrete_mixer_driving");
@@ -290,19 +290,19 @@ public class HouseConstructionGenerator extends PTAModelGenerator {
 		final SkillType noop = addSkillType("NO_OP");
 		addRequirement(project, basement, concreteMixer, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 1);
 		addRequirement(project, basement, basementSkill, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 2);
-		addRequirement(project, basement, noop, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY * 20);
+		addRequirement(project, basement, noop, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY * 5);
 		
-		final Task carcass = addTask(projectName, "Carcass", basement.getName());
+		final Task shell = addTask(projectName, "Building_shell", basement.getName());
 		final SkillType bricked = addSkillType("Bricking");
-		final SkillType crane = addSkillType("Crane_operation");
-		addRequirement(project, carcass, crane, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 20 * 1);
-		addRequirement(project, carcass, bricked, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY * 20 * 2);
-		addRequirement(project, carcass, bricked, WorkerLevel.MASTER, WORKHOURS_PER_DAY * 20 * 1);
+		final SkillType woodWork = addSkillType("Wood_work");
+		addRequirement(project, shell, woodWork, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 4 * 2);
+		addRequirement(project, shell, bricked, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY * 2 * 1);
+		addRequirement(project, shell, bricked, WorkerLevel.MASTER, WORKHOURS_PER_DAY * 2 * 2);
 
-		final Task roof = addTask(projectName, "Roof", carcass.getName(), carcass.getName());
-		final SkillType dachdecken = addSkillType("Roof_construction");
-		addRequirement(project, roof, crane, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 4 * 1);
-		addRequirement(project, roof, dachdecken, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 4 * 2);
+		final Task roof = addTask(projectName, "Roof", shell.getName(), shell.getName());
+		final SkillType roofSkill = addSkillType("Roof_construction");
+		addRequirement(project, roof, woodWork, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 2 * 1);
+		addRequirement(project, roof, roofSkill, WorkerLevel.MASTER, WORKHOURS_PER_DAY * 3);
 		
 		return generate();
 	}
