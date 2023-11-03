@@ -261,7 +261,7 @@ public class HouseConstructionGenerator extends PTAModelGenerator {
 		PersonTaskAssignmentModel model = new HouseConstructionGenerator("EpicSeed".hashCode()).constructSimpleProject();
 
 		try {
-			save(model, instancesFolder + "/ConstructionSimpleProject.xmi");
+			save(model, instancesFolder + "./ConstructionSimpleProject.xmi");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -275,34 +275,27 @@ public class HouseConstructionGenerator extends PTAModelGenerator {
 	public PersonTaskAssignmentModel constructSimpleProject() {
 		addWeeks(1, 3);
 		final String projectName = "Shed";
-		final Project project = addProject(projectName, 20000, 3, 500, 1);
+		final Project project = addProject(projectName, 10000, 3, 500, 1);
 		
 		// Tasks
-		final Task excavation = addTask(projectName, "Excavation", new String[0]);
-		final SkillType dredging = addSkillType("Dredging");
-		final SkillType digging = addSkillType("Digging");
-		addRequirement(project, excavation, dredging, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 1);
-		addRequirement(project, excavation, digging, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 1);
-		
-		final Task basement = addTask(projectName, "Basement", excavation.getName());
-		final SkillType concreteMixer = addSkillType("Concrete_mixer_driving");
-		final SkillType basementSkill = addSkillType("Basement_work");
-		final SkillType noop = addSkillType("NO_OP");
-		addRequirement(project, basement, concreteMixer, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 1);
-		addRequirement(project, basement, basementSkill, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 2);
-		addRequirement(project, basement, noop, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY * 5);
+		final Task basement = addTask(projectName, "Basement", new String[0]);
+		final SkillType basementSkill = addSkillType("Concrete_work");
+		addRequirement(project, basement, basementSkill, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 1);
 		
 		final Task shell = addTask(projectName, "Building_shell", basement.getName());
 		final SkillType bricked = addSkillType("Bricking");
 		final SkillType woodWork = addSkillType("Wood_work");
-		addRequirement(project, shell, woodWork, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 4 * 2);
+		addRequirement(project, shell, woodWork, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 1 * 1);
 		addRequirement(project, shell, bricked, WorkerLevel.APPRENTICE, WORKHOURS_PER_DAY * 2 * 1);
-		addRequirement(project, shell, bricked, WorkerLevel.MASTER, WORKHOURS_PER_DAY * 2 * 2);
 
 		final Task roof = addTask(projectName, "Roof", shell.getName(), shell.getName());
 		final SkillType roofSkill = addSkillType("Roof_construction");
-		addRequirement(project, roof, woodWork, WorkerLevel.JOURNEYMAN, WORKHOURS_PER_DAY * 2 * 1);
-		addRequirement(project, roof, roofSkill, WorkerLevel.MASTER, WORKHOURS_PER_DAY * 3);
+		addRequirement(project, roof, roofSkill, WorkerLevel.MASTER, WORKHOURS_PER_DAY * 2);
+		
+		// Persons
+		createApprentices(1, 3, List.of(bricked.getName()));
+		createJourneymen(1, 2, List.of(basementSkill.getName()));
+		createMasters(1, 1, List.of(woodWork.getName(), roofSkill.getName()));
 		
 		return generate();
 	}
