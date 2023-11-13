@@ -1,0 +1,14 @@
+package "refactoring.software.system"
+import "platform:/resource/SoftwareSystem/model/softwareSystem.ecore"
+// import a metamodel here
+
+config {  
+	solver := GLPK [home:="fu", license:="bar"];
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.00001];
+}
+
+// TODO
