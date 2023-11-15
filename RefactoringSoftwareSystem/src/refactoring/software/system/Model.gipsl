@@ -1,6 +1,5 @@
 package "refactoring.software.system"
 import "platform:/resource/SoftwareSystem/model/softwareSystem.ecore"
-// import a metamodel here
 
 config {  
 	solver := GLPK [home:="fu", license:="bar"];
@@ -11,42 +10,101 @@ config {
 	tolerance := true [value := 0.00001];
 }
 
-// TODO
-//rule createTmpSystem {
-//	++ s: System {
-//		.name := "tmp"
+//// Removes the `components` edge from a `System` to a `Component`.
+//// This rule must be executed for every match before creating a new structure.
+//rule removeComponentsEdge {
+//	c: Component
+//	s: System {
+//		-- -components -> c
 //	}
 //}
 //
-//mapping createTmpSystem with createTmpSystem;
-//constraint -> mapping::createTmpSystem {
+//mapping removePreexistingEdges with removeComponentsEdge;
+//
+//// Every match of the rule `removeComponentsEdge` must be selected
+//constraint -> mapping::removePreexistingEdges {
 //	self.value() == 1
 //}
 
-// Removes the `components` edge from a `System` to a `Component`.
-// This rule must be executed for every match before creating a new structure.
-rule removeComponentsEdge {
-	c: Component
-	s: System {
-		-- -components -> c
+rule moveComponent {
+	formerSystem : System {
+		-- -components -> component
 	}
-//	
-//	tmp: System {
-//		++ -components -> c
-//	}
-//	
-//	#tmp.name == "tmp"
+	newSystem : System {
+		++ -components -> component
+	}
+	component : Component
 }
 
-mapping removePreexistingEdges with removeComponentsEdge;
+pattern findComponentInFormerSystem {
+	s: System {
+		-components -> c1
+		-components -> c2
+	}
+	c1: Component
+	c2: Component {
+		-imports -> c1
+	}
+}
 
-// Every match of the rule `removeComponentsEdge` must be selected
-//constraint -> pattern::removeComponentsEdge {
-//	mappings.removePreexistingEdges->
-//		filter(m | m.nodes().c == self.nodes().c)->
-//		filter(m | m.nodes().s == self.nodes().s)->
-//		count() == 1
+//pattern findComponentImport {
+//	c1 : Component
+//	c2 : Component {
+//		- imports -> c1
+//	}
+//	
+//	s1 : System {
+//		- components -> c1
+//	}
+//	s2 : System {
+//		- components -> c2
+//	}
 //}
-constraint -> mapping::removePreexistingEdges {
-	self.value() == 1
+
+//pattern findComponentInSystem {
+//	c : Component
+//	s : System {
+//		- components -> c
+//	}
+//}
+
+mapping move with moveComponent;
+
+//constraint -> class::Component {
+//	mappings.move->filter(m | m.nodes().component == self)->count() <= 1
+//}
+
+constraint -> global {
+	mappings.move->count() <= 1
+}
+
+//objective mObj -> mapping::move {
+//	1
+//}
+
+objective formerValue -> mapping::move {
+	patterns.findComponentInFormerSystem
+		->filter(m | m.nodes().s == self.nodes().newSystem & m.nodes().c1 == self.nodes().component)
+//		->filter(m | m.nodes().s == self.)
+//		->filter(m | m.nodes().c1 == self.nodes().component)
+		->count()
+		* self.value()
+//	-
+//	patterns.findComponentInFormerSystem
+//		->filter(m | m.nodes().s == self.nodes().formerSystem)
+//		->filter(m | m.nodes().c1 == self.nodes().component)
+//		->count()
+}
+
+objective newValue -> mapping::move {
+	patterns.findComponentInFormerSystem
+		->filter(m | m.nodes().s == self.nodes().formerSystem & m.nodes().c1 == self.nodes().component)
+//		->filter(m | m.nodes().c1 == self.nodes().component)
+		->count()
+		* self.value()
+}
+
+global objective : max {
+//	mObj
+	newValue - formerValue
 }

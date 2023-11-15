@@ -23,9 +23,11 @@ public class RefactoringExampleRunner {
 		if (output.solutionCount() == 0) {
 			throw new InternalError("No solution found!");
 		}
+		System.out.println("=> Objective value: " + output.objectiveValue());
 		
 //		gipsApi.getCreateTmpSystem().applyNonZeroMappings();
-		gipsApi.getRemovePreexistingEdges().applyNonZeroMappings();
+//		gipsApi.getRemovePreexistingEdges().applyNonZeroMappings();
+		gipsApi.getMove().applyNonZeroMappings();
 
 		final String outputFile = instancesFolder + "/" + scenarioName + "_solved.xmi";
 		try {
