@@ -12,3 +12,41 @@ config {
 }
 
 // TODO
+//rule createTmpSystem {
+//	++ s: System {
+//		.name := "tmp"
+//	}
+//}
+//
+//mapping createTmpSystem with createTmpSystem;
+//constraint -> mapping::createTmpSystem {
+//	self.value() == 1
+//}
+
+// Removes the `components` edge from a `System` to a `Component`.
+// This rule must be executed for every match before creating a new structure.
+rule removeComponentsEdge {
+	c: Component
+	s: System {
+		-- -components -> c
+	}
+//	
+//	tmp: System {
+//		++ -components -> c
+//	}
+//	
+//	#tmp.name == "tmp"
+}
+
+mapping removePreexistingEdges with removeComponentsEdge;
+
+// Every match of the rule `removeComponentsEdge` must be selected
+//constraint -> pattern::removeComponentsEdge {
+//	mappings.removePreexistingEdges->
+//		filter(m | m.nodes().c == self.nodes().c)->
+//		filter(m | m.nodes().s == self.nodes().s)->
+//		count() == 1
+//}
+constraint -> mapping::removePreexistingEdges {
+	self.value() == 1
+}
