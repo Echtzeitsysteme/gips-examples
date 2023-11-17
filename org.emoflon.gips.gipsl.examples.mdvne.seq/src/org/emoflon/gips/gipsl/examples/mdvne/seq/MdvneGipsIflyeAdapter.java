@@ -1,8 +1,17 @@
 package org.emoflon.gips.gipsl.examples.mdvne.seq;
 
+import java.util.ArrayList;
+
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.emoflon.gips.core.gt.GTMapping;
+import org.emoflon.gips.core.ilp.ILPIntegerVariable;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.gips.SeqGipsAPI;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.LinkPathMatchPositiveMatch;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.LinkServerMatchPositiveMatch;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.NetworkRuleMatch;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.ServerMatchPositiveMatch;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.SwitchNodeMatchPositiveMatch;
 
 /**
  * Implementation adapter for GIPS and iflye. This is used to run the GIPS-based
@@ -56,48 +65,53 @@ public class MdvneGipsIflyeAdapter {
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
 		System.out.println("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
 
+		@SuppressWarnings("rawtypes")
+		final var allSelectedMappings = new ArrayList<GTMapping>();
+
+		// Server 2 Server
 		final var srv2srvMappings = api.getSrv2srv().getNonZeroVariableMappings();
 		final var srv2srvRule = api.getSrv2srv().getGTRule();
-		srv2srvMappings.forEach(m -> {
-			System.out.println("srv2srv: " + m.getName() + ": " + m.getFreeVariables().get("index").getValue());
-//			m.getFreeVariables().get(0);
-			srv2srvRule.apply(m.getMatch(), true);
-		});
+		allSelectedMappings.addAll(srv2srvMappings);
 
+		// Switch 2 Node
 		final var sw2nodeMappings = api.getSw2node().getNonZeroVariableMappings();
 		final var sw2nodeRule = api.getSw2node().getGTRule();
-		sw2nodeMappings.forEach(m -> {
-			System.out.println("sw2node: " + m.getName() + ": " + m.getFreeVariables().get("index").getValue());
-			sw2nodeRule.apply(m.getMatch(), true);
-		});
+		allSelectedMappings.addAll(sw2nodeMappings);
 
+		// Link 2 Server
 		final var l2sMappings = api.getL2s().getNonZeroVariableMappings();
 		final var l2sRule = api.getL2s().getGTRule();
-		l2sMappings.forEach(m -> {
-			System.out.println("l2s: " + m.getName() + ": " + m.getFreeVariables().get("index").getValue());
-			l2sRule.apply(m.getMatch(), true);
-		});
-		
+		allSelectedMappings.addAll(l2sMappings);
+
+		// Network 2 Network
 		final var net2netMappings = api.getNet2net().getNonZeroVariableMappings();
 		final var net2netRule = api.getNet2net().getGTRule();
-		net2netMappings.forEach(m -> {
-			System.out.println("net2net: " + m.getName() + ": " + m.getFreeVariables().get("index").getValue());
-			net2netRule.apply(m.getMatch(), true);
+		allSelectedMappings.addAll(net2netMappings);
+
+		// Sort all mappings according to their index variable value
+		allSelectedMappings.sort((o1, o2) -> {
+			return ((ILPIntegerVariable) o1.getFreeVariables().get("index")).getValue()
+					- ((ILPIntegerVariable) o2.getFreeVariables().get("index")).getValue();
 		});
 
-//		// TODO: Print all variable values
-//		api.getSrv2srv().getNonZeroVariableMappings().forEach(c -> {
-//			// TODO: Fix print out
-//			System.out.println(c.getName() + ": " + c.getFreeVariableNames());
-//		});
-//
-//		// TODO: This must be done in the order of the index variables
-//		// Apply all valid mappings
-//		api.getSrv2srv().applyNonZeroMappings();
-//		api.getSw2node().applyNonZeroMappings();
-////		api.getL2p().applyNonZeroMappings();
-//		api.getL2s().applyNonZeroMappings();
-////		api.getNet2net().applyNonZeroMappings();		
+		// Apply all selected mappings in their respective index order
+		allSelectedMappings.forEach(m -> {
+			System.out
+					.println(m.getName() + ": " + ((ILPIntegerVariable) m.getFreeVariables().get("index")).getValue());
+			if (m.getMatch() instanceof ServerMatchPositiveMatch) {
+				srv2srvRule.apply((ServerMatchPositiveMatch) m.getMatch(), true);
+			} else if (m.getMatch() instanceof SwitchNodeMatchPositiveMatch) {
+				sw2nodeRule.apply((SwitchNodeMatchPositiveMatch) m.getMatch(), true);
+			} else if (m.getMatch() instanceof LinkServerMatchPositiveMatch) {
+				l2sRule.apply((LinkServerMatchPositiveMatch) m.getMatch(), true);
+			} else if (m.getMatch() instanceof LinkPathMatchPositiveMatch) {
+				// TODO
+			} else if (m.getMatch() instanceof NetworkRuleMatch) {
+				net2netRule.apply((NetworkRuleMatch) m.getMatch(), true);
+			} else {
+				throw new InternalError();
+			}
+		});
 
 		// Terminate API
 		// api.terminate();
