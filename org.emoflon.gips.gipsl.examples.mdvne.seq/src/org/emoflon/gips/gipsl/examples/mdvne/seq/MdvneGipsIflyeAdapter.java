@@ -77,6 +77,13 @@ public class MdvneGipsIflyeAdapter {
 			System.out.println("l2s: " + m.getName() + ": " + m.getFreeVariables().get("index").getValue());
 			l2sRule.apply(m.getMatch(), true);
 		});
+		
+		final var net2netMappings = api.getNet2net().getNonZeroVariableMappings();
+		final var net2netRule = api.getNet2net().getGTRule();
+		net2netMappings.forEach(m -> {
+			System.out.println("net2net: " + m.getName() + ": " + m.getFreeVariables().get("index").getValue());
+			net2netRule.apply(m.getMatch(), true);
+		});
 
 //		// TODO: Print all variable values
 //		api.getSrv2srv().getNonZeroVariableMappings().forEach(c -> {
