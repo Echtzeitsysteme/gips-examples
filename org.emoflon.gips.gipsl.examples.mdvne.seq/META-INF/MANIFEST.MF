@@ -4,6 +4,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.emoflon.gips.gipsl.examples.mdvne.seq
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
+Export-Package: org.emoflon.gips.gipsl.examples.mdvne.seq
 Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.mdvne.seq; singleton:=true
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
@@ -12,5 +13,4 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.gips.core,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
- network.metrics
-
+ network.model
