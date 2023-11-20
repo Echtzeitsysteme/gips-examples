@@ -16,7 +16,7 @@ condition serverNotMapped = forbid serverIsMapped
 pattern serverIsMapped {
 	host: SubstrateServer
 	
-	virtualNode: VirtualServer {
+	virtualServer: VirtualServer {
 		-host -> host
 	}
 }
@@ -72,19 +72,19 @@ pattern vlNotMapped {
 when linkNotMapped
 
 // Actual rules
-rule serverMatchPositive {
+rule server2ServerRule {
 	root: Root {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
 	
 	substrateServer: SubstrateServer {
-		.residualCpu := substrateServer.residualCpu - virtualNode.cpu
-		.residualMemory := substrateServer.residualMemory - virtualNode.memory
-		.residualStorage := substrateServer.residualStorage - virtualNode.storage
+		.residualCpu := substrateServer.residualCpu - virtualServer.cpu
+		.residualMemory := substrateServer.residualMemory - virtualServer.memory
+		.residualStorage := substrateServer.residualStorage - virtualServer.storage
 	}
 	
-	virtualNode: VirtualServer {
+	virtualServer: VirtualServer {
 		++ -host -> substrateServer
 	}
 	
@@ -93,16 +93,16 @@ rule serverMatchPositive {
 	}
 	
 	virtualNetwork: VirtualNetwork {
-		-nodes -> virtualNode
+		-nodes -> virtualServer
 	}
 	
-	# virtualNode.cpu <= substrateServer.residualCpu
-	# virtualNode.memory <= substrateServer.residualMemory
-	# virtualNode.storage <= substrateServer.residualStorage
+	# virtualServer.cpu <= substrateServer.residualCpu
+	# virtualServer.memory <= substrateServer.residualMemory
+	# virtualServer.storage <= substrateServer.residualStorage
 }
 when serverNotMapped
 
-rule switchNodeMatchPositive {
+rule switch2NodeRule {
 	root: Root {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
@@ -124,7 +124,7 @@ rule switchNodeMatchPositive {
 }
 when switchNotMapped
 
-rule linkPathMatchPositive {
+rule link2PathRule {
 	root: Root {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
@@ -158,7 +158,7 @@ rule linkPathMatchPositive {
 }
 when linkNotMapped
 
-rule linkServerMatchPositive {
+rule link2ServerRule {
 	root: Root {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
@@ -180,7 +180,7 @@ rule linkServerMatchPositive {
 }
 when linkNotMapped
 
-rule networkRule {
+rule network2NetworkRule {
 	root: Root {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
@@ -199,12 +199,12 @@ when networkNotMapped
 //
 
 // Server 2 Server
-mapping srv2srv with serverMatchPositive {
+mapping srv2srv with server2ServerRule {
 	var index : EInt
 };
 
 constraint -> pattern::vsrvNotMapped {
-	mappings.srv2srv->filter(m | m.nodes().virtualNode == self.nodes().virtualServer)->sum(m | m.value()) == 1
+	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualServer)->sum(m | m.value()) == 1
 }
 
 constraint -> mapping::srv2srv {
@@ -212,7 +212,7 @@ constraint -> mapping::srv2srv {
 }
 
 // Switch 2 Node
-mapping sw2node with switchNodeMatchPositive{
+mapping sw2node with switch2NodeRule {
 	var index : EInt
 };
 
@@ -225,14 +225,14 @@ constraint -> mapping::sw2node {
 }
 
 // Link 2 Server
-mapping l2s with linkServerMatchPositive {
+mapping l2s with link2ServerRule {
 	var index : EInt
 };
 
 //constraint -> pattern::linkServerMatchPositive {
-//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
+//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualServer == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
 //		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.value())) +
-//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualNode == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
+//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualServer == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
 //		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.target & mpp.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.value()))
 //	>= 2 * mappings.l2s->filter(mpp | mpp.nodes().substrateServer == self.nodes().substrateServer & mpp.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value())
 //}
@@ -246,10 +246,10 @@ constraint -> mapping::l2s {
 }
 
 // Connect link to node mappings via the index variable
-constraint -> pattern::linkServerMatchPositive {
+constraint -> pattern::link2ServerRule {
 	[mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
 	>=
-	mappings.srv2srv->filter(m | m.nodes().virtualNode == self.nodes().virtualLink.source)->sum(m | m.variables().index)
+	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.source)->sum(m | m.variables().index)
 	+ 1]
 	
 	&
@@ -259,7 +259,8 @@ constraint -> pattern::linkServerMatchPositive {
 	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.source)->sum(m | m.variables().index)
 	+ 1]
 }
-constraint -> pattern::linkServerMatchPositive {	
+
+constraint -> pattern::link2ServerRule {	
 	[mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
 	>=
 	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.target)->sum(m | m.variables().index)
@@ -274,7 +275,7 @@ constraint -> pattern::linkServerMatchPositive {
 }
 
 //// Link 2 Path
-//mapping l2p with linkPathMatchPositive {
+//mapping l2p with link2PathRule {
 //	var index : EInt
 //};
 //
@@ -288,10 +289,10 @@ constraint -> pattern::linkServerMatchPositive {
 //	self.value() >= 0 + 0.001 => self.variables().index >= 0 + 0.001
 //}
 //
-//constraint -> pattern::linkPathMatchPositive {
+//constraint -> pattern::link2PathRule {
 //	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath== self.nodes().substratePath)->sum(m | m.variables().index)
 //	>=
-//	mappings.srv2srv->filter(m | m.nodes().virtualNode == self.nodes().virtualLink.source)->sum(m | m.variables().index)
+//	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.source)->sum(m | m.variables().index)
 //	+ 0.001
 //	
 //	&
@@ -308,11 +309,11 @@ constraint -> pattern::linkServerMatchPositive {
 //}
 
 // Embed the virtual network
-mapping net2net with networkRule {
+mapping net2net with network2NetworkRule {
 	var index : EInt
 };
 
-constraint -> pattern::networkRule {
+constraint -> pattern::network2NetworkRule {
 	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value()) == 1
 }
 
@@ -343,7 +344,7 @@ constraint -> pattern::vlNotMapped {
 constraint -> pattern::vsrvNotMapped {
 	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualServer.network)->sum(m | m.variables().index)
 	>=
-	mappings.srv2srv->filter(m | m.nodes().virtualNode == self.nodes().virtualServer)->sum(m | m.variables().index)
+	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualServer)->sum(m | m.variables().index)
 	+ 1
 }
 

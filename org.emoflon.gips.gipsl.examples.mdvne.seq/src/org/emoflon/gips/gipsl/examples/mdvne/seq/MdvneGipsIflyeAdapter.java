@@ -7,11 +7,10 @@ import org.emoflon.gips.core.gt.GTMapping;
 import org.emoflon.gips.core.ilp.ILPIntegerVariable;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.gips.SeqGipsAPI;
-import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.LinkPathMatchPositiveMatch;
-import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.LinkServerMatchPositiveMatch;
-import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.NetworkRuleMatch;
-import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.ServerMatchPositiveMatch;
-import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.SwitchNodeMatchPositiveMatch;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2ServerRuleMatch;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Network2NetworkRuleMatch;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Server2ServerRuleMatch;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Switch2NodeRuleMatch;
 
 /**
  * Implementation adapter for GIPS and iflye. This is used to run the GIPS-based
@@ -98,16 +97,16 @@ public class MdvneGipsIflyeAdapter {
 		allSelectedMappings.forEach(m -> {
 			System.out
 					.println(m.getName() + ": " + ((ILPIntegerVariable) m.getFreeVariables().get("index")).getValue());
-			if (m.getMatch() instanceof ServerMatchPositiveMatch) {
-				srv2srvRule.apply((ServerMatchPositiveMatch) m.getMatch(), true);
-			} else if (m.getMatch() instanceof SwitchNodeMatchPositiveMatch) {
-				sw2nodeRule.apply((SwitchNodeMatchPositiveMatch) m.getMatch(), true);
-			} else if (m.getMatch() instanceof LinkServerMatchPositiveMatch) {
-				l2sRule.apply((LinkServerMatchPositiveMatch) m.getMatch(), true);
-			} else if (m.getMatch() instanceof LinkPathMatchPositiveMatch) {
+			if (m.getMatch() instanceof Server2ServerRuleMatch) {
+				srv2srvRule.apply((Server2ServerRuleMatch) m.getMatch(), true);
+			} else if (m.getMatch() instanceof Switch2NodeRuleMatch) {
+				sw2nodeRule.apply((Switch2NodeRuleMatch) m.getMatch(), true);
+			} else if (m.getMatch() instanceof Link2ServerRuleMatch) {
+				l2sRule.apply((Link2ServerRuleMatch) m.getMatch(), true);
+			} else if (m.getMatch() instanceof Link2ServerRuleMatch) {
 				// TODO
-			} else if (m.getMatch() instanceof NetworkRuleMatch) {
-				net2netRule.apply((NetworkRuleMatch) m.getMatch(), true);
+			} else if (m.getMatch() instanceof Network2NetworkRuleMatch) {
+				net2netRule.apply((Network2NetworkRuleMatch) m.getMatch(), true);
 			} else {
 				throw new InternalError();
 			}
