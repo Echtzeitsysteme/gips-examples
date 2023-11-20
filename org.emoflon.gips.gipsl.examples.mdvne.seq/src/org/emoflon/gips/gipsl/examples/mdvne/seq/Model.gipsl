@@ -320,9 +320,37 @@ constraint -> mapping::net2net {
 	[self.value() >= 1] <=> [self.variables().index >= 1]
 }
 
+// The virtual network's index must be higher than the indexes of all of its virtual links
 constraint -> pattern::vlNotMapped {
 	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualLink.network)->sum(m | m.variables().index)
 	>=
 	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.variables().index)
+	+ 1
+}
+
+//
+// The following two constraint templates are not strictly necessary.
+// They ensure that the index number of the whole virtual network is always
+// higher than all of the index numbers of all of its nodes (servers and switches).
+// This constraint is already (implicitly) enforced by the link constraints that
+// ensure that the source and target nodes of each virtual link get embedded
+// before the link itself.
+//
+// index_node < index_link < index_network => index_node < index_network
+//
+
+// The virtual network's index must be higher than the indexes of all of its virtual servers
+constraint -> pattern::vsrvNotMapped {
+	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualServer.network)->sum(m | m.variables().index)
+	>=
+	mappings.srv2srv->filter(m | m.nodes().virtualNode == self.nodes().virtualServer)->sum(m | m.variables().index)
+	+ 1
+}
+
+// the virtual network's index must be higher than the indexes of all of its virtual switches
+constraint -> pattern::vswNotMapped {
+	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualSwitch.network)->sum(m | m.variables().index)
+	>=
+	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->sum(m | m.variables().index)
 	+ 1
 }
