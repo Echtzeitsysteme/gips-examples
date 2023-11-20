@@ -274,11 +274,11 @@ constraint -> pattern::link2ServerRule {
 	+ 1]
 }
 
-//// Link 2 Path
-//mapping l2p with link2PathRule {
-//	var index : EInt
-//};
-//
+// Link 2 Path
+mapping l2p with link2PathRule {
+	var index : EInt
+};
+
 //constraint -> pattern::vlNotMapped {
 //	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) +
 //	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value())

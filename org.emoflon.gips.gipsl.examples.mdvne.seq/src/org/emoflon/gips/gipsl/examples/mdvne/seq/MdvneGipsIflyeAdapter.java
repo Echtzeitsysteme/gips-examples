@@ -7,6 +7,7 @@ import org.emoflon.gips.core.gt.GTMapping;
 import org.emoflon.gips.core.ilp.ILPIntegerVariable;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.gips.SeqGipsAPI;
+import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2PathRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2ServerRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Network2NetworkRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Server2ServerRuleMatch;
@@ -82,6 +83,11 @@ public class MdvneGipsIflyeAdapter {
 		final var l2sRule = api.getL2s().getGTRule();
 		allSelectedMappings.addAll(l2sMappings);
 
+		// Link 2 Path
+		final var l2pMappings = api.getL2p().getNonZeroVariableMappings();
+		final var l2pRule = api.getL2p().getGTRule();
+		allSelectedMappings.addAll(l2pMappings);
+
 		// Network 2 Network
 		final var net2netMappings = api.getNet2net().getNonZeroVariableMappings();
 		final var net2netRule = api.getNet2net().getGTRule();
@@ -104,7 +110,7 @@ public class MdvneGipsIflyeAdapter {
 			} else if (m.getMatch() instanceof Link2ServerRuleMatch) {
 				l2sRule.apply((Link2ServerRuleMatch) m.getMatch(), true);
 			} else if (m.getMatch() instanceof Link2ServerRuleMatch) {
-				// TODO
+				l2pRule.apply((Link2PathRuleMatch) m.getMatch(), true);
 			} else if (m.getMatch() instanceof Network2NetworkRuleMatch) {
 				net2netRule.apply((Network2NetworkRuleMatch) m.getMatch(), true);
 			} else {
