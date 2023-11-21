@@ -229,18 +229,6 @@ mapping l2s with link2ServerRule {
 	var index : EInt
 };
 
-//constraint -> pattern::linkServerMatchPositive {
-//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualServer == self.nodes().virtualLink.source & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
-//		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.source & mpp.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.value())) +
-//	(mappings.srv2srv->filter(mpp | mpp.nodes().virtualServer == self.nodes().virtualLink.target & mpp.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
-//		mappings.sw2node->filter(mpp | mpp.nodes().virtualSwitch == self.nodes().virtualLink.target & mpp.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.value()))
-//	>= 2 * mappings.l2s->filter(mpp | mpp.nodes().substrateServer == self.nodes().substrateServer & mpp.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value())
-//}
-
-constraint -> pattern::vlNotMapped {
-	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) == 1
-}
-
 constraint -> mapping::l2s {
 	[self.value() >= 1] <=> [self.variables().index >= 1]
 }
@@ -259,7 +247,6 @@ constraint -> pattern::link2ServerRule {
 	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.source)->sum(m | m.variables().index)
 	+ 1]
 }
-
 constraint -> pattern::link2ServerRule {	
 	[mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
 	>=
@@ -279,34 +266,43 @@ mapping l2p with link2PathRule {
 	var index : EInt
 };
 
-//constraint -> pattern::vlNotMapped {
-//	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) +
-//	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value())
-//	== 1
-//}
-//
-//constraint -> mapping::l2p {
-//	self.value() >= 0 + 0.001 => self.variables().index >= 0 + 0.001
-//}
-//
-//constraint -> pattern::link2PathRule {
-//	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath== self.nodes().substratePath)->sum(m | m.variables().index)
-//	>=
-//	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.source)->sum(m | m.variables().index)
-//	+ 0.001
-//	
-//	&
-//	
-//	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath == self.nodes().substratePath)->sum(m | m.variables().index)
-//	>=
-//	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.target)->sum(m | m.variables().index)
-//	+ 0.001
-//}
+constraint -> pattern::vlNotMapped {
+	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) +
+	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value())
+	== 1
+}
 
-//// TODO: There must be no duplicate index variable value
-//constraint -> mapping::srv2srv {
-//	mappings.srv2srv->filter(m | m.variables().index == self.variables().index)->count() == 1
-//}
+constraint -> mapping::l2p {
+	[self.value() >= 1] <=> [self.variables().index >= 1]
+}
+
+// Connect link to node mappings via the index variable
+constraint -> pattern::link2PathRule {
+	[mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath== self.nodes().substratePath)->sum(m | m.variables().index)
+	>=
+	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.source)->sum(m | m.variables().index)
+	+ 1]
+	
+	&
+	
+	[mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath == self.nodes().substratePath)->sum(m | m.variables().index)
+	>=
+	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.source)->sum(m | m.variables().index)
+	+ 1]
+}
+constraint -> pattern::link2PathRule {
+	[mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath== self.nodes().substratePath)->sum(m | m.variables().index)
+	>=
+	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.target)->sum(m | m.variables().index)
+	+ 1]
+	
+	&
+	
+	[mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath == self.nodes().substratePath)->sum(m | m.variables().index)
+	>=
+	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.target)->sum(m | m.variables().index)
+	+ 1]
+}
 
 // Embed the virtual network
 mapping net2net with network2NetworkRule {
