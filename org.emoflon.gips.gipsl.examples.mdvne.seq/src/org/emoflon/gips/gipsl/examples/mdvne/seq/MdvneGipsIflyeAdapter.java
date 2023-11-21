@@ -109,7 +109,7 @@ public class MdvneGipsIflyeAdapter {
 				sw2nodeRule.apply((Switch2NodeRuleMatch) m.getMatch(), true);
 			} else if (m.getMatch() instanceof Link2ServerRuleMatch) {
 				l2sRule.apply((Link2ServerRuleMatch) m.getMatch(), true);
-			} else if (m.getMatch() instanceof Link2ServerRuleMatch) {
+			} else if (m.getMatch() instanceof Link2PathRuleMatch) {
 				l2pRule.apply((Link2PathRuleMatch) m.getMatch(), true);
 			} else if (m.getMatch() instanceof Network2NetworkRuleMatch) {
 				net2netRule.apply((Network2NetworkRuleMatch) m.getMatch(), true);
