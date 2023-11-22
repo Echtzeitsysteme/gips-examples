@@ -332,16 +332,16 @@ constraint -> mapping::net2net {
 // The virtual network's index must be higher than the indexes of all of its virtual link mappings.
 // This must hold true for the link 2 server mapping and the link 2 path mapping for every virtual link.
 constraint -> pattern::link2ServerRule {
-	[mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualLink.network)->sum(m | m.variables().index)
+	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualLink.network)->sum(m | m.variables().index)
 	>=
 	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.variables().index)
-	+ 1]
+	+ 1
 }
 constraint -> pattern::link2PathRule {
-	[mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualLink.network)->sum(m | m.variables().index)
+	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualLink.network)->sum(m | m.variables().index)
 	>=
 	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.variables().index)
-	+ 1]
+	+ 1
 }
 
 // TODO: These two constraints may be removed:
@@ -371,4 +371,28 @@ constraint -> pattern::vswNotMapped {
 	>=
 	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->sum(m | m.variables().index)
 	+ 1
+}
+
+objective srvObj -> mapping::srv2srv {
+	self.variables().index
+}
+
+objective swObj -> mapping::sw2node {
+	self.variables().index
+}
+
+objective lsObj -> mapping::l2s {
+	self.variables().index
+}
+
+objective lpObj -> mapping::l2p {
+	self.variables().index
+}
+
+objective netObj -> mapping::net2net {
+	self.variables().index
+}
+
+global objective : min {
+	srvObj + swObj + lsObj + lpObj + netObj
 }
