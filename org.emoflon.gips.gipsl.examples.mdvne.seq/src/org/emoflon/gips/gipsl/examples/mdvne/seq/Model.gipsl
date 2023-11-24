@@ -414,30 +414,44 @@ constraint -> pattern::link2PathRule {
 // Objectives
 //
 
-objective srvObj -> mapping::srv2srv {
+objective srvObjIdx -> mapping::srv2srv {
 	self.variables().index
 }
 
-objective swObj -> mapping::sw2node {
+objective swObjIdx -> mapping::sw2node {
 	self.variables().index
 }
 
-objective lsObj -> mapping::l2s {
+objective lsObjIdx -> mapping::l2s {
+	self.variables().index
+}
+
+objective lpObjIdx -> mapping::l2p {
+	self.variables().index
+}
+
+objective netObjIdx -> mapping::net2net {
 	self.variables().index
 }
 
 objective lpObj -> mapping::l2p {
-	self.variables().index
+	self.nodes().virtualLink.bandwidth * self.nodes().substratePath.hops
 }
 
-objective netObj -> mapping::net2net {
-	self.variables().index
+objective srvObj -> mapping::srv2srv {
+    self.nodes().substrateServer.residualCpu / self.nodes().substrateServer.cpu +
+    self.nodes().substrateServer.residualMemory / self.nodes().substrateServer.memory +
+    self.nodes().substrateServer.residualStorage / self.nodes().substrateServer.storage
 }
 
 global objective : min {
-	srvObj
-	+ swObj
-	+ lsObj
+	// Minimize the index variables
+	srvObjIdx
+	+ swObjIdx
+	+ lsObjIdx
+	+ lpObjIdx
+	+ netObjIdx
+	// Usual MdVNE objective taken from the "normal" GIPS implementation
+	+ srvObj
 	+ lpObj
-	+ netObj
 }
