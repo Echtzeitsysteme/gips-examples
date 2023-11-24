@@ -371,16 +371,14 @@ constraint -> mapping::net2net {
 constraint -> pattern::link2ServerRule {
 	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualLink.network)->sum(m | m.variables().index)
 	>=
-	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.variables().index)
+	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
 	+ 1
-	// TODO: ^add substrate server to the last filter
 }
 constraint -> pattern::link2PathRule {
 	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualLink.network)->sum(m | m.variables().index)
 	>=
-	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.variables().index)
+	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath == self.nodes().substratePath)->sum(m | m.variables().index)
 	+ 1
-	// TODO: ^add substrate path to the last filter
 }
 
 // TODO: These two constraints may be removed:
@@ -396,23 +394,25 @@ constraint -> pattern::link2PathRule {
 // index_node < index_link < index_network => index_node < index_network
 //
 
-// The virtual network's index must be higher than the indexes of all of its virtual servers
-constraint -> pattern::vsrvNotMapped {
-	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualServer.network)->sum(m | m.variables().index)
-	>= 
-	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualServer)->sum(m | m.variables().index)
-	+ 1
-	// TODO: ^add substrate server to filter
-}
+//// The virtual network's index must be higher than the indexes of all of its virtual servers
+//constraint -> pattern::vsrvNotMapped {
+//	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualServer.network)->sum(m | m.variables().index)
+//	>= 
+//	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualServer)->sum(m | m.variables().index)
+//	+ 1
+//}
+//
+//// the virtual network's index must be higher than the indexes of all of its virtual switches
+//constraint -> pattern::vswNotMapped {
+//	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualSwitch.network)->sum(m | m.variables().index)
+//	>=
+//	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->sum(m | m.variables().index)
+//	+ 1
+//}
 
-// the virtual network's index must be higher than the indexes of all of its virtual switches
-constraint -> pattern::vswNotMapped {
-	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualSwitch.network)->sum(m | m.variables().index)
-	>=
-	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->sum(m | m.variables().index)
-	+ 1
-	// TODO: ^add substrate node to filter
-}
+//
+// Objectives
+//
 
 objective srvObj -> mapping::srv2srv {
 	self.variables().index
@@ -435,7 +435,8 @@ objective netObj -> mapping::net2net {
 }
 
 global objective : min {
-	srvObj + swObj
+	srvObj
+	+ swObj
 	+ lsObj
 	+ lpObj
 	+ netObj
