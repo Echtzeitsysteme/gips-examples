@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<softwareSystem:System
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:softwareSystem="platform:/resource/SoftwareSystem/model/softwareSystem.ecore"
+    name="org"
+    inverseNumberOfSystems="0.125">
+  <subSystems
+      name="emoflon"
+      inverseNumberOfSystems="0.125">
+    <subSystems
+        name="ibex"
+        inverseNumberOfSystems="0.125">
+      <subSystems
+          name="gt"
+          inverseNumberOfSystems="0.125">
+        <components
+            imports="//@subSystems.0/@subSystems.0/@components.0 //@subSystems.0/@subSystems.0/@subSystems.0/@components.1"
+            name="GTRuleMatch"/>
+        <components
+            imports="//@subSystems.0/@subSystems.0/@components.0"
+            name="GTPatternMatch"/>
+      </subSystems>
+      <subSystems
+          name="tgg"
+          inverseNumberOfSystems="0.125">
+        <components
+            imports="//@subSystems.0/@subSystems.0/@components.0"
+            name="TGGMatch"/>
+      </subSystems>
+      <components
+          name="Match"/>
+    </subSystems>
+    <subSystems
+        name="neo"
+        inverseNumberOfSystems="0.125">
+      <subSystems
+          name="tgg"
+          inverseNumberOfSystems="0.125"/>
+    </subSystems>
+  </subSystems>
+  <subSystems
+      name="cmoflon"
+      inverseNumberOfSystems="0.125"/>
+</softwareSystem:System>
