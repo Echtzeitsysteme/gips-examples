@@ -2,7 +2,6 @@ package org.emoflon.gips.gipsl.examples.mdvne;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
-import org.emoflon.gips.core.ilp.ILPSolverStatus;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 
 /**
@@ -79,7 +78,7 @@ public class MdvneGipsIflyeAdapter {
 
 		return output.solutionCount() > 0;
 	}
-	
+
 	/**
 	 * Resets the initialized state of the GIPS API.
 	 */
