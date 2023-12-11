@@ -2,7 +2,6 @@ package org.emoflon.gips.gipsl.examples.mdvne.migration;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
-import org.emoflon.gips.core.ilp.ILPSolverStatus;
 import org.emoflon.gips.gipsl.examples.mdvne.migration.api.gips.MigrationGipsAPI;
 
 /**
