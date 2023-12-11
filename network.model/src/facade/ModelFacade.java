@@ -45,6 +45,7 @@ import model.Switch;
 import model.VirtualElement;
 import model.VirtualLink;
 import model.VirtualNetwork;
+import model.VirtualNode;
 import model.VirtualServer;
 import model.VirtualSwitch;
 
@@ -109,7 +110,7 @@ public class ModelFacade {
 		ModelFacade.instance.resourceSet.createResource(URI.createURI("model.xmi"));
 		ModelFacade.instance.resourceSet.getResources().get(0).getContents().add(ModelFactory.eINSTANCE.createRoot());
 	}
-	
+
 	/**
 	 * Initializes the resource set (model) from a given file path.
 	 */
@@ -1753,6 +1754,11 @@ public class ModelFacade {
 				throw new InternalError("Normal bandwidth of link " + vl.getName() + " was smaller than zero.");
 			}
 
+			if (!checkVirtualLinkSourceTargetEmbedding(vl)) {
+				throw new InternalError(
+						"Validation of the source or target embedding of link " + vl.getName() + " failed.");
+			}
+
 			if (host == null && vl.getHost() == null) {
 				continue;
 			} else {
@@ -1770,6 +1776,77 @@ public class ModelFacade {
 			}
 			throw new InternalError("Validation of virtual link " + vl.getName() + " was incorrect.");
 		}
+	}
+
+	/**
+	 * Validates that the source and target of a given virtual link are also
+	 * embedded on the hosts of the virtual link. There are two cases: (1) The
+	 * virtual link was embedded onto a substrate server. In this case, both, the
+	 * source and the target of the virtual link must be embedded onto the same
+	 * substrate server as the virtual link. (2) The virtual link was embedded onto
+	 * a substrate path. In this case, the virtual link's source node must be
+	 * embedded onto the source node of the substrate path and the virtual link's
+	 * target node must be embedded onto the target node of the substrate path.
+	 * 
+	 * @param vLink Virtual link to check.
+	 * @return True if all checks were successful.
+	 */
+	public boolean checkVirtualLinkSourceTargetEmbedding(final VirtualLink vLink) {
+		final VirtualNode src = (VirtualNode) vLink.getSource();
+		final VirtualNode trg = (VirtualNode) vLink.getTarget();
+
+		if (vLink.getHost() instanceof SubstrateServer) {
+			if (src instanceof VirtualServer) {
+				final VirtualServer srcVSrv = (VirtualServer) src;
+				if (!srcVSrv.getHost().equals(vLink.getHost())) {
+					return false;
+				}
+			} else if (src instanceof VirtualSwitch) {
+				final VirtualSwitch srcVSw = (VirtualSwitch) src;
+				if (!srcVSw.getHost().equals(vLink.getHost())) {
+					return false;
+				}
+			}
+
+			if (trg instanceof VirtualServer) {
+				final VirtualServer trgVSrv = (VirtualServer) trg;
+				if (!trgVSrv.getHost().equals(vLink.getHost())) {
+					return false;
+				}
+			} else if (trg instanceof VirtualSwitch) {
+				final VirtualSwitch trgVSw = (VirtualSwitch) trg;
+				if (!trgVSw.getHost().equals(vLink.getHost())) {
+					return false;
+				}
+			}
+		} else if (vLink.getHost() instanceof SubstratePath) {
+			final SubstratePath vLinkHost = (SubstratePath) vLink.getHost();
+			if (src instanceof VirtualServer) {
+				final VirtualServer srcVSrv = (VirtualServer) src;
+				if (!srcVSrv.getHost().equals(vLinkHost.getSource())) {
+					return false;
+				}
+			} else if (src instanceof VirtualSwitch) {
+				final VirtualSwitch srcVSw = (VirtualSwitch) src;
+				if (!srcVSw.getHost().equals(vLinkHost.getSource())) {
+					return false;
+				}
+			}
+
+			if (trg instanceof VirtualServer) {
+				final VirtualServer trgVSrv = (VirtualServer) trg;
+				if (!trgVSrv.getHost().equals(vLinkHost.getTarget())) {
+					return false;
+				}
+			} else if (trg instanceof VirtualSwitch) {
+				final VirtualSwitch trgVSw = (VirtualSwitch) trg;
+				if (!trgVSw.getHost().equals(vLinkHost.getTarget())) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**
