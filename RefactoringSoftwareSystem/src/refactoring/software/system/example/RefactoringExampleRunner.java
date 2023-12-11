@@ -24,7 +24,7 @@ public class RefactoringExampleRunner {
 			throw new InternalError("No solution found!");
 		}
 		System.out.println("=> Objective value: " + output.objectiveValue());
-		
+
 //		gipsApi.getCreateTmpSystem().applyNonZeroMappings();
 //		gipsApi.getRemovePreexistingEdges().applyNonZeroMappings();
 		gipsApi.getMove().applyNonZeroMappings();
