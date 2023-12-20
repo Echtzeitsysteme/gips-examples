@@ -12,3 +12,5 @@ org.emoflon.gips.gipsl.examples.sdr.extended/json-model.xmi
 org.emoflon.gips.gipsl.examples.sdr.extended/json-model-result.xmi
 
 org.emoflon.gips.gipsl.examples.sdr.extended/solution.json
+
+PTAOptimizerSimplified/instances/PersonSimplifiedExample_solved.xmi

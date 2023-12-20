@@ -1,0 +1,44 @@
+package "pta.simplified.gipsl"
+import "platform:/resource/PersonTaskAssignments/model/PersonTaskAssignments.ecore"
+
+from "../PTAOptimizer/src/pta/gipsl/PtaSpecification.gipsl" import assignOffer
+
+config {
+	solver := GUROBI [home:="foo", license:="bar"];
+	launchConfig := true [main := "pta.example.house.HouseConstructionExample"];
+	timeLimit := true [value := 600.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.000001];
+	lpOutput := true [path := "./gurobi.lp"];
+}
+
+// rule 'assignOffer' imported from the main implementation
+
+// find a Person in the model
+pattern findPerson {
+	p : Person
+}
+
+// find a Requirement in the model
+pattern findReq {
+	r : Requirement
+}
+
+mapping reqToPerson with assignOffer;
+
+// every Requirement in the model must be assigned exactly once
+constraint -> pattern::findReq {
+	mappings.reqToPerson->filter(m | m.nodes().requirement == self.nodes().r)->sum(m | m.value()) == 1
+}
+
+// choose the salary of the Task/Requirement as objective value
+objective salary -> mapping::reqToPerson {
+	self.nodes().worker.salary
+}
+
+// use the local objective and minimize the salary
+global objective : min {
+	salary
+}

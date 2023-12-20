@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PersonTaskAssignments:PersonTaskAssignmentModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:PersonTaskAssignments="platform:/resource/PersonTaskAssignments/model/PersonTaskAssignments.ecore">
+  <persons name="Amy Weeks"
+      salary="65.0"
+      overtimeFlexibility="1.25"
+      overtimeBonus="100.0">
+    <skills
+        name="Concrete_work"
+        level="2"
+        type="//@skillTypes.0"/>
+    <offers
+        name="AW"
+        hours="8"
+        week="//@weeks.0"/>
+  </persons>
+  <persons name="Cory Cooper"
+      salary="50.0"
+      overtimeFlexibility="1.25"
+      overtimeBonus="100.0">
+    <skills
+        name="Concrete_work"
+        level="2"
+        type="//@skillTypes.0"/>
+    <offers
+        name="CC"
+        hours="8"
+        week="//@weeks.0"/>
+  </persons>
+  <persons name="Max Power"
+      salary="45.0"
+      overtimeFlexibility="1.25"
+      overtimeBonus="100.0">
+    <skills
+        name="Electrician"
+        level="3"
+        type="//@skillTypes.1"/>
+    <offers
+        name="MP"
+        hours="10"
+        week="//@weeks.0"/>
+  </persons>
+  <skillTypes
+      name="Concrete_work"/>
+  <skillTypes
+      name="Electrician"/>
+  <weeks number="1"
+      offers="//@persons.0/@offers.0 //@persons.1/@offers.0 //@persons.2/@offers.0"/>
+  <projects
+      name="ConstructHouse"
+      deadline="1"
+      reward="450000.0"
+      lossPerWeek="10000.0"
+      start="1"
+      startWeek="//@weeks.0">
+    <tasks name="Basement">
+      <requirements
+          name="Concrete_work"
+          hours="8"
+          skillLevel="2"
+          skillType="//@skillTypes.0"
+          overtimeBonus="100.0"
+          salary="65.0"/>
+    </tasks>
+  </projects>
+</PersonTaskAssignments:PersonTaskAssignmentModel>
