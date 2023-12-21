@@ -49,10 +49,10 @@
   <weeks number="1"
       offers="//@persons.0/@offers.0 //@persons.1/@offers.0 //@persons.2/@offers.0"/>
   <projects
-      name="ConstructHouse"
+      name="Simplified"
       deadline="1"
-      reward="450000.0"
-      lossPerWeek="10000.0"
+      reward="500.0"
+      lossPerWeek="250.0"
       start="1"
       startWeek="//@weeks.0">
     <tasks name="Basement">

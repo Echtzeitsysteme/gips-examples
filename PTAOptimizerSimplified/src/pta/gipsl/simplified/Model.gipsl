@@ -5,7 +5,7 @@ from "../PTAOptimizer/src/pta/gipsl/PtaSpecification.gipsl" import assignOffer
 
 config {
 	solver := GUROBI [home:="foo", license:="bar"];
-	launchConfig := true [main := "pta.example.house.HouseConstructionExample"];
+	launchConfig := true [main := "pta.simplified.gipsl.example"];
 	timeLimit := true [value := 600.0];
 	randomSeed := true [value := 0];
 	presolve := true;
