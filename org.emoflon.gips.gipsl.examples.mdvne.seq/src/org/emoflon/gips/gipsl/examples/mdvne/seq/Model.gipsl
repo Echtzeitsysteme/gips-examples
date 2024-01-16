@@ -208,12 +208,15 @@ constraint -> pattern::vsrvNotMapped {
 }
 
 constraint -> mapping::srv2srv {
-	[self.value() >= 1] <=> [self.variables().index >= 1]
+//	[self.value() >= 1] <=> [self.variables().index >= 1]
+	self.value() <= self.variables().index
+	&
+	self.variables().index <= self.value() * 1000
 }
 
-constraint -> mapping::srv2srv {
-	self.variables().index >= 0
-}
+//constraint -> mapping::srv2srv {
+//	self.variables().index >= 0
+//}
 
 constraint -> class::SubstrateServer {
 	mappings.srv2srv->filter(m | m.nodes().substrateServer == self)->sum(m | m.nodes().virtualServer.cpu) <= self.residualCpu &
@@ -231,12 +234,15 @@ constraint -> pattern::vswNotMapped {
 }
 
 constraint -> mapping::sw2node {
-	[self.value() >= 1] <=> [self.variables().index >= 1]
+//	[self.value() >= 1] <=> [self.variables().index >= 1]
+	self.value() <= self.variables().index
+	&
+	self.variables().index <= self.value() * 1000
 }
 
-constraint -> mapping::sw2node {
-	self.variables().index >= 0
-}
+//constraint -> mapping::sw2node {
+//	self.variables().index >= 0
+//}
 
 // Link 2 Server
 mapping l2s with link2ServerRule {
@@ -244,12 +250,15 @@ mapping l2s with link2ServerRule {
 };
 
 constraint -> mapping::l2s {
-	[self.value() >= 1] <=> [self.variables().index >= 1]
+//	[self.value() >= 1] <=> [self.variables().index >= 1]
+	self.value() <= self.variables().index
+	&
+	self.variables().index <= self.value() * 1000
 }
 
-constraint -> mapping::l2s {
-	self.variables().index >= 0
-}
+//constraint -> mapping::l2s {
+//	self.variables().index >= 0
+//}
 
 // Link 2 Path
 mapping l2p with link2PathRule {
@@ -257,12 +266,15 @@ mapping l2p with link2PathRule {
 };
 
 constraint -> mapping::l2p {
-	[self.value() >= 1] <=> [self.variables().index >= 1]
+//	[self.value() >= 1] <=> [self.variables().index >= 1]
+	self.value() <= self.variables().index
+	&
+	self.variables().index <= self.value() * 1000
 }
 
-constraint -> mapping::l2p {
-	self.variables().index >= 0
-}
+//constraint -> mapping::l2p {
+//	self.variables().index >= 0
+//}
 
 constraint -> class::SubstratePath {
 	mappings.l2p->filter(m | m.nodes().substratePath == self)->sum(m | m.nodes().virtualLink.bandwidth) <= self.residualBandwidth
@@ -373,12 +385,15 @@ constraint -> pattern::network2NetworkRule {
 }
 
 constraint -> mapping::net2net {
-	[self.value() >= 1] <=> [self.variables().index >= 1]
+//	[self.value() >= 1] <=> [self.variables().index >= 1]
+	self.value() <= self.variables().index
+	&
+	self.variables().index <= self.value() * 1000
 }
 
-constraint -> mapping::net2net {
-	self.variables().index >= 0
-}
+//constraint -> mapping::net2net {
+//	self.variables().index >= 0
+//}
 
 // The virtual network's index must be higher than the indexes of all of its virtual link mappings.
 // This must hold true for the link 2 server mapping and the link 2 path mapping for every virtual link.
