@@ -410,6 +410,21 @@ constraint -> pattern::link2PathRule {
 	+ 1
 }
 
+// The virtual network's index must be higher than the indexes of all of its virtual node mappings.
+// This must hold true for the server 2 server mapping and the switch 2 node mapping for every virtual node.
+constraint -> pattern::server2ServerRule {
+	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualServer.network)->sum(m | m.variables().index)
+	>=
+	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualServer & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
+	+ 1
+}
+constraint -> pattern::switch2NodeRule {
+	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualSwitch.network)->sum(m | m.variables().index)
+	>=
+	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch & m.nodes().substrateNode == self.nodes().substrateNode)->sum(m | m.variables().index)
+	+ 1
+}
+
 // TODO: These two constraints may be removed:
 
 //
