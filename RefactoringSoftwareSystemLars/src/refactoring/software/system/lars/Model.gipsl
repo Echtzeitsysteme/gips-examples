@@ -2,7 +2,7 @@ package "refactoring.software.system.lars"
 import "platform:/resource/SoftwareSystem/model/softwareSystem.ecore"
 
 config {  
-	solver := GLPK [home:="fu", license:="bar"];
+	solver := GUROBI [home:="fu", license:="bar"];
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
 	presolve := true;
@@ -54,12 +54,6 @@ pattern findSingleComponent {
 	c : Component
 }
 
-pattern findNonImportTuple {
-	c1 : Component
-	c2 : Component
-}
-when componentTupleNoImport
-
 pattern findNonImportTriple {
 	c1 : Component
 	c2 : Component
@@ -79,12 +73,13 @@ mapping vari with findImportTriple;
 
 // connect vari mapping with the respective c1 and c2 mappings
 constraint -> pattern::findImportTriple {
-	mappings.vari->filter(m | m.nodes().c1 == self.nodes().c1 & m.nodes().c2 == self.nodes().c2 & m.nodes().s == self.nodes().s)->count()
+	// workaround for == in <=> constraints
+	mappings.vari->filter(m | m.nodes().c1 == self.nodes().c1 & m.nodes().c2 == self.nodes().c2 & m.nodes().s == self.nodes().s)->count() >= 1
 	<=>
 	[
-		mappings.embed->filter(m | m.nodes().c == self.nodes().c1 & m.nodes().snew == self.nodes().s)->count() == 1
+		mappings.embed->filter(m | m.nodes().c == self.nodes().c1 & m.nodes().snew == self.nodes().s)->count() >= 1
 		&
-		mappings.embed->filter(m | m.nodes().c == self.nodes().c2 & m.nodes().snew == self.nodes().s)->count() == 1
+		mappings.embed->filter(m | m.nodes().c == self.nodes().c2 & m.nodes().snew == self.nodes().s)->count() >= 1
 	]
 	// TODO: reformulate this with a more efficient constraint
 }
@@ -94,12 +89,13 @@ mapping varii with findNonImportTriple;
 
 // connect varii mapping with the respective c1 and c2 mappings
 constraint -> pattern::findNonImportTriple {
-	mappings.varii->filter(m | m.nodes().c1 == self.nodes().c1 & m.nodes().c2 == self.nodes().c2 & m.nodes().s == self.nodes().s)->count()
+	// workaround for == in <=> constraints
+	mappings.varii->filter(m | m.nodes().c1 == self.nodes().c1 & m.nodes().c2 == self.nodes().c2 & m.nodes().s == self.nodes().s)->count() >= 1
 	<=>
 	[
-		mappings.embed->filter(m | m.nodes().c == self.nodes().c1 & m.nodes().snew == self.nodes().s)->count() == 1
+		mappings.embed->filter(m | m.nodes().c == self.nodes().c1 & m.nodes().snew == self.nodes().s)->count() >= 1
 		&
-		mappings.embed->filter(m | m.nodes().c == self.nodes().c2 & m.nodes().snew == self.nodes().s)->count() == 1
+		mappings.embed->filter(m | m.nodes().c == self.nodes().c2 & m.nodes().snew == self.nodes().s)->count() >= 1
 	]
 	// TODO: reformulate this with a more efficient constraint
 }
@@ -114,7 +110,7 @@ objective oii -> mapping::varii {
 
 // iv) motivate the solver to chose the same embedding as before
 objective oiii -> pattern::findPrevEmbeddingTuple {
-	mappings.embed->filter(m | m.nodes().c == self.nodes().c & m.nodes().snew == self.nodes().s)
+	mappings.embed->filter(m | m.nodes().c == self.nodes().c & m.nodes().snew == self.nodes().s)->count()
 }
 
 global objective : max {
