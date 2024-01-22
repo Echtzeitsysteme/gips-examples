@@ -25,6 +25,13 @@ public class RefactoringExampleRunner {
 		}
 		System.out.println("=> Objective value: " + output.objectiveValue());
 
+		System.out.println("Embeddings: ");
+		gipsApi.getEmbed().getMappings().forEach((k, v) -> {
+			if (v.getValue() == 1) {
+				System.out.println("  " + v.getMatch().getC().getName() + " -> " + v.getMatch().getSnew().getName());
+			}
+		});
+
 		gipsApi.getEmbed().applyNonZeroMappings();
 
 		final String outputFile = instancesFolder + "/" + scenarioName + "_solved.xmi";
@@ -34,7 +41,7 @@ public class RefactoringExampleRunner {
 			e.printStackTrace();
 		}
 
-		gipsApi.terminate();
+//		gipsApi.terminate();
 		java.lang.System.exit(0);
 	}
 
