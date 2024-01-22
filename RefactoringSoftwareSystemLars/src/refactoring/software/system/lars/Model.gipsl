@@ -1,0 +1,124 @@
+package "refactoring.software.system.lars"
+import "platform:/resource/SoftwareSystem/model/softwareSystem.ecore"
+
+config {  
+	solver := GLPK [home:="fu", license:="bar"];
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.00001];
+}
+
+// condition also excludes the other way around
+condition componentTupleNoImport = forbid findImportTuple && forbid findImportTupleRev
+pattern findImportTuple {
+	c1 : Component {
+		- imports -> c2
+	}
+	c2 : Component
+}
+pattern findImportTupleRev {
+	c1 : Component
+	c2 : Component {
+		- imports -> c1
+	}
+}
+
+pattern findImportTriple {
+	c1 : Component {
+		- imports -> c2
+	}
+	c2 : Component
+	s : System
+}
+
+pattern findPrevEmbeddingTuple {
+	c : Component
+	s : System {
+		- components -> c
+	}
+}
+
+rule embedCSTuple {
+	c : Component
+	snew : System {
+		++ - components -> c
+	}
+	sold : System {
+		-- - components -> c
+	}
+}
+
+pattern findSingleComponent {
+	c : Component
+}
+
+pattern findNonImportTuple {
+	c1 : Component
+	c2 : Component
+}
+when componentTupleNoImport
+
+pattern findNonImportTriple {
+	c1 : Component
+	c2 : Component
+	s : System
+}
+when componentTupleNoImport
+
+mapping embed with embedCSTuple;
+
+// iii) every component must be embedded
+constraint -> pattern::findSingleComponent {
+	mappings.embed->filter(m | m.nodes().c == self.nodes().c)->count() == 1
+}
+
+// i) variables for non-existing violations
+mapping vari with findImportTriple;
+
+// connect vari mapping with the respective c1 and c2 mappings
+constraint -> pattern::findImportTriple {
+	mappings.vari->filter(m | m.nodes().c1 == self.nodes().c1 & m.nodes().c2 == self.nodes().c2 & m.nodes().s == self.nodes().s)->count()
+	<=>
+	[
+		mappings.embed->filter(m | m.nodes().c == self.nodes().c1 & m.nodes().snew == self.nodes().s)->count() == 1
+		&
+		mappings.embed->filter(m | m.nodes().c == self.nodes().c2 & m.nodes().snew == self.nodes().s)->count() == 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+// ii) variables for existing violations
+mapping varii with findNonImportTriple;
+
+// connect varii mapping with the respective c1 and c2 mappings
+constraint -> pattern::findNonImportTriple {
+	mappings.varii->filter(m | m.nodes().c1 == self.nodes().c1 & m.nodes().c2 == self.nodes().c2 & m.nodes().s == self.nodes().s)->count()
+	<=>
+	[
+		mappings.embed->filter(m | m.nodes().c == self.nodes().c1 & m.nodes().snew == self.nodes().s)->count() == 1
+		&
+		mappings.embed->filter(m | m.nodes().c == self.nodes().c2 & m.nodes().snew == self.nodes().s)->count() == 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+objective oi -> mapping::vari {
+	1
+}
+
+objective oii -> mapping::varii {
+	1
+}
+
+// iv) motivate the solver to chose the same embedding as before
+objective oiii -> pattern::findPrevEmbeddingTuple {
+	mappings.embed->filter(m | m.nodes().c == self.nodes().c & m.nodes().snew == self.nodes().s)
+}
+
+global objective : max {
+	oi
+	- oii
+	+ 0.001 * oiii
+}
