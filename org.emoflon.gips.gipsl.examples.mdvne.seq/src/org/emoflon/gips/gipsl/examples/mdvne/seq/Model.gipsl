@@ -9,6 +9,7 @@ config {
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.00001];
+	lpOutput := true [path := "problem.lp"];
 }
 
 // NACS
@@ -299,25 +300,28 @@ constraint -> pattern::vlNotMapped {
 // Link 2 Server
 constraint -> pattern::link2ServerRule {
 	// (x_1 -> x_2) => (~ x_1 or x_2) => (1 <= ~ x_1 + x_2)
-	1
+//	1
+//	<=
+//	(mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) - 1)
+//	+
+//	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b)
+
+	// (x_1 -> x_2) => (x_1 <= x_2)
+	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value())
 	<=
-	(mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) - 1)
-	+
 	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b)
 }
 constraint -> pattern::link2ServerRule {
-//	0.001 * mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b)
-//	<=
-//	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
-//	+ 
-	
-//	L * b_1 <= z_ji + z_ki + 1 - z_i1
+	//	L * b_1 < z_ji + z_ki + 1 - z_i1
+	// AND
+	// z_ji + z_ki + 1 - z_i1 <= U * (1 - b)
 	0.001 * mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b)
 	<=
-	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.source & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
-	+ mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.source & m.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.variables().index)
+	-(mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.source & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index))
+	- mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.source & m.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.variables().index)
 	+ 1
-	- mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
+	+ mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
+//	- 0.0001
 
 	&
 	
@@ -327,21 +331,40 @@ constraint -> pattern::link2ServerRule {
 	- mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
 	<=
 	1000 * (1 - mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b))
+}
+constraint -> pattern::link2ServerRule {
+	//	L * b_1 < z_ji + z_ki + 1 - z_i1
+	// AND
+	// z_ji + z_ki + 1 - z_i1 <= U * (1 - b)
+	0.001 * mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b)
+	<=
+	-(mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.target & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index))
+	- mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.target & m.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.variables().index)
+	+ 1
+	+ mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
+//	- 0.0001
+
+	&
 	
-// AND
-// z_ji + z_ki + 1 - z_i1 <= U * (1 - b)
+	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.target & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
+	+ mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.target & m.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.variables().index)
+	+ 1
+	- mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
+	<=
+	1000 * (1 - mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b))
 }
 
 //constraint -> pattern::link2ServerRule {
+//	// x
 //	[mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->count() >= 1]
 //	=> 
 //	[
-//		// z_i1
+//		// z_i
 //		mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
 //		>=
-//		// z_j1
+//		// z_j
 //		mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.source & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().index)
-//		// z_k1
+//		// z_k
 //		+ mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.source & m.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.variables().index)
 //		+ 1
 //		
