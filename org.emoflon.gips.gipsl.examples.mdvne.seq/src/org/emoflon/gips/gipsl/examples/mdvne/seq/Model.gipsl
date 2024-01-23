@@ -204,10 +204,12 @@ mapping srv2srv with server2ServerRule {
 	var index : EInt
 };
 
+// Every not-mapped server must be mapped afterwards
 constraint -> pattern::vsrvNotMapped {
 	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualServer)->sum(m | m.value()) == 1
 }
 
+// If a mapping is selected, its corresponding index variable must be >=1
 constraint -> mapping::srv2srv {
 //	[self.value() >= 1] <=> [self.variables().index >= 1]
 	self.value() <= self.variables().index
@@ -215,10 +217,12 @@ constraint -> mapping::srv2srv {
 	self.variables().index <= self.value() * 1000
 }
 
+// Index variable must be >= 0 -> this is implicitly enforced via the constraint above
 //constraint -> mapping::srv2srv {
 //	self.variables().index >= 0
 //}
 
+// Every servers available resources must not be exceeded
 constraint -> class::SubstrateServer {
 	mappings.srv2srv->filter(m | m.nodes().substrateServer == self)->sum(m | m.nodes().virtualServer.cpu) <= self.residualCpu &
     mappings.srv2srv->filter(m | m.nodes().substrateServer == self)->sum(m | m.nodes().virtualServer.memory) <= self.residualMemory &
@@ -230,10 +234,12 @@ mapping sw2node with switch2NodeRule {
 	var index : EInt
 };
 
+// Every non-mapped switch must be mapped afterwards
 constraint -> pattern::vswNotMapped {
 	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->sum(m | m.value()) == 1
 }
 
+// If a mapping is selected, its corresponding index variable must be >= 1
 constraint -> mapping::sw2node {
 //	[self.value() >= 1] <=> [self.variables().index >= 1]
 	self.value() <= self.variables().index
@@ -241,6 +247,7 @@ constraint -> mapping::sw2node {
 	self.variables().index <= self.value() * 1000
 }
 
+// Index variable must be >= 0 -> this is implicitly enforced via the constraint above
 //constraint -> mapping::sw2node {
 //	self.variables().index >= 0
 //}
@@ -248,15 +255,18 @@ constraint -> mapping::sw2node {
 // Link 2 Server
 mapping l2s with link2ServerRule {
 	var index : EInt
+	// The variable `b` will be used to enforce a implication
 	var b : EInt
 };
 
+// Variable `b` must be in {0,1}
 constraint -> mapping::l2s {
 	self.variables().b >= 0
 	&
 	self.variables().b <= 1
 }
 
+// If a mapping is selected, its corresponding index variable must be >= 1
 constraint -> mapping::l2s {
 //	[self.value() >= 1] <=> [self.variables().index >= 1]
 	self.value() <= self.variables().index
@@ -264,6 +274,7 @@ constraint -> mapping::l2s {
 	self.variables().index <= self.value() * 1000
 }
 
+// Index variable must be >= 0 -> this is implicitly enforced via the constraint above
 //constraint -> mapping::l2s {
 //	self.variables().index >= 0
 //}
@@ -271,15 +282,18 @@ constraint -> mapping::l2s {
 // Link 2 Path
 mapping l2p with link2PathRule {
 	var index : EInt
+	// The variable `b` will be used to enforce a implication
 	var b : EInt
 };
 
+// Variable `b` must be in {0,1}
 constraint -> mapping::l2p {
 	self.variables().b >= 0
 	&
 	self.variables().b <= 1
 }
 
+// If a mapping is selected, its corresponding index variable must be >= 1
 constraint -> mapping::l2p {
 //	[self.value() >= 1] <=> [self.variables().index >= 1]
 	self.value() <= self.variables().index
@@ -287,10 +301,12 @@ constraint -> mapping::l2p {
 	self.variables().index <= self.value() * 1000
 }
 
+// Index variable must be >= 0 -> this is implicitly enforced via the constraint above
 //constraint -> mapping::l2p {
 //	self.variables().index >= 0
 //}
 
+// All mappings must not exceed the available resources of a substrate path
 constraint -> class::SubstratePath {
 	mappings.l2p->filter(m | m.nodes().substratePath == self)->sum(m | m.nodes().virtualLink.bandwidth) <= self.residualBandwidth
 }
@@ -303,14 +319,18 @@ constraint -> pattern::vlNotMapped {
 	== 1
 }
 
-// Connect link to node mappings via the index variable
+
 // Link 2 Server
+// If a link 2 server mapping is selected, its variable `b` must be set to 1 (implication)
 constraint -> pattern::link2ServerRule {
 	// (x_1 -> x_2) => (x_1 <= x_2)
 	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value())
 	<=
 	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b)
 }
+
+// Connect link to server mappings via the index variable
+// Source node of the virtual link
 constraint -> pattern::link2ServerRule {
 	//	L * b_1 < z_ji + z_ki + 1 - z_i1
 	// AND
@@ -332,6 +352,8 @@ constraint -> pattern::link2ServerRule {
 	<=
 	1000 * (1 - mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b))
 }
+
+// Target node of the virtual link
 constraint -> pattern::link2ServerRule {
 	//	L * b_1 < z_ji + z_ki + 1 - z_i1
 	// AND
@@ -354,6 +376,8 @@ constraint -> pattern::link2ServerRule {
 	1000 * (1 - mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.variables().b))
 }
 
+// If a link gets embedded to a server, the source node as well as the target node
+// of the link must be embedded to the same server
 constraint -> pattern::link2ServerRule {
 	(mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.source & m.nodes().substrateServer == self.nodes().substrateServer)->sum(m | m.value()) +
 		mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.source & m.nodes().substrateNode == self.nodes().substrateServer)->sum(m | m.value())) +
@@ -378,12 +402,16 @@ constraint -> pattern::link2ServerRule {
 //}
 
 // Link 2 Path
+// If a link 2 path mapping is selected, its variable `b` must be set to 1 (implication)
 constraint -> pattern::link2PathRule {
 	// (x_1 -> x_2) => (x_1 <= x_2)
 	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath == self.nodes().substratePath)->sum(m | m.value())
 	<=
 	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath == self.nodes().substratePath)->sum(m | m.variables().b)
 }
+
+// Connect link to path mappings via the index variable
+// Source node of the virtual link
 constraint -> pattern::link2PathRule {
 	//	L * b_1 < z_ji + z_ki + 1 - z_i1
 	// AND
@@ -405,6 +433,8 @@ constraint -> pattern::link2PathRule {
 	<=
 	1000 * (1 - mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath == self.nodes().substratePath)->sum(m | m.variables().b))
 }
+
+// Target node of the virtual link
 constraint -> pattern::link2PathRule {
 	//	L * b_1 < z_ji + z_ki + 1 - z_i1
 	// AND
@@ -426,6 +456,9 @@ constraint -> pattern::link2PathRule {
 	<=
 	1000 * (1 - mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink & m.nodes().substratePath == self.nodes().substratePath)->sum(m | m.variables().b))
 }
+
+// If a link gets embedded to a path, the source node as well as the target node
+// of the link must be embedded to the source node and target node of the path, respectively
 constraint -> pattern::link2PathRule {
 	(mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualLink.source & m.nodes().substrateServer == self.nodes().substratePath.source)->sum(m | m.value()) +
 		mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualLink.source & m.nodes().substrateNode == self.nodes().substratePath.source)->sum(m | m.value())) +
@@ -454,10 +487,12 @@ mapping net2net with network2NetworkRule {
 	var index : EInt
 };
 
+// Every non-mapped virtual network must be mapped afterwards
 constraint -> pattern::network2NetworkRule {
 	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value()) == 1
 }
 
+// If a mapping is selected, its corresponding index variable must be >= 1
 constraint -> mapping::net2net {
 //	[self.value() >= 1] <=> [self.variables().index >= 1]
 	self.value() <= self.variables().index
@@ -465,6 +500,7 @@ constraint -> mapping::net2net {
 	self.variables().index <= self.value() * 1000
 }
 
+// Index variable must be >= 0 -> this is implicitly enforced via the constraint above
 //constraint -> mapping::net2net {
 //	self.variables().index >= 0
 //}
@@ -486,6 +522,7 @@ constraint -> pattern::link2PathRule {
 
 // The virtual network's index must be higher than the indexes of all of its virtual node mappings.
 // This must hold true for the server 2 server mapping and the switch 2 node mapping for every virtual node.
+// (This is important because there may be virtual networks without links, so the constraints above may not hold.)
 constraint -> pattern::server2ServerRule {
 	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualServer.network)->sum(m | m.variables().index)
 	>=
@@ -498,35 +535,6 @@ constraint -> pattern::switch2NodeRule {
 	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch & m.nodes().substrateNode == self.nodes().substrateNode)->sum(m | m.variables().index)
 	+ 1
 }
-
-// TODO: These two constraints may be removed:
-
-//
-// The following two constraint templates are not strictly necessary.
-// They ensure that the index number of the whole virtual network is always
-// higher than all of the index numbers of all of its nodes (servers and switches).
-// This constraint is already (implicitly) enforced by the link constraints that
-// ensure that the source and target nodes of each virtual link get embedded
-// before the link itself.
-//
-// index_node < index_link < index_network => index_node < index_network
-//
-
-//// The virtual network's index must be higher than the indexes of all of its virtual servers
-//constraint -> pattern::vsrvNotMapped {
-//	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualServer.network)->sum(m | m.variables().index)
-//	>= 
-//	mappings.srv2srv->filter(m | m.nodes().virtualServer == self.nodes().virtualServer)->sum(m | m.variables().index)
-//	+ 1
-//}
-//
-//// the virtual network's index must be higher than the indexes of all of its virtual switches
-//constraint -> pattern::vswNotMapped {
-//	mappings.net2net->filter(m | m.nodes().virtualNetwork == self.nodes().virtualSwitch.network)->sum(m | m.variables().index)
-//	>=
-//	mappings.sw2node->filter(m | m.nodes().virtualSwitch == self.nodes().virtualSwitch)->sum(m | m.variables().index)
-//	+ 1
-//}
 
 //
 // Objectives
