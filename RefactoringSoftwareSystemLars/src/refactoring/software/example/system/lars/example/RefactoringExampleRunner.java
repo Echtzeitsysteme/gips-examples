@@ -1,6 +1,8 @@
 package refactoring.software.example.system.lars.example;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.eclipse.emf.common.util.URI;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
@@ -36,6 +38,7 @@ public class RefactoringExampleRunner {
 
 		final String outputFile = instancesFolder + "/" + scenarioName + "_solved.xmi";
 		try {
+			Files.createDirectories(Paths.get(instancesFolder));
 			gipsApi.saveResult(outputFile);
 		} catch (final IOException e) {
 			e.printStackTrace();
