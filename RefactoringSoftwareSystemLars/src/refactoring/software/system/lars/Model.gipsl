@@ -45,9 +45,13 @@ rule embedCSTuple {
 	snew : System {
 		++ - components -> c
 	}
-	sold : System {
-		-- - components -> c
-	}
+	// the old edge will implicitly be removed because a node can only be contained once
+	// activating this expression below will break the functionality to honor
+	// pre-existing mappings because there can be no match with the same `snew` and `sold`
+	// hence, when activated, every component must be moved
+//	sold : System {
+//		-- - components -> c
+//	}
 }
 
 pattern findSingleComponent {
