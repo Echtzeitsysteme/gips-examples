@@ -16,11 +16,6 @@ config {
 
 // rule 'assignOffer' imported from the main implementation
 
-// find a Person in the model
-pattern findPerson {
-	p : Person
-}
-
 // find a Requirement in the model
 pattern findReq {
 	r : Requirement
