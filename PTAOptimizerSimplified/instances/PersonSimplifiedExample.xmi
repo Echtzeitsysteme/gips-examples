@@ -3,7 +3,7 @@
     xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:PersonTaskAssignments="platform:/resource/PersonTaskAssignments/model/PersonTaskAssignments.ecore">
-  <persons name="AmyWeeks"
+  <persons name="Amy_Weeks"
       salary="65.0"
       overtimeFlexibility="1.25"
       overtimeBonus="100.0">
@@ -16,7 +16,7 @@
         hours="8"
         week="//@weeks.0"/>
   </persons>
-  <persons name="CoryCooper"
+  <persons name="Cory_Cooper"
       salary="50.0"
       overtimeFlexibility="1.25"
       overtimeBonus="100.0">
@@ -29,7 +29,7 @@
         hours="8"
         week="//@weeks.0"/>
   </persons>
-  <persons name="MaxPower"
+  <persons name="Max_Power"
       salary="45.0"
       overtimeFlexibility="1.25"
       overtimeBonus="100.0">

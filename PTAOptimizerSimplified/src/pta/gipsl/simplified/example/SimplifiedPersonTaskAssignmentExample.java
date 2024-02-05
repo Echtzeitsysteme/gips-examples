@@ -19,6 +19,13 @@ public class SimplifiedPersonTaskAssignmentExample {
 
 		gipsApi.buildILPProblem(true);
 		gipsApi.solveILPProblem();
+
+		// Print out all matches
+		gipsApi.getReqToPerson().getMappings().forEach((s, m) -> {
+			System.out.println(m.getMatch());
+		});
+
+		// Apply all selected rule matches
 		gipsApi.getReqToPerson().applyNonZeroMappings();
 
 		final String outputFile = instancesFolder + "/PersonSimplifiedExample_solved.xmi";
@@ -28,7 +35,7 @@ public class SimplifiedPersonTaskAssignmentExample {
 			e.printStackTrace();
 		}
 
-		gipsApi.terminate();
+//		gipsApi.terminate();
 		System.exit(0);
 	}
 
