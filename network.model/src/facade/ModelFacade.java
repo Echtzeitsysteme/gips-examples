@@ -241,6 +241,56 @@ public class ModelFacade {
 	}
 
 	/**
+	 * Returns true if a server for a given ID exists.
+	 *
+	 * @param id ID to check server existence for.
+	 * @return True if server does exist in model.
+	 */
+	public boolean serverExists(final String id) {
+		try {
+			final Node n = getNodeById(id);
+			return (n != null && n instanceof Server);
+		} catch (final NullPointerException | IndexOutOfBoundsException ex) {
+			return false;
+		}
+	}
+
+	/**
+	 * Returns true if a switch for a given ID exists.
+	 *
+	 * @param id ID to check switch existence for.
+	 * @return True if switch does exist in model.
+	 */
+	public boolean switchExists(final String id) {
+		try {
+			final Node n = getNodeById(id);
+			return (n != null && n instanceof Switch);
+		} catch (final NullPointerException | IndexOutOfBoundsException ex) {
+			return false;
+		}
+	}
+
+	/**
+	 * Returns true if a link for a given ID exists.
+	 *
+	 * @param id ID to check link existence for.
+	 * @return True if link does exist in model.
+	 */
+	public boolean linkExists(final String id) {
+		return links.containsKey(id);
+	}
+
+	/**
+	 * Returns true if a path for a given ID exists.
+	 *
+	 * @param id ID to check path existence for.
+	 * @return True if path does exist in model.
+	 */
+	public boolean pathExists(final String id) {
+		return paths.containsKey(id);
+	}
+
+	/**
 	 * Returns a server object for a given ID.
 	 *
 	 * @param id ID to return server object for.
@@ -1227,6 +1277,70 @@ public class ModelFacade {
 	}
 
 	/**
+	 * Adds an embedding of one virtual element (server, switch, link, network) to
+	 * one substrate element (server, switch, path, network). The type of the
+	 * virtual element and the substrate element will be determined based on the
+	 * given IDs.
+	 * 
+	 * Precedence: Network > Server > Switch > Path > Link
+	 *
+	 * @param virtualId   Virtual Id.
+	 * @param substrateId Substrate Id.
+	 * @return True if embedding was successful.
+	 */
+	public boolean embedGeneric(final String substrateId, final String virtualId) {
+		// find substrate element
+		ElementType sub = ElementType.UNDEFINED;
+		if (networkExists(substrateId)) {
+			sub = ElementType.NETWORK;
+		} else if (serverExists(substrateId)) {
+			sub = ElementType.SERVER;
+		} else if (switchExists(substrateId)) {
+			sub = ElementType.SWITCH;
+		} else if (pathExists(substrateId)) {
+			sub = ElementType.PATH;
+		} else {
+			throw new IllegalArgumentException("Substrate element with ID " + substrateId + " not found.");
+		}
+
+		// find virtual element
+		ElementType virt = ElementType.UNDEFINED;
+		if (networkExists(virtualId)) {
+			virt = ElementType.NETWORK;
+		} else if (serverExists(virtualId)) {
+			virt = ElementType.SERVER;
+		} else if (switchExists(virtualId)) {
+			virt = ElementType.SWITCH;
+		} else if (linkExists(virtualId)) {
+			virt = ElementType.LINK;
+		} else {
+			throw new IllegalArgumentException("Virtual element with ID " + virtualId + " not found.");
+		}
+
+		// embedding itself
+		boolean success = false;
+
+		if (sub == ElementType.NETWORK && virt == ElementType.NETWORK) {
+			success = embedNetworkToNetwork(substrateId, virtualId);
+		} else if (sub == ElementType.SERVER && virt == ElementType.SERVER) {
+			success = embedServerToServer(substrateId, virtualId);
+		} else if (sub == ElementType.SERVER && virt == ElementType.SWITCH) {
+			success = embedSwitchToNode(substrateId, virtualId);
+		} else if (sub == ElementType.SERVER && virt == ElementType.LINK) {
+			success = embedLinkToServer(substrateId, virtualId);
+		} else if (sub == ElementType.SWITCH && virt == ElementType.SWITCH) {
+			success = embedSwitchToNode(substrateId, virtualId);
+		} else if (sub == ElementType.PATH && virt == ElementType.LINK) {
+			success = embedLinkToPath(substrateId, virtualId);
+		} else {
+			throw new UnsupportedOperationException("Substrate element " + substrateId + " and virtual element "
+					+ virtualId + " could be found but there is no possibility to embed the virtual element.");
+		}
+
+		return success;
+	}
+
+	/**
 	 * Removes a network embedding with the given ID from the substrate network.
 	 *
 	 * @param id Virtual network ID to remove embedding for.
@@ -1891,6 +2005,10 @@ public class ModelFacade {
 		}
 
 		return false;
+	}
+
+	private enum ElementType {
+		NETWORK, SERVER, SWITCH, PATH, LINK, UNDEFINED
 	}
 
 }
