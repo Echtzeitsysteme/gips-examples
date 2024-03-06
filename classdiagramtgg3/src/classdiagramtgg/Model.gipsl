@@ -1,0 +1,178 @@
+package "classdiagramtgg"
+import "platform:/resource/ClassDiagram/model/classDiagram.ecore"
+
+config {  
+	solver := GUROBI [home:="fu", license:="bar"];
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.00001];
+}
+
+pattern findSingleMethod {
+	m : Method
+}
+
+rule embedMCTuple {
+	m : Method
+	c : Clazz {
+		++ - features -> m
+	}
+}
+
+pattern findSingleAttribute {
+	a : Attribute
+}
+
+rule embedACTuple {
+	a : Attribute
+	c : Clazz {
+		++ - features -> a
+	}
+}
+
+mapping embedMethod with embedMCTuple;
+
+// every method must be embedded
+constraint -> pattern::findSingleMethod {
+	mappings.embedMethod->filter(m | m.nodes().m == self)->count() == 1
+}
+
+mapping embedAttribute with embedACTuple;
+
+// every attribute must be embedded
+constraint -> pattern::findSingleAttribute {
+	mappings.embedAttribute->filter(m | m.nodes().a == self)->count() == 1
+}
+
+//
+//
+//
+
+//pattern findImportAMCTripleSameClazz {
+//	a : Attribute
+//	m : Method {
+//		- dependencies -> a
+//	}
+//	c : Clazz {
+//		- features -> a
+//		- features -> m
+//	}
+//}
+
+//pattern findNonImportAMCTriple {
+//	a : Attribute
+//	m : Method
+//	c : Clazz
+//}
+//when acTupleNoImport
+//
+//condition acTupleNoImport = forbid findImportTuple
+//pattern findImportTuple {
+//	a : Attribute
+//	m : Method {
+//		- dependencies -> a
+//	}
+//}
+
+//pattern findImportAMCTripleDiffClazz {
+//	a : Attribute
+//	m : Method {
+//		- dependencies -> a
+//	}
+//	c1 : Clazz {
+//		- features -> a
+//	}
+//	c2 : Clazz {
+//		- features -> m
+//	}
+//}
+
+//// variables for non-existing violations (attribute <-> method)
+//mapping nonViolationAMC with findImportAMCTripleSameClazz;
+//
+//constraint -> pattern::findImportAMCTripleSameClazz {
+//	// workaround for == in <=> constraints
+//	mappings.nonViolationAMC->filter(m | m.nodes().a == self.nodes().a & m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
+//	<=>
+//	[
+//		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count() >= 1
+//		&
+//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
+//	]
+//	// TODO: reformulate this with a more efficient constraint
+//}
+//
+//objective obJNonViolationAMC -> mapping::nonViolationAMC {
+//	1
+//}
+//
+//// variables for existing violations (attribute <-> method)
+//mapping violationAMC with findImportAMCTripleDiffClazz;
+//
+//constraint -> pattern::findImportAMCTripleDiffClazz {
+//	// workaround for == in <=> constraints
+//	mappings.violationAMC->filter(m | m.nodes().a == self.nodes().a & m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
+//	<=>
+//	[
+//		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count() >= 1
+//		&
+//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
+//	]
+//	// TODO: reformulate this with a more efficient constraint
+//}
+//
+//objective objViolationAMC -> mapping::violationAMC {
+//	1
+//}
+//
+//global objective : max {
+//	obJNonViolationAMC
+//	- objViolationAMC
+//}
+
+
+//
+//
+//
+
+pattern findViolationA {
+	c1 : Clazz {
+		- features -> a1
+	}
+	c2 : Clazz {
+		- features -> m1
+	}
+	a1 : Attribute
+	m1 : Method {
+		- dependencies -> a1
+	}
+}
+
+mapping violationA with findViolationA;
+
+constraint -> pattern::findViolationA {
+	// workaround for == in <=> constraints
+	mappings.violationA->filter(
+		m | m.nodes().a1 == self.nodes().a1
+		& m.nodes().m1 == self.nodes().m1
+		& m.nodes().c1 == self.nodes().c1
+		& m.nodes().c2 == self.nodes().c2
+	)->count() >= 1
+	<=>
+	[
+		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a1 & m.nodes().c == self.nodes().c1)->count() >= 1
+		&
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c2)->count() >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+objective obJViolationA -> mapping::violationA {
+	1
+}
+
+global objective : min {
+	obJViolationA
+}
