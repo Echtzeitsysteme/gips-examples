@@ -10,16 +10,9 @@ config {
 	tolerance := true [value := 0.00001];
 }
 
-pattern findSingleMethod {
-	m : Method
-}
-
-rule embedMCTuple {
-	m : Method
-	c : Clazz {
-		++ - features -> m
-	}
-}
+//
+// Utilities for embedding a single attribute or a single method
+//
 
 pattern findSingleAttribute {
 	a : Attribute
@@ -29,6 +22,17 @@ rule embedACTuple {
 	a : Attribute
 	c : Clazz {
 		++ - features -> a
+	}
+}
+
+pattern findSingleMethod {
+	m : Method
+}
+
+rule embedMCTuple {
+	m : Method
+	c : Clazz {
+		++ - features -> m
 	}
 }
 
@@ -47,103 +51,13 @@ constraint -> pattern::findSingleAttribute {
 }
 
 //
-//
-//
-
-//pattern findImportAMCTripleSameClazz {
-//	a : Attribute
-//	m : Method {
-//		- dependencies -> a
-//	}
-//	c : Clazz {
-//		- features -> a
-//		- features -> m
-//	}
-//}
-
-//pattern findNonImportAMCTriple {
-//	a : Attribute
-//	m : Method
-//	c : Clazz
-//}
-//when acTupleNoImport
-//
-//condition acTupleNoImport = forbid findImportTuple
-//pattern findImportTuple {
-//	a : Attribute
-//	m : Method {
-//		- dependencies -> a
-//	}
-//}
-
-//pattern findImportAMCTripleDiffClazz {
-//	a : Attribute
-//	m : Method {
-//		- dependencies -> a
-//	}
-//	c1 : Clazz {
-//		- features -> a
-//	}
-//	c2 : Clazz {
-//		- features -> m
-//	}
-//}
-
-//// variables for non-existing violations (attribute <-> method)
-//mapping nonViolationAMC with findImportAMCTripleSameClazz;
-//
-//constraint -> pattern::findImportAMCTripleSameClazz {
-//	// workaround for == in <=> constraints
-//	mappings.nonViolationAMC->filter(m | m.nodes().a == self.nodes().a & m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
-//	<=>
-//	[
-//		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count() >= 1
-//		&
-//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
-//	]
-//	// TODO: reformulate this with a more efficient constraint
-//}
-//
-//objective obJNonViolationAMC -> mapping::nonViolationAMC {
-//	1
-//}
-//
-//// variables for existing violations (attribute <-> method)
-//mapping violationAMC with findImportAMCTripleDiffClazz;
-//
-//constraint -> pattern::findImportAMCTripleDiffClazz {
-//	// workaround for == in <=> constraints
-//	mappings.violationAMC->filter(m | m.nodes().a == self.nodes().a & m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
-//	<=>
-//	[
-//		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count() >= 1
-//		&
-//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
-//	]
-//	// TODO: reformulate this with a more efficient constraint
-//}
-//
-//objective objViolationAMC -> mapping::violationAMC {
-//	1
-//}
-//
-//global objective : max {
-//	obJNonViolationAMC
-//	- objViolationAMC
-//}
-
-
-//
-//
+// Violation of type A:
+// a method has a dependency to an attribute which should be mapped to a different class than the method
 //
 
 pattern findViolationA {
-	c1 : Clazz {
-//		- features -> a1
-	}
-	c2 : Clazz {
-//		- features -> m1
-	}
+	c1 : Clazz
+	c2 : Clazz
 	a1 : Attribute
 	m1 : Method {
 		- dependencies -> a1
@@ -174,7 +88,9 @@ objective objViolationA -> mapping::violationA {
 }
 
 //
-//
+// Violation of type B:
+// two attributes and two methods are mapped to the same class, but the methods only have a dependency
+// to their own attribute
 //
 
 pattern findViolationB {
@@ -192,6 +108,7 @@ pattern findViolationB {
 mapping violationB with findViolationB;
 
 constraint -> pattern::findViolationB {
+	// workaround for == in <=> constraints
 	mappings.violationB->filter(
 		m | m.nodes().a1 == self.nodes().a1
 		& m.nodes().m1 == self.nodes().m1
@@ -208,6 +125,7 @@ constraint -> pattern::findViolationB {
 		&
 		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m2 & m.nodes().c == self.nodes().c1)->count() >= 1
 	]
+	// TODO: reformulate this with a more efficient constraint
 }
 
 objective objViolationB -> mapping::violationB {
@@ -215,7 +133,7 @@ objective objViolationB -> mapping::violationB {
 }
 
 //
-//
+// Honor pre-existing mappings
 //
 
 pattern findPrevEmbTupleAttr {
@@ -237,10 +155,12 @@ objective objExistAttrMap -> pattern::findPrevEmbTupleAttr {
 	mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count()
 }
 
+// motivate the solver to chose the same embedding as before (methods)
 objective objExistMethMap -> pattern::findPrevEmbTupleMeth {
 	mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count()
 }
 
+// minimize the number of violations
 global objective : min {
 	objViolationA
 	+ objViolationB
