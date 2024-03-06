@@ -36,14 +36,14 @@ mapping embedMethod with embedMCTuple;
 
 // every method must be embedded
 constraint -> pattern::findSingleMethod {
-	mappings.embedMethod->filter(m | m.nodes().m == self)->count() == 1
+	mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m)->count() == 1
 }
 
 mapping embedAttribute with embedACTuple;
 
 // every attribute must be embedded
 constraint -> pattern::findSingleAttribute {
-	mappings.embedAttribute->filter(m | m.nodes().a == self)->count() == 1
+	mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a)->count() == 1
 }
 
 //
@@ -139,10 +139,10 @@ constraint -> pattern::findSingleAttribute {
 
 pattern findViolationA {
 	c1 : Clazz {
-		- features -> a1
+//		- features -> a1
 	}
 	c2 : Clazz {
-		- features -> m1
+//		- features -> m1
 	}
 	a1 : Attribute
 	m1 : Method {

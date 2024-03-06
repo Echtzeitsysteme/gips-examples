@@ -29,6 +29,14 @@ public class ClassDiagramExampleRunner {
 		}
 		System.out.println("=> Objective value: " + output.objectiveValue());
 
+		System.out.println("---");
+
+		System.out.println("Violation Mappings: ");
+		gipsApi.getViolationA().getMappings().forEach((k, v) -> {
+			System.out.println(v.getValue() + ": " + v.getA1().getName() + " -> " + v.getC1().getName() + "; "
+					+ v.getM1().getName() + " -> " + v.getC2().getName());
+		});
+
 		System.out.println("Embeddings (Attributes): ");
 		gipsApi.getEmbedAttribute().getMappings().forEach((k, v) -> {
 			if (v.getValue() == 1) {
