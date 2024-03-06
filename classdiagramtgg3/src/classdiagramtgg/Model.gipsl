@@ -214,7 +214,36 @@ objective objViolationB -> mapping::violationB {
 	1
 }
 
+//
+//
+//
+
+pattern findPrevEmbTupleAttr {
+	c : Clazz {
+		- features -> a
+	}
+	a : Attribute
+}
+
+pattern findPrevEmbTupleMeth {
+	c : Clazz {
+		- features -> m
+	}
+	m : Method
+}
+
+// motivate the solver to chose the same embedding as before (attributes)
+objective objExistAttrMap -> pattern::findPrevEmbTupleAttr {
+	mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count()
+}
+
+objective objExistMethMap -> pattern::findPrevEmbTupleMeth {
+	mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count()
+}
+
 global objective : min {
 	objViolationA
 	+ objViolationB
+	- 0.001 * objExistAttrMap
+	- 0.001 * objExistMethMap
 }
