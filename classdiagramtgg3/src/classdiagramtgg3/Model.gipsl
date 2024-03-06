@@ -1,4 +1,4 @@
-package "classdiagramtgg"
+package "classdiagramtgg3"
 import "platform:/resource/ClassDiagram/model/classDiagram.ecore"
 
 config {  
