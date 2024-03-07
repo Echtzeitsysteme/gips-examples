@@ -89,19 +89,25 @@ objective objViolationA -> mapping::violationA {
 
 //
 // Violation of type B:
-// two attributes and two methods are mapped to the same class, but the methods only have a dependency
-// to their own attribute
+// two methods with no common attribute dependency should not be placed in the same class
 //
 
 pattern findViolationB {
+	c1 : Clazz
+	m1 : Method
+	m2 : Method
+}
+when twoMethodsWithNoSharingAttribute
+
+condition twoMethodsWithNoSharingAttribute = forbid findAMMCQuadruple
+pattern findAMMCQuadruple {
 	c1 : Clazz
 	a1 : Attribute
 	m1 : Method {
 		- dependencies -> a1
 	}
-	a2 : Attribute
 	m2 : Method {
-		- dependencies -> a2
+		- dependencies -> a1
 	}
 }
 
@@ -110,18 +116,12 @@ mapping violationB with findViolationB;
 constraint -> pattern::findViolationB {
 	// workaround for == in <=> constraints
 	mappings.violationB->filter(
-		m | m.nodes().a1 == self.nodes().a1
-		& m.nodes().m1 == self.nodes().m1
-		& m.nodes().a2 == self.nodes().a2
+		m | m.nodes().m1 == self.nodes().m1
 		& m.nodes().m2 == self.nodes().m2
 	)->count() >= 1
 	<=>
 	[
-		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a1 & m.nodes().c == self.nodes().c1)->count() >= 1
-		&
 		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c1)->count() >= 1
-		&
-		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a2 & m.nodes().c == self.nodes().c1)->count() >= 1
 		&
 		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m2 & m.nodes().c == self.nodes().c1)->count() >= 1
 	]
