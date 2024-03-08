@@ -16,7 +16,7 @@ public class RefactoringExampleRunner {
 		final String projectFolder = System.getProperty("user.dir");
 		final String instancesFolder = projectFolder + "/instances";
 		final String scenarioName = "TestSystem1";
-		final String file = projectFolder + "/../../TGG-3.0-Prototype/Refactoring/resources/softwareSystem/"
+		final String file = projectFolder + "/../../TGG-3.0-Prototype/RefactoringAC/resources/softwareSystem/"
 				+ scenarioName + ".xmi";
 		final URI uri = URI.createFileURI(file);
 		gipsApi.init(uri);
