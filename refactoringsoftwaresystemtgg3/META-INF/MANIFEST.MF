@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
-Automatic-Module-Name: RefactoringSoftwareSystemLars
+Automatic-Module-Name: refactoringsoftwaresystemtgg3
 Bundle-ManifestVersion: 2
-Bundle-Name: RefactoringSoftwareSystemLars
+Bundle-Name: refactoringsoftwaresystemtgg3
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: RefactoringSoftwareSystemLars; singleton:=true
+Bundle-SymbolicName: refactoringsoftwaresystemtgg3;singleton:=true
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.emoflon.ibex.common,

@@ -1,4 +1,4 @@
-package "refactoring.software.system.lars"
+package "refactoringsoftwaresystemtgg3"
 import "platform:/resource/SoftwareSystem/model/softwareSystem.ecore"
 
 config {  
