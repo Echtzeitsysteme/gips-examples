@@ -11,7 +11,7 @@ public class ExampleMdVNE {
 	public static void main(final String[] args) {
 		// Create new MdVNE Gips API and load a model
 		final MdvneGipsAPI api = new MdvneGipsAPI();
-		api.init(URI.createFileURI("model-in.xmi"));
+		api.init(URI.createFileURI("./resources/example-models/model-in.xmi"));
 
 		// Build the ILP problem (including updates)
 		api.buildILPProblem(true);
@@ -23,9 +23,10 @@ public class ExampleMdVNE {
 		api.getSw2node().applyNonZeroMappings();
 		api.getL2p().applyNonZeroMappings();
 		api.getL2s().applyNonZeroMappings();
+		api.getNet2net().applyNonZeroMappings();
 
 		try {
-			api.saveResult("model-out.xmi");
+			api.saveResult("./resources/example-models/model-out.xmi");
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
