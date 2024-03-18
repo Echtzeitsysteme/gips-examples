@@ -17,7 +17,7 @@ public class ClassDiagramExampleRunner {
 		final String projectFolder = System.getProperty("user.dir");
 		final String instancesFolder = projectFolder + "/instances";
 		final String scenarioName = "Example_small";
-		final String file = projectFolder + "/../../TGG-3.0-Prototype/Refactoring/resources/classDiagram/"
+		final String file = projectFolder + "/../../TGG-3.0-Prototype/RefactoringAC/resources/classDiagram/"
 				+ scenarioName + ".xmi";
 		final URI uri = URI.createFileURI(file);
 		gipsApi.init(uri);
