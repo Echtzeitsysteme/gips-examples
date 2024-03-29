@@ -61,7 +61,7 @@ public class ClassDiagramExampleRunner {
 			e.printStackTrace();
 		}
 
-//		gipsApi.terminate();
+		gipsApi.terminate();
 		java.lang.System.exit(0);
 	}
 
