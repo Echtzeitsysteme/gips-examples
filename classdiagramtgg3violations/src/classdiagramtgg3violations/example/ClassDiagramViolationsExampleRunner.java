@@ -24,7 +24,7 @@ public class ClassDiagramViolationsExampleRunner {
 		}
 		System.out.println("=> Found violations: " + output.objectiveValue());
 
-//		gipsApi.terminate();
+		gipsApi.terminate();
 		java.lang.System.exit(0);
 	}
 
