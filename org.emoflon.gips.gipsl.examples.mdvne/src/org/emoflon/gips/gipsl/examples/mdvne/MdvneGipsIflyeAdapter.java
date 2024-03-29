@@ -63,19 +63,6 @@ public class MdvneGipsIflyeAdapter {
 		api.getL2s().applyNonZeroMappings();
 		api.getNet2net().applyNonZeroMappings();
 
-		// Terminate API
-		// api.terminate();
-		// TODO: Currently, this throws an Exception:
-		//
-		// java.lang.IllegalArgumentException: Cannot remove a consumer which was not
-		// registered before!
-		// at
-		// org.emoflon.ibex.gt.api.GraphTransformationPattern.unsubscribeAppearing(GraphTransformationPattern.java:310)
-		// at org.emoflon.gips.core.gt.GTMapper.terminate(GTMapper.java:69)
-		// at org.emoflon.gips.core.GipsEngine.lambda$1(GIPSEngine.java:71)
-		// at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-		// at org.emoflon.gips.core.GipsEngine.terminate(GIPSEngine.java:71)
-
 		return output.solutionCount() > 0;
 	}
 
@@ -84,6 +71,7 @@ public class MdvneGipsIflyeAdapter {
 	 */
 	public static void resetInit() {
 		init = false;
+		api.terminate();
 	}
 
 }
