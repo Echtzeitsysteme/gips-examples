@@ -31,6 +31,7 @@ public class HeadlessRunner {
 		System.out.println("Objective value: " + output.objectiveValue());
 
 		api.getZeroNode().applyNonZeroMappings();
+		api.terminate();
 
 		System.out.println("GIPSL run finished.");
 		System.exit(0);

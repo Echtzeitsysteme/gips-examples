@@ -31,6 +31,8 @@ public class ExampleMdVNE {
 			e.printStackTrace();
 		}
 
+		api.terminate();
+
 		System.out.println("Gipsl run finished.");
 		System.exit(0);
 	}
