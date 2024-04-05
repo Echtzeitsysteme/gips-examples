@@ -27,6 +27,8 @@ public class ExampleSdr {
 			e.printStackTrace();
 		}
 
+		api.terminate();
+
 		System.out.println("GIPSL run finished.");
 		System.exit(0);
 	}
