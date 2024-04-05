@@ -1290,31 +1290,15 @@ public class ModelFacade {
 	 */
 	public boolean embedGeneric(final String substrateId, final String virtualId) {
 		// find substrate element
-		ElementType sub = ElementType.UNDEFINED;
-		if (networkExists(substrateId)) {
-			sub = ElementType.NETWORK;
-		} else if (serverExists(substrateId)) {
-			sub = ElementType.SERVER;
-		} else if (switchExists(substrateId)) {
-			sub = ElementType.SWITCH;
-		} else if (pathExists(substrateId)) {
-			sub = ElementType.PATH;
-		} else {
-			throw new IllegalArgumentException("Substrate element with ID " + substrateId + " not found.");
-		}
+		final ElementType sub = findElementType(substrateId);
 
 		// find virtual element
-		ElementType virt = ElementType.UNDEFINED;
-		if (networkExists(virtualId)) {
-			virt = ElementType.NETWORK;
-		} else if (serverExists(virtualId)) {
-			virt = ElementType.SERVER;
-		} else if (switchExists(virtualId)) {
-			virt = ElementType.SWITCH;
-		} else if (linkExists(virtualId)) {
-			virt = ElementType.LINK;
-		} else {
-			throw new IllegalArgumentException("Virtual element with ID " + virtualId + " not found.");
+		final ElementType virt = findElementType(virtualId);
+
+		// check if embedding is possible at all (besides resource constraints)
+		if (!isEmbeddingPossibleGeneric(substrateId, virtualId, true)) {
+			throw new UnsupportedOperationException(
+					"Embedding of " + virtualId + " onto " + substrateId + " is not possible.");
 		}
 
 		// embedding itself
@@ -1338,6 +1322,84 @@ public class ModelFacade {
 		}
 
 		return success;
+	}
+
+	/**
+	 * Checks if an embedding is possible for a given virtual ID onto a given
+	 * substrate ID. If ignoreResources is set to true, the method will not check if
+	 * the available resources of the substrate element can fulfill the resource
+	 * demand of the virtual element. In general, this method does not check if
+	 * there is a pre-existing embedding.
+	 * 
+	 * @param substrateId     ID of the substrate element to check the embedding
+	 *                        for.
+	 * @param virtualId       ID of the virtual element to check the embedding for.
+	 * @param ignoreResources If true, all resource constraints will be ignored.
+	 * @return True if an embedding of the virtual element onto the substrate
+	 *         element is possible.
+	 */
+	public boolean isEmbeddingPossibleGeneric(final String substrateId, final String virtualId,
+			final boolean ignoreResources) {
+		// find substrate element
+		final ElementType sub = findElementType(substrateId);
+
+		// find virtual element
+		final ElementType virt = findElementType(virtualId);
+
+		switch (virt) {
+		// virtual element = switch
+		case SWITCH:
+			return sub == ElementType.SWITCH || sub == ElementType.SERVER;
+		// virtual element = link
+		case LINK:
+			if (sub == ElementType.SERVER) {
+				return true;
+			} else if (sub == ElementType.PATH) {
+				return ignoreResources
+						|| getPathById(substrateId).getResidualBandwidth() >= getLinkById(virtualId).getBandwidth();
+			}
+			return false;
+		// virtual element = server
+		case SERVER:
+			if (sub == ElementType.SERVER) {
+				final SubstrateServer sserver = (SubstrateServer) getServerById(substrateId);
+				final VirtualServer vserver = (VirtualServer) getServerById(virtualId);
+				return (ignoreResources || (sserver.getResidualCpu() >= vserver.getCpu()
+						&& sserver.getResidualMemory() >= vserver.getMemory()
+						&& sserver.getResidualStorage() >= vserver.getStorage()));
+			}
+			return false;
+		// virtual element = network
+		case NETWORK:
+			return sub == ElementType.NETWORK;
+		default:
+			throw new UnsupportedOperationException("Type of virtual element " + virtualId + " not found.");
+		}
+	}
+
+	/**
+	 * Finds the element type for a given element ID.
+	 * 
+	 * @param id The element ID to find the type for.
+	 * @return Element type for the given ID.
+	 */
+	private ElementType findElementType(final String id) {
+		ElementType type = ElementType.UNDEFINED;
+		if (networkExists(id)) {
+			type = ElementType.NETWORK;
+		} else if (serverExists(id)) {
+			type = ElementType.SERVER;
+		} else if (switchExists(id)) {
+			type = ElementType.SWITCH;
+		} else if (pathExists(id)) {
+			type = ElementType.PATH;
+		} else if (linkExists(id)) {
+			type = ElementType.LINK;
+		} else {
+			throw new IllegalArgumentException("Element with ID " + id + " not found.");
+		}
+
+		return type;
 	}
 
 	/**
