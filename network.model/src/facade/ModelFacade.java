@@ -1092,6 +1092,13 @@ public class ModelFacade {
 				final SubstrateNetwork sNet = (SubstrateNetwork) n;
 				for (final SubstratePath p : sNet.getPaths()) {
 					this.paths.put(p.getName(), p);
+
+					// Add path to lookup map
+					final SubstrateNode source = p.getSource();
+					if (!pathSourceMap.containsKey(source)) {
+						pathSourceMap.put(source, new HashSet<SubstratePath>());
+					}
+					pathSourceMap.get(source).add(p);
 				}
 			}
 		}
