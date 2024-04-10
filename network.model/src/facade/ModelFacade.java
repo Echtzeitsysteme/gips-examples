@@ -318,7 +318,7 @@ public class ModelFacade {
 	 * @param id ID to return node object for.
 	 * @return Node object for given ID.
 	 */
-	private Node getNodeById(final String id) {
+	public Node getNodeById(final String id) {
 		checkStringValid(id);
 
 		List<Network> nets = getRoot().getNetworks();
