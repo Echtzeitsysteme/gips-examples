@@ -1280,6 +1280,9 @@ public class ModelFacade {
 			}
 		}
 
+		// Update residual bandwidth value of other paths containing the substrate links
+		updateAllPathsResidualBandwidth(subPath.getNetwork().getName());
+
 		return success;
 	}
 
@@ -1508,6 +1511,7 @@ public class ModelFacade {
 	public void unembedVirtualNetwork(final VirtualNetwork vNet) {
 		// Check if there is a host for this virtual network.
 		if (vNet.getHost() != null) {
+			final String hostNameId = vNet.getHost().getName();
 			vNet.getHost().getGuests().remove(vNet);
 
 			for (final Node n : vNet.getNodes()) {
@@ -1549,6 +1553,9 @@ public class ModelFacade {
 					}
 				}
 			}
+
+			// Correct other substrate paths residual values
+			updateAllPathsResidualBandwidth(hostNameId);
 		}
 	}
 
@@ -1845,10 +1852,8 @@ public class ModelFacade {
 			}
 		}
 
-		for (final SubstratePath p : sNet.getPaths()) {
-			final SubstratePath sp = p;
-			int sumGuestBw = 0;
-
+		// Check the paths residual bandwidths
+		for (final SubstratePath sp : sNet.getPaths()) {
 			if (sp.getBandwidth() < 0) {
 				throw new InternalError("Normal bandwidth of path " + sp.getName() + " was smaller than zero.");
 			}
@@ -1857,12 +1862,39 @@ public class ModelFacade {
 				throw new InternalError("Residual bandwidth of path " + sp.getName() + " was smaller than zero.");
 			}
 
+			// Find sum of all embedded virtual links bandwidth
+			int sumGuestBw = 0;
 			for (final VirtualLink gl : sp.getGuestLinks()) {
 				sumGuestBw += gl.getBandwidth();
 			}
 
-			if (sp.getResidualBandwidth() != sp.getBandwidth() - sumGuestBw) {
+			// Find minimum of all contained substrate links bandwidth
+			int maxBw = Integer.MAX_VALUE;
+			for (final SubstrateLink l : sp.getLinks()) {
+				if (maxBw > l.getResidualBandwidth()) {
+					maxBw = l.getResidualBandwidth();
+				}
+			}
+
+			final int globalMin = Math.min(maxBw, sp.getBandwidth() - sumGuestBw);
+
+			if (sp.getResidualBandwidth() != globalMin) {
 				throw new InternalError("Residual bandwidth value of path " + sp.getName() + " was incorrect.");
+			}
+		}
+
+		// Check if the residual bandwidths of the paths are not greater than the
+		// smallest available bandwidth on each of the substrate links
+		for (final SubstratePath p : sNet.getPaths()) {
+			int lowestBw = Integer.MAX_VALUE;
+			for (final SubstrateLink l : p.getLinks()) {
+				if (lowestBw > l.getResidualBandwidth()) {
+					lowestBw = l.getResidualBandwidth();
+				}
+			}
+			if (lowestBw < p.getResidualBandwidth()) {
+				throw new InternalError("Residual bandwidth value of path " + p.getName()
+						+ " was higher than the lowest available residual bandwidth of one of its substrate links.");
 			}
 		}
 
@@ -2074,6 +2106,65 @@ public class ModelFacade {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Iterates over all substrate paths of a given substrate network (id) and
+	 * corrects the residual bandwidth value of each path if one of its contained
+	 * substrate links has a residual bandwidth value that is smaller than the one
+	 * of the substrate path. This may happen if a substrate link is part of at
+	 * least to substrate paths and one of the substrate paths has at least one
+	 * virtual link embedded.
+	 * 
+	 * @param subNetId Id of the substrate network to correct the residual bandwidth
+	 *                 of all paths for.
+	 */
+	public void updateAllPathsResidualBandwidth(final String subNetId) {
+		final Network net = getNetworkById(subNetId);
+		if (net == null || !(net instanceof SubstrateNetwork)) {
+			throw new IllegalArgumentException("Provided id does not resolve to a substrate network.");
+		}
+		final SubstrateNetwork subNet = (SubstrateNetwork) net;
+		for (final SubstratePath p : subNet.getPaths()) {
+			updatePathResidualBandwidth(p);
+		}
+	}
+
+	/**
+	 * Corrects the residual bandwidth value of a given substrate path to the
+	 * minimum of its available bandwidth (due to embeddings of virtual links) or to
+	 * the available bandwidth of its substrate links (to the the embedding of
+	 * virtual links to other paths).
+	 * 
+	 * @param path Substrate path to correct residual value for.
+	 */
+	private void updatePathResidualBandwidth(final SubstratePath path) {
+		// Find minimum residual bandwidth of all contained substrate links
+		int minBw = Integer.MAX_VALUE;
+		for (final SubstrateLink l : path.getLinks()) {
+			if (minBw > l.getResidualBandwidth()) {
+				minBw = l.getResidualBandwidth();
+			}
+		}
+
+		// Sanity check
+		if (minBw < 0) {
+			throw new InternalError("There was at least one substrate link with a residual bandwidth value < 0.");
+		}
+
+		// Find value of the embedded virtual links
+		int embeddedBw = 0;
+		for (final VirtualLink l : path.getGuestLinks()) {
+			embeddedBw += l.getBandwidth();
+		}
+
+		// global minimum; limited by embeddings of virtual links or limited by
+		// substrate links
+		final int globalMin = Math.min(minBw, path.getBandwidth() - embeddedBw);
+
+		if (path.getResidualBandwidth() != globalMin) {
+			path.setResidualBandwidth(globalMin);
+		}
 	}
 
 	private enum ElementType {
