@@ -6,7 +6,7 @@ Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.lsp2pInc; singleton:=true
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-16
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt,
  org.emoflon.gips.core,
