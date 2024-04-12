@@ -135,6 +135,8 @@ public class JsonSdrRunner {
 			e.printStackTrace();
 		}
 
+		api.terminate();
+
 		return allMappings;
 	}
 

@@ -29,6 +29,7 @@ import facade.pathgen.IPathGen;
 import facade.pathgen.Yen;
 import model.Link;
 import model.ModelFactory;
+import model.ModelPackage;
 import model.Network;
 import model.Node;
 import model.Root;
@@ -44,6 +45,7 @@ import model.Switch;
 import model.VirtualElement;
 import model.VirtualLink;
 import model.VirtualNetwork;
+import model.VirtualNode;
 import model.VirtualServer;
 import model.VirtualSwitch;
 
@@ -91,14 +93,35 @@ public class ModelFacade {
 	public static synchronized ModelFacade getInstance() {
 		if (ModelFacade.instance == null) {
 			ModelFacade.instance = new ModelFacade();
+			initEmptyRs();
 		}
 		return ModelFacade.instance;
 	}
 
 	/**
-	 * Root (entry point of the model).
+	 * Initializes an empty resource set (model).
 	 */
-	private Root root = ModelFactory.eINSTANCE.createRoot();
+	private static synchronized void initEmptyRs() {
+		ModelFacade.instance.resourceSet = new ResourceSetImpl();
+		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
+		ModelFacade.instance.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
+				ModelPackage.eINSTANCE);
+		ModelFacade.instance.resourceSet.createResource(URI.createURI("model.xmi"));
+		ModelFacade.instance.resourceSet.getResources().get(0).getContents().add(ModelFactory.eINSTANCE.createRoot());
+	}
+
+	/**
+	 * Initializes the resource set (model) from a given file path.
+	 */
+	private static synchronized void initRsFromFile(final URI absPath) {
+		ModelFacade.instance.resourceSet = new ResourceSetImpl();
+		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
+		ModelFacade.instance.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
+				ModelPackage.eINSTANCE);
+		ModelFacade.instance.resourceSet.getResource(absPath, true);
+	}
 
 	/*
 	 * Look-up data structures.
@@ -107,12 +130,26 @@ public class ModelFacade {
 	private Map<String, Link> links = new HashMap<>();
 
 	/**
+	 * Resource set which contains the model.
+	 */
+	private ResourceSet resourceSet;
+
+	/**
+	 * Returns the current model instance as resource set.
+	 * 
+	 * @return Current model instance as resource set.
+	 */
+	public ResourceSet getResourceSet() {
+		return resourceSet;
+	}
+
+	/**
 	 * Returns the root node.
 	 *
 	 * @return Root node.
 	 */
 	public Root getRoot() {
-		return root;
+		return (Root) ModelFacade.instance.resourceSet.getResources().get(0).getContents().get(0);
 	}
 
 	/**
@@ -121,7 +158,7 @@ public class ModelFacade {
 	 * @return Collection of all networks from the model.
 	 */
 	public Collection<Network> getAllNetworks() {
-		return root.getNetworks();
+		return getRoot().getNetworks();
 	}
 
 	/**
@@ -188,7 +225,7 @@ public class ModelFacade {
 	public Network getNetworkById(final String id) {
 		checkStringValid(id);
 
-		return root.getNetworks().stream().filter(n -> n.getName().equals(id)).collect(Collectors.toList()).get(0);
+		return getRoot().getNetworks().stream().filter(n -> n.getName().equals(id)).collect(Collectors.toList()).get(0);
 	}
 
 	/**
@@ -201,6 +238,56 @@ public class ModelFacade {
 		checkStringValid(id);
 
 		return getAllNetworks().stream().filter(n -> n.getName().equals(id)).collect(Collectors.toList()).size() != 0;
+	}
+
+	/**
+	 * Returns true if a server for a given ID exists.
+	 *
+	 * @param id ID to check server existence for.
+	 * @return True if server does exist in model.
+	 */
+	public boolean serverExists(final String id) {
+		try {
+			final Node n = getNodeById(id);
+			return (n != null && n instanceof Server);
+		} catch (final NullPointerException | IndexOutOfBoundsException ex) {
+			return false;
+		}
+	}
+
+	/**
+	 * Returns true if a switch for a given ID exists.
+	 *
+	 * @param id ID to check switch existence for.
+	 * @return True if switch does exist in model.
+	 */
+	public boolean switchExists(final String id) {
+		try {
+			final Node n = getNodeById(id);
+			return (n != null && n instanceof Switch);
+		} catch (final NullPointerException | IndexOutOfBoundsException ex) {
+			return false;
+		}
+	}
+
+	/**
+	 * Returns true if a link for a given ID exists.
+	 *
+	 * @param id ID to check link existence for.
+	 * @return True if link does exist in model.
+	 */
+	public boolean linkExists(final String id) {
+		return links.containsKey(id);
+	}
+
+	/**
+	 * Returns true if a path for a given ID exists.
+	 *
+	 * @param id ID to check path existence for.
+	 * @return True if path does exist in model.
+	 */
+	public boolean pathExists(final String id) {
+		return paths.containsKey(id);
 	}
 
 	/**
@@ -231,10 +318,10 @@ public class ModelFacade {
 	 * @param id ID to return node object for.
 	 * @return Node object for given ID.
 	 */
-	private Node getNodeById(final String id) {
+	public Node getNodeById(final String id) {
 		checkStringValid(id);
 
-		List<Network> nets = root.getNetworks();
+		List<Network> nets = getRoot().getNetworks();
 		List<Node> nodes = new ArrayList<>();
 		nets.stream().forEach(net -> {
 			net.getNodes().stream().filter(n -> n instanceof Node).filter(n -> n.getName().equals(id))
@@ -305,8 +392,8 @@ public class ModelFacade {
 		}
 
 		net.setName(id);
-		net.setRoot(root);
-		return root.getNetworks().add(net);
+		net.setRoot(getRoot());
+		return getRoot().getNetworks().add(net);
 	}
 
 	/**
@@ -794,7 +881,7 @@ public class ModelFacade {
 	 * networks of the root node.
 	 */
 	public void resetAll() {
-		root.getNetworks().clear();
+		getRoot().getNetworks().clear();
 		generatedMetaPaths.clear();
 		visitedNodes.clear();
 		linksUntilNode.clear();
@@ -802,7 +889,7 @@ public class ModelFacade {
 		links.clear();
 		paths.clear();
 		pathSourceMap.clear();
-		root = ModelFactory.eINSTANCE.createRoot();
+		initEmptyRs();
 	}
 
 	/**
@@ -966,7 +1053,7 @@ public class ModelFacade {
 		// ^null is okay if all paths are absolute
 		final Resource r = rs.createResource(absPath);
 		// Fetch model contents from eMoflon
-		r.getContents().add(root);
+		r.getContents().add(getRoot());
 		try {
 			r.save(null);
 		} catch (final IOException e) {
@@ -989,17 +1076,12 @@ public class ModelFacade {
 	public void loadModel(final String path) {
 		checkStringValid(path);
 		final URI absPath = URI.createFileURI(System.getProperty("user.dir") + "/" + path);
-
-		final ResourceSet rs = new ResourceSetImpl();
-		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl(null));
-		// ^null is okay if all paths are absolute
-		final Resource res = rs.getResource(absPath, true);
-		root = (Root) res.getContents().get(0);
+		initRsFromFile(absPath);
 
 		// Restore other look-up data structures
 		this.links.clear();
 		this.paths.clear();
-		for (final Network n : root.getNetworks()) {
+		for (final Network n : getRoot().getNetworks()) {
 			// Links
 			for (final Link l : n.getLinks()) {
 				this.links.put(l.getName(), l);
@@ -1010,6 +1092,13 @@ public class ModelFacade {
 				final SubstrateNetwork sNet = (SubstrateNetwork) n;
 				for (final SubstratePath p : sNet.getPaths()) {
 					this.paths.put(p.getName(), p);
+
+					// Add path to lookup map
+					final SubstrateNode source = p.getSource();
+					if (!pathSourceMap.containsKey(source)) {
+						pathSourceMap.put(source, new HashSet<SubstratePath>());
+					}
+					pathSourceMap.get(source).add(p);
 				}
 			}
 		}
@@ -1191,7 +1280,136 @@ public class ModelFacade {
 			}
 		}
 
+		// Update residual bandwidth value of other paths containing the substrate links
+		updateAllPathsResidualBandwidth(subPath.getNetwork().getName());
+
 		return success;
+	}
+
+	/**
+	 * Adds an embedding of one virtual element (server, switch, link, network) to
+	 * one substrate element (server, switch, path, network). The type of the
+	 * virtual element and the substrate element will be determined based on the
+	 * given IDs.
+	 * 
+	 * Precedence: Network > Server > Switch > Path > Link
+	 *
+	 * @param virtualId   Virtual Id.
+	 * @param substrateId Substrate Id.
+	 * @return True if embedding was successful.
+	 */
+	public boolean embedGeneric(final String substrateId, final String virtualId) {
+		// find substrate element
+		final ElementType sub = findElementType(substrateId);
+
+		// find virtual element
+		final ElementType virt = findElementType(virtualId);
+
+		// check if embedding is possible at all (besides resource constraints)
+		if (!isEmbeddingPossibleGeneric(substrateId, virtualId, true)) {
+			throw new UnsupportedOperationException(
+					"Embedding of " + virtualId + " onto " + substrateId + " is not possible.");
+		}
+
+		// embedding itself
+		boolean success = false;
+
+		if (sub == ElementType.NETWORK && virt == ElementType.NETWORK) {
+			success = embedNetworkToNetwork(substrateId, virtualId);
+		} else if (sub == ElementType.SERVER && virt == ElementType.SERVER) {
+			success = embedServerToServer(substrateId, virtualId);
+		} else if (sub == ElementType.SERVER && virt == ElementType.SWITCH) {
+			success = embedSwitchToNode(substrateId, virtualId);
+		} else if (sub == ElementType.SERVER && virt == ElementType.LINK) {
+			success = embedLinkToServer(substrateId, virtualId);
+		} else if (sub == ElementType.SWITCH && virt == ElementType.SWITCH) {
+			success = embedSwitchToNode(substrateId, virtualId);
+		} else if (sub == ElementType.PATH && virt == ElementType.LINK) {
+			success = embedLinkToPath(substrateId, virtualId);
+		} else {
+			throw new UnsupportedOperationException("Substrate element " + substrateId + " and virtual element "
+					+ virtualId + " could be found but there is no possibility to embed the virtual element.");
+		}
+
+		return success;
+	}
+
+	/**
+	 * Checks if an embedding is possible for a given virtual ID onto a given
+	 * substrate ID. If ignoreResources is set to true, the method will not check if
+	 * the available resources of the substrate element can fulfill the resource
+	 * demand of the virtual element. In general, this method does not check if
+	 * there is a pre-existing embedding.
+	 * 
+	 * @param substrateId     ID of the substrate element to check the embedding
+	 *                        for.
+	 * @param virtualId       ID of the virtual element to check the embedding for.
+	 * @param ignoreResources If true, all resource constraints will be ignored.
+	 * @return True if an embedding of the virtual element onto the substrate
+	 *         element is possible.
+	 */
+	public boolean isEmbeddingPossibleGeneric(final String substrateId, final String virtualId,
+			final boolean ignoreResources) {
+		// find substrate element
+		final ElementType sub = findElementType(substrateId);
+
+		// find virtual element
+		final ElementType virt = findElementType(virtualId);
+
+		switch (virt) {
+		// virtual element = switch
+		case SWITCH:
+			return sub == ElementType.SWITCH || sub == ElementType.SERVER;
+		// virtual element = link
+		case LINK:
+			if (sub == ElementType.SERVER) {
+				return true;
+			} else if (sub == ElementType.PATH) {
+				return ignoreResources
+						|| getPathById(substrateId).getResidualBandwidth() >= getLinkById(virtualId).getBandwidth();
+			}
+			return false;
+		// virtual element = server
+		case SERVER:
+			if (sub == ElementType.SERVER) {
+				final SubstrateServer sserver = (SubstrateServer) getServerById(substrateId);
+				final VirtualServer vserver = (VirtualServer) getServerById(virtualId);
+				return (ignoreResources || (sserver.getResidualCpu() >= vserver.getCpu()
+						&& sserver.getResidualMemory() >= vserver.getMemory()
+						&& sserver.getResidualStorage() >= vserver.getStorage()));
+			}
+			return false;
+		// virtual element = network
+		case NETWORK:
+			return sub == ElementType.NETWORK;
+		default:
+			throw new UnsupportedOperationException("Type of virtual element " + virtualId + " not found.");
+		}
+	}
+
+	/**
+	 * Finds the element type for a given element ID.
+	 * 
+	 * @param id The element ID to find the type for.
+	 * @return Element type for the given ID.
+	 */
+	private ElementType findElementType(final String id) {
+		ElementType type = ElementType.UNDEFINED;
+		if (networkExists(id)) {
+			type = ElementType.NETWORK;
+		} else if (serverExists(id)) {
+			type = ElementType.SERVER;
+		} else if (switchExists(id)) {
+			type = ElementType.SWITCH;
+		} else if (pathExists(id)) {
+			type = ElementType.PATH;
+		} else if (linkExists(id)) {
+			type = ElementType.LINK;
+		} else {
+			throw new IllegalArgumentException("Element with ID " + id + " not found.");
+		}
+
+		return type;
 	}
 
 	/**
@@ -1282,7 +1500,7 @@ public class ModelFacade {
 			}
 		}
 
-		root.getNetworks().remove(net);
+		getRoot().getNetworks().remove(net);
 	}
 
 	/**
@@ -1293,6 +1511,7 @@ public class ModelFacade {
 	public void unembedVirtualNetwork(final VirtualNetwork vNet) {
 		// Check if there is a host for this virtual network.
 		if (vNet.getHost() != null) {
+			final String hostNameId = vNet.getHost().getName();
 			vNet.getHost().getGuests().remove(vNet);
 
 			for (final Node n : vNet.getNodes()) {
@@ -1334,6 +1553,9 @@ public class ModelFacade {
 					}
 				}
 			}
+
+			// Correct other substrate paths residual values
+			updateAllPathsResidualBandwidth(hostNameId);
 		}
 	}
 
@@ -1510,7 +1732,7 @@ public class ModelFacade {
 	 * values.
 	 */
 	public void validateModel() {
-		for (final Network net : root.getNetworks()) {
+		for (final Network net : getRoot().getNetworks()) {
 			if (net instanceof SubstrateNetwork) {
 				validateSubstrateNetwork((SubstrateNetwork) net);
 			} else if (net instanceof VirtualNetwork) {
@@ -1630,10 +1852,8 @@ public class ModelFacade {
 			}
 		}
 
-		for (final SubstratePath p : sNet.getPaths()) {
-			final SubstratePath sp = p;
-			int sumGuestBw = 0;
-
+		// Check the paths residual bandwidths
+		for (final SubstratePath sp : sNet.getPaths()) {
 			if (sp.getBandwidth() < 0) {
 				throw new InternalError("Normal bandwidth of path " + sp.getName() + " was smaller than zero.");
 			}
@@ -1642,12 +1862,39 @@ public class ModelFacade {
 				throw new InternalError("Residual bandwidth of path " + sp.getName() + " was smaller than zero.");
 			}
 
+			// Find sum of all embedded virtual links bandwidth
+			int sumGuestBw = 0;
 			for (final VirtualLink gl : sp.getGuestLinks()) {
 				sumGuestBw += gl.getBandwidth();
 			}
 
-			if (sp.getResidualBandwidth() != sp.getBandwidth() - sumGuestBw) {
+			// Find minimum of all contained substrate links bandwidth
+			int maxBw = Integer.MAX_VALUE;
+			for (final SubstrateLink l : sp.getLinks()) {
+				if (maxBw > l.getResidualBandwidth()) {
+					maxBw = l.getResidualBandwidth();
+				}
+			}
+
+			final int globalMin = Math.min(maxBw, sp.getBandwidth() - sumGuestBw);
+
+			if (sp.getResidualBandwidth() != globalMin) {
 				throw new InternalError("Residual bandwidth value of path " + sp.getName() + " was incorrect.");
+			}
+		}
+
+		// Check if the residual bandwidths of the paths are not greater than the
+		// smallest available bandwidth on each of the substrate links
+		for (final SubstratePath p : sNet.getPaths()) {
+			int lowestBw = Integer.MAX_VALUE;
+			for (final SubstrateLink l : p.getLinks()) {
+				if (lowestBw > l.getResidualBandwidth()) {
+					lowestBw = l.getResidualBandwidth();
+				}
+			}
+			if (lowestBw < p.getResidualBandwidth()) {
+				throw new InternalError("Residual bandwidth value of path " + p.getName()
+						+ " was higher than the lowest available residual bandwidth of one of its substrate links.");
 			}
 		}
 
@@ -1722,6 +1969,11 @@ public class ModelFacade {
 				throw new InternalError("Normal bandwidth of link " + vl.getName() + " was smaller than zero.");
 			}
 
+			if (!checkVirtualLinkSourceTargetEmbedding(vl)) {
+				throw new InternalError(
+						"Validation of the source or target embedding of link " + vl.getName() + " failed.");
+			}
+
 			if (host == null && vl.getHost() == null) {
 				continue;
 			} else {
@@ -1739,6 +1991,77 @@ public class ModelFacade {
 			}
 			throw new InternalError("Validation of virtual link " + vl.getName() + " was incorrect.");
 		}
+	}
+
+	/**
+	 * Validates that the source and target of a given virtual link are also
+	 * embedded on the hosts of the virtual link. There are two cases: (1) The
+	 * virtual link was embedded onto a substrate server. In this case, both, the
+	 * source and the target of the virtual link must be embedded onto the same
+	 * substrate server as the virtual link. (2) The virtual link was embedded onto
+	 * a substrate path. In this case, the virtual link's source node must be
+	 * embedded onto the source node of the substrate path and the virtual link's
+	 * target node must be embedded onto the target node of the substrate path.
+	 * 
+	 * @param vLink Virtual link to check.
+	 * @return True if all checks were successful.
+	 */
+	public boolean checkVirtualLinkSourceTargetEmbedding(final VirtualLink vLink) {
+		final VirtualNode src = (VirtualNode) vLink.getSource();
+		final VirtualNode trg = (VirtualNode) vLink.getTarget();
+
+		if (vLink.getHost() instanceof SubstrateServer) {
+			if (src instanceof VirtualServer) {
+				final VirtualServer srcVSrv = (VirtualServer) src;
+				if (!srcVSrv.getHost().equals(vLink.getHost())) {
+					return false;
+				}
+			} else if (src instanceof VirtualSwitch) {
+				final VirtualSwitch srcVSw = (VirtualSwitch) src;
+				if (!srcVSw.getHost().equals(vLink.getHost())) {
+					return false;
+				}
+			}
+
+			if (trg instanceof VirtualServer) {
+				final VirtualServer trgVSrv = (VirtualServer) trg;
+				if (!trgVSrv.getHost().equals(vLink.getHost())) {
+					return false;
+				}
+			} else if (trg instanceof VirtualSwitch) {
+				final VirtualSwitch trgVSw = (VirtualSwitch) trg;
+				if (!trgVSw.getHost().equals(vLink.getHost())) {
+					return false;
+				}
+			}
+		} else if (vLink.getHost() instanceof SubstratePath) {
+			final SubstratePath vLinkHost = (SubstratePath) vLink.getHost();
+			if (src instanceof VirtualServer) {
+				final VirtualServer srcVSrv = (VirtualServer) src;
+				if (!srcVSrv.getHost().equals(vLinkHost.getSource())) {
+					return false;
+				}
+			} else if (src instanceof VirtualSwitch) {
+				final VirtualSwitch srcVSw = (VirtualSwitch) src;
+				if (!srcVSw.getHost().equals(vLinkHost.getSource())) {
+					return false;
+				}
+			}
+
+			if (trg instanceof VirtualServer) {
+				final VirtualServer trgVSrv = (VirtualServer) trg;
+				if (!trgVSrv.getHost().equals(vLinkHost.getTarget())) {
+					return false;
+				}
+			} else if (trg instanceof VirtualSwitch) {
+				final VirtualSwitch trgVSw = (VirtualSwitch) trg;
+				if (!trgVSw.getHost().equals(vLinkHost.getTarget())) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -1783,6 +2106,69 @@ public class ModelFacade {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Iterates over all substrate paths of a given substrate network (id) and
+	 * corrects the residual bandwidth value of each path if one of its contained
+	 * substrate links has a residual bandwidth value that is smaller than the one
+	 * of the substrate path. This may happen if a substrate link is part of at
+	 * least to substrate paths and one of the substrate paths has at least one
+	 * virtual link embedded.
+	 * 
+	 * @param subNetId Id of the substrate network to correct the residual bandwidth
+	 *                 of all paths for.
+	 */
+	public void updateAllPathsResidualBandwidth(final String subNetId) {
+		final Network net = getNetworkById(subNetId);
+		if (net == null || !(net instanceof SubstrateNetwork)) {
+			throw new IllegalArgumentException("Provided id does not resolve to a substrate network.");
+		}
+		final SubstrateNetwork subNet = (SubstrateNetwork) net;
+		for (final SubstratePath p : subNet.getPaths()) {
+			updatePathResidualBandwidth(p);
+		}
+	}
+
+	/**
+	 * Corrects the residual bandwidth value of a given substrate path to the
+	 * minimum of its available bandwidth (due to embeddings of virtual links) or to
+	 * the available bandwidth of its substrate links (to the the embedding of
+	 * virtual links to other paths).
+	 * 
+	 * @param path Substrate path to correct residual value for.
+	 */
+	private void updatePathResidualBandwidth(final SubstratePath path) {
+		// Find minimum residual bandwidth of all contained substrate links
+		int minBw = Integer.MAX_VALUE;
+		for (final SubstrateLink l : path.getLinks()) {
+			if (minBw > l.getResidualBandwidth()) {
+				minBw = l.getResidualBandwidth();
+			}
+		}
+
+		// Sanity check
+		if (minBw < 0) {
+			throw new InternalError("There was at least one substrate link with a residual bandwidth value < 0.");
+		}
+
+		// Find value of the embedded virtual links
+		int embeddedBw = 0;
+		for (final VirtualLink l : path.getGuestLinks()) {
+			embeddedBw += l.getBandwidth();
+		}
+
+		// global minimum; limited by embeddings of virtual links or limited by
+		// substrate links
+		final int globalMin = Math.min(minBw, path.getBandwidth() - embeddedBw);
+
+		if (path.getResidualBandwidth() != globalMin) {
+			path.setResidualBandwidth(globalMin);
+		}
+	}
+
+	private enum ElementType {
+		NETWORK, SERVER, SWITCH, PATH, LINK, UNDEFINED
 	}
 
 }
