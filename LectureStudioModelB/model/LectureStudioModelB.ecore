@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ASCII"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="LectureStudioModel" nsURI="platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
-    nsPrefix="LectureStudioModel">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="LectureStudioModelB" nsURI="platform:/resource/LectureStudioModelB/model/LectureStudioModelB.ecore"
+    nsPrefix="LectureStudioModelB">
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-    <details key="documentation" value="TODO: Add documentation for LectureStudioModel. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ..."/>
+    <details key="documentation" value="TODO: Add documentation for LectureStudioModelB. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ..."/>
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Network">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lectureStudioServer" upperBound="-1"

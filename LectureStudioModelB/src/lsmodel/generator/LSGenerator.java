@@ -13,12 +13,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
-import LectureStudioModel.Client;
-import LectureStudioModel.Configuration;
-import LectureStudioModel.LectureStudioModelFactory;
-import LectureStudioModel.LectureStudioModelPackage;
-import LectureStudioModel.LectureStudioServer;
-import LectureStudioModel.Network;
+import LectureStudioModelB.Client;
+import LectureStudioModelB.Configuration;
+import LectureStudioModelB.LectureStudioModelBFactory;
+import LectureStudioModelB.LectureStudioModelBPackage;
+import LectureStudioModelB.LectureStudioServer;
+import LectureStudioModelB.Network;
 
 public class LSGenerator {
 	
@@ -27,7 +27,7 @@ public class LSGenerator {
 	public static String projectFolder = System.getProperty("user.dir");
 	public static String instancesFolder = projectFolder + "/../org.emoflon.gips.gipsl.examples.lsp2p/instances/";
 	
-	protected LectureStudioModelFactory factory = LectureStudioModelFactory.eINSTANCE;
+	protected LectureStudioModelBFactory factory = LectureStudioModelBFactory.eINSTANCE;
 	protected Random rnd;
 	
 	public static void initFileSystem() {
@@ -86,7 +86,7 @@ public class LSGenerator {
 		URI uri = URI.createFileURI(path);
 		ResourceSet rs = new ResourceSetImpl();
 		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		rs.getPackageRegistry().put(LectureStudioModelPackage.eNS_URI, LectureStudioModelPackage.eINSTANCE);
+		rs.getPackageRegistry().put(LectureStudioModelBPackage.eNS_URI, LectureStudioModelBPackage.eINSTANCE);
 		Resource r = rs.createResource(uri);
 		r.getContents().add(model);
 		r.save(null);
