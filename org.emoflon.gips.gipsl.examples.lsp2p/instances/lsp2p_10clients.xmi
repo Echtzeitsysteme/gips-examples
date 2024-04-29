@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LectureStudioModelB:Network xmlns:LectureStudioModelB="platform:/resource/LectureStudioModelB/model/LectureStudioModelB.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" time="0.0" xmi:version="2.0">
+  <lectureStudioServer id="0" depth="0" clients="0" data="10.0" isRelayClient="1" isHasRoot="1" transferTime="0.0" txBW="250.0" rxBW="250.0" minTxBW="12.5" invTxBW="0.004" invRxBW="0.004">
+    <waitingClients id="1" depth="-1" clients="0" data="10.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="25.136340730754483" rxBW="150.0" minTxBW="12.568170365377242" invTxBW="0.03978303806076647" invRxBW="0.006666666666666667" />
+    <waitingClients id="2" depth="-1" clients="0" data="10.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="12.29633207809865" rxBW="150.0" minTxBW="6.148166039049325" invTxBW="0.08132506455165835" invRxBW="0.006666666666666667" />
+    <waitingClients id="3" depth="-1" clients="0" data="10.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="27.85335550495398" rxBW="150.0" minTxBW="13.92667775247699" invTxBW="0.03590231704119601" invRxBW="0.006666666666666667" />
+    <waitingClients id="4" depth="-1" clients="0" data="10.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="15.995351815142836" rxBW="150.0" minTxBW="7.997675907571418" invTxBW="0.06251816224844131" invRxBW="0.006666666666666667" />
+    <waitingClients id="5" depth="-1" clients="0" data="10.0" isRelayClient="0" isHasRoot="0" transferTime="0.0" txBW="16.231015872951033" rxBW="150.0" minTxBW="8.115507936475517" invTxBW="0.061610438177594214" invRxBW="0.006666666666666667" />
+  </lectureStudioServer>
+  <configurations clients="1" slowDown="1.0" bwSplit="1.0" />
+  <configurations clients="2" slowDown="2.0" bwSplit="0.5" />
+  <configurations clients="3" slowDown="3.0" bwSplit="0.3333333333333333" />
+  <configurations clients="4" slowDown="4.0" bwSplit="0.25" />
+  <configurations clients="5" slowDown="5.0" bwSplit="0.2" />
+</LectureStudioModelB:Network>

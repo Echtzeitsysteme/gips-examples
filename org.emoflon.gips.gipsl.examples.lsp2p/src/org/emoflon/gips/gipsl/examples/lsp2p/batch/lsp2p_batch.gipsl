@@ -1,0 +1,206 @@
+package "org.emoflon.gips.gipsl.examples.lsp2p.batch"
+
+import "platform:/resource/LectureStudioModelB/model/LectureStudioModelB.ecore"
+import "http://www.eclipse.org/emf/2002/Ecore"
+
+config {
+	solver := GUROBI [home:="c:\gurobi1000\win64", license:="c:\gurobi1000\win64\gurobi.lic"];
+	launchConfig := true [main := "org.emoflon.gips.gipsl.examples.lsp2p.run.LSp2pBatch"];
+	timeLimit := true [value := 6000.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.000001];
+} 
+
+condition clientIsWaiting = enforce ls2client
+pattern ls2client {
+	ls : LectureStudioServer {
+		-waitingClients->client
+	}
+	client : Client
+} 
+
+rule addClient(hasRoot: EInt, bw: EDouble, tt: EDouble) {
+	relay : Node {
+		++ -clientConnection->connection
+		++ -activeClients->client
+		.isRelayClient := 1
+		.clients := cfg.clients
+	}
+	
+	cfg : Configuration
+	
+	client : Client {
+		.transferTime := param::tt
+		.depth := param::hasRoot
+		.isHasRoot := param::hasRoot
+	}
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+	
+	# relay.txBW >= client.txBW
+//	# client.id > relay.id
+	# cfg.bwSplit * relay.txBW >= relay.minTxBW 
+} when clientIsWaiting
+
+rule node {
+	node : Node {
+		++ -configuration->cfg
+	}
+	cfg : Configuration
+	# node.txBW * cfg.bwSplit >= node.minTxBW
+}
+
+mapping relay2Client with addClient {
+	var hasRoot:EInt bind hasRoot					// Zeigt an, ob es eine Verbindung zum LS Server gibt.
+	var connectionBW:EDouble bind bw	// Gibt an wie viel BW für Client reserviert wird.
+	var invertedBW:EDouble				// invertedBW = 1/connectionBW
+	var transferTime:EDouble bind tt	// Gibt die Zeit an, die es braucht um das File bis zum Client zu transportieren.
+};
+
+mapping node2Cfg with node;
+
+/*	Setzt die Konfluenzbedingung für die Einbettung: Es darf maximal und es muss mindestens eine Mappingvariable ausgewählt werden.	
+ */
+constraint -> pattern::ls2client {
+	mappings.relay2Client->filter(m | m.nodes().client == self.nodes().client)->sum(m | m.value()) == 1
+}
+
+constraint -> mapping::relay2Client {
+	[self.value() >= 1 => self.variables().hasRoot >= 1] &
+	[self.value() <= 0 => self.variables().hasRoot >= 0] &
+	self.variables().hasRoot >= 0 &
+	self.variables().hasRoot <= 2
+}
+
+constraint -> pattern::addClient {
+	[self.nodes().relay.isRelayClient >= 1 & 
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value())  >= 1
+	] => 
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().hasRoot) >= 1 &
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().hasRoot) <= 1]
+	
+}
+
+constraint -> pattern::addClient {
+	[self.nodes().relay.isRelayClient <= 0  & 
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1
+	] => 
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().hasRoot) >= 
+		mappings.relay2Client->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().hasRoot) + 1 &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().hasRoot) <= 
+		mappings.relay2Client->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().hasRoot) + 1]
+	
+}
+
+constraint -> class::Node {
+	mappings.node2Cfg->filter(m | m.nodes().node == self)->sum(m | m.value()) <= 1
+}
+
+constraint -> pattern::node {
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 =>
+	[mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) <= 1 &
+		mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1]
+}
+
+constraint -> pattern::node {
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) <= 0 =>
+	[mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) <= 0 &
+		mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 0]
+}
+
+constraint -> pattern::node {
+	mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 =>
+	[mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.nodes().cfg.clients) <= 
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) &
+	mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.nodes().cfg.clients) >= 
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value())
+	]
+}
+
+constraint -> pattern::node {
+	mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) <= 0 =>
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().node & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) <= 0
+}
+
+constraint -> mapping::relay2Client {
+	[self.value() >= 1 => self.variables().connectionBW <= self.nodes().client.rxBW] &
+	[self.value() <= 0 => self.variables().connectionBW <= 0] &
+	self.variables().connectionBW >= 0 &
+	[self.value() >= 1 => self.variables().invertedBW >= self.nodes().client.invRxBW] &
+	[self.value() <= 0 => self.variables().invertedBW <= 1] &
+	self.variables().invertedBW >= 0 &
+	[self.value() >= 1 => self.variables().transferTime >= 0.0001] &
+	[self.value() <= 0 => self.variables().transferTime <= 0] &
+	self.variables().transferTime >= 0
+}
+
+constraint -> pattern::addClient {
+	[mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().relay & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 &
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().relay.txBW * self.nodes().cfg.bwSplit  &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	]
+}
+
+constraint -> pattern::addClient {
+	[mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().relay & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 &
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().client.rxBW &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().client.rxBW]
+}
+
+constraint -> pattern::addClient {
+	[mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().relay & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 &
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().relay.invTxBW * self.nodes().cfg.slowDown  &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().relay.invTxBW * self.nodes().cfg.slowDown
+	]
+}
+
+constraint -> pattern::addClient {
+	[mappings.node2Cfg->filter(m | m.nodes().node == self.nodes().relay & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 &
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().client.invRxBW &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client & m.nodes().cfg == self.nodes().cfg)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().client.invRxBW]
+}
+
+constraint -> pattern::addClient {
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 => [
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) >= 
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().client.data)  
+	+ mappings.relay2Client->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().transferTime) &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) <= 
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().client.data)  
+	+ mappings.relay2Client->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().transferTime)]
+}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+objective transfertime -> mapping::relay2Client {
+	self.variables().transferTime
+}
+
+global objective : min {
+	transfertime
+}

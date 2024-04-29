@@ -1,0 +1,576 @@
+package "org.emoflon.gips.gipsl.examples.lsp2p.incremental"
+
+import "platform:/resource/LectureStudioModelB/model/LectureStudioModelB.ecore"
+import "http://www.eclipse.org/emf/2002/Ecore"
+
+config {
+	solver := GUROBI [home:="c:\gurobi1000\win64", license:="c:\gurobi1000\win64\gurobi.lic"];
+	launchConfig := true [main := "org.emoflon.gips.gipsl.examples.lsp2p.run.LSp2pIncremental"];
+	timeLimit := true [value := 6000.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.000001];
+}
+
+pattern ls2Waiting {
+	ls : LectureStudioServer {
+		- waitingClients -> waiting
+	} 
+	waiting : Client
+}
+
+condition hasNoConfig = forbid node2config
+pattern node2config {
+	relay : Node {
+		-configuration->other 
+	}
+	other : Configuration
+}
+
+rule addClientRootInit(bw: EDouble, tt: EDouble) {
+	relay : LectureStudioServer {
+		-- -waitingClients->client
+		++ -clientConnection->connection
+		++ -activeClients->client
+		++ -configuration->cfg
+	}
+	
+	cfg : Configuration
+	
+	# cfg.clients == 1
+	
+	client : Client {
+		.transferTime := param::tt
+		.isHasRoot := 1
+		.isRelayClient := 0
+	}
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+	
+} when hasNoConfig
+
+rule addClientRoot(bw: EDouble, tt: EDouble) {
+	relay : LectureStudioServer {
+		-- -waitingClients->client
+		++ -clientConnection->connection
+		++ -activeClients->client
+		-- -configuration->oldCfg
+		++ -configuration->newCfg
+	}
+	
+	oldCfg : Configuration
+	newCfg : Configuration
+	
+	#oldCfg.clients + 1 == newCfg.clients
+	
+	client : Client {
+		.transferTime := param::tt
+		.isHasRoot := 1
+		.isRelayClient := 0
+	}
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+}
+
+
+
+rule addClientInit(bw: EDouble, tt: EDouble) {
+	ls : LectureStudioServer {
+		-- -waitingClients->client
+	}
+	
+	relay : Node {
+		++ -clientConnection->connection
+		++ -activeClients->client
+		++ -configuration->cfg
+		.isHasRoot := 1
+		.isRelayClient := 1
+	}
+	
+	cfg : Configuration 
+	
+	#cfg.clients == 1
+	#relay.isHasRoot >= 1
+	
+	// Heuristics
+	#relay.isHasRoot <= 3
+	#relay.txBW >= client.txBW
+	
+	client : Client {
+		.transferTime := param::tt
+		.isHasRoot := relay.isHasRoot + 1
+	}
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+	 
+} when hasNoConfig
+
+rule addClient(bw: EDouble, tt: EDouble) {
+	ls : LectureStudioServer {
+		-- -waitingClients->client
+	}
+	
+	relay : Node {
+		++ -clientConnection->connection
+		++ -activeClients->client
+		-- -configuration->oldCfg
+		++ -configuration->newCfg
+	}
+	
+	oldCfg : Configuration
+	newCfg : Configuration
+	
+	#oldCfg.clients + 1 == newCfg.clients
+	#relay.isHasRoot >= 1
+	
+	// Heuristics
+	#relay.isHasRoot <= 3
+	#relay.txBW >= client.txBW
+	#newCfg.clients <= 2
+	
+	client : Client {
+		.transferTime := param::tt
+		.isHasRoot := 1
+		.isRelayClient := 0
+	}
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+}
+
+rule updateTransferTime(ttu: EDouble) {
+	relay : Node {
+		- activeClients -> client
+		- configuration -> oldCfg
+	}
+	client : Client {
+		.transferTime := param::ttu
+	}
+	oldCfg : Configuration
+	newCfg : Configuration
+	#oldCfg.clients + 1 == newCfg.clients
+}
+
+mapping initRoot2Client with addClientRootInit {
+	var connectionBW:EDouble bind bw	// Gibt an wie viel BW für Client reserviert wird.
+	var invertedBW:EDouble				// invertedBW = 1/connectionBW
+	var transferTime:EDouble bind tt	// Gibt die Zeit an, die es braucht um das File bis zum Client zu transportieren.
+};
+
+mapping root2Client with addClientRoot {
+	var connectionBW:EDouble bind bw
+	var invertedBW:EDouble
+	var transferTime:EDouble bind tt
+};
+
+mapping initRelay2Client with addClientInit {
+	var connectionBW:EDouble bind bw
+	var invertedBW:EDouble
+	var transferTime:EDouble bind tt
+};
+
+mapping relay2Client with addClient {
+	var connectionBW:EDouble bind bw
+	var invertedBW:EDouble
+	var transferTime:EDouble bind tt
+};
+
+mapping updateTT with updateTransferTime {
+	var transferTime:EDouble bind ttu
+};
+
+// Set this to n = #waiting_clients in the future
+constraint -> global {
+	mappings.initRoot2Client->sum(m | m.value()) +
+	mappings.root2Client->sum(m | m.value()) + 
+	mappings.initRelay2Client->sum(m | m.value()) +
+	mappings.relay2Client->sum(m | m.value()) == 1
+}
+
+// Prevent multiple embeddings
+constraint -> pattern::ls2Waiting {
+	mappings.initRoot2Client->filter(m | m.nodes().client == self.nodes().waiting)->sum(m | m.value()) +
+	mappings.root2Client->filter(m | m.nodes().client == self.nodes().waiting)->sum(m | m.value()) + 
+	mappings.initRelay2Client->filter(m | m.nodes().client == self.nodes().waiting)->sum(m | m.value()) +
+	mappings.relay2Client->filter(m | m.nodes().client == self.nodes().waiting)->sum(m | m.value()) <= 1
+}
+
+constraint -> pattern::updateTransferTime {
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) +
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) >= 1 
+		| mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.value()) >= 1 
+	] =>
+	mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 
+}
+
+constraint -> pattern::updateTransferTime {
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) + 
+		mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay)->sum(m | m.value()) <= 0 
+		& mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.value()) <= 0 
+	] =>
+	mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) <= 0 
+}
+ 
+constraint -> mapping::updateTT {
+	[self.value() >= 1 => self.variables().transferTime >= self.nodes().client.transferTime] &
+	[self.value() <= 0 => self.variables().transferTime <= self.nodes().client.transferTime] &
+	[self.value() <= 0 => self.variables().transferTime >= self.nodes().client.transferTime]
+}
+
+constraint -> pattern::updateTransferTime {
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client != self.nodes().client)->sum(m | m.value()) >= 1 &
+		mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1
+	] =>
+	[mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) <= 
+		self.nodes().client.transferTime * self.nodes().newCfg.slowDown / self.nodes().oldCfg.slowDown &
+	 mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) >= 
+		self.nodes().client.transferTime * self.nodes().newCfg.slowDown / self.nodes().oldCfg.slowDown
+	]
+}
+
+constraint -> pattern::updateTransferTime {
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client != self.nodes().client)->sum(m | m.value()) >= 1 &
+		mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.value()) >= 0 &
+		mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1
+	] =>
+	[mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) <=
+		self.nodes().relay.transferTime + 
+		(self.nodes().client.transferTime - self.nodes().relay.transferTime) * (self.nodes().newCfg.slowDown/self.nodes().oldCfg.slowDown) &
+	 mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) >=
+		self.nodes().relay.transferTime + 
+		(self.nodes().client.transferTime - self.nodes().relay.transferTime) * (self.nodes().newCfg.slowDown/self.nodes().oldCfg.slowDown)
+	]
+}
+
+constraint -> pattern::updateTransferTime {
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client != self.nodes().client)->sum(m | m.value()) >= 1 &
+		mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.value()) >= 1 &
+		mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1
+	] =>
+	[mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) <=
+		mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().transferTime) + 
+		(self.nodes().client.transferTime - self.nodes().relay.transferTime) * (self.nodes().newCfg.slowDown/self.nodes().oldCfg.slowDown) &
+	 mappings.updateTT->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)
+		->sum(m | m.variables().transferTime) >=
+		mappings.updateTT->filter(m | m.nodes().client == self.nodes().relay)->sum(m | m.variables().transferTime) + 
+		(self.nodes().client.transferTime - self.nodes().relay.transferTime) * (self.nodes().newCfg.slowDown/self.nodes().oldCfg.slowDown)
+	]
+}
+
+constraint -> mapping::initRoot2Client {
+	[self.value() >= 1 => self.variables().connectionBW <= self.nodes().client.rxBW] &
+	[self.value() <= 0 => self.variables().connectionBW <= 0] &
+	self.variables().connectionBW >= 0 &
+	[self.value() >= 1 => self.variables().invertedBW >= self.nodes().client.invRxBW] &
+	[self.value() <= 0 => self.variables().invertedBW <= 1] &
+	self.variables().invertedBW >= 0 &
+	[self.value() >= 1 => self.variables().transferTime >= 0.0001] &
+	[self.value() <= 0 => self.variables().transferTime <= 0] &
+	self.variables().transferTime >= 0
+}
+
+constraint -> mapping::root2Client {
+	[self.value() >= 1 => self.variables().connectionBW <= self.nodes().client.rxBW] &
+	[self.value() <= 0 => self.variables().connectionBW <= 0] &
+	self.variables().connectionBW >= 0 &
+	[self.value() >= 1 => self.variables().invertedBW >= self.nodes().client.invRxBW] &
+	[self.value() <= 0 => self.variables().invertedBW <= 1] &
+	self.variables().invertedBW >= 0 &
+	[self.value() >= 1 => self.variables().transferTime >= 0.0001] &
+	[self.value() <= 0 => self.variables().transferTime <= 0] &
+	self.variables().transferTime >= 0
+}
+
+constraint -> mapping::initRelay2Client {
+	[self.value() >= 1 => self.variables().connectionBW <= self.nodes().client.rxBW] &
+	[self.value() <= 0 => self.variables().connectionBW <= 0] &
+	self.variables().connectionBW >= 0 &
+	[self.value() >= 1 => self.variables().invertedBW >= self.nodes().client.invRxBW] &
+	[self.value() <= 0 => self.variables().invertedBW <= 1] &
+	self.variables().invertedBW >= 0 &
+	[self.value() >= 1 => self.variables().transferTime >= 0.0001] &
+	[self.value() <= 0 => self.variables().transferTime <= 0] &
+	self.variables().transferTime >= 0
+}
+
+constraint -> mapping::relay2Client {
+	[self.value() >= 1 => self.variables().connectionBW <= self.nodes().client.rxBW] &
+	[self.value() <= 0 => self.variables().connectionBW <= 0] &
+	self.variables().connectionBW >= 0 &
+	[self.value() >= 1 => self.variables().invertedBW >= self.nodes().client.invRxBW] &
+	[self.value() <= 0 => self.variables().invertedBW <= 1] &
+	self.variables().invertedBW >= 0 &
+	[self.value() >= 1 => self.variables().transferTime >= 0.0001] &
+	[self.value() <= 0 => self.variables().transferTime <= 0] &
+	self.variables().transferTime >= 0
+}
+
+// Nail down bandwidth and inverted bandwidth for initRoot2client mappings
+constraint -> pattern::addClientRootInit {
+	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().relay.txBW * self.nodes().cfg.bwSplit  &
+	mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	]
+}
+
+constraint -> pattern::addClientRootInit {
+	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().client.rxBW &
+	mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().client.rxBW]
+}
+
+constraint -> pattern::addClientRootInit {
+	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().relay.invTxBW * self.nodes().cfg.slowDown  &
+	mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().relay.invTxBW * self.nodes().cfg.slowDown
+	]
+}
+
+constraint -> pattern::addClientRootInit {
+	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().client.invRxBW &
+	mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().client.invRxBW]
+}
+
+// Nail down bandwidth and inverted bandwidth for root2client mappings
+constraint -> pattern::addClientRoot {
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	] =>
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().relay.txBW * self.nodes().newCfg.bwSplit  &
+	mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	]
+}
+
+constraint -> pattern::addClientRoot {
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	] =>
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().client.rxBW &
+	mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().client.rxBW]
+}
+
+constraint -> pattern::addClientRoot {
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	] =>
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().relay.invTxBW * self.nodes().newCfg.slowDown  &
+	mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().relay.invTxBW * self.nodes().newCfg.slowDown
+	]
+}
+
+constraint -> pattern::addClientRoot {
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	] =>
+	[mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().client.invRxBW &
+	mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().client.invRxBW]
+}
+
+// Nail down bandwidth and inverted bandwidth for initRelay2client mappings
+constraint -> pattern::addClientInit {
+	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().relay.txBW * self.nodes().cfg.bwSplit  &
+	mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	]
+}
+
+constraint -> pattern::addClientInit {
+	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().client.rxBW &
+	mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().client.rxBW]
+}
+
+constraint -> pattern::addClientInit {
+	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().relay.invTxBW * self.nodes().cfg.slowDown  &
+	mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().relay.invTxBW * self.nodes().cfg.slowDown
+	]
+}
+
+constraint -> pattern::addClientInit {
+	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().cfg.bwSplit
+	] =>
+	[mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().client.invRxBW &
+	mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().client.invRxBW]
+}
+
+// Nail down bandwidth and inverted bandwidth for relay2client mappings
+constraint -> pattern::addClient {
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().relay.txBW * self.nodes().newCfg.bwSplit  &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	]
+}
+
+constraint -> pattern::addClient {
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) <= 
+		self.nodes().client.rxBW &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().connectionBW) >= 
+		self.nodes().client.rxBW]
+}
+
+constraint -> pattern::addClient {
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW - 0.0001 >= self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().relay.invTxBW * self.nodes().newCfg.slowDown  &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().relay.invTxBW * self.nodes().newCfg.slowDown
+	]
+}
+
+constraint -> pattern::addClient {
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 &
+		self.nodes().client.rxBW <= self.nodes().relay.txBW * self.nodes().newCfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) <= 
+		self.nodes().client.invRxBW &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay &  m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW) >= 
+		self.nodes().client.invRxBW]
+}
+
+// Calculate transfertime for initRoot2client mappings
+constraint -> pattern::addClientRootInit {
+	mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 
+	=> [
+	mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) >= 
+	mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().relay.data) &
+	mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) <= 
+	mappings.initRoot2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().relay.data)
+	]
+}
+
+// Calculate transfertime for root2client mappings
+constraint -> pattern::addClientRoot {
+	mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 
+	=> [
+	mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) >= 
+	mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().relay.data) &
+	mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) <= 
+	mappings.root2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().relay.data)
+	]
+}
+
+// Calculate transfertime for initRelay2client mappings
+constraint -> pattern::addClientInit {
+	mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 
+	=> [
+	mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) >= 
+	mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().ls.data)
+	+ self.nodes().relay.transferTime &
+	mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) <= 
+	mappings.initRelay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().ls.data)
+	+ self.nodes().relay.transferTime
+	]
+}
+
+// Calculate transfertime for initRelay2client mappings
+constraint -> pattern::addClient {
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.value()) >= 1 
+	=> [
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) >= 
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().ls.data)
+	+ self.nodes().relay.transferTime &
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().transferTime) <= 
+	mappings.relay2Client->filter(m | m.nodes().relay == self.nodes().relay & m.nodes().client == self.nodes().client)->sum(m | m.variables().invertedBW * m.nodes().ls.data)
+	+ self.nodes().relay.transferTime
+	]
+}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+objective transfertime1 -> mapping::root2Client {
+	self.variables().transferTime
+}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+objective transfertime2 -> mapping::initRoot2Client {
+	self.variables().transferTime
+}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+objective transfertime3 -> mapping::relay2Client {
+	self.variables().transferTime
+}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+objective transfertime4 -> mapping::initRelay2Client {
+	self.variables().transferTime
+}
+
+objective transfertime5 -> mapping::updateTT {
+	self.variables().transferTime
+}
+
+global objective : min {
+	transfertime1 + transfertime2 + transfertime3 + transfertime4 + transfertime5
+}
+
