@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LectureStudioModel:Network xmlns:LectureStudioModel="platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" time="0.0" nextId="81" xmi:version="2.0">
+<LectureStudioModelB:Network xmlns:LectureStudioModelB="platform:/resource/LectureStudioModelB/model/LectureStudioModelB.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" time="0.0" nextId="81" xmi:version="2.0">
   <lectureStudioServer id="0" depth="0" clients="0" data="1.0" isRelayClient="1" isHasRoot="1" transferTime="0.0" txBW="500.0" rxBW="500.0" minTxBW="25.0" invTxBW="0.002" invRxBW="0.002" configuration="//@configurations.25">
     <activeClients id="6" depth="-1" clients="0" data="1.0" isRelayClient="0" isHasRoot="1" transferTime="0.16666666651144624" txBW="25.866159711679806" rxBW="150.0" minTxBW="12.933079855839903" invTxBW="0.03866055151389374" invRxBW="0.006666666666666667" />
     <activeClients id="1" depth="-1" clients="0" data="1.0" isRelayClient="0" isHasRoot="1" transferTime="0.0833333331393078" txBW="44.056766644197594" rxBW="150.0" minTxBW="22.028383322098797" invTxBW="0.022697988894101084" invRxBW="0.006666666666666667" />
@@ -282,4 +282,4 @@
   <configurations clients="78" slowDown="78.0" bwSplit="0.01282051282051282" />
   <configurations clients="79" slowDown="79.0" bwSplit="0.012658227848101266" />
   <configurations clients="80" slowDown="80.0" bwSplit="0.0125" />
-</LectureStudioModel:Network>
+</LectureStudioModelB:Network>
