@@ -11,8 +11,8 @@ import org.emoflon.gips.core.ilp.ILPSolverStatus;
 import org.emoflon.gips.gipsl.examples.lsp2pInc.api.gips.Lsp2pIncGipsAPI;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
-import LectureStudioModel.LectureStudioModelPackage;
-import LectureStudioModel.Network;
+import LectureStudioModelB.LectureStudioModelBPackage;
+import LectureStudioModelB.Network;
 import lsmodel.generator.GenDistribution;
 import lsmodel.generator.GenParameter;
 import lsmodel.generator.LSGenerator;
@@ -90,7 +90,7 @@ public class LSp2pIncremental {
 	public static ResourceSet prepareResource(final URI uri) {
 		ResourceSet rs = new ResourceSetImpl();
 		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		rs.getPackageRegistry().put(LectureStudioModelPackage.eNS_URI, LectureStudioModelPackage.eINSTANCE);
+		rs.getPackageRegistry().put(LectureStudioModelBPackage.eNS_URI, LectureStudioModelBPackage.eINSTANCE);
 		rs.createResource(uri);
 		return rs;
 	}

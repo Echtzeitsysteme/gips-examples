@@ -1,6 +1,6 @@
 package "org.emoflon.gips.gipsl.examples.lsp2p.batch"
 
-import "platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
+import "platform:/resource/LectureStudioModelB/model/LectureStudioModelB.ecore"
 import "http://www.eclipse.org/emf/2002/Ecore"
 
 config {
