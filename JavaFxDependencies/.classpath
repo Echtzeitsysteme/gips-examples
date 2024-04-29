@@ -6,42 +6,42 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="javafx.base.jar">
+	<classpathentry exported="true" kind="lib" path="lib/javafx.base.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JavaFxDependencies/dlls"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="javafx.controls.jar">
+	<classpathentry exported="true" kind="lib" path="lib/javafx.controls.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JavaFxDependencies/dlls"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="javafx.fxml.jar">
+	<classpathentry exported="true" kind="lib" path="lib/javafx.fxml.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JavaFxDependencies/dlls"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="javafx.graphics.jar">
+	<classpathentry exported="true" kind="lib" path="lib/javafx.graphics.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JavaFxDependencies/dlls"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="javafx.media.jar">
+	<classpathentry exported="true" kind="lib" path="lib/javafx.media.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JavaFxDependencies/dlls"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="javafx.swing.jar">
+	<classpathentry exported="true" kind="lib" path="lib/javafx.swing.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JavaFxDependencies/dlls"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="javafx.web.jar">
+	<classpathentry exported="true" kind="lib" path="lib/javafx.web.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JavaFxDependencies/dlls"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="javafx-swt.jar">
+	<classpathentry exported="true" kind="lib" path="lib/javafx-swt.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JavaFxDependencies/dlls"/>
 		</attributes>

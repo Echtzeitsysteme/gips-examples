@@ -3,14 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: JavaFxDependencies
 Bundle-SymbolicName: JavaFxDependencies
 Bundle-Version: 1.0.0
-Bundle-ClassPath: javafx.base.jar,
- javafx.controls.jar,
- javafx.fxml.jar,
- javafx.graphics.jar,
- javafx.media.jar,
- javafx.swing.jar,
- javafx.web.jar,
- javafx-swt.jar
+Bundle-ClassPath: lib/javafx.base.jar,
+ lib/javafx.controls.jar,
+ lib/javafx.fxml.jar,
+ lib/javafx.graphics.jar,
+ lib/javafx.media.jar,
+ lib/javafx.swing.jar,
+ lib/javafx.web.jar,
+ lib/javafx-swt.jar
 Export-Package: com.sun.glass.events,
  com.sun.glass.ui,
  com.sun.glass.ui.delegate,
