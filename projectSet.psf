@@ -4,10 +4,14 @@
 <project reference="1.0,https://github.com/eMoflon/TGG-3.0-Prototype.git,main,ClassDiagram"/>
 <project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,classdiagramtgg3"/>
 <project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,classdiagramtgg3violations"/>
+<project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,JavaFxDependencies"/>
+<project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,LectureStudioModelB"/>
 <project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,network.model"/>
 <project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.headlessrunner"/>
 <project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.headlessrunnermodel"/>
 <project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.helloworld"/>
+<project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.lsp2p"/>
+<project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.lsp2pInc"/>
 <project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.mdvne"/>
 <project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.mdvne.migration"/>
 <project reference="1.0,https://github.com/Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.mdvne.seq"/>
@@ -39,5 +43,9 @@
 <item elementID="=classdiagramtgg3violations" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=SoftwareSystem" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=refactoringsoftwaresystemtgg3" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=JavaFxDependencies" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=LectureStudioModelB" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.emoflon.gips.gipsl.examples.lsp2p" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.emoflon.gips.gipsl.examples.lsp2pInc" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 </psf>
