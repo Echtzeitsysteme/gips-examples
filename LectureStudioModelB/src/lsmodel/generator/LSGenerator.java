@@ -21,15 +21,15 @@ import LectureStudioModelB.LectureStudioServer;
 import LectureStudioModelB.Network;
 
 public class LSGenerator {
-	
+
 	public static final DecimalFormat df = new DecimalFormat("0.00");
 
 	public static String projectFolder = System.getProperty("user.dir");
 	public static String instancesFolder = projectFolder + "/../org.emoflon.gips.gipsl.examples.lsp2p/instances/";
-	
+
 	protected LectureStudioModelBFactory factory = LectureStudioModelBFactory.eINSTANCE;
 	protected Random rnd;
-	
+
 	public static void initFileSystem() {
 		File iF = new File(instancesFolder);
 		if (!iF.exists()) {
@@ -41,7 +41,7 @@ public class LSGenerator {
 		initFileSystem();
 		simpleInitialBatch(10);
 	}
-	
+
 	public static Network simpleInitialBatch(int numOfConfigs) {
 		LSGenerator gen = new LSGenerator("FunSeed123".hashCode());
 		double fileSize = 10;
@@ -49,15 +49,12 @@ public class LSGenerator {
 		int clients = 5;
 		double clientsUp = 50;
 		double clientsDown = 150;
-		
-		Network net = gen.generateInitial(
-				numOfConfigs,
-				new GenParameter(GenDistribution.CONST, fileSize), 
-				new GenParameter(GenDistribution.CONST, lsBW), 
-				new GenParameter(GenDistribution.CONST, clients), 
+
+		Network net = gen.generateInitial(numOfConfigs, new GenParameter(GenDistribution.CONST, fileSize),
+				new GenParameter(GenDistribution.CONST, lsBW), new GenParameter(GenDistribution.CONST, clients),
 				new GenParameter(GenDistribution.UNI, 10, clientsUp),
 				new GenParameter(GenDistribution.CONST, clientsDown));
-		
+
 		StringBuilder fileName = new StringBuilder();
 //		fileName.append("/LSBW@");
 //		fileName.append(df.format(lsBW).replace(",", "-"));
@@ -81,7 +78,7 @@ public class LSGenerator {
 
 		return net;
 	}
-	
+
 	public static void save(Network model, String path) throws IOException {
 		URI uri = URI.createFileURI(path);
 		ResourceSet rs = new ResourceSetImpl();
@@ -92,26 +89,27 @@ public class LSGenerator {
 		r.save(null);
 		r.unload();
 	}
-	
+
 	public LSGenerator(long seed) {
 		rnd = new Random(seed);
 	}
-	
-	public Network generateInitial(int numOfConfigs, GenParameter data, GenParameter lsBwUp, GenParameter nodes, GenParameter nodeBwUp, GenParameter nodeBwDown) {
+
+	public Network generateInitial(int numOfConfigs, GenParameter data, GenParameter lsBwUp, GenParameter nodes,
+			GenParameter nodeBwUp, GenParameter nodeBwDown) {
 		int id = 0;
 		Network net = factory.createNetwork();
 		net.setTime(0);
-		
+
 		LectureStudioServer ls = factory.createLectureStudioServer();
 		ls.setData(data.getParam(rnd));
-		ls.setId(""+id++);
+		ls.setId("" + id++);
 		ls.setTxBW(lsBwUp.getParam(rnd));
-		ls.setMinTxBW(ls.getTxBW()/20.0);
+		ls.setMinTxBW(ls.getTxBW() / 20.0);
 		// Rx is actually not needed.
 		ls.setRxBW(lsBwUp.getParam(rnd));
-		ls.setInvTxBW(1.0/ls.getTxBW());
+		ls.setInvTxBW(1.0 / ls.getTxBW());
 		// Rx is actually not needed.
-		ls.setInvRxBW(1.0/ls.getRxBW());
+		ls.setInvRxBW(1.0 / ls.getRxBW());
 //		ls.setResidualTxBW(ls.getTxBW());
 //		// Same here.
 //		ls.setResidualRxBW(ls.getRxBW());
@@ -123,33 +121,33 @@ public class LSGenerator {
 		ls.setIsHasRoot(1);
 		ls.setClients(0);
 		net.getLectureStudioServer().add(ls);
-		
+
 		List<Configuration> configs = new LinkedList<>();
-		for(int i = 0; i<numOfConfigs; i++) {
+		for (int i = 0; i < numOfConfigs; i++) {
 			Configuration config = factory.createConfiguration();
 			config.setClients(i);
 			config.setSlowDown(i);
-			config.setBwSplit(1.0/i);
+			config.setBwSplit(1.0 / i);
 			configs.add(config);
 		}
 		net.getConfigurations().addAll(configs);
-		
+
 		List<Client> clients = new LinkedList<>();
-		for(int i = (int)nodes.getParam(rnd); i>0; i--) {
+		for (int i = (int) nodes.getParam(rnd); i > 0; i--) {
 			Client client = factory.createClient();
 			client.setData(ls.getData());
 			client.setDepth(-1);
-			client.setId(""+id++);
+			client.setId("" + id++);
 			client.setIsRelayClient(0);
 			client.setTxBW(nodeBwUp.getParam(rnd));
-			client.setMinTxBW(client.getTxBW()/2.0);
+			client.setMinTxBW(client.getTxBW() / 2.0);
 			client.setRxBW(nodeBwDown.getParam(rnd));
 //			client.setResidualTxBW(client.getTxBW());
 //			client.setResidualRxBW(client.getRxBW());
 //			client.setAllocatedTxBW(0);
 //			client.setAllocatedRxBW(0);
-			client.setInvTxBW(1.0/client.getTxBW());
-			client.setInvRxBW(1.0/client.getRxBW());
+			client.setInvTxBW(1.0 / client.getTxBW());
+			client.setInvRxBW(1.0 / client.getRxBW());
 			client.setTransferTime(0);
 			client.setIsRelayClient(0);
 			client.setIsHasRoot(0);
@@ -158,29 +156,30 @@ public class LSGenerator {
 		}
 		ls.getWaitingClients().addAll(clients);
 		net.setNextId(id);
-		
+
 		return net;
 	}
-	
-	public void insertRndClients(final LectureStudioServer ls, GenParameter nodes, GenParameter nodeBwUp, GenParameter nodeBwDown) {
+
+	public void insertRndClients(final LectureStudioServer ls, GenParameter nodes, GenParameter nodeBwUp,
+			GenParameter nodeBwDown) {
 		Network network = (Network) ls.eContainer();
 		int id = network.getNextId();
 		List<Client> clients = new LinkedList<>();
-		for(int i = (int)nodes.getParam(rnd); i>0; i--) {
+		for (int i = (int) nodes.getParam(rnd); i > 0; i--) {
 			Client client = factory.createClient();
 			client.setData(ls.getData());
 			client.setDepth(-1);
-			client.setId(""+id++);
+			client.setId("" + id++);
 			client.setIsRelayClient(0);
 			client.setTxBW(nodeBwUp.getParam(rnd));
-			client.setMinTxBW(client.getTxBW()/2.0);
+			client.setMinTxBW(client.getTxBW() / 2.0);
 			client.setRxBW(nodeBwDown.getParam(rnd));
 //			client.setResidualTxBW(client.getTxBW());
 //			client.setResidualRxBW(client.getRxBW());
 //			client.setAllocatedTxBW(0);
 //			client.setAllocatedRxBW(0);
-			client.setInvTxBW(1.0/client.getTxBW());
-			client.setInvRxBW(1.0/client.getRxBW());
+			client.setInvTxBW(1.0 / client.getTxBW());
+			client.setInvRxBW(1.0 / client.getRxBW());
 			client.setTransferTime(0);
 			client.setIsRelayClient(0);
 			client.setIsHasRoot(0);
@@ -191,5 +190,3 @@ public class LSGenerator {
 		network.setNextId(id);
 	}
 }
-
-
