@@ -2149,7 +2149,7 @@ public class ModelFacade {
 		}
 
 		// Sanity check
-		if (minBw < 0) {
+		if (!ModelFacadeConfig.IGNORE_BW && minBw < 0) {
 			throw new InternalError("There was at least one substrate link with a residual bandwidth value < 0.");
 		}
 
