@@ -72,7 +72,9 @@ public class MdvneGipsBwIgnoreIflyeAdapter {
 	 */
 	public static void resetInit() {
 		init = false;
-		api.terminate();
+		if (api != null) {
+			api.terminate();
+		}
 	}
 
 }
