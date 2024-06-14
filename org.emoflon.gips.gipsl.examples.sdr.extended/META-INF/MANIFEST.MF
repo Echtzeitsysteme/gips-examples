@@ -13,7 +13,7 @@ Bundle-ClassPath: lib/commons-cli/commons-cli-1.5.0.jar,
  lib/gson/gson-2.10.1-javadoc.jar,
  lib/gson/gson-2.10.1-sources.jar,
  .
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt,
  org.emoflon.gips.core,
