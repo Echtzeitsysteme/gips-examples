@@ -190,5 +190,5 @@ Export-Package: com.sun.glass.events,
  javafx.stage,
  javafx.util,
  javafx.util.converter
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: JavaFxDependencies
