@@ -6,6 +6,10 @@ Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: classdiagramtgg3;singleton:=true
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/commons-cli/commons-cli-1.5.0.jar,
+ lib/commons-cli/commons-cli-1.5.0-javadoc.jar,
+ lib/commons-cli/commons-cli-1.5.0-sources.jar,
+ .
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt,
