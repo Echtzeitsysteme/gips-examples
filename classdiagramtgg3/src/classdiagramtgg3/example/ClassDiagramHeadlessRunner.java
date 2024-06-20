@@ -34,6 +34,11 @@ public class ClassDiagramHeadlessRunner {
 	private static String xmiOutputPath;
 
 	/**
+	 * If true, the runner will print the complete solution to the console.
+	 */
+	private static boolean printSolution = true;
+
+	/**
 	 * Main method to start the headless runner. String array of arguments will be
 	 * parsed.
 	 * 
@@ -84,6 +89,7 @@ public class ClassDiagramHeadlessRunner {
 	 * <ol>
 	 * <li>#0: XMI input file path (required)</li>
 	 * <li>#1: XMI output file path (required)</li>
+	 * <li>#2: Print the found solution to console (optional)</li>
 	 * </ol>
 	 * 
 	 * @param args Arguments to parse.
@@ -101,6 +107,11 @@ public class ClassDiagramHeadlessRunner {
 		xmiOutputFile.setRequired(true);
 		options.addOption(xmiOutputFile);
 
+		// Print solution flag
+		final Option printSolutionOption = new Option("p", "printsolution", false, "print solution");
+		printSolutionOption.setRequired(false);
+		options.addOption(printSolutionOption);
+
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -116,6 +127,7 @@ public class ClassDiagramHeadlessRunner {
 		// Get values
 		xmiInputPath = cmd.getOptionValue("inputxmi");
 		xmiOutputPath = cmd.getOptionValue("outputxmi");
+		printSolution = cmd.hasOption("printsolution");
 	}
 
 	/**
@@ -127,26 +139,30 @@ public class ClassDiagramHeadlessRunner {
 	 *                non-zero mappings.
 	 */
 	private static void printAndApplySolution(final Classdiagramtgg3GipsAPI gipsApi) {
-		System.out.println("Violation Mappings: ");
-		gipsApi.getViolationA().getMappings().forEach((k, v) -> {
-			System.out.println(v.getValue() + ": " + v.getA1().getName() + " -> " + v.getC1().getName() + "; "
-					+ v.getM1().getName() + " -> " + v.getC2().getName());
-		});
+		if (printSolution) {
+			System.out.println("Violation Mappings: ");
+			gipsApi.getViolationA().getMappings().forEach((k, v) -> {
+				System.out.println(v.getValue() + ": " + v.getA1().getName() + " -> " + v.getC1().getName() + "; "
+						+ v.getM1().getName() + " -> " + v.getC2().getName());
+			});
 
-		System.out.println("Embeddings (Attributes): ");
-		gipsApi.getEmbedAttribute().getMappings().forEach((k, v) -> {
-			if (v.getValue() == 1) {
-				System.out.println("  " + v.getMatch().getA().getName() + " -> " + v.getMatch().getC().getName());
-			}
-		});
+			System.out.println("Embeddings (Attributes): ");
+			gipsApi.getEmbedAttribute().getMappings().forEach((k, v) -> {
+				if (v.getValue() == 1) {
+					System.out.println("  " + v.getMatch().getA().getName() + " -> " + v.getMatch().getC().getName());
+				}
+			});
+
+			System.out.println("Embeddings (Methods): ");
+			gipsApi.getEmbedMethod().getMappings().forEach((k, v) -> {
+				if (v.getValue() == 1) {
+					System.out.println("  " + v.getMatch().getM().getName() + " -> " + v.getMatch().getC().getName());
+				}
+			});
+		}
+
+		// Apply found solution
 		gipsApi.getEmbedAttribute().applyNonZeroMappings();
-
-		System.out.println("Embeddings (Methods): ");
-		gipsApi.getEmbedMethod().getMappings().forEach((k, v) -> {
-			if (v.getValue() == 1) {
-				System.out.println("  " + v.getMatch().getM().getName() + " -> " + v.getMatch().getC().getName());
-			}
-		});
 		gipsApi.getEmbedMethod().applyNonZeroMappings();
 	}
 
