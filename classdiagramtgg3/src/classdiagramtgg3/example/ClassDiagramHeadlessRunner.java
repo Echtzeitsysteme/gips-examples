@@ -75,6 +75,7 @@ public class ClassDiagramHeadlessRunner {
 
 		// Terminate everything
 		gipsApi.terminate();
+		System.out.println("=> Finished Java headless runner execution.");
 		System.exit(0);
 	}
 
@@ -108,7 +109,7 @@ public class ClassDiagramHeadlessRunner {
 			cmd = parser.parse(options, args);
 		} catch (final ParseException e) {
 			System.err.println(e.getMessage());
-			formatter.printHelp("cli parameters", options);
+			formatter.printHelp("CLI parameters", options);
 			System.exit(1);
 		}
 
