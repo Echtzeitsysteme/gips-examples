@@ -1,5 +1,6 @@
 package model.converter;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,6 +29,14 @@ public class FileUtils {
 	 * @param json JSON object to write to file.
 	 */
 	protected static void writeFileFromJson(final String path, final JsonObject json) {
+		if (path == null || path.isBlank()) {
+			throw new IllegalArgumentException("Given path was null or blank.");
+		}
+
+		if (json == null) {
+			throw new IllegalArgumentException("Given json object was null.");
+		}
+
 		FileUtils.writeFile(path, json.toString());
 	}
 
@@ -38,6 +47,9 @@ public class FileUtils {
 	 * @return JSON object read from file.
 	 */
 	protected static JsonObject readFileToJson(final String path) {
+		if (path == null || path.isBlank()) {
+			throw new IllegalArgumentException("Given path was null or blank.");
+		}
 		return new Gson().fromJson(FileUtils.readFile(path), JsonObject.class);
 	}
 
@@ -48,6 +60,14 @@ public class FileUtils {
 	 * @param string Content to write in file.
 	 */
 	public static void writeFile(final String path, final String string) {
+		if (path == null || path.isBlank()) {
+			throw new IllegalArgumentException("Given path was null or blank.");
+		}
+
+		if (string == null) {
+			throw new IllegalArgumentException("Given String was null.");
+		}
+
 		FileWriter file = null;
 		try {
 			file = new FileWriter(path);
@@ -71,6 +91,16 @@ public class FileUtils {
 	 * @return File content as string.
 	 */
 	public static String readFile(final String path) {
+		if (path == null || path.isBlank()) {
+			throw new IllegalArgumentException("Given path was null or blank.");
+		}
+
+		// Check if file exists
+		final File f = new File(path);
+		if (!f.exists() || f.isDirectory()) {
+			throw new UnsupportedOperationException("File <" + path + "> does not exist.");
+		}
+
 		String read = "";
 		try {
 			read = Files.readString(Path.of(path));
@@ -88,6 +118,9 @@ public class FileUtils {
 	 * @return String with converted linebreaks.
 	 */
 	public static String replaceLinebreaks(final String toConvert) {
+		if (toConvert == null) {
+			throw new IllegalArgumentException("Given String was null.");
+		}
 		return toConvert.replace("\r\n", System.lineSeparator()).replace("\n", System.lineSeparator());
 	}
 
