@@ -21,9 +21,6 @@ function gips_setup {
     unzip -q -o $JAR "org/emoflon/gips/gipsl/examples/sdr/extended/hipe/engine/hipe-network.xmi"
     unzip -q -o $JAR "org/emoflon/gips/gipsl/examples/sdr/extended/api/gips/gips-model.xmi"
     unzip -q -o $JAR "org/emoflon/gips/gipsl/examples/sdr/extended/api/ibex-patterns.xmi"
-
-    export hipe_network_path="./org/emoflon/gips/gipsl/examples/sdr/extended/hipe/engine/hipe-network.xmi"
-    export hipe_engine_class_name="org.emoflon.gips.gipsl.examples.sdr.extended.hipe.engine.HiPEEngine";
 }
 
 function run {
