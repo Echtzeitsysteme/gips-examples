@@ -108,7 +108,9 @@ public class JsonSdrRunner {
 	private static Collection<SolutionMapping> runGips() {
 		// Create the API
 		final ExtendedGipsAPI api = new ExtendedGipsAPI();
-		api.init(URI.createFileURI(JSON_MODEL_URI));
+		api.init(URI.createFileURI("./org/emoflon/gips/gipsl/examples/sdr/extended/api/gips/gips-model.xmi"), //
+				URI.createFileURI(JSON_MODEL_URI), //
+				URI.createFileURI("./org/emoflon/gips/gipsl/examples/sdr/extended/api/ibex-patterns.xmi"));
 
 		api.buildILPProblem(true);
 		final ILPSolverOutput output = api.solveILPProblem();
