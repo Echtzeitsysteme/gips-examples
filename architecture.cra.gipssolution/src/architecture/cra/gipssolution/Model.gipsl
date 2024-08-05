@@ -169,6 +169,20 @@ objective objViolationC -> mapping::violationC {
 	1
 }
 
+//
+// Violation of type D1:
+// a method 'a' has no dependency to a method 'b' which both should be mapped to the same class
+//
+
+// TODO
+
+//
+// Violation of type D2:
+// a method 'a' has no dependency to an attribute 'b' which both should be mapped to the same class
+//
+
+// TODO
+
 ////
 //// Honor pre-existing mappings
 ////
