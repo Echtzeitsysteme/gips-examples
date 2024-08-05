@@ -1,40 +1,169 @@
 package "architecture.cra.gipssolution"
-import "http://www.eclipse.org/emf/2002/Ecore"
-// import a metamodel here
+import "platform:/resource/ArchitectureCRA/model/architectureCRA.ecore"
 
 config {  
-	solver := GLPK [home:="fu", license:="bar"];
-	launchConfig := true [main := "TODO"];
-	timeLimit := true [value := 42.0];
-	randomSeed := true [value := 73];
+	solver := GUROBI [home:="fu", license:="bar"];
+	timeLimit := true [value := 3600.0];
+	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.00001];
 }
 
-// specify an example rule
-rule exampleRule {
-	clazz : EClass {
-		++ -eAllOperations -> op
+//
+// Utilities for embedding a single attribute or a single method
+//
+
+pattern findSingleAttribute {
+	a : Attribute
+}
+
+rule embedACTuple {
+	a : Attribute
+	c : Class {
+		++ - encapsulates -> a
 	}
-	
-	op : EOperation
 }
 
-// create a mapping on the rule
-mapping mapNode with exampleRule;
-
-// create a constraint on one class
-constraint -> class::EOperation {
-	mappings.mapNode->filter(m | m.nodes().clazz.^abstract)->count() > self.lowerBound
+pattern findSingleMethod {
+	m : Method
 }
 
-// create an objective for the mapping
-objective nodeObj -> mapping::mapNode {
-	self.nodes().op.upperBound * sin(73)
+rule embedMCTuple {
+	m : Method
+	c : Class {
+		++ - encapsulates -> m
+	}
 }
 
-// create an overall objective
+mapping embedMethod with embedMCTuple;
+
+// every method must be embedded
+constraint -> pattern::findSingleMethod {
+	mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m)->count() == 1
+}
+
+mapping embedAttribute with embedACTuple;
+
+// every attribute must be embedded
+constraint -> pattern::findSingleAttribute {
+	mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a)->count() == 1
+}
+
+//
+// Violation of type A:
+// a method has a dependency to an attribute which should be mapped to a different class than the method
+//
+
+pattern findViolationA {
+	c1 : Class
+	c2 : Class
+	a1 : Attribute
+	m1 : Method {
+		- dataDependency -> a1
+	}
+}
+
+mapping violationA with findViolationA;
+
+constraint -> pattern::findViolationA {
+	// workaround for == in <=> constraints
+	mappings.violationA->filter(
+		m | m.nodes().a1 == self.nodes().a1
+		& m.nodes().m1 == self.nodes().m1
+		& m.nodes().c1 == self.nodes().c1
+		& m.nodes().c2 == self.nodes().c2
+	)->count() >= 1
+	<=>
+	[
+		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a1 & m.nodes().c == self.nodes().c1)->count() >= 1
+		&
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c2)->count() >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+objective objViolationA -> mapping::violationA {
+	1
+}
+
+//
+// Violation of type B:
+// two methods with no common attribute dependency should not be placed in the same class
+//
+
+//pattern findViolationB {
+//	c1 : Clazz
+//	m1 : Method
+//	m2 : Method
+//}
+//when twoMethodsWithNoSharingAttribute
+//
+//condition twoMethodsWithNoSharingAttribute = forbid findAMMCQuadruple
+//pattern findAMMCQuadruple {
+//	c1 : Clazz
+//	a1 : Attribute
+//	m1 : Method {
+//		- dependencies -> a1
+//	}
+//	m2 : Method {
+//		- dependencies -> a1
+//	}
+//}
+//
+//mapping violationB with findViolationB;
+//
+//constraint -> pattern::findViolationB {
+//	// workaround for == in <=> constraints
+//	mappings.violationB->filter(
+//		m | m.nodes().m1 == self.nodes().m1
+//		& m.nodes().m2 == self.nodes().m2
+//	)->count() >= 1
+//	<=>
+//	[
+//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c1)->count() >= 1
+//		&
+//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m2 & m.nodes().c == self.nodes().c1)->count() >= 1
+//	]
+//	// TODO: reformulate this with a more efficient constraint
+//}
+//
+//objective objViolationB -> mapping::violationB {
+//	1
+//}
+
+////
+//// Honor pre-existing mappings
+////
+//
+//pattern findPrevEmbTupleAttr {
+//	c : Clazz {
+//		- features -> a
+//	}
+//	a : Attribute
+//}
+//
+//pattern findPrevEmbTupleMeth {
+//	c : Clazz {
+//		- features -> m
+//	}
+//	m : Method
+//}
+//
+//// motivate the solver to chose the same embedding as before (attributes)
+//objective objExistAttrMap -> pattern::findPrevEmbTupleAttr {
+//	mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count()
+//}
+//
+//// motivate the solver to chose the same embedding as before (methods)
+//objective objExistMethMap -> pattern::findPrevEmbTupleMeth {
+//	mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count()
+//}
+
+// minimize the number of violations
 global objective : min {
-	2 * nodeObj
+	objViolationA
+//	+ objViolationB
+//	- 0.001 * objExistAttrMap
+//	- 0.001 * objExistMethMap
 }
