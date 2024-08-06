@@ -26,9 +26,11 @@ public class CraExampleRunner {
 
 		final String projectFolder = System.getProperty("user.dir");
 		final String instancesFolder = projectFolder + "/instances";
-		final String scenarioName = "TTC_InputRDG_A";
+		final String scenarioName = "TTC_InputRDG_B";
+//		final String scenarioName = "ViolationC";
 		final String file = projectFolder + "/../../TGG-3.0-Prototype/RefactoringAC/resources/architecture/"
 				+ scenarioName + ".xmi";
+//		final String file = projectFolder + "/../../TGG-3.0-Prototype/ArchitectureCRA/" + scenarioName + ".xmi";
 		final URI uri = URI.createFileURI(file);
 
 		final ResourceSet rs = new ResourceSetImpl();
@@ -116,6 +118,27 @@ public class CraExampleRunner {
 			}
 		});
 		gipsApi.getEmbedMethod().applyNonZeroMappings();
+
+		System.out.println("ViolationC Mappings: ");
+		gipsApi.getViolationC().getMappings().forEach((k, v) -> {
+//			if(v.getValue() == 1) {
+			System.out.println("ViolationC : " + v.getValue());
+//			}
+		});
+
+//		System.out.println("PositiveC Mappings: ");
+//		gipsApi.getPositiveC().getMappings().forEach((k, v) -> {
+////			if(v.getValue() == 1) {
+//			System.out.println("PositiveC : " + v.getValue());
+////			}
+//		});
+//
+//		System.out.println("ViolationD1 Mappings: ");
+//		gipsApi.getViolationD1().getMappings().forEach((k, v) -> {
+////			if(v.getValue() == 1) {
+//			System.out.println("ViolationD1 : " + v.getValue());
+////			}
+//		});
 
 		// Remove all empty classes (i.e., classes without an applied mapping)
 		ArchitectureUtil.postProcess(gipsApi.getEMoflonAPI().getModel().getResources().get(0), false);
