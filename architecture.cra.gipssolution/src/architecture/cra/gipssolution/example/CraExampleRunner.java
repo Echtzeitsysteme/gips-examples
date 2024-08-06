@@ -61,7 +61,7 @@ public class CraExampleRunner {
 //		gipsApi.init(rs);
 		gipsApi.init(absPath);
 
-		gipsApi.update();
+//		gipsApi.update();
 //		var test = gipsApi.getEMoflonAPI().getInterpreter().getMatches();
 
 		// Solve
@@ -82,22 +82,22 @@ public class CraExampleRunner {
 //		// TODO: Sysouts for Violation C
 //		// TODO: Sysouts for Violation D1
 //		// TODO: Sysouts for Violation D2
-//
-//		System.out.println("Embeddings (Attributes): ");
-//		gipsApi.getEmbedAttribute().getMappings().forEach((k, v) -> {
-//			if (v.getValue() == 1) {
-//				System.out.println("  " + v.getMatch().getA().getName() + " -> " + v.getMatch().getC().getName());
-//			}
-//		});
-//		gipsApi.getEmbedAttribute().applyNonZeroMappings();
-//
-//		System.out.println("Embeddings (Methods): ");
-//		gipsApi.getEmbedMethod().getMappings().forEach((k, v) -> {
-//			if (v.getValue() == 1) {
-//				System.out.println("  " + v.getMatch().getM().getName() + " -> " + v.getMatch().getC().getName());
-//			}
-//		});
-//		gipsApi.getEmbedMethod().applyNonZeroMappings();
+
+		System.out.println("Embeddings (Attributes): ");
+		gipsApi.getEmbedAttribute().getMappings().forEach((k, v) -> {
+			if (v.getValue() == 1) {
+				System.out.println("  " + v.getMatch().getA().getName() + " -> " + v.getMatch().getC().getName());
+			}
+		});
+		gipsApi.getEmbedAttribute().applyNonZeroMappings();
+
+		System.out.println("Embeddings (Methods): ");
+		gipsApi.getEmbedMethod().getMappings().forEach((k, v) -> {
+			if (v.getValue() == 1) {
+				System.out.println("  " + v.getMatch().getM().getName() + " -> " + v.getMatch().getC().getName());
+			}
+		});
+		gipsApi.getEmbedMethod().applyNonZeroMappings();
 
 		// Remove all empty classes (i.e., classes without an applied mapping)
 		ArchitectureUtil.postProcess(gipsApi.getEMoflonAPI().getModel().getResources().get(0), false);

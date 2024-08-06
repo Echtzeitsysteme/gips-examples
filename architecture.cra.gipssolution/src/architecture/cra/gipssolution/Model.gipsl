@@ -56,38 +56,38 @@ constraint -> pattern::findSingleAttribute {
 // Violation of type A:
 // a method `m` has a dependency to an attribute `a` which should be mapped to a different class than the method `m`
 //
-//
-//pattern findViolationA {
-//	c1 : Class
-//	c2 : Class
-//	a1 : Attribute
-//	m1 : Method {
-//		- dataDependency -> a1
-//	}
-//}
-//
-//mapping violationA with findViolationA;
 
-//constraint -> pattern::findViolationA {
-//	// workaround for == in <=> constraints
-//	mappings.violationA->filter(
-//		m | m.nodes().a1 == self.nodes().a1
-//		& m.nodes().m1 == self.nodes().m1
-//		& m.nodes().c1 == self.nodes().c1
-//		& m.nodes().c2 == self.nodes().c2
-//	)->count() >= 1
-//	<=>
-//	[
-//		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a1 & m.nodes().c == self.nodes().c1)->count() >= 1
-//		&
-//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c2)->count() >= 1
-//	]
-//	// TODO: reformulate this with a more efficient constraint
-//}
-//
-//objective objViolationA -> mapping::violationA {
-//	1
-//}
+pattern findViolationA {
+	c1 : Clazz
+	c2 : Clazz
+	a1 : Attribute
+	m1 : Method {
+		- dataDependency -> a1
+	}
+}
+
+mapping violationA with findViolationA;
+
+constraint -> pattern::findViolationA {
+	// workaround for == in <=> constraints
+	mappings.violationA->filter(
+		m | m.nodes().a1 == self.nodes().a1
+		& m.nodes().m1 == self.nodes().m1
+		& m.nodes().c1 == self.nodes().c1
+		& m.nodes().c2 == self.nodes().c2
+	)->count() >= 1
+	<=>
+	[
+		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a1 & m.nodes().c == self.nodes().c1)->count() >= 1
+		&
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c2)->count() >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+objective objViolationA -> mapping::violationA {
+	1
+}
 
 //
 // Violation of type B:
@@ -139,113 +139,113 @@ constraint -> pattern::findSingleAttribute {
 // a method `a` has a dependency to a method `b` which should be mapped to a different class than the method `a`
 //
 
-//pattern findViolationC {
-//	c1 : Class
-//	c2 : Class
-//	m1 : Method {
-//		- functionalDependency -> m2
-//	}
-//	m2 : Method
-//}
-//
-//mapping violationC with findViolationC;
-//
-////constraint -> pattern::findViolationC {
-//	// workaround for == in <=> constraints
-//	mappings.violationC->filter(
-//		m | m.nodes().m1 == self.nodes().m1
-//		& m.nodes().m2 == self.nodes().m2
-//		& m.nodes().c1 == self.nodes().c1
-//		& m.nodes().c2 == self.nodes().c2
-//	)->count() >= 1
-//	<=>
-//	[
-//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c1)->count() >= 1
-//		&
-//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m2 & m.nodes().c == self.nodes().c2)->count() >= 1
-//	]
-//	// TODO: reformulate this with a more efficient constraint
-//}
-//
-//objective objViolationC -> mapping::violationC {
-//	1
-//}
+pattern findViolationC {
+	c1 : Clazz
+	c2 : Clazz
+	m1 : Method {
+		- functionalDependency -> m2
+	}
+	m2 : Method
+}
+
+mapping violationC with findViolationC;
+
+constraint -> pattern::findViolationC {
+	// workaround for == in <=> constraints
+	mappings.violationC->filter(
+		m | m.nodes().m1 == self.nodes().m1
+		& m.nodes().m2 == self.nodes().m2
+		& m.nodes().c1 == self.nodes().c1
+		& m.nodes().c2 == self.nodes().c2
+	)->count() >= 1
+	<=>
+	[
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c1)->count() >= 1
+		&
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m2 & m.nodes().c == self.nodes().c2)->count() >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+objective objViolationC -> mapping::violationC {
+	1
+}
 
 //
 // Violation of type D1:
 // a method 'a' has no dependency to a method 'b' which both should be mapped to the same class
 //
 
-//pattern findViolationD1 {
-//	c : Class
-//	m1 : Method {
-//		- functionalDependency -> m2
-//	}
-//	m2 : Method
-//}
-//
-//mapping violationD1 with findViolationD1;
-//
-//constraint -> pattern::findViolationD1 {
-//	// workaround for == in <=> constraints
-//	mappings.violationD1->filter(
-//		m | m.nodes().m1 == self.nodes().m1
-//		& m.nodes().m2 == self.nodes().m2
-//		& m.nodes().c == self.nodes().c
-//	)->count() >= 1
-//	<=>
-//	[
-//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c)->count() >= 1
-//		&
-//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m2 & m.nodes().c == self.nodes().c)->count() >= 1
-//	]
-//	// TODO: reformulate this with a more efficient constraint
-//}
-//
-//objective objViolationD1 -> mapping::violationD1 {
-//	1
-//}
+pattern findViolationD1 {
+	c : Clazz
+	m1 : Method {
+		- functionalDependency -> m2
+	}
+	m2 : Method
+}
+
+mapping violationD1 with findViolationD1;
+
+constraint -> pattern::findViolationD1 {
+	// workaround for == in <=> constraints
+	mappings.violationD1->filter(
+		m | m.nodes().m1 == self.nodes().m1
+		& m.nodes().m2 == self.nodes().m2
+		& m.nodes().c == self.nodes().c
+	)->count() >= 1
+	<=>
+	[
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c)->count() >= 1
+		&
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m2 & m.nodes().c == self.nodes().c)->count() >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+objective objViolationD1 -> mapping::violationD1 {
+	1
+}
 
 //
 // Violation of type D2:
 // a method 'a' has no dependency to an attribute 'b' which both should be mapped to the same class
 //
 
-//pattern findViolationD2 {
-//	c : Class
-//	m : Method {
-//		- dataDependency -> a
-//	}
-//	a : Attribute
-//}
-//
-//mapping violationD2 with findViolationD2;
-//
-//constraint -> pattern::findViolationD2 {
-//	// workaround for == in <=> constraints
-//	mappings.violationD2->filter(
-//		m | m.nodes().m == self.nodes().m
-//		& m.nodes().a == self.nodes().a
-//		& m.nodes().c == self.nodes().c
-//	)->count() >= 1
-//	<=>
-//	[
-//		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
-//		&
-//		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count() >= 1
-//	]
-//	// TODO: reformulate this with a more efficient constraint
-//}
-//
-//objective objViolationD2 -> mapping::violationD2 {
-//	1
-//}
+pattern findViolationD2 {
+	c : Clazz
+	m : Method {
+		- dataDependency -> a
+	}
+	a : Attribute
+}
+
+mapping violationD2 with findViolationD2;
+
+constraint -> pattern::findViolationD2 {
+	// workaround for == in <=> constraints
+	mappings.violationD2->filter(
+		m | m.nodes().m == self.nodes().m
+		& m.nodes().a == self.nodes().a
+		& m.nodes().c == self.nodes().c
+	)->count() >= 1
+	<=>
+	[
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
+		&
+		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count() >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+objective objViolationD2 -> mapping::violationD2 {
+	1
+}
 
 // minimize the number of violations
-//global objective : min {
-//	objViolationA
+global objective : min {
+	objViolationA
 ////	+ objViolationB
-////	+ objViolationC
-////	+ objViolationD1
-////	+ objViolationD2
-//}
+	+ objViolationC
+	+ objViolationD1
+	+ objViolationD2
+}
