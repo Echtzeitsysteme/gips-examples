@@ -174,48 +174,76 @@ objective objViolationC -> mapping::violationC {
 // a method 'a' has no dependency to a method 'b' which both should be mapped to the same class
 //
 
-// TODO
+pattern findViolationD1 {
+	c : Class
+	m1 : Method {
+		- functionalDependency -> m2
+	}
+	m2 : Method
+}
+
+mapping violationD1 with findViolationD1;
+
+constraint -> pattern::findViolationD1 {
+	// workaround for == in <=> constraints
+	mappings.violationD1->filter(
+		m | m.nodes().m1 == self.nodes().m1
+		& m.nodes().m2 == self.nodes().m2
+		& m.nodes().c == self.nodes().c
+	)->count() >= 1
+	<=>
+	[
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m1 & m.nodes().c == self.nodes().c)->count() >= 1
+		&
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m2 & m.nodes().c == self.nodes().c)->count() >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+objective objViolationD1 -> mapping::violationD1 {
+	1
+}
 
 //
 // Violation of type D2:
 // a method 'a' has no dependency to an attribute 'b' which both should be mapped to the same class
 //
 
-// TODO
+pattern findViolationD2 {
+	c : Class
+	m : Method {
+		- dataDependency -> a
+	}
+	a : Attribute
+}
 
-////
-//// Honor pre-existing mappings
-////
-//
-//pattern findPrevEmbTupleAttr {
-//	c : Clazz {
-//		- features -> a
-//	}
-//	a : Attribute
-//}
-//
-//pattern findPrevEmbTupleMeth {
-//	c : Clazz {
-//		- features -> m
-//	}
-//	m : Method
-//}
-//
-//// motivate the solver to chose the same embedding as before (attributes)
-//objective objExistAttrMap -> pattern::findPrevEmbTupleAttr {
-//	mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count()
-//}
-//
-//// motivate the solver to chose the same embedding as before (methods)
-//objective objExistMethMap -> pattern::findPrevEmbTupleMeth {
-//	mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count()
-//}
+mapping violationD2 with findViolationD2;
+
+constraint -> pattern::findViolationD2 {
+	// workaround for == in <=> constraints
+	mappings.violationD2->filter(
+		m | m.nodes().m == self.nodes().m
+		& m.nodes().a == self.nodes().a
+		& m.nodes().c == self.nodes().c
+	)->count() >= 1
+	<=>
+	[
+		mappings.embedMethod->filter(m | m.nodes().m == self.nodes().m & m.nodes().c == self.nodes().c)->count() >= 1
+		&
+		mappings.embedAttribute->filter(m | m.nodes().a == self.nodes().a & m.nodes().c == self.nodes().c)->count() >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+objective objViolationD2 -> mapping::violationD2 {
+	1
+}
 
 // minimize the number of violations
 global objective : min {
 	objViolationA
 //	+ objViolationB
-//	- 0.001 * objExistAttrMap
-//	- 0.001 * objExistMethMap
 	+ objViolationC
+	+ objViolationD1
+	+ objViolationD2
 }
