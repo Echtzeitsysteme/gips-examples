@@ -28,10 +28,10 @@ public class ArchitectureUtil {
 			if (feature.getIsEncapsulatedBy() != null)
 				continue;
 
-			var newClass = ArchitectureCRAFactory.eINSTANCE.createClass();
+			var newClass = ArchitectureCRAFactory.eINSTANCE.createClazz();
 			newClass.setName("c_" + feature.getName());
 			model.getClasses().add(newClass);
-			newClass.getEncapsulates().add(feature);
+//			newClass.getEncapsulates().add(feature);
 		}
 	}
 
