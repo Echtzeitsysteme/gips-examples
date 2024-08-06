@@ -5,15 +5,20 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 
 import architecture.cra.gipssolution.api.gips.GipssolutionGipsAPI;
+import architecture.cra.gipssolution.utils.external.ArchitectureUtil;
+import architecture.util.CRAIndexCalculator;
+import architectureCRA.ClassModel;
 
 public class CraExampleRunner {
 
 	public static void main(final String[] args) {
 		final GipssolutionGipsAPI gipsApi = new GipssolutionGipsAPI();
 
+		// Load a XMI model
 		final String projectFolder = System.getProperty("user.dir");
 		final String instancesFolder = projectFolder + "/instances";
 		final String scenarioName = "TTC_InputRDG_A";
@@ -22,6 +27,11 @@ public class CraExampleRunner {
 		final URI uri = URI.createFileURI(file);
 		gipsApi.init(uri);
 
+		// Create empty classes in the model
+		final Resource model = gipsApi.getEMoflonAPI().getModel().getResources().get(0);
+		ArchitectureUtil.preProcess(model);
+
+		// Solve
 		gipsApi.buildILPProblem(true);
 		final ILPSolverOutput output = gipsApi.solveILPProblem();
 		if (output.solutionCount() == 0) {
@@ -56,6 +66,13 @@ public class CraExampleRunner {
 		});
 		gipsApi.getEmbedMethod().applyNonZeroMappings();
 
+		// Remove all empty classes (i.e., classes without an applied mapping)
+		ArchitectureUtil.postProcess(model, false);
+
+		// Evaluate model (with the `CRAIndexCalculator`
+		CRAIndexCalculator.evaluateModel((ClassModel) model.getContents().get(0));
+
+		// Save model to XMI file
 		final String outputFile = instancesFolder + "/" + scenarioName + "_solved.xmi";
 		try {
 			Files.createDirectories(Paths.get(instancesFolder));
@@ -64,6 +81,7 @@ public class CraExampleRunner {
 			e.printStackTrace();
 		}
 
+		// The end
 		gipsApi.terminate();
 		java.lang.System.exit(0);
 	}
