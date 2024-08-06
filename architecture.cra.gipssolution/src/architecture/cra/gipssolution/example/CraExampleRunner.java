@@ -20,7 +20,10 @@ import architectureCRA.ClassModel;
 public class CraExampleRunner {
 
 	public static void main(final String[] args) {
+		//
 		// Load a XMI model
+		//
+
 		final String projectFolder = System.getProperty("user.dir");
 		final String instancesFolder = projectFolder + "/instances";
 		final String scenarioName = "TTC_InputRDG_A";
@@ -35,11 +38,18 @@ public class CraExampleRunner {
 		rs.getPackageRegistry().put(ArchitectureCRAPackage.eINSTANCE.getNsURI(), ArchitectureCRAPackage.eINSTANCE);
 		rs.getResource(uri, true);
 
+		//
 		// Create empty classes in the model
+		//
+
 		ArchitectureUtil.preProcess(rs.getResources().get(0));
 
+		//
+		// Write changed model to file
+		//
+
 		// Workaround: Always use absolute path
-		final URI absPath = URI.createFileURI(System.getProperty("user.dir") + "/" + "test.xmi");
+		final URI absPath = URI.createFileURI(System.getProperty("user.dir") + "/" + "preprocessed.xmi");
 
 		// Create new model for saving
 		final ResourceSet rs2 = new ResourceSetImpl();
@@ -54,9 +64,10 @@ public class CraExampleRunner {
 			e.printStackTrace();
 		}
 
-//		System.exit(1);
-
+		//
 		// Init GIPS API
+		//
+
 		GipssolutionGipsAPI gipsApi = new GipssolutionGipsAPI();
 //		gipsApi.init(rs);
 		gipsApi.init(absPath);
@@ -64,7 +75,10 @@ public class CraExampleRunner {
 //		gipsApi.update();
 //		var test = gipsApi.getEMoflonAPI().getInterpreter().getMatches();
 
+		//
 		// Solve
+		//
+
 		gipsApi.buildILPProblem(true);
 		final ILPSolverOutput output = gipsApi.solveILPProblem();
 		if (output.solutionCount() == 0) {
@@ -73,6 +87,10 @@ public class CraExampleRunner {
 		System.out.println("=> Objective value: " + output.objectiveValue());
 
 		System.out.println("---");
+
+		//
+		// Evaluation
+		//
 
 //		System.out.println("Violation Mappings: ");
 //		gipsApi.getViolationA().getMappings().forEach((k, v) -> {
@@ -106,8 +124,12 @@ public class CraExampleRunner {
 		CRAIndexCalculator.evaluateModel(
 				(ClassModel) gipsApi.getEMoflonAPI().getModel().getResources().get(0).getContents().get(0));
 
+		//
 		// Save model to XMI file
-		final String outputFile = instancesFolder + "/" + scenarioName + "_solved.xmi";
+		//
+
+//		final String outputFile = instancesFolder + "/" + scenarioName + "_solved.xmi";
+		final String outputFile = "./solved.xmi";
 		try {
 			Files.createDirectories(Paths.get(instancesFolder));
 			gipsApi.saveResult(outputFile);
@@ -115,7 +137,10 @@ public class CraExampleRunner {
 			e.printStackTrace();
 		}
 
+		//
 		// The end
+		//
+
 		gipsApi.terminate();
 		java.lang.System.exit(0);
 	}
