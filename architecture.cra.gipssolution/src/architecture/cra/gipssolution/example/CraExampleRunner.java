@@ -26,7 +26,7 @@ public class CraExampleRunner {
 
 		final String projectFolder = System.getProperty("user.dir");
 		final String instancesFolder = projectFolder + "/instances";
-		final String scenarioName = "TTC_InputRDG_C";
+		final String scenarioName = "TTC_InputRDG_B";
 //		final String scenarioName = "ViolationC";
 		final String file = projectFolder + "/../../TGG-3.0-Prototype/RefactoringAC/resources/architecture/"
 				+ scenarioName + ".xmi";
@@ -94,15 +94,6 @@ public class CraExampleRunner {
 		// Evaluation
 		//
 
-//		System.out.println("Violation Mappings: ");
-//		gipsApi.getViolationA().getMappings().forEach((k, v) -> {
-//			System.out.println(v.getValue() + ": " + v.getA1().getName() + " -> " + v.getC1().getName() + "; "
-//					+ v.getM1().getName() + " -> " + v.getC2().getName());
-//		});
-//		// TODO: Sysouts for Violation C
-//		// TODO: Sysouts for Violation D1
-//		// TODO: Sysouts for Violation D2
-
 		System.out.println("Embeddings (Attributes): ");
 		gipsApi.getEmbedAttribute().getMappings().forEach((k, v) -> {
 			if (v.getValue() == 1) {
@@ -118,27 +109,55 @@ public class CraExampleRunner {
 			}
 		});
 		gipsApi.getEmbedMethod().applyNonZeroMappings();
+		
+		System.out.println("---");
 
-		System.out.println("ViolationC Mappings: ");
-		gipsApi.getViolationC().getMappings().forEach((k, v) -> {
-//			if(v.getValue() == 1) {
-			System.out.println("ViolationC : " + v.getValue());
-//			}
-		});
+		// Violation A counter
+		int mappingCounter = 0;
+		for (var k : gipsApi.getViolationA().getMappings().keySet()) {
+			if (gipsApi.getViolationA().getMappings().get(k).getValue() == 1) {
+				mappingCounter++;
+			}
+		}
+		System.out.println("ViolationA Counter:  " + mappingCounter);
 
-//		System.out.println("PositiveC Mappings: ");
-//		gipsApi.getPositiveC().getMappings().forEach((k, v) -> {
-////			if(v.getValue() == 1) {
-//			System.out.println("PositiveC : " + v.getValue());
-////			}
-//		});
-//
-//		System.out.println("ViolationD1 Mappings: ");
-//		gipsApi.getViolationD1().getMappings().forEach((k, v) -> {
-////			if(v.getValue() == 1) {
-//			System.out.println("ViolationD1 : " + v.getValue());
-////			}
-//		});
+		// Violation C counter
+		mappingCounter = 0;
+		for (var k : gipsApi.getViolationC().getMappings().keySet()) {
+			if (gipsApi.getViolationC().getMappings().get(k).getValue() == 1) {
+				mappingCounter++;
+			}
+		}
+		System.out.println("ViolationC Counter:  " + mappingCounter);
+
+		// Positive C counter
+		mappingCounter = 0;
+		for (var k : gipsApi.getPositiveC().getMappings().keySet()) {
+			if (gipsApi.getPositiveC().getMappings().get(k).getValue() == 1) {
+				mappingCounter++;
+			}
+		}
+		System.out.println("PositiveC Counter:   " + mappingCounter);
+
+		// Violation D1 counter
+		mappingCounter = 0;
+		for (var k : gipsApi.getViolationD1().getMappings().keySet()) {
+			if (gipsApi.getViolationD1().getMappings().get(k).getValue() == 1) {
+				mappingCounter++;
+			}
+		}
+		System.out.println("ViolationD1 Counter: " + mappingCounter);
+
+		// Violation D2 counter
+		mappingCounter = 0;
+		for (var k : gipsApi.getViolationD2().getMappings().keySet()) {
+			if (gipsApi.getViolationD2().getMappings().get(k).getValue() == 1) {
+				mappingCounter++;
+			}
+		}
+		System.out.println("ViolationD2 Counter: " + mappingCounter);
+		
+		System.out.println("---");
 
 		// Remove all empty classes (i.e., classes without an applied mapping)
 		ArchitectureUtil.postProcess(gipsApi.getEMoflonAPI().getModel().getResources().get(0), false);
