@@ -26,7 +26,7 @@ public class CraExampleRunner {
 
 		final String projectFolder = System.getProperty("user.dir");
 		final String instancesFolder = projectFolder + "/instances";
-		final String scenarioName = "TTC_InputRDG_B";
+		final String scenarioName = "TTC_InputRDG_C";
 //		final String scenarioName = "ViolationC";
 		final String file = projectFolder + "/../../TGG-3.0-Prototype/RefactoringAC/resources/architecture/"
 				+ scenarioName + ".xmi";
