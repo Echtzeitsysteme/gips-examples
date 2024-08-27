@@ -315,15 +315,15 @@ objective objPositiveD2 -> mapping::positiveD2 {
 	1
 }
 
-// minimize the number of violations
-global objective : min {
-	objViolationA
-	+ objViolationC
-	+ objViolationD1
-	+ objViolationD2
+// maximize the number of positive mappings - violations
+global objective : max {
+	objPositiveC
+	+ objPositiveA
+	+ objPositiveD1
+	+ objPositiveD2
 	
-	- objPositiveC
-	- objPositiveA
-	- objPositiveD1
-	- objPositiveD2
+	- objViolationA
+	- objViolationC
+	- objViolationD1
+	- objViolationD2
 }

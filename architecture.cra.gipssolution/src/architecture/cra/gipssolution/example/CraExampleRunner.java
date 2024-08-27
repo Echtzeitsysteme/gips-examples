@@ -26,7 +26,7 @@ public class CraExampleRunner {
 
 		final String projectFolder = System.getProperty("user.dir");
 		final String instancesFolder = projectFolder + "/instances";
-		final String scenarioName = "TTC_InputRDG_B";
+		final String scenarioName = "TTC_InputRDG_A";
 //		final String scenarioName = "ViolationC";
 		final String file = projectFolder + "/../../TGG-3.0-Prototype/RefactoringAC/resources/architecture/"
 				+ scenarioName + ".xmi";
@@ -109,7 +109,7 @@ public class CraExampleRunner {
 			}
 		});
 		gipsApi.getEmbedMethod().applyNonZeroMappings();
-		
+
 		System.out.println("---");
 
 		// Violation A counter
@@ -120,6 +120,15 @@ public class CraExampleRunner {
 			}
 		}
 		System.out.println("ViolationA Counter:  " + mappingCounter);
+
+		// Positive A counter
+		mappingCounter = 0;
+		for (var k : gipsApi.getPositiveA().getMappings().keySet()) {
+			if (gipsApi.getPositiveA().getMappings().get(k).getValue() == 1) {
+				mappingCounter++;
+			}
+		}
+		System.out.println("PositiveA Counter:   " + mappingCounter);
 
 		// Violation C counter
 		mappingCounter = 0;
@@ -148,6 +157,15 @@ public class CraExampleRunner {
 		}
 		System.out.println("ViolationD1 Counter: " + mappingCounter);
 
+		// Positive D1 counter
+		mappingCounter = 0;
+		for (var k : gipsApi.getPositiveD1().getMappings().keySet()) {
+			if (gipsApi.getPositiveD1().getMappings().get(k).getValue() == 1) {
+				mappingCounter++;
+			}
+		}
+		System.out.println("PositiveD1 Counter:  " + mappingCounter);
+
 		// Violation D2 counter
 		mappingCounter = 0;
 		for (var k : gipsApi.getViolationD2().getMappings().keySet()) {
@@ -156,7 +174,16 @@ public class CraExampleRunner {
 			}
 		}
 		System.out.println("ViolationD2 Counter: " + mappingCounter);
-		
+
+		// Positive D2 counter
+		mappingCounter = 0;
+		for (var k : gipsApi.getPositiveD2().getMappings().keySet()) {
+			if (gipsApi.getPositiveD2().getMappings().get(k).getValue() == 1) {
+				mappingCounter++;
+			}
+		}
+		System.out.println("PositiveD2 Counter:  " + mappingCounter);
+
 		System.out.println("---");
 
 		// Remove all empty classes (i.e., classes without an applied mapping)
