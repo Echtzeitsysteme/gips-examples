@@ -315,6 +315,28 @@ objective objPositiveD2 -> mapping::positiveD2 {
 	1
 }
 
+//
+// Minimize the number of used classes
+//
+
+pattern findSingleClazz {
+	c : Clazz
+}
+
+mapping clazzUsed with findSingleClazz;
+
+objective oNoOfUsedClazzes -> mapping::clazzUsed {
+	self.value()
+}
+
+constraint -> class::Clazz {
+	mappings.embedAttribute->filter(m | m.nodes().c == self)->count() 
+	+ mappings.embedMethod->filter(m | m.nodes().c == self)->count()
+	== 1
+	<=>
+	mappings.clazzUsed->filter(m | m.nodes().c == self)->count() == 1
+}
+
 // maximize the number of positive mappings - violations
 global objective : max {
 	objPositiveC
@@ -326,4 +348,6 @@ global objective : max {
 	- objViolationC
 	- objViolationD1
 	- objViolationD2
+	
+	- 0.01 * oNoOfUsedClazzes
 }
