@@ -68,16 +68,17 @@ public class ArchitectureUtil {
 		var violations = 0;
 
 		for (var clazz : model.getClasses()) {
+			var numOfMethods = clazz.getEncapsulates().stream().filter(f -> f instanceof Method).count();
+			var numOfAttribtutes = clazz.getEncapsulates().size() - numOfMethods;
+			var cohesionViolations = numOfMethods * (numOfMethods - 1) + numOfMethods * numOfAttribtutes;
 			for (var feature : clazz.getEncapsulates()) {
 
 				if (feature instanceof Method method) {
-					var methodCouplingViolations = 0;
 					var methodCohesionMatches = 0;
 					// first we count coupling violations
 					for (Attribute dataDependency : method.getDataDependency()) {
 						if (!dataDependency.getIsEncapsulatedBy().equals(method.getIsEncapsulatedBy())) {
 							violations++;
-							methodCouplingViolations++;
 						} else {
 							methodCohesionMatches++;
 						}
@@ -86,19 +87,19 @@ public class ArchitectureUtil {
 					for (var functionalDependency : method.getFunctionalDependency()) {
 						if (!functionalDependency.getIsEncapsulatedBy().equals(method.getIsEncapsulatedBy())) {
 							violations++;
-							methodCouplingViolations++;
 						} else {
 							methodCohesionMatches++;
 						}
 					}
 
 					// then we count cohesion violations
-					var dependencyCount = method.getDataDependency().size() + method.getFunctionalDependency().size();
-					var cohesionViolation = dependencyCount - methodCohesionMatches;
-
-					violations += cohesionViolation;
+					cohesionViolations -= methodCohesionMatches;
 				}
+
 			}
+
+			violations += cohesionViolations;
+
 		}
 		return violations;
 	}
