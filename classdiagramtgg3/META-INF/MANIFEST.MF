@@ -4,6 +4,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: classdiagramtgg3
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
+Export-Package: org.apache.commons.cli;version="1.5.0"
 Bundle-SymbolicName: classdiagramtgg3;singleton:=true
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/commons-cli/commons-cli-1.5.0.jar,
