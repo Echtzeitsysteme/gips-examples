@@ -111,6 +111,8 @@ public class CraExampleRunner {
 		gipsApi.getEmbedMethod().applyNonZeroMappings();
 
 		System.out.println("---");
+		
+		int globalViolationsCounter = 0;
 
 		// Violation A counter
 		int mappingCounter = 0;
@@ -120,15 +122,16 @@ public class CraExampleRunner {
 			}
 		}
 		System.out.println("ViolationA Counter:  " + mappingCounter);
+		globalViolationsCounter += mappingCounter;
 
-		// Positive A counter
-		mappingCounter = 0;
-		for (var k : gipsApi.getPositiveA().getMappings().keySet()) {
-			if (gipsApi.getPositiveA().getMappings().get(k).getValue() == 1) {
-				mappingCounter++;
-			}
-		}
-		System.out.println("PositiveA Counter:   " + mappingCounter);
+//		// Positive A counter
+//		mappingCounter = 0;
+//		for (var k : gipsApi.getPositiveA().getMappings().keySet()) {
+//			if (gipsApi.getPositiveA().getMappings().get(k).getValue() == 1) {
+//				mappingCounter++;
+//			}
+//		}
+//		System.out.println("PositiveA Counter:   " + mappingCounter);
 
 		// Violation C counter
 		mappingCounter = 0;
@@ -138,15 +141,16 @@ public class CraExampleRunner {
 			}
 		}
 		System.out.println("ViolationC Counter:  " + mappingCounter);
+		globalViolationsCounter += mappingCounter;
 
-		// Positive C counter
-		mappingCounter = 0;
-		for (var k : gipsApi.getPositiveC().getMappings().keySet()) {
-			if (gipsApi.getPositiveC().getMappings().get(k).getValue() == 1) {
-				mappingCounter++;
-			}
-		}
-		System.out.println("PositiveC Counter:   " + mappingCounter);
+//		// Positive C counter
+//		mappingCounter = 0;
+//		for (var k : gipsApi.getPositiveC().getMappings().keySet()) {
+//			if (gipsApi.getPositiveC().getMappings().get(k).getValue() == 1) {
+//				mappingCounter++;
+//			}
+//		}
+//		System.out.println("PositiveC Counter:   " + mappingCounter);
 
 		// Violation D1 counter
 		mappingCounter = 0;
@@ -156,15 +160,16 @@ public class CraExampleRunner {
 			}
 		}
 		System.out.println("ViolationD1 Counter: " + mappingCounter);
+		globalViolationsCounter += mappingCounter;
 
-		// Positive D1 counter
-		mappingCounter = 0;
-		for (var k : gipsApi.getPositiveD1().getMappings().keySet()) {
-			if (gipsApi.getPositiveD1().getMappings().get(k).getValue() == 1) {
-				mappingCounter++;
-			}
-		}
-		System.out.println("PositiveD1 Counter:  " + mappingCounter);
+//		// Positive D1 counter
+//		mappingCounter = 0;
+//		for (var k : gipsApi.getPositiveD1().getMappings().keySet()) {
+//			if (gipsApi.getPositiveD1().getMappings().get(k).getValue() == 1) {
+//				mappingCounter++;
+//			}
+//		}
+//		System.out.println("PositiveD1 Counter:  " + mappingCounter);
 
 		// Violation D2 counter
 		mappingCounter = 0;
@@ -174,15 +179,16 @@ public class CraExampleRunner {
 			}
 		}
 		System.out.println("ViolationD2 Counter: " + mappingCounter);
+		globalViolationsCounter += mappingCounter;
 
-		// Positive D2 counter
-		mappingCounter = 0;
-		for (var k : gipsApi.getPositiveD2().getMappings().keySet()) {
-			if (gipsApi.getPositiveD2().getMappings().get(k).getValue() == 1) {
-				mappingCounter++;
-			}
-		}
-		System.out.println("PositiveD2 Counter:  " + mappingCounter);
+//		// Positive D2 counter
+//		mappingCounter = 0;
+//		for (var k : gipsApi.getPositiveD2().getMappings().keySet()) {
+//			if (gipsApi.getPositiveD2().getMappings().get(k).getValue() == 1) {
+//				mappingCounter++;
+//			}
+//		}
+//		System.out.println("PositiveD2 Counter:  " + mappingCounter);
 
 		System.out.println("---");
 
@@ -197,7 +203,8 @@ public class CraExampleRunner {
 		final ClassModel cm = (ClassModel) gipsApi.getEMoflonApp().getModel().getResources().get(0).getContents().get(0);
 		final int violationsCounter = ArchitectureUtil.countViolations(cm);
 		System.out.println("---");
-		System.out.println("#violations: " + violationsCounter);
+		System.out.println("#violations (lars): " + violationsCounter);
+		System.out.println("#violations (max) : " + globalViolationsCounter);
 		System.out.println("---");
 
 		//
