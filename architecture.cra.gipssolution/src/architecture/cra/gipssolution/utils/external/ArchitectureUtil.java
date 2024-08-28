@@ -7,7 +7,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.smartemf.runtime.util.SmartEMFUtil;
 
 import architectureCRA.ArchitectureCRAFactory;
+import architectureCRA.Attribute;
 import architectureCRA.ClassModel;
+import architectureCRA.Method;
 
 /**
  * 
@@ -60,6 +62,45 @@ public class ArchitectureUtil {
 	public static int countModelElements(Resource resource) {
 		ClassModel model = (ClassModel) resource.getContents().get(0);
 		return model.getClasses().size() + model.getFeatures().size();
+	}
+
+	public static int countViolations(ClassModel model) {
+		var violations = 0;
+
+		for (var clazz : model.getClasses()) {
+			for (var feature : clazz.getEncapsulates()) {
+
+				if (feature instanceof Method method) {
+					var methodCouplingViolations = 0;
+					var methodCohesionMatches = 0;
+					// first we count coupling violations
+					for (Attribute dataDependency : method.getDataDependency()) {
+						if (!dataDependency.getIsEncapsulatedBy().equals(method.getIsEncapsulatedBy())) {
+							violations++;
+							methodCouplingViolations++;
+						} else {
+							methodCohesionMatches++;
+						}
+					}
+
+					for (var functionalDependency : method.getFunctionalDependency()) {
+						if (!functionalDependency.getIsEncapsulatedBy().equals(method.getIsEncapsulatedBy())) {
+							violations++;
+							methodCouplingViolations++;
+						} else {
+							methodCohesionMatches++;
+						}
+					}
+
+					// then we count cohesion violations
+					var dependencyCount = method.getDataDependency().size() + method.getFunctionalDependency().size();
+					var cohesionViolation = dependencyCount - methodCohesionMatches;
+
+					violations += cohesionViolation;
+				}
+			}
+		}
+		return violations;
 	}
 
 }

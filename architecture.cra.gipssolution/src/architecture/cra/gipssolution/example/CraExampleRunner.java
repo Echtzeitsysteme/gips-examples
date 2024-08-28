@@ -192,6 +192,13 @@ public class CraExampleRunner {
 		// Evaluate model (with the `CRAIndexCalculator`
 		CRAIndexCalculator.evaluateModel(
 				(ClassModel) gipsApi.getEMoflonAPI().getModel().getResources().get(0).getContents().get(0));
+		
+		// Evaluate model (with the violations counter by Lars)
+		final ClassModel cm = (ClassModel) gipsApi.getEMoflonApp().getModel().getResources().get(0).getContents().get(0);
+		final int violationsCounter = ArchitectureUtil.countViolations(cm);
+		System.out.println("---");
+		System.out.println("#violations: " + violationsCounter);
+		System.out.println("---");
 
 		//
 		// Save model to XMI file
