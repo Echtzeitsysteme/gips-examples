@@ -26,7 +26,7 @@ public class CraExampleRunner {
 
 		final String projectFolder = System.getProperty("user.dir");
 		final String instancesFolder = projectFolder + "/instances";
-		final String scenarioName = "TTC_InputRDG_A";
+		final String scenarioName = "TTC_InputRDG_B";
 //		final String scenarioName = "ViolationC";
 		final String file = projectFolder + "/../../TGG-3.0-Prototype/RefactoringAC/resources/architecture/"
 				+ scenarioName + ".xmi";
@@ -44,7 +44,9 @@ public class CraExampleRunner {
 		// Create empty classes in the model
 		//
 
-		ArchitectureUtil.preProcess(rs.getResources().get(0));
+//		ArchitectureUtil.preProcess(rs.getResources().get(0));
+		ArchitectureUtil.preProcessHalfNumberOfClasses(rs.getResources().get(0));
+//		ArchitectureUtil.preProcessNClasses(rs.getResources().get(0), 8);
 
 		//
 		// Write changed model to file
@@ -81,6 +83,8 @@ public class CraExampleRunner {
 		// Solve
 		//
 
+		final long tick = System.nanoTime();
+		
 		gipsApi.buildILPProblem(true);
 		final ILPSolverOutput output = gipsApi.solveILPProblem();
 		if (output.solutionCount() == 0) {
@@ -89,6 +93,8 @@ public class CraExampleRunner {
 		System.out.println("=> Objective value: " + output.objectiveValue());
 
 		System.out.println("---");
+		
+		final long tock = System.nanoTime();
 
 		//
 		// Evaluation
@@ -203,8 +209,10 @@ public class CraExampleRunner {
 		final ClassModel cm = (ClassModel) gipsApi.getEMoflonApp().getModel().getResources().get(0).getContents().get(0);
 		final int violationsCounter = ArchitectureUtil.countViolations(cm);
 		System.out.println("---");
-		System.out.println("#violations (lars): " + violationsCounter);
-		System.out.println("#violations (max) : " + globalViolationsCounter);
+		System.out.println("#Violations (Lars): " + violationsCounter);
+		System.out.println("#Violations (Max) : " + globalViolationsCounter);
+		System.out.println("---");
+		System.out.println("Total solve time: " + (tock - tick) * 1.0 / 1_000_000_000 + " seconds");
 		System.out.println("---");
 
 		//

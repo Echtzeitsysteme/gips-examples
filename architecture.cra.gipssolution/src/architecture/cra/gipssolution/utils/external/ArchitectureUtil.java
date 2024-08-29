@@ -14,6 +14,7 @@ import architectureCRA.Method;
 /**
  * 
  * @author Lars Fritsche
+ * @author Maximilian Kratz
  *
  */
 public class ArchitectureUtil {
@@ -35,6 +36,33 @@ public class ArchitectureUtil {
 			model.getClasses().add(newClass);
 //			newClass.getEncapsulates().add(feature);
 		}
+	}
+
+	/**
+	 * Creates n empty classes in the given ClassModel.
+	 * 
+	 * @param resource Resource that contains the given ClassModel.
+	 * @param n        Number of classes to create.
+	 */
+	public static void preProcessNClasses(final Resource resource, final int n) {
+		final ClassModel model = (ClassModel) resource.getContents().get(0);
+
+		for (int i = 0; i < n; i++) {
+			var newClass = ArchitectureCRAFactory.eINSTANCE.createClazz();
+			newClass.setName("c_" + i);
+			model.getClasses().add(newClass);
+		}
+	}
+
+	/**
+	 * Creates half as much empty classes in the given ClassModel as there are
+	 * features.
+	 * 
+	 * @param resource Resource that contains the given ClassModel.
+	 */
+	public static void preProcessHalfNumberOfClasses(final Resource resource) {
+		final ClassModel model = (ClassModel) resource.getContents().get(0);
+		preProcessNClasses(resource, model.getFeatures().size() / 2);
 	}
 
 	/**

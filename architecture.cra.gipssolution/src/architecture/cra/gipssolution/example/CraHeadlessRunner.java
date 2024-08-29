@@ -82,7 +82,8 @@ public class CraHeadlessRunner {
 		rs.getPackageRegistry().put(ArchitectureCRAPackage.eINSTANCE.getNsURI(), ArchitectureCRAPackage.eINSTANCE);
 		rs.getResource(uri, true);
 
-		ArchitectureUtil.preProcess(rs.getResources().get(0));
+//		ArchitectureUtil.preProcess(rs.getResources().get(0));
+		ArchitectureUtil.preProcessHalfNumberOfClasses(rs.getResources().get(0));
 
 		//
 		// Write changed model to file
@@ -115,6 +116,8 @@ public class CraHeadlessRunner {
 		// Build and solve the ILP problem
 		//
 
+		final long tick = System.nanoTime();
+		
 		gipsApi.buildILPProblem(true);
 		final ILPSolverOutput output = gipsApi.solveILPProblem();
 		if (output.solutionCount() == 0) {
@@ -122,6 +125,8 @@ public class CraHeadlessRunner {
 		}
 		System.out.println("=> Objective value: " + output.objectiveValue());
 		System.out.println("---");
+		
+		final long tock = System.nanoTime();
 
 		//
 		// Evaluation
@@ -150,6 +155,9 @@ public class CraHeadlessRunner {
 		System.out.println("---");
 		System.out.println("#Violations (Lars): " + violationsCounterLars);
 		System.out.println("#Violations (Max) : " + violationsCounterGips);
+		System.out.println("---");
+		System.out.println("---");
+		System.out.println("Total solve time: " + (tock - tick) * 1.0 / 1_000_000_000 + " seconds");
 		System.out.println("---");
 
 		//
