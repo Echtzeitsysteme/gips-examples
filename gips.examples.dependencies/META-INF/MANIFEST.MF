@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dependencies
+Bundle-SymbolicName: gips.examples.dependencies
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.apache.commons.cli;version="1.5.0"
+Automatic-Module-Name: gips.examples.dependencies
+Bundle-ClassPath: lib/commons-cli/commons-cli-1.5.0.jar,
+ lib/commons-cli/commons-cli-1.5.0-javadoc.jar,
+ lib/commons-cli/commons-cli-1.5.0-sources.jar,
+ .
+Bundle-RequiredExecutionEnvironment: JavaSE-21

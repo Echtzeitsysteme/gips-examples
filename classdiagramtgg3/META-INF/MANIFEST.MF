@@ -4,17 +4,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: classdiagramtgg3
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
-Export-Package: org.apache.commons.cli;version="1.5.0"
 Bundle-SymbolicName: classdiagramtgg3;singleton:=true
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: lib/commons-cli/commons-cli-1.5.0.jar,
- lib/commons-cli/commons-cli-1.5.0-javadoc.jar,
- lib/commons-cli/commons-cli-1.5.0-sources.jar,
- .
+Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt,
  org.emoflon.gips.core,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
- ClassDiagram
+ ClassDiagram,
+ gips.examples.dependencies;bundle-version="1.0.0"
