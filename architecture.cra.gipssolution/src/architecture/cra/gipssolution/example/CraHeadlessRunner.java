@@ -1,8 +1,5 @@
 package architecture.cra.gipssolution.example;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -11,17 +8,9 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
-import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import architecture.cra.gipssolution.api.gips.GipssolutionGipsAPI;
-import architecture.cra.gipssolution.utils.external.ArchitectureUtil;
-import architecture.util.CRAIndexCalculator;
-import architectureCRA.ArchitectureCRAPackage;
-import architectureCRA.ClassModel;
 
 /**
  * Runnable headless CLI runner for the CRA assignment problem (taken from the
@@ -29,7 +18,7 @@ import architectureCRA.ClassModel;
  * 
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
-public class CraHeadlessRunner {
+public class CraHeadlessRunner extends AbstractCraRunner {
 
 	/**
 	 * XMI input file path to load a model from.
@@ -52,80 +41,40 @@ public class CraHeadlessRunner {
 	private static boolean printSolution = true;
 
 	/**
-	 * Main method to start the headless runner. String array of arguments will be
-	 * parsed.
-	 * 
-	 * @param args See {@link #parseArgs(String[])}.
+	 * Run method to start the whole headless runner.
 	 */
-	public static void main(final String[] args) {
-		parseArgs(args);
-
+	private void run() {
 		//
 		// Check if input file exists
 		//
 
-		final File xmiInputFile = new File(xmiInputPath);
-		if (!xmiInputFile.exists() || xmiInputFile.isDirectory()) {
-			throw new IllegalArgumentException("Input XMI file <" + xmiInputPath + "> could not be found.");
-		}
+		checkIfFileExists(xmiInputPath);
 
 		//
 		// Create empty classes in the model
 		//
 
-		final URI uri = URI.createFileURI(xmiInputPath);
-
-		final ResourceSet rs = new ResourceSetImpl();
-		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-
-		rs.getPackageRegistry().put(ArchitectureCRAPackage.eINSTANCE.getNsURI(), ArchitectureCRAPackage.eINSTANCE);
-		rs.getResource(uri, true);
-
-//		ArchitectureUtil.preProcess(rs.getResources().get(0));
-		ArchitectureUtil.preProcessHalfNumberOfClasses(rs.getResources().get(0));
+		final ResourceSet rs = createEmptyClasses(xmiInputPath);
 
 		//
 		// Write changed model to file
 		//
 
-		// Workaround: Always use absolute path
-		final URI absPath = URI.createFileURI(xmiPrePath);
-
-		// Create new model for saving
-		final ResourceSet rs2 = new ResourceSetImpl();
-		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl(null));
-		// ^null is okay if all paths are absolute
-		final Resource r = rs2.createResource(absPath);
-		// Fetch model contents from eMoflon
-		r.getContents().add(rs.getResources().get(0).getContents().get(0));
-		try {
-			r.save(null);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+		writeXmiToFile(xmiPrePath, rs);
 
 		//
 		// Initialize GIPS API
 		//
 
 		final GipssolutionGipsAPI gipsApi = new GipssolutionGipsAPI();
-		gipsApi.init(absPath);
+		gipsApi.init(URI.createFileURI(xmiPrePath));
 
 		//
 		// Build and solve the ILP problem
 		//
 
 		final long tick = System.nanoTime();
-		
-		gipsApi.buildILPProblem(true);
-		final ILPSolverOutput output = gipsApi.solveILPProblem();
-		if (output.solutionCount() == 0) {
-			throw new InternalError("No solution found!");
-		}
-		System.out.println("=> Objective value: " + output.objectiveValue());
-		System.out.println("---");
-		
+		buildAndSolve(gipsApi);
 		final long tock = System.nanoTime();
 
 		//
@@ -133,29 +82,12 @@ public class CraHeadlessRunner {
 		//
 
 		// Print and apply the best found solution
-		printAndApplySolution(gipsApi);
-
+		printAndApplySolution(gipsApi, printSolution);
 		System.out.println("---");
 
 		// Count violations
-		final int violationsCounterGips = countViolationsGips(gipsApi);
-		System.out.println("---");
+		countViolations(gipsApi);
 
-		// Remove all empty classes (i.e., classes without an applied mapping)
-		ArchitectureUtil.postProcess(gipsApi.getEMoflonAPI().getModel().getResources().get(0), false);
-
-		// Evaluate model (with the `CRAIndexCalculator`)
-		CRAIndexCalculator.evaluateModel(
-				(ClassModel) gipsApi.getEMoflonAPI().getModel().getResources().get(0).getContents().get(0));
-
-		// Evaluate model (with the violations counter by Lars)
-		final ClassModel cm = (ClassModel) gipsApi.getEMoflonApp().getModel().getResources().get(0).getContents()
-				.get(0);
-		final int violationsCounterLars = ArchitectureUtil.countViolations(cm);
-		System.out.println("---");
-		System.out.println("#Violations (Lars): " + violationsCounterLars);
-		System.out.println("#Violations (Max) : " + violationsCounterGips);
-		System.out.println("---");
 		System.out.println("---");
 		System.out.println("Total solve time: " + (tock - tick) * 1.0 / 1_000_000_000 + " seconds");
 		System.out.println("---");
@@ -164,11 +96,7 @@ public class CraHeadlessRunner {
 		// Save output XMI file
 		//
 
-		try {
-			gipsApi.saveResult(xmiOutputPath);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+		gipsSave(gipsApi, xmiOutputPath);
 
 		//
 		// Terminate everything
@@ -180,56 +108,14 @@ public class CraHeadlessRunner {
 	}
 
 	/**
-	 * Counts all assignment violations via the given GIPS API.
+	 * Main method to start the headless runner. String array of arguments will be
+	 * parsed.
 	 * 
-	 * @param gipsApi GIPS API to get the violations from.
-	 * @return Number of assignment violations.
+	 * @param args See {@link #parseArgs(String[])}.
 	 */
-	private static int countViolationsGips(final GipssolutionGipsAPI gipsApi) {
-		// Violation counter
-		int globalViolationsCounter = 0;
-
-		// Violation A counter
-		int mappingCounter = 0;
-		for (var k : gipsApi.getViolationA().getMappings().keySet()) {
-			if (gipsApi.getViolationA().getMappings().get(k).getValue() == 1) {
-				mappingCounter++;
-			}
-		}
-		System.out.println("ViolationA Counter:  " + mappingCounter);
-		globalViolationsCounter += mappingCounter;
-
-		// Violation C counter
-		mappingCounter = 0;
-		for (var k : gipsApi.getViolationC().getMappings().keySet()) {
-			if (gipsApi.getViolationC().getMappings().get(k).getValue() == 1) {
-				mappingCounter++;
-			}
-		}
-		System.out.println("ViolationC Counter:  " + mappingCounter);
-		globalViolationsCounter += mappingCounter;
-
-		// Violation D1 counter
-		mappingCounter = 0;
-		for (var k : gipsApi.getViolationD1().getMappings().keySet()) {
-			if (gipsApi.getViolationD1().getMappings().get(k).getValue() == 1) {
-				mappingCounter++;
-			}
-		}
-		System.out.println("ViolationD1 Counter: " + mappingCounter);
-		globalViolationsCounter += mappingCounter;
-
-		// Violation D2 counter
-		mappingCounter = 0;
-		for (var k : gipsApi.getViolationD2().getMappings().keySet()) {
-			if (gipsApi.getViolationD2().getMappings().get(k).getValue() == 1) {
-				mappingCounter++;
-			}
-		}
-		System.out.println("ViolationD2 Counter: " + mappingCounter);
-		globalViolationsCounter += mappingCounter;
-
-		return globalViolationsCounter;
+	public static void main(final String[] args) {
+		parseArgs(args);
+		new CraHeadlessRunner().run();
 	}
 
 	/**
@@ -285,33 +171,4 @@ public class CraHeadlessRunner {
 		printSolution = cmd.hasOption("printsolution");
 	}
 
-	/**
-	 * Prints and applies the best found solution (aka all non-zero mappings) with a
-	 * given CRA GIPS API object.
-	 * 
-	 * @param gipsApi CRA GIPS API object to get all mapping information from. This
-	 *                API will also be used to apply all non-zero mappings.
-	 */
-	private static void printAndApplySolution(final GipssolutionGipsAPI gipsApi) {
-		if (printSolution) {
-			System.out.println("Embeddings (Attributes): ");
-			gipsApi.getEmbedAttribute().getMappings().forEach((k, v) -> {
-				if (v.getValue() == 1) {
-					System.out.println("  " + v.getMatch().getA().getName() + " -> " + v.getMatch().getC().getName());
-				}
-			});
-
-			System.out.println("Embeddings (Methods): ");
-			gipsApi.getEmbedMethod().getMappings().forEach((k, v) -> {
-				if (v.getValue() == 1) {
-					System.out.println("  " + v.getMatch().getM().getName() + " -> " + v.getMatch().getC().getName());
-				}
-			});
-
-		}
-
-		// Apply found solution
-		gipsApi.getEmbedAttribute().applyNonZeroMappings();
-		gipsApi.getEmbedMethod().applyNonZeroMappings();
-	}
 }

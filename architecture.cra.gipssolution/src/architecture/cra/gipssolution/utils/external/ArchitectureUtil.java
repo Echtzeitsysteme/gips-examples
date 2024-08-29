@@ -14,7 +14,7 @@ import architectureCRA.Method;
 /**
  * 
  * @author Lars Fritsche
- * @author Maximilian Kratz
+ * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  *
  */
 public class ArchitectureUtil {
