@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/gson/gson-2.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gson/gson-2.10.1-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gson/gson-2.10.1-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-cli/commons-cli-1.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-cli/commons-cli-1.5.0-javadoc.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-cli/commons-cli-1.5.0-sources.jar"/>
