@@ -1,4 +1,4 @@
-package architecture.cra.gipssolution.example;
+package architecture.cra.gipssolution.runner;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;

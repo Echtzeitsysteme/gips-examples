@@ -1,4 +1,4 @@
-package architecture.cra.gipssolution.example;
+package architecture.cra.gipssolution.runner;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;

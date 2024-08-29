@@ -1,4 +1,4 @@
-package architecture.cra.gipssolution.example;
+package architecture.cra.gipssolution.runner;
 
 import java.io.File;
 import java.io.IOException;
