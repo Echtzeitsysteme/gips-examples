@@ -3,12 +3,13 @@ import "platform:/resource/ArchitectureCRA/model/architectureCRA.ecore"
 
 config {  
 	solver := GUROBI [home:="fu", license:="bar"];
-	timeLimit := true [value := 86400.0]; // 24h time limit
+	timeLimit := true [value := 345600.0]; // 4*24h time limit
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.00001];
 	lpOutput := true [path := "gurobi.lp"];
+	threadCount := true [value := 64];
 }
 
 //
