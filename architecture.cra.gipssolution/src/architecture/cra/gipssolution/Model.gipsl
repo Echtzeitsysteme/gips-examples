@@ -9,7 +9,7 @@ config {
 	debugOutput := true;
 	tolerance := true [value := 0.00001];
 	lpOutput := true [path := "gurobi.lp"];
-	threadCount := true [value := 64];
+	threadCount := true [value := 32];
 }
 
 //
