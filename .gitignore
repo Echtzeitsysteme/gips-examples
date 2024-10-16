@@ -26,3 +26,9 @@ org.emoflon.gips.gipsl.examples.sdr.extended/org/
 org.emoflon.gips.gipsl.examples.sdr.extended/test-output.json
 
 classdiagramtgg3/instances/cra-solved-headless-output.xmi
+
+architecture.cra.gipssolution/gurobi.lp
+
+architecture.cra.gipssolution/preprocessed.xmi
+
+architecture.cra.gipssolution/solved.xmi
