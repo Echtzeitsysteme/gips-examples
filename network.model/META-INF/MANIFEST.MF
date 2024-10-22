@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.junit,
  org.moflon.core.utilities,
- org.emoflon.smartemf
+ org.emoflon.smartemf,
+ gips.examples.dependencies;bundle-version="1.0.0"
 Export-Package: facade,
  facade.config,
  facade.pathgen,
