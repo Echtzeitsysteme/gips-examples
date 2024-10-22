@@ -28,12 +28,13 @@ export JAR="gips-cra.jar"
 setup
 
 # Example arguments:
-# ./input.xmi ./output.xmi ./pre.xmi
-# $1          $2           $3
+# ./input.xmi ./output.xmi ./pre.xmi ./metrics.csv
+# $1          $2           $3        $4
 
 export inputXmi=$1
 export outputXmi=$2
 export preXmi=$3
+export outputCsv=$4
 
 # GIPS workaround for all needed xmi files
 echo "=> Applying GIPS XMI workarounds."
@@ -52,7 +53,7 @@ rsync -a ./architecture/cra/gipssolution ../architecture.cra.gipssolution/src-ge
 
 # Actual run
 export RUN_NAME=$(date +%Y-%m-%d"_"%H:%M:%S)
-export ARGS="-i $inputXmi -o $outputXmi -q $preXmi -p"
+export ARGS="-i $inputXmi -o $outputXmi -q $preXmi -c $outputCsv -p"
 echo "#"
 echo "# => Using ARGS: $ARGS"
 echo "#"
