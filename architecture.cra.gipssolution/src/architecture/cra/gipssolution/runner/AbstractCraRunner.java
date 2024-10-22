@@ -66,8 +66,9 @@ public abstract class AbstractCraRunner {
 	 * found.
 	 * 
 	 * @param gipsApi GIPS API to build and solve the ILP problem for.
+	 * @return Returns the objective value.
 	 */
-	protected void buildAndSolve(final GipssolutionGipsAPI gipsApi) {
+	protected double buildAndSolve(final GipssolutionGipsAPI gipsApi) {
 		gipsApi.buildILPProblem(true);
 		final ILPSolverOutput output = gipsApi.solveILPProblem();
 		if (output.solutionCount() == 0) {
@@ -75,6 +76,7 @@ public abstract class AbstractCraRunner {
 		}
 		System.out.println("=> Objective value: " + output.objectiveValue());
 		System.out.println("---");
+		return output.objectiveValue();
 	}
 
 	/**
