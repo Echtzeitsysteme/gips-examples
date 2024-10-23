@@ -3,6 +3,7 @@ package pta.scenario.house;
 import java.io.IOException;
 
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.ilp.ILPSolverStatus;
 
 import PTAProblem.api.gips.PTAProblemGipsAPI;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
@@ -30,6 +31,11 @@ public class HouseConstructionBatchTest extends ScenarioRunner<PTAProblemGipsAPI
 	public void run() {
 		api.buildILPProblem(true);
 		ILPSolverOutput output = api.solveILPProblem();
+		if(output.status() != ILPSolverStatus.OPTIMAL) {
+			System.out.println("Solution could not be found.");
+			System.out.println(output.status());
+			System.out.println(output.validationLog().toString());
+		}
 		api.getAom().applyNonZeroMappings();
 		api.getProjectCost().applyNonZeroMappings();
 		
