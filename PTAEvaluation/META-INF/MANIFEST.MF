@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PTAEvaluation
+Bundle-SymbolicName: PTAEvaluation
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: .,
+ pta.scenario,
+ pta.scenario.house,
+ pta.scenario.shed
+Require-Bundle: PersonTaskAssignments,
+ org.emoflon.smartemf,
+ PTAProblem;bundle-version="1.0.0",
+ PTAConstraintConfigA,
+ PTAConstraintConfigB,
+ PTAConstraintConfigC
