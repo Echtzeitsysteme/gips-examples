@@ -32,6 +32,7 @@ This repository holds some GIPS example projects.
 | `org.emoflon.gips.gipsl.examples.sdr.*`            | Software-Defined Radio task scheduling on CPUs                                          |
 | `PersonTaskAssignments`/`PTA*`                     | Person-to-Task Assignments for construction purposes                                    |
 | `refactoringsoftwaresystemtgg3`/`SoftwareSystem`   | Example GIPS-based solution of the TGG 3.0 prototype implementation (software system)   |
+| `testmetamodel`/`testgipsproject`                  | Minimal working example for an EMF metamodel and a GIPS(L) project using it             |
 
 For more projects, refer to the [GIPS test repository](https://github.com/Echtzeitsysteme/gips-tests).
 
