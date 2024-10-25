@@ -37,6 +37,29 @@ public class HouseConstructionGenerator extends ScenarioGenerator {
 //			e.printStackTrace();
 //		}
 	}
+	
+	final public static double WORKHOURS_PER_DAY = 8;
+	final public static int WORKDAYS_PER_WEEK = 5;
+
+	final public static double HOURS_APPRENTICE = 20;
+	final public static double HOURS_JOURNEYMAN = 38;
+	final public static double HOURS_MASTER = 38;
+
+	final public static double FLEX_APPRENTICE = 1.1;
+	final public static double FLEX_JOURNEYMAN = 1.25;
+	final public static double FLEX_MASTER = 1.5;
+
+	final public static double SALARY_APPRENTICE = 30;
+	final public static double SALARY_JOURNEYMAN = 65;
+	final public static double SALARY_MASTER = 100;
+
+	final public static double BONUS_APPRENTICE = 65;
+	final public static double BONUS_JOURNEYMAN = 100;
+	final public static double BONUS_MASTER = 150;
+
+	final public static int SKILL_APPRENTICE = 1;
+	final public static int SKILL_JOURNEYMAN = 2;
+	final public static int SKILL_MASTER = 3;
 
 	public HouseConstructionGenerator(final int seed) {
 		super(seed);

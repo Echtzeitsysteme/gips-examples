@@ -5,21 +5,21 @@ import java.io.IOException;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.core.ilp.ILPSolverStatus;
 
-import PTAConstraintConfigA.api.gips.PTAConstraintConfigAGipsAPI;
+import PTAConstraintConfigD.api.gips.PTAConstraintConfigDGipsAPI;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
 import pta.generator.PTAModelGenerator;
 import pta.scenario.ScenarioGenerator;
 import pta.scenario.ScenarioRunner;
 import pta.scenario.ScenarioValidator;
 
-public class HouseConstructionBatchATest extends ScenarioRunner<PTAConstraintConfigAGipsAPI>{
+public class HouseConstructionBatchDTest extends ScenarioRunner<PTAConstraintConfigDGipsAPI>{
 	
 	static public String projectFolder = System.getProperty("user.dir");
 	static public String instancesFolder = projectFolder + "/instances/examples";
 
 	public static void main(String[] args) {
 		String file = instancesFolder + "/RndEval1.xmi";		
-		HouseConstructionBatchATest runner = new HouseConstructionBatchATest();
+		HouseConstructionBatchDTest runner = new HouseConstructionBatchDTest();
 		//PersonTaskAssignmentModel model = new HouseConstructionGenerator("EpicSeed".hashCode()).constructNEvaluationProjects(2);
 		ScenarioGenerator generator = new ScenarioGenerator();
 		generator.nProjects = ScenarioGenerator.mkRange(10, 11);
@@ -38,8 +38,8 @@ public class HouseConstructionBatchATest extends ScenarioRunner<PTAConstraintCon
 	}
 
 	@Override
-	public PTAConstraintConfigAGipsAPI newAPI() {
-		return new PTAConstraintConfigAGipsAPI();
+	public PTAConstraintConfigDGipsAPI newAPI() {
+		return new PTAConstraintConfigDGipsAPI();
 	}
 
 	@Override

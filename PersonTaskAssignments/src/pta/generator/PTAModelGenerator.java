@@ -98,32 +98,49 @@ public class PTAModelGenerator {
 		p.setOvertimeFlexibility(flexibility);
 		p.setOvertimeBonus(overtimeSalary);
 		skills.forEach((sName, sLevel) -> {
-			Skill skill = factory.createSkill();
-			SkillType type = skillTypes.get(sName);
-			if (type == null) {
-				type = addSkillType(sName);
-			}
-			skill.setName(type.getName());
-			skill.setId(id++);
-			skill.setType(skillTypes.get(sName));
-			skill.setLevel(sLevel);
-			p.getSkills().add(skill);
+			addSkill(name, sLevel, sName);
 		});
 		persons.put(name, p);
 		return p;
+	}
+	
+	public Skill addSkill(String person, int level, String skillType) {
+		Person p  = persons.get(person);
+		Skill s = p.getSkills().stream()
+			.filter(skill -> skill.getLevel() == level && skill.getType().getName().equals(skillType))
+			.findAny()
+			.orElseGet(() -> {
+				Skill skill = factory.createSkill();
+				SkillType type = skillTypes.get(skillType);
+				if (type == null) {
+					type = addSkillType(skillType);
+				}
+				skill.setName(type.getName());
+				skill.setId(id++);
+				skill.setType(type);
+				skill.setLevel(level);
+				p.getSkills().add(skill);
+				return skill;
+			});
+		return s;
 	}
 
 	public Collection<Offer> addOffer(String person, int week, int... hours) {
 		Collection<Offer> os = new LinkedHashSet<>();
 		for (int hour : hours) {
-			Offer offer = factory.createOffer();
-			offer.setId(id++);
-			offer.setHours(hour);
-			os.add(offer);
-			offer.setWeek(weeks.get(week));
+			os.add(addOffer(person, week, hour));
 		}
 		persons.get(person).getOffers().addAll(os);
 		return os;
+	}
+	
+	public Offer addOffer(String person, int week, int hours) {
+		Offer offer = factory.createOffer();
+		offer.setId(id++);
+		offer.setHours(hours);
+		offer.setWeek(weeks.get(week));
+		persons.get(person).getOffers().add(offer);
+		return offer;
 	}
 
 	public Project addProject(String name, double reward, int weeksUntilLoss, double lossPerWeek, int start) {
@@ -133,10 +150,7 @@ public class PTAModelGenerator {
 		Project p = factory.createProject();
 		p.setName(name);
 		p.setId(id++);
-		p.setStart(weeks.get(start));
-		p.setReward(reward);
 		p.setWeeksUntilLoss(weeksUntilLoss);
-		p.setLossPerWeek(lossPerWeek);
 		p.setInitialWeekNumber(start);
 		projects.put(name, p);
 		return p;
@@ -190,5 +204,22 @@ public class PTAModelGenerator {
 		}
 
 		return ws;
+	}
+	
+	public Week addWeek() {
+		Week prev = null;
+		if(!weeks.isEmpty()) {
+			prev = weeks.values().stream().toList().getLast();
+		}
+		
+		Week w = factory.createWeek();
+		w.setId(id++);
+		w.setNumber((prev == null) ? 1 : prev.getNumber()+1);
+		if(prev != null) {
+			w.setPrevious(prev);
+		}
+		weeks.put(w.getNumber(), w);
+		
+		return w;
 	}
 }

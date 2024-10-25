@@ -90,9 +90,8 @@ pattern taskHasNext {
 
 pattern projectInitialWeek {
 	week : Week
-	project : Project {
-		- start -> week
-	}
+	project : Project
+	#project.initialWeekNumber == week.number
 }
 
 

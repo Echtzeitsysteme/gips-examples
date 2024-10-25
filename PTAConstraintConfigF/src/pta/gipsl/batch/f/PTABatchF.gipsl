@@ -107,14 +107,6 @@ pattern taskHasNext {
 	}
 }
 
-pattern projectInitialWeek {
-	week : Week
-	project : Project {
-		- start -> week
-	}
-}
-
-
 mapping aom with assignOffer {
 	var hours : EInt
 	var overTime : EInt
@@ -185,7 +177,7 @@ objective minOvertime -> class::Requirement {
 }
 
 objective finishEarly -> class::Project {
-	mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.nodes().week.number) * 0.001
+	mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.value() * m.nodes().week.number * 0.1) 
 } 
 
 global objective : min {

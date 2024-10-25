@@ -94,12 +94,12 @@ public class HouseConstructionValidator {
 			}
 
 			valid &= p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct().filter(
-					week -> week.getNumber() < p.getInitialWeekNumber() || week.getNumber() < p.getStart().getNumber())
+					week -> week.getNumber() < p.getInitialWeekNumber() || week.getNumber() < p.getInitialWeekNumber())
 					.findAny().isEmpty();
 
 			valid &= p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct()
 					.filter(week -> week.getNumber() > p.getInitialWeekNumber() + p.getWeeksUntilLoss()
-							|| week.getNumber() > p.getStart().getNumber() + p.getWeeksUntilLoss())
+							|| week.getNumber() > p.getInitialWeekNumber() + p.getWeeksUntilLoss())
 					.findAny().isEmpty();
 
 			List<Week> weeks = p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct()
@@ -141,15 +141,6 @@ public class HouseConstructionValidator {
 					return r.getHours() * r.getSalary();
 				}
 			}).reduce(0.0, (sum, cost) -> sum + cost);
-
-			if (totalCost <= p.getReward()) {
-				System.out.println("INFO: Project planning is within budget. Total salary is: " + totalCost
-						+ "€, while the planned spending limit was: " + p.getReward() + "€.");
-			} else {
-				System.out.println("INFO: Project planning exceeds budget. Total salary is: " + totalCost
-						+ "€, while the planned spending limit was: " + p.getReward() + "€.");
-			}
-
 		}
 
 		return valid;

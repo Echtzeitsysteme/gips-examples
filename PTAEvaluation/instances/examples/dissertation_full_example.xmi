@@ -86,8 +86,6 @@
   <projects
       name="Shed"
       weeksUntilLoss="3"
-      reward="20000.0"
-      lossPerWeek="500.0"
       initialWeekNumber="1">
     <tasks name="Basement"
         next="//@projects.0/@tasks.1">
@@ -118,8 +116,7 @@
           salary="30.0"/>
     </tasks>
     <tasks name="Roof"
-        previous="//@projects.0/@tasks.1"
-        final="true">
+        previous="//@projects.0/@tasks.1">
       <requirements
           name="Roofing"
           hours="16"

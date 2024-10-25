@@ -13,4 +13,5 @@ Require-Bundle: PersonTaskAssignments,
  PTAProblem;bundle-version="1.0.0",
  PTAConstraintConfigA,
  PTAConstraintConfigB,
- PTAConstraintConfigC
+ PTAConstraintConfigC,
+ PTAConstraintConfigD

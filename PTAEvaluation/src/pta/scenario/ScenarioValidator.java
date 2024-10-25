@@ -88,7 +88,7 @@ public class ScenarioValidator {
 			}
 			
 			valid = p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct().filter(
-					week -> week.getNumber() < p.getInitialWeekNumber() || week.getNumber() < p.getStart().getNumber())
+					week -> week.getNumber() < p.getInitialWeekNumber() || week.getNumber() < p.getInitialWeekNumber())
 					.findAny().isEmpty();
 			if(!valid) {
 				logger.addError("Some tasks of Project("+p.getName()+","+p.getId()+") have been assigned before the project's time frame.");
@@ -96,7 +96,7 @@ public class ScenarioValidator {
 
 			valid = p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct()
 					.filter(week -> week.getNumber() > p.getInitialWeekNumber() + p.getWeeksUntilLoss()
-							|| week.getNumber() > p.getStart().getNumber() + p.getWeeksUntilLoss())
+							|| week.getNumber() > p.getInitialWeekNumber() + p.getWeeksUntilLoss())
 					.findAny().isEmpty();
 			if(!valid) {
 				logger.addError("Some tasks of Project("+p.getName()+","+p.getId()+") have been assigned after the project's time frame.");
@@ -122,7 +122,7 @@ public class ScenarioValidator {
 			if (valid) {
 				logger.addInfo("The Project("+p.getName()+","+p.getId()+") will start at the initial project week: KW#" + p.getInitialWeekNumber() + ".");
 			} else {
-				logger.addError("The Project("+p.getName()+","+p.getId()+") does not start at the required initial week: " + p.getInitialWeekNumber()
+				logger.addInfo("The Project("+p.getName()+","+p.getId()+") does not start at the initial week: " + p.getInitialWeekNumber()
 				+ ", but starts at: " + weeks.get(weeks.size() - 1).getNumber() + ".");
 			}
 
@@ -195,12 +195,6 @@ public class ScenarioValidator {
 		for (Person person : model.getPersons()) {
 			Set<Week> offeredWeeks = person.getOffers().stream().map(offer -> offer.getWeek())
 					.collect(Collectors.toSet());
-			for (Week week : model.getWeeks()) {
-				if(!offeredWeeks.contains(week)) {
-					logger.addError("Person("+person.getName()+","+person.getId()+") is placing an offer in a week that is not existing in the model.");
-				}
-			}
-			
 			if(!person.getOffers().stream().filter(offer -> offer.getRequirements().size() > 1).findAny()
 					.isEmpty()) {
 				logger.addInfo("Person("+person.getName()+","+person.getId()+") is assigning an offer to more than one requirement.");
