@@ -1,60 +1,41 @@
 package pta.scenario.house;
 
-import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
-import org.emoflon.gips.core.ilp.ILPSolverStatus;
-
-import PTAProblem.api.gips.PTAProblemGipsAPI;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
+import pta.scenario.EvaluationResult;
+import pta.scenario.ScenarioGenerator;
 import pta.scenario.ScenarioRunner;
-import pta.scenario.ScenarioValidator;
 
-public class HouseConstructionBatchTest extends ScenarioRunner<PTAProblemGipsAPI>{
+public class HouseConstructionBatchTest {
 	
-	static public String projectFolder = System.getProperty("user.dir");
-	static public String instancesFolder = projectFolder + "/instances/examples";
-
 	public static void main(String[] args) {
-		String file = instancesFolder + "/ConstructionProject1.xmi";		
-		HouseConstructionBatchTest runner = new HouseConstructionBatchTest();
-		runner.init(file);
-		runner.run();
-	}
-
-	@Override
-	public PTAProblemGipsAPI newAPI() {
-		return new PTAProblemGipsAPI();
-	}
-
-	@Override
-	public void run() {
-		api.buildILPProblem(true);
-		ILPSolverOutput output = api.solveILPProblem();
-		if(output.status() != ILPSolverStatus.OPTIMAL) {
-			System.out.println("Solution could not be found.");
-			System.out.println(output.status());
-			System.out.println(output.validationLog().toString());
-		}
-		api.getAom().applyNonZeroMappings();
-		api.getProjectCost().applyNonZeroMappings();
+		List<ScenarioRunner<?>> runners = new LinkedList<>();
+		runners.add(new HouseConstructionBatchATest("Batch-A"));
+		runners.add(new HouseConstructionBatchBTest("Batch-B"));
+		runners.add(new HouseConstructionBatchCTest("Batch-C"));
+		runners.add(new HouseConstructionBatchDTest("Batch-D"));
+		runners.add(new HouseConstructionBatchDTest("Batch-E"));
 		
-		ScenarioValidator validator = new ScenarioValidator((PersonTaskAssignmentModel) api.getEMoflonApp().getModel().getResources().get(0).getContents().get(0));
-		if(!validator.validate()) {
-			System.out.println("++ Validator: Solution is invalid.");
-		} else {
-			System.out.println("++ Validator: Solution seems to be valid.");
-		}
-		System.out.println(validator.getLog());
-		
-		String outputFile = instancesFolder + "/ConstructionProject1_solved.xmi";
-		try {
-			api.saveResult(outputFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Map<String, EvaluationResult> results = new LinkedHashMap<>();
+		runners.forEach(runner -> {
+			ScenarioGenerator generator = new ScenarioGenerator();
+			generator.nProjects = ScenarioGenerator.mkRange(3, 6);
+			generator.tasksPerProject = ScenarioGenerator.mkRange(4, 8);
+			generator.reqPerTask = ScenarioGenerator.mkRange(4, 8);
+			PersonTaskAssignmentModel model = generator.generate("EpicSeed".hashCode());
 
-		api.terminate();
+			System.out.println("##########\tRunning "+runner.name+" ...\t##########");
+			runner.init(model);
+			EvaluationResult result = runner.run();
+			System.out.println(result);
+			
+			results.put(runner.name, result);
+			System.out.println("##########\tFinished "+runner.name+".\t##########");
+		});
+
 	}
-
 }

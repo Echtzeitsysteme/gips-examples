@@ -11,6 +11,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.ilp.ILPSolverStatus;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import PersonTaskAssignments.Person;
@@ -25,34 +27,43 @@ public class ScenarioValidator {
 	
 	final protected PersonTaskAssignmentModel model;
 	final protected ValidationLogger logger = new ValidationLogger();
+	final protected ILPSolverOutput output;
 	
-	public ScenarioValidator(final PersonTaskAssignmentModel model) {
+	public ScenarioValidator(final PersonTaskAssignmentModel model, final ILPSolverOutput output) {
 		this.model = model;
+		this.output = output;
 	}
-	
-	public ScenarioValidator(String file) {
-		ResourceSet rs = new ResourceSetImpl();
-		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-				new SmartEMFResourceFactoryImpl("../"));
-		rs.getPackageRegistry().put(PersonTaskAssignmentsPackage.eNS_URI, PersonTaskAssignmentsPackage.eINSTANCE);
-		URI fileURI = URI.createFileURI(file);
-		Resource r = rs.getResource(fileURI, true);
-		this.model = (PersonTaskAssignmentModel) r.getContents().get(0);
-	}
+
 
 	public boolean validate() {
-		validateWeeks();
-		validateProjects();
-		validatePersons();
-
+		try {
+			validateWeeks();
+			validateProjects();
+			validatePersons();
+			validateOutput();
+		} catch(Exception e) {
+			logger.addError("Exception during validation occurred: " + e.getMessage());
+		}
 		return !logger.hasErrors();
 	}
 	
+	protected void validateOutput() {
+		if(output.status() == ILPSolverStatus.OPTIMAL) {
+			logger.addInfo("Solution was found and is optimal. Objective function value: "+output.objectiveValue());
+		} else {
+			logger.addError("No optimal Solution could be found. Result: " + output.status());
+			if(output.validationLog().isNotValid()) {
+				logger.addError("The GIPS pre-solver prevented solver execution due to conflicting constraints.");
+			}
+		}
+	}
+
+
 	public String getLog() {
 		return logger.toString();
 	}
 
-	public void validateWeeks() {
+	protected void validateWeeks() {
 		LinkedList<Week> weeks = new LinkedList<>(model.getWeeks());
 		Week previous = null;
 		int num = 1;
@@ -79,7 +90,7 @@ public class ScenarioValidator {
 		} while (!weeks.isEmpty());
 	}
 
-	public void validateProjects() {
+	protected void validateProjects() {
 		boolean valid = true;
 		for (Project p : model.getProjects()) {
 			for (Task t : p.getTasks()) {
@@ -133,7 +144,7 @@ public class ScenarioValidator {
 
 	}
 
-	public void checkAssignmentsTask(final Project project, final Task task) {
+	protected void checkAssignmentsTask(final Project project, final Task task) {
 		if (task.getWeeks() == null || task.getWeeks().isEmpty()) {
 			if (task.getRequirements() == null || task.getRequirements().isEmpty()) {
 				return;
@@ -170,7 +181,7 @@ public class ScenarioValidator {
 		}
 	}
 
-	public void checkRequirement(final Task task, final Requirement requirement) {
+	protected void checkRequirement(final Task task, final Requirement requirement) {
 		boolean valid = requirement.getOffers().stream()
 				.map(offer -> offer.getHours() * ((Person) offer.eContainer()).getOvertimeFlexibility())
 				.reduce(0.0, (sum, offer) -> sum + offer) >= requirement.getHours();
@@ -191,7 +202,7 @@ public class ScenarioValidator {
 		}
 	}
 
-	public void validatePersons() {
+	protected void validatePersons() {
 		for (Person person : model.getPersons()) {
 			Set<Week> offeredWeeks = person.getOffers().stream().map(offer -> offer.getWeek())
 					.collect(Collectors.toSet());

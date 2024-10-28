@@ -9,7 +9,7 @@ config {
 	timeLimit := true [value := 6000.0];
 	randomSeed := true [value := 0];
 	presolve := true;
-	debugOutput := true;
+	debugOutput := false;
 	tolerance := true [value := 0.000001];
 }
 

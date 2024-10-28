@@ -15,10 +15,7 @@ config {
 
 
 rule assignOffer {
-	skill : Skill {
-		-type->skilltype
-	}
-	skilltype : SkillType
+	skill : Skill
 	worker : Person {
 		-offers->offer
 		-skills->skill
@@ -29,9 +26,7 @@ rule assignOffer {
 		- week -> week
 	}
 	
-	requirement : Requirement {
-		-skillType->skilltype
-	}
+	requirement : Requirement
 	
 	task : Task {
 		-requirements->requirement
