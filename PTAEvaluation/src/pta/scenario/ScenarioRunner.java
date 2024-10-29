@@ -1,5 +1,7 @@
 package pta.scenario;
 
+import java.io.IOException;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -10,6 +12,7 @@ import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import PersonTaskAssignments.PersonTaskAssignmentsPackage;
+import pta.evaluation.util.EvaluationResult;
 
 public abstract class ScenarioRunner<API extends GipsEngineAPI<?,?>> {
 	protected API api;
@@ -20,6 +23,8 @@ public abstract class ScenarioRunner<API extends GipsEngineAPI<?,?>> {
 	}
 	
 	public abstract API newAPI();
+	
+	public abstract String getType();
 	
 	public void init(final String file) {
 		api = newAPI();
@@ -45,5 +50,7 @@ public abstract class ScenarioRunner<API extends GipsEngineAPI<?,?>> {
 //	}
 	
 	public abstract EvaluationResult run();
+	
+	public abstract EvaluationResult run(String outputFile) throws IOException;
 	
 }

@@ -2,9 +2,11 @@ package pta.scenario.house;
 
 import PTAConstraintConfigB.api.gips.PTAConstraintConfigBGipsAPI;
 
-public class HouseConstructionBatchBTest extends HouseConstructionBatchGenericTest<PTAConstraintConfigBGipsAPI>{
+public class HouseConstructionBatchB extends HouseConstructionBatchGeneric<PTAConstraintConfigBGipsAPI>{
 	
-	public HouseConstructionBatchBTest(String name) {
+	final public static String TYPE = "BATCH-B"; 
+	
+	public HouseConstructionBatchB(String name) {
 		super(name);
 	}
 
@@ -19,4 +21,8 @@ public class HouseConstructionBatchBTest extends HouseConstructionBatchGenericTe
 		api.getProjectCost().applyNonZeroMappings();
 	}
 
+	@Override
+	public String getType() {
+		return TYPE;
+	}
 }

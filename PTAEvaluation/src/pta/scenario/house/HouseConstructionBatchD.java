@@ -2,9 +2,11 @@ package pta.scenario.house;
 
 import PTAConstraintConfigD.api.gips.PTAConstraintConfigDGipsAPI;
 
-public class HouseConstructionBatchDTest extends HouseConstructionBatchGenericTest<PTAConstraintConfigDGipsAPI>{
+public class HouseConstructionBatchD extends HouseConstructionBatchGeneric<PTAConstraintConfigDGipsAPI>{
 
-	public HouseConstructionBatchDTest(String name) {
+	final public static String TYPE = "BATCH-D"; 
+	
+	public HouseConstructionBatchD(String name) {
 		super(name);
 	}
 
@@ -18,6 +20,9 @@ public class HouseConstructionBatchDTest extends HouseConstructionBatchGenericTe
 		api.getAom().applyNonZeroMappings();
 		api.getProjectCost().applyNonZeroMappings();
 	}
-
-
+	
+	@Override
+	public String getType() {
+		return TYPE;
+	}
 }

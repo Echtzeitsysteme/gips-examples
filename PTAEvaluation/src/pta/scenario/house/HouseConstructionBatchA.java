@@ -2,17 +2,19 @@ package pta.scenario.house;
 
 import PTAConstraintConfigA.api.gips.PTAConstraintConfigAGipsAPI;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
-import pta.scenario.EvaluationResult;
+import pta.evaluation.util.EvaluationResult;
 import pta.scenario.ScenarioGenerator;
 
-public class HouseConstructionBatchATest extends HouseConstructionBatchGenericTest<PTAConstraintConfigAGipsAPI>{
+public class HouseConstructionBatchA extends HouseConstructionBatchGeneric<PTAConstraintConfigAGipsAPI>{
 	
-	public HouseConstructionBatchATest(String name) {
+	final public static String TYPE = "BATCH-A"; 
+	
+	public HouseConstructionBatchA(String name) {
 		super(name);
 	}
 
 	public static void main(String[] args) {		
-		HouseConstructionBatchATest runner = new HouseConstructionBatchATest("Batch-A");
+		HouseConstructionBatchA runner = new HouseConstructionBatchA("Batch-A");
 		ScenarioGenerator generator = new ScenarioGenerator();
 		generator.nProjects = ScenarioGenerator.mkRange(1, 2);
 		generator.tasksPerProject = ScenarioGenerator.mkRange(4, 8);
@@ -34,6 +36,11 @@ public class HouseConstructionBatchATest extends HouseConstructionBatchGenericTe
 	public void executeGT() {
 		api.getAom().applyNonZeroMappings();
 		api.getProjectCost().applyNonZeroMappings();
+	}
+
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 
 }

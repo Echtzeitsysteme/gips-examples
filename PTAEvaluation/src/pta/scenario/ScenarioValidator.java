@@ -29,6 +29,13 @@ public class ScenarioValidator {
 	final protected ValidationLogger logger = new ValidationLogger();
 	final protected ILPSolverOutput output;
 	
+	protected int numberOfProjects = 0;
+	protected int numberOfTasks = 0;
+	protected int numberOfRequirements = 0;
+	protected int numberOfOffers = 0;
+	protected int numberOfWeeks = 0;
+	protected int numberOfPersons = 0;
+	
 	public ScenarioValidator(final PersonTaskAssignmentModel model, final ILPSolverOutput output) {
 		this.model = model;
 		this.output = output;
@@ -58,13 +65,10 @@ public class ScenarioValidator {
 		}
 	}
 
-
-	public String getLog() {
-		return logger.toString();
-	}
-
 	protected void validateWeeks() {
 		LinkedList<Week> weeks = new LinkedList<>(model.getWeeks());
+		numberOfWeeks = weeks.size();
+		
 		Week previous = null;
 		int num = 1;
 		do {
@@ -91,9 +95,14 @@ public class ScenarioValidator {
 	}
 
 	protected void validateProjects() {
+		numberOfProjects = model.getProjects().size();
+		
 		boolean valid = true;
 		for (Project p : model.getProjects()) {
+			numberOfTasks += p.getTasks().size();
+			
 			for (Task t : p.getTasks()) {
+				numberOfRequirements += t.getRequirements().size();
 				checkAssignmentsTask(p, t);
 
 			}
@@ -203,7 +212,11 @@ public class ScenarioValidator {
 	}
 
 	protected void validatePersons() {
+		numberOfPersons = model.getPersons().size();
+		
 		for (Person person : model.getPersons()) {
+			numberOfOffers += person.getOffers().size();
+			
 			Set<Week> offeredWeeks = person.getOffers().stream().map(offer -> offer.getWeek())
 					.collect(Collectors.toSet());
 			if(!person.getOffers().stream().filter(offer -> offer.getRequirements().size() > 1).findAny()
@@ -211,6 +224,39 @@ public class ScenarioValidator {
 				logger.addInfo("Person("+person.getName()+","+person.getId()+") is assigning an offer to more than one requirement.");
 			}
 		}
+	}
+
+	public String getLog() {
+		return logger.toString();
+	}
+
+	public int getNumberOfProjects() {
+		return numberOfProjects;
+	}
+
+
+	public int getNumberOfTasks() {
+		return numberOfTasks;
+	}
+
+
+	public int getNumberOfRequirements() {
+		return numberOfRequirements;
+	}
+
+
+	public int getNumberOfOffers() {
+		return numberOfOffers;
+	}
+
+
+	public int getNumberOfWeeks() {
+		return numberOfWeeks;
+	}
+
+
+	public int getNumberOfPersons() {
+		return numberOfPersons;
 	}
 	
 }

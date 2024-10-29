@@ -15,4 +15,5 @@ Require-Bundle: PersonTaskAssignments,
  PTAConstraintConfigB,
  PTAConstraintConfigC,
  PTAConstraintConfigD,
- PTAConstraintConfigE
+ PTAConstraintConfigE,
+ gips.examples.dependencies;bundle-version="1.0.0"

@@ -5,8 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.emoflon.gips.core.util.Observer;
+
 import PersonTaskAssignments.PersonTaskAssignmentModel;
-import pta.scenario.EvaluationResult;
+import pta.evaluation.util.EvaluationResult;
 import pta.scenario.ScenarioGenerator;
 import pta.scenario.ScenarioRunner;
 
@@ -14,11 +16,11 @@ public class HouseConstructionBatchTest {
 	
 	public static void main(String[] args) {
 		List<ScenarioRunner<?>> runners = new LinkedList<>();
-		runners.add(new HouseConstructionBatchATest("Batch-A"));
-		runners.add(new HouseConstructionBatchBTest("Batch-B"));
-		runners.add(new HouseConstructionBatchCTest("Batch-C"));
-		runners.add(new HouseConstructionBatchDTest("Batch-D"));
-		runners.add(new HouseConstructionBatchDTest("Batch-E"));
+		runners.add(new HouseConstructionBatchA("Batch-A"));
+		runners.add(new HouseConstructionBatchB("Batch-B"));
+		runners.add(new HouseConstructionBatchC("Batch-C"));
+		runners.add(new HouseConstructionBatchD("Batch-D"));
+		runners.add(new HouseConstructionBatchD("Batch-E"));
 		
 		Map<String, EvaluationResult> results = new LinkedHashMap<>();
 		runners.forEach(runner -> {
@@ -29,13 +31,14 @@ public class HouseConstructionBatchTest {
 			PersonTaskAssignmentModel model = generator.generate("EpicSeed".hashCode());
 
 			System.out.println("##########\tRunning "+runner.name+" ...\t##########");
-			runner.init(model);
+			Observer obs = Observer.getInstance();
+			obs.setCurrentSeries(runner.name);
+			obs.observe("INIT", ()->runner.init(model));
 			EvaluationResult result = runner.run();
 			System.out.println(result);
 			
 			results.put(runner.name, result);
 			System.out.println("##########\tFinished "+runner.name+".\t##########");
 		});
-
 	}
 }
