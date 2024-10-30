@@ -20,4 +20,4 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
  org.emoflon.gips.gipsl.examples.sdrmodel;bundle-version="0.0.1",
- gips.examples.dependencies;bundle-version="1.0.0"
+ gips.examples.dependencies
