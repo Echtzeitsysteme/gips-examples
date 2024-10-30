@@ -12,6 +12,7 @@ import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import PersonTaskAssignments.PersonTaskAssignmentsPackage;
+import hipe.engine.config.HiPEPathOptions;
 import pta.evaluation.util.EvaluationResult;
 
 public abstract class ScenarioRunner<API extends GipsEngineAPI<?,?>> {
@@ -26,10 +27,26 @@ public abstract class ScenarioRunner<API extends GipsEngineAPI<?,?>> {
 	
 	public abstract String getType();
 	
+	public abstract String getGipsModelPath();
+	public abstract String getIbexModelPath();
+	public abstract String getHiPEModelPath();
+	public abstract String getHiPEEngineFQN();
+	
 	public void init(final String file) {
 		api = newAPI();
 		URI uri = URI.createFileURI(file);
 		api.init(uri);
+	}
+	
+	public void init(String gipsModel, String inputModel, String ibexPatternModel, String hipePatternModel, String hipeEngineFQN) {
+		api = newAPI();
+		URI gipsUri = URI.createFileURI(gipsModel);
+		URI inputUri = URI.createFileURI(inputModel);
+		URI ibexUri = URI.createFileURI(ibexPatternModel);
+		URI hipeUri = URI.createFileURI(hipePatternModel);
+		HiPEPathOptions.setNetworkPath(hipeUri);
+		HiPEPathOptions.setEngineClassName(hipeEngineFQN);
+		api.init(gipsUri, inputUri, ibexUri);
 	}
 	
 	public void init(final EObject model) {
@@ -42,12 +59,6 @@ public abstract class ScenarioRunner<API extends GipsEngineAPI<?,?>> {
 		r.getContents().add(model);
 		api.init(rs);
 	}
-	
-//	public void init(final EObject model) {
-//		api = newAPI();
-//		URI uri = URI.createFileURI(file);
-//		api.init(uri);
-//	}
 	
 	public abstract EvaluationResult run();
 	

@@ -1,7 +1,10 @@
 package pta.scenario.house;
 
+import org.eclipse.emf.common.util.URI;
+
 import PTAConstraintConfigA.api.gips.PTAConstraintConfigAGipsAPI;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
+import hipe.engine.config.HiPEPathOptions;
 import pta.evaluation.util.EvaluationResult;
 import pta.scenario.ScenarioGenerator;
 
@@ -41,6 +44,26 @@ public class HouseConstructionBatchA extends HouseConstructionBatchGeneric<PTACo
 	@Override
 	public String getType() {
 		return TYPE;
+	}
+
+	@Override
+	public String getGipsModelPath() {
+		return "PTAConstraintConfigA/api/gips/gips-model.xmi";
+	}
+
+	@Override
+	public String getIbexModelPath() {
+		return "PTAConstraintConfigA/api/ibex-patterns.xmi";
+	}
+
+	@Override
+	public String getHiPEModelPath() {
+		return "PTAConstraintConfigA/hipe/engine/hipe-network.xmi";
+	}
+
+	@Override
+	public String getHiPEEngineFQN() {
+		return "PTAConstraintConfigA.hipe.engine.HiPEEngine";
 	}
 
 }

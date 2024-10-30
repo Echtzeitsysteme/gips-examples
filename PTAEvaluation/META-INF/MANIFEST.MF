@@ -16,4 +16,5 @@ Require-Bundle: PersonTaskAssignments,
  PTAConstraintConfigC,
  PTAConstraintConfigD,
  PTAConstraintConfigE,
- gips.examples.dependencies;bundle-version="1.0.0"
+ gips.examples.dependencies;bundle-version="1.0.0",
+ hipe.engine

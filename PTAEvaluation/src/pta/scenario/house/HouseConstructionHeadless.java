@@ -152,19 +152,18 @@ public class HouseConstructionHeadless {
 	private String xmiOutputPath;
 	private String scenarioID;
 	private String runnerType;
-	private String xmiPrePath;
 	private String csvOutputPath;
 	private boolean printSolution;
 	
 	public void run() throws Exception {
 		checkIfFileExists(xmiInputPath);
-		checkIfFileExists(xmiOutputPath);
-		checkIfFileExists(csvOutputPath);
+		//checkIfFileExists(xmiOutputPath);
+		//checkIfFileExists(csvOutputPath);
 		
 		ScenarioRunner<?> runner = createRunner(runnerType, scenarioID);
 		Observer obs = Observer.getInstance();
 		obs.setCurrentSeries(scenarioID);
-		obs.observe("INIT", ()->runner.init(xmiInputPath));
+		obs.observe("INIT", ()->runner.init(runner.getGipsModelPath(), xmiInputPath, runner.getIbexModelPath(), runner.getHiPEModelPath(), runner.getHiPEEngineFQN()));
 		EvaluationResult result = runner.run(xmiOutputPath);
 		if(printSolution)
 			System.out.println(result);
@@ -206,11 +205,6 @@ public class HouseConstructionHeadless {
 		runnerType.setRequired(true);
 		options.addOption(runnerType);
 
-		// XMI file for the pre-processing
-		final Option xmiPreFile = new Option("q", "prexmi", true, "preprocessing XMI file to save");
-		xmiPreFile.setRequired(true);
-		options.addOption(xmiPreFile);
-
 		// CSV output path
 		final Option csvOutputFile = new Option("c", "outputcsv", true, "output CSV file to save");
 		csvOutputFile.setRequired(false);
@@ -238,7 +232,6 @@ public class HouseConstructionHeadless {
 		xmiOutputPath = cmd.getOptionValue("outputxmi");
 		this.scenarioID = cmd.getOptionValue("scenarioid");
 		this.runnerType = cmd.getOptionValue("runnertype");
-		xmiPrePath = cmd.getOptionValue("prexmi");
 		csvOutputPath = cmd.getOptionValue("outputcsv");
 		printSolution = cmd.hasOption("printsolution");
 	}

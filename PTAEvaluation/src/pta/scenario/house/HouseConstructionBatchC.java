@@ -25,4 +25,24 @@ public class HouseConstructionBatchC extends HouseConstructionBatchGeneric<PTACo
 	public String getType() {
 		return TYPE;
 	}
+	
+	@Override
+	public String getGipsModelPath() {
+		return "PTAConstraintConfigC/api/gips/gips-model.xmi";
+	}
+
+	@Override
+	public String getIbexModelPath() {
+		return "PTAConstraintConfigC/api/ibex-patterns.xmi";
+	}
+
+	@Override
+	public String getHiPEModelPath() {
+		return "PTAConstraintConfigC/hipe/engine/hipe-network.xmi";
+	}
+	
+	@Override
+	public String getHiPEEngineFQN() {
+		return "PTAConstraintConfigC.hipe.engine.HiPEEngine";
+	}
 }
