@@ -6,7 +6,13 @@ Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.sdr.extended; singleton:=true
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .
+Bundle-ClassPath: lib/commons-cli/commons-cli-1.9.0.jar,
+ lib/commons-cli/commons-cli-1.9.0-javadoc.jar,
+ lib/commons-cli/commons-cli-1.9.0-sources.jar,
+ lib/gson/gson-2.11.0.jar,
+ lib/gson/gson-2.11.0-javadoc.jar,
+ lib/gson/gson-2.11.0-sources.jar,
+ .
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt,
