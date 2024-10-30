@@ -159,7 +159,6 @@ public class HouseConstructionHeadless {
 		checkIfFileExists(xmiInputPath);
 		//checkIfFileExists(xmiOutputPath);
 		//checkIfFileExists(csvOutputPath);
-		
 		ScenarioRunner<?> runner = createRunner(runnerType, scenarioID);
 		Observer obs = Observer.getInstance();
 		obs.setCurrentSeries(scenarioID);

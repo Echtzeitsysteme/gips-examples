@@ -10,11 +10,14 @@ Export-Package: .,
  pta.scenario.shed
 Require-Bundle: PersonTaskAssignments,
  org.emoflon.smartemf,
- PTAProblem;bundle-version="1.0.0",
+ PTAProblem,
  PTAConstraintConfigA,
  PTAConstraintConfigB,
  PTAConstraintConfigC,
  PTAConstraintConfigD,
  PTAConstraintConfigE,
- gips.examples.dependencies;bundle-version="1.0.0",
+ gips.examples.dependencies,
  hipe.engine
+Import-Package: org.emoflon.gips.core.api,
+ org.emoflon.gips.core.util,
+ org.emoflon.ibex.gt.api
