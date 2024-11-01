@@ -52,7 +52,7 @@ rsync -a ./architecture/cra/gipssolution ../architecture.cra.gipssolution/src-ge
 # Finished workaround
 
 # Actual run
-export RUN_NAME=$(date +%Y-%m-%d"_"%H:%M:%S)
+export RUN_NAME=$(date +%Y-%m-%d"_"%H-%M-%S)
 export ARGS="-i $inputXmi -o $outputXmi -q $preXmi -c $outputCsv -p"
 echo "#"
 echo "# => Using ARGS: $ARGS"
