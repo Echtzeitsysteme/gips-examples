@@ -6,6 +6,14 @@ import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 import PersonTaskAssignments.PersonTaskAssignmentModel;
 
 import pta.generator.PTAModelGenerator;
@@ -18,7 +26,7 @@ import pta.scenario.house.HouseConstructionBatchE;
 import pta.scenario.house.HouseConstructionIncF;
 import pta.scenario.house.HouseConstructionIncG;
 
-public class EvaluationModelGenerator {
+public class EvaluationGenerator {
 	
 	public static String projectFolder = System.getProperty("user.dir");
 	public static String instancesFolder = projectFolder + "/instances/evaluation/scenarios";
@@ -30,9 +38,6 @@ public class EvaluationModelGenerator {
 	public static String runScript = scriptFolder + "/start-args-gips.sh";
 	public static String envScript = scriptFolder + "/env.sh";
 	
-	public static String jarLocation = projectFolder+"/PTAEvaluation.jar";
-	
-	public static String gurobiLic = "/mnt/c/gurobi1101/win64/gurobi.lic";
 	public static String gurobiHome = "/opt/gurobi1103/linux64/";
 	public static String gurobiLib = "/opt/gurobi1103/linux64/lib/";
 	public static String gurobiBin = "/opt/gurobi1103/linux64/bin/";
@@ -52,6 +57,38 @@ public class EvaluationModelGenerator {
 	
 
 	public static void main(String[] args) {
+		final Options options = new Options();
+		
+		// License file to use
+		final Option licFile = new Option("l", "license", true, "GUROBI license file.");
+		licFile.setRequired(true);
+		options.addOption(licFile);
+		
+		// JAR to run
+		final Option jarFile = new Option("j", "jar", true, "Executable JAR file.");
+		jarFile.setRequired(true);
+		options.addOption(jarFile);
+		
+		final CommandLineParser parser = new DefaultParser();
+		final HelpFormatter formatter = new HelpFormatter();
+		CommandLine cmd = null;
+
+		try {
+			cmd = parser.parse(options, args);
+		} catch (final ParseException e) {
+			System.err.println(e.getMessage());
+			formatter.printHelp("CLI parameters", options);
+			System.exit(1);
+		}
+		
+		String gurobiLic = cmd.getOptionValue("license");
+		String jarLocation = cmd.getOptionValue("jar");
+		
+		File project = new File(projectFolder);
+		if (!project.exists()) {
+			project.mkdirs();
+		}
+		
 		File instances = new File(instancesFolder);
 		if (!instances.exists()) {
 			instances.mkdirs();
