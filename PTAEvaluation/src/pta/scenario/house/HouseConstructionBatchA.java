@@ -8,7 +8,7 @@ import PersonTaskAssignments.PersonTaskAssignmentModel;
 import pta.evaluation.util.EvaluationResult;
 import pta.scenario.ScenarioGenerator;
 
-public class HouseConstructionBatchA extends HouseConstructionBatchGeneric<PTAConstraintConfigAGipsAPI>{
+public class HouseConstructionBatchA extends HouseConstructionGeneric<PTAConstraintConfigAGipsAPI>{
 	
 	final public static String TYPE = "BATCH-A"; 
 	

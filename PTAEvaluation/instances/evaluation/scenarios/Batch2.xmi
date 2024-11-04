@@ -1,0 +1,1063 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PersonTaskAssignments:PersonTaskAssignmentModel xmlns:PersonTaskAssignments="platform:/resource/PersonTaskAssignments/model/PersonTaskAssignments.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
+  <persons id="35" name="Person_1" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="36" name="SkillType_20" level="3" type="//@skillTypes.19" />
+    <skills id="80" name="SkillType_8" level="3" type="//@skillTypes.7" />
+    <skills id="83" name="SkillType_10" level="3" type="//@skillTypes.9" />
+    <skills id="86" name="SkillType_23" level="3" type="//@skillTypes.22" />
+    <skills id="94" name="SkillType_7" level="3" type="//@skillTypes.6" />
+    <offers id="228" hours="4" week="//@weeks.0" />
+    <offers id="241" hours="8" week="//@weeks.11" />
+    <offers id="243" hours="8" week="//@weeks.13" />
+    <offers id="245" hours="4" week="//@weeks.15" />
+    <offers id="250" hours="8" week="//@weeks.19" />
+    <offers id="255" hours="8" week="//@weeks.23" />
+    <offers id="258" hours="4" week="//@weeks.26" />
+    <offers id="281" hours="8" week="//@weeks.17" />
+    <offers id="306" hours="8" week="//@weeks.30" />
+    <offers id="308" hours="4" week="//@weeks.30" />
+    <offers id="311" hours="8" week="//@weeks.30" />
+    <offers id="319" hours="8" week="//@weeks.31" />
+    <offers id="321" hours="8" week="//@weeks.31" />
+    <offers id="328" hours="8" week="//@weeks.32" />
+    <offers id="331" hours="4" week="//@weeks.32" />
+    <offers id="340" hours="8" week="//@weeks.33" />
+    <offers id="341" hours="8" week="//@weeks.33" />
+    <offers id="344" hours="4" week="//@weeks.33" />
+    <offers id="357" hours="4" week="//@weeks.35" />
+    <offers id="364" hours="2" week="//@weeks.36" />
+    <offers id="367" hours="8" week="//@weeks.36" />
+    <offers id="368" hours="8" week="//@weeks.36" />
+    <offers id="370" hours="8" week="//@weeks.36" />
+    <offers id="371" hours="2" week="//@weeks.36" />
+    <offers id="375" hours="8" week="//@weeks.37" />
+    <offers id="379" hours="8" week="//@weeks.37" />
+    <offers id="395" hours="8" week="//@weeks.40" />
+    <offers id="418" hours="8" week="//@weeks.43" />
+    <offers id="424" hours="8" week="//@weeks.44" />
+    <offers id="437" hours="8" week="//@weeks.46" />
+    <offers id="438" hours="8" week="//@weeks.46" />
+    <offers id="444" hours="8" week="//@weeks.47" />
+    <offers id="452" hours="4" week="//@weeks.48" />
+    <offers id="461" hours="4" week="//@weeks.49" />
+    <offers id="473" hours="8" week="//@weeks.51" />
+    <offers id="481" hours="4" week="//@weeks.52" />
+    <offers id="489" hours="4" week="//@weeks.53" />
+    <offers id="490" hours="8" week="//@weeks.53" />
+    <offers id="496" hours="4" week="//@weeks.54" />
+    <offers id="505" hours="2" week="//@weeks.55" />
+    <offers id="512" hours="2" week="//@weeks.56" />
+    <offers id="519" hours="4" week="//@weeks.57" />
+    <offers id="524" hours="8" week="//@weeks.58" />
+    <offers id="531" hours="8" week="//@weeks.59" />
+    <offers id="539" hours="8" week="//@weeks.60" />
+    <offers id="540" hours="8" week="//@weeks.60" />
+    <offers id="548" hours="8" week="//@weeks.61" />
+    <offers id="553" hours="8" week="//@weeks.62" />
+    <offers id="561" hours="8" week="//@weeks.63" />
+    <offers id="566" hours="4" week="//@weeks.64" />
+    <offers id="571" hours="4" week="//@weeks.64" />
+    <offers id="575" hours="4" week="//@weeks.65" />
+    <offers id="586" hours="8" week="//@weeks.66" />
+    <offers id="596" hours="2" week="//@weeks.67" />
+    <offers id="605" hours="4" week="//@weeks.68" />
+    <offers id="622" hours="4" week="//@weeks.70" />
+    <offers id="628" hours="4" week="//@weeks.71" />
+    <offers id="634" hours="8" week="//@weeks.71" />
+    <offers id="639" hours="8" week="//@weeks.72" />
+    <offers id="647" hours="4" week="//@weeks.72" />
+    <offers id="650" hours="8" week="//@weeks.73" />
+    <offers id="653" hours="2" week="//@weeks.73" />
+    <offers id="659" hours="2" week="//@weeks.74" />
+    <offers id="664" hours="4" week="//@weeks.74" />
+    <offers id="666" hours="4" week="//@weeks.74" />
+    <offers id="775" hours="8" week="//@weeks.40" />
+    <offers id="795" hours="8" week="//@weeks.43" />
+    <offers id="815" hours="4" week="//@weeks.46" />
+    <offers id="831" hours="4" week="//@weeks.48" />
+    <offers id="885" hours="4" week="//@weeks.57" />
+    <offers id="918" hours="8" week="//@weeks.63" />
+    <offers id="984" hours="8" week="//@weeks.72" />
+  </persons>
+  <persons id="39" name="Person_2" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="40" name="SkillType_4" level="2" type="//@skillTypes.3" />
+    <skills id="120" name="SkillType_18" level="2" type="//@skillTypes.17" />
+    <offers id="230" hours="8" week="//@weeks.1" />
+    <offers id="254" hours="8" week="//@weeks.22" />
+    <offers id="260" hours="8" week="//@weeks.27" />
+    <offers id="264" hours="8" week="//@weeks.0" />
+    <offers id="312" hours="8" week="//@weeks.30" />
+    <offers id="335" hours="8" week="//@weeks.32" />
+    <offers id="346" hours="8" week="//@weeks.33" />
+    <offers id="348" hours="8" week="//@weeks.33" />
+    <offers id="351" hours="8" week="//@weeks.34" />
+    <offers id="369" hours="8" week="//@weeks.36" />
+    <offers id="408" hours="8" week="//@weeks.42" />
+    <offers id="413" hours="8" week="//@weeks.43" />
+    <offers id="420" hours="8" week="//@weeks.43" />
+    <offers id="462" hours="8" week="//@weeks.49" />
+    <offers id="465" hours="8" week="//@weeks.50" />
+    <offers id="467" hours="8" week="//@weeks.50" />
+    <offers id="478" hours="8" week="//@weeks.52" />
+    <offers id="493" hours="8" week="//@weeks.53" />
+    <offers id="494" hours="8" week="//@weeks.53" />
+    <offers id="514" hours="8" week="//@weeks.56" />
+    <offers id="521" hours="8" week="//@weeks.57" />
+    <offers id="529" hours="8" week="//@weeks.59" />
+    <offers id="535" hours="8" week="//@weeks.60" />
+    <offers id="544" hours="8" week="//@weeks.61" />
+    <offers id="562" hours="8" week="//@weeks.63" />
+    <offers id="568" hours="8" week="//@weeks.64" />
+    <offers id="581" hours="8" week="//@weeks.65" />
+    <offers id="583" hours="8" week="//@weeks.66" />
+    <offers id="594" hours="8" week="//@weeks.67" />
+    <offers id="599" hours="8" week="//@weeks.67" />
+    <offers id="600" hours="8" week="//@weeks.67" />
+    <offers id="625" hours="8" week="//@weeks.70" />
+    <offers id="640" hours="8" week="//@weeks.72" />
+    <offers id="648" hours="8" week="//@weeks.72" />
+    <offers id="651" hours="8" week="//@weeks.73" />
+    <offers id="655" hours="8" week="//@weeks.73" />
+    <offers id="669" hours="8" week="//@weeks.74" />
+    <offers id="692" hours="8" week="//@weeks.30" />
+    <offers id="728" hours="8" week="//@weeks.34" />
+    <offers id="746" hours="8" week="//@weeks.37" />
+    <offers id="778" hours="8" week="//@weeks.41" />
+    <offers id="790" hours="8" week="//@weeks.43" />
+    <offers id="818" hours="8" week="//@weeks.47" />
+    <offers id="825" hours="8" week="//@weeks.48" />
+    <offers id="868" hours="8" week="//@weeks.54" />
+    <offers id="878" hours="8" week="//@weeks.56" />
+    <offers id="902" hours="8" week="//@weeks.61" />
+    <offers id="911" hours="8" week="//@weeks.63" />
+    <offers id="919" hours="8" week="//@weeks.64" />
+    <offers id="957" hours="8" week="//@weeks.70" />
+    <offers id="997" hours="8" week="//@weeks.74" />
+  </persons>
+  <persons id="43" name="Person_3" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="44" name="SkillType_25" level="3" type="//@skillTypes.24" />
+    <offers id="231" hours="8" week="//@weeks.2" />
+    <offers id="270" hours="8" week="//@weeks.6" />
+    <offers id="339" hours="8" week="//@weeks.33" />
+    <offers id="414" hours="8" week="//@weeks.43" />
+    <offers id="427" hours="8" week="//@weeks.45" />
+    <offers id="453" hours="8" week="//@weeks.48" />
+    <offers id="516" hours="8" week="//@weeks.57" />
+    <offers id="545" hours="8" week="//@weeks.61" />
+    <offers id="551" hours="8" week="//@weeks.62" />
+    <offers id="559" hours="8" week="//@weeks.63" />
+    <offers id="602" hours="8" week="//@weeks.68" />
+    <offers id="608" hours="8" week="//@weeks.69" />
+    <offers id="684" hours="8" week="//@weeks.29" />
+    <offers id="694" hours="8" week="//@weeks.30" />
+    <offers id="735" hours="8" week="//@weeks.35" />
+    <offers id="798" hours="8" week="//@weeks.44" />
+    <offers id="857" hours="8" week="//@weeks.52" />
+    <offers id="882" hours="8" week="//@weeks.57" />
+    <offers id="890" hours="8" week="//@weeks.58" />
+    <offers id="897" hours="8" week="//@weeks.60" />
+    <offers id="921" hours="8" week="//@weeks.65" />
+    <offers id="930" hours="8" week="//@weeks.66" />
+    <offers id="936" hours="8" week="//@weeks.67" />
+    <offers id="946" hours="8" week="//@weeks.68" />
+    <offers id="951" hours="8" week="//@weeks.69" />
+    <offers id="960" hours="8" week="//@weeks.70" />
+    <offers id="969" hours="8" week="//@weeks.71" />
+    <offers id="988" hours="8" week="//@weeks.73" />
+  </persons>
+  <persons id="47" name="Person_4" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="48" name="SkillType_23" level="2" type="//@skillTypes.22" />
+    <skills id="166" name="SkillType_8" level="2" type="//@skillTypes.7" />
+    <skills id="191" name="SkillType_17" level="2" type="//@skillTypes.16" />
+    <offers id="232" hours="8" week="//@weeks.3" />
+    <offers id="272" hours="8" week="//@weeks.8" />
+    <offers id="280" hours="8" week="//@weeks.16" />
+    <offers id="296" hours="8" week="//@weeks.29" />
+    <offers id="355" hours="8" week="//@weeks.35" />
+    <offers id="385" hours="8" week="//@weeks.39" />
+    <offers id="415" hours="8" week="//@weeks.43" />
+    <offers id="442" hours="8" week="//@weeks.47" />
+    <offers id="454" hours="8" week="//@weeks.48" />
+    <offers id="469" hours="8" week="//@weeks.51" />
+    <offers id="517" hours="8" week="//@weeks.57" />
+    <offers id="552" hours="8" week="//@weeks.62" />
+    <offers id="584" hours="8" week="//@weeks.66" />
+    <offers id="603" hours="8" week="//@weeks.68" />
+    <offers id="689" hours="8" week="//@weeks.29" />
+    <offers id="707" hours="8" week="//@weeks.31" />
+    <offers id="723" hours="8" week="//@weeks.33" />
+    <offers id="741" hours="8" week="//@weeks.36" />
+    <offers id="750" hours="8" week="//@weeks.37" />
+    <offers id="773" hours="8" week="//@weeks.40" />
+    <offers id="807" hours="8" week="//@weeks.45" />
+    <offers id="814" hours="8" week="//@weeks.46" />
+    <offers id="830" hours="8" week="//@weeks.48" />
+    <offers id="842" hours="8" week="//@weeks.49" />
+    <offers id="863" hours="8" week="//@weeks.53" />
+    <offers id="874" hours="8" week="//@weeks.55" />
+    <offers id="876" hours="8" week="//@weeks.55" />
+    <offers id="892" hours="8" week="//@weeks.58" />
+    <offers id="908" hours="8" week="//@weeks.62" />
+    <offers id="909" hours="8" week="//@weeks.62" />
+    <offers id="913" hours="8" week="//@weeks.63" />
+    <offers id="939" hours="8" week="//@weeks.67" />
+    <offers id="947" hours="8" week="//@weeks.68" />
+  </persons>
+  <persons id="51" name="Person_5" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="52" name="SkillType_24" level="1" type="//@skillTypes.23" />
+    <skills id="56" name="SkillType_29" level="1" type="//@skillTypes.28" />
+    <skills id="146" name="SkillType_12" level="1" type="//@skillTypes.11" />
+    <offers id="233" hours="8" week="//@weeks.4" />
+    <offers id="234" hours="8" week="//@weeks.5" />
+    <offers id="297" hours="8" week="//@weeks.29" />
+    <offers id="322" hours="4" week="//@weeks.31" />
+    <offers id="362" hours="8" week="//@weeks.36" />
+    <offers id="376" hours="8" week="//@weeks.37" />
+    <offers id="381" hours="8" week="//@weeks.38" />
+    <offers id="416" hours="8" week="//@weeks.43" />
+    <offers id="417" hours="8" week="//@weeks.43" />
+    <offers id="422" hours="8" week="//@weeks.44" />
+    <offers id="428" hours="8" week="//@weeks.45" />
+    <offers id="434" hours="8" week="//@weeks.46" />
+    <offers id="443" hours="8" week="//@weeks.47" />
+    <offers id="455" hours="8" week="//@weeks.48" />
+    <offers id="470" hours="8" week="//@weeks.51" />
+    <offers id="503" hours="8" week="//@weeks.55" />
+    <offers id="525" hours="8" week="//@weeks.58" />
+    <offers id="536" hours="8" week="//@weeks.60" />
+    <offers id="546" hours="8" week="//@weeks.61" />
+    <offers id="563" hours="4" week="//@weeks.63" />
+    <offers id="604" hours="8" week="//@weeks.68" />
+    <offers id="609" hours="8" week="//@weeks.69" />
+    <offers id="657" hours="8" week="//@weeks.74" />
+    <offers id="672" hours="8" week="//@weeks.75" />
+    <offers id="678" hours="4" week="//@weeks.75" />
+    <offers id="681" hours="4" week="//@weeks.29" />
+    <offers id="700" hours="8" week="//@weeks.31" />
+    <offers id="706" hours="4" week="//@weeks.31" />
+    <offers id="729" hours="8" week="//@weeks.34" />
+    <offers id="791" hours="4" week="//@weeks.43" />
+    <offers id="803" hours="8" week="//@weeks.45" />
+    <offers id="806" hours="4" week="//@weeks.45" />
+    <offers id="820" hours="4" week="//@weeks.47" />
+    <offers id="838" hours="8" week="//@weeks.49" />
+    <offers id="866" hours="8" week="//@weeks.53" />
+    <offers id="883" hours="8" week="//@weeks.57" />
+    <offers id="916" hours="4" week="//@weeks.63" />
+    <offers id="929" hours="8" week="//@weeks.66" />
+    <offers id="958" hours="4" week="//@weeks.70" />
+    <offers id="964" hours="4" week="//@weeks.70" />
+    <offers id="978" hours="4" week="//@weeks.72" />
+  </persons>
+  <persons id="59" name="Person_6" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="60" name="SkillType_4" level="1" type="//@skillTypes.3" />
+    <offers id="235" hours="8" week="//@weeks.6" />
+    <offers id="429" hours="8" week="//@weeks.45" />
+    <offers id="537" hours="8" week="//@weeks.60" />
+    <offers id="585" hours="8" week="//@weeks.66" />
+    <offers id="619" hours="8" week="//@weeks.70" />
+    <offers id="630" hours="8" week="//@weeks.71" />
+  </persons>
+  <persons id="63" name="Person_7" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="64" name="SkillType_25" level="1" type="//@skillTypes.24" />
+    <offers id="236" hours="8" week="//@weeks.7" />
+    <offers id="386" hours="8" week="//@weeks.39" />
+    <offers id="393" hours="8" week="//@weeks.40" />
+    <offers id="423" hours="8" week="//@weeks.44" />
+    <offers id="456" hours="8" week="//@weeks.48" />
+    <offers id="631" hours="8" week="//@weeks.71" />
+    <offers id="641" hours="8" week="//@weeks.72" />
+  </persons>
+  <persons id="67" name="Person_8" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="68" name="SkillType_18" level="1" type="//@skillTypes.17" />
+    <skills id="100" name="SkillType_10" level="1" type="//@skillTypes.9" />
+    <offers id="237" hours="8" week="//@weeks.8" />
+    <offers id="248" hours="8" week="//@weeks.17" />
+    <offers id="298" hours="8" week="//@weeks.29" />
+    <offers id="350" hours="8" week="//@weeks.34" />
+    <offers id="356" hours="8" week="//@weeks.35" />
+    <offers id="382" hours="8" week="//@weeks.38" />
+    <offers id="394" hours="8" week="//@weeks.40" />
+    <offers id="459" hours="8" week="//@weeks.49" />
+    <offers id="471" hours="8" week="//@weeks.51" />
+    <offers id="492" hours="8" week="//@weeks.53" />
+    <offers id="518" hours="8" week="//@weeks.57" />
+    <offers id="538" hours="8" week="//@weeks.60" />
+    <offers id="547" hours="8" week="//@weeks.61" />
+    <offers id="579" hours="8" week="//@weeks.65" />
+    <offers id="587" hours="8" week="//@weeks.66" />
+    <offers id="595" hours="8" week="//@weeks.67" />
+    <offers id="610" hours="8" week="//@weeks.69" />
+    <offers id="616" hours="8" week="//@weeks.69" />
+    <offers id="633" hours="8" week="//@weeks.71" />
+    <offers id="643" hours="8" week="//@weeks.72" />
+    <offers id="674" hours="8" week="//@weeks.75" />
+  </persons>
+  <persons id="71" name="Person_9" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="72" name="SkillType_24" level="3" type="//@skillTypes.23" />
+    <offers id="239" hours="4" week="//@weeks.9" />
+    <offers id="287" hours="4" week="//@weeks.23" />
+    <offers id="300" hours="4" week="//@weeks.29" />
+    <offers id="317" hours="4" week="//@weeks.31" />
+    <offers id="327" hours="4" week="//@weeks.32" />
+    <offers id="387" hours="4" week="//@weeks.39" />
+    <offers id="400" hours="4" week="//@weeks.41" />
+    <offers id="409" hours="4" week="//@weeks.42" />
+    <offers id="436" hours="4" week="//@weeks.46" />
+    <offers id="611" hours="4" week="//@weeks.69" />
+    <offers id="620" hours="8" week="//@weeks.70" />
+    <offers id="732" hours="8" week="//@weeks.34" />
+    <offers id="752" hours="4" week="//@weeks.37" />
+    <offers id="787" hours="4" week="//@weeks.42" />
+    <offers id="824" hours="8" week="//@weeks.47" />
+    <offers id="888" hours="4" week="//@weeks.57" />
+    <offers id="894" hours="4" week="//@weeks.58" />
+  </persons>
+  <persons id="76" name="Person_10" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="77" name="SkillType_9" level="2" type="//@skillTypes.8" />
+    <offers id="240" hours="8" week="//@weeks.10" />
+    <offers id="301" hours="8" week="//@weeks.29" />
+    <offers id="305" hours="8" week="//@weeks.30" />
+    <offers id="363" hours="8" week="//@weeks.36" />
+    <offers id="457" hours="8" week="//@weeks.48" />
+    <offers id="472" hours="8" week="//@weeks.51" />
+    <offers id="613" hours="8" week="//@weeks.69" />
+  </persons>
+  <persons id="89" name="Person_11" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="90" name="SkillType_17" level="3" type="//@skillTypes.16" />
+    <skills id="97" name="SkillType_18" level="3" type="//@skillTypes.17" />
+    <offers id="244" hours="8" week="//@weeks.14" />
+    <offers id="247" hours="8" week="//@weeks.16" />
+    <offers id="307" hours="8" week="//@weeks.30" />
+    <offers id="342" hours="8" week="//@weeks.33" />
+    <offers id="359" hours="8" week="//@weeks.35" />
+    <offers id="377" hours="8" week="//@weeks.37" />
+    <offers id="396" hours="8" week="//@weeks.40" />
+    <offers id="402" hours="8" week="//@weeks.41" />
+    <offers id="411" hours="8" week="//@weeks.42" />
+    <offers id="419" hours="8" week="//@weeks.43" />
+    <offers id="474" hours="8" week="//@weeks.51" />
+    <offers id="480" hours="8" week="//@weeks.52" />
+    <offers id="491" hours="8" week="//@weeks.53" />
+    <offers id="507" hours="8" week="//@weeks.55" />
+    <offers id="530" hours="8" week="//@weeks.59" />
+    <offers id="541" hours="8" week="//@weeks.60" />
+    <offers id="560" hours="8" week="//@weeks.63" />
+    <offers id="578" hours="8" week="//@weeks.65" />
+    <offers id="642" hours="8" week="//@weeks.72" />
+    <offers id="662" hours="8" week="//@weeks.74" />
+    <offers id="673" hours="8" week="//@weeks.75" />
+  </persons>
+  <persons id="103" name="Person_12" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="104" name="SkillType_11" level="3" type="//@skillTypes.10" />
+    <skills id="154" name="SkillType_4" level="3" type="//@skillTypes.3" />
+    <skills id="196" name="SkillType_6" level="3" type="//@skillTypes.5" />
+    <offers id="249" hours="8" week="//@weeks.18" />
+    <offers id="267" hours="8" week="//@weeks.3" />
+    <offers id="282" hours="8" week="//@weeks.18" />
+    <offers id="320" hours="8" week="//@weeks.31" />
+    <offers id="378" hours="8" week="//@weeks.37" />
+    <offers id="403" hours="8" week="//@weeks.41" />
+    <offers id="542" hours="8" week="//@weeks.60" />
+    <offers id="572" hours="8" week="//@weeks.64" />
+    <offers id="588" hours="8" week="//@weeks.66" />
+    <offers id="690" hours="8" week="//@weeks.29" />
+    <offers id="701" hours="8" week="//@weeks.31" />
+    <offers id="708" hours="8" week="//@weeks.31" />
+    <offers id="725" hours="8" week="//@weeks.33" />
+    <offers id="742" hours="8" week="//@weeks.36" />
+    <offers id="747" hours="8" week="//@weeks.37" />
+    <offers id="760" hours="8" week="//@weeks.38" />
+    <offers id="780" hours="8" week="//@weeks.41" />
+    <offers id="784" hours="8" week="//@weeks.42" />
+    <offers id="804" hours="8" week="//@weeks.45" />
+    <offers id="823" hours="8" week="//@weeks.47" />
+    <offers id="826" hours="8" week="//@weeks.48" />
+    <offers id="850" hours="8" week="//@weeks.51" />
+    <offers id="860" hours="8" week="//@weeks.53" />
+    <offers id="903" hours="8" week="//@weeks.61" />
+    <offers id="912" hours="8" week="//@weeks.63" />
+    <offers id="940" hours="8" week="//@weeks.67" />
+    <offers id="991" hours="8" week="//@weeks.73" />
+    <offers id="998" hours="8" week="//@weeks.74" />
+    <offers id="1004" hours="8" week="//@weeks.75" />
+  </persons>
+  <persons id="107" name="Person_13" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="108" name="SkillType_20" level="3" type="//@skillTypes.19" />
+    <offers id="229" hours="4" week="//@weeks.0" />
+    <offers id="316" hours="8" week="//@weeks.31" />
+    <offers id="325" hours="8" week="//@weeks.32" />
+    <offers id="345" hours="8" week="//@weeks.33" />
+    <offers id="404" hours="8" week="//@weeks.41" />
+    <offers id="451" hours="4" week="//@weeks.48" />
+    <offers id="460" hours="4" week="//@weeks.49" />
+    <offers id="475" hours="8" week="//@weeks.51" />
+    <offers id="482" hours="4" week="//@weeks.52" />
+    <offers id="488" hours="4" week="//@weeks.53" />
+    <offers id="550" hours="8" week="//@weeks.62" />
+    <offers id="567" hours="4" week="//@weeks.64" />
+    <offers id="576" hours="4" week="//@weeks.65" />
+    <offers id="580" hours="8" week="//@weeks.65" />
+    <offers id="606" hours="4" week="//@weeks.68" />
+    <offers id="629" hours="4" week="//@weeks.71" />
+    <offers id="644" hours="8" week="//@weeks.72" />
+    <offers id="665" hours="4" week="//@weeks.74" />
+  </persons>
+  <persons id="112" name="Person_14" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="113" name="SkillType_15" level="1" type="//@skillTypes.14" />
+    <skills id="156" name="SkillType_6" level="1" type="//@skillTypes.5" />
+    <offers id="252" hours="4" week="//@weeks.20" />
+    <offers id="261" hours="4" week="//@weeks.28" />
+    <offers id="268" hours="8" week="//@weeks.4" />
+    <offers id="337" hours="4" week="//@weeks.32" />
+    <offers id="353" hours="4" week="//@weeks.34" />
+    <offers id="383" hours="8" week="//@weeks.38" />
+    <offers id="406" hours="8" week="//@weeks.41" />
+    <offers id="431" hours="4" week="//@weeks.45" />
+    <offers id="448" hours="4" week="//@weeks.47" />
+    <offers id="466" hours="8" week="//@weeks.50" />
+    <offers id="486" hours="4" week="//@weeks.52" />
+    <offers id="498" hours="4" week="//@weeks.54" />
+    <offers id="510" hours="8" week="//@weeks.56" />
+    <offers id="522" hours="8" week="//@weeks.57" />
+    <offers id="554" hours="8" week="//@weeks.62" />
+    <offers id="556" hours="4" week="//@weeks.62" />
+    <offers id="589" hours="8" week="//@weeks.66" />
+    <offers id="592" hours="4" week="//@weeks.66" />
+    <offers id="635" hours="4" week="//@weeks.71" />
+    <offers id="637" hours="8" week="//@weeks.71" />
+    <offers id="667" hours="8" week="//@weeks.74" />
+    <offers id="675" hours="8" week="//@weeks.75" />
+    <offers id="683" hours="8" week="//@weeks.29" />
+    <offers id="693" hours="8" week="//@weeks.30" />
+    <offers id="722" hours="8" week="//@weeks.33" />
+    <offers id="730" hours="8" week="//@weeks.34" />
+    <offers id="734" hours="8" week="//@weeks.35" />
+    <offers id="797" hours="8" week="//@weeks.44" />
+    <offers id="827" hours="8" week="//@weeks.48" />
+    <offers id="839" hours="8" week="//@weeks.49" />
+    <offers id="861" hours="8" week="//@weeks.53" />
+    <offers id="869" hours="8" week="//@weeks.54" />
+    <offers id="980" hours="8" week="//@weeks.72" />
+  </persons>
+  <persons id="116" name="Person_15" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="117" name="SkillType_1" level="2" type="//@skillTypes.0" />
+    <skills id="151" name="SkillType_14" level="2" type="//@skillTypes.13" />
+    <offers id="253" hours="8" week="//@weeks.21" />
+    <offers id="265" hours="8" week="//@weeks.1" />
+    <offers id="291" hours="8" week="//@weeks.26" />
+    <offers id="302" hours="8" week="//@weeks.29" />
+    <offers id="310" hours="8" week="//@weeks.30" />
+    <offers id="332" hours="8" week="//@weeks.32" />
+    <offers id="397" hours="8" week="//@weeks.40" />
+    <offers id="425" hours="8" week="//@weeks.44" />
+    <offers id="483" hours="8" week="//@weeks.52" />
+    <offers id="573" hours="8" week="//@weeks.64" />
+    <offers id="590" hours="8" week="//@weeks.66" />
+    <offers id="668" hours="8" week="//@weeks.74" />
+    <offers id="680" hours="8" week="//@weeks.29" />
+    <offers id="713" hours="8" week="//@weeks.31" />
+    <offers id="715" hours="8" week="//@weeks.32" />
+    <offers id="727" hours="8" week="//@weeks.33" />
+    <offers id="733" hours="8" week="//@weeks.34" />
+    <offers id="754" hours="8" week="//@weeks.37" />
+    <offers id="767" hours="8" week="//@weeks.39" />
+    <offers id="769" hours="8" week="//@weeks.39" />
+    <offers id="779" hours="8" week="//@weeks.41" />
+    <offers id="796" hours="8" week="//@weeks.43" />
+    <offers id="845" hours="8" week="//@weeks.49" />
+    <offers id="847" hours="8" week="//@weeks.50" />
+    <offers id="849" hours="8" week="//@weeks.51" />
+    <offers id="877" hours="8" week="//@weeks.55" />
+    <offers id="906" hours="8" week="//@weeks.61" />
+    <offers id="926" hours="8" week="//@weeks.65" />
+    <offers id="928" hours="8" week="//@weeks.66" />
+    <offers id="944" hours="8" week="//@weeks.67" />
+    <offers id="967" hours="8" week="//@weeks.70" />
+    <offers id="977" hours="8" week="//@weeks.72" />
+    <offers id="987" hours="8" week="//@weeks.73" />
+    <offers id="1007" hours="8" week="//@weeks.75" />
+  </persons>
+  <persons id="123" name="Person_16" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="124" name="SkillType_10" level="3" type="//@skillTypes.9" />
+    <offers id="259" hours="4" week="//@weeks.26" />
+    <offers id="330" hours="2" week="//@weeks.32" />
+    <offers id="365" hours="2" week="//@weeks.36" />
+    <offers id="373" hours="4" week="//@weeks.36" />
+    <offers id="390" hours="4" week="//@weeks.39" />
+    <offers id="439" hours="4" week="//@weeks.46" />
+    <offers id="446" hours="4" week="//@weeks.47" />
+    <offers id="501" hours="4" week="//@weeks.54" />
+    <offers id="506" hours="4" week="//@weeks.55" />
+    <offers id="513" hours="4" week="//@weeks.56" />
+    <offers id="532" hours="4" week="//@weeks.59" />
+    <offers id="569" hours="2" week="//@weeks.64" />
+    <offers id="577" hours="8" week="//@weeks.65" />
+    <offers id="597" hours="2" week="//@weeks.67" />
+    <offers id="614" hours="4" week="//@weeks.69" />
+    <offers id="623" hours="4" week="//@weeks.70" />
+    <offers id="646" hours="4" week="//@weeks.72" />
+    <offers id="652" hours="2" week="//@weeks.73" />
+    <offers id="661" hours="4" week="//@weeks.74" />
+    <offers id="677" hours="4" week="//@weeks.75" />
+  </persons>
+  <persons id="127" name="Person_17" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="128" name="SkillType_13" level="3" type="//@skillTypes.12" />
+    <offers id="256" hours="8" week="//@weeks.24" />
+    <offers id="333" hours="8" week="//@weeks.32" />
+    <offers id="447" hours="8" week="//@weeks.47" />
+    <offers id="555" hours="8" week="//@weeks.62" />
+    <offers id="617" hours="8" week="//@weeks.69" />
+    <offers id="624" hours="8" week="//@weeks.70" />
+  </persons>
+  <persons id="132" name="Person_18" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="133" name="SkillType_3" level="2" type="//@skillTypes.2" />
+    <offers id="257" hours="8" week="//@weeks.25" />
+    <offers id="334" hours="8" week="//@weeks.32" />
+    <offers id="347" hours="8" week="//@weeks.33" />
+    <offers id="360" hours="8" week="//@weeks.35" />
+    <offers id="405" hours="8" week="//@weeks.41" />
+    <offers id="484" hours="8" week="//@weeks.52" />
+    <offers id="508" hours="8" week="//@weeks.55" />
+    <offers id="645" hours="8" week="//@weeks.72" />
+  </persons>
+  <persons id="136" name="Person_19" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="137" name="SkillType_10" level="3" type="//@skillTypes.9" />
+    <offers id="242" hours="8" week="//@weeks.12" />
+    <offers id="329" hours="2" week="//@weeks.32" />
+    <offers id="366" hours="4" week="//@weeks.36" />
+    <offers id="372" hours="2" week="//@weeks.36" />
+    <offers id="389" hours="4" week="//@weeks.39" />
+    <offers id="440" hours="4" week="//@weeks.46" />
+    <offers id="445" hours="4" week="//@weeks.47" />
+    <offers id="500" hours="4" week="//@weeks.54" />
+    <offers id="504" hours="2" week="//@weeks.55" />
+    <offers id="511" hours="2" week="//@weeks.56" />
+    <offers id="520" hours="4" week="//@weeks.57" />
+    <offers id="527" hours="8" week="//@weeks.58" />
+    <offers id="533" hours="4" week="//@weeks.59" />
+    <offers id="570" hours="2" week="//@weeks.64" />
+    <offers id="598" hours="4" week="//@weeks.67" />
+    <offers id="615" hours="4" week="//@weeks.69" />
+    <offers id="621" hours="8" week="//@weeks.70" />
+    <offers id="654" hours="4" week="//@weeks.73" />
+    <offers id="660" hours="2" week="//@weeks.74" />
+    <offers id="676" hours="4" week="//@weeks.75" />
+  </persons>
+  <persons id="142" name="Person_20" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="143" name="SkillType_15" level="1" type="//@skillTypes.14" />
+    <offers id="251" hours="4" week="//@weeks.20" />
+    <offers id="262" hours="4" week="//@weeks.28" />
+    <offers id="303" hours="8" week="//@weeks.29" />
+    <offers id="313" hours="8" week="//@weeks.30" />
+    <offers id="336" hours="4" week="//@weeks.32" />
+    <offers id="352" hours="4" week="//@weeks.34" />
+    <offers id="391" hours="8" week="//@weeks.39" />
+    <offers id="430" hours="4" week="//@weeks.45" />
+    <offers id="449" hours="4" week="//@weeks.47" />
+    <offers id="463" hours="8" week="//@weeks.49" />
+    <offers id="476" hours="8" week="//@weeks.51" />
+    <offers id="485" hours="4" week="//@weeks.52" />
+    <offers id="499" hours="4" week="//@weeks.54" />
+    <offers id="557" hours="4" week="//@weeks.62" />
+    <offers id="591" hours="4" week="//@weeks.66" />
+    <offers id="636" hours="4" week="//@weeks.71" />
+  </persons>
+  <persons id="159" name="Person_21" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="160" name="SkillType_2" level="2" type="//@skillTypes.1" />
+    <offers id="269" hours="8" week="//@weeks.5" />
+    <offers id="285" hours="8" week="//@weeks.21" />
+    <offers id="699" hours="8" week="//@weeks.30" />
+    <offers id="744" hours="8" week="//@weeks.36" />
+    <offers id="801" hours="8" week="//@weeks.44" />
+    <offers id="835" hours="8" week="//@weeks.48" />
+    <offers id="846" hours="8" week="//@weeks.50" />
+    <offers id="853" hours="8" week="//@weeks.51" />
+    <offers id="879" hours="8" week="//@weeks.56" />
+    <offers id="898" hours="8" week="//@weeks.60" />
+    <offers id="941" hours="8" week="//@weeks.67" />
+    <offers id="965" hours="8" week="//@weeks.70" />
+    <offers id="973" hours="8" week="//@weeks.71" />
+  </persons>
+  <persons id="163" name="Person_22" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="164" name="SkillType_5" level="2" type="//@skillTypes.4" />
+    <offers id="271" hours="8" week="//@weeks.7" />
+    <offers id="702" hours="8" week="//@weeks.31" />
+    <offers id="740" hours="8" week="//@weeks.36" />
+    <offers id="793" hours="8" week="//@weeks.43" />
+    <offers id="799" hours="8" week="//@weeks.44" />
+    <offers id="811" hours="8" week="//@weeks.46" />
+    <offers id="821" hours="8" week="//@weeks.47" />
+    <offers id="851" hours="8" week="//@weeks.51" />
+    <offers id="858" hours="8" week="//@weeks.52" />
+    <offers id="862" hours="8" week="//@weeks.53" />
+    <offers id="873" hours="8" week="//@weeks.55" />
+    <offers id="891" hours="8" week="//@weeks.58" />
+    <offers id="895" hours="8" week="//@weeks.59" />
+    <offers id="952" hours="8" week="//@weeks.69" />
+    <offers id="961" hours="8" week="//@weeks.70" />
+    <offers id="970" hours="8" week="//@weeks.71" />
+  </persons>
+  <persons id="168" name="Person_23" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="169" name="SkillType_14" level="3" type="//@skillTypes.13" />
+    <offers id="273" hours="8" week="//@weeks.9" />
+    <offers id="695" hours="8" week="//@weeks.30" />
+    <offers id="703" hours="8" week="//@weeks.31" />
+    <offers id="864" hours="8" week="//@weeks.53" />
+    <offers id="922" hours="8" week="//@weeks.65" />
+    <offers id="931" hours="8" week="//@weeks.66" />
+    <offers id="962" hours="8" week="//@weeks.70" />
+    <offers id="971" hours="8" week="//@weeks.71" />
+    <offers id="981" hours="8" week="//@weeks.72" />
+    <offers id="989" hours="8" week="//@weeks.73" />
+  </persons>
+  <persons id="172" name="Person_24" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="173" name="SkillType_5" level="3" type="//@skillTypes.4" />
+    <offers id="274" hours="8" week="//@weeks.10" />
+    <offers id="696" hours="8" week="//@weeks.30" />
+    <offers id="704" hours="8" week="//@weeks.31" />
+    <offers id="716" hours="8" week="//@weeks.32" />
+    <offers id="731" hours="8" week="//@weeks.34" />
+    <offers id="748" hours="8" week="//@weeks.37" />
+    <offers id="781" hours="8" week="//@weeks.41" />
+    <offers id="812" hours="8" week="//@weeks.46" />
+    <offers id="865" hours="8" week="//@weeks.53" />
+    <offers id="937" hours="8" week="//@weeks.67" />
+    <offers id="999" hours="8" week="//@weeks.74" />
+  </persons>
+  <persons id="175" name="Person_25" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="176" name="SkillType_3" level="3" type="//@skillTypes.2" />
+    <offers id="275" hours="8" week="//@weeks.11" />
+    <offers id="685" hours="8" week="//@weeks.29" />
+    <offers id="724" hours="8" week="//@weeks.33" />
+    <offers id="794" hours="8" week="//@weeks.43" />
+    <offers id="840" hours="8" week="//@weeks.49" />
+    <offers id="938" hours="8" week="//@weeks.67" />
+    <offers id="990" hours="8" week="//@weeks.73" />
+  </persons>
+  <persons id="178" name="Person_26" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="179" name="SkillType_24" level="2" type="//@skillTypes.23" />
+    <offers id="276" hours="8" week="//@weeks.12" />
+    <offers id="686" hours="8" week="//@weeks.29" />
+    <offers id="697" hours="8" week="//@weeks.30" />
+    <offers id="757" hours="8" week="//@weeks.38" />
+    <offers id="822" hours="8" week="//@weeks.47" />
+    <offers id="828" hours="8" week="//@weeks.48" />
+    <offers id="896" hours="8" week="//@weeks.59" />
+    <offers id="914" hours="8" week="//@weeks.63" />
+    <offers id="982" hours="8" week="//@weeks.72" />
+  </persons>
+  <persons id="181" name="Person_27" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="182" name="SkillType_16" level="1" type="//@skillTypes.15" />
+    <offers id="277" hours="8" week="//@weeks.13" />
+    <offers id="687" hours="8" week="//@weeks.29" />
+    <offers id="717" hours="8" week="//@weeks.32" />
+    <offers id="758" hours="8" week="//@weeks.38" />
+    <offers id="774" hours="8" week="//@weeks.40" />
+    <offers id="783" hours="8" week="//@weeks.42" />
+    <offers id="870" hours="8" week="//@weeks.54" />
+    <offers id="875" hours="8" week="//@weeks.55" />
+    <offers id="904" hours="8" week="//@weeks.61" />
+    <offers id="915" hours="8" week="//@weeks.63" />
+    <offers id="983" hours="8" week="//@weeks.72" />
+  </persons>
+  <persons id="184" name="Person_28" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="185" name="SkillType_12" level="1" type="//@skillTypes.11" />
+    <offers id="263" hours="8" week="//@weeks.29" />
+    <offers id="266" hours="8" week="//@weeks.2" />
+    <offers id="278" hours="8" week="//@weeks.14" />
+    <offers id="314" hours="8" week="//@weeks.30" />
+    <offers id="323" hours="4" week="//@weeks.31" />
+    <offers id="432" hours="8" week="//@weeks.45" />
+    <offers id="564" hours="4" week="//@weeks.63" />
+    <offers id="626" hours="8" week="//@weeks.70" />
+    <offers id="670" hours="8" week="//@weeks.74" />
+    <offers id="679" hours="4" week="//@weeks.75" />
+    <offers id="682" hours="4" week="//@weeks.29" />
+    <offers id="705" hours="4" week="//@weeks.31" />
+    <offers id="792" hours="4" week="//@weeks.43" />
+    <offers id="805" hours="4" week="//@weeks.45" />
+    <offers id="819" hours="4" week="//@weeks.47" />
+    <offers id="829" hours="8" week="//@weeks.48" />
+    <offers id="841" hours="8" week="//@weeks.49" />
+    <offers id="917" hours="4" week="//@weeks.63" />
+    <offers id="959" hours="4" week="//@weeks.70" />
+    <offers id="963" hours="4" week="//@weeks.70" />
+    <offers id="968" hours="8" week="//@weeks.71" />
+    <offers id="979" hours="4" week="//@weeks.72" />
+  </persons>
+  <persons id="188" name="Person_29" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="189" name="SkillType_27" level="3" type="//@skillTypes.26" />
+    <offers id="279" hours="8" week="//@weeks.15" />
+    <offers id="688" hours="8" week="//@weeks.29" />
+    <offers id="749" hours="8" week="//@weeks.37" />
+    <offers id="759" hours="8" week="//@weeks.38" />
+    <offers id="813" hours="8" week="//@weeks.46" />
+    <offers id="867" hours="8" week="//@weeks.53" />
+    <offers id="923" hours="8" week="//@weeks.65" />
+    <offers id="972" hours="8" week="//@weeks.71" />
+    <offers id="1000" hours="8" week="//@weeks.74" />
+  </persons>
+  <persons id="193" name="Person_30" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="194" name="SkillType_7" level="3" type="//@skillTypes.6" />
+    <offers id="246" hours="4" week="//@weeks.15" />
+    <offers id="309" hours="4" week="//@weeks.30" />
+    <offers id="343" hours="4" week="//@weeks.33" />
+    <offers id="358" hours="4" week="//@weeks.35" />
+    <offers id="401" hours="8" week="//@weeks.41" />
+    <offers id="497" hours="4" week="//@weeks.54" />
+    <offers id="663" hours="4" week="//@weeks.74" />
+    <offers id="816" hours="4" week="//@weeks.46" />
+    <offers id="832" hours="4" week="//@weeks.48" />
+    <offers id="884" hours="4" week="//@weeks.57" />
+  </persons>
+  <persons id="198" name="Person_31" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="199" name="SkillType_20" level="2" type="//@skillTypes.19" />
+    <offers id="283" hours="8" week="//@weeks.19" />
+    <offers id="293" hours="4" week="//@weeks.28" />
+    <offers id="710" hours="4" week="//@weeks.31" />
+    <offers id="721" hours="4" week="//@weeks.32" />
+    <offers id="736" hours="8" week="//@weeks.35" />
+    <offers id="737" hours="4" week="//@weeks.35" />
+    <offers id="761" hours="4" week="//@weeks.38" />
+    <offers id="765" hours="8" week="//@weeks.38" />
+    <offers id="771" hours="4" week="//@weeks.39" />
+    <offers id="789" hours="8" week="//@weeks.42" />
+    <offers id="810" hours="4" week="//@weeks.45" />
+    <offers id="833" hours="4" week="//@weeks.48" />
+    <offers id="856" hours="4" week="//@weeks.51" />
+    <offers id="887" hours="4" week="//@weeks.57" />
+    <offers id="933" hours="4" week="//@weeks.66" />
+    <offers id="954" hours="4" week="//@weeks.69" />
+    <offers id="985" hours="8" week="//@weeks.72" />
+    <offers id="993" hours="4" week="//@weeks.73" />
+    <offers id="1002" hours="4" week="//@weeks.74" />
+    <offers id="1005" hours="8" week="//@weeks.75" />
+  </persons>
+  <persons id="202" name="Person_32" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="203" name="SkillType_14" level="1" type="//@skillTypes.13" />
+    <offers id="284" hours="8" week="//@weeks.20" />
+    <offers id="698" hours="8" week="//@weeks.30" />
+    <offers id="743" hours="8" week="//@weeks.36" />
+    <offers id="751" hours="8" week="//@weeks.37" />
+    <offers id="763" hours="8" week="//@weeks.38" />
+    <offers id="785" hours="8" week="//@weeks.42" />
+    <offers id="800" hours="8" week="//@weeks.44" />
+    <offers id="852" hours="8" week="//@weeks.51" />
+    <offers id="859" hours="8" week="//@weeks.52" />
+    <offers id="905" hours="8" week="//@weeks.61" />
+    <offers id="920" hours="8" week="//@weeks.64" />
+    <offers id="948" hours="8" week="//@weeks.68" />
+    <offers id="994" hours="8" week="//@weeks.73" />
+  </persons>
+  <persons id="206" name="Person_33" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="207" name="SkillType_21" level="2" type="//@skillTypes.20" />
+    <offers id="286" hours="8" week="//@weeks.22" />
+    <offers id="691" hours="8" week="//@weeks.29" />
+    <offers id="718" hours="8" week="//@weeks.32" />
+    <offers id="782" hours="8" week="//@weeks.41" />
+    <offers id="808" hours="8" week="//@weeks.45" />
+    <offers id="836" hours="8" week="//@weeks.48" />
+    <offers id="843" hours="8" week="//@weeks.49" />
+    <offers id="871" hours="8" week="//@weeks.54" />
+    <offers id="880" hours="8" week="//@weeks.56" />
+    <offers id="899" hours="8" week="//@weeks.60" />
+    <offers id="924" hours="8" week="//@weeks.65" />
+    <offers id="934" hours="8" week="//@weeks.66" />
+    <offers id="942" hours="8" week="//@weeks.67" />
+    <offers id="974" hours="8" week="//@weeks.71" />
+    <offers id="1006" hours="8" week="//@weeks.75" />
+  </persons>
+  <persons id="209" name="Person_34" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="210" name="SkillType_24" level="3" type="//@skillTypes.23" />
+    <offers id="238" hours="4" week="//@weeks.9" />
+    <offers id="288" hours="4" week="//@weeks.23" />
+    <offers id="299" hours="4" week="//@weeks.29" />
+    <offers id="318" hours="4" week="//@weeks.31" />
+    <offers id="326" hours="4" week="//@weeks.32" />
+    <offers id="388" hours="4" week="//@weeks.39" />
+    <offers id="399" hours="4" week="//@weeks.41" />
+    <offers id="410" hours="4" week="//@weeks.42" />
+    <offers id="435" hours="4" week="//@weeks.46" />
+    <offers id="479" hours="8" week="//@weeks.52" />
+    <offers id="526" hours="8" week="//@weeks.58" />
+    <offers id="612" hours="4" week="//@weeks.69" />
+    <offers id="632" hours="8" week="//@weeks.71" />
+    <offers id="658" hours="8" week="//@weeks.74" />
+    <offers id="753" hours="4" week="//@weeks.37" />
+    <offers id="786" hours="4" week="//@weeks.42" />
+    <offers id="844" hours="8" week="//@weeks.49" />
+    <offers id="889" hours="4" week="//@weeks.57" />
+    <offers id="893" hours="4" week="//@weeks.58" />
+    <offers id="925" hours="8" week="//@weeks.65" />
+  </persons>
+  <persons id="212" name="Person_35" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="213" name="SkillType_29" level="2" type="//@skillTypes.28" />
+    <offers id="289" hours="8" week="//@weeks.24" />
+    <offers id="711" hours="8" week="//@weeks.31" />
+    <offers id="768" hours="8" week="//@weeks.39" />
+    <offers id="788" hours="8" week="//@weeks.42" />
+    <offers id="900" hours="8" week="//@weeks.60" />
+    <offers id="955" hours="8" week="//@weeks.69" />
+    <offers id="995" hours="8" week="//@weeks.73" />
+  </persons>
+  <persons id="216" name="Person_36" salary="150.0" overtimeFlexibility="1.5" overtimeBonus="225.0">
+    <skills id="217" name="SkillType_19" level="3" type="//@skillTypes.18" />
+    <offers id="290" hours="8" week="//@weeks.25" />
+    <offers id="712" hours="8" week="//@weeks.31" />
+    <offers id="726" hours="8" week="//@weeks.33" />
+    <offers id="764" hours="8" week="//@weeks.38" />
+    <offers id="881" hours="8" week="//@weeks.56" />
+    <offers id="943" hours="8" week="//@weeks.67" />
+    <offers id="949" hours="8" week="//@weeks.68" />
+    <offers id="966" hours="8" week="//@weeks.70" />
+  </persons>
+  <persons id="220" name="Person_37" salary="50.0" overtimeFlexibility="1.0" overtimeBonus="75.0">
+    <skills id="221" name="SkillType_2" level="1" type="//@skillTypes.1" />
+    <offers id="292" hours="8" week="//@weeks.27" />
+    <offers id="714" hours="8" week="//@weeks.31" />
+    <offers id="719" hours="8" week="//@weeks.32" />
+    <offers id="755" hours="8" week="//@weeks.37" />
+    <offers id="777" hours="8" week="//@weeks.40" />
+    <offers id="802" hours="8" week="//@weeks.44" />
+    <offers id="854" hours="8" week="//@weeks.51" />
+    <offers id="901" hours="8" week="//@weeks.60" />
+    <offers id="945" hours="8" week="//@weeks.67" />
+    <offers id="956" hours="8" week="//@weeks.69" />
+    <offers id="996" hours="8" week="//@weeks.73" />
+  </persons>
+  <persons id="223" name="Person_38" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="224" name="SkillType_20" level="2" type="//@skillTypes.19" />
+    <offers id="294" hours="4" week="//@weeks.28" />
+    <offers id="709" hours="4" week="//@weeks.31" />
+    <offers id="720" hours="4" week="//@weeks.32" />
+    <offers id="738" hours="4" week="//@weeks.35" />
+    <offers id="745" hours="8" week="//@weeks.36" />
+    <offers id="756" hours="8" week="//@weeks.37" />
+    <offers id="762" hours="4" week="//@weeks.38" />
+    <offers id="770" hours="4" week="//@weeks.39" />
+    <offers id="776" hours="8" week="//@weeks.40" />
+    <offers id="809" hours="4" week="//@weeks.45" />
+    <offers id="817" hours="8" week="//@weeks.46" />
+    <offers id="834" hours="4" week="//@weeks.48" />
+    <offers id="855" hours="4" week="//@weeks.51" />
+    <offers id="886" hours="4" week="//@weeks.57" />
+    <offers id="927" hours="8" week="//@weeks.65" />
+    <offers id="932" hours="4" week="//@weeks.66" />
+    <offers id="953" hours="4" week="//@weeks.69" />
+    <offers id="975" hours="8" week="//@weeks.71" />
+    <offers id="992" hours="4" week="//@weeks.73" />
+    <offers id="1001" hours="4" week="//@weeks.74" />
+  </persons>
+  <persons id="226" name="Person_39" salary="100.0" overtimeFlexibility="1.25" overtimeBonus="150.0">
+    <skills id="227" name="SkillType_7" level="2" type="//@skillTypes.6" />
+    <offers id="295" hours="8" week="//@weeks.29" />
+    <offers id="739" hours="8" week="//@weeks.35" />
+    <offers id="766" hours="8" week="//@weeks.38" />
+    <offers id="772" hours="8" week="//@weeks.39" />
+    <offers id="837" hours="8" week="//@weeks.48" />
+    <offers id="848" hours="8" week="//@weeks.50" />
+    <offers id="872" hours="8" week="//@weeks.54" />
+    <offers id="907" hours="8" week="//@weeks.61" />
+    <offers id="910" hours="8" week="//@weeks.62" />
+    <offers id="935" hours="8" week="//@weeks.66" />
+    <offers id="950" hours="8" week="//@weeks.68" />
+    <offers id="976" hours="8" week="//@weeks.71" />
+    <offers id="986" hours="8" week="//@weeks.72" />
+    <offers id="1003" hours="8" week="//@weeks.74" />
+  </persons>
+  <skillTypes id="1" name="SkillType_1" />
+  <skillTypes id="2" name="SkillType_2" />
+  <skillTypes id="3" name="SkillType_3" />
+  <skillTypes id="4" name="SkillType_4" />
+  <skillTypes id="5" name="SkillType_5" />
+  <skillTypes id="6" name="SkillType_6" />
+  <skillTypes id="7" name="SkillType_7" />
+  <skillTypes id="8" name="SkillType_8" />
+  <skillTypes id="9" name="SkillType_9" />
+  <skillTypes id="10" name="SkillType_10" />
+  <skillTypes id="11" name="SkillType_11" />
+  <skillTypes id="12" name="SkillType_12" />
+  <skillTypes id="13" name="SkillType_13" />
+  <skillTypes id="14" name="SkillType_14" />
+  <skillTypes id="15" name="SkillType_15" />
+  <skillTypes id="16" name="SkillType_16" />
+  <skillTypes id="17" name="SkillType_17" />
+  <skillTypes id="18" name="SkillType_18" />
+  <skillTypes id="19" name="SkillType_19" />
+  <skillTypes id="20" name="SkillType_20" />
+  <skillTypes id="21" name="SkillType_21" />
+  <skillTypes id="22" name="SkillType_22" />
+  <skillTypes id="23" name="SkillType_23" />
+  <skillTypes id="24" name="SkillType_24" />
+  <skillTypes id="25" name="SkillType_25" />
+  <skillTypes id="26" name="SkillType_26" />
+  <skillTypes id="27" name="SkillType_27" />
+  <skillTypes id="28" name="SkillType_28" />
+  <skillTypes id="29" name="SkillType_29" />
+  <skillTypes id="30" name="SkillType_30" />
+  <weeks offers="//@persons.0/@offers.0 //@persons.12/@offers.0 //@persons.1/@offers.3" id="34" number="1" next="//@weeks.1" />
+  <weeks previous="//@weeks.0" offers="//@persons.1/@offers.0 //@persons.14/@offers.1" id="38" number="2" next="//@weeks.2" />
+  <weeks previous="//@weeks.1" offers="//@persons.2/@offers.0 //@persons.27/@offers.1" id="42" number="3" next="//@weeks.3" />
+  <weeks previous="//@weeks.2" offers="//@persons.3/@offers.0 //@persons.11/@offers.1" id="46" number="4" next="//@weeks.4" />
+  <weeks previous="//@weeks.3" offers="//@persons.4/@offers.0 //@persons.13/@offers.2" id="50" number="5" next="//@weeks.5" />
+  <weeks previous="//@weeks.4" offers="//@persons.4/@offers.1 //@persons.20/@offers.0" id="55" number="6" next="//@weeks.6" />
+  <weeks previous="//@weeks.5" offers="//@persons.5/@offers.0 //@persons.2/@offers.1" id="58" number="7" next="//@weeks.7" />
+  <weeks previous="//@weeks.6" offers="//@persons.6/@offers.0 //@persons.21/@offers.0" id="62" number="8" next="//@weeks.8" />
+  <weeks previous="//@weeks.7" offers="//@persons.7/@offers.0 //@persons.3/@offers.1" id="66" number="9" next="//@weeks.9" />
+  <weeks previous="//@weeks.8" offers="//@persons.33/@offers.0 //@persons.8/@offers.0 //@persons.22/@offers.0" id="70" number="10" next="//@weeks.10" />
+  <weeks previous="//@weeks.9" offers="//@persons.9/@offers.0 //@persons.23/@offers.0" id="75" number="11" next="//@weeks.11" />
+  <weeks previous="//@weeks.10" offers="//@persons.0/@offers.1 //@persons.24/@offers.0" id="79" number="12" next="//@weeks.12" />
+  <weeks previous="//@weeks.11" offers="//@persons.18/@offers.0 //@persons.25/@offers.0" id="82" number="13" next="//@weeks.13" />
+  <weeks previous="//@weeks.12" offers="//@persons.0/@offers.2 //@persons.26/@offers.0" id="85" number="14" next="//@weeks.14" />
+  <weeks previous="//@weeks.13" offers="//@persons.10/@offers.0 //@persons.27/@offers.2" id="88" number="15" next="//@weeks.15" />
+  <weeks previous="//@weeks.14" offers="//@persons.0/@offers.3 //@persons.29/@offers.0 //@persons.28/@offers.0" id="93" number="16" next="//@weeks.16" />
+  <weeks previous="//@weeks.15" offers="//@persons.10/@offers.1 //@persons.3/@offers.2" id="96" number="17" next="//@weeks.17" />
+  <weeks previous="//@weeks.16" offers="//@persons.7/@offers.1 //@persons.0/@offers.7" id="99" number="18" next="//@weeks.18" />
+  <weeks previous="//@weeks.17" offers="//@persons.11/@offers.0 //@persons.11/@offers.2" id="102" number="19" next="//@weeks.19" />
+  <weeks previous="//@weeks.18" offers="//@persons.0/@offers.4 //@persons.30/@offers.0" id="106" number="20" next="//@weeks.20" />
+  <weeks previous="//@weeks.19" offers="//@persons.19/@offers.0 //@persons.13/@offers.0 //@persons.31/@offers.0" id="111" number="21" next="//@weeks.21" />
+  <weeks previous="//@weeks.20" offers="//@persons.14/@offers.0 //@persons.20/@offers.1" id="115" number="22" next="//@weeks.22" />
+  <weeks previous="//@weeks.21" offers="//@persons.1/@offers.1 //@persons.32/@offers.0" id="119" number="23" next="//@weeks.23" />
+  <weeks previous="//@weeks.22" offers="//@persons.0/@offers.5 //@persons.8/@offers.1 //@persons.33/@offers.1" id="122" number="24" next="//@weeks.24" />
+  <weeks previous="//@weeks.23" offers="//@persons.16/@offers.0 //@persons.34/@offers.0" id="126" number="25" next="//@weeks.25" />
+  <weeks previous="//@weeks.24" offers="//@persons.17/@offers.0 //@persons.35/@offers.0" id="131" number="26" next="//@weeks.26" />
+  <weeks previous="//@weeks.25" offers="//@persons.0/@offers.6 //@persons.15/@offers.0 //@persons.14/@offers.2" id="135" number="27" next="//@weeks.27" />
+  <weeks previous="//@weeks.26" offers="//@persons.1/@offers.2 //@persons.36/@offers.0" id="139" number="28" next="//@weeks.28" />
+  <weeks previous="//@weeks.27" offers="//@persons.13/@offers.1 //@persons.19/@offers.1 //@persons.30/@offers.1 //@persons.37/@offers.0" id="141" number="29" next="//@weeks.29" />
+  <weeks previous="//@weeks.28" offers="//@persons.27/@offers.0 //@persons.38/@offers.0 //@persons.3/@offers.3 //@persons.4/@offers.2 //@persons.7/@offers.2 //@persons.33/@offers.2 //@persons.8/@offers.2 //@persons.9/@offers.1 //@persons.14/@offers.3 //@persons.19/@offers.2 //@persons.14/@offers.12 //@persons.4/@offers.25 //@persons.27/@offers.10 //@persons.13/@offers.22 //@persons.2/@offers.12 //@persons.24/@offers.1 //@persons.25/@offers.1 //@persons.26/@offers.1 //@persons.28/@offers.1 //@persons.3/@offers.14 //@persons.11/@offers.9 //@persons.32/@offers.1" id="145" number="30" next="//@weeks.30" />
+  <weeks previous="//@weeks.29" offers="//@persons.9/@offers.2 //@persons.0/@offers.8 //@persons.10/@offers.2 //@persons.0/@offers.9 //@persons.29/@offers.1 //@persons.14/@offers.4 //@persons.0/@offers.10 //@persons.1/@offers.4 //@persons.19/@offers.3 //@persons.27/@offers.3 //@persons.1/@offers.37 //@persons.13/@offers.23 //@persons.2/@offers.13 //@persons.22/@offers.1 //@persons.23/@offers.1 //@persons.25/@offers.2 //@persons.31/@offers.1 //@persons.20/@offers.2" id="304" number="31" next="//@weeks.31" />
+  <weeks previous="//@weeks.30" offers="//@persons.12/@offers.1 //@persons.8/@offers.3 //@persons.33/@offers.3 //@persons.0/@offers.11 //@persons.11/@offers.3 //@persons.0/@offers.12 //@persons.4/@offers.3 //@persons.27/@offers.4 //@persons.4/@offers.26 //@persons.11/@offers.10 //@persons.21/@offers.1 //@persons.22/@offers.2 //@persons.23/@offers.2 //@persons.27/@offers.11 //@persons.4/@offers.27 //@persons.3/@offers.15 //@persons.11/@offers.11 //@persons.37/@offers.1 //@persons.30/@offers.2 //@persons.34/@offers.1 //@persons.35/@offers.1 //@persons.14/@offers.13 //@persons.36/@offers.1" id="315" number="32" next="//@weeks.32" />
+  <weeks previous="//@weeks.31" offers="//@persons.12/@offers.2 //@persons.33/@offers.4 //@persons.8/@offers.4 //@persons.0/@offers.13 //@persons.18/@offers.1 //@persons.15/@offers.1 //@persons.0/@offers.14 //@persons.14/@offers.5 //@persons.16/@offers.1 //@persons.17/@offers.1 //@persons.1/@offers.5 //@persons.19/@offers.4 //@persons.13/@offers.3 //@persons.14/@offers.14 //@persons.23/@offers.3 //@persons.26/@offers.2 //@persons.32/@offers.2 //@persons.36/@offers.2 //@persons.37/@offers.2 //@persons.30/@offers.3" id="324" number="33" next="//@weeks.33" />
+  <weeks previous="//@weeks.32" offers="//@persons.2/@offers.2 //@persons.0/@offers.15 //@persons.0/@offers.16 //@persons.10/@offers.3 //@persons.29/@offers.2 //@persons.0/@offers.17 //@persons.12/@offers.3 //@persons.1/@offers.6 //@persons.17/@offers.2 //@persons.1/@offers.7 //@persons.13/@offers.24 //@persons.3/@offers.16 //@persons.24/@offers.2 //@persons.11/@offers.12 //@persons.35/@offers.2 //@persons.14/@offers.15" id="338" number="34" next="//@weeks.34" />
+  <weeks previous="//@weeks.33" offers="//@persons.7/@offers.3 //@persons.1/@offers.8 //@persons.19/@offers.5 //@persons.13/@offers.4 //@persons.1/@offers.38 //@persons.4/@offers.28 //@persons.13/@offers.25 //@persons.23/@offers.4 //@persons.8/@offers.11 //@persons.14/@offers.16" id="349" number="35" next="//@weeks.35" />
+  <weeks previous="//@weeks.34" offers="//@persons.3/@offers.4 //@persons.7/@offers.4 //@persons.0/@offers.18 //@persons.29/@offers.3 //@persons.10/@offers.4 //@persons.17/@offers.3 //@persons.13/@offers.26 //@persons.2/@offers.14 //@persons.30/@offers.4 //@persons.30/@offers.5 //@persons.37/@offers.3 //@persons.38/@offers.1" id="354" number="36" next="//@weeks.36" />
+  <weeks previous="//@weeks.35" offers="//@persons.4/@offers.4 //@persons.9/@offers.3 //@persons.0/@offers.19 //@persons.15/@offers.2 //@persons.18/@offers.2 //@persons.0/@offers.20 //@persons.0/@offers.21 //@persons.1/@offers.9 //@persons.0/@offers.22 //@persons.0/@offers.23 //@persons.18/@offers.3 //@persons.15/@offers.3 //@persons.21/@offers.2 //@persons.3/@offers.17 //@persons.11/@offers.13 //@persons.31/@offers.2 //@persons.20/@offers.3 //@persons.37/@offers.4" id="361" number="37" next="//@weeks.37" />
+  <weeks previous="//@weeks.36" offers="//@persons.0/@offers.24 //@persons.4/@offers.5 //@persons.10/@offers.5 //@persons.11/@offers.4 //@persons.0/@offers.25 //@persons.1/@offers.39 //@persons.11/@offers.14 //@persons.23/@offers.5 //@persons.28/@offers.2 //@persons.3/@offers.18 //@persons.31/@offers.3 //@persons.8/@offers.12 //@persons.33/@offers.14 //@persons.14/@offers.17 //@persons.36/@offers.3 //@persons.37/@offers.5" id="374" number="38" next="//@weeks.38" />
+  <weeks previous="//@weeks.37" offers="//@persons.4/@offers.6 //@persons.7/@offers.5 //@persons.13/@offers.5 //@persons.25/@offers.3 //@persons.26/@offers.3 //@persons.28/@offers.3 //@persons.11/@offers.15 //@persons.30/@offers.6 //@persons.37/@offers.6 //@persons.31/@offers.4 //@persons.35/@offers.3 //@persons.30/@offers.7 //@persons.38/@offers.2" id="380" number="39" next="//@weeks.39" />
+  <weeks previous="//@weeks.38" offers="//@persons.3/@offers.5 //@persons.6/@offers.1 //@persons.8/@offers.5 //@persons.33/@offers.5 //@persons.18/@offers.4 //@persons.15/@offers.4 //@persons.19/@offers.6 //@persons.14/@offers.18 //@persons.34/@offers.2 //@persons.14/@offers.19 //@persons.37/@offers.7 //@persons.30/@offers.8 //@persons.38/@offers.3" id="384" number="40" next="//@weeks.40" />
+  <weeks previous="//@weeks.39" offers="//@persons.6/@offers.2 //@persons.7/@offers.6 //@persons.0/@offers.26 //@persons.10/@offers.6 //@persons.14/@offers.6 //@persons.3/@offers.19 //@persons.26/@offers.4 //@persons.0/@offers.65 //@persons.37/@offers.8 //@persons.36/@offers.4" id="392" number="41" next="//@weeks.41" />
+  <weeks previous="//@weeks.40" offers="//@persons.33/@offers.6 //@persons.8/@offers.6 //@persons.29/@offers.4 //@persons.10/@offers.7 //@persons.11/@offers.5 //@persons.12/@offers.4 //@persons.17/@offers.4 //@persons.13/@offers.6 //@persons.1/@offers.40 //@persons.14/@offers.20 //@persons.11/@offers.16 //@persons.23/@offers.6 //@persons.32/@offers.3" id="398" number="42" next="//@weeks.42" />
+  <weeks previous="//@weeks.41" offers="//@persons.1/@offers.10 //@persons.8/@offers.7 //@persons.33/@offers.7 //@persons.10/@offers.8 //@persons.26/@offers.5 //@persons.11/@offers.17 //@persons.31/@offers.5 //@persons.33/@offers.15 //@persons.8/@offers.13 //@persons.34/@offers.3 //@persons.30/@offers.9" id="407" number="43" next="//@weeks.43" />
+  <weeks previous="//@weeks.42" offers="//@persons.1/@offers.11 //@persons.2/@offers.3 //@persons.3/@offers.6 //@persons.4/@offers.7 //@persons.4/@offers.8 //@persons.0/@offers.27 //@persons.10/@offers.9 //@persons.1/@offers.12 //@persons.1/@offers.41 //@persons.4/@offers.29 //@persons.27/@offers.12 //@persons.21/@offers.3 //@persons.24/@offers.3 //@persons.0/@offers.66 //@persons.14/@offers.21" id="412" number="44" next="//@weeks.44" />
+  <weeks previous="//@weeks.43" offers="//@persons.4/@offers.9 //@persons.6/@offers.3 //@persons.0/@offers.28 //@persons.14/@offers.7 //@persons.13/@offers.27 //@persons.2/@offers.15 //@persons.21/@offers.4 //@persons.31/@offers.6 //@persons.20/@offers.4 //@persons.36/@offers.5" id="421" number="45" next="//@weeks.45" />
+  <weeks previous="//@weeks.44" offers="//@persons.2/@offers.4 //@persons.4/@offers.10 //@persons.5/@offers.1 //@persons.19/@offers.7 //@persons.13/@offers.7 //@persons.27/@offers.5 //@persons.4/@offers.30 //@persons.11/@offers.18 //@persons.27/@offers.13 //@persons.4/@offers.31 //@persons.3/@offers.20 //@persons.32/@offers.4 //@persons.37/@offers.9 //@persons.30/@offers.10" id="426" number="46" next="//@weeks.46" />
+  <weeks previous="//@weeks.45" offers="//@persons.4/@offers.11 //@persons.33/@offers.8 //@persons.8/@offers.8 //@persons.0/@offers.29 //@persons.0/@offers.30 //@persons.15/@offers.5 //@persons.18/@offers.5 //@persons.21/@offers.5 //@persons.23/@offers.7 //@persons.28/@offers.4 //@persons.3/@offers.21 //@persons.0/@offers.67 //@persons.29/@offers.7 //@persons.37/@offers.10" id="433" number="47" next="//@weeks.47" />
+  <weeks previous="//@weeks.46" offers="//@persons.3/@offers.7 //@persons.4/@offers.12 //@persons.0/@offers.31 //@persons.18/@offers.6 //@persons.15/@offers.6 //@persons.16/@offers.2 //@persons.13/@offers.8 //@persons.19/@offers.8 //@persons.1/@offers.42 //@persons.27/@offers.14 //@persons.4/@offers.32 //@persons.21/@offers.6 //@persons.25/@offers.4 //@persons.11/@offers.19 //@persons.8/@offers.14" id="441" number="48" next="//@weeks.48" />
+  <weeks previous="//@weeks.47" offers="//@persons.12/@offers.5 //@persons.0/@offers.32 //@persons.2/@offers.5 //@persons.3/@offers.8 //@persons.4/@offers.13 //@persons.6/@offers.4 //@persons.9/@offers.4 //@persons.1/@offers.43 //@persons.11/@offers.20 //@persons.13/@offers.28 //@persons.25/@offers.5 //@persons.27/@offers.15 //@persons.3/@offers.22 //@persons.0/@offers.68 //@persons.29/@offers.8 //@persons.30/@offers.11 //@persons.37/@offers.11 //@persons.20/@offers.5 //@persons.32/@offers.5 //@persons.38/@offers.4" id="450" number="49" next="//@weeks.49" />
+  <weeks previous="//@weeks.48" offers="//@persons.7/@offers.7 //@persons.12/@offers.6 //@persons.0/@offers.33 //@persons.1/@offers.13 //@persons.19/@offers.9 //@persons.4/@offers.33 //@persons.13/@offers.29 //@persons.24/@offers.4 //@persons.27/@offers.16 //@persons.3/@offers.23 //@persons.32/@offers.6 //@persons.33/@offers.16 //@persons.14/@offers.22" id="458" number="50" next="//@weeks.50" />
+  <weeks previous="//@weeks.49" offers="//@persons.1/@offers.14 //@persons.13/@offers.9 //@persons.1/@offers.15 //@persons.20/@offers.6 //@persons.14/@offers.23 //@persons.38/@offers.5" id="464" number="51" next="//@weeks.51" />
+  <weeks previous="//@weeks.50" offers="//@persons.3/@offers.9 //@persons.4/@offers.14 //@persons.7/@offers.8 //@persons.9/@offers.5 //@persons.0/@offers.34 //@persons.10/@offers.10 //@persons.12/@offers.7 //@persons.19/@offers.10 //@persons.14/@offers.24 //@persons.11/@offers.21 //@persons.21/@offers.7 //@persons.31/@offers.7 //@persons.20/@offers.7 //@persons.36/@offers.6 //@persons.37/@offers.12 //@persons.30/@offers.12" id="468" number="52" next="//@weeks.52" />
+  <weeks previous="//@weeks.51" offers="//@persons.1/@offers.16 //@persons.33/@offers.9 //@persons.10/@offers.11 //@persons.0/@offers.35 //@persons.12/@offers.8 //@persons.14/@offers.8 //@persons.17/@offers.5 //@persons.19/@offers.11 //@persons.13/@offers.10 //@persons.2/@offers.16 //@persons.21/@offers.8 //@persons.31/@offers.8" id="477" number="53" next="//@weeks.53" />
+  <weeks previous="//@weeks.52" offers="//@persons.12/@offers.9 //@persons.0/@offers.36 //@persons.0/@offers.37 //@persons.10/@offers.12 //@persons.7/@offers.9 //@persons.1/@offers.17 //@persons.1/@offers.18 //@persons.11/@offers.22 //@persons.13/@offers.30 //@persons.21/@offers.9 //@persons.3/@offers.24 //@persons.22/@offers.3 //@persons.23/@offers.8 //@persons.4/@offers.34 //@persons.28/@offers.5" id="487" number="54" next="//@weeks.54" />
+  <weeks previous="//@weeks.53" offers="//@persons.0/@offers.38 //@persons.29/@offers.5 //@persons.13/@offers.11 //@persons.19/@offers.12 //@persons.18/@offers.7 //@persons.15/@offers.7 //@persons.1/@offers.44 //@persons.13/@offers.31 //@persons.26/@offers.6 //@persons.32/@offers.7 //@persons.38/@offers.6" id="495" number="55" next="//@weeks.55" />
+  <weeks previous="//@weeks.54" offers="//@persons.4/@offers.15 //@persons.18/@offers.8 //@persons.0/@offers.39 //@persons.15/@offers.8 //@persons.10/@offers.13 //@persons.17/@offers.6 //@persons.21/@offers.10 //@persons.3/@offers.25 //@persons.26/@offers.7 //@persons.3/@offers.26 //@persons.14/@offers.25" id="502" number="56" next="//@weeks.56" />
+  <weeks previous="//@weeks.55" offers="//@persons.13/@offers.12 //@persons.18/@offers.9 //@persons.0/@offers.40 //@persons.15/@offers.9 //@persons.1/@offers.19 //@persons.1/@offers.45 //@persons.20/@offers.8 //@persons.32/@offers.8 //@persons.35/@offers.4" id="509" number="57" next="//@weeks.57" />
+  <weeks previous="//@weeks.56" offers="//@persons.2/@offers.6 //@persons.3/@offers.10 //@persons.7/@offers.10 //@persons.0/@offers.41 //@persons.18/@offers.10 //@persons.1/@offers.20 //@persons.13/@offers.13 //@persons.2/@offers.17 //@persons.4/@offers.35 //@persons.29/@offers.9 //@persons.0/@offers.69 //@persons.37/@offers.13 //@persons.30/@offers.13 //@persons.8/@offers.15 //@persons.33/@offers.17" id="515" number="58" next="//@weeks.58" />
+  <weeks previous="//@weeks.57" offers="//@persons.0/@offers.42 //@persons.4/@offers.16 //@persons.33/@offers.10 //@persons.18/@offers.11 //@persons.2/@offers.18 //@persons.21/@offers.11 //@persons.3/@offers.27 //@persons.33/@offers.18 //@persons.8/@offers.16" id="523" number="59" next="//@weeks.59" />
+  <weeks previous="//@weeks.58" offers="//@persons.1/@offers.21 //@persons.10/@offers.14 //@persons.0/@offers.43 //@persons.15/@offers.10 //@persons.18/@offers.12 //@persons.21/@offers.12 //@persons.25/@offers.6" id="528" number="60" next="//@weeks.60" />
+  <weeks previous="//@weeks.59" offers="//@persons.1/@offers.22 //@persons.4/@offers.17 //@persons.5/@offers.2 //@persons.7/@offers.11 //@persons.0/@offers.44 //@persons.0/@offers.45 //@persons.10/@offers.15 //@persons.11/@offers.6 //@persons.2/@offers.19 //@persons.20/@offers.9 //@persons.32/@offers.9 //@persons.34/@offers.4 //@persons.36/@offers.7" id="534" number="61" next="//@weeks.61" />
+  <weeks previous="//@weeks.60" offers="//@persons.1/@offers.23 //@persons.2/@offers.7 //@persons.4/@offers.18 //@persons.7/@offers.12 //@persons.0/@offers.46 //@persons.1/@offers.46 //@persons.11/@offers.23 //@persons.26/@offers.8 //@persons.31/@offers.9 //@persons.14/@offers.26 //@persons.38/@offers.7" id="543" number="62" next="//@weeks.62" />
+  <weeks previous="//@weeks.61" offers="//@persons.12/@offers.10 //@persons.2/@offers.8 //@persons.3/@offers.11 //@persons.0/@offers.47 //@persons.13/@offers.14 //@persons.16/@offers.3 //@persons.13/@offers.15 //@persons.19/@offers.13 //@persons.3/@offers.28 //@persons.3/@offers.29 //@persons.38/@offers.8" id="549" number="63" next="//@weeks.63" />
+  <weeks previous="//@weeks.62" offers="//@persons.2/@offers.9 //@persons.10/@offers.16 //@persons.0/@offers.48 //@persons.1/@offers.24 //@persons.4/@offers.19 //@persons.27/@offers.6 //@persons.1/@offers.47 //@persons.11/@offers.24 //@persons.3/@offers.30 //@persons.25/@offers.7 //@persons.26/@offers.9 //@persons.4/@offers.36 //@persons.27/@offers.17 //@persons.0/@offers.70" id="558" number="64" next="//@weeks.64" />
+  <weeks previous="//@weeks.63" offers="//@persons.0/@offers.49 //@persons.12/@offers.11 //@persons.1/@offers.25 //@persons.15/@offers.11 //@persons.18/@offers.13 //@persons.0/@offers.50 //@persons.11/@offers.7 //@persons.14/@offers.9 //@persons.1/@offers.48 //@persons.31/@offers.10" id="565" number="65" next="//@weeks.65" />
+  <weeks previous="//@weeks.64" offers="//@persons.0/@offers.51 //@persons.12/@offers.12 //@persons.15/@offers.12 //@persons.10/@offers.17 //@persons.7/@offers.13 //@persons.12/@offers.13 //@persons.1/@offers.26 //@persons.2/@offers.20 //@persons.22/@offers.4 //@persons.28/@offers.6 //@persons.32/@offers.10 //@persons.33/@offers.19 //@persons.14/@offers.27 //@persons.37/@offers.14" id="574" number="66" next="//@weeks.66" />
+  <weeks previous="//@weeks.65" offers="//@persons.1/@offers.27 //@persons.3/@offers.12 //@persons.5/@offers.3 //@persons.0/@offers.52 //@persons.7/@offers.14 //@persons.11/@offers.8 //@persons.13/@offers.16 //@persons.14/@offers.10 //@persons.19/@offers.14 //@persons.13/@offers.17 //@persons.14/@offers.28 //@persons.4/@offers.37 //@persons.2/@offers.21 //@persons.22/@offers.5 //@persons.37/@offers.15 //@persons.30/@offers.14 //@persons.32/@offers.11 //@persons.38/@offers.9" id="582" number="67" next="//@weeks.67" />
+  <weeks previous="//@weeks.66" offers="//@persons.1/@offers.28 //@persons.7/@offers.15 //@persons.0/@offers.53 //@persons.15/@offers.13 //@persons.18/@offers.14 //@persons.1/@offers.29 //@persons.1/@offers.30 //@persons.2/@offers.22 //@persons.23/@offers.9 //@persons.24/@offers.5 //@persons.3/@offers.31 //@persons.11/@offers.25 //@persons.20/@offers.10 //@persons.32/@offers.12 //@persons.35/@offers.5 //@persons.14/@offers.29 //@persons.36/@offers.8" id="593" number="68" next="//@weeks.68" />
+  <weeks previous="//@weeks.67" offers="//@persons.2/@offers.10 //@persons.3/@offers.13 //@persons.4/@offers.20 //@persons.0/@offers.54 //@persons.12/@offers.14 //@persons.2/@offers.23 //@persons.3/@offers.32 //@persons.31/@offers.11 //@persons.35/@offers.6 //@persons.38/@offers.10" id="601" number="69" next="//@weeks.69" />
+  <weeks previous="//@weeks.68" offers="//@persons.2/@offers.11 //@persons.4/@offers.21 //@persons.7/@offers.16 //@persons.8/@offers.9 //@persons.33/@offers.11 //@persons.9/@offers.6 //@persons.15/@offers.14 //@persons.18/@offers.15 //@persons.7/@offers.17 //@persons.16/@offers.4 //@persons.2/@offers.24 //@persons.21/@offers.13 //@persons.37/@offers.16 //@persons.30/@offers.15 //@persons.34/@offers.5 //@persons.36/@offers.9" id="607" number="70" next="//@weeks.70" />
+  <weeks previous="//@weeks.69" offers="//@persons.5/@offers.4 //@persons.8/@offers.10 //@persons.18/@offers.16 //@persons.0/@offers.55 //@persons.15/@offers.15 //@persons.16/@offers.5 //@persons.1/@offers.31 //@persons.27/@offers.7 //@persons.1/@offers.49 //@persons.4/@offers.38 //@persons.27/@offers.18 //@persons.2/@offers.25 //@persons.21/@offers.14 //@persons.22/@offers.6 //@persons.27/@offers.19 //@persons.4/@offers.39 //@persons.20/@offers.11 //@persons.35/@offers.7 //@persons.14/@offers.30" id="618" number="71" next="//@weeks.71" />
+  <weeks previous="//@weeks.70" offers="//@persons.0/@offers.56 //@persons.12/@offers.15 //@persons.5/@offers.5 //@persons.6/@offers.5 //@persons.33/@offers.12 //@persons.7/@offers.18 //@persons.0/@offers.57 //@persons.13/@offers.18 //@persons.19/@offers.15 //@persons.13/@offers.19 //@persons.27/@offers.20 //@persons.2/@offers.26 //@persons.21/@offers.15 //@persons.22/@offers.7 //@persons.28/@offers.7 //@persons.20/@offers.12 //@persons.32/@offers.13 //@persons.37/@offers.17 //@persons.38/@offers.11" id="627" number="72" next="//@weeks.72" />
+  <weeks previous="//@weeks.71" offers="//@persons.0/@offers.58 //@persons.1/@offers.32 //@persons.6/@offers.6 //@persons.10/@offers.18 //@persons.7/@offers.19 //@persons.12/@offers.16 //@persons.17/@offers.7 //@persons.15/@offers.16 //@persons.0/@offers.59 //@persons.1/@offers.33 //@persons.14/@offers.31 //@persons.4/@offers.40 //@persons.27/@offers.21 //@persons.13/@offers.32 //@persons.22/@offers.8 //@persons.25/@offers.8 //@persons.26/@offers.10 //@persons.0/@offers.71 //@persons.30/@offers.16 //@persons.38/@offers.12" id="638" number="73" next="//@weeks.73" />
+  <weeks previous="//@weeks.72" offers="//@persons.0/@offers.60 //@persons.1/@offers.34 //@persons.15/@offers.17 //@persons.0/@offers.61 //@persons.18/@offers.17 //@persons.1/@offers.35 //@persons.14/@offers.32 //@persons.2/@offers.27 //@persons.22/@offers.9 //@persons.24/@offers.6 //@persons.11/@offers.26 //@persons.37/@offers.18 //@persons.30/@offers.17 //@persons.31/@offers.12 //@persons.34/@offers.6 //@persons.36/@offers.10" id="649" number="74" next="//@weeks.74" />
+  <weeks previous="//@weeks.73" offers="//@persons.4/@offers.22 //@persons.33/@offers.13 //@persons.0/@offers.62 //@persons.18/@offers.18 //@persons.15/@offers.18 //@persons.10/@offers.19 //@persons.29/@offers.6 //@persons.0/@offers.63 //@persons.12/@offers.17 //@persons.0/@offers.64 //@persons.13/@offers.20 //@persons.14/@offers.11 //@persons.1/@offers.36 //@persons.27/@offers.8 //@persons.1/@offers.50 //@persons.11/@offers.27 //@persons.23/@offers.10 //@persons.28/@offers.8 //@persons.37/@offers.19 //@persons.30/@offers.18 //@persons.38/@offers.13" id="656" number="75" next="//@weeks.75" />
+  <weeks previous="//@weeks.74" offers="//@persons.4/@offers.23 //@persons.10/@offers.20 //@persons.7/@offers.20 //@persons.13/@offers.21 //@persons.18/@offers.19 //@persons.15/@offers.19 //@persons.4/@offers.24 //@persons.27/@offers.9 //@persons.11/@offers.28 //@persons.30/@offers.19 //@persons.32/@offers.14 //@persons.14/@offers.33" id="671" number="76" />
+  <projects id="31" name="Project_1" weeksUntilLoss="38" initialWeekNumber="1" sumSalary="0.0">
+    <tasks id="32" name="Task_1" next="//@projects.0/@tasks.1">
+      <requirements skillType="//@skillTypes.19" id="33" name="SkillType_20" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.3" id="37" name="SkillType_4" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.24" id="41" name="SkillType_25" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.22" id="45" name="SkillType_23" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.23" id="49" name="SkillType_24" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+    </tasks>
+    <tasks previous="//@projects.0/@tasks.0" id="53" name="Task_2" next="//@projects.0/@tasks.2">
+      <requirements skillType="//@skillTypes.28" id="54" name="SkillType_29" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.3" id="57" name="SkillType_4" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.24" id="61" name="SkillType_25" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.17" id="65" name="SkillType_18" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.23" id="69" name="SkillType_24" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+    </tasks>
+    <tasks previous="//@projects.0/@tasks.1" id="73" name="Task_3" next="//@projects.0/@tasks.3">
+      <requirements skillType="//@skillTypes.8" id="74" name="SkillType_9" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.7" id="78" name="SkillType_8" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.9" id="81" name="SkillType_10" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.22" id="84" name="SkillType_23" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.16" id="87" name="SkillType_17" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+    </tasks>
+    <tasks previous="//@projects.0/@tasks.2" id="91" name="Task_4" next="//@projects.0/@tasks.4">
+      <requirements skillType="//@skillTypes.6" id="92" name="SkillType_7" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.17" id="95" name="SkillType_18" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.9" id="98" name="SkillType_10" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.10" id="101" name="SkillType_11" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.19" id="105" name="SkillType_20" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+    </tasks>
+    <tasks previous="//@projects.0/@tasks.3" id="109" name="Task_5" next="//@projects.0/@tasks.5">
+      <requirements skillType="//@skillTypes.14" id="110" name="SkillType_15" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.0" id="114" name="SkillType_1" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.17" id="118" name="SkillType_18" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.9" id="121" name="SkillType_10" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.12" id="125" name="SkillType_13" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+    </tasks>
+    <tasks previous="//@projects.0/@tasks.4" id="129" name="Task_6">
+      <requirements skillType="//@skillTypes.2" id="130" name="SkillType_3" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.9" id="134" name="SkillType_10" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.3" id="138" name="SkillType_4" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.14" id="140" name="SkillType_15" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.11" id="144" name="SkillType_12" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+    </tasks>
+  </projects>
+  <projects id="147" name="Project_2" weeksUntilLoss="38" initialWeekNumber="1" sumSalary="0.0">
+    <tasks id="148" name="Task_1" next="//@projects.1/@tasks.1">
+      <requirements skillType="//@skillTypes.17" id="149" name="SkillType_18" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.13" id="150" name="SkillType_14" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.11" id="152" name="SkillType_12" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.3" id="153" name="SkillType_4" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.5" id="155" name="SkillType_6" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+    </tasks>
+    <tasks previous="//@projects.1/@tasks.0" id="157" name="Task_2" next="//@projects.1/@tasks.2">
+      <requirements skillType="//@skillTypes.1" id="158" name="SkillType_2" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.24" id="161" name="SkillType_25" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.4" id="162" name="SkillType_5" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.7" id="165" name="SkillType_8" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.13" id="167" name="SkillType_14" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+    </tasks>
+    <tasks previous="//@projects.1/@tasks.1" id="170" name="Task_3" next="//@projects.1/@tasks.3">
+      <requirements skillType="//@skillTypes.4" id="171" name="SkillType_5" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.2" id="174" name="SkillType_3" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.23" id="177" name="SkillType_24" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.15" id="180" name="SkillType_16" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.11" id="183" name="SkillType_12" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+    </tasks>
+    <tasks previous="//@projects.1/@tasks.2" id="186" name="Task_4" next="//@projects.1/@tasks.4">
+      <requirements skillType="//@skillTypes.26" id="187" name="SkillType_27" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.16" id="190" name="SkillType_17" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.6" id="192" name="SkillType_7" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.5" id="195" name="SkillType_6" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.19" id="197" name="SkillType_20" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+    </tasks>
+    <tasks previous="//@projects.1/@tasks.3" id="200" name="Task_5" next="//@projects.1/@tasks.5">
+      <requirements skillType="//@skillTypes.13" id="201" name="SkillType_14" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.1" id="204" name="SkillType_2" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.20" id="205" name="SkillType_21" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.23" id="208" name="SkillType_24" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.28" id="211" name="SkillType_29" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+    </tasks>
+    <tasks previous="//@projects.1/@tasks.4" id="214" name="Task_6">
+      <requirements skillType="//@skillTypes.18" id="215" name="SkillType_19" hours="8" skillLevel="3" overtimeBonus="225.0" salary="150.0" />
+      <requirements skillType="//@skillTypes.0" id="218" name="SkillType_1" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.1" id="219" name="SkillType_2" hours="8" skillLevel="1" overtimeBonus="75.0" salary="50.0" />
+      <requirements skillType="//@skillTypes.19" id="222" name="SkillType_20" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+      <requirements skillType="//@skillTypes.6" id="225" name="SkillType_7" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0" />
+    </tasks>
+  </projects>
+</PersonTaskAssignments:PersonTaskAssignmentModel>

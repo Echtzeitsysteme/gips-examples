@@ -6,6 +6,7 @@ import pta.scenario.ScenarioRunner;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,22 +28,70 @@ import org.emoflon.gips.core.util.Observer;
 
 public class HouseConstructionHeadless {
 	
-	public static Entry<Integer, String> HEADER_ID = entry(0, "id");
-	public static Entry<Integer, String> HEADER_TYPE = entry(1, "type");
-	public static Entry<Integer, String> HEADER_PROJECTS = entry(2, "projects");
-	public static Entry<Integer, String> HEADER_TASKS = entry(3, "tasks");
-	public static Entry<Integer, String> HEADER_REQS = entry(4, "requirements");
-	public static Entry<Integer, String> HEADER_OFFERS = entry(5, "offers");
-	public static Entry<Integer, String> HEADER_WEEKS = entry(6, "weeks");
-	public static Entry<Integer, String> HEADER_PERSONS = entry(7, "persons");
-	public static Entry<Integer, String> HEADER_TOTAL_T = entry(8, "total_time");
-	public static Entry<Integer, String> HEADER_PM_T = entry(9, "pm_time");
-	public static Entry<Integer, String> HEADER_BUILD_GIPS_T = entry(10, "build_gips_time");
-	public static Entry<Integer, String> HEADER_BUILD_SOLVER_T = entry(11, "build_solver_time");
-	public static Entry<Integer, String> HEADER_SOLVE_T = entry(12, "solve_time");
-	public static Entry<Integer, String> HEADER_APPLY_T = entry(13, "apply_time");
+	// Model statistic headers
+	public static String HEADER_ID = "id";
+	public static String HEADER_TYPE = "type";
+	public static String HEADER_PROJECTS = "projects";
+	public static String HEADER_TASKS = "tasks";
+	public static String HEADER_REQS = "requirements";
+	public static String HEADER_OFFERS = "offers";
+	public static String HEADER_WEEKS = "weeks";
+	public static String HEADER_PERSONS = "persons";
+	public static String HEADER_NODES = "model_size";
+	public static String HEADER_OPTIMAL = "is_optimal";
+	public static String HEADER_SOLVED_RATIO = "solved_ratio";
+	public static String HEADER_PROJECT_RATIO = "project_ratio";
+	// Time statistic headers
+	// Average
+	public static String HEADER_TOTAL_T = "total_time_avg";
+	public static String HEADER_PM_T = "pm_time_avg";
+	public static String HEADER_BUILD_T = "build_time_avg";
+	public static String HEADER_BUILD_GIPS_T = "build_gips_time_avg";
+	public static String HEADER_BUILD_SOLVER_T = "build_solver_time_avg";
+	public static String HEADER_SOLVE_T = "solve_time_avg";
+	public static String HEADER_APPLY_T = "apply_time_avg";
+	// Time statistic headers
+	// Maximum
+	public static String HEADER_PM_T_MAX = "pm_time_max";
+	public static String HEADER_BUILD_T_MAX = "build_time_max";
+	public static String HEADER_BUILD_GIPS_T_MAX = "build_gips_time_max";
+	public static String HEADER_BUILD_SOLVER_T_MAX = "build_solver_time_max";
+	public static String HEADER_SOLVE_T_MAX = "solve_time_max";
+	public static String HEADER_APPLY_T_MAX = "apply_time_max";
+	// Time statistic headers
+	// Minimum
+	public static String HEADER_PM_T_MIN = "pm_time_min";
+	public static String HEADER_BUILD_T_MIN = "build_time_min";
+	public static String HEADER_BUILD_GIPS_T_MIN = "build_gips_time_min";
+	public static String HEADER_BUILD_SOLVER_T_MIN = "build_solver_time_min";
+	public static String HEADER_SOLVE_T_MIN = "solve_time_min";
+	public static String HEADER_APPLY_T_MIN = "apply_time_min";
+	// Memory statistic headers
+	// Average
+	public static String HEADER_PM_MEM = "pm_memory_avg";
+	public static String HEADER_BUILD_MEM = "build_memory_avg";
+	public static String HEADER_BUILD_GIPS_MEM = "build_gips_memory_avg";
+	public static String HEADER_BUILD_SOLVER_MEM = "build_solver_memory_avg";
+	public static String HEADER_SOLVE_MEM = "solve_memory_avg";
+	public static String HEADER_APPLY_MEM = "apply_memory_avg";
+	// Memory statistic headers
+	// Maximum
+	public static String HEADER_PM_MEM_MAX = "pm_memory_max";
+	public static String HEADER_BUILD_MEM_MAX = "build_memory_max";
+	public static String HEADER_BUILD_GIPS_MEM_MAX = "build_gips_memory_max";
+	public static String HEADER_BUILD_SOLVER_MEM_MAX = "build_solver_memory_max";
+	public static String HEADER_SOLVE_MEM_MAX = "solve_memory_max";
+	public static String HEADER_APPLY_MEM_MAX = "apply_memory_max";
+	// Memory statistic headers
+	// Minimum
+	public static String HEADER_PM_MEM_MIN = "pm_memory_min";
+	public static String HEADER_BUILD_MEM_MIN = "build_memory_min";
+	public static String HEADER_BUILD_GIPS_MEM_MIN = "build_gips_memory_min";
+	public static String HEADER_BUILD_SOLVER_MEM_MIN = "build_solver_memory_min";
+	public static String HEADER_SOLVE_MEM_MIN = "solve_memory_min";
+	public static String HEADER_APPLY_MEM_MIN = "apply_memory_min";
 	
-	private static Map<Integer, String> CSV_COLUMNS = Map.ofEntries(
+	private static String[] CSV_COLUMNS = {
 			HEADER_ID,
 			HEADER_TYPE,
 			HEADER_PROJECTS,
@@ -51,15 +100,57 @@ public class HouseConstructionHeadless {
 			HEADER_OFFERS,
 			HEADER_WEEKS,
 			HEADER_PERSONS,
+			HEADER_NODES,
+			HEADER_OPTIMAL,
+			HEADER_SOLVED_RATIO,
+			HEADER_PROJECT_RATIO,
+			//
 			HEADER_TOTAL_T,
+			HEADER_BUILD_T,
 			HEADER_PM_T,
 			HEADER_BUILD_GIPS_T,
 			HEADER_BUILD_SOLVER_T,
 			HEADER_SOLVE_T,
-			HEADER_APPLY_T
-	);
+			HEADER_APPLY_T,
+			//
+			HEADER_PM_T_MAX,
+			HEADER_BUILD_T_MAX,
+			HEADER_BUILD_GIPS_T_MAX,
+			HEADER_BUILD_SOLVER_T_MAX,
+			HEADER_SOLVE_T_MAX,
+			HEADER_APPLY_T_MAX,
+			//
+			HEADER_PM_T_MIN,
+			HEADER_BUILD_T_MIN,
+			HEADER_BUILD_GIPS_T_MIN,
+			HEADER_BUILD_SOLVER_T_MIN,
+			HEADER_SOLVE_T_MIN,
+			HEADER_APPLY_T_MIN,
+			//
+			HEADER_PM_MEM,
+			HEADER_BUILD_MEM,
+			HEADER_BUILD_GIPS_MEM,
+			HEADER_BUILD_SOLVER_MEM,
+			HEADER_SOLVE_MEM,
+			HEADER_APPLY_MEM,
+			//
+			HEADER_PM_MEM_MAX,
+			HEADER_BUILD_MEM_MAX,
+			HEADER_BUILD_GIPS_MEM_MAX,
+			HEADER_BUILD_SOLVER_MEM_MAX,
+			HEADER_SOLVE_MEM_MAX,
+			HEADER_APPLY_MEM_MAX,
+			//
+			HEADER_PM_MEM_MIN,
+			HEADER_BUILD_MEM_MIN,
+			HEADER_BUILD_GIPS_MEM_MIN,
+			HEADER_BUILD_SOLVER_MEM_MIN,
+			HEADER_SOLVE_MEM_MIN,
+			HEADER_APPLY_MEM_MIN
+			};
+
 	
-	private static CSVFormat CSV_FORMAT = CSVFormat.DEFAULT.builder().setHeader(getHeader()).build();
+	private static CSVFormat CSV_FORMAT = CSVFormat.DEFAULT.builder().setHeader(CSV_COLUMNS).build();
 	
 	public static void main(final String[] args) {
 		HouseConstructionHeadless ctrl = new HouseConstructionHeadless();
@@ -79,6 +170,8 @@ public class HouseConstructionHeadless {
 			case HouseConstructionBatchC.TYPE : return new HouseConstructionBatchC(id);
 			case HouseConstructionBatchD.TYPE : return new HouseConstructionBatchD(id);
 			case HouseConstructionBatchE.TYPE : return new HouseConstructionBatchE(id);
+			case HouseConstructionIncF.TYPE : return new HouseConstructionIncF(id);
+			case HouseConstructionIncG.TYPE : return new HouseConstructionIncG(id);
 			default: throw new IllegalArgumentException("Unknown runner type: "+type);
 		}
 	}
@@ -93,14 +186,6 @@ public class HouseConstructionHeadless {
 		if (!inputFile.exists() || inputFile.isDirectory()) {
 			throw new IllegalArgumentException("Input file <" + path + "> could not be found.");
 		}
-	}
-	
-	private static String[] getHeader() {
-		String[] header = new String[CSV_COLUMNS.size()];
-		for(var entry : CSV_COLUMNS.entrySet()) {
-			header[entry.getKey()] = entry.getValue();
-		}
-		return header;
 	}
 	
 	public static void writeCsvLine(final String csvPath, final String[] content) throws IOException {
@@ -120,32 +205,82 @@ public class HouseConstructionHeadless {
 	}
 	
 	public static void resultToCSV(final String csvPath, final EvaluationResult result, final ScenarioRunner<?> runner) throws Exception {
-		String[] content = new String[CSV_COLUMNS.size()];
+		String[] content = new String[CSV_COLUMNS.length];
 		
-		content[HEADER_ID.getKey()] = result.id();
-		content[HEADER_TYPE.getKey()] = runner.getType();
-		content[HEADER_PROJECTS.getKey()] = String.valueOf(result.validator().getNumberOfProjects());
-		content[HEADER_TASKS.getKey()] = String.valueOf(result.validator().getNumberOfTasks());
-		content[HEADER_REQS.getKey()] = String.valueOf(result.validator().getNumberOfRequirements());
-		content[HEADER_OFFERS.getKey()] = String.valueOf(result.validator().getNumberOfOffers());
-		content[HEADER_WEEKS.getKey()] = String.valueOf(result.validator().getNumberOfWeeks());
-		content[HEADER_PERSONS.getKey()] = String.valueOf(result.validator().getNumberOfPersons());
+		setColumn(HEADER_ID, result.id(), content);
+		setColumn(HEADER_TYPE, runner.getType(), content);
+		setColumn(HEADER_PROJECTS, result.validator().getNumberOfProjects(), content);
+		setColumn(HEADER_TASKS, result.validator().getNumberOfTasks(), content);
+		setColumn(HEADER_REQS, result.validator().getNumberOfRequirements(), content);
+		setColumn(HEADER_OFFERS, result.validator().getNumberOfOffers(), content);
+		setColumn(HEADER_WEEKS, result.validator().getNumberOfWeeks(), content);
+		setColumn(HEADER_PERSONS, result.validator().getNumberOfPersons(), content);
+		setColumn(HEADER_NODES, result.validator().getModelSize(), content);
+		setColumn(HEADER_OPTIMAL, result.validator().isValid(), content);
+		setColumn(HEADER_SOLVED_RATIO, result.output().optimality(), content);
+		setColumn(HEADER_PROJECT_RATIO, result.validator().getSuccessRate(), content);
 		
-//		double init = result.measurements().get("INIT").durationSeconds();
-//		double build = result.measurements().get("BUILD").durationSeconds();
-//		double build_pm =  result.measurements().get("PM").durationSeconds();
-//		double build_gips =  result.measurements().get("BUILD_GIPS").durationSeconds();
-//		double build_solver =  result.measurements().get("BUILD_SOLVER").durationSeconds();
-//		double solve = result.measurements().get("SOLVE_PROBLEM").durationSeconds();
-//		double total = init + build + solve;
-//		
-//		content[HEADER_TOTAL_T.getKey()] = String.valueOf(total);
-//		content[HEADER_PM_T.getKey()] = String.valueOf(build_pm);
-//		content[HEADER_BUILD_GIPS_T.getKey()] = String.valueOf(build_gips);
-//		content[HEADER_BUILD_SOLVER_T.getKey()] = String.valueOf(build_solver);
-//		content[HEADER_SOLVE_T.getKey()] = String.valueOf(solve);
+		setColumn(HEADER_PM_T, result.measurements().get("PM").avgDurationSeconds(), content);
+		setColumn(HEADER_PM_T_MIN, result.measurements().get("PM").minDurationSeconds(), content);
+		setColumn(HEADER_PM_T_MAX, result.measurements().get("PM").maxDurationSeconds(), content);
+		setColumn(HEADER_PM_MEM, result.measurements().get("PM").avgMemoryMB(), content);
+		setColumn(HEADER_PM_MEM_MIN, result.measurements().get("PM").minMemoryMB(), content);
+		setColumn(HEADER_PM_MEM_MAX, result.measurements().get("PM").maxMemoryMB(), content);
+		
+		setColumn(HEADER_BUILD_T, result.measurements().get("BUILD").avgDurationSeconds(), content);
+		setColumn(HEADER_BUILD_T_MIN, result.measurements().get("BUILD").minDurationSeconds(), content);
+		setColumn(HEADER_BUILD_T_MAX, result.measurements().get("BUILD").maxDurationSeconds(), content);
+		setColumn(HEADER_BUILD_MEM, result.measurements().get("BUILD").avgMemoryMB(), content);
+		setColumn(HEADER_BUILD_MEM_MIN, result.measurements().get("BUILD").minMemoryMB(), content);
+		setColumn(HEADER_BUILD_MEM_MAX, result.measurements().get("BUILD").maxMemoryMB(), content);
+		
+		setColumn(HEADER_BUILD_GIPS_T, result.measurements().get("BUILD_GIPS").avgDurationSeconds(), content);
+		setColumn(HEADER_BUILD_GIPS_T_MIN, result.measurements().get("BUILD_GIPS").minDurationSeconds(), content);
+		setColumn(HEADER_BUILD_GIPS_T_MAX, result.measurements().get("BUILD_GIPS").maxDurationSeconds(), content);
+		setColumn(HEADER_BUILD_GIPS_MEM, result.measurements().get("BUILD_GIPS").avgMemoryMB(), content);
+		setColumn(HEADER_BUILD_GIPS_MEM_MIN, result.measurements().get("BUILD_GIPS").minMemoryMB(), content);
+		setColumn(HEADER_BUILD_GIPS_MEM_MAX, result.measurements().get("BUILD_GIPS").maxMemoryMB(), content);
+		
+		setColumn(HEADER_BUILD_SOLVER_T, result.measurements().get("BUILD_SOLVER").avgDurationSeconds(), content);
+		setColumn(HEADER_BUILD_SOLVER_T_MIN, result.measurements().get("BUILD_SOLVER").minDurationSeconds(), content);
+		setColumn(HEADER_BUILD_SOLVER_T_MAX, result.measurements().get("BUILD_SOLVER").maxDurationSeconds(), content);
+		setColumn(HEADER_BUILD_SOLVER_MEM, result.measurements().get("BUILD_SOLVER").avgMemoryMB(), content);
+		setColumn(HEADER_BUILD_SOLVER_MEM_MIN, result.measurements().get("BUILD_SOLVER").minMemoryMB(), content);
+		setColumn(HEADER_BUILD_SOLVER_MEM_MAX, result.measurements().get("BUILD_SOLVER").maxMemoryMB(), content);
+		
+		setColumn(HEADER_SOLVE_T, result.measurements().get("SOLVE_PROBLEM").avgDurationSeconds(), content);
+		setColumn(HEADER_SOLVE_T_MIN, result.measurements().get("SOLVE_PROBLEM").minDurationSeconds(), content);
+		setColumn(HEADER_SOLVE_T_MAX, result.measurements().get("SOLVE_PROBLEM").maxDurationSeconds(), content);
+		setColumn(HEADER_SOLVE_MEM, result.measurements().get("SOLVE_PROBLEM").avgMemoryMB(), content);
+		setColumn(HEADER_SOLVE_MEM_MIN, result.measurements().get("SOLVE_PROBLEM").minMemoryMB(), content);
+		setColumn(HEADER_SOLVE_MEM_MAX, result.measurements().get("SOLVE_PROBLEM").maxMemoryMB(), content);
+		
+		setColumn(HEADER_APPLY_T, result.measurements().get("APPLY").avgDurationSeconds(), content);
+		setColumn(HEADER_APPLY_T_MIN, result.measurements().get("APPLY").minDurationSeconds(), content);
+		setColumn(HEADER_APPLY_T_MAX, result.measurements().get("APPLY").maxDurationSeconds(), content);
+		setColumn(HEADER_APPLY_MEM, result.measurements().get("APPLY").avgMemoryMB(), content);
+		setColumn(HEADER_APPLY_MEM_MIN, result.measurements().get("APPLY").minMemoryMB(), content);
+		setColumn(HEADER_APPLY_MEM_MAX, result.measurements().get("APPLY").maxMemoryMB(), content);
+		
+		double total_time_avg = result.measurements().get("PM").avgDurationSeconds() + 
+				result.measurements().get("BUILD").avgDurationSeconds() + 
+				result.measurements().get("SOLVE_PROBLEM").avgDurationSeconds() + 
+				result.measurements().get("APPLY").avgDurationSeconds();
+		
+		setColumn(HEADER_TOTAL_T, total_time_avg, content);
 		
 		writeCsvLine(csvPath, content);
+	}
+	
+	public static <T> void setColumn(String header, T value, String[] target) {
+		int idx = 0;
+		for(String entry : CSV_COLUMNS) {
+			if(entry.equals(header)) {
+				target[idx] = String.valueOf(value);
+				return;
+			}
+			idx++;
+		}
 	}
 
 	private String xmiInputPath;

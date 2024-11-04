@@ -2,7 +2,7 @@ package pta.scenario.house;
 
 import PTAConstraintConfigC.api.gips.PTAConstraintConfigCGipsAPI;
 
-public class HouseConstructionBatchC extends HouseConstructionBatchGeneric<PTAConstraintConfigCGipsAPI>{
+public class HouseConstructionBatchC extends HouseConstructionGeneric<PTAConstraintConfigCGipsAPI>{
 
 	final public static String TYPE = "BATCH-C"; 
 	

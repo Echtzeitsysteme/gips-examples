@@ -31,8 +31,12 @@ public class ScenarioValidator {
 	protected int numberOfOffers = 0;
 	protected int numberOfWeeks = 0;
 	protected int numberOfPersons = 0;
+	protected int numberOfSkills = 0;
+	protected int numberOfSkillTypes = 0;
+	protected int modelSize = 0;
 	
 	protected double successRate = 0.0;
+	protected boolean isValid = false;
 	
 	public ScenarioValidator(final PersonTaskAssignmentModel model, final SolverOutput output) {
 		this.model = model;
@@ -61,11 +65,13 @@ public class ScenarioValidator {
 		} catch(Exception e) {
 			logger.addError("Exception during validation occurred: " + e.getMessage());
 		}
-		return !logger.hasErrors();
+		isValid = !logger.hasErrors();
+		return isValid;
 	}
 	
 	protected void validateOutput() {
-		if(output.isOptimal()) {
+		modelSize = numberOfProjects + numberOfTasks + numberOfRequirements + numberOfOffers + numberOfWeeks + numberOfPersons + numberOfSkills + numberOfSkillTypes;
+		if(output.isOptimal() && !logger.hasErrors()) {
 			logger.addInfo("**Result: All solutions were found and are optimal. Objective function value: "+output.getObjectiveValue());
 		} else {
 			logger.addError("**Result: Some solutions could not be found.\nRatio:" + output.optimality());
@@ -113,7 +119,21 @@ public class ScenarioValidator {
 		
 		Map<Project, Boolean> skipList = new LinkedHashMap<>();
 		
-		if(numberOfProjects == output.getOutputs().size()) {
+		if(numberOfProjects == 1 && output.getOutputs().size() == 1 && output.getOutputs().entrySet().iterator().next().getKey().equals(model)) {
+			if(output.isOptimal()) {
+				skipList.put(model.getProjects().get(0), false);
+			} else {
+				skipList.put(model.getProjects().get(0), true);
+			}
+		} else if(numberOfProjects != output.getOutputs().size() && output.getOutputs().entrySet().iterator().next().getKey().equals(model)) {
+			for(Project p : model.getProjects()) {
+				if(output.isOptimal()) {
+					skipList.put(p, false);
+				} else {
+					skipList.put(p, true);
+				}
+			}
+		} else if(numberOfProjects == output.getOutputs().size()) {
 			for(Project p : model.getProjects()) {
 				var out = output.getOutputs().get(p);
 				if(out != null) {
@@ -269,10 +289,12 @@ public class ScenarioValidator {
 	}
 
 	protected void validatePersons() {
+		numberOfSkillTypes = model.getSkillTypes().size();
 		numberOfPersons = model.getPersons().size();
-		
+
 		for (Person person : model.getPersons()) {
 			numberOfOffers += person.getOffers().size();
+			numberOfSkills += person.getSkills().size();
 			
 			Set<Week> offeredWeeks = person.getOffers().stream().map(offer -> offer.getWeek())
 					.collect(Collectors.toSet());
@@ -286,6 +308,11 @@ public class ScenarioValidator {
 	public String getLog() {
 		return logger.toString();
 	}
+
+	public boolean isValid() {
+		return isValid;
+	}
+
 
 	public int getNumberOfProjects() {
 		return numberOfProjects;
@@ -310,6 +337,21 @@ public class ScenarioValidator {
 	public int getNumberOfPersons() {
 		return numberOfPersons;
 	}
+
+	public int getNumberOfSkills() {
+		return numberOfSkills;
+	}
+
+
+	public int getNumberOfSkillTypes() {
+		return numberOfSkillTypes;
+	}
+
+
+	public int getModelSize() {
+		return modelSize;
+	}
+
 
 	public double getSuccessRate() {
 		return successRate;
