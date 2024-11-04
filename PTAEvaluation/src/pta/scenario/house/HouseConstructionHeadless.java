@@ -131,19 +131,19 @@ public class HouseConstructionHeadless {
 		content[HEADER_WEEKS.getKey()] = String.valueOf(result.validator().getNumberOfWeeks());
 		content[HEADER_PERSONS.getKey()] = String.valueOf(result.validator().getNumberOfPersons());
 		
-		double init = result.measurements().get("INIT").durationSeconds();
-		double build = result.measurements().get("BUILD").durationSeconds();
-		double build_pm =  result.measurements().get("PM").durationSeconds();
-		double build_gips =  result.measurements().get("BUILD_GIPS").durationSeconds();
-		double build_solver =  result.measurements().get("BUILD_SOLVER").durationSeconds();
-		double solve = result.measurements().get("SOLVE_PROBLEM").durationSeconds();
-		double total = init + build + solve;
-		
-		content[HEADER_TOTAL_T.getKey()] = String.valueOf(total);
-		content[HEADER_PM_T.getKey()] = String.valueOf(build_pm);
-		content[HEADER_BUILD_GIPS_T.getKey()] = String.valueOf(build_gips);
-		content[HEADER_BUILD_SOLVER_T.getKey()] = String.valueOf(build_solver);
-		content[HEADER_SOLVE_T.getKey()] = String.valueOf(solve);
+//		double init = result.measurements().get("INIT").durationSeconds();
+//		double build = result.measurements().get("BUILD").durationSeconds();
+//		double build_pm =  result.measurements().get("PM").durationSeconds();
+//		double build_gips =  result.measurements().get("BUILD_GIPS").durationSeconds();
+//		double build_solver =  result.measurements().get("BUILD_SOLVER").durationSeconds();
+//		double solve = result.measurements().get("SOLVE_PROBLEM").durationSeconds();
+//		double total = init + build + solve;
+//		
+//		content[HEADER_TOTAL_T.getKey()] = String.valueOf(total);
+//		content[HEADER_PM_T.getKey()] = String.valueOf(build_pm);
+//		content[HEADER_BUILD_GIPS_T.getKey()] = String.valueOf(build_gips);
+//		content[HEADER_BUILD_SOLVER_T.getKey()] = String.valueOf(build_solver);
+//		content[HEADER_SOLVE_T.getKey()] = String.valueOf(solve);
 		
 		writeCsvLine(csvPath, content);
 	}

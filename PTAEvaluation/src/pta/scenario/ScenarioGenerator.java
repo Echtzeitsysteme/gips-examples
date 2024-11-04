@@ -258,6 +258,16 @@ public class ScenarioGenerator extends PTAModelGenerator{
 		rnd = new Random(seed);
 	}
 	
+	public void scale(int scaling, int nP, double pSpread, int nTpP, double tSpread, int nRpT, double rSpread) {
+		int nPLower = nP*scaling;
+		int nPUpper = nPLower + (int)Math.ceil(nPLower*pSpread) + 1;
+		nProjects = mkRange(nPLower, nPUpper);
+		int nTpPUpper = nTpP + (int)Math.ceil(nTpP*tSpread) + 1;
+		tasksPerProject = mkRange(nTpP, nTpPUpper);
+		int nRpTUpper = nRpT + (int)Math.ceil(nRpT*rSpread) + 1;
+		reqPerTask = mkRange(nRpT, nRpTUpper);
+	}
+	
 	public PersonTaskAssignmentModel generate(final int seed) {
 		rnd = new Random(seed);
 		return this.generate();

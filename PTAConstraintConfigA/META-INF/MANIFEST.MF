@@ -13,4 +13,14 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt.hipe,
  PersonTaskAssignments;bundle-version="0.0.1"
 Export-Package: PTAConstraintConfigA.api,
- PTAConstraintConfigA.api.gips
+ PTAConstraintConfigA.api.gips,
+ PTAConstraintConfigA.api.gips.constraint,
+ PTAConstraintConfigA.api.gips.mapper,
+ PTAConstraintConfigA.api.gips.mapping,
+ PTAConstraintConfigA.api.gips.objective,
+ PTAConstraintConfigA.api.matches,
+ PTAConstraintConfigA.api.rules,
+ PTAConstraintConfigA.hipe.engine,
+ PTAConstraintConfigA.hipe.engine.actor,
+ PTAConstraintConfigA.hipe.engine.actor.edge,
+ PTAConstraintConfigA.hipe.engine.actor.junction

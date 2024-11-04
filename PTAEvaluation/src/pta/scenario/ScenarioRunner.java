@@ -60,7 +60,7 @@ public abstract class ScenarioRunner<API extends GipsEngineAPI<?,?>> {
 		api.init(rs);
 	}
 	
-	public abstract EvaluationResult run();
+	public abstract EvaluationResult run() throws IOException;
 	
 	public abstract EvaluationResult run(String outputFile) throws IOException;
 	

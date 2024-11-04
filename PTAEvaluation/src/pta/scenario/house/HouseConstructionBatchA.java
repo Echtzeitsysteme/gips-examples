@@ -1,10 +1,10 @@
 package pta.scenario.house;
 
-import org.eclipse.emf.common.util.URI;
+import java.io.IOException;
+
 
 import PTAConstraintConfigA.api.gips.PTAConstraintConfigAGipsAPI;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
-import hipe.engine.config.HiPEPathOptions;
 import pta.evaluation.util.EvaluationResult;
 import pta.scenario.ScenarioGenerator;
 
@@ -25,9 +25,14 @@ public class HouseConstructionBatchA extends HouseConstructionBatchGeneric<PTACo
 		PersonTaskAssignmentModel model = generator.generate("EpicSeed".hashCode());
 
 		runner.init(model);
-		EvaluationResult result = runner.run();
-		System.out.println(result);
-		//System.exit(0);
+		EvaluationResult result;
+		try {
+			result = runner.run();
+			System.out.println(result);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -2,32 +2,28 @@ package pta.scenario;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.core.ilp.ILPSolverStatus;
-import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import PersonTaskAssignments.Person;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
-import PersonTaskAssignments.PersonTaskAssignmentsPackage;
 import PersonTaskAssignments.Project;
 import PersonTaskAssignments.Requirement;
 import PersonTaskAssignments.Task;
 import PersonTaskAssignments.Week;
+import pta.evaluation.util.SolverOutput;
 
 public class ScenarioValidator {
 	
 	final protected PersonTaskAssignmentModel model;
 	final protected ValidationLogger logger = new ValidationLogger();
-	final protected ILPSolverOutput output;
+	final protected SolverOutput output;
 	
 	protected int numberOfProjects = 0;
 	protected int numberOfTasks = 0;
@@ -36,7 +32,9 @@ public class ScenarioValidator {
 	protected int numberOfWeeks = 0;
 	protected int numberOfPersons = 0;
 	
-	public ScenarioValidator(final PersonTaskAssignmentModel model, final ILPSolverOutput output) {
+	protected double successRate = 0.0;
+	
+	public ScenarioValidator(final PersonTaskAssignmentModel model, final SolverOutput output) {
 		this.model = model;
 		this.output = output;
 	}
@@ -45,8 +43,20 @@ public class ScenarioValidator {
 	public boolean validate() {
 		try {
 			validateWeeks();
+		} catch(Exception e) {
+			logger.addError("Exception during validation occurred: " + e.getMessage());
+		}
+		try {
 			validateProjects();
+		} catch(Exception e) {
+			logger.addError("Exception during validation occurred: " + e.getMessage());
+		}
+		try {
 			validatePersons();
+		} catch(Exception e) {
+			logger.addError("Exception during validation occurred: " + e.getMessage());
+		}
+		try {
 			validateOutput();
 		} catch(Exception e) {
 			logger.addError("Exception during validation occurred: " + e.getMessage());
@@ -55,12 +65,13 @@ public class ScenarioValidator {
 	}
 	
 	protected void validateOutput() {
-		if(output.status() == ILPSolverStatus.OPTIMAL) {
-			logger.addInfo("Solution was found and is optimal. Objective function value: "+output.objectiveValue());
+		if(output.isOptimal()) {
+			logger.addInfo("**Result: All solutions were found and are optimal. Objective function value: "+output.getObjectiveValue());
 		} else {
-			logger.addError("No optimal Solution could be found. Result: " + output.status());
-			if(output.validationLog().isNotValid()) {
-				logger.addError("The GIPS pre-solver prevented solver execution due to conflicting constraints.");
+			logger.addError("**Result: Some solutions could not be found.\nRatio:" + output.optimality());
+			logger.addError("\tTherefore, not all projects were embedded sucessfully.\nRatio:" + successRate);
+			if(!output.noStaticConstraintViolation()) {
+				logger.addError("The GIPS pre-solver prevented some solver execution due to conflicting constraints.");
 			}
 		}
 	}
@@ -96,30 +107,67 @@ public class ScenarioValidator {
 
 	protected void validateProjects() {
 		numberOfProjects = model.getProjects().size();
-		
+		numberOfTasks = model.getProjects().stream().map(p->p.getTasks().size()).reduce(0, (sum, val) -> sum+val);
+		numberOfRequirements = model.getProjects().stream().flatMap(p -> p.getTasks().stream()).map(t -> t.getRequirements().size()).reduce(0, (sum, val)->sum+val);
 		boolean valid = true;
-		for (Project p : model.getProjects()) {
-			numberOfTasks += p.getTasks().size();
+		
+		Map<Project, Boolean> skipList = new LinkedHashMap<>();
+		
+		if(numberOfProjects == output.getOutputs().size()) {
+			for(Project p : model.getProjects()) {
+				var out = output.getOutputs().get(p);
+				if(out != null) {
+					skipList.put(p, out.status() != ILPSolverStatus.OPTIMAL);
+				} else {
+					skipList.put(p, true);
+				}
+			}
+		} else if(numberOfTasks == output.getOutputs().size()) {
+			for(Project p : model.getProjects()) {
+				for(Task t : p.getTasks()) {
+					var out = output.getOutputs().get(t);
+					if(out != null && skipList.containsKey(p)) {
+						skipList.put(p, skipList.get(p) || out.status() != ILPSolverStatus.OPTIMAL);
+						continue;
+					} else if(out != null && !skipList.containsKey(p)) {
+						skipList.put(p, out.status() != ILPSolverStatus.OPTIMAL);
+					} else {
+						skipList.put(p, true);
+						continue;
+					}
+				}
+			}
+		}
+		
+		successRate = ((double) skipList.values().stream().filter(b -> !b.booleanValue()).count())/(double) numberOfProjects;
+		
+		for (Project p : model.getProjects()) {	
+			if(skipList.containsKey(p) && skipList.get(p)) {
+				logger.addError("Some or all tasks of Project("+p.getName()+","+p.getId()+") were not assigned to an offer.");
+				continue;
+			}
 			
 			for (Task t : p.getTasks()) {
-				numberOfRequirements += t.getRequirements().size();
 				checkAssignmentsTask(p, t);
-
 			}
 			
-			valid = p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct().filter(
-					week -> week.getNumber() < p.getInitialWeekNumber() || week.getNumber() < p.getInitialWeekNumber())
-					.findAny().isEmpty();
-			if(!valid) {
-				logger.addError("Some tasks of Project("+p.getName()+","+p.getId()+") have been assigned before the project's time frame.");
-			}
-
-			valid = p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct()
-					.filter(week -> week.getNumber() > p.getInitialWeekNumber() + p.getWeeksUntilLoss()
-							|| week.getNumber() > p.getInitialWeekNumber() + p.getWeeksUntilLoss())
-					.findAny().isEmpty();
-			if(!valid) {
-				logger.addError("Some tasks of Project("+p.getName()+","+p.getId()+") have been assigned after the project's time frame.");
+			try {
+				valid = p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct().filter(
+						week -> week.getNumber() < p.getInitialWeekNumber() || week.getNumber() < p.getInitialWeekNumber())
+						.findAny().isEmpty();
+				if(!valid) {
+					logger.addError("Some tasks of Project("+p.getName()+","+p.getId()+") have been assigned before the project's time frame.");
+				}
+				
+				valid = p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct()
+						.filter(week -> week.getNumber() > p.getInitialWeekNumber() + p.getWeeksUntilLoss()
+								|| week.getNumber() > p.getInitialWeekNumber() + p.getWeeksUntilLoss())
+						.findAny().isEmpty();
+				if(!valid) {
+					logger.addError("Some tasks of Project("+p.getName()+","+p.getId()+") have been assigned after the project's time frame.");
+				}
+			} catch (Exception e) {
+				valid = false;
 			}
 
 			List<Week> weeks = p.getTasks().stream().flatMap(t -> t.getWeeks().stream()).distinct()
@@ -131,19 +179,28 @@ public class ScenarioValidator {
 				}
 			});
 
-			int numOfWeeks = 1 + weeks.get(0).getNumber() - p.getInitialWeekNumber();
-			if (valid) {
-				logger.addInfo("The Project("+p.getName()+","+p.getId()+") will stay within the time limit and will take " + numOfWeeks + " weeks.");
-			} else {
-				logger.addError("The Project("+p.getName()+","+p.getId()+") exceeds the time limit and will take " + numOfWeeks + " weeks.");
+			int numOfWeeks = -1;
+			try {
+				numOfWeeks = 1 + weeks.get(0).getNumber() - p.getInitialWeekNumber();
+				if (valid) {
+					logger.addInfo("The Project("+p.getName()+","+p.getId()+") will stay within the time limit and will take " + numOfWeeks + " weeks.");
+				} else {
+					logger.addError("The Project("+p.getName()+","+p.getId()+") exceeds the time limit and will take " + numOfWeeks + " weeks.");
+				}
+			} catch (Exception e) {
+				valid = false;
 			}
-
-			valid = (weeks.get(weeks.size() - 1).getNumber() == p.getInitialWeekNumber());
-			if (valid) {
-				logger.addInfo("The Project("+p.getName()+","+p.getId()+") will start at the initial project week: KW#" + p.getInitialWeekNumber() + ".");
-			} else {
-				logger.addInfo("The Project("+p.getName()+","+p.getId()+") does not start at the initial week: " + p.getInitialWeekNumber()
-				+ ", but starts at: " + weeks.get(weeks.size() - 1).getNumber() + ".");
+			
+			try {
+				valid = (weeks.get(weeks.size() - 1).getNumber() == p.getInitialWeekNumber());
+				if (valid) {
+					logger.addInfo("The Project("+p.getName()+","+p.getId()+") will start at the initial project week: KW#" + p.getInitialWeekNumber() + ".");
+				} else {
+					logger.addInfo("The Project("+p.getName()+","+p.getId()+") does not start at the initial week: " + p.getInitialWeekNumber()
+					+ ", but starts at: " + weeks.get(weeks.size() - 1).getNumber() + ".");
+				}
+			} catch (Exception e) {
+				valid = false;
 			}
 
 			double totalCost = p.getSumSalary();
@@ -184,7 +241,7 @@ public class ScenarioValidator {
 				}
 			});
 
-			if(previousWeeks.get(0).getNumber() >= currentWeeks.get(0).getNumber()) {
+			if(previousWeeks.get(0).getNumber() > currentWeeks.get(0).getNumber()) {
 				logger.addError("Task("+task.getName()+","+task.getId()+") of Project("+project.getName()+","+project.getId()+") has weeks that violate the partial order constraint.");
 			}
 		}
@@ -234,29 +291,28 @@ public class ScenarioValidator {
 		return numberOfProjects;
 	}
 
-
 	public int getNumberOfTasks() {
 		return numberOfTasks;
 	}
-
 
 	public int getNumberOfRequirements() {
 		return numberOfRequirements;
 	}
 
-
 	public int getNumberOfOffers() {
 		return numberOfOffers;
 	}
-
 
 	public int getNumberOfWeeks() {
 		return numberOfWeeks;
 	}
 
-
 	public int getNumberOfPersons() {
 		return numberOfPersons;
+	}
+
+	public double getSuccessRate() {
+		return successRate;
 	}
 	
 }

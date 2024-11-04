@@ -9,6 +9,7 @@ import org.emoflon.gips.core.util.Observer;
 
 import PersonTaskAssignments.PersonTaskAssignmentModel;
 import pta.evaluation.util.EvaluationResult;
+import pta.evaluation.util.SolverOutput;
 import pta.scenario.ScenarioRunner;
 import pta.scenario.ScenarioValidator;
 
@@ -18,18 +19,8 @@ public abstract class HouseConstructionBatchGeneric<API extends GipsEngineAPI<?,
 	}
 
 	@Override
-	public EvaluationResult run() {
-		api.buildILPProblemTimed(true);
-		ILPSolverOutput output = api.solveILPProblemTimed();
-		if(output.status() == ILPSolverStatus.OPTIMAL) {
-			executeGT();
-		}
-		ScenarioValidator validator = new ScenarioValidator((PersonTaskAssignmentModel) api.getEMoflonApp().getModel().getResources().get(0).getContents().get(0), output);
-		validator.validate();
-		api.terminate();
-		
-		Observer obs = Observer.getInstance();
-		return new EvaluationResult(obs.getCurrentSeries(), validator, output, obs.getMeasurements(obs.getCurrentSeries()));
+	public EvaluationResult run() throws IOException {
+		return run("");
 	}
 	
 	@Override
@@ -39,13 +30,17 @@ public abstract class HouseConstructionBatchGeneric<API extends GipsEngineAPI<?,
 		if(output.status() == ILPSolverStatus.OPTIMAL) {
 			executeGT();
 		}
-		ScenarioValidator validator = new ScenarioValidator((PersonTaskAssignmentModel) api.getEMoflonApp().getModel().getResources().get(0).getContents().get(0), output);
+		ScenarioValidator validator = new ScenarioValidator((PersonTaskAssignmentModel) api.getEMoflonApp().getModel().getResources().get(0).getContents().get(0), new SolverOutput(output));
 		validator.validate();
-		api.saveResult(outputFile);
+		
+		if(outputFile != null && !outputFile.isBlank() && !outputFile.isEmpty()) {
+			api.saveResult(outputFile);
+		}
+		
 		api.terminate();
 		
 		Observer obs = Observer.getInstance();
-		return new EvaluationResult(obs.getCurrentSeries(), validator, output, obs.getMeasurements(obs.getCurrentSeries()));
+		return new EvaluationResult(obs.getCurrentSeries(), validator, new SolverOutput(output), obs.getMeasurements(obs.getCurrentSeries()));
 	}
 	
 	public abstract void executeGT();
