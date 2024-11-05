@@ -38,6 +38,9 @@ public class HouseConstructionHeadless {
 	public static String HEADER_WEEKS = "weeks";
 	public static String HEADER_PERSONS = "persons";
 	public static String HEADER_NODES = "model_size";
+	public static String HEADER_MAPPINGS = "mappings";
+	public static String HEADER_VARS = "vars";
+	public static String HEADER_CONSTRAINTS = "constraints";
 	public static String HEADER_OPTIMAL = "is_optimal";
 	public static String HEADER_SOLVED_RATIO = "solved_ratio";
 	public static String HEADER_PROJECT_RATIO = "project_ratio";
@@ -101,6 +104,9 @@ public class HouseConstructionHeadless {
 			HEADER_WEEKS,
 			HEADER_PERSONS,
 			HEADER_NODES,
+			HEADER_MAPPINGS,
+			HEADER_VARS,
+			HEADER_CONSTRAINTS,
 			HEADER_OPTIMAL,
 			HEADER_SOLVED_RATIO,
 			HEADER_PROJECT_RATIO,
@@ -216,6 +222,9 @@ public class HouseConstructionHeadless {
 		setColumn(HEADER_WEEKS, result.validator().getNumberOfWeeks(), content);
 		setColumn(HEADER_PERSONS, result.validator().getNumberOfPersons(), content);
 		setColumn(HEADER_NODES, result.validator().getModelSize(), content);
+		setColumn(HEADER_MAPPINGS, result.output().getOutputs().values().iterator().next().stats().mappings(), content);
+		setColumn(HEADER_VARS, result.output().getOutputs().values().iterator().next().stats().vars(), content);
+		setColumn(HEADER_CONSTRAINTS, result.output().getOutputs().values().iterator().next().stats().constraints(), content);
 		setColumn(HEADER_OPTIMAL, result.validator().isValid(), content);
 		setColumn(HEADER_SOLVED_RATIO, result.output().optimality(), content);
 		setColumn(HEADER_PROJECT_RATIO, result.validator().getSuccessRate(), content);
