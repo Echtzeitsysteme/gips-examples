@@ -155,7 +155,7 @@ public class EvaluationGenerator {
 			}
 		}
 		
-		String script = EvaluationScriptGenerator.genDispatchScript(csvPrefix, generatedScripts);
+		String script = EvaluationScriptGenerator.genDispatchScript(jarLocation, csvPrefix, generatedScripts);
 		try {
 			Files.writeString(new File(dispatchScript).toPath(), script);
 		} catch (IOException e) {

@@ -30,7 +30,7 @@ function run {
 source «env»
 
 # Config
-export JAR="«jar»"
+export JAR="../«jar»"
 
 setup
 
@@ -45,7 +45,7 @@ export runnerType=$4
 export outputCsv=$5
 
 # Actual run
-export RUN_NAME="$scenarioID$(date +%Y-%m-%d"_"%H:%M:%S)"
+export RUN_NAME="$scenarioID$(date +%Y-%m-%d"_"%H-%M-%S)"
 export ARGS="-i $inputXmi -o $outputXmi -id $scenarioID -r $runnerType -c $outputCsv"
 echo "#"
 echo "# => Using ARGS: $ARGS"
@@ -58,23 +58,25 @@ echo "# => Arg script done."
 echo "#"'''
 	}
 	
-	static def String genExecutionScript(String runScript, String id, String type, String src, String trg) {
+	static def String genExecutionScript(String runScript, String src, String trg, String id, String type) {
 		return '''#!/bin/bash
 set -e
 export csv=$1
 echo "#"
 echo "# => Dispatching evaluation job<«id»>"
 echo "#"
-«runScript» "«src»" «trg»" "«id»" "«type»" $csv
+chmod +x «runScript»
+«runScript» "«src»" "«trg»" "«id»" "«type»" $csv
 echo "#"
 echo "# => Job complete<«id»>"
 echo "#"'''
 	}
 	
-	static def String genDispatchScript(String csvPrefix, Collection<String> execScripts) {
+	static def String genDispatchScript(String jar, String csvPrefix, Collection<String> execScripts) {
 		return '''#!/bin/bash
 set -e
-export csvFile="«csvPrefix»$(date +%Y-%m-%d"_"%H:%M:%S).csv"
+export JAR="../«jar»"
+export csvFile="«csvPrefix»$(date +%Y-%m-%d"_"%H-%M-%S).csv"
 
 # GIPS workaround for all needed xmi files
 echo "=> Applying GIPS XMI workarounds."
@@ -89,7 +91,8 @@ echo "#"
 echo "# => Adding jobs to spooler."
 echo "#"
 «FOR script : execScripts»
-tsp «script» csvFile
+chmod +x «script»
+tsp «script» $csvFile
 «ENDFOR»
 echo "#"
 echo "# => Finished."
