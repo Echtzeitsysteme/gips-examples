@@ -72,21 +72,21 @@ public class HouseConstructionIncG extends HouseConstructionGeneric<PTAConstrain
 	
 	@Override
 	public String getGipsModelPath() {
-		return "PTAConstraintConfigF/api/gips/gips-model.xmi";
+		return "PTAConstraintConfigG/api/gips/gips-model.xmi";
 	}
 
 	@Override
 	public String getIbexModelPath() {
-		return "PTAConstraintConfigF/api/ibex-patterns.xmi";
+		return "PTAConstraintConfigG/api/ibex-patterns.xmi";
 	}
 
 	@Override
 	public String getHiPEModelPath() {
-		return "PTAConstraintConfigF/hipe/engine/hipe-network.xmi";
+		return "PTAConstraintConfigG/hipe/engine/hipe-network.xmi";
 	}
 	
 	@Override
 	public String getHiPEEngineFQN() {
-		return "PTAConstraintConfigF.hipe.engine.HiPEEngine";
+		return "PTAConstraintConfigG.hipe.engine.HiPEEngine";
 	}
 }

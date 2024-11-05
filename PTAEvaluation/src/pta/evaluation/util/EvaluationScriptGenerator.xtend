@@ -66,7 +66,11 @@ echo "#"
 echo "# => Dispatching evaluation job<«id»>"
 echo "#"
 chmod +x «runScript»
-«runScript» "«src»" "«trg»" "«id»" "«type»" $csv
+for ((i=1;i<=5;i++));
+do
+	«runScript» "«src»" "«trg»" "«id»-$i" "«type»" $csv
+done
+
 echo "#"
 echo "# => Job complete<«id»>"
 echo "#"'''

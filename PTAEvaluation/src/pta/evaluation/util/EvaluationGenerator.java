@@ -113,6 +113,7 @@ public class EvaluationGenerator {
 		String csvPrefix = csvFolder + "/results";
 		List<String> generatedScripts = new LinkedList<>();
 		
+		// Generate batch scenarios
 		for(int i = 1; i<=10; i++) {
 			String src = instancesFolder + "/Batch"+i+".xmi";
 			String trg = solutionFolder + "/Batch"+i+"_solved.xmi";
@@ -123,6 +124,10 @@ public class EvaluationGenerator {
 				e.printStackTrace();
 			}
 			for(String type : batchRunnerTypes) {
+				// Skip the largest scenario for now
+				if(type.equals(HouseConstructionBatchE.TYPE))
+					continue;
+				
 				String id = type+"-batch-"+i;
 				String script = EvaluationScriptGenerator.genExecutionScript(runScript, src, trg, id, type);
 				String scriptPath = execScriptFolder+"/"+id+"-run.sh";
@@ -134,9 +139,14 @@ public class EvaluationGenerator {
 				}
 			}
 			
-			src = instancesFolder + "/Inc"+i+".xmi";
-			trg = solutionFolder + "/Inc"+i+"_solved.xmi";
-			model = generateIncremental(i);
+
+		}
+		
+		// Generate incremental scenarios
+		for(int i = 1; i<=6; i++) {
+			String src = instancesFolder + "/Batch"+i+".xmi";
+			String trg = solutionFolder + "/Batch"+i+"_solved.xmi";
+			PersonTaskAssignmentModel model = generateBatch(i);
 			try {
 				PTAModelGenerator.save(model, instancesFolder + "/Inc"+i+".xmi");
 			} catch (IOException e) {
@@ -152,6 +162,21 @@ public class EvaluationGenerator {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+		
+		// Add largest batch scenario at the end
+		for(int i = 1; i<=10; i++) {
+			String src = instancesFolder + "/Batch"+i+".xmi";
+			String trg = solutionFolder + "/Batch"+i+"_solved.xmi";
+			String id = HouseConstructionBatchE.TYPE+"-batch-"+i;
+			String script = EvaluationScriptGenerator.genExecutionScript(runScript, src, trg, id, HouseConstructionBatchE.TYPE);
+			String scriptPath = execScriptFolder+"/"+id+"-run.sh";
+			generatedScripts.add(scriptPath);
+			try {
+				Files.writeString(new File(scriptPath).toPath(), script);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		
