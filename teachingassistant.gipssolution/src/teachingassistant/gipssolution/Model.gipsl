@@ -9,3 +9,37 @@ config {
 	presolve := true;
 	debugOutput := true;
 }
+
+rule assignAssistantToTutorial {
+	a : Assistant {
+		- skills -> s
+	}
+	
+	t : Tutorial {
+		++ -givenBy -> a
+	}
+	
+	d : Department {
+		- assistants -> a
+		- tutorials -> t
+	}
+	
+	s : Skill
+	
+	// SkillType must match
+	# t.type == s.type
+	
+	// preference must be at least 1
+	# s.preference >= 1
+}
+
+pattern findTutorial {
+	t : Tutorial
+}
+
+mapping at with assignAssistantToTutorial;
+
+// Every tutorial must be given exactly once
+constraint -> pattern::findTutorial {
+	mappings.at->filter(m | m.nodes().t == self.nodes().t)->count() == 1
+}
