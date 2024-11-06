@@ -19,6 +19,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Tutorial" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SkillType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="givenBy" eType="#//Assistant"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Skill">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SkillType"/>
