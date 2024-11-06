@@ -1,0 +1,11 @@
+package "teachingassistant.gipssolution"
+import "platform:/resource/teachingassistant.metamodel/model/Metamodel.ecore"
+
+config {  
+	solver := GUROBI [home:="fu", license:="bar"];
+	launchConfig := true [main := "TODO"];
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+}
