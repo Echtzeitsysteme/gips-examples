@@ -37,9 +37,21 @@ pattern findTutorial {
 	t : Tutorial
 }
 
+pattern findAssistant {
+	a : Assistant
+}
+
 mapping at with assignAssistantToTutorial;
 
 // Every tutorial must be given exactly once
 constraint -> pattern::findTutorial {
 	mappings.at->filter(m | m.nodes().t == self.nodes().t)->count() == 1
+}
+
+// The duration of all assignments for every assistant must lay
+// in their valid hour interval (min <= assignments <= max)
+constraint -> pattern::findAssistant {
+	mappings.at->filter(m | m.nodes().a == self.nodes().a)->sum(m | m.nodes().t.duration) >= self.nodes().a.minimumHoursPerWeek
+	&
+	mappings.at->filter(m | m.nodes().a == self.nodes().a)->sum(m | m.nodes().t.duration) <= self.nodes().a.maximumHoursPerWeek
 }
