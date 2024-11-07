@@ -107,9 +107,11 @@ public class JsonSdrRunner {
 	 * @return Collection of all chosen solution mappings.
 	 */
 	private static Collection<SolutionMapping> runGips() {
-		HiPEPathOptions.setNetworkPath(URI.createFileURI("./org/emoflon/gips/gipsl/examples/sdr/extended/hipe/engine/hipe-network.xmi"));
-		HiPEPathOptions.setEngineClassName("org.emoflon.gips.gipsl.examples.sdr.extended.hipe.engine.HiPEEngine");
-		
+		HiPEPathOptions.getInstance().setNetworkPath(
+				URI.createFileURI("./org/emoflon/gips/gipsl/examples/sdr/extended/hipe/engine/hipe-network.xmi"));
+		HiPEPathOptions.getInstance()
+				.setEngineClassName("org.emoflon.gips.gipsl.examples.sdr.extended.hipe.engine.HiPEEngine");
+
 		// Create the API
 		final ExtendedGipsAPI api = new ExtendedGipsAPI();
 		api.init(URI.createFileURI("./org/emoflon/gips/gipsl/examples/sdr/extended/api/gips/gips-model.xmi"), //
