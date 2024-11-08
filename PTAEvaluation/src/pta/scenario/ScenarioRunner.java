@@ -44,8 +44,8 @@ public abstract class ScenarioRunner<API extends GipsEngineAPI<?,?>> {
 		URI inputUri = URI.createFileURI(inputModel);
 		URI ibexUri = URI.createFileURI(ibexPatternModel);
 		URI hipeUri = URI.createFileURI(hipePatternModel);
-		HiPEPathOptions.setNetworkPath(hipeUri);
-		HiPEPathOptions.setEngineClassName(hipeEngineFQN);
+		HiPEPathOptions.getInstance().setNetworkPath(hipeUri);
+		HiPEPathOptions.getInstance().setEngineClassName(hipeEngineFQN);
 		api.init(gipsUri, inputUri, ibexUri);
 	}
 	
