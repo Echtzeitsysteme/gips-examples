@@ -53,7 +53,8 @@ public class MdvneGipsIflyeAdapter {
 		final ILPSolverOutput output = api.solveILPProblem();
 
 		// Persist matches with their selections
-		api.persistMatchesSolution(api.getSrv2srv(), "match-export.json", new Srv2SrvMatchConverter());
+		api.persistMatchesSolution(api.getSrv2srv(), MatchExportUtils.getNextFreeFilename(),
+				new Srv2SrvMatchConverter());
 
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
