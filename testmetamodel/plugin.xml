@@ -2,6 +2,6 @@
 <?eclipse version="3.0"?><!--
 --><plugin>
   <extension point="org.eclipse.emf.ecore.generated_package">
-    <package class="testmetamodel.TestmetamodelPackage" genModel="model/testmetamodel.genmodel" uri="http://www.example.org/testmetamodel"/>
+    <package class="testmetamodel.TestmetamodelPackage" genModel="model/testmetamodel.genmodel" uri="platform:/resource/testmetamodel/model/testmetamodel.ecore"/>
   </extension>
 </plugin>
