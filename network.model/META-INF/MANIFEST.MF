@@ -5,10 +5,7 @@ Bundle-SymbolicName: network.model;singleton:=true
 Bundle-Version: 0.0.3.qualifier
 Bundle-Vendor: Real-Time Systems Lab - TU Darmstadt
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: lib/gson/gson-2.11.0.jar,
- lib/gson/gson-2.11.0-javadoc.jar,
- lib/gson/gson-2.11.0-sources.jar,
- .
+Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: network.model
 Require-Bundle: org.eclipse.emf.ecore,
