@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testmetamodel:Root
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:testmetamodel="http://www.example.org/testmetamodel">
+  <items/>
+  <items id="1"/>
+</testmetamodel:Root>
