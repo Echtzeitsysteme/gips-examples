@@ -1,0 +1,2 @@
+This project was copied from the TGG-3.0-Prototype repository:
+https://github.com/eMoflon/TGG-3.0-Prototype/tree/ed012d6f3fc5efba96c22716b957a466b85a0e99

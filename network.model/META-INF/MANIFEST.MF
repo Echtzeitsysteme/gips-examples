@@ -5,13 +5,15 @@ Bundle-SymbolicName: network.model;singleton:=true
 Bundle-Version: 0.0.3.qualifier
 Bundle-Vendor: Real-Time Systems Lab - TU Darmstadt
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: network.model
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.junit,
  org.moflon.core.utilities,
- org.emoflon.smartemf
+ org.emoflon.smartemf,
+ gips.examples.dependencies
 Export-Package: facade,
  facade.config,
  facade.pathgen,
