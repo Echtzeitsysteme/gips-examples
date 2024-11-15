@@ -52,6 +52,14 @@ pattern findAssistantTutorialTriple {
 	ts : Timeslot
 }
 
+pattern findAssistantContentOverlap {
+	a : Assistant
+	t1 : Tutorial
+	t2 : Tutorial
+	
+	# t1.type == t2.type
+}
+
 pattern findSkilledAssistant {
 	a : Assistant {
 		- skills -> s
@@ -88,11 +96,27 @@ constraint -> pattern::findAssistantTutorialTriple {
 	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t2)->count()
 	<= 1
 }
+
 // M0: Maximize the number of perfectly fitting assistants (skill type wise)
 objective assistantSkillsObj -> pattern::findSkilledAssistant {
 	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t)->count()
 }
 
+// M2: Maximize the number of course content overlaps for each
+// assistant, i.e., we want the tutorials on the same topics held
+// by the same assistants if possible. This is equal to the minimization
+// of the number of individual topics an assistant covers
+objective contentOverlapObj -> pattern::findAssistantContentOverlap {
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t1)->count()
+	+
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t2)->count()
+}
+
+// Global objective that uses weights to prioritize the goals
 global objective : max {
-	assistantSkillsObj
+	// M0: If possible, use assistants with highest skill
+	1 * assistantSkillsObj
+	+ 
+	// M2: Maximize topic overlap for each assistant
+	0.5 * contentOverlapObj
 }
