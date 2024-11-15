@@ -52,6 +52,17 @@ pattern findAssistantTutorialTriple {
 	ts : Timeslot
 }
 
+pattern findSkilledAssistant {
+	a : Assistant {
+		- skills -> s
+	}
+	s : Skill
+	t : Tutorial
+	
+	# s.preference == 2
+	# s.type == t.type
+}
+
 mapping at with assignAssistantToTutorial;
 
 // Every tutorial must be given exactly once
@@ -76,4 +87,12 @@ constraint -> pattern::findAssistantTutorialTriple {
 	+
 	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t2)->count()
 	<= 1
+}
+// M0: Maximize the number of perfectly fitting assistants (skill type wise)
+objective assistantSkillsObj -> pattern::findSkilledAssistant {
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t)->count()
+}
+
+global objective : max {
+	assistantSkillsObj
 }
