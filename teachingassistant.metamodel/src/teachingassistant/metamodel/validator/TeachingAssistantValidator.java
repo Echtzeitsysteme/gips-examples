@@ -1,5 +1,8 @@
 package teachingassistant.metamodel.validator;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -48,6 +51,7 @@ public class TeachingAssistantValidator {
 
 		for (final Assistant assistant : model.getAssistants()) {
 			int cummulatedHours = 0;
+			final Set<Integer> usedTimeslots = new HashSet<Integer>();
 			for (final Tutorial tutorial : model.getTutorials()) {
 				// SkillType of the tutorial must be matched by the assistant
 				if (tutorial.getGivenBy() != null && tutorial.getGivenBy().equals(assistant)) {
@@ -61,6 +65,14 @@ public class TeachingAssistantValidator {
 						return false;
 					}
 					cummulatedHours += tutorial.getDuration();
+
+					// An assistant must not have two tutorials at the same time slot
+					// M0 model instances do not have time slots, hence, the null check
+					if (tutorial.getTimeslot() != null) {
+						if (!usedTimeslots.add(tutorial.getTimeslot().getId())) {
+							return false;
+						}
+					}
 				}
 			}
 

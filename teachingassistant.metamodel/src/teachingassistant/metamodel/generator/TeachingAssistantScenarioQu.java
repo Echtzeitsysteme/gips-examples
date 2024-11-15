@@ -1,8 +1,6 @@
 package teachingassistant.metamodel.generator;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 
 import metamodel.Department;
@@ -16,15 +14,19 @@ import metamodel.SkillType;
  */
 public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 
-	protected Random rand;
+	// M0 related constants
 	private final static int NUMBER_OF_TUTORIALS = 20;
 	private final static int NUMBER_OF_TAS = 15;
+
+	// M1 related constants
+	private final static int NUMBER_OF_TIMESLOTS = 10;
 
 	public static void main(final String[] args) {
 		final TeachingAssistantScenarioQu gen = new TeachingAssistantScenarioQu(0);
 		final String instanceFolderPath = gen.prepareFolder();
 
-		final Department model = gen.constructModelM0(NUMBER_OF_TUTORIALS, NUMBER_OF_TAS);
+//		final Department model = gen.constructModelM0(NUMBER_OF_TUTORIALS, NUMBER_OF_TAS);
+		final Department model = gen.constructModelM1(NUMBER_OF_TUTORIALS, NUMBER_OF_TAS, NUMBER_OF_TIMESLOTS);
 		try {
 			save(model, instanceFolderPath + "/qu_department.xmi");
 		} catch (final IOException e) {
@@ -49,7 +51,7 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 	 * 1 and 3; the minimum number of available hours per week for a TA is 0; the
 	 * maximum number of available hours per week for TA is an integer uniformly
 	 * drawn between 1 and 5; the number of contact hours required for a tutorial is
-	 * an integer uniformly drawn between 1 and 2.
+	 * an integer uniformly drawn between 1 and 2."
 	 * 
 	 * Assumption: minimum number of tutorials per TA and number of hours was merged
 	 * in our metamodel. Therefore, a teaching assistant can give as many tutorials
@@ -78,31 +80,61 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 			addTutorial("Tutorial_" + i, getRandomSkillType(), getRandInt(1, 2));
 		}
 
-		return generate("QuEtAlDepartment");
+		return generate("QuEtAlDepartmentM0");
 	}
 
-	//
-	// Utility methods.
-	//
+	/**
+	 * Constructs a model based on M1 of the publication mentioned above. In
+	 * addition to the construction of scenario M0, the following specification will
+	 * be used: "4.1. Time Conflict of Two Tutorials. Usually the schedules of the
+	 * tutorials are a priori determined. For instance, if the course “Basics of
+	 * Calculus” has 3 tutorials, then the 3 tutorials are usually scattered
+	 * uniformly in a week. As a result, it is likely that one tutorial (say,
+	 * tutorial i is from 4:00 pm to 5:00 pm on Monday) has time overlap with
+	 * another tutorial (say, tutorial 𝑘 is from 3:00 pm to 5:00 pm on Monday). In
+	 * this case, the two tutorials cannot be taught by the same TA."
+	 * 
+	 * Assumption: minimum number of tutorials per TA and number of hours was merged
+	 * in our metamodel. Therefore, a teaching assistant can give as many tutorials
+	 * as their aggregated duration is lower or equal to their maximum number of
+	 * hours per week.
+	 * 
+	 * Assumption: Time slots will be generated according to the given
+	 * `numberOfTimeslots`. Each tutorial will get a random time slot assign (equally
+	 * distributed).
+	 * 
+	 * @param numberOfTutorials Number of tutorials to generate.
+	 * @param numberOfTas       Number of teaching assistants to generate.
+	 * @param numberOfTimeslots Number of time slots to generate.
+	 * @return Department model instance.
+	 */
+	public Department constructModelM1(final int numberOfTutorials, final int numberOfTas,
+			final int numberOfTimeslots) {
+		// TODO
+		// Assistants
+		for (int i = 0; i < numberOfTas; i++) {
+			addAssistant("Assistant_" + i, 0, getRandInt(0, 5));
 
-	private String prepareFolder() {
-		final String projectFolder = System.getProperty("user.dir");
-		final String instancesFolder = projectFolder + "/instances";
-		final File f = new File(instancesFolder);
-		if (!f.exists()) {
-			f.mkdirs();
+			// Assumption: every assistant has every SkillType but the preference is
+			// uniformly random.
+			// Warning: this may lead to non-feasible models!
+			for (final SkillType st : SkillType.VALUES) {
+				addSkillToAssistant("Assistant_" + i, st, getRandInt(0, 2));
+			}
 		}
-		return instancesFolder;
-	}
 
-	private int getRandInt(final int min, final int max) {
-		return rand.nextInt((max - min) + 1) + min;
-	}
+		// Time slots
+		for (int i = 0; i < numberOfTimeslots; i++) {
+			addTimeslot(i);
+		}
 
-	private SkillType getRandomSkillType() {
-		final List<SkillType> allSkillTypes = SkillType.VALUES;
-		final int randomIndex = getRandInt(0, allSkillTypes.size() - 1);
-		return allSkillTypes.get(randomIndex);
+		// Tutorials
+		for (int i = 0; i < numberOfTutorials; i++) {
+			// The ID of the timeslot to choose should be drawn equally from random
+			addTutorial("Tutorial_" + i, getRandomSkillType(), getRandInt(1, 2), getRandInt(0, numberOfTimeslots - 1));
+		}
+
+		return generate("QuEtAlDepartmentM1");
 	}
 
 }

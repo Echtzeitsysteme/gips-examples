@@ -41,6 +41,17 @@ pattern findAssistant {
 	a : Assistant
 }
 
+pattern findAssistantTutorialTriple {
+	a : Assistant
+	t1 : Tutorial {
+		- timeslot -> ts
+	}
+	t2 : Tutorial {
+		- timeslot -> ts
+	}
+	ts : Timeslot
+}
+
 mapping at with assignAssistantToTutorial;
 
 // Every tutorial must be given exactly once
@@ -54,4 +65,15 @@ constraint -> pattern::findAssistant {
 	mappings.at->filter(m | m.nodes().a == self.nodes().a)->sum(m | m.nodes().t.duration) >= self.nodes().a.minimumHoursPerWeek
 	&
 	mappings.at->filter(m | m.nodes().a == self.nodes().a)->sum(m | m.nodes().t.duration) <= self.nodes().a.maximumHoursPerWeek
+}
+
+// M1: An assistant must not have two tutorials in the same time slot
+// Formulation in GIPSL: for a given triple of an Assistant (a) and two
+// conflicting tutorials (t1, t2; conflicting means they both have the 
+// same time slot) there must at most be one of the tutorials chosen
+constraint -> pattern::findAssistantTutorialTriple {
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t1)->count()
+	+
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t2)->count()
+	<= 1
 }
