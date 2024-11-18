@@ -41,14 +41,8 @@ pattern findAssistant {
 	a : Assistant
 }
 
-pattern findAssistantTutorialTriple {
+pattern findAssistantTimeslotTuple {
 	a : Assistant
-	t1 : Tutorial {
-		- timeslot -> ts
-	}
-	t2 : Tutorial {
-		- timeslot -> ts
-	}
 	ts : Timeslot
 }
 
@@ -87,13 +81,11 @@ constraint -> pattern::findAssistant {
 }
 
 // M1: An assistant must not have two tutorials in the same time slot
-// Formulation in GIPSL: for a given triple of an Assistant (a) and two
-// conflicting tutorials (t1, t2; conflicting means they both have the 
-// same time slot) there must at most be one of the tutorials chosen
-constraint -> pattern::findAssistantTutorialTriple {
-	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t1)->count()
-	+
-	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t2)->count()
+// Formulation in GIPSL: for a given tuple of an Assistant (a) and a
+// time slot (ts), there must be at most one tutorial given by assistant
+// a in time slot ts
+constraint -> pattern::findAssistantTimeslotTuple {
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t.timeslot == self.nodes().ts)->count()
 	<= 1
 }
 
