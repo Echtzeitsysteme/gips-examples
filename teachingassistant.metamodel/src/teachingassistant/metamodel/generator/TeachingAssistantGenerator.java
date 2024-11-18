@@ -142,7 +142,7 @@ public class TeachingAssistantGenerator {
 
 	protected String prepareFolder() {
 		final String projectFolder = System.getProperty("user.dir");
-		final String instancesFolder = projectFolder + "/instances";
+		final String instancesFolder = projectFolder + "/../teachingassistant.metamodel" + "/instances";
 		final File f = new File(instancesFolder);
 		if (!f.exists()) {
 			f.mkdirs();
