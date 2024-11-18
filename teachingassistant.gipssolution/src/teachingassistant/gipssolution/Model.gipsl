@@ -134,9 +134,10 @@ constraint -> pattern::findAssistantDayTuple {
 }
 
 // M4: Controlling the Number of Days a TA Works
-// Formulation in GIPSL: TODO
+// Formulation in GIPSL: the number of assigned days must be smaller 
+// or equal to the number of maximum days per week (of the assistant)
 constraint -> pattern::findAssistant {
-	mappings.laAssignment->filter(m | m.nodes().a == self.nodes().a)->count() <= self.nodes().a.maximumDaysPerWeek
+	mappings.adAssignment->filter(m | m.nodes().a == self.nodes().a)->count() <= self.nodes().a.maximumDaysPerWeek
 }
 
 // M0: Maximize the number of perfectly fitting assistants (skill type wise)

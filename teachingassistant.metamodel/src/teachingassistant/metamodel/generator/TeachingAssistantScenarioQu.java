@@ -239,6 +239,11 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 	 */
 	public Department constructModelM4(final int numberOfTutorials, final int numberOfTas, final int numberOfTimeslots,
 			final int numberOfLecturers, final int maximumDaysPerWeek) {
+		// Days
+		for (int i = 0; i < 5; i++) {
+			addDay("Day_" + i);
+		}
+
 		// Assistants
 		for (int i = 0; i < numberOfTas; i++) {
 			addAssistant("Assistant_" + i, 0, getRandInt(0, 5));
@@ -253,7 +258,6 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 			// Assumption: every assistant gets a random number of possible work days per
 			// week equally drawn from 1 to `maximumDaysPerWeek`
 			assistants.get("Assistant_" + i).setMaximumDaysPerWeek(getRandInt(1, maximumDaysPerWeek));
-			;
 		}
 
 		// Time slots
@@ -270,7 +274,7 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 		// Lecturers
 		for (int i = 0; i < numberOfLecturers; i++) {
 			// The number of maximum assigned TAs will be drawn equally from random
-			addLecturer("Lecturer_" + i, getRandomSkillType(), getRandInt(0, MAXIMUM_NUMBER_OF_TAS_PER_LECTURER));
+			addLecturer("Lecturer_" + i, getRandomSkillType(), getRandInt(1, MAXIMUM_NUMBER_OF_TAS_PER_LECTURER));
 		}
 
 		return generate("QuEtAlDepartmentM4");

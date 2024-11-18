@@ -237,29 +237,6 @@ public class TeachingAssistantValidator {
 			return false;
 		}
 
-		for (final Lecturer lecturer : model.getLecturers()) {
-			final Set<Assistant> employedAssistants = new HashSet<>();
-			// Lecturers must only have tutorials with a matching type
-			for (final Tutorial t : lecturer.getTutorials()) {
-				if (t.getType() != lecturer.getType()) {
-					return false;
-				}
-
-				employedAssistants.add(t.getGivenBy());
-			}
-
-			// lecturers must not have a number of maximum TAs that is smaller than zero
-			if (lecturer.getMaximumNumberOfTas() < 0) {
-				return false;
-			}
-
-			// The number of assigned TAs must not be larger than the maximum number of TAs
-			// (limit given by the specific lecturer)
-			if (employedAssistants.size() > lecturer.getMaximumNumberOfTas()) {
-				return false;
-			}
-		}
-
 		// Number of assigned work days must be smaller or equal to the maximum number
 		// of work days of this specific assistant
 		if (workingDays.size() > assistant.getMaximumDaysPerWeek()) {
@@ -286,6 +263,10 @@ public class TeachingAssistantValidator {
 		final Set<Assistant> employedAssistants = new HashSet<>();
 		for (final Tutorial t : lecturer.getTutorials()) {
 			employedAssistants.add(t.getGivenBy());
+		}
+		// lecturers must not have a number of maximum TAs that is smaller than zero
+		if (lecturer.getMaximumNumberOfTas() < 0) {
+			return false;
 		}
 		if (employedAssistants.size() > lecturer.getMaximumNumberOfTas()) {
 			return false;

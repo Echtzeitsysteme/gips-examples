@@ -66,13 +66,8 @@ public class TeachingAssistantGenerator {
 		checkNotNull(timeslot, "Time slot");
 		addTutorial(name, type, duration);
 		tutorials.get(name).setTimeslot(timeslots.get(timeslot));
-	}
-
-	public void addTutorial(final String name, final SkillType type, final int duration, final int timeslot,
-			final String day) {
-		checkNotNull(day, "Day");
-		addTutorial(name, type, duration, timeslot);
-		tutorials.get(name).getTimeslot().setDay(days.get(day));
+		final Day randomDay = days.get("Day_" + getRandInt(0, days.size() - 1));
+		tutorials.get(name).getTimeslot().setDay(randomDay);
 	}
 
 	public void addAssistant(final String name, final int minHoursPerWeek, final int maxHoursPerWeek) {
