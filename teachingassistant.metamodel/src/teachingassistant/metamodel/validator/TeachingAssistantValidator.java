@@ -11,6 +11,7 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import metamodel.Assistant;
 import metamodel.Department;
+import metamodel.Lecturer;
 import metamodel.MetamodelPackage;
 import metamodel.Skill;
 import metamodel.Tutorial;
@@ -47,6 +48,14 @@ public class TeachingAssistantValidator {
 			if (tutorial.getGivenBy() == null) {
 				return false;
 			}
+
+			// If a tutorial has a lecturer, the tutorial must also be contained in the
+			// collection of tutorials of the same lecturer
+			if (tutorial.getLecturer() != null) {
+				if (!tutorial.getLecturer().getTutorials().contains(tutorial)) {
+					return false;
+				}
+			}
 		}
 
 		for (final Assistant assistant : model.getAssistants()) {
@@ -80,6 +89,29 @@ public class TeachingAssistantValidator {
 			if (!(assistant.getMinimumHoursPerWeek() <= cummulatedHours)
 					|| !(assistant.getMaximumHoursPerWeek() >= cummulatedHours)) {
 				return false;
+			}
+
+			for (final Lecturer lecturer : model.getLecturers()) {
+				final Set<Assistant> employedAssistants = new HashSet<>();
+				// Lecturers must only have tutorials with a matching type
+				for (final Tutorial t : lecturer.getTutorials()) {
+					if (t.getType() != lecturer.getType()) {
+						return false;
+					}
+
+					employedAssistants.add(t.getGivenBy());
+				}
+
+				// lecturers must not have a number of maximum TAs that is smaller than zero
+				if (lecturer.getMaximumNumberOfTas() < 0) {
+					return false;
+				}
+
+				// The number of assigned TAs must not be larger than the maximum number of TAs
+				// (limit given by the specific lecturer)
+				if (employedAssistants.size() > lecturer.getMaximumNumberOfTas()) {
+					return false;
+				}
 			}
 		}
 

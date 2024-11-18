@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -15,6 +16,7 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import metamodel.Assistant;
 import metamodel.Department;
+import metamodel.Lecturer;
 import metamodel.MetamodelFactory;
 import metamodel.MetamodelPackage;
 import metamodel.Skill;
@@ -29,17 +31,20 @@ public class TeachingAssistantGenerator {
 	protected Map<String, Assistant> assistants = new LinkedHashMap<>();
 	protected Map<String, Tutorial> tutorials = new LinkedHashMap<>();
 	protected Map<Integer, Timeslot> timeslots = new LinkedHashMap<>();
+	protected Map<String, Lecturer> lecturers = new LinkedHashMap<>();
 
 	protected Random rand;
 
 	public Department generate(final String departmentName) {
 		checkNotNull(departmentName, "Name");
 
+		populateTutorialsToLecturers();
 		root = factory.createDepartment();
 		root.setName(departmentName);
 		root.getAssistants().addAll(assistants.values());
 		root.getTutorials().addAll(tutorials.values());
 		root.getTimeslots().addAll(timeslots.values());
+		root.getLecturers().addAll(lecturers.values());
 		return root;
 	}
 
@@ -55,16 +60,9 @@ public class TeachingAssistantGenerator {
 	}
 
 	public void addTutorial(final String name, final SkillType type, final int duration, final int timeslot) {
-		checkNotNull(name, " Name");
-		checkNotNull(type, "Type");
 		checkNotNull(timeslot, "Time slot");
-
-		final Tutorial t = factory.createTutorial();
-		t.setName(name);
-		t.setDuration(duration);
-		t.setType(type);
-		t.setTimeslot(timeslots.get(timeslot));
-		this.tutorials.put(name, t);
+		addTutorial(name, type, duration);
+		tutorials.get(name).setTimeslot(timeslots.get(timeslot));
 	}
 
 	public void addAssistant(final String name, final int minHoursPerWeek, final int maxHoursPerWeek) {
@@ -109,6 +107,31 @@ public class TeachingAssistantGenerator {
 		t.setName(String.valueOf(id));
 		t.setId(id);
 		timeslots.put(Integer.valueOf(id), t);
+	}
+
+	public void addLecturer(final String name, final SkillType type) {
+		checkNotNull(name, "Name");
+
+		final Lecturer l = factory.createLecturer();
+		l.setName(name);
+		l.setType(type);
+		lecturers.put(name, l);
+	}
+
+	public void addLecturer(final String name, final SkillType type, final int maximumNumberOfTas) {
+		addLecturer(name, type);
+		lecturers.get(name).setMaximumNumberOfTas(maximumNumberOfTas);
+	}
+
+	public void populateTutorialsToLecturers() {
+		for (final Tutorial t : tutorials.values()) {
+			final List<Lecturer> filteredLecturers = lecturers.values().stream() //
+					.filter(l -> l.getType().equals(t.getType())) //
+					.collect(Collectors.toList());
+			final Lecturer randomLecturer = filteredLecturers.get(getRandInt(0, filteredLecturers.size() - 1));
+			randomLecturer.getTutorials().add(t);
+			t.setLecturer(randomLecturer);
+		}
 	}
 
 	//

@@ -12,6 +12,8 @@
         eType="#//Tutorial" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="timeslots" upperBound="-1"
         eType="#//Timeslot" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lecturers" upperBound="-1"
+        eType="#//Lecturer" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Assistant" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="minimumHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -24,6 +26,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="givenBy" eType="#//Assistant"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="timeslot" eType="#//Timeslot"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lecturer" eType="#//Lecturer"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Skill">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SkillType"/>
@@ -39,5 +42,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Timeslot" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Lecturer" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tutorials" upperBound="-1"
+        eType="#//Tutorial"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SkillType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumNumberOfTas" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 </ecore:EPackage>

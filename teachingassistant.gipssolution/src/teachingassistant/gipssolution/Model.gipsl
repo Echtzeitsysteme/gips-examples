@@ -65,7 +65,20 @@ pattern findSkilledAssistant {
 	# s.type == t.type
 }
 
+pattern findLecturerAssistantTuple {
+	l : Lecturer
+	a : Assistant
+}
+
+pattern findLecturer {
+	l : Lecturer
+}
+
 mapping at with assignAssistantToTutorial;
+
+// M3: Mapping that must be 1 if assistant a works for
+// lecturer l
+mapping laAssignment with findLecturerAssistantTuple;
 
 // Every tutorial must be given exactly once
 constraint -> pattern::findTutorial {
@@ -87,6 +100,21 @@ constraint -> pattern::findAssistant {
 constraint -> pattern::findAssistantTimeslotTuple {
 	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t.timeslot == self.nodes().ts)->count()
 	<= 1
+}
+
+// M3: If assistant a works for lecturer l, set its mapping variable
+// to 1
+constraint -> pattern::findLecturerAssistantTuple {
+	mappings.laAssignment->filter(m | m.nodes().a == self.nodes().a & m.nodes().l == self.nodes().l)->count() == 1
+	<=>
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t.lecturer == self.nodes().l)->count() >= 1
+}
+
+// M3: Controlling the number of TAs for one course/lecturer
+// Formulation in GIPSL: the number of assigned TAs for a given
+// lecturer must be at most `maximumNumberOfTas`
+constraint -> pattern::findLecturer {
+	mappings.laAssignment->filter(m | m.nodes().l == self.nodes().l)->count() <= self.nodes().l.maximumNumberOfTas
 }
 
 // M0: Maximize the number of perfectly fitting assistants (skill type wise)
