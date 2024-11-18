@@ -96,8 +96,9 @@ objective assistantSkillsObj -> pattern::findSkilledAssistant {
 
 // M2: Maximize the number of course content overlaps for each
 // assistant, i.e., we want the tutorials on the same topics held
-// by the same assistants if possible. This is equal to the minimization
-// of the number of individual topics an assistant covers
+// by the same assistants if possible. This is equal to the maximization
+// of overlapping triples (assistant a, tutorial t1, and tutorial t2
+// which are both given by assistant a)
 objective contentOverlapObj -> pattern::findAssistantContentOverlap {
 	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t1)->count()
 	+

@@ -6,7 +6,7 @@ import teachingassistant.gipssolution.api.gips.GipssolutionGipsAPI;
 
 public class TeachingAssistantRunner extends AbstractTeachingAssistantRunner {
 
-	final String scenarioFileName = "qu_department.xmi";
+	private final String scenarioFileName = "qu_department.xmi";
 
 	public static void main(final String[] args) {
 		new TeachingAssistantRunner().run();

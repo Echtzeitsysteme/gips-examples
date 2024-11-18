@@ -82,7 +82,7 @@ public class TeachingAssistantGenerator {
 		checkNotNull(type, "Type");
 
 		if (!this.assistants.containsKey(name)) {
-			throw new UnsupportedOperationException("Assistent with name <" + name + "> does not exist.");
+			throw new UnsupportedOperationException("Assistant with name <" + name + "> does not exist.");
 		}
 
 		final Skill s = createSkill(type, preference);

@@ -7,7 +7,7 @@ import metamodel.Department;
 import metamodel.SkillType;
 
 /**
- * Implements the scenario described in: Xiaobo Qu, Wen Yi, Tingsong Wang,
+ * Implements the scenarios described in: Xiaobo Qu, Wen Yi, Tingsong Wang,
  * Shuaian Wang, Lin Xiao, and Zhiyuan Liu. Mixed-Integer Linear Programming
  * Models for Teaching Assistant Assignment and Extensions. 2017.
  * https://doi.org/10.1155/2017/9057947
@@ -100,8 +100,8 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 	 * hours per week.
 	 * 
 	 * Assumption: Time slots will be generated according to the given
-	 * `numberOfTimeslots`. Each tutorial will get a random time slot assign (equally
-	 * distributed).
+	 * `numberOfTimeslots`. Each tutorial will get a random time slot assign
+	 * (equally distributed).
 	 * 
 	 * @param numberOfTutorials Number of tutorials to generate.
 	 * @param numberOfTas       Number of teaching assistants to generate.
@@ -110,7 +110,6 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 	 */
 	public Department constructModelM1(final int numberOfTutorials, final int numberOfTas,
 			final int numberOfTimeslots) {
-		// TODO
 		// Assistants
 		for (int i = 0; i < numberOfTas; i++) {
 			addAssistant("Assistant_" + i, 0, getRandInt(0, 5));
@@ -130,7 +129,7 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 
 		// Tutorials
 		for (int i = 0; i < numberOfTutorials; i++) {
-			// The ID of the timeslot to choose should be drawn equally from random
+			// The ID of the time slot to choose should be drawn equally from random
 			addTutorial("Tutorial_" + i, getRandomSkillType(), getRandInt(1, 2), getRandInt(0, numberOfTimeslots - 1));
 		}
 

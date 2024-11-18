@@ -66,7 +66,7 @@ public class TeachingAssistantValidator {
 					}
 					cummulatedHours += tutorial.getDuration();
 
-					// An assistant must not have two tutorials at the same time slot
+					// M1: An assistant must not have two tutorials at the same time slot
 					// M0 model instances do not have time slots, hence, the null check
 					if (tutorial.getTimeslot() != null) {
 						if (!usedTimeslots.add(tutorial.getTimeslot().getId())) {

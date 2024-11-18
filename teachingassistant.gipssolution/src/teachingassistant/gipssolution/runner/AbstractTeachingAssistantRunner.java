@@ -94,4 +94,5 @@ public abstract class AbstractTeachingAssistantRunner {
 		// Apply found solution
 		gipsApi.getAt().applyNonZeroMappings();
 	}
+
 }
