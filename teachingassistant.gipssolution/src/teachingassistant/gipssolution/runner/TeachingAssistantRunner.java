@@ -4,12 +4,12 @@ import org.eclipse.emf.common.util.URI;
 
 import teachingassistant.gipssolution.api.gips.GipssolutionGipsAPI;
 
-public class TeachingAssistentRunner extends AbstractTeachingAssistantRunner {
+public class TeachingAssistantRunner extends AbstractTeachingAssistantRunner {
 
 	final String scenarioFileName = "qu_department.xmi";
 
 	public static void main(final String[] args) {
-		new TeachingAssistentRunner().run();
+		new TeachingAssistantRunner().run();
 	}
 
 	public void run() {
@@ -56,7 +56,6 @@ public class TeachingAssistentRunner extends AbstractTeachingAssistantRunner {
 
 		System.out.println("Building + solving took " + 1.0 * (tock - tick) / 1_000_000_000 + "s.");
 		gipsApi.terminate();
-		java.lang.System.exit(0);
 	}
 
 }
