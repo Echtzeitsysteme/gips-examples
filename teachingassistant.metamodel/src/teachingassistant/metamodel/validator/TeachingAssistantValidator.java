@@ -10,6 +10,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import metamodel.Assistant;
+import metamodel.Day;
 import metamodel.Department;
 import metamodel.Lecturer;
 import metamodel.MetamodelPackage;
@@ -60,10 +61,14 @@ public class TeachingAssistantValidator {
 
 		for (final Assistant assistant : model.getAssistants()) {
 			int cummulatedHours = 0;
+			final Set<Day> workingDays = new HashSet<>();
 			final Set<Integer> usedTimeslots = new HashSet<Integer>();
 			for (final Tutorial tutorial : model.getTutorials()) {
-				// SkillType of the tutorial must be matched by the assistant
 				if (tutorial.getGivenBy() != null && tutorial.getGivenBy().equals(assistant)) {
+					// Add working days
+					workingDays.add(tutorial.getTimeslot().getDay());
+
+					// SkillType of the tutorial must be matched by the assistant
 					boolean skillTypeMatched = false;
 					for (final Skill s : assistant.getSkills()) {
 						if (tutorial.getType().equals(s.getType())) {
@@ -112,6 +117,12 @@ public class TeachingAssistantValidator {
 				if (employedAssistants.size() > lecturer.getMaximumNumberOfTas()) {
 					return false;
 				}
+			}
+
+			// Number of assigned work days must be smaller or equal to the maximum number
+			// of work days of this specific assistant
+			if (workingDays.size() > assistant.getMaximumDaysPerWeek()) {
+				return false;
 			}
 		}
 

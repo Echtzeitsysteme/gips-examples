@@ -74,11 +74,20 @@ pattern findLecturer {
 	l : Lecturer
 }
 
+pattern findAssistantDayTuple {
+	a : Assistant
+	d : Day
+}
+
 mapping at with assignAssistantToTutorial;
 
 // M3: Mapping that must be 1 if assistant a works for
 // lecturer l
 mapping laAssignment with findLecturerAssistantTuple;
+
+// M4: Mapping that must be 1 if assistant a works on
+// day d
+mapping adAssignment with findAssistantDayTuple;
 
 // Every tutorial must be given exactly once
 constraint -> pattern::findTutorial {
@@ -115,6 +124,19 @@ constraint -> pattern::findLecturerAssistantTuple {
 // lecturer must be at most `maximumNumberOfTas`
 constraint -> pattern::findLecturer {
 	mappings.laAssignment->filter(m | m.nodes().l == self.nodes().l)->count() <= self.nodes().l.maximumNumberOfTas
+}
+
+// M4: If assistant a works on day d, set its mapping variable to 1
+constraint -> pattern::findAssistantDayTuple {
+	mappings.adAssignment->filter(m | m.nodes().a == self.nodes().a & m.nodes().d == self.nodes().d)->count() == 1
+	<=>
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t.timeslot.day == self.nodes().d)->count() >= 1
+}
+
+// M4: Controlling the Number of Days a TA Works
+// Formulation in GIPSL: TODO
+constraint -> pattern::findAssistant {
+	mappings.laAssignment->filter(m | m.nodes().a == self.nodes().a)->count() <= self.nodes().a.maximumDaysPerWeek
 }
 
 // M0: Maximize the number of perfectly fitting assistants (skill type wise)

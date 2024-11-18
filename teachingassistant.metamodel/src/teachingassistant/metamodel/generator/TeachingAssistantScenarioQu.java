@@ -25,14 +25,19 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 	private final static int NUMBER_OF_LECTURERS = 5;
 	private final static int MAXIMUM_NUMBER_OF_TAS_PER_LECTURER = 10;
 
+	// M4 related constants
+	private final static int MAXIMUM_DAYS_PER_WEEK = 5;
+
 	public static void main(final String[] args) {
 		final TeachingAssistantScenarioQu gen = new TeachingAssistantScenarioQu(0);
 		final String instanceFolderPath = gen.prepareFolder();
 
 //		final Department model = gen.constructModelM0(NUMBER_OF_TUTORIALS, NUMBER_OF_TAS);
 //		final Department model = gen.constructModelM1(NUMBER_OF_TUTORIALS, NUMBER_OF_TAS, NUMBER_OF_TIMESLOTS);
-		final Department model = gen.constructModelM3(NUMBER_OF_TUTORIALS, NUMBER_OF_TAS, NUMBER_OF_TIMESLOTS,
-				NUMBER_OF_LECTURERS);
+//		final Department model = gen.constructModelM3(NUMBER_OF_TUTORIALS, NUMBER_OF_TAS, NUMBER_OF_TIMESLOTS,
+//				NUMBER_OF_LECTURERS);
+		final Department model = gen.constructModelM4(NUMBER_OF_TUTORIALS, NUMBER_OF_TAS, NUMBER_OF_TIMESLOTS,
+				NUMBER_OF_LECTURERS, MAXIMUM_DAYS_PER_WEEK);
 		try {
 			save(model, instanceFolderPath + "/qu_department.xmi");
 		} catch (final IOException e) {
@@ -201,6 +206,74 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 		}
 
 		return generate("QuEtAlDepartmentM3");
+	}
+
+	/**
+	 * Constructs a model based on M3 of the publication mentioned above. In
+	 * addition to the construction of scenario M0, the following specification will
+	 * be used: "4.4. Controlling the Number of Days a TA Works. A TA may like to
+	 * teach five tutorials, but she may not like to teach one tutorial every day."
+	 * 
+	 * Assumption: minimum number of tutorials per TA and number of hours was merged
+	 * in our metamodel. Therefore, a teaching assistant can give as many tutorials
+	 * as their aggregated duration is lower or equal to their maximum number of
+	 * hours per week.
+	 * 
+	 * Assumption: Time slots will be generated according to the given
+	 * `numberOfTimeslots`. Each tutorial will get a random time slot assign
+	 * (equally distributed).
+	 * 
+	 * Assumption: Lecturers will be generated according to the given
+	 * `numberOfLecturers`. Each lecturer will get a random maximum number of
+	 * teaching assistants.
+	 * 
+	 * Assumption: Each assistant will get a random number of maximum work days per
+	 * week.
+	 * 
+	 * 
+	 * @param numberOfTutorials Number of tutorials to generate.
+	 * @param numberOfTas       Number of teaching assistants to generate.
+	 * @param numberOfTimeslots Number of time slots to generate.
+	 * @param numberOfLecturers Number of lecturers to generate.
+	 * @return Department model instance.
+	 */
+	public Department constructModelM4(final int numberOfTutorials, final int numberOfTas, final int numberOfTimeslots,
+			final int numberOfLecturers, final int maximumDaysPerWeek) {
+		// Assistants
+		for (int i = 0; i < numberOfTas; i++) {
+			addAssistant("Assistant_" + i, 0, getRandInt(0, 5));
+
+			// Assumption: every assistant has every SkillType but the preference is
+			// uniformly random.
+			// Warning: this may lead to non-feasible models!
+			for (final SkillType st : SkillType.VALUES) {
+				addSkillToAssistant("Assistant_" + i, st, getRandInt(0, 2));
+			}
+
+			// Assumption: every assistant gets a random number of possible work days per
+			// week equally drawn from 1 to `maximumDaysPerWeek`
+			assistants.get("Assistant_" + i).setMaximumDaysPerWeek(getRandInt(1, maximumDaysPerWeek));
+			;
+		}
+
+		// Time slots
+		for (int i = 0; i < numberOfTimeslots; i++) {
+			addTimeslot(i);
+		}
+
+		// Tutorials
+		for (int i = 0; i < numberOfTutorials; i++) {
+			// The ID of the time slot to choose should be drawn equally from random
+			addTutorial("Tutorial_" + i, getRandomSkillType(), getRandInt(1, 2), getRandInt(0, numberOfTimeslots - 1));
+		}
+
+		// Lecturers
+		for (int i = 0; i < numberOfLecturers; i++) {
+			// The number of maximum assigned TAs will be drawn equally from random
+			addLecturer("Lecturer_" + i, getRandomSkillType(), getRandInt(0, MAXIMUM_NUMBER_OF_TAS_PER_LECTURER));
+		}
+
+		return generate("QuEtAlDepartmentM4");
 	}
 
 }

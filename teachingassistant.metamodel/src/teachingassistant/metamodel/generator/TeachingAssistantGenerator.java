@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import metamodel.Assistant;
+import metamodel.Day;
 import metamodel.Department;
 import metamodel.Lecturer;
 import metamodel.MetamodelFactory;
@@ -32,6 +33,7 @@ public class TeachingAssistantGenerator {
 	protected Map<String, Tutorial> tutorials = new LinkedHashMap<>();
 	protected Map<Integer, Timeslot> timeslots = new LinkedHashMap<>();
 	protected Map<String, Lecturer> lecturers = new LinkedHashMap<>();
+	protected Map<String, Day> days = new LinkedHashMap<>();
 
 	protected Random rand;
 
@@ -45,6 +47,7 @@ public class TeachingAssistantGenerator {
 		root.getTutorials().addAll(tutorials.values());
 		root.getTimeslots().addAll(timeslots.values());
 		root.getLecturers().addAll(lecturers.values());
+		root.getDays().addAll(days.values());
 		return root;
 	}
 
@@ -65,6 +68,13 @@ public class TeachingAssistantGenerator {
 		tutorials.get(name).setTimeslot(timeslots.get(timeslot));
 	}
 
+	public void addTutorial(final String name, final SkillType type, final int duration, final int timeslot,
+			final String day) {
+		checkNotNull(day, "Day");
+		addTutorial(name, type, duration, timeslot);
+		tutorials.get(name).getTimeslot().setDay(days.get(day));
+	}
+
 	public void addAssistant(final String name, final int minHoursPerWeek, final int maxHoursPerWeek) {
 		checkNotNull(name, "Name");
 
@@ -73,6 +83,12 @@ public class TeachingAssistantGenerator {
 		a.setMaximumHoursPerWeek(maxHoursPerWeek);
 		a.setName(name);
 		assistants.put(name, a);
+	}
+
+	public void addAssistant(final String name, final int minHoursPerWeek, final int maxHoursPerWeek,
+			final int maxDaysPerWeek) {
+		addAssistant(name, minHoursPerWeek, maxHoursPerWeek);
+		assistants.get(name).setMaximumDaysPerWeek(maxDaysPerWeek);
 	}
 
 	public void addSkillToAssistant(final String name, final SkillType type, final int preference) {
@@ -132,6 +148,14 @@ public class TeachingAssistantGenerator {
 			randomLecturer.getTutorials().add(t);
 			t.setLecturer(randomLecturer);
 		}
+	}
+
+	public void addDay(final String name) {
+		checkNotNull(name, "Name");
+
+		final Day d = factory.createDay();
+		d.setName(name);
+		days.put(name, d);
 	}
 
 	//
