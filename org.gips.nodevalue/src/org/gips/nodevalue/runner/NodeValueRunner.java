@@ -38,6 +38,12 @@ public class NodeValueRunner extends AbstractNodeValueRunner {
 		final long tock = System.nanoTime();
 
 		//
+		// Persist match export as JSON
+		//
+
+		persistMatchExport(gipsApi);
+
+		//
 		// Apply the solution
 		//
 

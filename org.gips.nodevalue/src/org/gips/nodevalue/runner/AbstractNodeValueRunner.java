@@ -9,6 +9,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
+import org.gips.nodevalue.MatchExportUtils;
+import org.gips.nodevalue.NodeMatchConverter;
 import org.gips.nodevalue.api.gips.NodevalueGipsAPI;
 
 public abstract class AbstractNodeValueRunner {
@@ -91,6 +93,16 @@ public abstract class AbstractNodeValueRunner {
 	 */
 	protected void applySolution(final NodevalueGipsAPI gipsApi) {
 		gipsApi.getConnect().applyNonZeroMappings();
+	}
+
+	/**
+	 * Persists the matches with their selection value to a JSON file.
+	 * 
+	 * @param gipsApi GIPS API to persist matches for.
+	 */
+	protected void persistMatchExport(final NodevalueGipsAPI gipsApi) {
+		gipsApi.persistMatchesSolution(gipsApi.getConnect(), MatchExportUtils.getNextFreeFilename(),
+				new NodeMatchConverter());
 	}
 
 }
