@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodevaluemetamodel:Root xmlns:nodevaluemetamodel="platform:/resource/nodevaluemetamodel/model/Nodevaluemetamodel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
+  <nodes name="187" value="187" />
+  <nodes name="226" value="226" />
+  <nodes name="998" value="998" connectedNodes="//@nodes.8" />
+  <nodes name="632" value="632" />
+  <nodes name="39" value="39" />
+  <nodes name="35" value="35" />
+  <nodes name="618" value="618" />
+  <nodes name="743" value="743" />
+  <nodes connectedNodes="//@nodes.2" name="783" value="783" />
+  <nodes name="198" value="198" />
+</nodevaluemetamodel:Root>

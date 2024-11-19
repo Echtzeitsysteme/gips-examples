@@ -1,0 +1,60 @@
+package "org.gips.nodevalue"
+import "platform:/resource/nodevaluemetamodel/model/Nodevaluemetamodel.ecore"
+
+config {  
+	solver := GUROBI [home:="fu", license:="bar"];
+	timeLimit := true [value := 10.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	threadCount := true [value := 4];
+}
+
+condition nodesNotConnected = forbid findConnectedNodes
+pattern findConnectedNodes {
+	r : Root {
+		- nodes -> n1
+		- nodes -> n2
+	}
+	n1 : Node {
+		- connectedNodes -> n2
+	}
+	n2 : Node {
+		- connectedNodes -> n1
+	}
+}
+
+rule connectTwoNodes {
+	r : Root {
+		- nodes -> n1
+		- nodes -> n2
+	}
+	n1 : Node {
+		++- connectedNodes -> n2
+	}
+	n2 : Node {
+		++- connectedNodes -> n1
+	}
+}
+when nodesNotConnected
+
+//
+// GIPSL starts here
+//
+
+mapping connect with connectTwoNodes;
+
+// At most one connection (i.e., two nodes) can be connected
+constraint -> global {
+	mappings.connect->count() <= 1
+}
+
+// Objective: find the two nodes with the highest values
+objective o -> mapping::connect {
+	self.nodes().n1.^value * self.nodes().n2.^value
+}
+
+// Maximize
+global objective : max {
+	o
+}
