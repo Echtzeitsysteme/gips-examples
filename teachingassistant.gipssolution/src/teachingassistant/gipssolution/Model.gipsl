@@ -1,0 +1,166 @@
+package "teachingassistant.gipssolution"
+import "platform:/resource/teachingassistant.metamodel/model/Metamodel.ecore"
+
+config {  
+	solver := GUROBI [home:="fu", license:="bar"];
+	launchConfig := true [main := "TODO"];
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+}
+
+rule assignAssistantToTutorial {
+	a : Assistant {
+		- skills -> s
+	}
+	
+	t : Tutorial {
+		++ -givenBy -> a
+	}
+	
+	d : Department {
+		- assistants -> a
+		- tutorials -> t
+	}
+	
+	s : Skill
+	
+	// SkillType must match
+	# t.type == s.type
+	
+	// preference must be at least 1
+	# s.preference >= 1
+}
+
+pattern findTutorial {
+	t : Tutorial
+}
+
+pattern findAssistant {
+	a : Assistant
+}
+
+pattern findAssistantTimeslotTuple {
+	a : Assistant
+	ts : Timeslot
+}
+
+pattern findAssistantContentOverlap {
+	a : Assistant
+	t1 : Tutorial
+	t2 : Tutorial
+	
+	# t1.type == t2.type
+}
+
+pattern findSkilledAssistant {
+	a : Assistant {
+		- skills -> s
+	}
+	s : Skill
+	t : Tutorial
+	
+	# s.preference == 2
+	# s.type == t.type
+}
+
+pattern findLecturerAssistantTuple {
+	l : Lecturer
+	a : Assistant
+}
+
+pattern findLecturer {
+	l : Lecturer
+}
+
+pattern findAssistantDayTuple {
+	a : Assistant
+	d : Day
+}
+
+mapping at with assignAssistantToTutorial;
+
+// M3: Mapping that must be 1 if assistant a works for
+// lecturer l
+mapping laAssignment with findLecturerAssistantTuple;
+
+// M4: Mapping that must be 1 if assistant a works on
+// day d
+mapping adAssignment with findAssistantDayTuple;
+
+// Every tutorial must be given exactly once
+constraint -> pattern::findTutorial {
+	mappings.at->filter(m | m.nodes().t == self.nodes().t)->count() == 1
+}
+
+// The duration of all assignments for every assistant must lay
+// in their valid hour interval (min <= assignments <= max)
+constraint -> pattern::findAssistant {
+	mappings.at->filter(m | m.nodes().a == self.nodes().a)->sum(m | m.nodes().t.duration) >= self.nodes().a.minimumHoursPerWeek
+	&
+	mappings.at->filter(m | m.nodes().a == self.nodes().a)->sum(m | m.nodes().t.duration) <= self.nodes().a.maximumHoursPerWeek
+}
+
+// M1: An assistant must not have two tutorials in the same time slot
+// Formulation in GIPSL: for a given tuple of an Assistant (a) and a
+// time slot (ts), there must be at most one tutorial given by assistant
+// a in time slot ts
+constraint -> pattern::findAssistantTimeslotTuple {
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t.timeslot == self.nodes().ts)->count()
+	<= 1
+}
+
+// M3: If assistant a works for lecturer l, set its mapping variable
+// to 1
+constraint -> pattern::findLecturerAssistantTuple {
+	mappings.laAssignment->filter(m | m.nodes().a == self.nodes().a & m.nodes().l == self.nodes().l)->count() == 1
+	<=>
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t.lecturer == self.nodes().l)->count() >= 1
+}
+
+// M3: Controlling the number of TAs for one course/lecturer
+// Formulation in GIPSL: the number of assigned TAs for a given
+// lecturer must be at most `maximumNumberOfTas`
+constraint -> pattern::findLecturer {
+	mappings.laAssignment->filter(m | m.nodes().l == self.nodes().l)->count() <= self.nodes().l.maximumNumberOfTas
+}
+
+// M4: If assistant a works on day d, set its mapping variable to 1
+constraint -> pattern::findAssistantDayTuple {
+	mappings.adAssignment->filter(m | m.nodes().a == self.nodes().a & m.nodes().d == self.nodes().d)->count() == 1
+	<=>
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t.timeslot.day == self.nodes().d)->count() >= 1
+}
+
+// M4: Controlling the Number of Days a TA Works
+// Formulation in GIPSL: the number of assigned days must be smaller 
+// or equal to the number of maximum days per week (of the assistant)
+constraint -> pattern::findAssistant {
+	mappings.adAssignment->filter(m | m.nodes().a == self.nodes().a)->count() <= self.nodes().a.maximumDaysPerWeek
+}
+
+// M0: Maximize the number of perfectly fitting assistants (skill type wise)
+objective assistantSkillsObj -> pattern::findSkilledAssistant {
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t)->count()
+}
+
+// M2: Maximize the number of course content overlaps for each
+// assistant, i.e., we want the tutorials on the same topics held
+// by the same assistants if possible. This is equal to the maximization
+// of overlapping triples (assistant a, tutorial t1, and tutorial t2
+// which are both given by assistant a)
+objective contentOverlapObj -> pattern::findAssistantContentOverlap {
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t1)->count()
+	+
+	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t == self.nodes().t2)->count()
+}
+
+// Global objective that uses weights to prioritize the goals
+global objective : max {
+	// M0: If possible, use assistants with highest skill
+	1 * assistantSkillsObj
+	+ 
+	// M2: Maximize topic overlap for each assistant
+	0.5 * contentOverlapObj
+}
