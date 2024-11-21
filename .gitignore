@@ -32,3 +32,7 @@ architecture.cra.gipssolution/gurobi.lp
 architecture.cra.gipssolution/preprocessed.xmi
 
 architecture.cra.gipssolution/solved.xmi
+
+teachingassistant.metamodel/instances/
+
+teachingassistant.gipssolution/instances/
