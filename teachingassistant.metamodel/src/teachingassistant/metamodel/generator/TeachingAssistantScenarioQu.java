@@ -22,7 +22,7 @@ public class TeachingAssistantScenarioQu extends TeachingAssistantGenerator {
 	private final static int NUMBER_OF_TIMESLOTS = 10;
 
 	// M3 related constants
-	private final static int NUMBER_OF_LECTURERS = 5;
+	private final static int NUMBER_OF_LECTURERS = 10;
 	private final static int MAXIMUM_NUMBER_OF_TAS_PER_LECTURER = 10;
 
 	// M4 related constants
