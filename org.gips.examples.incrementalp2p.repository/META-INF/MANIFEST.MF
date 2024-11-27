@@ -8,7 +8,7 @@ Bundle-SymbolicName: org.gips.examples.incrementalp2p.repository; singleton:=tru
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.log4j,
  org.apache.commons.logging
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt,
  org.emoflon.ibex.patternmodel,

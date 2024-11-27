@@ -4,7 +4,7 @@ Bundle-Name: Run
 Bundle-SymbolicName: org.gips.examples.incrementalp2p.run
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.gips.examples.incrementalp2p.run
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.gips.examples.incrementalp2p.distribution;bundle-version="1.0.0",
  org.gips.examples.incrementalp2p.gips.incrementaldistribution;bundle-version="1.0.0",
  org.gips.examples.incrementalp2p.repository;bundle-version="1.0.0",

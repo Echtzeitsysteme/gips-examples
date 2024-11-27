@@ -4,7 +4,7 @@ Bundle-Name: Distribution
 Bundle-SymbolicName: org.gips.examples.incrementalp2p.distribution
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.gips.examples.incrementalp2p.distribution
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: LectureStudioModel;bundle-version="0.0.1",
  org.gips.examples.incrementalp2p.gips.incrementaldistribution;bundle-version="1.0.0",
  org.gips.examples.incrementalp2p.repository;bundle-version="1.0.0",
