@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Distribution
+Bundle-SymbolicName: org.gips.examples.incrementalp2p.distribution
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: org.gips.examples.incrementalp2p.distribution
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: LectureStudioModel;bundle-version="0.0.1",
+ org.gips.examples.incrementalp2p.gips.incrementaldistribution;bundle-version="1.0.0",
+ org.gips.examples.incrementalp2p.repository;bundle-version="1.0.0",
+ com.google.inject;bundle-version="5.0.1",
+ org.emoflon.ibex.gt;bundle-version="1.0.0",
+ org.emoflon.gips.core;bundle-version="1.0.0",
+ org.gips.examples.incrementalp2p.common;bundle-version="1.0.0"
+Export-Package: org.gips.examples.incrementalp2p.distribution.contracts,
+ org.gips.examples.incrementalp2p.distribution.implementation,
+ org.gips.examples.incrementalp2p.distribution.module

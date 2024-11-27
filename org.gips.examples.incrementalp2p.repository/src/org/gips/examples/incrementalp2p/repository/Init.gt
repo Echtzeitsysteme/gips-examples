@@ -1,0 +1,50 @@
+import "http://www.eclipse.org/emf/2002/Ecore"
+import "platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
+
+rule root {
+	++root: Root {
+		++ -time->time
+	}
+	
+	++time: Time {
+		.current:=0.0
+	}
+}
+
+rule network {
+	root: Root {
+		++-networks->network
+	}
+	++network: Network
+}
+
+rule waitingClientQueue {
+	lectureStudioServer: LectureStudioServer {
+		++ -waitingClients->waitingClientQueue
+		++ -clientContainer->clientContainer
+	}
+	++waitingClientQueue: WaitingClientQueue
+	++clientContainer: ClientContainer
+}
+
+rule lectureStudioServer(id:EString, size:EDouble) {
+	network: Network {
+		++ -lectureStudioServer->lectureStudioServer
+	}
+	
+	++node: Node {
+		.id := param::id
+		.sendBandwidth := 150000.0
+		.receiveBandwidth := N(300,5.0)
+		++ -data->data
+	}
+	
+	++lectureStudioServer: LectureStudioServer {
+		++ -lsNode->node
+		++ -data->data
+	}
+	
+	++data: Data {
+		.size := param::size
+	}
+}

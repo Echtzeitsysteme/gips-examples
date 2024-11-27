@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.gips.examples.incrementalp2p.repository
+Bundle-ManifestVersion: 2
+Bundle-Name: org.gips.examples.incrementalp2p.repository
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.gips.examples.incrementalp2p.repository; singleton:=true
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.log4j,
+ org.apache.commons.logging
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: org.emoflon.ibex.common,
+ org.emoflon.ibex.gt,
+ org.emoflon.ibex.patternmodel,
+ org.emoflon.ibex.gt.democles,
+ org.emoflon.ibex.gt.hipe,
+ LectureStudioModel;bundle-version="0.0.1",
+ com.google.inject;bundle-version="5.0.1",
+ javax.inject;bundle-version="1.0.0",
+ org.gips.examples.incrementalp2p.common;bundle-version="1.0.0"
+Export-Package: org.gips.examples.incrementalp2p.repository.api,
+ org.gips.examples.incrementalp2p.repository.api.matches,
+ org.gips.examples.incrementalp2p.repository.api.rules,
+ org.gips.examples.incrementalp2p.repository.contracts,
+ org.gips.examples.incrementalp2p.repository.contracts.models,
+ org.gips.examples.incrementalp2p.repository.module
+
