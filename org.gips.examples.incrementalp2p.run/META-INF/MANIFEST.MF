@@ -15,4 +15,5 @@ Require-Bundle: org.gips.examples.incrementalp2p.distribution;bundle-version="1.
  org.apache.log4j;bundle-version="1.2.19",
  javax.inject;bundle-version="1.0.0",
  org.aopalliance;bundle-version="1.0.0",
- LectureStudioModel;bundle-version="0.0.1"
+ LectureStudioModel;bundle-version="0.0.1",
+ gips.examples.dependencies;bundle-version="1.0.0"

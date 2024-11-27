@@ -4,14 +4,6 @@ Bundle-Name: Common
 Bundle-SymbolicName: org.gips.examples.incrementalp2p.common
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.gips.examples.incrementalp2p.common
-Bundle-ClassPath: lib/jakarta.inject/jakarta.inject-api-2.0.1.jar,
- lib/jakarta.inject/jakarta.inject-api-2.0.1-javadoc.jar,
- lib/jakarta.inject/jakarta.inject-api-2.0.1-sources.jar,
- lib/failureaccess/failureaccess-1.0.1.jar,
- lib/failureaccess/failureaccess-1.0.1-javadoc.jar,
- lib/failureaccess/failureaccess-1.0.1-sources.jar,
- .
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Export-Package: jakarta.inject,
- org.gips.examples.incrementalp2p.common,
+Export-Package: org.gips.examples.incrementalp2p.common,
  org.gips.examples.incrementalp2p.common.models

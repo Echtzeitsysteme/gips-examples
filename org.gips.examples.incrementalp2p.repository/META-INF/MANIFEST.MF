@@ -17,7 +17,8 @@ Require-Bundle: org.emoflon.ibex.common,
  LectureStudioModel;bundle-version="0.0.1",
  com.google.inject;bundle-version="5.0.1",
  javax.inject;bundle-version="1.0.0",
- org.gips.examples.incrementalp2p.common;bundle-version="1.0.0"
+ org.gips.examples.incrementalp2p.common;bundle-version="1.0.0",
+ gips.examples.dependencies;bundle-version="1.0.0"
 Export-Package: org.gips.examples.incrementalp2p.repository.api,
  org.gips.examples.incrementalp2p.repository.api.matches,
  org.gips.examples.incrementalp2p.repository.api.rules,
