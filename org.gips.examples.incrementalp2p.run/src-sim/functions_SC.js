@@ -46,7 +46,7 @@ var step4 = 'Distribute additional clients';
 var step5 = 'Finished';
 
 
-var state = step1;
+var state = step3;
 function runSimulation() {
 	loading();
 
