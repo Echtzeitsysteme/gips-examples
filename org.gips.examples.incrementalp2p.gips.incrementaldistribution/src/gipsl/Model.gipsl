@@ -19,7 +19,7 @@ from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl
 from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Patterns.gt" import findAnyClientAndLsData
 
 config {
-	solver := GLPK [home:="fu", license:="bar"];
+	solver := GUROBI [home:="fu", license:="bar"];
 	launchConfig := true [main := "lectureStudio.gipsl"];
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
