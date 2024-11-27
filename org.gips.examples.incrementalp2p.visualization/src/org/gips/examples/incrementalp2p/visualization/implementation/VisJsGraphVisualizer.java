@@ -20,7 +20,7 @@ import org.gips.examples.incrementalp2p.visualization.contracts.VisualizationUpd
 import org.gips.examples.incrementalp2p.visualization.implementation.mappers.UIColor;
 import org.gips.examples.incrementalp2p.visualization.implementation.mappers.VisJsMapper;
 
-import com.google.inject.Inject;
+import jakarta.inject.Inject;
 
 //https://visjs.github.io/vis-network/examples/
 //https://visjs.github.io/vis-network/docs/network/

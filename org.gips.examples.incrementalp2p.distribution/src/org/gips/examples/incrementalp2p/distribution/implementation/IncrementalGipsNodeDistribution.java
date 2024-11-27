@@ -9,7 +9,7 @@ import org.gips.examples.incrementalp2p.distribution.contracts.IncrementStrategy
 import org.gips.examples.incrementalp2p.distribution.contracts.IncrementalNodeDistributionEngine;
 import org.gips.examples.incrementalp2p.repository.contracts.P2PNetworkRepository;
 
-import com.google.inject.Inject;
+import jakarta.inject.Inject;
 
 public class IncrementalGipsNodeDistribution extends GipsNodeDistribution implements IncrementalNodeDistributionEngine {
 	final static Logger logger = Logger.getLogger(IncrementalGipsNodeDistribution.class);

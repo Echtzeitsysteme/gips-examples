@@ -10,7 +10,7 @@ import org.gips.examples.incrementalp2p.visualization.contracts.VisualizationDat
 import org.gips.examples.incrementalp2p.visualization.contracts.VisualizationNode;
 import org.gips.examples.incrementalp2p.visualization.implementation.mappers.Mapper;
 
-import com.google.inject.Inject;
+import jakarta.inject.Inject;
 
 public class GtApiVisualizationDataProvider implements VisualizationDataProvider {
 	@Inject

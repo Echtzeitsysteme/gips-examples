@@ -21,7 +21,7 @@ import org.gips.examples.incrementalp2p.visualization.contracts.VisualizationNod
 import org.gips.examples.incrementalp2p.visualization.contracts.VisualizationUpdatesDataProvider;
 import org.gips.examples.incrementalp2p.visualization.implementation.mappers.Mapper;
 
-import com.google.inject.Inject;
+import jakarta.inject.Inject;
 
 public class ExampleRunner {
 	final static Logger logger = Logger.getLogger(ExampleRunner.class);

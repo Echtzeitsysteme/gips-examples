@@ -21,7 +21,7 @@ import org.gips.examples.incrementalp2p.gips.incrementaldistribution.api.gips.ma
 import org.gips.examples.incrementalp2p.gips.incrementaldistribution.api.gips.mapping.StreamingClientRCMapping;
 import org.gips.examples.incrementalp2p.repository.contracts.models.ConnectionModel;
 
-import com.google.inject.Inject;
+import jakarta.inject.Inject;
 
 import LectureStudioModel.ConnectionData;
 import LectureStudioModel.Node;

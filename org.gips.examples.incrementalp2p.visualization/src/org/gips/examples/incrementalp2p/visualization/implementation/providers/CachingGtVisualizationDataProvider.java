@@ -6,7 +6,7 @@ import org.gips.examples.incrementalp2p.visualization.contracts.CachingVisualiza
 import org.gips.examples.incrementalp2p.visualization.contracts.VisualizationConnection;
 import org.gips.examples.incrementalp2p.visualization.contracts.VisualizationNode;
 
-import com.google.inject.Inject;
+import jakarta.inject.Inject;
 
 public class CachingGtVisualizationDataProvider implements CachingVisualizationDataProvider {
 	List<VisualizationNode> nodes;
