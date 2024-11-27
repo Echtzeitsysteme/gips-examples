@@ -1,0 +1,86 @@
+import "http://www.eclipse.org/emf/2002/Ecore"
+import "platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
+
+//Median bandwidth
+//https://de.statista.com/statistik/daten/studie/416534/umfrage/durchschnittliche-internetgeschwindigkeit-in-deutschland/
+//https://www.speedtest.net/global-index/germany
+rule addClient(id:EString) {
+	++node: Node {
+		.id := param::id
+		.sendBandwidth := N(150000.0, 30000.0)
+		.receiveBandwidth := N(36000.0, 7000.0)	
+		++ -data->data
+	}
+	
+	++data: Data {
+		.size := 0.0
+	}
+	
+	lectureStudioServer: LectureStudioServer {
+		-clientContainer-> clientContainer
+	}
+
+	clientContainer: ClientContainer {
+		++ -nodes->node
+	}
+}
+
+rule addWaitingClient(id:EString) {
+	node: Node
+	lectureStudioServer: LectureStudioServer {	
+		-waitingClients-> waitingClientQueue
+	}
+	waitingClientQueue: WaitingClientQueue {
+		++ -clients->node
+	}
+	
+	#node.id == param::id
+}
+
+rule possibleConnection(serverId:EString, clientId:EString) {
+	lectureStudioServer: LectureStudioServer {
+		-clientContainer-> clientContainer
+	}
+	
+	clientContainer: ClientContainer {
+		++ -connectionData->connection
+	}
+	++connection: ConnectionData {
+		.serverId := param::serverId
+		.clientId := param::clientId
+		.bandwidth := N(35000.0, 8000.0)
+	}
+} 
+
+rule removeConnectedClient(id:EString) {
+	clientContainer: ClientContainer {
+		---connections-> connection
+	}
+	--connection: Connection {
+		---client->client
+	}
+	
+	--client: Node
+	
+	#client.id == param::id		
+}
+
+rule removeConnectionFromServer(id:EString) {
+	clientContainer: ClientContainer {
+		---connections->connection
+	}
+	--connection: Connection {
+		---server->server
+	}
+	
+	server: Node
+	
+	#server.id == param::id		
+}
+
+rule removePossibleConnection() {
+	clientContainer: ClientContainer {
+		-- -connectionData->connection
+	}
+	--connection: ConnectionData
+}

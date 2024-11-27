@@ -1,0 +1,96 @@
+import "http://www.eclipse.org/emf/2002/Ecore"
+import "platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
+
+rule connectClientAndServer {
+    client: Node {
+		++ -serverConnection->connection	
+	}
+	
+	server: Node {
+		++ -clientConnection->connection
+		.isRelayClient := true
+	}
+	
+	connectionData: ConnectionData
+	
+	++connection: Connection {
+		++-server->server
+		++-client->client
+		.transferRate := min(min(server.sendBandwidth,connectionData.bandwidth), client.receiveBandwidth)
+	}
+	
+	clientContainer: ClientContainer {
+		++-connections->connection	
+	}
+	
+	#connectionData.serverId == server.id
+	#connectionData.clientId == client.id	
+}
+
+abstract rule connectToLectureStudio refines connectClientAndServer {
+	lectureStudio: LectureStudioServer {
+		-lsNode->server
+	}
+	
+	client: Node
+	server: Node
+	connectionData: ConnectionData	
+}
+
+abstract rule connectToRelayClient refines connectClientAndServer {	
+	#server.sendBandwidth >= client.sendBandwidth
+	lectureStudio: LectureStudioServer {
+		-lsNode->lsNode
+	}
+	
+	lsNode: Node
+	client: Node
+	server: Node
+	connectionData: ConnectionData	
+}
+
+abstract rule connectToRelayRelayClient refines connectClientAndServer {
+	#server.sendBandwidth >= client.sendBandwidth
+	
+	lectureStudio: LectureStudioServer {
+		-lsNode->lsNode
+	}
+	
+	lsNode: Node
+	relayClient: Node
+	client: Node
+	server: Node
+	connectionData: ConnectionData	
+}
+
+rule connectLectureStudioStreamClient refines connectToLectureStudio {
+	connectionData: ConnectionData
+	client: Node
+	server: Node
+	
+	waitingClientQueue: WaitingClientQueue {
+		-- -clients->client
+	}
+}
+
+rule connectRelayClient refines connectToLectureStudio {
+	lectureStudio: LectureStudioServer
+	connectionData: ConnectionData	
+	client: Node
+	server: Node
+	
+	waitingClientQueue: WaitingClientQueue {
+		-- -clients->client
+	}
+}
+
+rule connectRelayStreamClient refines connectToRelayClient {
+	lectureStudio: LectureStudioServer
+	connectionData: ConnectionData	
+	client: Node
+	server: Node
+	
+	waitingClientQueue: WaitingClientQueue {
+		-- -clients->client
+	}
+}
