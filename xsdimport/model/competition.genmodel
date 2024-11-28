@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/xsdimport/src" modelPluginID="xsdimport" modelName="Competition"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.xsd.ecore.importer"
+    complianceLevel="5.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <foreignModel>file:/home/mkratz/Downloads/competition-1/competition.xsd</foreignModel>
+  <genPackages prefix="Competition" resource="XML" disposableProviderFactory="true"
+      ecorePackage="Competition.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Competition.ecore#//WeekDay">
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//WeekDay/Sunday"/>
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//WeekDay/Monday"/>
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//WeekDay/Tuesday"/>
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//WeekDay/Wednesday"/>
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//WeekDay/Thursday"/>
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//WeekDay/Friday"/>
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//WeekDay/Saturday"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Competition.ecore#//Weekend">
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//Weekend/SaturdaySunday"/>
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//Weekend/FridaySaturdaySunday"/>
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//Weekend/FridaySaturdaySundayMonday"/>
+      <genEnumLiterals ecoreEnumLiteral="Competition.ecore#//Weekend/SaturdaySundayMonday"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="Competition.ecore#//ID"/>
+    <genDataTypes ecoreDataType="Competition.ecore#//WeekDayObject"/>
+    <genDataTypes ecoreDataType="Competition.ecore#//WeekDayOrAny"/>
+    <genDataTypes ecoreDataType="Competition.ecore#//WeekendObject"/>
+    <genClasses ecoreClass="Competition.ecore#//ConstraintAttributes">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ConstraintAttributes/on"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ConstraintAttributes/weight"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//Contracts">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//Contracts/contract"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//ContractType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/singleAssignmentPerDay"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/maxNumAssignments"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/minNumAssignments"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/maxConsecutiveWorkingDays"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/minConsecutiveWorkingDays"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/maxConsecutiveFreeDays"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/minConsecutiveFreeDays"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/maxConsecutiveWorkingWeekends"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/minConsecutiveWorkingWeekends"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/maxWorkingWeekendsInFourWeeks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ContractType/weekendDefinition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/completeWeekends"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/identicalShiftTypesDuringWeekend"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/noNightShiftBeforeFreeWeekend"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/twoFreeDaysAfterNightShifts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/alternativeSkillCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/unwantedPatterns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ContractType/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ContractType/iD"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//Cover">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//Cover/shift"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//Cover/preferred"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//CoverRequirements">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute Competition.ecore#//CoverRequirements/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Competition.ecore#//CoverRequirements/dayOfWeekCover"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Competition.ecore#//CoverRequirements/dateSpecificCover"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//DateSpecificCoverType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//DateSpecificCoverType/date"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//DateSpecificCoverType/cover"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//DayOffRequests">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//DayOffRequests/dayOff"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//DayOffType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//DayOffType/employeeID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//DayOffType/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//DayOffType/weight"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//DayOfWeekCoverType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//DayOfWeekCoverType/day"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//DayOfWeekCoverType/cover"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//DayOnRequests">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//DayOnRequests/dayOn"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//DayOnType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//DayOnType/employeeID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//DayOnType/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//DayOnType/weight"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Competition.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Competition.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//DocumentRoot/schedulingPeriod"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//Employees">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//Employees/employee"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//EmployeeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//EmployeeType/contractID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//EmployeeType/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//EmployeeType/skills"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//EmployeeType/iD"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//OnAndWeight">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//OnAndWeight/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//OnAndWeight/on"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//OnAndWeight/weight"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//PatternEntriesType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute Competition.ecore#//PatternEntriesType/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Competition.ecore#//PatternEntriesType/patternEntry"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//PatternEntryType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//PatternEntryType/shiftType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//PatternEntryType/day"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//PatternEntryType/index"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//Patterns">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute Competition.ecore#//Patterns/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference Competition.ecore#//Patterns/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//PatternType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//PatternType/patternEntries"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//PatternType/iD"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//PatternType/weight"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//SchedulingPeriodType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//SchedulingPeriodType/startDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//SchedulingPeriodType/endDate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/skills"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/shiftTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/patterns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/contracts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/employees"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/coverRequirements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/dayOffRequests"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/dayOnRequests"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/shiftOffRequests"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//SchedulingPeriodType/shiftOnRequests"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//SchedulingPeriodType/iD"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//SchedulingPeriodType/organisationID"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//ShiftOffRequests">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ShiftOffRequests/shiftOff"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//ShiftOffType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftOffType/shiftTypeID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftOffType/employeeID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftOffType/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftOffType/weight"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//ShiftOnRequests">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ShiftOnRequests/shiftOn"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//ShiftOnType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftOnType/shiftTypeID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftOnType/employeeID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftOnType/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftOnType/weight"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//ShiftType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftType/startTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftType/endTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftType/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ShiftType/skills"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//ShiftType/iD"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//ShiftTypes">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Competition.ecore#//ShiftTypes/shift"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//Skills">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//Skills/skill"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//SkillsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute Competition.ecore#//SkillsType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//SkillsType/skill"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//SkillsType1">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//SkillsType1/skill"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//UnwantedPatternsType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute Competition.ecore#//UnwantedPatternsType/group"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//UnwantedPatternsType/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="Competition.ecore#//WeightOnly">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//WeightOnly/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Competition.ecore#//WeightOnly/weight"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

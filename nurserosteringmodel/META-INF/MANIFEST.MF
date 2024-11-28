@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: nurserosteringmodel
+Bundle-SymbolicName: nurserosteringmodel;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: 
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Automatic-Module-Name: nurserosteringmodel
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.emoflon.smartemf
+Export-Package: nurserosteringmodel.impl,
+ nurserosteringmodel
+
