@@ -90,7 +90,6 @@ public class INRC1Loader {
 		// Parse all relevant child nodes
 		for (int i = 0; i < children.getLength(); i++) {
 			final Node n = children.item(i);
-//			System.out.println(n.getNodeName());
 			final String name = n.getNodeName();
 
 			if (name.equals("StartDate")) {
@@ -110,9 +109,9 @@ public class INRC1Loader {
 					addEmployee(n.getChildNodes().item(employeeNo));
 				}
 			} else if (name.equals("DayOffRequests")) {
-
+				// TODO
 			} else if (name.equals("ShiftOffRequests")) {
-
+				// TODO
 			} else if (name.equals("Skills")) {
 				for (int skillNo = 0; skillNo < n.getChildNodes().getLength(); skillNo++) {
 					addSkill(n.getChildNodes().item(skillNo));
@@ -123,8 +122,6 @@ public class INRC1Loader {
 				}
 			}
 		}
-
-//		System.out.println(children.getLength());
 	}
 
 	private void addCoverRequirement(final Node coverRequirement) {
@@ -214,20 +211,17 @@ public class INRC1Loader {
 				final NodeList skills = c.getChildNodes().item(1).getChildNodes();
 				for (int s = 0; s < skills.getLength(); s++) {
 					final Node c2 = skills.item(s);
-//					if (c2.getNodeName().equals("Skill")) {
-//						final String skill = c2.getChildNodes().item(0).getNodeValue();
-						final String skill = c2.getNodeValue();
-						this.employeeHasSkill.put(e.getName(), skill);
-//					}
+					final String skill = c2.getNodeValue();
+					this.employeeHasSkill.put(e.getName(), skill);
 				}
 			}
 		}
-		
+
 		this.employees.add(e);
 	}
 
 	private void addContract(final Node contract) {
-
+		// TODO
 	}
 
 	private void addShift(final Node shift) {
@@ -277,9 +271,6 @@ public class INRC1Loader {
 		root.setName("Hospital");
 
 		root.getSkills().addAll(skills);
-		// TODO
-//		root.getNurses().addAll();
-//		root.getDays().addAll();
 
 		root.setStartDate(startDate);
 		root.setEndDate(endDate);
@@ -309,7 +300,6 @@ public class INRC1Loader {
 
 				// Set shift
 				final String shiftName = translateShiftIdToName(k);
-//				final String shiftName = k;
 				final Shift shift = cloneShift(getShift(shiftName));
 				cv.setShift(shift);
 
@@ -380,10 +370,6 @@ public class INRC1Loader {
 			final Skill skill = getSkill(skillName);
 			shift.getSkills().add(skill);
 		});
-
-//		this.shiftNeedsSkill.forEach((shift, skill) -> {
-//
-//		});
 	}
 
 	private void resolveSkillToEmployeeMappings() {
