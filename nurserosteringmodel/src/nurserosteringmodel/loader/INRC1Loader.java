@@ -17,13 +17,20 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import nurserosteringmodel.CoverRequirement;
 import nurserosteringmodel.Day;
 import nurserosteringmodel.NurserosteringmodelFactory;
+import nurserosteringmodel.NurserosteringmodelPackage;
 import nurserosteringmodel.Root;
 import nurserosteringmodel.Shift;
 import nurserosteringmodel.Skill;
@@ -38,6 +45,9 @@ public class INRC1Loader {
 	private Map<String, String> shiftNeedsSkill = new HashMap<>();
 	private Set<Day> days = new HashSet<Day>();
 
+	// Map $dayName -> "shiftName" -> preferred no of employees
+	private Map<String, Map<String, Integer>> coverRequirements = new HashMap<String, Map<String, Integer>>();
+
 	public static void main(final String[] args) {
 		final INRC1Loader loader = new INRC1Loader();
 		try {
@@ -46,6 +56,12 @@ public class INRC1Loader {
 			e.printStackTrace();
 		}
 		final Root root = loader.transform();
+		try {
+			save(root, "./model.xmi");
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		System.exit(0);
 	}
 
 	public void loadFromXmlFile(final String filepath) throws ParserConfigurationException, SAXException, IOException {
@@ -87,8 +103,6 @@ public class INRC1Loader {
 				for (int employeeNo = 0; employeeNo < n.getChildNodes().getLength(); employeeNo++) {
 					addEmployee(n.getChildNodes().item(employeeNo));
 				}
-			} else if (name.equals("CoverRequirements")) {
-
 			} else if (name.equals("DayOffRequests")) {
 
 			} else if (name.equals("ShiftOffRequests")) {
@@ -98,11 +112,63 @@ public class INRC1Loader {
 					addSkill(n.getChildNodes().item(skillNo));
 				}
 			} else if (name.equals("CoverRequirements")) {
-
+				for (int crNo = 0; crNo < n.getChildNodes().getLength(); crNo++) {
+					addCoverRequirement(n.getChildNodes().item(crNo));
+				}
 			}
 		}
 
 //		System.out.println(children.getLength());
+	}
+
+	private void addCoverRequirement(final Node coverRequirement) {
+		if (coverRequirement.getNodeName().equals("#text")) {
+			return;
+		}
+
+		String day = null;
+		final Map<String, Integer> dayReqs = new HashMap<String, Integer>();
+		final NodeList children = coverRequirement.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			final Node n = children.item(i);
+			if (n.getNodeName().equals("Day")) {
+				day = n.getChildNodes().item(0).getNodeValue();
+			} else if (n.getNodeName().equals("Cover")) {
+				final String shiftId = n.getChildNodes().item(1).getChildNodes().item(0).getNodeValue();
+				final String preferred = n.getChildNodes().item(3).getChildNodes().item(0).getNodeValue();
+				dayReqs.put(shiftId, Integer.valueOf(preferred));
+			}
+
+		}
+
+		// Save found values to look-up data structure
+		if (!this.coverRequirements.containsKey(day)) {
+			this.coverRequirements.put(day, new HashMap<String, Integer>());
+		}
+
+		for (final String k : dayReqs.keySet()) {
+			this.coverRequirements.get(day).put(translateShiftIdToName(k), Integer.valueOf(dayReqs.get(k)));
+		}
+	}
+
+	// TODO: This method should use non-hard-coded values read from the XMI file
+	private String translateShiftIdToName(final String shiftId) {
+		switch (shiftId) {
+		case "E", "Early": {
+			return "Early";
+		}
+		case "L", "Late": {
+			return "Late";
+		}
+		case "D", "Day", "Day shift": {
+			return "Day shift";
+		}
+		case "N", "Night": {
+			return "Night";
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + shiftId);
+		}
 	}
 
 	private void addSkill(final Node skill) {
@@ -170,6 +236,7 @@ public class INRC1Loader {
 		createDays(startDate, endDate);
 
 		final Root root = modelFactory.createRoot();
+		root.setName("Hospital");
 
 		root.getSkills().addAll(skills);
 		// TODO
@@ -180,6 +247,7 @@ public class INRC1Loader {
 		root.setEndDate(endDate);
 
 		root.getDays().addAll(days);
+//		root.getShifts().addAll(shifts);
 
 		return root;
 	}
@@ -191,10 +259,37 @@ public class INRC1Loader {
 			final Day day = modelFactory.createDay();
 			day.setDate(currentDate);
 			day.setDayOfWeek(findDayOfWeek(currentDate));
+			day.setName(currentDate);
 			currentDate = incrementDate(currentDate);
-			// TODO: Add shifts
+
+			// Add all cover requirements
+			this.coverRequirements.get(findDayOfWeek(day.getDate())).forEach((k, v) -> {
+				final CoverRequirement cv = modelFactory.createCoverRequirement();
+				// Set preferred
+				cv.setPreferred(v);
+
+				// Set shift
+				final String shiftName = translateShiftIdToName(k);
+//				final String shiftName = k;
+				final Shift shift = cloneShift(getShift(shiftName));
+				cv.setShift(shift);
+
+				// Save to day
+				day.getRequirements().add(cv);
+			});
+
 			this.days.add(day);
 		}
+	}
+
+	private Shift cloneShift(final Shift shift) {
+		final Shift newShift = modelFactory.createShift();
+		newShift.setName(shift.getName());
+		newShift.setStartTime(shift.getStartTime());
+		newShift.setEndTime(shift.getEndTime());
+		newShift.getSkills().addAll(shift.getSkills());
+		newShift.getAssignedNurses().addAll(shift.getAssignedNurses());
+		return newShift;
 	}
 
 	private String incrementDate(final String dateString) {
@@ -247,9 +342,9 @@ public class INRC1Loader {
 			shift.getSkills().add(skill);
 		});
 
-		this.shiftNeedsSkill.forEach((shift, skill) -> {
-
-		});
+//		this.shiftNeedsSkill.forEach((shift, skill) -> {
+//
+//		});
 	}
 
 	private Skill getSkill(final String name) {
@@ -261,6 +356,29 @@ public class INRC1Loader {
 			}
 		}
 		return null;
+	}
+
+	private Shift getShift(final String name) {
+		final Iterator<Shift> it = shifts.iterator();
+		while (it.hasNext()) {
+			final Shift s = it.next();
+			if (s.getName() != null && s.getName().equals(name)) {
+				return s;
+			}
+		}
+		return null;
+	}
+
+	public static void save(final Root model, final String path) throws IOException {
+		// TODO: Checks
+
+		final URI uri = URI.createFileURI(path);
+		final ResourceSet rs = new ResourceSetImpl();
+		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
+		rs.getPackageRegistry().put(NurserosteringmodelPackage.eNS_URI, NurserosteringmodelPackage.eINSTANCE);
+		final Resource r = rs.createResource(uri);
+		r.getContents().add(model);
+		r.save(null);
 	}
 
 }
