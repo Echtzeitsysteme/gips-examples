@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 
 import nurserosteringmodel.CoverRequirement;
 import nurserosteringmodel.Day;
+import nurserosteringmodel.Employee;
 import nurserosteringmodel.NurserosteringmodelFactory;
 import nurserosteringmodel.NurserosteringmodelPackage;
 import nurserosteringmodel.Root;
@@ -42,8 +43,13 @@ public class INRC1Loader {
 	private String endDate;
 	private Set<Shift> shifts = new HashSet<Shift>();
 	private Set<Skill> skills = new HashSet<Skill>();
+
+	// TODO: this should either be a 1 to n mapping
 	private Map<String, String> shiftNeedsSkill = new HashMap<>();
+	private Map<String, String> employeeHasSkill = new HashMap<>();
+
 	private Set<Day> days = new HashSet<Day>();
+	private Set<Employee> employees = new HashSet<Employee>();
 
 	// Map $dayName -> "shiftName" -> preferred no of employees
 	private Map<String, Map<String, Integer>> coverRequirements = new HashMap<String, Map<String, Integer>>();
@@ -186,7 +192,38 @@ public class INRC1Loader {
 	}
 
 	private void addEmployee(final Node employee) {
+		final Employee e = modelFactory.createEmployee();
 
+		if (employee.getNodeName().equals("#text")) {
+			return;
+		}
+
+		// TODO: contracts
+
+		// parse attributes of the shift
+		final NodeList children = employee.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			final Node c = children.item(i);
+			final String name = c.getNodeName();
+
+			if (name.equals("ContractId")) {
+				// TODO
+			} else if (name.equals("Name")) {
+				e.setName(c.getChildNodes().item(0).getNodeValue());
+			} else if (name.equals("Skills")) {
+				final NodeList skills = c.getChildNodes().item(1).getChildNodes();
+				for (int s = 0; s < skills.getLength(); s++) {
+					final Node c2 = skills.item(s);
+//					if (c2.getNodeName().equals("Skill")) {
+//						final String skill = c2.getChildNodes().item(0).getNodeValue();
+						final String skill = c2.getNodeValue();
+						this.employeeHasSkill.put(e.getName(), skill);
+//					}
+				}
+			}
+		}
+		
+		this.employees.add(e);
 	}
 
 	private void addContract(final Node contract) {
@@ -234,6 +271,7 @@ public class INRC1Loader {
 	public Root transform() {
 		resolveSkillToShiftMappings();
 		createDays(startDate, endDate);
+		resolveSkillToEmployeeMappings();
 
 		final Root root = modelFactory.createRoot();
 		root.setName("Hospital");
@@ -248,6 +286,7 @@ public class INRC1Loader {
 
 		root.getDays().addAll(days);
 //		root.getShifts().addAll(shifts);
+		root.getEmployees().addAll(employees);
 
 		return root;
 	}
@@ -345,6 +384,14 @@ public class INRC1Loader {
 //		this.shiftNeedsSkill.forEach((shift, skill) -> {
 //
 //		});
+	}
+
+	private void resolveSkillToEmployeeMappings() {
+		this.employees.forEach(employee -> {
+			final String skillName = employeeHasSkill.get(employee.getName());
+			final Skill skill = getSkill(skillName);
+			employee.getSkills().add(skill);
+		});
 	}
 
 	private Skill getSkill(final String name) {
