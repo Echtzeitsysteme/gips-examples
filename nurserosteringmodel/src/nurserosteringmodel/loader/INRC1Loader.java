@@ -45,9 +45,8 @@ public class INRC1Loader {
 	private Set<Shift> shifts = new HashSet<Shift>();
 	private Set<Skill> skills = new HashSet<Skill>();
 
-	// TODO: this should either be a 1 to n mapping
-	private Map<String, String> shiftNeedsSkill = new HashMap<>();
-	private Map<String, String> employeeHasSkill = new HashMap<>();
+	private Map<String, Set<String>> shiftNeedsSkill = new HashMap<>();
+	private Map<String, Set<String>> employeeHasSkill = new HashMap<>();
 
 	private Set<Day> days = new HashSet<Day>();
 	private Set<Employee> employees = new HashSet<Employee>();
@@ -217,7 +216,10 @@ public class INRC1Loader {
 				for (int s = 0; s < skills.getLength(); s++) {
 					final Node c2 = skills.item(s);
 					final String skill = c2.getNodeValue();
-					this.employeeHasSkill.put(e.getName(), skill);
+					if (!this.employeeHasSkill.containsKey(e.getName())) {
+						this.employeeHasSkill.put(e.getName(), new HashSet<String>());
+					}
+					this.employeeHasSkill.get(e.getName()).add(skill);
 				}
 			}
 		}
@@ -320,7 +322,10 @@ public class INRC1Loader {
 					}
 
 					final Node skill = c.getChildNodes().item(skillNo);
-					this.shiftNeedsSkill.put(s.getName(), skill.getChildNodes().item(0).getNodeValue());
+					if (!this.shiftNeedsSkill.containsKey(s.getName())) {
+						this.shiftNeedsSkill.put(s.getName(), new HashSet<>());
+					}
+					this.shiftNeedsSkill.get(s.getName()).add(skill.getChildNodes().item(0).getNodeValue());
 				}
 			}
 		}
@@ -435,17 +440,21 @@ public class INRC1Loader {
 
 	private void resolveSkillToShiftMappings() {
 		this.shifts.forEach(shift -> {
-			final String skillName = shiftNeedsSkill.get(shift.getName());
-			final Skill skill = getSkill(skillName);
-			shift.getSkills().add(skill);
+			final Set<String> skillNames = shiftNeedsSkill.get(shift.getName());
+			for (final String skillName : skillNames) {
+				final Skill skill = getSkill(skillName);
+				shift.getSkills().add(skill);
+			}
 		});
 	}
 
 	private void resolveSkillToEmployeeMappings() {
 		this.employees.forEach(employee -> {
-			final String skillName = employeeHasSkill.get(employee.getName());
-			final Skill skill = getSkill(skillName);
-			employee.getSkills().add(skill);
+			final Set<String> skillNames = employeeHasSkill.get(employee.getName());
+			for (final String skillName : skillNames) {
+				final Skill skill = getSkill(skillName);
+				employee.getSkills().add(skill);
+			}
 		});
 	}
 
