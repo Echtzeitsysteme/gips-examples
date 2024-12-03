@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?eclipse version="3.0"?><plugin/>
+<?eclipse version="3.0"?><plugin>
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package class="nurserosteringmodel.NurserosteringmodelPackage" genModel="model/Nurserosteringmodel.genmodel" uri="platform:/resource/nurserosteringmodel/model/Nurserosteringmodel.ecore"/>
+  </extension>
+</plugin>
