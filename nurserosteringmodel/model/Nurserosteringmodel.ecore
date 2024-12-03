@@ -16,10 +16,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="shifts" upperBound="-1"
         eType="#//Shift" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contracts" upperBound="-1"
+        eType="#//Contract" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Employee" eSuperTypes="#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" lowerBound="1"
-        eType="#//Contract"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="skills" upperBound="-1"
         eType="#//Skill"/>
   </eClassifiers>

@@ -27,6 +27,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import nurserosteringmodel.Contract;
 import nurserosteringmodel.CoverRequirement;
 import nurserosteringmodel.Day;
 import nurserosteringmodel.Employee;
@@ -53,6 +54,10 @@ public class INRC1Loader {
 
 	// Map $dayName -> "shiftName" -> preferred no of employees
 	private Map<String, Map<String, Integer>> coverRequirements = new HashMap<String, Map<String, Integer>>();
+
+	private Map<String, String> employee2Contract = new HashMap<>();
+
+	private Set<Contract> contracts = new HashSet<Contract>();
 
 	public static void main(final String[] args) {
 		final INRC1Loader loader = new INRC1Loader();
@@ -195,7 +200,7 @@ public class INRC1Loader {
 			return;
 		}
 
-		// TODO: contracts
+		String contract = "";
 
 		// parse attributes of the shift
 		final NodeList children = employee.getChildNodes();
@@ -203,8 +208,8 @@ public class INRC1Loader {
 			final Node c = children.item(i);
 			final String name = c.getNodeName();
 
-			if (name.equals("ContractId")) {
-				// TODO
+			if (name.equals("ContractID")) {
+				contract = c.getChildNodes().item(0).getNodeValue();
 			} else if (name.equals("Name")) {
 				e.setName(c.getChildNodes().item(0).getNodeValue());
 			} else if (name.equals("Skills")) {
@@ -218,10 +223,72 @@ public class INRC1Loader {
 		}
 
 		this.employees.add(e);
+		this.employee2Contract.put(e.getName(), contract);
 	}
 
 	private void addContract(final Node contract) {
 		// TODO
+		final Contract con = modelFactory.createContract();
+
+		if (contract.getNodeName().equals("#text")) {
+			return;
+		}
+
+		con.setName(contract.getAttributes().item(0).getNodeValue());
+
+		final NodeList children = contract.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			final Node c = children.item(i);
+			final String name = c.getNodeName();
+
+			if (name.equals("Description")) {
+				// skipped for now
+			} else if (name.equals("SingleAssignmentPerDay")) {
+				// skipped for now
+			} else if (name.equals("MaxNumAssignments")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setMaximumNoOfAssignments(Integer.valueOf(value));
+			} else if (name.equals("MinNumAssignments")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setMinimumNoOfAssignments(Integer.valueOf(value));
+			} else if (name.equals("MaxConsecutiveWorkingDays")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setMaximumNoOfConsWorkDays(Integer.valueOf(value));
+			} else if (name.equals("MinConsecutiveWorkingDays")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setMinimumNoOfConsWorkDays(Integer.valueOf(value));
+			} else if (name.equals("MaxConsecutiveFreeDays")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setMaximumNoOfConsFreeDays(Integer.valueOf(value));
+			} else if (name.equals("MinConsecutiveFreeDays")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setMinimumNoOfConsFreeDays(Integer.valueOf(value));
+			} else if (name.equals("MaxConsecutiveWorkingWeekends")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setMaximumNoOfConsWorkWeekends(Integer.valueOf(value));
+			} else if (name.equals("MinConsecutiveWorkingWeekends")) {
+				// skipped for now
+			} else if (name.equals("MaxWorkingWeekendsInFourWeeks")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setMaximumNoOfWorkWeekInFourWeeks(Integer.valueOf(value));
+			} else if (name.equals("WeekendDefinition")) {
+				// skipped for now
+			} else if (name.equals("CompleteWeekends")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setCompleteWeekends(value.equals("true"));
+			} else if (name.equals("IdenticalShiftTypesDuringWeekend")) {
+				final String value = c.getChildNodes().item(0).getNodeValue();
+				con.setIdenticalShiftTypesDuringTheWeekend(value.equals("true"));
+			} else if (name.equals("NoNightShiftBeforeFreeWeekend")) {
+				// skipped for now
+			} else if (name.equals("AlternativeSkillCategory")) {
+				// skipped for now
+			} else if (name.equals("UnwantedPatterns")) {
+				// skipped for now
+			}
+		}
+
+		this.contracts.add(con);
 	}
 
 	private void addShift(final Node shift) {
@@ -266,6 +333,7 @@ public class INRC1Loader {
 		resolveSkillToShiftMappings();
 		createDays(startDate, endDate);
 		resolveSkillToEmployeeMappings();
+		resolveEmployeeToContractMappings();
 
 		final Root root = modelFactory.createRoot();
 		root.setName("Hospital");
@@ -278,6 +346,7 @@ public class INRC1Loader {
 		root.getDays().addAll(days);
 //		root.getShifts().addAll(shifts);
 		root.getEmployees().addAll(employees);
+		root.getContracts().addAll(contracts);
 
 		return root;
 	}
@@ -378,6 +447,25 @@ public class INRC1Loader {
 			final Skill skill = getSkill(skillName);
 			employee.getSkills().add(skill);
 		});
+	}
+
+	private void resolveEmployeeToContractMappings() {
+		this.employees.forEach(employee -> {
+			final String contractName = employee2Contract.get(employee.getName());
+			final Contract contract = getContract(contractName);
+			employee.setContract(contract);
+		});
+	}
+
+	private Contract getContract(final String contractName) {
+		final Iterator<Contract> it = contracts.iterator();
+		while (it.hasNext()) {
+			final Contract c = it.next();
+			if (c.getName() != null && c.getName().equals(contractName)) {
+				return c;
+			}
+		}
+		return null;
 	}
 
 	private Skill getSkill(final String name) {
