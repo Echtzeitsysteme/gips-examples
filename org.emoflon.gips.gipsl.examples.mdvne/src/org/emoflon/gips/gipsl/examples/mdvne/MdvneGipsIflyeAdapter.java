@@ -1,7 +1,11 @@
 package org.emoflon.gips.gipsl.examples.mdvne;
 
+import java.util.Map;
+
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 
 /**
@@ -39,6 +43,9 @@ public class MdvneGipsIflyeAdapter {
 			throw new IllegalArgumentException("Model resource set was null or empty.");
 		}
 
+		final Observer obs = Observer.getInstance();
+		obs.setCurrentSeries("Eval");
+
 		// Initialize the API, if necessary
 		if (!init) {
 			api = new MdvneGipsAPI();
@@ -47,14 +54,21 @@ public class MdvneGipsIflyeAdapter {
 		}
 
 		// Build the ILP problem (including updates)
-		api.buildILPProblem(true);
+		api.buildILPProblemTimed(true);
 
 		// Solve the ILP problem
-		final ILPSolverOutput output = api.solveILPProblem();
+		final ILPSolverOutput output = api.solveILPProblemTimed();
 
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
 		System.out.println("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
+
+		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
+		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
+		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
+		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
+		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
+		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
 		// Apply all valid mappings
 		api.getSrv2srv().applyNonZeroMappings();

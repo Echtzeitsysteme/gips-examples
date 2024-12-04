@@ -1,11 +1,14 @@
 package org.emoflon.gips.gipsl.examples.mdvne.seq;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.gt.GTMapping;
 import org.emoflon.gips.core.ilp.ILPIntegerVariable;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.gips.SeqGipsAPI;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2PathRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2ServerRuleMatch;
@@ -47,6 +50,9 @@ public class MdvneSeqGipsIflyeAdapter {
 		if (model.getResources() == null || model.getResources().isEmpty()) {
 			throw new IllegalArgumentException("Model resource set was null or empty.");
 		}
+		
+		final Observer obs = Observer.getInstance();
+		obs.setCurrentSeries("Eval");
 
 		// Initialize the API, if necessary
 		if (!init) {
@@ -64,6 +70,13 @@ public class MdvneSeqGipsIflyeAdapter {
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
 		System.out.println("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
+		
+		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
+		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
+		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
+		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
+		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
+		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
 		@SuppressWarnings("rawtypes")
 		final var allSelectedMappings = new ArrayList<GTMapping>();
