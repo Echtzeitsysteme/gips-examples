@@ -136,6 +136,7 @@ public class CraHeadlessRunner extends AbstractCraRunner {
 		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
 		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
 		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
+		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
 //		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
 		gipsApi.terminate();
