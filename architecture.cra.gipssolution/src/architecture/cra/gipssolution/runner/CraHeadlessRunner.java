@@ -1,5 +1,7 @@
 package architecture.cra.gipssolution.runner;
 
+import java.util.Map;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -9,6 +11,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.Observer;
 
 import architecture.cra.gipssolution.api.gips.GipssolutionGipsAPI;
 import architecture.cra.gipssolution.utils.CsvUtil;
@@ -72,6 +76,9 @@ public class CraHeadlessRunner extends AbstractCraRunner {
 		// Initialize GIPS API
 		//
 
+		final Observer obs = Observer.getInstance();
+		obs.setCurrentSeries("Eval");
+
 		final long tickTotal = System.nanoTime();
 		final GipssolutionGipsAPI gipsApi = new GipssolutionGipsAPI();
 		gipsApi.init(URI.createFileURI(xmiPrePath));
@@ -124,6 +131,12 @@ public class CraHeadlessRunner extends AbstractCraRunner {
 		//
 		// Terminate everything
 		//
+
+		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
+		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
+		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
+		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
+//		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
 		gipsApi.terminate();
 		System.out.println("=> Finished Java headless runner execution.");
