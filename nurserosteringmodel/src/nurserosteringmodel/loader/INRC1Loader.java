@@ -391,7 +391,7 @@ public class INRC1Loader {
 		newShift.setStartTime(shift.getStartTime());
 		newShift.setEndTime(shift.getEndTime());
 		newShift.getSkills().addAll(shift.getSkills());
-		newShift.getAssignedNurses().addAll(shift.getAssignedNurses());
+		newShift.getAssignedEmployees().addAll(shift.getAssignedEmployees());
 		return newShift;
 	}
 

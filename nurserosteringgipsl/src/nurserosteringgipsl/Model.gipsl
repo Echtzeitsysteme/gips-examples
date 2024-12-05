@@ -10,3 +10,18 @@ config {
 	debugOutput := true;
 	tolerance := true [value := 0.00001];
 }
+
+rule assignEmployeeToShift {
+	root : Root {
+		- employees -> employee
+		- shifts -> shift
+	}
+	
+	employee : Employee
+	shift : Shift {
+		++ - assignedEmployees -> employee
+	}
+	
+	// check if employee.skills.contains(shift.skills)
+	// is missing because of IBeX-GT language limitations
+}
