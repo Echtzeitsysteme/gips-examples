@@ -1,0 +1,12 @@
+package "nurserosteringgipsl"
+import "platform:/resource/nurserosteringmodel/model/Nurserosteringmodel.ecore"
+
+config {  
+	solver := GUROBI [home:="fu", license:="bar"];
+	launchConfig := true [main := "TODO"];
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.00001];
+}
