@@ -1,0 +1,114 @@
+import "http://www.eclipse.org/emf/2002/Ecore"
+import "platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
+
+pattern findCurrentLectureStudioConnection {
+	lsNode: Node
+	relayClient: Node
+	
+	lectureStudioConnection: Connection {
+		-server->lsNode
+		-client->relayClient
+	}
+	
+	lsServer: LectureStudioServer {
+		-lsNode-> lsNode
+	}
+}
+
+pattern findCurrentRelayConnection refines findCurrentLectureStudioConnection {
+	relayClient: Node
+	relayRelayClient: Node	
+	
+	relayConnection: Connection {
+		-server->relayClient
+		-client->relayRelayClient
+	}
+	
+	lectureStudioConnection: Connection
+}
+
+pattern findCurrentStreamingClientLS refines findCurrentLectureStudioConnection {
+	lsNode: Node	
+	relayClient: Node
+	lectureStudioConnection: Connection
+	#relayClient.isRelayClient == false
+} when forbidfindrelayClientConnection
+
+pattern findrelayClientConnection {
+	connection: Connection {
+		-server->relayClient
+	}
+	
+	relayClient: Node
+}
+
+pattern findAnyClient {
+	node : Node
+	lsNode: Node
+	
+	lsServer: LectureStudioServer {
+		-lsNode-> lsNode
+	}
+}
+
+pattern findWaitingClient {
+	node: Node
+	
+	waitingClientQueue: WaitingClientQueue {
+		-clients->node	
+	}
+	
+	lsNode: Node
+	
+	lsServer: LectureStudioServer {
+		-lsNode-> lsNode
+	}
+}
+
+pattern findRoot {
+	root: Root {
+		-networks->network
+	}
+	
+	network: Network	
+}
+
+pattern findNetwork refines findRoot {
+	network: Network {
+		-lectureStudioServer->lectureStudioServer
+	}
+	
+	lectureStudioServer: LectureStudioServer	
+}
+
+pattern findLectureStudioServer refines findNetwork {
+	lectureStudioServer: LectureStudioServer {
+		-lsNode->lsNode
+		-waitingClients->waitingClientQueue
+		-clientContainer->clientContainer
+	}
+	
+	lsNode: Node
+	waitingClientQueue: WaitingClientQueue
+	clientContainer: ClientContainer	
+}
+
+pattern findAnyConnectionData {
+	connectionData: ConnectionData
+	lsData: Data
+	
+	ls: LectureStudioServer {
+		-data->lsData
+	}
+}
+
+pattern findAnyClientAndLsData {
+	node: Node
+	lsNode: Node
+	lsData: Data
+	
+	ls: LectureStudioServer {
+		-data->lsData
+		-lsNode->lsNode
+	}
+}
