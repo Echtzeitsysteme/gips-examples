@@ -3,5 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Utils
 Bundle-SymbolicName: neural.network.utils
 Bundle-Version: 1.0.0.qualifier
+Require-Bundle: gips.examples.dependencies;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: neural.network.utils
