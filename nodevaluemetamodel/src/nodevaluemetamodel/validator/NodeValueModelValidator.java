@@ -1,9 +1,5 @@
 package nodevaluemetamodel.validator;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -53,22 +49,47 @@ public class NodeValueModelValidator {
 			}
 		}
 
-		// The highest x nodes must be connected
-		final List<Node> sortedNodes = new LinkedList<Node>();
-		sortedNodes.addAll(model.getNodes());
-		Collections.sort(sortedNodes, (n1, n2) -> {
-			return n2.getValue() - n1.getValue();
-		});
+//		// The highest x nodes must be connected
+//		final List<Node> sortedNodes = new LinkedList<Node>();
+//		sortedNodes.addAll(model.getNodes());
+//		Collections.sort(sortedNodes, (n1, n2) -> {
+//			return n2.getValue() - n1.getValue();
+//		});
+//
+//		// From the top down: once a node has no other connected nodes, all following
+//		// nodes must also be not connected to any nodes
+//		boolean connected = true;
+//		for (final Node n : sortedNodes) {
+//			if (!n.getConnectedNodes().isEmpty() && !connected) {
+//				return false;
+//			}
+//			if (n.getConnectedNodes().isEmpty() && connected) {
+//				connected = false;
+//			}
+//		}
 
-		// From the top down: once a node has no other connected nodes, all following
-		// nodes must also be not connected to any nodes
-		boolean connected = true;
-		for (final Node n : sortedNodes) {
-			if (!n.getConnectedNodes().isEmpty() && !connected) {
-				return false;
-			}
-			if (n.getConnectedNodes().isEmpty() && connected) {
-				connected = false;
+		// Every pair of nodes must be connected if their values are both >= 500
+		for (final Node n1 : model.getNodes()) {
+			for (final Node n2 : model.getNodes()) {
+				// Nodes should be connected
+				if (!n1.equals(n2) && n1.getValue() >= 500 && n2.getValue() >= 500) {
+					if (!n1.getConnectedNodes().contains(n2)) {
+						return false;
+					}
+					if (!n2.getConnectedNodes().contains(n1)) {
+						return false;
+					}
+				}
+
+				// Nodes should not be connected
+				if (n1.getValue() < 500 || n1.getValue() < 500) {
+					if (n1.getConnectedNodes().contains(n2)) {
+						return false;
+					}
+					if (n2.getConnectedNodes().contains(n1)) {
+						return false;
+					}
+				}
 			}
 		}
 

@@ -10,6 +10,10 @@ config {
 	threadCount := true [value := 4];
 }
 
+pattern findRoot {
+	r : Root
+}
+
 condition nodesNotConnected = forbid findConnectedNodes
 pattern findConnectedNodes {
 	r : Root {
@@ -44,14 +48,26 @@ when nodesNotConnected
 
 mapping connect with connectTwoNodes;
 
-// At most one connection (i.e., two nodes) can be connected
-constraint -> global {
-	mappings.connect->count() <= 1
+//// At most one connection (i.e., two nodes) can be connected
+//constraint -> global {
+//	mappings.connect->count() <= 1
+//}
+
+// Connect every two nodes if their values are both >= 500
+constraint -> pattern::connectTwoNodes {
+	[self.nodes().n1.^value >= 500 & self.nodes().n2.^value >= 500]
+	<=> 
+	mappings.connect->filter(m | m.nodes().n1 == self.nodes().n1 & m.nodes().n2 == self.nodes().n2)->sum(m | m.value()) == 1
 }
 
-// Objective: find the two nodes with the highest values
-objective o -> mapping::connect {
-	self.nodes().n1.^value * self.nodes().n2.^value
+//// Objective: find the two nodes with the highest values
+//objective o -> mapping::connect {
+//	self.nodes().n1.^value * self.nodes().n2.^value
+//}
+
+// Maximize number of mappings
+objective o -> pattern::findRoot {
+	mappings.connect->count()
 }
 
 // Maximize
