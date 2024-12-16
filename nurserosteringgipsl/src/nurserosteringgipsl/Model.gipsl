@@ -25,3 +25,33 @@ rule assignEmployeeToShift {
 	// check if employee.skills.contains(shift.skills)
 	// is missing because of IBeX-GT language limitations
 }
+
+pattern findShift {
+	root : Root {
+		- shifts -> shift
+	}
+	
+	shift : Shift
+}
+
+pattern findEmployeeDayTuple {
+	employee : Employee
+	day : Day
+}
+
+mapping e2s with assignEmployeeToShift;
+
+// "all demanded shifts must be assigned to a nurse;"
+constraint -> class::CoverRequirement {
+	mappings.e2s->filter(m | m.nodes().shift == self.shift)->count() == 1
+}
+
+// "a nurse can only work one shift per day, i.e. no two shift can be assigned to the same nurse on a day."
+// TODO
+
+// Minimum/maximum number of shifts that can be assigned to an employee
+constraint -> class::Employee {
+	mappings.e2s->filter(m | m.nodes().employee == self)->count() >= self.contract.minimumNoOfAssignments
+	&
+	mappings.e2s->filter(m | m.nodes().employee == self)->count() <= self.contract.maximumNoOfAssignments
+}
