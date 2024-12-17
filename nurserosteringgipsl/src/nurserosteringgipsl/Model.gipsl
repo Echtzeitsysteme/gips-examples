@@ -24,6 +24,7 @@ rule assignEmployeeToShift {
 	
 	// check if employee.skills.contains(shift.skills)
 	// is missing because of IBeX-GT language limitations
+	// TODO
 }
 
 pattern findShift {
@@ -34,20 +35,50 @@ pattern findShift {
 	shift : Shift
 }
 
-pattern findEmployeeDayTuple {
+pattern findEmployeeDayCombination {
+	root : Root {
+		- days -> day
+		- employees -> employee
+	}
 	employee : Employee
-	day : Day
+	day : Day {
+		- requirements -> coverRequirement
+	}
+	coverRequirement : CoverRequirement {
+		- shift -> shift
+	}
+	shift : Shift
 }
 
 mapping e2s with assignEmployeeToShift;
 
+// Mapping for every employee and day combination.
+// If a mapping `m` was selected by the ILP solver,
+// the respective employee `e` works on day `d` of
+// the mapping.
+mapping edAssignment with findEmployeeDayCombination;
+
 // "all demanded shifts must be assigned to a nurse;"
+// GIPS interpretation: every cover requirement has a number of preferred employees.
+// This constraint ensures that the shift connected to this cover requirement gets
+// as many employees mapped as this cover requirement's "preferred".
 constraint -> class::CoverRequirement {
-	mappings.e2s->filter(m | m.nodes().shift == self.shift)->count() == 1
+	mappings.e2s->filter(m | m.nodes().shift == self.shift)->count() == self.preferred
 }
 
 // "a nurse can only work one shift per day, i.e. no two shift can be assigned to the same nurse on a day."
-// TODO
+constraint -> class::Employee {
+	mappings.edAssignment->filter(m | m.nodes().employee == self)->count() <= 1
+}
+
+// Helper constraint: if at least one mapping of employee `e` on day `d` is selected,
+// set the respective `edAssignment` mapping to 1.
+constraint -> pattern::findEmployeeDayCombination {
+	mappings.e2s->filter(m | m.nodes().employee == self.nodes().employee & m.nodes().shift == self.nodes().shift
+	)->count() >= 1
+	<=>
+	mappings.edAssignment->filter(m | m.nodes().employee == self.nodes().employee & m.nodes().day == self.nodes().day)->count() == 1
+}
 
 // Minimum/maximum number of shifts that can be assigned to an employee
 constraint -> class::Employee {
