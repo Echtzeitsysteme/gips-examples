@@ -2,6 +2,7 @@ package org.emoflon.gips.gipsl.examples.mdvne.seq;
 
 import java.util.ArrayList;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.gt.GTMapping;
 import org.emoflon.gips.core.ilp.ILPIntegerVariable;
@@ -12,6 +13,8 @@ import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2ServerRuleMatc
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Network2NetworkRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Server2ServerRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Switch2NodeRuleMatch;
+
+import hipe.engine.config.HiPEPathOptions;
 
 /**
  * Implementation adapter for GIPS and iflye. This is used to run the GIPS-based
@@ -31,6 +34,52 @@ public class MdvneSeqGipsIflyeAdapter {
 	 * If false, the API must be initialized.
 	 */
 	static boolean init = false;
+
+	/**
+	 * Executes the embedding GIPS-based VNE algorithm.
+	 * 
+	 * @param model   Resource set that contains the model (= the root node of the
+	 *                model).
+	 * @param gipsXmi Path to the GIPS intermediate model XMI file.
+	 * @param ibexXmi Path to the IBeX model XMI file.
+	 * @param hipeXmi Path to the HiPE XMI file.
+	 * @return True if embedding was successful.
+	 */
+	public static boolean execute(final ResourceSet model, final String gipsXmi, final String ibexXmi,
+			final String hipeXmi) {
+		if (model == null) {
+			throw new IllegalArgumentException("Model was null.");
+		}
+
+		if (model.getResources() == null || model.getResources().isEmpty()) {
+			throw new IllegalArgumentException("Model resource set was null or empty.");
+		}
+
+		if (gipsXmi == null || gipsXmi.isBlank()) {
+			throw new IllegalArgumentException("GIPS intermediate XMI path was null or empty.");
+		}
+
+		if (ibexXmi == null || ibexXmi.isBlank()) {
+			throw new IllegalArgumentException("IBeX XMI path was null or empty.");
+		}
+
+		if (hipeXmi == null || hipeXmi.isBlank()) {
+			throw new IllegalArgumentException("HiPE XMI path was null or empty.");
+		}
+
+		// Set HiPE configuration parameters
+		HiPEPathOptions.getInstance().setNetworkPath(URI.createFileURI(hipeXmi));
+		HiPEPathOptions.getInstance()
+				.setEngineClassName("org.emoflon.gips.gipsl.examples.mdvne.seq.hipe.engine.HiPEEngine");
+
+		if (!init) {
+			api = new SeqGipsAPI();
+			api.init(URI.createFileURI(gipsXmi), model, URI.createFileURI(ibexXmi));
+			init = true;
+		}
+
+		return buildAndSolve();
+	}
 
 	/**
 	 * Executes the embedding GIPS-based VNE algorithm.
@@ -55,6 +104,15 @@ public class MdvneSeqGipsIflyeAdapter {
 			init = true;
 		}
 
+		return buildAndSolve();
+	}
+
+	/**
+	 * Builds and solves the ILP problem using the GIPS API object.
+	 * 
+	 * @return true, if a valid solution could be found.
+	 */
+	private static boolean buildAndSolve() {
 		// Build the ILP problem (including updates)
 		api.buildILPProblem(true);
 
