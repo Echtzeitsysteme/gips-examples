@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nurserosteringmodel:Root
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:nurserosteringmodel="platform:/resource/nurserosteringmodel/model/Nurserosteringmodel.ecore"
+    name="Hospital"
+    startDate="2010-01-01"
+    endDate="2010-01-28">
+  <employees
+      name="0"
+      contract="//@contracts.0"
+      skills="//@skills.0"/>
+  <employees
+      name="1"
+      contract="//@contracts.0"
+      skills="//@skills.0"/>
+  <employees
+      name="2"
+      contract="//@contracts.0"
+      skills="//@skills.0"/>
+  <days name="2010-01-17"
+      date="2010-01-17"
+      dayOfWeek="Sunday">
+    <requirements
+        preferred="1">
+      <shift
+          name="Late"
+          startTime="143000"
+          endTime="223000"
+          skills="//@skills.0"
+          day="//@days.0"/>
+    </requirements>
+    <requirements
+        preferred="1">
+      <shift
+          name="Early"
+          startTime="63000"
+          endTime="143000"
+          skills="//@skills.0"
+          day="//@days.0"/>
+    </requirements>
+    <requirements
+        preferred="1">
+      <shift
+          name="Day shift"
+          startTime="83000"
+          endTime="163000"
+          skills="//@skills.0"
+          day="//@days.0"/>
+    </requirements>
+  </days>
+  <skills name="Nurse"/>
+  <contracts
+      name="0"
+      maximumNoOfAssignments="16"
+      minimumNoOfAssignments="9"
+      maximumNoOfConsWorkDays="8"
+      minimumNoOfConsWorkDays="2"
+      maximumNoOfConsFreeDays="7"
+      minimumNoOfConsFreeDays="1"
+      maximumNoOfConsWorkWeekends="8"
+      completeWeekends="true"
+      identicalShiftTypesDuringTheWeekend="true"/>
+</nurserosteringmodel:Root>

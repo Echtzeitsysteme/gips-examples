@@ -73,6 +73,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="skills" upperBound="-1"
         eType="#//Skill"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="day" eType="#//Day"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Skill" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="CoverRequirement">

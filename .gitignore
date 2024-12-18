@@ -36,3 +36,9 @@ architecture.cra.gipssolution/solved.xmi
 teachingassistant.metamodel/instances/
 
 teachingassistant.gipssolution/instances/
+
+nurserosteringmodel/resources/solved.xmi
+
+nurserosteringgipsl/gurobi.lp
+
+nurserosteringmodel/resources/model.xmi

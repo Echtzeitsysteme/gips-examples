@@ -67,7 +67,7 @@ public class INRC1Loader {
 		}
 		final Root root = loader.transform();
 		try {
-			save(root, "./model.xmi");
+			save(root, "./resources/model.xmi");
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
@@ -375,6 +375,7 @@ public class INRC1Loader {
 				// Set shift
 				final String shiftName = translateShiftIdToName(k);
 				final Shift shift = cloneShift(getShift(shiftName));
+				shift.setDay(day);
 				cv.setShift(shift);
 
 				// Save to day
