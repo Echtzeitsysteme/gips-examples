@@ -24,7 +24,7 @@ import nurserosteringmodel.Skill;
 
 public class NurseRosteringModelValidator {
 
-	public final static String SCENARIO_FILE_NAME = "model.xmi";
+	public final static String SCENARIO_FILE_NAME = "solved.xmi";
 
 	public static void main(final String[] args) {
 		new NurseRosteringModelValidator().run();

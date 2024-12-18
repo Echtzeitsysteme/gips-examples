@@ -6,7 +6,7 @@ import nurserosteringgipsl.api.gips.NurserosteringgipslGipsAPI;
 
 public class NurseRosteringRunner extends AbstractNurseRosteringRunner {
 
-	private final String scenarioFileName = "model_simple.xmi";
+	private final String scenarioFileName = "model.xmi";
 
 	public static void main(final String[] args) {
 		new NurseRosteringRunner().run();
