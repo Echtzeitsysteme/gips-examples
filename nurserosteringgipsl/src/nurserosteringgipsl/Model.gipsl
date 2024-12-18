@@ -32,39 +32,14 @@ rule assignEmployeeToShift {
 	// is missing because of IBeX-GT language limitations
 }
 
-//pattern findShift {
-//	root : Root {
-//		- shifts -> shift
-//	}
-//	
-//	shift : Shift
-//}
-
 pattern findEmployeeDayCombination {
 	root : Root {
 		- days -> day
 		- employees -> employee
 	}
 	employee : Employee
-	day : Day {
-//		- requirements -> coverRequirement
-	}
-//	coverRequirement : CoverRequirement {
-//		- shift -> shift
-//	}
-//	shift : Shift
+	day : Day
 }
-
-//pattern findEmployeeShiftDayCombination {
-//	employee : Employee
-//	shift : Shift
-//	day : Day {
-//		- requirements -> cr
-//	}
-//	cr : CoverRequirement {
-//		- shift -> shift
-//	}
-//}
 
 //pattern findShiftSkillEmployeeCombination {
 //	shift : Shift {
@@ -88,14 +63,6 @@ pattern findEmployeeDayCombination {
 
 mapping e2s with assignEmployeeToShift;
 
-// Mapping for every employee and day combination.
-// If a mapping `m` was selected by the ILP solver,
-// the respective employee `e` works on day `d` of
-// the mapping.
-mapping edAssignment with findEmployeeDayCombination {
-	var counter : EInt
-};
-
 //// Mapping for every shift, skill, and employee combination.
 //// If a mapping `m` was selected by the ILP solver,
 //// the respective employee `e` works on shift `s` and has
@@ -111,26 +78,10 @@ constraint -> class::CoverRequirement {
 }
 
 // "a nurse can only work one shift per day, i.e. no two shift can be assigned to the same nurse on a day."
-//constraint -> class::Employee {
-//	mappings.edAssignment->filter(m | m.nodes().employee == self)->sum(m | m.variables().counter) <= 1
-//}
-constraint -> mapping::edAssignment {
-	self.variables().counter <= 1
-}
-
-// Helper constraint: if at least one mapping of employee `e` on day `d` is selected,
-// set the respective `edAssignment` mapping to 1.
-//constraint -> pattern::findEmployeeShiftDayCombination {
-//	mappings.e2s->filter(m | m.nodes().employee == self.nodes().employee & m.nodes().shift == self.nodes().shift
-//	)->count() >= 1
-//	<=>
-//	mappings.edAssignment->filter(m | m.nodes().employee == self.nodes().employee & m.nodes().day == self.nodes().day)->count() == 1
-//}
 constraint -> pattern::findEmployeeDayCombination {
 	mappings.e2s->filter(m | m.nodes().employee == self.nodes().employee & m.nodes().shift.day == self.nodes().day
 	)->count()
-	==
-	mappings.edAssignment->filter(m | m.nodes().employee == self.nodes().employee & m.nodes().day == self.nodes().day)->count()
+	<= 1
 }
 
 // Helper constraint: if at least one mapping of employee `e` to shift `s` is selected,
@@ -142,7 +93,7 @@ constraint -> pattern::findEmployeeDayCombination {
 //	mappings.e2s->filter(m | m.nodes().shift == self.nodes().shift & m.nodes().employee == self.nodes().employee)->count() >= 1
 //}
 
-// Minimum/maximum number of shifts that can be assigned to an employee
+//// Minimum/maximum number of shifts that can be assigned to an employee
 //constraint -> class::Employee {
 //	mappings.e2s->filter(m | m.nodes().employee == self)->count() >= self.contract.minimumNoOfAssignments
 //	&
