@@ -1,40 +1,38 @@
 package "org.emoflon.gips.gipsl.examples.headlessrunnerxmi"
-import "http://www.eclipse.org/emf/2002/Ecore"
-// import a metamodel here
+import "platform:/resource/org.emoflon.gips.gipsl.examples.headlessrunnermodel/model/Headlessrunnermodel.ecore"
 
 config {  
 	solver := GUROBI [home:="fu", license:="bar"];
-	launchConfig := true [main := "TODO"];
-	timeLimit := true [value := 42.0];
-	randomSeed := true [value := 73];
+	timeLimit := true [value := 10.0];
+	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
-	tolerance := true [value := 0.00001];
+	lpOutput := true [path := "./gurobi.lp"];
 }
 
-// specify an example rule
-rule exampleRule {
-	clazz : EClass {
-		++ -eAllOperations -> op
+rule setNodeZero {
+	root : Root {
+		++ -nodes -> node
 	}
 	
-	op : EOperation
+	node : Node {
+		.cost := 0
+	}
+	
+	# node.cost > 0
 }
 
 // create a mapping on the rule
-mapping mapNode with exampleRule;
+mapping zeroNode with setNodeZero;
 
-// create a constraint on one class
-constraint -> class::EOperation {
-	mappings.mapNode->filter(m | m.nodes().clazz.^abstract)->count() > self.lowerBound
+constraint -> class::Node {
+	mappings.zeroNode->filter(m | m.nodes().node == self)->count() == 1
 }
 
-// create an objective for the mapping
-objective nodeObj -> mapping::mapNode {
-	self.nodes().op.upperBound * sin(73)
+objective nodeObj -> mapping::zeroNode {
+	1
 }
 
-// create an overall objective
-global objective : min {
-	2 * nodeObj
+global objective : max {
+	nodeObj
 }
