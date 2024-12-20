@@ -1,0 +1,40 @@
+package "org.emoflon.gips.gipsl.examples.headlessrunnerxmi"
+import "http://www.eclipse.org/emf/2002/Ecore"
+// import a metamodel here
+
+config {  
+	solver := GUROBI [home:="fu", license:="bar"];
+	launchConfig := true [main := "TODO"];
+	timeLimit := true [value := 42.0];
+	randomSeed := true [value := 73];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.00001];
+}
+
+// specify an example rule
+rule exampleRule {
+	clazz : EClass {
+		++ -eAllOperations -> op
+	}
+	
+	op : EOperation
+}
+
+// create a mapping on the rule
+mapping mapNode with exampleRule;
+
+// create a constraint on one class
+constraint -> class::EOperation {
+	mappings.mapNode->filter(m | m.nodes().clazz.^abstract)->count() > self.lowerBound
+}
+
+// create an objective for the mapping
+objective nodeObj -> mapping::mapNode {
+	self.nodes().op.upperBound * sin(73)
+}
+
+// create an overall objective
+global objective : min {
+	2 * nodeObj
+}
