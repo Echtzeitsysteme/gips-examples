@@ -13,6 +13,7 @@
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,network.model"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.headlessrunner"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.headlessrunnermodel"/>
+<project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.headlessrunnerxmi"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.helloworld"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.lsp2p"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.lsp2pInc"/>
@@ -39,7 +40,7 @@
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,testgipsproject"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,testmetamodel"/>
 </provider>
-<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1732699722780_4" label="gips-examples" name="gips-examples">
+<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1720597379209_4" label="gips-examples" name="gips-examples">
 <item elementID="=architecture.cra.gipssolution" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=ArchitectureCRA" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=ClassDiagram" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
@@ -66,10 +67,10 @@
 <item elementID="=PTAOptimizerExtended" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=refactoringsoftwaresystemtgg3" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=SoftwareSystem" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=teachingassistant.gipssolution" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=teachingassistant.metamodel" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=testgipsproject" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=testmetamodel" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=teachingassistant.gipssolution" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=teachingassistant.metamodel" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=LectureStudioModel" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.gips.examples.incrementalp2p.common" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.gips.examples.incrementalp2p.distribution" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
@@ -77,5 +78,6 @@
 <item elementID="=org.gips.examples.incrementalp2p.repository" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.gips.examples.incrementalp2p.run" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.gips.examples.incrementalp2p.visualization" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.emoflon.gips.gipsl.examples.headlessrunnerxmi" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 </psf>

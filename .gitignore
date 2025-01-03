@@ -37,6 +37,16 @@ teachingassistant.metamodel/instances/
 
 teachingassistant.gipssolution/instances/
 
+org.emoflon.gips.gipsl.examples.headlessrunnerxmi/scripts/gips-headless.jar
+
+org.emoflon.gips.gipsl.examples.headlessrunnerxmi/scripts/gurobi.lp
+
+org.emoflon.gips.gipsl.examples.headlessrunnerxmi/scripts/gips-model.xmi
+
+org.emoflon.gips.gipsl.examples.headlessrunnerxmi/scripts/hipe-network.xmi
+
+org.emoflon.gips.gipsl.examples.headlessrunnerxmi/scripts/ibex-patterns.xmi
+
 nurserosteringmodel/resources/solved.xmi
 
 nurserosteringgipsl/gurobi.lp
