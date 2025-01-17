@@ -169,6 +169,7 @@ public class ModelFacade {
 	 */
 	public List<Node> getAllServersOfNetwork(final String networkId) {
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
 		return getNetworkById(networkId).getNodes().stream().filter(n -> n instanceof Server)
 				.collect(Collectors.toList());
@@ -182,6 +183,7 @@ public class ModelFacade {
 	 */
 	public List<Node> getAllSwitchesOfNetwork(final String networkId) {
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
 		return getNetworkById(networkId).getNodes().stream().filter(n -> n instanceof Switch)
 				.collect(Collectors.toList());
@@ -195,6 +197,7 @@ public class ModelFacade {
 	 */
 	public List<Link> getAllLinksOfNetwork(final String networkId) {
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
 		return getNetworkById(networkId).getLinks();
 	}
@@ -207,6 +210,7 @@ public class ModelFacade {
 	 */
 	public List<SubstratePath> getAllPathsOfNetwork(final String networkId) {
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
 		final Network net = getNetworkById(networkId);
 		if (net instanceof VirtualNetwork) {
@@ -224,8 +228,53 @@ public class ModelFacade {
 	 */
 	public Network getNetworkById(final String id) {
 		checkStringValid(id);
+		ifNetworkNotExistentThrowException(id);
 
 		return getRoot().getNetworks().stream().filter(n -> n.getName().equals(id)).collect(Collectors.toList()).get(0);
+	}
+
+	/**
+	 * If there is no network with the given ID in the model, throw an exception.
+	 * 
+	 * @param networkId Network ID to search for.
+	 */
+	private void ifNetworkNotExistentThrowException(final String networkId) {
+		if (!networkExists(networkId)) {
+			throw new IllegalArgumentException("The network with id <" + networkId + "> does not exist.");
+		}
+	}
+
+	/**
+	 * If there is no server with the given ID in the model, throw an exception.
+	 * 
+	 * @param serverId Server ID to search for.
+	 */
+	private void ifServerNotExistentThrowException(final String serverId) {
+		if (!serverExists(serverId)) {
+			throw new IllegalArgumentException("The server with id <" + serverId + "> does not exist.");
+		}
+	}
+
+	/**
+	 * If there is no switch with the given ID in the model, throw an exception.
+	 * 
+	 * @param switchId Switch ID to search for.
+	 */
+	private void ifSwitchNotExistentThrowException(final String switchId) {
+		if (!switchExists(switchId)) {
+			throw new IllegalArgumentException("The switch with id <" + switchId + "> does not exist.");
+		}
+	}
+
+	/**
+	 * If there is no node with the given ID in the model, throw an exception.
+	 * 
+	 * @param nodeId Node ID to search for.
+	 */
+	private void ifNodeNotExistentThrowException(final String nodeId) {
+		if (!(switchExists(nodeId) || serverExists(nodeId))) {
+			throw new IllegalArgumentException("The node with id <" + nodeId + "> does not exist.");
+		}
 	}
 
 	/**
@@ -250,7 +299,7 @@ public class ModelFacade {
 		try {
 			final Node n = getNodeById(id);
 			return (n != null && n instanceof Server);
-		} catch (final NullPointerException | IndexOutOfBoundsException ex) {
+		} catch (final NullPointerException | IndexOutOfBoundsException | IllegalArgumentException ex) {
 			return false;
 		}
 	}
@@ -265,7 +314,7 @@ public class ModelFacade {
 		try {
 			final Node n = getNodeById(id);
 			return (n != null && n instanceof Switch);
-		} catch (final NullPointerException | IndexOutOfBoundsException ex) {
+		} catch (final NullPointerException | IndexOutOfBoundsException | IllegalArgumentException ex) {
 			return false;
 		}
 	}
@@ -298,6 +347,7 @@ public class ModelFacade {
 	 */
 	public Server getServerById(final String id) {
 		checkStringValid(id);
+		ifServerNotExistentThrowException(id);
 		return (Server) getNodeById(id);
 	}
 
@@ -309,6 +359,7 @@ public class ModelFacade {
 	 */
 	public Switch getSwitchById(final String id) {
 		checkStringValid(id);
+		ifSwitchNotExistentThrowException(id);
 		return (Switch) getNodeById(id);
 	}
 
@@ -327,6 +378,11 @@ public class ModelFacade {
 			net.getNodes().stream().filter(n -> n instanceof Node).filter(n -> n.getName().equals(id))
 					.forEach(n -> nodes.add(n));
 		});
+
+		if (nodes.size() == 0) {
+			throw new IllegalArgumentException("Node with ID <" + id + "> not found.");
+		}
+
 		return nodes.get(0);
 	}
 
@@ -346,6 +402,11 @@ public class ModelFacade {
 		// links.add(l));
 		// });
 		// return links.get(0);
+
+		if (links.get(id) == null) {
+			throw new IllegalArgumentException("Link with ID <" + id + "> not found.");
+		}
+
 		return links.get(id);
 	}
 
@@ -366,6 +427,11 @@ public class ModelFacade {
 		// });
 		//
 		// return paths.get(0);
+
+		if (paths.get(id) == null) {
+			throw new IllegalArgumentException("Path with ID <" + id + "> not found.");
+		}
+
 		return paths.get(id);
 	}
 
@@ -416,6 +482,8 @@ public class ModelFacade {
 			throw new IllegalArgumentException("A node with id " + id + " already exists!");
 		}
 
+		ifNetworkNotExistentThrowException(networkId);
+
 		final Network net = getNetworkById(networkId);
 		Server server;
 
@@ -458,6 +526,8 @@ public class ModelFacade {
 			throw new IllegalArgumentException("A node with id " + id + " already exists!");
 		}
 
+		ifNetworkNotExistentThrowException(networkId);
+
 		final Network net = getNetworkById(networkId);
 		Switch sw;
 
@@ -496,6 +566,8 @@ public class ModelFacade {
 			throw new IllegalArgumentException("A node with given id does not exist!");
 		}
 
+		ifNetworkNotExistentThrowException(networkId);
+
 		final Network net = getNetworkById(networkId);
 		Link link;
 		if (net instanceof VirtualNetwork) {
@@ -530,6 +602,7 @@ public class ModelFacade {
 	 */
 	public void createAllPathsForNetwork(final String networkdId) {
 		checkStringValid(networkdId);
+		ifNetworkNotExistentThrowException(networkdId);
 		final Network net = getNetworkById(networkdId);
 
 		if (net instanceof VirtualNetwork) {
@@ -603,6 +676,7 @@ public class ModelFacade {
 	 * @return Maximum path length.
 	 */
 	private int determineMaxPathLengthForTree(final String networkId) {
+		ifNetworkNotExistentThrowException(networkId);
 		int maxServerDepth = Integer.MAX_VALUE;
 
 		final List<Node> servers = getAllServersOfNetwork(networkId);
@@ -856,6 +930,7 @@ public class ModelFacade {
 	 */
 	public boolean doesNodeIdExist(final String id, final String networkId) {
 		checkStringValid(new String[] { id, networkId });
+		ifNetworkNotExistentThrowException(networkId);
 
 		return !getNetworkById(networkId).getNodes().stream().filter(n -> n.getName().equals(id))
 				.collect(Collectors.toList()).isEmpty();
@@ -871,6 +946,7 @@ public class ModelFacade {
 	public boolean doesLinkIdExist(final String id, final String networkId) {
 		checkStringValid(id);
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
 		return !getNetworkById(networkId).getLinks().stream().filter(l -> l.getName().equals(id))
 				.collect(Collectors.toList()).isEmpty();
@@ -926,6 +1002,9 @@ public class ModelFacade {
 	 * @return Path if a path between source and target does exist.
 	 */
 	public SubstratePath getPathFromSourceToTarget(final String sourceId, final String targetId) {
+		ifNodeNotExistentThrowException(sourceId);
+		ifNodeNotExistentThrowException(targetId);
+
 		final Node source = getNodeById(sourceId);
 		final Node target = getNodeById(targetId);
 
