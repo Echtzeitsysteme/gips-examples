@@ -6,5 +6,5 @@ public class UIColor {
 	public static String ClientNode = ColorValue.Blue;
 
 	public static String Edge = ColorValue.LightBlue;
-	
+
 }

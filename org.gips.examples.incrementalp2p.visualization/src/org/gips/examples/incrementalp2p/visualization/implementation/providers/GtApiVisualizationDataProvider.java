@@ -27,5 +27,5 @@ public class GtApiVisualizationDataProvider implements VisualizationDataProvider
 	public List<VisualizationConnection> getConnections() {
 		return repository.getConnections().stream().map(Mapper::toVisualizationConnection).collect(Collectors.toList());
 	}
-	
+
 }

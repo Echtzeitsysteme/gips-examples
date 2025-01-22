@@ -18,5 +18,5 @@ public interface VisualizationUpdatesDataProvider {
 	void setAdditionalNodes(List<VisualizationNode> additionalNodes);
 
 	void setAdditionalEdges(List<VisualizationConnection> additionalEdges);
-	
+
 }

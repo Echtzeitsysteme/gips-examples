@@ -142,13 +142,14 @@ public class GtClientRepository extends AApiSaver implements P2PNetworkRepositor
 		api.possibleConnection(conn.server(), conn.client()).apply(false);
 	}
 
-	private Stream<ClientServerPair> getConnectionsForServer(final List<WaitingClient> clients, final WaitingClient server) {
+	private Stream<ClientServerPair> getConnectionsForServer(final List<WaitingClient> clients,
+			final WaitingClient server) {
 		return clients.stream().filter(x -> x.id() != server.id())
 				.map(client -> new ClientServerPair(server.id(), client.id()));
 	}
 
 	record ClientServerPair(String server, String client) {
-		
+
 	}
 
 }

@@ -19,5 +19,5 @@ class Mapper {
 	public static ConnectionModel toConnectionModel(final Connection x) {
 		return new ConnectionModel(x.getServer().getId(), x.getClient().getId(), x.getTransferRate());
 	}
-	
+
 }

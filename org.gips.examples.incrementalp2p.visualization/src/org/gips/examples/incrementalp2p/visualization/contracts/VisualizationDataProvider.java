@@ -6,5 +6,5 @@ public interface VisualizationDataProvider {
 	List<VisualizationNode> getNodes();
 
 	List<VisualizationConnection> getConnections();
-	
+
 }
