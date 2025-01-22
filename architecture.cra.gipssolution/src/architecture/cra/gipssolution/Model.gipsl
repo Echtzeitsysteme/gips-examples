@@ -2,14 +2,13 @@ package "architecture.cra.gipssolution"
 import "platform:/resource/ArchitectureCRA/model/architectureCRA.ecore"
 
 config {  
-	solver := GUROBI [home:="fu", license:="bar"];
+	solver := GUROBI;
 	timeLimit := true [value := 1209600.0]; // 14*24h time limit
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.00001];
 	lpOutput := true [path := "gurobi.lp"];
-//	threadCount := true [value := 64];
 }
 
 //
