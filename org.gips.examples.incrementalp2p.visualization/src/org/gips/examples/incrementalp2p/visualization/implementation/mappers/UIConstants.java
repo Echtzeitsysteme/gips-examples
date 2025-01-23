@@ -6,5 +6,5 @@ public class UIConstants {
 	public static final String RelayColor = "relayColor";
 	public static final String ClientColor = "clientColor";
 	public static final String EdgeColor = "edgeColor";
-	
+
 }

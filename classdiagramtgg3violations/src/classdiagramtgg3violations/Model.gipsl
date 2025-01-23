@@ -2,7 +2,7 @@ package "classdiagramtgg3violations"
 import "platform:/resource/ClassDiagram/model/classDiagram.ecore"
 
 config {  
-	solver := GUROBI [home:="fu", license:="bar"];
+	solver := GUROBI;
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
 	presolve := true;

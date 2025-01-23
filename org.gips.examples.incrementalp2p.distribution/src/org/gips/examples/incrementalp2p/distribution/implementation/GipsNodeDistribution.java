@@ -21,10 +21,9 @@ import org.gips.examples.incrementalp2p.gips.incrementaldistribution.api.gips.ma
 import org.gips.examples.incrementalp2p.gips.incrementaldistribution.api.gips.mapping.StreamingClientRCMapping;
 import org.gips.examples.incrementalp2p.repository.contracts.models.ConnectionModel;
 
-import jakarta.inject.Inject;
-
 import LectureStudioModel.ConnectionData;
 import LectureStudioModel.Node;
+import jakarta.inject.Inject;
 
 public class GipsNodeDistribution implements NodeDistributionEngine {
 	@Inject
@@ -38,7 +37,7 @@ public class GipsNodeDistribution implements NodeDistributionEngine {
 		TimeAggregator.gtTick();
 		api.update();
 		TimeAggregator.gtTock();
-		
+
 		api.buildILPProblem(false);
 
 		TimeAggregator.ilpTick();
@@ -46,7 +45,7 @@ public class GipsNodeDistribution implements NodeDistributionEngine {
 		TimeAggregator.ilpTock();
 
 		relevantMappings().forEach(x -> x.applyNonZeroMappings(false));
-		
+
 		TimeAggregator.gtTick();
 		api.update();
 		TimeAggregator.gtTock();

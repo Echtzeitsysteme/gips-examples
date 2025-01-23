@@ -2,8 +2,7 @@ package "org.emoflon.gips.gipsl.examples.mdvne.bwignore"
 import "platform:/resource/network.model/model/Model.ecore"
 
 config {
-	solver := GUROBI [home:="fu", license:="bar"];
-	launchConfig := true [main := "org.emoflon.gips.gipsl.examples.mdvne.ExampleMdVNEBwIgnore"];
+	solver := GUROBI;
 	timeLimit := true [value := 600.0];
 	randomSeed := true [value := 0];
 	presolve := true;

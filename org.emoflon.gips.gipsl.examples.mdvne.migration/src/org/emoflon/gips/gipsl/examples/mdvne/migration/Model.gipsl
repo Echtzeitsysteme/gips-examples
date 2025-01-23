@@ -4,8 +4,7 @@ import "platform:/resource/network.model/model/Model.ecore"
 // check out: https://github.com/Echtzeitsysteme/iflye
 
 config {
-	solver := GUROBI [home:="fu", license:="bar"];
-	launchConfig := false [main := "org.emoflon.gips.gipsl.examples.mdvne.migration.ExampleMdVNE"];
+	solver := GUROBI;
 	timeLimit := true [value := 600.0];
 	randomSeed := true [value := 0];
 	presolve := true;

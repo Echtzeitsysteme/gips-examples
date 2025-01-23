@@ -10,7 +10,7 @@ import "platform:/resource/testmetamodel/model/testmetamodel.ecore"
 // e.g., the ILP solving timeout
 config {
 	// solver: GLPK (open-source)
-	solver := GLPK [home:="fu", license:="bar"];
+	solver := GLPK;
 	
 	// set a time limit of 42s
 	timeLimit := true [value := 42.0];

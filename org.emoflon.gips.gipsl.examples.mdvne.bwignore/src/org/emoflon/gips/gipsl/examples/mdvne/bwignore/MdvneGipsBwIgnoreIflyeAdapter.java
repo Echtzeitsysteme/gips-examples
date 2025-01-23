@@ -99,11 +99,11 @@ public class MdvneGipsBwIgnoreIflyeAdapter {
 		return buildAndSolve();
 	}
 
-	/** 
-	 * Builds and solves the ILP problem using the GIPS API object. 
-	 *  
-	 * @return true, if a valid solution could be found. 
-	 */ 
+	/**
+	 * Builds and solves the ILP problem using the GIPS API object.
+	 * 
+	 * @return true, if a valid solution could be found.
+	 */
 	private static boolean buildAndSolve() {
 		// Build the ILP problem (including updates)
 		api.buildILPProblem(true);

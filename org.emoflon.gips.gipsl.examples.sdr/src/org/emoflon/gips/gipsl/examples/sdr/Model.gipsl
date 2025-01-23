@@ -2,8 +2,7 @@ package "org.emoflon.gips.gipsl.examples.sdr"
 import "platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore"
 
 config {  
-	solver := GUROBI [home:="fu", license:="bar"];
-	launchConfig := true [main := "TODO"];
+	solver := GUROBI;
 	timeLimit := true [value := 30.0];
 	randomSeed := true [value := 0];
 	presolve := true;
