@@ -5,6 +5,7 @@ Bundle-Name: org.emoflon.gips.gipsl.examples.mdvne.migration
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.emoflon.gips.gipsl.examples.mdvne.migration
+Import-Package: org.emoflon.gips.gipsl.examples.mdvne
 Bundle-SymbolicName: org.emoflon.gips.gipsl.examples.mdvne.migration; singleton:=true
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-21

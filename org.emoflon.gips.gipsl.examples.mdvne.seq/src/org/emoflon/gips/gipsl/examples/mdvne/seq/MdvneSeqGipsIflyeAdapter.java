@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.gt.GTMapping;
 import org.emoflon.gips.core.ilp.ILPIntegerVariable;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapterUtil;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.gips.SeqGipsAPI;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2PathRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2ServerRuleMatch;
@@ -78,6 +79,9 @@ public class MdvneSeqGipsIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
 		return buildAndSolve();
 	}
 
@@ -103,6 +107,9 @@ public class MdvneSeqGipsIflyeAdapter {
 			api.init(model);
 			init = true;
 		}
+
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
 
 		return buildAndSolve();
 	}
