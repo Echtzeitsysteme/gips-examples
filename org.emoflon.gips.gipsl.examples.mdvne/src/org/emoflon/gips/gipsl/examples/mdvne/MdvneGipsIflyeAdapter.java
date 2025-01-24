@@ -69,6 +69,9 @@ public class MdvneGipsIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
 		return buildAndSolve();
 	}
 
@@ -94,6 +97,9 @@ public class MdvneGipsIflyeAdapter {
 			api.init(model);
 			init = true;
 		}
+
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
 
 		return buildAndSolve();
 	}

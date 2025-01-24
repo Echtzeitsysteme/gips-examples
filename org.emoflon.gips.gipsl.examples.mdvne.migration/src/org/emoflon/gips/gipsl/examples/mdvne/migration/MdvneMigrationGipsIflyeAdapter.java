@@ -3,6 +3,7 @@ package org.emoflon.gips.gipsl.examples.mdvne.migration;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapterUtil;
 import org.emoflon.gips.gipsl.examples.mdvne.migration.api.gips.MigrationGipsAPI;
 
 import hipe.engine.config.HiPEPathOptions;
@@ -70,6 +71,9 @@ public class MdvneMigrationGipsIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
 		return buildAndSolve();
 	}
 
@@ -95,6 +99,9 @@ public class MdvneMigrationGipsIflyeAdapter {
 			api.init(model);
 			init = true;
 		}
+
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
 
 		return buildAndSolve();
 	}
