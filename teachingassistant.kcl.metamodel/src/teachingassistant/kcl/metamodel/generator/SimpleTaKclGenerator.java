@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import metamodel.Day;
 import metamodel.Department;
 import metamodel.Lecturer;
+import metamodel.Week;
 
 public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 
@@ -27,10 +29,13 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	private final int ASSISTANTS_MAXIMUM_HOURS_TOTAL = 312; // KCL
 
 	// Time slots
-	private final int NUMBER_OF_TIMESLOTS_PER_WEEK = 10;
+	private final int NUMBER_OF_TIMESLOTS_PER_WEEK = 10; // Must be at least 5 = 1 per day
 
 	// Tutorials
 	private final int NUMBER_OF_TUTORIALS_PER_WEEK = 6;
+
+	// Weeks
+	private final int NUMBER_OF_WEEKS = 1;
 
 	/**
 	 * Runs the scenario generation and writes a XMI file to the configured output
@@ -63,7 +68,9 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 
 	public Department constructModel() {
 		// Weeks and days
-		addWeekWithDays("Week_1");
+		for (int i = 0; i < NUMBER_OF_WEEKS; i++) {
+			addWeekWithDays("Week_" + i);
+		}
 
 		// Lecturers
 		for (int i = 0; i < NUMBER_OF_LECTURERS; i++) {
@@ -100,9 +107,21 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		}
 
 		// Time slots
-		for (int i = 0; i < NUMBER_OF_TIMESLOTS_PER_WEEK; i++) {
-			// TODO: Connect to weeks
-			addTimeslot(i);
+		for (int i = 0; i < NUMBER_OF_WEEKS; i++) {
+			for (int j = 0; j < NUMBER_OF_TIMESLOTS_PER_WEEK; j++) {
+				final int timeslotId = (i * NUMBER_OF_TIMESLOTS_PER_WEEK) + j;
+				addTimeslot(timeslotId);
+				final Week w = this.weeks.get("Week_" + i);
+				if (w == null) {
+					throw new UnsupportedOperationException("Week not found.");
+				}
+				final Day d = w.getDays().get(j % 5);
+				if (d == null) {
+					throw new UnsupportedOperationException("Day not found.");
+				}
+				System.out.println("Set day <" + d.getName() + "> to time slot ID: " + timeslotId);
+				this.timeslots.get(timeslotId).setDay(d);
+			}
 		}
 
 		// Tutorials
