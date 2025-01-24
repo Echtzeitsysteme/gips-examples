@@ -69,34 +69,67 @@ public class TeachingAssistantKclValidator {
 		boolean valid = true;
 
 		// Tutorials
-		for (final Tutorial tutorial : model.getTutorials()) {
-			valid = valid && validate(tutorial);
+		{
+			boolean tutorialsValid = true;
+			for (final Tutorial tutorial : model.getTutorials()) {
+				tutorialsValid = tutorialsValid && validate(tutorial);
+			}
+			tutorialsValid = tutorialsValid && validateTutorialNameUnique(model.getTutorials());
+			System.out.println("=> All tutorials valid: " + tutorialsValid);
+			valid = valid && tutorialsValid;
 		}
-		valid = valid && validateTutorialNameUnique(model.getTutorials());
 
 		// Assistants
-		for (final Assistant assistant : model.getAssistants()) {
-			valid = valid && validate(assistant, model);
+		{
+			boolean assistantsValid = true;
+			for (final Assistant assistant : model.getAssistants()) {
+				assistantsValid = assistantsValid && validate(assistant, model);
+			}
+			assistantsValid = assistantsValid && validateAssistantNameUnique(model.getAssistants());
+			System.out.println("=> All assistants valid: " + assistantsValid);
+			valid = valid && assistantsValid;
 		}
-		valid = valid && validateAssistantNameUnique(model.getAssistants());
 
 		// Time slots
-		for (final Timeslot timeslot : model.getTimeslots()) {
-			valid = valid && validate(timeslot);
+		{
+			boolean timeslotsValid = true;
+			for (final Timeslot timeslot : model.getTimeslots()) {
+				timeslotsValid = timeslotsValid && validate(timeslot);
+			}
+			timeslotsValid = timeslotsValid && validateTimeSlotsIdUnique(model.getTimeslots());
+			System.out.println("=> All time slots valid: " + timeslotsValid);
+			valid = valid && timeslotsValid;
 		}
-		valid = valid && validateTimeSlotsIdUnique(model.getTimeslots());
+
+		// Weeks
+		{
+			boolean weeksValid = true;
+			// System.out.println("=> All weeks are valid: " + weeksValid);
+			// TODO
+			valid = valid && weeksValid;
+		}
 
 		// Days
-		for (final Day day : model.getDays()) {
-			valid = valid && validate(day);
+		{
+			boolean daysValid = true;
+			for (final Day day : model.getDays()) {
+				daysValid = daysValid && validate(day);
+			}
+			daysValid = daysValid && validateDayNameUnique(model.getDays());
+			System.out.println("=> All days valid: " + daysValid);
+			valid = valid && daysValid;
 		}
-		valid = valid && validateDayNameUnique(model.getDays());
 
 		// Lecturers
-		for (final Lecturer lecturer : model.getLecturers()) {
-			valid = valid && validate(lecturer);
+		{
+			boolean lecturersValid = true;
+			for (final Lecturer lecturer : model.getLecturers()) {
+				lecturersValid = lecturersValid && validate(lecturer);
+			}
+			lecturersValid = lecturersValid && validateLecturerNameUnique(model.getLecturers());
+			System.out.println("=> All lecturers valid: " + lecturersValid);
+			valid = valid && lecturersValid;
 		}
-		valid = valid && validateLecturerNameUnique(model.getLecturers());
 
 		return valid;
 	}
@@ -235,6 +268,8 @@ public class TeachingAssistantKclValidator {
 					}
 				}
 				if (!skillTypeMatched) {
+					System.out.println("=> Skill type of assistant <" + assistant.getName() + "> and tutorial <"
+							+ tutorial.getName() + "> not matched.");
 					return false;
 				}
 				cumulatedTotalHours += tutorial.getDuration();
@@ -242,6 +277,9 @@ public class TeachingAssistantKclValidator {
 				// An assistant must not have two tutorials at the same time slot
 				if (tutorial.getTimeslot() != null) {
 					if (!usedTimeslots.add(tutorial.getTimeslot().getId())) {
+						System.out.println("=> Assistant <" + assistant.getName()
+								+ "> has two tutorials on overlapping time slots: " + tutorial.getTimeslot().getId());
+						;
 						return false;
 					}
 				}
@@ -250,6 +288,9 @@ public class TeachingAssistantKclValidator {
 
 		// Assistant's total hour limit must be matched by the cumulative duration
 		if (!(cumulatedTotalHours <= assistant.getMaximumHoursTotal())) {
+			System.err.println(
+					"=> Assistant <" + assistant.getName() + "> exceeds their maximum hours total. Specified limit: "
+							+ assistant.getMaximumHoursTotal() + ", actual assignment: " + cumulatedTotalHours);
 			return false;
 		}
 
@@ -285,7 +326,11 @@ public class TeachingAssistantKclValidator {
 			if (week2Hours.containsKey(w)) {
 				final int hoursInWeek = week2Hours.get(w);
 				if (hoursInWeek < assistant.getMinimumHoursPerWeek()
-						|| hoursInWeek > assistant.getMaximumDaysPerWeek()) {
+						|| hoursInWeek > assistant.getMaximumHoursPerWeek()) {
+					System.out.println("=> Assistant <" + assistant.getName()
+							+ "> number of hours per week is not within their boundaries: "
+							+ assistant.getMinimumHoursPerWeek() + " <=? " + hoursInWeek + " <=? "
+							+ assistant.getMaximumHoursPerWeek());
 					return false;
 				}
 			}
@@ -293,6 +338,9 @@ public class TeachingAssistantKclValidator {
 			if (week2Days.containsKey(w)) {
 				final int daysInWeek = week2Days.get(w).size();
 				if (daysInWeek > assistant.getMaximumDaysPerWeek()) {
+					System.out.println("=> Assistant <" + assistant.getName() + "> maximum number of days exceeded: "
+							+ assistant.getMaximumDaysPerWeek() + " <=? " + daysInWeek);
+					;
 					return false;
 				}
 			}
