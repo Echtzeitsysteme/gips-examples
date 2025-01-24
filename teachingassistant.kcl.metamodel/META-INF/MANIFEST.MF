@@ -1,12 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: teachingassistant.kcl.metamodel
+Bundle-Name: %pluginName
 Bundle-SymbolicName: teachingassistant.kcl.metamodel;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Bundle-Vendor: 
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: teachingassistant.kcl.metamodel
-Require-Bundle: org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.xmi
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi,
+ org.emoflon.smartemf;bundle-version="1.0.0"
+Export-Package: metamodel,
+ metamodel.impl
 

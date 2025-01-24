@@ -32,6 +32,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="timeslot" eType="#//Timeslot"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lecturer" eType="#//Lecturer"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Skill" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="preference" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
