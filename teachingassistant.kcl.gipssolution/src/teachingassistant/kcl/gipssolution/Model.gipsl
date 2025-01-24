@@ -137,7 +137,7 @@ mapping laAssignment with findLecturerAssistantTuple;
 
 // Mapping that must be 1 if assistant `a` works on
 // day `d` (utility).
-mapping adAssignment with findAssistantDayWeekTriple;
+mapping adwAssignment with findAssistantDayWeekTriple;
 
 // ------------------------------
 
@@ -154,6 +154,24 @@ constraint -> class::Tutorial {
 // in their time limit (`#assignments` <= `maxHoursTotal`).
 constraint -> class::Assistant {
 	mappings.at->filter(m | m.nodes().a == self)->sum(m | m.nodes().t.duration) <= self.maximumHoursTotal
+}
+
+// The duration of assignments per week for every assistant must lay
+// in their weekly time limit (`minHoursPerWeek` <= `#hoursInWeek` <= `maxHoursPeerWeek`)
+constraint -> pattern::findAssistantWeekTuple {
+	mappings.at->filter( //
+		m | m.nodes().a == self.nodes().a //
+		& m.nodes().t.timeslot.day.week == self.nodes().w) //
+		->sum(m | m.nodes().t.duration) //
+	>= self.nodes().a.minimumHoursPerWeek
+	
+	&
+	
+	mappings.at->filter( //
+		m | m.nodes().a == self.nodes().a //
+		& m.nodes().t.timeslot.day.week == self.nodes().w) //
+		->sum(m | m.nodes().t.duration) //
+	<= self.nodes().a.maximumHoursPerWeek
 }
 
 // An assistant must not have two tutorials in the same time slot
@@ -183,7 +201,7 @@ constraint -> class::Lecturer {
 // If assistant `a` works on day `d` (in week `w`),
 // set its mapping variable to 1 (utility).
 constraint -> pattern::findAssistantDayWeekTriple {
-	mappings.adAssignment->filter(m | m.nodes().a == self.nodes().a & m.nodes().d == self.nodes().d)->count() == 1
+	mappings.adwAssignment->filter(m | m.nodes().a == self.nodes().a & m.nodes().d == self.nodes().d)->count() == 1
 	<=>
 	mappings.at->filter(m | m.nodes().a == self.nodes().a & m.nodes().t.timeslot.day == self.nodes().d)->count() >= 1
 }
@@ -192,7 +210,7 @@ constraint -> pattern::findAssistantDayWeekTriple {
 // Formulation in GIPSL: the number of assigned days per week must be smaller 
 // or equal to the number of maximum days per week (of the assistant).
 constraint -> pattern::findAssistantWeekTuple {
-	mappings.adAssignment->filter( //
+	mappings.adwAssignment->filter( //
 		m | m.nodes().a == self.nodes().a //
 		& m.nodes().w == self.nodes().w //
 	)->count() <= self.nodes().a.maximumDaysPerWeek

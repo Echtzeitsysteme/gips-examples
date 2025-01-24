@@ -315,6 +315,11 @@ public class TeachingAssistantKclValidator {
 			throw new IllegalArgumentException("Given model was null.");
 		}
 
+		// Name
+		if (assistant.getName() == null || assistant.getName().isBlank()) {
+			return false;
+		}
+
 		int cumulatedTotalHours = 0;
 		final Set<Integer> usedTimeslots = new HashSet<Integer>();
 		final Set<Tutorial> allGivenTutorials = new HashSet<Tutorial>();
@@ -423,6 +428,9 @@ public class TeachingAssistantKclValidator {
 		// Tutorial types
 		for (final Tutorial t : lecturer.getTutorials()) {
 			if (!t.getSkillType().equals(lecturer.getSkillTypeName())) {
+				System.out.println("=> Lecturer <" + lecturer.getName() + "> has a tutorial <" + t.getName()
+						+ "> with the wrong skill type <" + t.getSkillType() + "> instead of <"
+						+ lecturer.getSkillTypeName() + ">.");
 				return false;
 			}
 		}
@@ -434,14 +442,20 @@ public class TeachingAssistantKclValidator {
 		}
 		// lecturers must not have a number of maximum TAs that is smaller than zero
 		if (lecturer.getMaximumNumberOfTas() < 0) {
+			System.out.println("=> The number of maximum number of TAs of lecturer <" + lecturer.getName()
+					+ "> was negative: " + lecturer.getMaximumNumberOfTas());
 			return false;
 		}
 		if (employedAssistants.size() > lecturer.getMaximumNumberOfTas()) {
+			System.out.println("=> The number of assigned TAs (" + employedAssistants.size() + ")of lecturer <"
+					+ lecturer.getName() + "> was larger than the configured limit: "
+					+ lecturer.getMaximumNumberOfTas());
 			return false;
 		}
 
 		// A lecturer must have at least one tutorial
 		if (lecturer.getTutorials().isEmpty()) {
+			System.out.println("=> Lecturer <" + lecturer.getName() + "> has no tutorials.");
 			return false;
 		}
 

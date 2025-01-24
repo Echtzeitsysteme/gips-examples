@@ -167,6 +167,7 @@ public class TeachingAssistantKclGenerator {
 	}
 
 	public void populateTutorialsToLecturers() {
+		// This may result in unsolvable models, hence, the sanity check afterwards
 		for (final Tutorial t : tutorials.values()) {
 			final List<Lecturer> filteredLecturers = lecturers.values().stream() //
 					.filter(l -> l.getSkillTypeName().equals(t.getSkillType())) //
@@ -174,6 +175,13 @@ public class TeachingAssistantKclGenerator {
 			final Lecturer randomLecturer = filteredLecturers.get(getRandInt(0, filteredLecturers.size() - 1));
 			randomLecturer.getTutorials().add(t);
 			t.setLecturer(randomLecturer);
+		}
+
+		// Sanity check
+		for (final Lecturer l : lecturers.values()) {
+			if (l.getTutorials().isEmpty()) {
+				throw new InternalError("=> Lecturer <" + l.getName() + "> did not get any tutorials.");
+			}
 		}
 	}
 

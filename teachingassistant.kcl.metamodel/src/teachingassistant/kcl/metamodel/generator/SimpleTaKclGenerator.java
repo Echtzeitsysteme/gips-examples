@@ -84,9 +84,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		for (int i = 0; i < NUMBER_OR_ASSISTANTS; i++) {
 			addAssistant("Assistant_" + i, //
 					ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK, //
-					getRandInt( //
-							ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK, //
-							ASSISTANTS_MAXIMUM_NUMBER_OF_HOURS_PER_WEEK), //
+					ASSISTANTS_MAXIMUM_NUMBER_OF_HOURS_PER_WEEK, //
 					ASSISTANTS_MAXIMUM_NUMBER_OF_DAYS_PER_WEEK, //
 					ASSISTANTS_MAXIMUM_HOURS_TOTAL //
 			);
