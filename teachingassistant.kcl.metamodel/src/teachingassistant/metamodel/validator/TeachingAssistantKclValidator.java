@@ -66,6 +66,11 @@ public class TeachingAssistantKclValidator {
 	 * @return True if complete model is valid.
 	 */
 	public boolean validate(final Department model) {
+		if (model == null) {
+			System.out.println("=> Given model was null.");
+			return false;
+		}
+
 		boolean valid = true;
 
 		// Tutorials
@@ -104,8 +109,11 @@ public class TeachingAssistantKclValidator {
 		// Weeks
 		{
 			boolean weeksValid = true;
-			// System.out.println("=> All weeks are valid: " + weeksValid);
-			// TODO
+			for (final Week week : model.getWeeks()) {
+				weeksValid = weeksValid && validate(week);
+			}
+			weeksValid = weeksValid && validateWeekNameUnique(model.getWeeks());
+			System.out.println("=> All weeks are valid: " + weeksValid);
 			valid = valid && weeksValid;
 		}
 
@@ -141,6 +149,10 @@ public class TeachingAssistantKclValidator {
 	 * @return True if all names were unique.
 	 */
 	private boolean validateTutorialNameUnique(final Collection<Tutorial> tutorials) {
+		if (tutorials == null) {
+			return false;
+		}
+
 		final Set<String> names = new HashSet<>();
 		for (final Tutorial t : tutorials) {
 			if (!names.add(t.getName())) {
@@ -158,6 +170,10 @@ public class TeachingAssistantKclValidator {
 	 * @return True if all names were unique.
 	 */
 	private boolean validateAssistantNameUnique(final Collection<Assistant> assistants) {
+		if (assistants == null) {
+			return false;
+		}
+
 		final Set<String> names = new HashSet<>();
 		for (final Assistant a : assistants) {
 			if (!names.add(a.getName())) {
@@ -175,6 +191,10 @@ public class TeachingAssistantKclValidator {
 	 * @return True if all names were unique.
 	 */
 	private boolean validateLecturerNameUnique(final Collection<Lecturer> lecturers) {
+		if (lecturers == null) {
+			return false;
+		}
+
 		final Set<String> names = new HashSet<>();
 		for (final Lecturer l : lecturers) {
 			if (!names.add(l.getName())) {
@@ -192,9 +212,34 @@ public class TeachingAssistantKclValidator {
 	 * @return True if all IDs were unique.
 	 */
 	private boolean validateTimeSlotsIdUnique(final Collection<Timeslot> timeslots) {
+		if (timeslots == null) {
+			return false;
+		}
+
 		final Set<Integer> ids = new HashSet<>();
 		for (final Timeslot ts : timeslots) {
 			if (!ids.add(ts.getId())) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks the given collection of weeks for unique names.
+	 * 
+	 * @param weeks Collection of weeks to check.
+	 * @return True if all names were unique.
+	 */
+	private boolean validateWeekNameUnique(final Collection<Week> weeks) {
+		if (weeks == null) {
+			return false;
+		}
+
+		final Set<String> names = new HashSet<>();
+		for (final Week w : weeks) {
+			if (!names.add(w.getName())) {
 				return false;
 			}
 		}
@@ -209,6 +254,10 @@ public class TeachingAssistantKclValidator {
 	 * @return True if all names were unique.
 	 */
 	private boolean validateDayNameUnique(final Collection<Day> days) {
+		if (days == null) {
+			return false;
+		}
+
 		final Set<String> names = new HashSet<>();
 		for (final Day d : days) {
 			if (!names.add(d.getName())) {
@@ -220,6 +269,10 @@ public class TeachingAssistantKclValidator {
 	}
 
 	private boolean validate(final Tutorial tutorial) {
+		if (tutorial == null) {
+			return false;
+		}
+
 		// Every tutorial must be given by some assistant
 		if (tutorial.getGivenBy() == null) {
 			return false;
@@ -254,6 +307,14 @@ public class TeachingAssistantKclValidator {
 	}
 
 	private boolean validate(final Assistant assistant, final Department model) {
+		if (assistant == null) {
+			return false;
+		}
+
+		if (model == null) {
+			throw new IllegalArgumentException("Given model was null.");
+		}
+
 		int cumulatedTotalHours = 0;
 		final Set<Integer> usedTimeslots = new HashSet<Integer>();
 		final Set<Tutorial> allGivenTutorials = new HashSet<Tutorial>();
@@ -350,6 +411,10 @@ public class TeachingAssistantKclValidator {
 	}
 
 	private boolean validate(final Lecturer lecturer) {
+		if (lecturer == null) {
+			return false;
+		}
+
 		// Name
 		if (lecturer.getName() == null || lecturer.getName().isBlank()) {
 			return false;
@@ -384,6 +449,10 @@ public class TeachingAssistantKclValidator {
 	}
 
 	private boolean validate(final Timeslot timeslot) {
+		if (timeslot == null) {
+			return false;
+		}
+
 		if (timeslot.getName() == null || timeslot.getName().isBlank()) {
 			return false;
 		}
@@ -399,7 +468,29 @@ public class TeachingAssistantKclValidator {
 		return true;
 	}
 
+	private boolean validate(final Week week) {
+		if (week == null) {
+			return false;
+		}
+
+		// Name of the week must not be null or blank
+		if (week.getName() == null || week.getName().isBlank()) {
+			return false;
+		}
+
+		// A week must have at least one day
+		if (week.getDays().isEmpty()) {
+			return false;
+		}
+
+		return true;
+	}
+
 	private boolean validate(final Day day) {
+		if (day == null) {
+			return false;
+		}
+
 		// Name of the day must not be null or blank
 		if (day.getName() == null || day.getName().isBlank()) {
 			return false;
