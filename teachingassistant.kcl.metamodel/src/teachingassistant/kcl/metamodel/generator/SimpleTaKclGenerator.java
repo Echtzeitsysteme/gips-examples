@@ -22,9 +22,9 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	private final int LECTURERS_MAXIMUM_NUMBER_OF_ASSISTANTS = 8;
 
 	// Assistants
-	private final int NUMBER_OR_ASSISTANTS = 5;
+	private final int NUMBER_OF_ASSISTANTS = 10;
 	private final int ASSISTANTS_MAXIMUM_NUMBER_OF_DAYS_PER_WEEK = 3;
-	private final int ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK = 1;
+	private final int ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK = 0;
 	private final int ASSISTANTS_MAXIMUM_NUMBER_OF_HOURS_PER_WEEK = 20; // KCL
 	private final int ASSISTANTS_MAXIMUM_HOURS_TOTAL = 312; // KCL
 
@@ -81,7 +81,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		}
 
 		// Assistants
-		for (int i = 0; i < NUMBER_OR_ASSISTANTS; i++) {
+		for (int i = 0; i < NUMBER_OF_ASSISTANTS; i++) {
 			addAssistant("Assistant_" + i, //
 					ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK, //
 					ASSISTANTS_MAXIMUM_NUMBER_OF_HOURS_PER_WEEK, //
@@ -122,7 +122,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		}
 
 		// Tutorials
-		for (int i = 0; i < NUMBER_OF_TUTORIALS_PER_WEEK; i++) {
+		for (int i = 0; i < NUMBER_OF_TUTORIALS_PER_WEEK * NUMBER_OF_WEEKS; i++) {
 			// The ID of the time slot to choose should be drawn equally from random
 			addTutorial("Tutorial_" + i, getRandomSkillTypeFromLecturer(), getRandInt(1, 2),
 					getRandInt(0, this.timeslots.size() - 1));
