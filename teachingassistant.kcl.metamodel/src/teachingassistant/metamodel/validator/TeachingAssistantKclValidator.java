@@ -1,7 +1,9 @@
 package teachingassistant.metamodel.validator;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -18,6 +20,7 @@ import metamodel.MetamodelPackage;
 import metamodel.Skill;
 import metamodel.Timeslot;
 import metamodel.Tutorial;
+import metamodel.Week;
 
 /**
  * Model validator for the teaching assistant example.
@@ -77,7 +80,7 @@ public class TeachingAssistantKclValidator {
 		}
 		valid = valid && validateAssistantNameUnique(model.getAssistants());
 
-		// Timeslots
+		// Time slots
 		for (final Timeslot timeslot : model.getTimeslots()) {
 			valid = valid && validate(timeslot);
 		}
@@ -197,19 +200,33 @@ public class TeachingAssistantKclValidator {
 			}
 		}
 
+		// The tutorial's skill type must match the lecturer's skill type
+		if (tutorial.getLecturer() != null) {
+			if (!tutorial.getSkillType().equals(tutorial.getLecturer().getSkillTypeName())) {
+				return false;
+			}
+		}
+
+		// The tutorial's duration must be larger than zero
+		if (tutorial.getDuration() <= 0) {
+			return false;
+		}
+
+		// The tutorial's time slot must not be empty
+		if (tutorial.getTimeslot() == null) {
+			return false;
+		}
+
 		return true;
 	}
 
 	private boolean validate(final Assistant assistant, final Department model) {
-		int cummulatedHours = 0;
-		final Set<Day> workingDays = new HashSet<>();
+		int cumulatedTotalHours = 0;
 		final Set<Integer> usedTimeslots = new HashSet<Integer>();
+		final Set<Tutorial> allGivenTutorials = new HashSet<Tutorial>();
 		for (final Tutorial tutorial : model.getTutorials()) {
 			if (tutorial.getGivenBy() != null && tutorial.getGivenBy().equals(assistant)) {
-				// Add working days
-//				workingDays.add(tutorial.getTimeslot().getDay());
-				// TODO^
-
+				allGivenTutorials.add(tutorial);
 				// SkillType of the tutorial must be matched by the assistant
 				boolean skillTypeMatched = false;
 				for (final Skill s : assistant.getSkills()) {
@@ -220,10 +237,9 @@ public class TeachingAssistantKclValidator {
 				if (!skillTypeMatched) {
 					return false;
 				}
-				cummulatedHours += tutorial.getDuration();
+				cumulatedTotalHours += tutorial.getDuration();
 
-				// M1: An assistant must not have two tutorials at the same time slot
-				// M0 model instances do not have time slots, hence, the null check
+				// An assistant must not have two tutorials at the same time slot
 				if (tutorial.getTimeslot() != null) {
 					if (!usedTimeslots.add(tutorial.getTimeslot().getId())) {
 						return false;
@@ -232,16 +248,54 @@ public class TeachingAssistantKclValidator {
 			}
 		}
 
-		// Assistant's hour limit must be matched by the cummulative duration
-		if (!(assistant.getMinimumHoursPerWeek() <= cummulatedHours)
-				|| !(assistant.getMaximumHoursPerWeek() >= cummulatedHours)) {
+		// Assistant's total hour limit must be matched by the cumulative duration
+		if (!(cumulatedTotalHours <= assistant.getMaximumHoursTotal())) {
 			return false;
 		}
 
 		// Number of assigned work days must be smaller or equal to the maximum number
-		// of work days of this specific assistant
-		if (workingDays.size() > assistant.getMaximumDaysPerWeek()) {
-			return false;
+		// Check maximum number of work days per week and cumulative hours per week
+		//
+		// Extract two information of all given tutorials:
+		// 1) total number of hours per week
+		// 2) working days per week
+		final Map<Week, Integer> week2Hours = new HashMap<Week, Integer>();
+		final Map<Week, Set<Day>> week2Days = new HashMap<Week, Set<Day>>();
+		for (final Tutorial t : allGivenTutorials) {
+			final Week w = t.getTimeslot().getDay().getWeek();
+
+			// Hours
+			if (!week2Hours.containsKey(w)) {
+				week2Hours.put(w, 0);
+			}
+
+			final int previousValue = week2Hours.remove(w);
+			week2Hours.put(w, previousValue + t.getDuration());
+
+			// Days
+			if (!week2Days.containsKey(w)) {
+				week2Days.put(w, new HashSet<Day>());
+			}
+
+			week2Days.get(w).add(t.getTimeslot().getDay());
+		}
+
+		// Check found values against assistant's values from the model
+		for (final Week w : model.getWeeks()) {
+			if (week2Hours.containsKey(w)) {
+				final int hoursInWeek = week2Hours.get(w);
+				if (hoursInWeek < assistant.getMinimumHoursPerWeek()
+						|| hoursInWeek > assistant.getMaximumDaysPerWeek()) {
+					return false;
+				}
+			}
+
+			if (week2Days.containsKey(w)) {
+				final int daysInWeek = week2Days.get(w).size();
+				if (daysInWeek > assistant.getMaximumDaysPerWeek()) {
+					return false;
+				}
+			}
 		}
 
 		return true;
@@ -273,6 +327,11 @@ public class TeachingAssistantKclValidator {
 			return false;
 		}
 
+		// A lecturer must have at least one tutorial
+		if (lecturer.getTutorials().isEmpty()) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -285,6 +344,10 @@ public class TeachingAssistantKclValidator {
 			return false;
 		}
 
+		if (timeslot.getDay() == null) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -293,6 +356,13 @@ public class TeachingAssistantKclValidator {
 		if (day.getName() == null || day.getName().isBlank()) {
 			return false;
 		}
+
+		if (day.getWeek() == null) {
+			return false;
+		}
+
+		// It is allowed for a day to not have any time slots
+
 		return true;
 	}
 

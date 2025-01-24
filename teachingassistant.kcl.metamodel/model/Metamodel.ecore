@@ -44,6 +44,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Timeslot" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="day" eType="#//Day" eOpposite="#//Day/timeslots"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Lecturer" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="tutorials" upperBound="-1"
@@ -53,9 +54,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Day" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="timeslots" upperBound="-1"
-        eType="#//Timeslot"/>
+        eType="#//Timeslot" eOpposite="#//Timeslot/day"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="week" eType="#//Week" eOpposite="#//Week/days"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Week" eSuperTypes="#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="days" upperBound="-1" eType="#//Day"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="days" upperBound="-1" eType="#//Day"
+        eOpposite="#//Day/week"/>
   </eClassifiers>
 </ecore:EPackage>
