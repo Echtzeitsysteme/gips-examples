@@ -93,8 +93,6 @@ public class TeachingAssistantKclGenerator {
 		checkNotNull(timeslot, "Time slot");
 		addTutorial(name, skillType, duration);
 		tutorials.get(name).setTimeslot(timeslots.get(timeslot));
-		final Day randomDay = days.get("Day_" + getRandInt(0, days.size() - 1));
-		tutorials.get(name).getTimeslot().setDay(randomDay);
 	}
 
 	public void addAssistant(final String name, final int minHoursPerWeek, final int maxHoursPerWeek) {

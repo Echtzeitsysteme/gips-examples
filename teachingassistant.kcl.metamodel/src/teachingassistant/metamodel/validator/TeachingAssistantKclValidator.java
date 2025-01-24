@@ -207,7 +207,8 @@ public class TeachingAssistantKclValidator {
 		for (final Tutorial tutorial : model.getTutorials()) {
 			if (tutorial.getGivenBy() != null && tutorial.getGivenBy().equals(assistant)) {
 				// Add working days
-				workingDays.add(tutorial.getTimeslot().getDay());
+//				workingDays.add(tutorial.getTimeslot().getDay());
+				// TODO^
 
 				// SkillType of the tutorial must be matched by the assistant
 				boolean skillTypeMatched = false;

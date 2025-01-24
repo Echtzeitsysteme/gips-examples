@@ -119,8 +119,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 				if (d == null) {
 					throw new UnsupportedOperationException("Day not found.");
 				}
-				System.out.println("Set day <" + d.getName() + "> to time slot ID: " + timeslotId);
-				this.timeslots.get(timeslotId).setDay(d);
+				d.getTimeslots().add(this.timeslots.get(timeslotId));
 			}
 		}
 
@@ -129,7 +128,6 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 			// The ID of the time slot to choose should be drawn equally from random
 			addTutorial("Tutorial_" + i, getRandomSkillTypeFromLecturer(), getRandInt(1, 2),
 					getRandInt(0, this.timeslots.size() - 1));
-			// TODO: Connect to weeks
 		}
 
 		return generate("KCL-Department");
