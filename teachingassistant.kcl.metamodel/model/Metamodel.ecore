@@ -19,13 +19,18 @@
         eType="#//Lecturer" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="days" upperBound="-1" eType="#//Day"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weeks" upperBound="-1"
+        eType="#//Week" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Assistant" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="minimumHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumDaysPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="skills" upperBound="-1"
-        eType="#//Skill"/>
+        eType="#//Skill" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumHoursTotal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="blockedDates" upperBound="-1"
+        eType="#//Day"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Tutorial" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="givenBy" eType="#//Assistant"/>
@@ -48,4 +53,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumNumberOfTas" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Day" eSuperTypes="#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Week" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="days" upperBound="-1" eType="#//Day"/>
+  </eClassifiers>
 </ecore:EPackage>

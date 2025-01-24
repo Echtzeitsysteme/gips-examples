@@ -24,6 +24,7 @@ import metamodel.MetamodelPackage;
 import metamodel.Skill;
 import metamodel.Timeslot;
 import metamodel.Tutorial;
+import metamodel.Week;
 
 public class TeachingAssistantKclGenerator {
 	protected MetamodelFactory factory = MetamodelFactory.eINSTANCE;
@@ -34,6 +35,7 @@ public class TeachingAssistantKclGenerator {
 	protected Map<Integer, Timeslot> timeslots = new LinkedHashMap<>();
 	protected Map<String, Lecturer> lecturers = new LinkedHashMap<>();
 	protected Map<String, Day> days = new LinkedHashMap<>();
+	protected Map<String, Week> weeks = new LinkedHashMap<>();
 
 	protected Random rand;
 
@@ -63,7 +65,17 @@ public class TeachingAssistantKclGenerator {
 		root.getTimeslots().addAll(timeslots.values());
 		root.getLecturers().addAll(lecturers.values());
 		root.getDays().addAll(days.values());
+		root.getWeeks().addAll(weeks.values());
 		return root;
+	}
+
+	public void addWeekWithDays(final String name) {
+		addWeek(name);
+		weeks.get(name).getDays().add(addDay(name + "_Monday"));
+		weeks.get(name).getDays().add(addDay(name + "_Tuesday"));
+		weeks.get(name).getDays().add(addDay(name + "_Wednesday"));
+		weeks.get(name).getDays().add(addDay(name + "_Thursday"));
+		weeks.get(name).getDays().add(addDay(name + "_Friday"));
 	}
 
 	public void addTutorial(final String name, final String skillType, final int duration) {
@@ -99,6 +111,13 @@ public class TeachingAssistantKclGenerator {
 			final int maxDaysPerWeek) {
 		addAssistant(name, minHoursPerWeek, maxHoursPerWeek);
 		assistants.get(name).setMaximumDaysPerWeek(maxDaysPerWeek);
+	}
+
+	public void addAssistant(final String name, final int minHoursPerWeek, final int maxHoursPerWeek,
+			final int maxDaysPerWeek, final int maxHoursTotal) {
+		addAssistant(name, minHoursPerWeek, maxHoursPerWeek);
+		assistants.get(name).setMaximumDaysPerWeek(maxDaysPerWeek);
+		assistants.get(name).setMaximumHoursTotal(maxHoursTotal);
 	}
 
 	public void addSkillToAssistant(final String name, final String skillType, final int preference) {
@@ -160,12 +179,21 @@ public class TeachingAssistantKclGenerator {
 		}
 	}
 
-	public void addDay(final String name) {
+	public Day addDay(final String name) {
 		checkNotNull(name, "Name");
 
 		final Day d = factory.createDay();
 		d.setName(name);
 		days.put(name, d);
+		return d;
+	}
+
+	public void addWeek(final String name) {
+		checkNotNull(name, "Name");
+
+		final Week w = factory.createWeek();
+		w.setName(name);
+		weeks.put(name, w);
 	}
 
 	//
@@ -199,7 +227,7 @@ public class TeachingAssistantKclGenerator {
 
 	protected String prepareFolder() {
 		final String projectFolder = System.getProperty("user.dir");
-		final String instancesFolder = projectFolder + "/../teachingassistant.metamodel" + "/instances";
+		final String instancesFolder = projectFolder + "/../teachingassistant.kcl.metamodel" + "/instances";
 		final File f = new File(instancesFolder);
 		if (!f.exists()) {
 			f.mkdirs();
