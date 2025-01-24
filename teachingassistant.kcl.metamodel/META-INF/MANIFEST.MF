@@ -14,5 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi,
  org.emoflon.smartemf;bundle-version="1.0.0"
 Export-Package: metamodel,
- metamodel.impl
+ metamodel.impl,
+ teachingassistant.kcl.metamodel.generator,
+ teachingassistant.metamodel.validator
 
