@@ -215,9 +215,9 @@ constraint with srv2srv {
 }
 
 constraint with SubstrateServer {
-	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.cpu) <= context.residualCpu &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.memory) <= context.residualMemory &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.storage) <= context.residualStorage
+	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.cpu * element.value) <= context.residualCpu &
+    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.memory * element.value) <= context.residualMemory &
+    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.storage * element.value) <= context.residualStorage
 }
 
 // Switch 2 Node
@@ -264,7 +264,7 @@ constraint with l2p {
 }
 
 constraint with SubstratePath {
-	mappings.l2p->filter(element.nodes.substratePath == context)->sum(element.nodes.virtualLink.bandwidth) <= context.residualBandwidth
+	mappings.l2p->filter(element.nodes.substratePath == context)->sum(element.nodes.virtualLink.bandwidth * element.value) <= context.residualBandwidth
 }
 
 // Every link must be mapped exactly once
@@ -278,7 +278,7 @@ constraint with vlNotMapped {
 // Connect link to node mappings via the index variable
 // Link 2 Server
 constraint with link2ServerRule {
-	[mappings.l2s->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substrateServer == context.nodes.substrateServer)->count() >= 1]
+	[mappings.l2s->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.value) >= 1]
 	=> 
 	[
 		mappings.l2s->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.variables.index)
@@ -321,7 +321,7 @@ constraint with link2ServerRule {
 
 // Link 2 Path
 constraint with link2PathRule {
-	[mappings.l2p->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substratePath == context.nodes.substratePath)->count() >= 1]
+	[mappings.l2p->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substratePath == context.nodes.substratePath)->sum(element.value) >= 1]
 	=> 
 	[
 		mappings.l2p->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substratePath == context.nodes.substratePath)->sum(element.variables.index)
@@ -464,13 +464,14 @@ function netObjIdx with net2net {
 }
 
 function lpObj with l2p {
-	context.nodes.virtualLink.bandwidth * context.nodes.substratePath.hops
+	context.nodes.virtualLink.bandwidth * context.nodes.substratePath.hops * context.value
 }
 
 function srvObj with srv2srv {
-    context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
+    (context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
     context.nodes.substrateServer.residualMemory / context.nodes.substrateServer.memory +
-    context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage
+    context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage)
+    * context.value
 }
 
 objective : min {

@@ -227,15 +227,16 @@ constraint with vsrvNotMapped {
 }
 
 function srvObj with srv2srv {
-    context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
+    (context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
     context.nodes.substrateServer.residualMemory / context.nodes.substrateServer.memory +
-    context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage
+    context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage)
+    * context.value
 }
 
 constraint with SubstrateServer {
-	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.cpu) <= context.residualCpu &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.memory) <= context.residualMemory &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.storage) <= context.residualStorage
+	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.cpu * element.value) <= context.residualCpu &
+    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.memory * element.value) <= context.residualMemory &
+    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.storage * element.value) <= context.residualStorage
 }
 
 // Switch 2 Node

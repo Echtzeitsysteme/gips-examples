@@ -227,15 +227,16 @@ constraint with vsrvNotMapped {
 }
 
 function srvObj with srv2srv {
-    context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
+    (context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
     context.nodes.substrateServer.residualMemory / context.nodes.substrateServer.memory +
-    context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage
+    context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage)
+    * context.value
 }
 
 constraint with SubstrateServer {
-	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.cpu) <= context.residualCpu &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.memory) <= context.residualMemory &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.storage) <= context.residualStorage
+	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.cpu * element.value) <= context.residualCpu &
+    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.memory * element.value) <= context.residualMemory &
+    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.storage * element.value) <= context.residualStorage
 }
 
 // Switch 2 Node
@@ -254,11 +255,11 @@ constraint with linkPathMatchPositive {
 	>= 2 * mappings.l2p->filter(element.nodes.substratePath == context.nodes.substratePath & element.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value)
 }
 function lpObj with l2p {
-	context.nodes.virtualLink.bandwidth * context.nodes.substratePath.hops
+	context.nodes.virtualLink.bandwidth * context.nodes.substratePath.hops * context.value
 }
 
 constraint with SubstratePath {
-	mappings.l2p->filter(element.nodes.substratePath == context)->sum(element.nodes.virtualLink.bandwidth) <= context.residualBandwidth
+	mappings.l2p->filter(element.nodes.substratePath == context)->sum(element.nodes.virtualLink.bandwidth * element.value) <= context.residualBandwidth
 }
 
 // Link 2 Server

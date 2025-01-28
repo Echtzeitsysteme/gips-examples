@@ -180,9 +180,9 @@ function srvObj with srv2srv {
 }
 
 constraint with SubstrateServer {
-	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.cpu) <= context.cpu &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.memory) <= context.memory &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.storage) <= context.storage
+	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.cpu * element.value) <= context.cpu &
+    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.memory * element.value) <= context.memory &
+    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.storage * element.value) <= context.storage
 }
 
 // Switch 2 Node
@@ -201,11 +201,11 @@ constraint with embedLinkPath {
 	>= 2 * mappings.l2p->filter(element.nodes.substratePath == context.nodes.substratePath & element.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value)
 }
 function lpObj with l2p {
-	context.nodes.virtualLink.bandwidth * context.nodes.substratePath.hops
+	context.nodes.virtualLink.bandwidth * context.nodes.substratePath.hops * context.value
 }
 
 constraint with SubstratePath {
-	mappings.l2p->filter(element.nodes.substratePath == context)->sum(element.nodes.virtualLink.bandwidth) <= context.bandwidth
+	mappings.l2p->filter(element.nodes.substratePath == context)->sum(element.nodes.virtualLink.bandwidth * element.value) <= context.bandwidth
 }
 
 // Link 2 Server
