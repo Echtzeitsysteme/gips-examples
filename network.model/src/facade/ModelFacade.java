@@ -171,7 +171,7 @@ public class ModelFacade {
 		checkStringValid(networkId);
 		ifNetworkNotExistentThrowException(networkId);
 
-		return getNetworkById(networkId).getNodes().stream().filter(n -> n instanceof Server)
+		return getNetworkById(networkId).getNodess().stream().filter(n -> n instanceof Server)
 				.collect(Collectors.toList());
 	}
 
@@ -185,7 +185,7 @@ public class ModelFacade {
 		checkStringValid(networkId);
 		ifNetworkNotExistentThrowException(networkId);
 
-		return getNetworkById(networkId).getNodes().stream().filter(n -> n instanceof Switch)
+		return getNetworkById(networkId).getNodess().stream().filter(n -> n instanceof Switch)
 				.collect(Collectors.toList());
 	}
 
@@ -375,7 +375,7 @@ public class ModelFacade {
 		List<Network> nets = getRoot().getNetworks();
 		List<Node> nodes = new ArrayList<>();
 		nets.stream().forEach(net -> {
-			net.getNodes().stream().filter(n -> n instanceof Node).filter(n -> n.getName().equals(id))
+			net.getNodess().stream().filter(n -> n instanceof Node).filter(n -> n.getName().equals(id))
 					.forEach(n -> nodes.add(n));
 		});
 
@@ -507,7 +507,7 @@ public class ModelFacade {
 			subServer.setResidualStorage(storage);
 		}
 
-		return net.getNodes().add(server);
+		return net.getNodess().add(server);
 	}
 
 	/**
@@ -540,7 +540,7 @@ public class ModelFacade {
 		sw.setNetwork(net);
 		sw.setDepth(depth);
 
-		return net.getNodes().add(sw);
+		return net.getNodess().add(sw);
 	}
 
 	/**
@@ -932,7 +932,7 @@ public class ModelFacade {
 		checkStringValid(new String[] { id, networkId });
 		ifNetworkNotExistentThrowException(networkId);
 
-		return !getNetworkById(networkId).getNodes().stream().filter(n -> n.getName().equals(id))
+		return !getNetworkById(networkId).getNodess().stream().filter(n -> n.getName().equals(id))
 				.collect(Collectors.toList()).isEmpty();
 	}
 
@@ -1594,7 +1594,7 @@ public class ModelFacade {
 			final String hostNameId = vNet.getHost().getName();
 			vNet.getHost().getGuests().remove(vNet);
 
-			for (final Node n : vNet.getNodes()) {
+			for (final Node n : vNet.getNodess()) {
 				if (n instanceof VirtualServer) {
 					final VirtualServer vsrv = (VirtualServer) n;
 					final SubstrateServer host = vsrv.getHost();
@@ -1718,7 +1718,7 @@ public class ModelFacade {
 		});
 
 		// Remove server itself
-		getNetworkById(ssrv.getNetwork().getName()).getNodes().remove(ssrv);
+		getNetworkById(ssrv.getNetwork().getName()).getNodess().remove(ssrv);
 		EcoreUtil.delete(ssrv);
 	}
 
@@ -1835,7 +1835,7 @@ public class ModelFacade {
 			}
 		});
 
-		for (final Node n : sNet.getNodes()) {
+		for (final Node n : sNet.getNodess()) {
 			if (n instanceof SubstrateServer) {
 				final SubstrateServer srv = (SubstrateServer) n;
 
@@ -2010,7 +2010,7 @@ public class ModelFacade {
 			host = null;
 		}
 
-		for (final Node n : vNet.getNodes()) {
+		for (final Node n : vNet.getNodess()) {
 			if (n instanceof VirtualServer) {
 				final VirtualServer vsrv = (VirtualServer) n;
 
@@ -2154,17 +2154,17 @@ public class ModelFacade {
 	 * @return True if virtual network is in a floating state.
 	 */
 	public boolean checkIfFloating(final VirtualNetwork vNet) {
-		for (final Node n : vNet.getNodes()) {
+		for (final Node n : vNet.getNodess()) {
 			if (n instanceof VirtualServer) {
 				final VirtualServer vsrv = (VirtualServer) n;
 				if (vsrv.getHost() == null || vsrv.getHost().getNetwork() == null
-						|| !vsrv.getHost().getNetwork().getNodes().contains(vsrv.getHost())) {
+						|| !vsrv.getHost().getNetwork().getNodess().contains(vsrv.getHost())) {
 					return true;
 				}
 			} else if (n instanceof VirtualSwitch) {
 				final VirtualSwitch vsw = (VirtualSwitch) n;
 				if ((vsw.getHost().getNetwork() == null)
-						|| !vsw.getHost().getNetwork().getNodes().contains(vsw.getHost())) {
+						|| !vsw.getHost().getNetwork().getNodess().contains(vsw.getHost())) {
 					return true;
 				}
 			}
@@ -2179,7 +2179,7 @@ public class ModelFacade {
 				}
 			} else if (vl.getHost() instanceof SubstrateServer) {
 				final SubstrateServer host = (SubstrateServer) vl.getHost();
-				if ((host.getNetwork() == null) || !host.getNetwork().getNodes().contains(host)) {
+				if ((host.getNetwork() == null) || !host.getNetwork().getNodess().contains(host)) {
 					return true;
 				}
 			}

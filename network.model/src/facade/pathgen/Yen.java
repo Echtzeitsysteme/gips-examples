@@ -203,7 +203,7 @@ public class Yen implements IPathGen {
 
 		// Iterate over all nodes and execute path generation if the current node is not
 		// the start node
-		for (final Node n : net.getNodes()) {
+		for (final Node n : net.getNodess()) {
 			SubstrateNode sn = (SubstrateNode) n;
 			if (!sn.equals(start)) {
 				final List<List<SubstrateNode>> candidates = yen(net, start, sn, K);
