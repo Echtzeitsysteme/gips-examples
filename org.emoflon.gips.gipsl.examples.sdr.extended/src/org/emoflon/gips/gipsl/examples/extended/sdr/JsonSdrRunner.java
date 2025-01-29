@@ -22,7 +22,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.gipsl.examples.sdr.extended.api.gips.ExtendedGipsAPI;
 import org.emoflon.gips.gipsl.examples.sdrmodel.generator.SDRModelGenerator;
 
@@ -118,8 +118,8 @@ public class JsonSdrRunner {
 				URI.createFileURI(JSON_MODEL_URI), //
 				URI.createFileURI("./org/emoflon/gips/gipsl/examples/sdr/extended/api/ibex-patterns.xmi"));
 
-		api.buildILPProblem(true);
-		final ILPSolverOutput output = api.solveILPProblem();
+		api.buildProblem(true);
+		final SolverOutput output = api.solveProblem();
 		System.out.println("Solver status: " + output.status());
 		System.out.println("Objective value: " + output.objectiveValue());
 

@@ -3,7 +3,7 @@ package org.emoflon.gips.gipsl.examples.sdr;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.gipsl.examples.sdr.api.gips.SdrGipsAPI;
 
 public class ExampleSdr {
@@ -12,8 +12,8 @@ public class ExampleSdr {
 		final SdrGipsAPI api = new SdrGipsAPI();
 		api.init(URI.createFileURI("../org.emoflon.gips.gipsl.examples.sdrmodel/instances/instance1.xmi"));
 
-		api.buildILPProblem(true);
-		final ILPSolverOutput output = api.solveILPProblem();
+		api.buildProblem(true);
+		final SolverOutput output = api.solveProblem();
 		System.out.println("Solver status: " + output.status());
 		System.out.println("Objective value: " + output.objectiveValue());
 

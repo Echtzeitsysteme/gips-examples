@@ -107,37 +107,37 @@ rule thread (complexity : EDouble, diff : EDouble, absDiff : EDouble){
 // GIPSL starts here!
 //
 
-mapping b2t with block2thread;
-mapping f2i with flow2intercom;
-mapping f2t with flow2thread;
+mapping b2t to block2thread;
+mapping f2i to flow2intercom;
+mapping f2t to flow2thread;
 
-mapping usedThread with thread {
+mapping usedThread to thread {
 	var complexity : EDouble bind complexity
 	var diff : EDouble bind diff
 	var absDiff : EDouble bind absDiff
 };
 
-constraint -> mapping::usedThread {
-	[self.variables().complexity >= 0.0001 => self.value() >= 1] &
-	[self.value() >= 1 => self.variables().complexity >= 0.0001 ] &
-	self.variables().complexity >= 0 &
-	self.variables().absDiff >= 0
+constraint with usedThread {
+	[context.variables.complexity >= 0.0001 => context.value >= 1] &
+	[context.value >= 1 => context.variables.complexity >= 0.0001 ] &
+	context.variables.complexity >= 0 &
+	context.variables.absDiff >= 0
 }
 
 // This constraints forbids the case in line 3 of the normal implication table
 // -> It changes it to line 3 of our modified table
-constraint -> class::Thread {
-	mappings.b2t->filter(m | m.nodes().thread == self)->sum(m | m.nodes().block.relativeComplexity * m.nodes().block.inputRate) == 
-	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().complexity)
+constraint with Thread {
+	mappings.b2t->filter(element.nodes.thread == context)->sum(element.nodes.block.relativeComplexity * element.nodes.block.inputRate * element.value) == 
+	mappings.usedThread->filter(element.nodes.thread == context)->sum(element.variables.complexity)
 }
 
-constraint -> class::Thread {
-	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().diff) == 
-	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().complexity) - 
-	mappings.usedThread->sum(m | m.variables().complexity * m.nodes().cpu.inverseThreadCount)
+constraint with Thread {
+	mappings.usedThread->filter(element.nodes.thread == context)->sum(element.variables.diff) == 
+	mappings.usedThread->filter(element.nodes.thread == context)->sum(element.variables.complexity) - 
+	mappings.usedThread->sum(element.variables.complexity * element.nodes.cpu.inverseThreadCount)
 }
 
-constraint -> mapping::usedThread {
+constraint with usedThread {
 	// A: Precondition -> diff >= 0
 	// B: Then -> abs_diff == diff
 	// A => B
@@ -145,8 +145,8 @@ constraint -> mapping::usedThread {
 	// 1 => 0 = 0 : diff >= 0 & abs_diff != diff -> false
 	// 0 => 1 = 1 : diff < 0 & abs_diff == diff -> true
 	// 0 => 0 = 1 : diff < 0 & abs_diff != diff -> true
-	[self.variables().diff >= 0 =>
-	[self.variables().absDiff >= self.variables().diff & self.variables().absDiff <= self.variables().diff]] &
+	[context.variables.diff >= 0 =>
+	[context.variables.absDiff >= context.variables.diff & context.variables.absDiff <= context.variables.diff]] &
 	// A: Precondition -> diff <= 0
 	// B: Then -> abs_diff == -diff
 	// A => B
@@ -154,8 +154,8 @@ constraint -> mapping::usedThread {
 	// 1 => 0 = 0 : diff < 0 & abs_diff != -diff -> false
 	// 0 => 1 = 1 : diff >= 0 & abs_diff == diff -> true
 	// 0 => 0 = 1 : diff >= 0 & abs_diff != diff -> true
-	[self.variables().diff <= -0.0001 =>
-	[self.variables().absDiff >= (self.variables().diff * -1.0) & self.variables().absDiff <= (self.variables().diff * -1.0)]]
+	[context.variables.diff <= -0.0001 =>
+	[context.variables.absDiff >= (context.variables.diff * -1.0) & context.variables.absDiff <= (context.variables.diff * -1.0)]]
 	// A => B & C => D
 	// 0 => 0 & 0 => 0 : IMPOSSIBLE -> diff < 0 & diff >= 0 is logical contradiction
 	// 0 => 0 & 0 => 1 : IMPOSSIBLE -> diff < 0 & diff >= 0 is logical contradiction
@@ -176,39 +176,39 @@ constraint -> mapping::usedThread {
 }
 
 // Every block must be mapped to exactly one thread
-constraint -> class::Block {
-	mappings.b2t->filter(m | m.nodes().block == self)->count() == 1
+constraint with Block {
+	mappings.b2t->filter(element.nodes.block == context)->sum(element.value) == 1
 }
 
 // Every flow must be mapped to an intercom or a thread
-constraint -> class::Flow {
-	mappings.f2i->filter(m | m.nodes().flow == self)->count() +
-	mappings.f2t->filter(m | m.nodes().flow == self)->count()
+constraint with Flow {
+	mappings.f2i->filter(element.nodes.flow == context)->sum(element.value) +
+	mappings.f2t->filter(element.nodes.flow == context)->sum(element.value)
 	== 1
 }
 
 // Start and target of a flow must be embedded on its host counter parts (1, intercom)
-constraint -> pattern::flow2intercom {
-	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.source & m.nodes().thread == self.nodes().intercom.source)->count() +
-	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.target & m.nodes().thread == self.nodes().intercom.target)->count()
-	>= 2 * mappings.f2i->filter(m | m.nodes().intercom == self.nodes().intercom & m.nodes().flow == self.nodes().flow)->count()
+constraint with flow2intercom {
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.source & element.nodes.thread == context.nodes.intercom.source)->sum(element.value) +
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.target & element.nodes.thread == context.nodes.intercom.target)->sum(element.value)
+	>= 2 * mappings.f2i->filter(element.nodes.intercom == context.nodes.intercom & element.nodes.flow == context.nodes.flow)->sum(element.value)
 }
 
 // Start and target of a flow must be embedded on its host counter parts (2, thread)
-constraint -> pattern::flow2thread {
-	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.source & m.nodes().thread == self.nodes().thread)->count() +
-	mappings.b2t->filter(m | m.nodes().block == self.nodes().flow.target & m.nodes().thread == self.nodes().thread)->count()
-	>= 2 * mappings.f2t->filter(m | m.nodes().thread == self.nodes().thread & m.nodes().flow == self.nodes().flow)->count()
+constraint with flow2thread {
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.source & element.nodes.thread == context.nodes.thread)->sum(element.value) +
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.target & element.nodes.thread == context.nodes.thread)->sum(element.value)
+	>= 2 * mappings.f2t->filter(element.nodes.thread == context.nodes.thread & element.nodes.flow == context.nodes.flow)->sum(element.value)
 }
 
 // Objective = inter-thread communication
-objective intercomcost -> class::Interthreadcom {
-//	mappings.f2i->filter(m | m.nodes().intercom.source.core == m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate) * 2 +
-	mappings.f2i->filter(m | m.nodes().intercom.source.core != m.nodes().intercom.target.core & m.nodes().intercom == self)->sum(m | m.nodes().flow.rate)
+function intercomcost with Interthreadcom {
+//	mappings.f2i->filter(element.nodes.intercom.source.core == element.nodes.intercom.target.core & element.nodes.intercom == context)->sum(element.nodes.flow.rate) * 2 +
+	mappings.f2i->filter(element.nodes.intercom.source.core != element.nodes.intercom.target.core & element.nodes.intercom == context)->sum(element.nodes.flow.rate * element.value)
 }
 
-//objective computecost -> class::Block {
-//	mappings.b2t->filter(m | m.nodes().block == self)->sum(m | m.nodes().block.relativeComplexity) * self.inputs->sum(in | in.rate)
+//objective computecost with Block {
+//	mappings.b2t->filter(element.nodes.block == context)->sum(element.nodes.block.relativeComplexity) * context.inputs->sum(in | in.rate)
 //}
 
 //// Objective = flow to thread mapping (constant)
@@ -218,16 +218,16 @@ objective intercomcost -> class::Interthreadcom {
  
 // Objective for used threads:
 // In  general, we want to maximize the number of used threads.
-//objective glob -> class::Root {
+//objective glob with Root {
 //	-(mappings.usedThread->count())
 //}
 
-objective glob -> class::Thread {
-	mappings.usedThread->filter(m | m.nodes().thread == self)->sum(m | m.variables().absDiff) * self.root.interThreadCommunicationFactor
+function glob with Thread {
+	mappings.usedThread->filter(element.nodes.thread == context)->sum(element.variables.absDiff) * context.root.interThreadCommunicationFactor
 }
 
 // Combine the local objectives and give the maximization of used threads a large head start.
-global objective : min {
-	intercomcost + glob
+objective : min {
+	functions.intercomcost + functions.glob
 	// ^weight is included in `glob`
 }
