@@ -40,14 +40,14 @@ mapping embedMethod to embedMCTuple;
 
 // every method must be embedded
 constraint with findSingleMethod {
-	mappings.embedMethod->filter(element.nodes.m == context.nodes.m)->count() == 1
+	mappings.embedMethod->filter(element.nodes.m == context.nodes.m)->sum(element.value) == 1
 }
 
 mapping embedAttribute to embedACTuple;
 
 // every attribute must be embedded
 constraint with findSingleAttribute {
-	mappings.embedAttribute->filter(element.nodes.a == context.nodes.a)->count() == 1
+	mappings.embedAttribute->filter(element.nodes.a == context.nodes.a)->sum(element.value) == 1
 }
 
 //
@@ -73,12 +73,12 @@ constraint with findViolationA {
 		& element.nodes.m1 == context.nodes.m1
 		& element.nodes.c1 == context.nodes.c1
 		& element.nodes.c2 == context.nodes.c2
-	)->count() >= 1
+	)->sum(element.value) >= 1
 	<=>
 	[
-		mappings.embedAttribute->filter(element.nodes.a == context.nodes.a1 & element.nodes.c == context.nodes.c1)->count() >= 1
+		mappings.embedAttribute->filter(element.nodes.a == context.nodes.a1 & element.nodes.c == context.nodes.c1)->sum(element.value) >= 1
 		&
-		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c2)->count() >= 1
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c2)->sum(element.value) >= 1
 	]
 	// TODO: reformulate this with a more efficient constraint
 }
@@ -118,12 +118,12 @@ constraint with findViolationB {
 	mappings.violationB->filter(
 		element.nodes.m1 == context.nodes.m1
 		& element.nodes.m2 == context.nodes.m2
-	)->count() >= 1
+	)->sum(element.value) >= 1
 	<=>
 	[
-		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->count() >= 1
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->sum(element.value) >= 1
 		&
-		mappings.embedMethod->filter(element.nodes.m == context.nodes.m2 & element.nodes.c == context.nodes.c1)->count() >= 1
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m2 & element.nodes.c == context.nodes.c1)->sum(element.value) >= 1
 	]
 	// TODO: reformulate this with a more efficient constraint
 }
@@ -152,12 +152,12 @@ pattern findPrevEmbTupleMeth {
 
 // motivate the solver to chose the same embedding as before (attributes)
 function objExistAttrMap with findPrevEmbTupleAttr {
-	mappings.embedAttribute->filter(element.nodes.a == context.nodes.a & element.nodes.c == context.nodes.c)->count()
+	mappings.embedAttribute->filter(element.nodes.a == context.nodes.a & element.nodes.c == context.nodes.c)->sum(element.value)
 }
 
 // motivate the solver to chose the same embedding as before (methods)
 function objExistMethMap with findPrevEmbTupleMeth {
-	mappings.embedMethod->filter(element.nodes.m == context.nodes.m & element.nodes.c == context.nodes.c)->count()
+	mappings.embedMethod->filter(element.nodes.m == context.nodes.m & element.nodes.c == context.nodes.c)->sum(element.value)
 }
 
 // minimize the number of violations
