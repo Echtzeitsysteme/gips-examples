@@ -33,14 +33,14 @@ mapping embedAttribute to embedACTuple;
 
 // every attribute must be embedded
 constraint with Attribute {
-	mappings.embedAttribute->filter(element.nodes.a == context)->count() == 1
+	mappings.embedAttribute->filter(element.nodes.a == context)->sum(element.value) == 1
 }
 
 mapping embedMethod to embedMCTuple;
 
 // every method must be embedded
 constraint with Method {
-	mappings.embedMethod->filter(element.nodes.m == context)->count() == 1
+	mappings.embedMethod->filter(element.nodes.m == context)->sum(element.value) == 1
 }
 
 //
@@ -65,12 +65,12 @@ constraint with findViolationA {
 		& element.nodes.m1 == context.nodes.m1
 		& element.nodes.c1 == context.nodes.c1
 		& element.nodes.c2 == context.nodes.c2
-	)->count() == 1
+	)->sum(element.value) == 1
 	<=>
 	[
-		mappings.embedAttribute->filter(element.nodes.a == context.nodes.a1 & element.nodes.c == context.nodes.c1)->count() == 1
+		mappings.embedAttribute->filter(element.nodes.a == context.nodes.a1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
 		&
-		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c2)->count() == 1
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c2)->sum(element.value) == 1
 	]
 }
 
@@ -100,12 +100,12 @@ constraint with findViolationC {
 		& element.nodes.m2 == context.nodes.m2
 		& element.nodes.c1 == context.nodes.c1
 		& element.nodes.c2 == context.nodes.c2
-	)->count() == 1
+	)->sum(element.value) == 1
 	<=>
 	[
-		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->count() == 1
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
 		&
-		mappings.embedMethod->filter(element.nodes.m == context.nodes.m2 & element.nodes.c == context.nodes.c2)->count() == 1
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m2 & element.nodes.c == context.nodes.c2)->sum(element.value) == 1
 	]
 }
 
@@ -140,12 +140,12 @@ constraint with findViolationD1 {
 		element.nodes.m1 == context.nodes.m1
 		& element.nodes.m2 == context.nodes.m2
 		& element.nodes.c1 == context.nodes.c1
-	)->count() == 1
+	)->sum(element.value) == 1
 	<=>
 	[
-		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->count() == 1
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
 		&
-		mappings.embedMethod->filter(element.nodes.m == context.nodes.m2 & element.nodes.c == context.nodes.c1)->count() == 1
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m2 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
 	]
 }
 
@@ -180,12 +180,12 @@ constraint with findViolationD2 {
 		element.nodes.m1 == context.nodes.m1
 		& element.nodes.a1 == context.nodes.a1
 		& element.nodes.c1 == context.nodes.c1
-	)->count() == 1
+	)->sum(element.value) == 1
 	<=>
 	[
-		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->count() == 1
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
 		&
-		mappings.embedAttribute->filter(element.nodes.a == context.nodes.a1 & element.nodes.c == context.nodes.c1)->count() == 1
+		mappings.embedAttribute->filter(element.nodes.a == context.nodes.a1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
 	]
 }
 
