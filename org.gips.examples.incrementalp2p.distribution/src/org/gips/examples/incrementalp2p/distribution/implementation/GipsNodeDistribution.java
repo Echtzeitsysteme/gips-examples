@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
-import org.emoflon.gips.core.gt.GTMapper;
+import org.emoflon.gips.core.gt.GipsRuleMapper;
 import org.gips.examples.incrementalp2p.common.Guard;
 import org.gips.examples.incrementalp2p.common.TimeAggregator;
 import org.gips.examples.incrementalp2p.distribution.contracts.ConnectionLog;
@@ -38,10 +38,10 @@ public class GipsNodeDistribution implements NodeDistributionEngine {
 		api.update();
 		TimeAggregator.gtTock();
 
-		api.buildILPProblem(false);
+		api.buildProblem(false);
 
 		TimeAggregator.ilpTick();
-		api.solveILPProblem();
+		api.solveProblem();
 		TimeAggregator.ilpTock();
 
 		relevantMappings().forEach(x -> x.applyNonZeroMappings(false));
@@ -67,7 +67,7 @@ public class GipsNodeDistribution implements NodeDistributionEngine {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private Stream<GTMapper> relevantMappings() {
+	private Stream<GipsRuleMapper> relevantMappings() {
 
 		var getRelayClient = api.getRelayClient();
 		var streamingClientLS = api.getStreamingClientLS();
