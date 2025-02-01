@@ -17,7 +17,7 @@ function gips_setup {
 
 function run {
     # Execute the program itself and save its output to logfile
-    java -Xmx1g -jar $JAR $1 2>&1 | tee "./$(date "+%Y%m%d-%H%M%S").log"
+    java -Xmx4g -jar $JAR $1 2>&1 | tee "./$(date +%Y-%m-%d"_"%H-%M-%S).log"
 }
 
 # Set env vars

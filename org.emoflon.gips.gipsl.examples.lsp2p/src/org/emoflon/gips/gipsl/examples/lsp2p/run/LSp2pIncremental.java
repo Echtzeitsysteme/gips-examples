@@ -20,7 +20,7 @@ public class LSp2pIncremental {
 		ILPSolverOutput output = gipsApi.solveILPProblem();
 		gipsApi.getRelay2Client().applyNonZeroMappings();
 		gipsApi.getNode2Cfg().applyNonZeroMappings();
-		
+
 		String outputFile = instancesFolder + "/lsp2p_10clients_solved.xmi";
 		try {
 			gipsApi.saveResult(outputFile);

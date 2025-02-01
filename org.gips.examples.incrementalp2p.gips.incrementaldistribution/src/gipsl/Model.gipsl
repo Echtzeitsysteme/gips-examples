@@ -1,0 +1,189 @@
+package "org.gips.examples.incrementalp2p.gips.incrementaldistribution"
+
+import "http://www.eclipse.org/emf/2002/Ecore"
+
+import "platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
+
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Rules.gt" import connectLectureStudioStreamClient
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Rules.gt" import connectRelayClient
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Rules.gt" import connectRelayStreamClient
+
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Patterns.gt" import findCurrentLectureStudioConnection
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Patterns.gt" import findCurrentRelayConnection
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Patterns.gt" import findCurrentStreamingClientLS
+
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Patterns.gt" import findAnyClient
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Patterns.gt" import findWaitingClient
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Patterns.gt" import findLectureStudioServer
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Patterns.gt" import findAnyConnectionData
+from "../org.gips.examples.incrementalp2p.gips.incrementaldistribution/src/gipsl/Patterns.gt" import findAnyClientAndLsData
+
+config {
+	solver := GUROBI;
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := false;
+}
+
+mapping currentLectureStudioConnections with findCurrentLectureStudioConnection;
+mapping currentRelayConnections with findCurrentRelayConnection;
+
+mapping currentStreamingClientLS with findCurrentStreamingClientLS;
+
+mapping streamingClientLS with connectLectureStudioStreamClient;
+mapping relayClient with connectRelayClient;
+mapping streamingClientRC with connectRelayStreamClient;
+
+// Current LS clients
+constraint -> pattern::findCurrentLectureStudioConnection {
+	mappings.currentLectureStudioConnections
+		-> filter(m| m.nodes().lectureStudioConnection == self.nodes().lectureStudioConnection)
+		-> count()
+	== 1
+}
+
+// Current relay clients
+constraint -> pattern::findCurrentRelayConnection {
+	mappings.currentRelayConnections
+		-> filter(m |
+			m.nodes(). lectureStudioConnection == self.nodes().lectureStudioConnection &
+			m.nodes().relayConnection == self.nodes().relayConnection
+		)
+		-> count()
+	== 1
+}
+
+// Current StreamingClientLS
+constraint-> pattern::findCurrentStreamingClientLS {
+	mappings.currentStreamingClientLS
+		-> filter(m | m.nodes().lectureStudioConnection.client.id == self.nodes().relayClient.id)
+		-> count()
+	>=
+	mappings.currentLectureStudioConnections
+		-> filter(m | m.nodes().lectureStudioConnection.client.id == self.nodes().relayClient.id)
+		-> count()
+	-
+	mappings.streamingClientRC
+		-> filter(m | m.nodes().connectionData.serverId == self.nodes().relayClient.id)
+		-> count()
+}
+
+constraint-> pattern::findAnyConnectionData {
+	mappings.currentStreamingClientLS
+		-> filter(m | m.nodes().lectureStudioConnection.client.id == self.nodes().connectionData.serverId)
+		-> count()
+	+
+	mappings.streamingClientRC
+		-> filter(m | m.nodes().connectionData == self.nodes().connectionData)
+		-> count()
+	<=
+	mappings.currentLectureStudioConnections
+		-> filter(m | m.nodes().lectureStudioConnection.client.id == self.nodes().connectionData.serverId)
+		-> count()
+}
+
+// Clients mapped once
+constraint-> pattern::findWaitingClient {
+	mappings.streamingClientLS
+		-> filter(m | m.nodes().client == self.nodes().node)
+		-> count()
+	+
+	mappings.relayClient
+		-> filter(m | m.nodes().client == self.nodes().node)
+		-> count()
+	+
+	mappings.streamingClientRC
+		-> filter(m | m.nodes().client == self.nodes().node)
+		-> count()
+	== 1
+}
+
+// Every relay client has client(s) => rc != lsStream
+constraint-> pattern::findWaitingClient {
+	mappings.relayClient
+		-> filter(m | m.nodes().client == self.nodes().node)
+		-> count()
+	<=
+	mappings.streamingClientRC
+		-> filter(m | m.nodes().server == self.nodes().node)
+		-> count()
+}
+
+// Every rcStream has a RC
+constraint-> pattern::findAnyConnectionData {
+	mappings.streamingClientRC
+		-> filter(m | m.nodes().connectionData == self.nodes().connectionData)
+		-> count()
+	<=
+	mappings.relayClient
+		-> filter(m | m.nodes().client.id == self.nodes().connectionData.serverId)
+		-> count()
+	+
+	mappings.currentLectureStudioConnections
+		-> filter(m | m.nodes().lectureStudioConnection.client.id == self.nodes().connectionData.serverId)
+		-> count()
+}
+
+// Send to LSStream >= sendToRCStream
+constraint -> pattern::findAnyClientAndLsData {
+	mappings.currentStreamingClientLS
+		-> filter(m | m.nodes().lectureStudioConnection.server == self.nodes().lsNode)
+		-> sum(m | self.nodes().lsData.size / m.nodes().lectureStudioConnection.server.sendBandwidth)
+	+
+	mappings.streamingClientLS
+		-> sum(m | self.nodes().lsData.size / m.nodes().server.sendBandwidth)
+	>=
+	mappings.streamingClientRC
+		-> filter(m | m.nodes().connectionData.serverId == self.nodes().node.id)
+		->sum(m | self.nodes().lsData.size / m.nodes().server.sendBandwidth)
+	+
+	mappings.currentRelayConnections
+		-> filter(m | m.nodes().relayConnection.server == self.nodes().node)
+		-> sum(m | self.nodes().lsData.size / m.nodes().relayConnection.server.sendBandwidth)
+}
+
+constraint -> pattern::findAnyClientAndLsData {
+	mappings.currentStreamingClientLS
+		-> filter(m | m.nodes().lectureStudioConnection.server == self.nodes().lsNode)
+		-> sum(m | self.nodes().lsData.size / m.nodes().lectureStudioConnection.transferRate)
+	+
+	mappings.streamingClientLS
+		-> sum(m | self.nodes().lsData.size / m.nodes().connectionData.bandwidth)
+	>=
+	mappings.streamingClientRC
+		-> filter(m | m.nodes().server == self.nodes().node)
+		->sum(m | self.nodes().lsData.size / m.nodes().connectionData.bandwidth)
+	+
+	mappings.currentRelayConnections
+		-> filter(m | m.nodes().relayConnection.server == self.nodes().node)
+		-> sum(m | self.nodes().lsData.size / m.nodes().relayConnection.transferRate)
+}
+
+objective minStreamLsSendBandwidth->class::LectureStudioServer {
+	mappings.currentLectureStudioConnections
+		-> filter(m | m.nodes().lectureStudioConnection.server == self.lsNode)
+		-> sum(m | self.data.size / m.nodes().lectureStudioConnection.server.sendBandwidth)
+	+
+	mappings.streamingClientLS
+		-> sum(m | self.data.size / m.nodes().server.sendBandwidth)
+	+
+	mappings.relayClient
+		-> sum(m | self.data.size / m.nodes().server.sendBandwidth)
+}
+
+objective minStreamLsConnectionBandwidth->class::LectureStudioServer {
+	mappings.currentLectureStudioConnections
+		-> filter(m | m.nodes().lectureStudioConnection.server == self.lsNode)
+		-> sum(m | self.data.size / m.nodes().lectureStudioConnection.transferRate)
+	+
+	mappings.streamingClientLS
+		-> sum(m | self.data.size / m.nodes().connectionData.bandwidth)
+	+
+	mappings.relayClient
+		-> sum(m | self.data.size / m.nodes().connectionData.bandwidth)
+}
+
+global objective : min  {
+	minStreamLsSendBandwidth + minStreamLsConnectionBandwidth
+}

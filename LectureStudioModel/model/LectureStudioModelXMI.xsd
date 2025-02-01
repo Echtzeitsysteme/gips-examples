@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:LectureStudioModel="platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore">
+  <xsd:annotation>
+    <xsd:documentation>TODO: Add documentation for LectureStudioModel. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ...</xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://www.omg.org/XMI" schemaLocation="platform:/plugin/org.eclipse.emf.ecore/model/XMI.xsd"/>
+  <xsd:complexType name="Root">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="clock" type="xsd:double"/>
+      <xsd:element name="networks" type="LectureStudioModel:Network"/>
+      <xsd:element name="time" type="LectureStudioModel:Time"/>
+      <xsd:element name="logs" type="LectureStudioModel:LogEntry"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="networks" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="Root" type="LectureStudioModel:Root"/>
+  <xsd:complexType name="Network">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="lectureStudioServer" type="LectureStudioModel:LectureStudioServer"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+  </xsd:complexType>
+  <xsd:element name="Network" type="LectureStudioModel:Network"/>
+  <xsd:complexType name="LectureStudioServer">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="lsNode" type="LectureStudioModel:Node"/>
+      <xsd:element name="waitingClients" type="LectureStudioModel:WaitingClientQueue"/>
+      <xsd:element name="clientContainer" type="LectureStudioModel:ClientContainer"/>
+      <xsd:element name="data" type="LectureStudioModel:Data"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="lsNode" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="LectureStudioServer" type="LectureStudioModel:LectureStudioServer"/>
+  <xsd:complexType name="Node">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="sendBandwidth" type="xsd:double"/>
+      <xsd:element name="receiveBandwidth" type="xsd:double"/>
+      <xsd:element name="id" nillable="true" type="xsd:string"/>
+      <xsd:element name="clock" type="xsd:double"/>
+      <xsd:element name="transferredData" type="xsd:double"/>
+      <xsd:element name="data" type="LectureStudioModel:Data"/>
+      <xsd:element name="serverConnection" type="LectureStudioModel:Connection"/>
+      <xsd:element name="clientConnection" type="LectureStudioModel:Connection"/>
+      <xsd:element name="depth" type="LectureStudioModel:NodeDepth"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="isRelayClient" type="xsd:boolean"/>
+    <xsd:attribute name="serverConnection" type="xsd:string"/>
+    <xsd:attribute name="clientConnection" type="xsd:string"/>
+    <xsd:attribute name="depth" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="Node" type="LectureStudioModel:Node"/>
+  <xsd:complexType name="Data">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="size" type="xsd:double"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+  </xsd:complexType>
+  <xsd:element name="Data" type="LectureStudioModel:Data"/>
+  <xsd:complexType name="Connection">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="transferRate" type="xsd:double"/>
+      <xsd:element name="transferredData" type="xsd:double"/>
+      <xsd:element name="server" type="LectureStudioModel:Node"/>
+      <xsd:element name="client" type="LectureStudioModel:Node"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="server" type="xsd:string"/>
+    <xsd:attribute name="client" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="Connection" type="LectureStudioModel:Connection"/>
+  <xsd:complexType name="WaitingClientQueue">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="clients" type="LectureStudioModel:Node"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="clients" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="WaitingClientQueue" type="LectureStudioModel:WaitingClientQueue"/>
+  <xsd:complexType name="ConnectionData">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="bandwidth" type="xsd:double"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="serverId" type="xsd:string"/>
+    <xsd:attribute name="clientId" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="ConnectionData" type="LectureStudioModel:ConnectionData"/>
+  <xsd:complexType name="ClientContainer">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="connections" type="LectureStudioModel:Connection"/>
+      <xsd:element name="nodes" type="LectureStudioModel:Node"/>
+      <xsd:element name="connectionData" type="LectureStudioModel:ConnectionData"/>
+      <xsd:element name="nodeDepths" type="LectureStudioModel:NodeDepth"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+  </xsd:complexType>
+  <xsd:element name="ClientContainer" type="LectureStudioModel:ClientContainer"/>
+  <xsd:complexType name="Time">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="current" type="xsd:double"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+  </xsd:complexType>
+  <xsd:element name="Time" type="LectureStudioModel:Time"/>
+  <xsd:complexType name="LogEntry">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="depth" type="xsd:int"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="comment" type="xsd:string"/>
+    <xsd:attribute name="serverId" type="xsd:string"/>
+    <xsd:attribute name="clientId" type="xsd:string"/>
+    <xsd:attribute name="value" type="xsd:double"/>
+  </xsd:complexType>
+  <xsd:element name="LogEntry" type="LectureStudioModel:LogEntry"/>
+  <xsd:complexType name="NodeDepth">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="depth" type="xsd:int"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+  </xsd:complexType>
+  <xsd:element name="NodeDepth" type="LectureStudioModel:NodeDepth"/>
+</xsd:schema>

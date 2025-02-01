@@ -2,7 +2,7 @@ package "refactoringsoftwaresystemtgg3"
 import "platform:/resource/SoftwareSystem/model/softwareSystem.ecore"
 
 config {  
-	solver := GUROBI [home:="fu", license:="bar"];
+	solver := GUROBI;
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
 	presolve := true;

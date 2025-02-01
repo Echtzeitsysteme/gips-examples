@@ -3,8 +3,7 @@ import "platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmod
 import "http://www.eclipse.org/emf/2002/Ecore"
 
 config {  
-	solver := GUROBI [home:="foo", license:="bar"];
-	launchConfig := true [main := "org.emoflon.gips.gipsl.examples.extened.sdr.ExampleSdr"];
+	solver := GUROBI;
 	timeLimit := true [value := 300.0];
 	randomSeed := true [value := 0];
 	presolve := true;

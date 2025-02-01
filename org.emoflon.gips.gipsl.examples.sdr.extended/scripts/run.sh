@@ -21,25 +21,19 @@ function gips_setup {
     unzip -q -o $JAR "org/emoflon/gips/gipsl/examples/sdr/extended/hipe/engine/hipe-network.xmi"
     unzip -q -o $JAR "org/emoflon/gips/gipsl/examples/sdr/extended/api/gips/gips-model.xmi"
     unzip -q -o $JAR "org/emoflon/gips/gipsl/examples/sdr/extended/api/ibex-patterns.xmi"
-
-    mkdir -p ../org.emoflon.gips.gipsl.examples.sdr.extended/src-gen/
-    rsync -a ./org ./bin
-    rsync -a ./org ../org.emoflon.gips.gipsl.examples.sdr.extended/src-gen/
-    rm -r ./org
 }
 
 function run {
     # Execute the program itself and save its output to a logfile
-    java -Xmx4g -jar $JAR -i $1 -o $2 2>&1 | tee "./$(date "+%Y%m%d-%H%M%S").log"
+    java -Xmx16g -jar $JAR -i $1 -o $2 2>&1 | tee "./$(date +%Y-%m-%d"_"%H-%M-%S).log"
 }
 
 function clean {
-    rm -r ./bin
     rm -r ./instances
     rm json-model.xmi
     rm json-model-result.xmi
     rm Gurobi_ILP.log
-    rm -r ../org.emoflon.gips.gipsl.examples.sdr.extended
+    rm -r ./org
 }
 
 # Set env vars

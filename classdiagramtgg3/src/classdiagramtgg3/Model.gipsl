@@ -2,8 +2,8 @@ package "classdiagramtgg3"
 import "platform:/resource/ClassDiagram/model/classDiagram.ecore"
 
 config {  
-	solver := GUROBI [home:="fu", license:="bar"];
-	timeLimit := true [value := 120.0];
+	solver := GUROBI;
+	timeLimit := true [value := 3600.0];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel"
+    modelDirectory="/ClassDiagram/src-gen" creationIcons="false" editDirectory="/ClassDiagram.edit/src-gen"
+    editorDirectory="/ClassDiagram.editor/src-gen" modelPluginID="ClassDiagram" modelName="ClassDiagram"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" codeFormatting="true"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="21.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>classDiagram.ecore</foreignModel>
+  <testsDirectory xsi:nil="true"/>
+  <genPackages prefix="ClassDiagram" disposableProviderFactory="true" ecorePackage="classDiagram.ecore#/">
+    <genClasses ecoreClass="classDiagram.ecore#//ClazzModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference classDiagram.ecore#//ClazzModel/clazzes"/>
+    </genClasses>
+    <genClasses ecoreClass="classDiagram.ecore#//Clazz">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute classDiagram.ecore#//Clazz/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference classDiagram.ecore#//Clazz/features"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="classDiagram.ecore#//Feature">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute classDiagram.ecore#//Feature/name"/>
+    </genClasses>
+    <genClasses ecoreClass="classDiagram.ecore#//Method">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference classDiagram.ecore#//Method/dependencies"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference classDiagram.ecore#//Method/methodDependency"/>
+    </genClasses>
+    <genClasses ecoreClass="classDiagram.ecore#//Attribute"/>
+  </genPackages>
+</genmodel:GenModel>

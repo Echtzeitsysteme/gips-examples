@@ -4,8 +4,7 @@ import "platform:/resource/network.model/model/Model.ecore"
 // check out: https://github.com/Echtzeitsysteme/iflye
 
 config {
-	solver := GUROBI [home:="fu", license:="bar"];
-	launchConfig := true [main := "org.emoflon.gips.gipsl.examples.mdvne.ExampleMdVNE"];
+	solver := GUROBI;
 	timeLimit := true [value := 600.0];
 	randomSeed := true [value := 0];
 	presolve := true;
@@ -275,6 +274,22 @@ constraint -> pattern::linkServerMatchPositive {
 constraint -> pattern::vlNotMapped {
 	mappings.l2p->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) +
 	mappings.l2s->filter(m | m.nodes().virtualLink == self.nodes().virtualLink)->sum(m | m.value()) == 1
+}
+
+//
+// Additions to support multiple substrate networks
+//
+
+// If a match of a virtual network and a substrate network is selected,
+// the number of selected switch and server mappings must be equal to
+// the number of nodes that are contained in the same virtual network.
+constraint -> pattern::networkRule {
+	mappings.net2net->filter(m | m.nodes().substrateNetwork == self.nodes().substrateNetwork & m.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value()) == 1
+	=>
+	mappings.sw2node->filter(m | m.nodes().substrateNetwork == self.nodes().substrateNetwork & m.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
+	+
+	mappings.srv2srv->filter(m | m.nodes().substrateNetwork == self.nodes().substrateNetwork & m.nodes().virtualNetwork == self.nodes().virtualNetwork)->sum(m | m.value())
+	>= self.nodes().virtualNetwork.nodes->count()
 }
 
 // Global objective

@@ -10,9 +10,12 @@ public class ExampleSdr {
 
 	public static void main(final String[] args) {
 		final ExtendedGipsAPI api = new ExtendedGipsAPI();
-//		api.init(URI.createFileURI("../org.emoflon.gips.gipsl.examples.sdrmodel/instances/CPU_4_8@B8_C1-00_R1-00_UNI.xmi"));
 		api.init(URI.createFileURI(
-				"../org.emoflon.gips.gipsl.examples.sdrmodel/instances/CPU_4_8@m2-00_kF1_fC10-00_N0-50_SimpleChain.xmi"));
+				"../org.emoflon.gips.gipsl.examples.sdr.extended/src-gen/org/emoflon/gips/gipsl/examples/sdr/extended/api/gips/gips-model.xmi"), //
+				URI.createFileURI(
+						"../org.emoflon.gips.gipsl.examples.sdrmodel/instances/CPU_4_8@m2.00_kF1_fC10.00_N0.50_SimpleChain.xmi"), //
+				URI.createFileURI(
+						"../org.emoflon.gips.gipsl.examples.sdr.extended/src-gen/org/emoflon/gips/gipsl/examples/sdr/extended/api/ibex-patterns.xmi"));
 
 		api.buildILPProblem(true);
 		final ILPSolverOutput output = api.solveILPProblem();
