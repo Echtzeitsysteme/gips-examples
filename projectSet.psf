@@ -7,7 +7,6 @@
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,classdiagramtgg3"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,classdiagramtgg3violations"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,gips.examples.dependencies"/>
-<project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,JavaFxDependencies"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,LectureStudioModel"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,LectureStudioModelB"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,network.model"/>
@@ -47,7 +46,6 @@
 <item elementID="=classdiagramtgg3" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=classdiagramtgg3violations" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=gips.examples.dependencies" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=JavaFxDependencies" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=LectureStudioModelB" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=network.model" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.emoflon.gips.gipsl.examples.headlessrunner" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
