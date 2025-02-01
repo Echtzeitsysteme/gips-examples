@@ -2,10 +2,10 @@ package pta.scenario.house;
 
 import PTAConstraintConfigE.api.gips.PTAConstraintConfigEGipsAPI;
 
-public class HouseConstructionBatchE extends HouseConstructionGeneric<PTAConstraintConfigEGipsAPI>{
+public class HouseConstructionBatchE extends HouseConstructionGeneric<PTAConstraintConfigEGipsAPI> {
 
-	final public static String TYPE = "BATCH-E"; 
-	
+	final public static String TYPE = "BATCH-E";
+
 	public HouseConstructionBatchE(String name) {
 		super(name);
 	}
@@ -14,18 +14,18 @@ public class HouseConstructionBatchE extends HouseConstructionGeneric<PTAConstra
 	public PTAConstraintConfigEGipsAPI newAPI() {
 		return new PTAConstraintConfigEGipsAPI();
 	}
-	
+
 	@Override
 	public void executeGT() {
 		api.getAom().applyNonZeroMappings(false);
 		api.getProjectCost().applyNonZeroMappings(false);
 	}
-	
+
 	@Override
 	public String getType() {
 		return TYPE;
 	}
-	
+
 	@Override
 	public String getGipsModelPath() {
 		return "PTAConstraintConfigE/api/gips/gips-model.xmi";
@@ -40,7 +40,7 @@ public class HouseConstructionBatchE extends HouseConstructionGeneric<PTAConstra
 	public String getHiPEModelPath() {
 		return "PTAConstraintConfigE/hipe/engine/hipe-network.xmi";
 	}
-	
+
 	@Override
 	public String getHiPEEngineFQN() {
 		return "PTAConstraintConfigE.hipe.engine.HiPEEngine";

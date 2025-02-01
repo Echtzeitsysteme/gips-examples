@@ -1,19 +1,12 @@
 package pta.scenario.house;
 
-import pta.evaluation.util.EvaluationResult;
-import pta.scenario.ScenarioRunner;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Map;
-import java.util.Map.Entry;
-import static java.util.Map.entry;    
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -26,8 +19,11 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.emoflon.gips.core.util.Observer;
 
+import pta.evaluation.util.EvaluationResult;
+import pta.scenario.ScenarioRunner;
+
 public class HouseConstructionHeadless {
-	
+
 	// Model statistic headers
 	public static String HEADER_ID = "id";
 	public static String HEADER_TYPE = "type";
@@ -96,75 +92,33 @@ public class HouseConstructionHeadless {
 	public static String HEADER_BUILD_SOLVER_MEM_MIN = "build_solver_memory_min";
 	public static String HEADER_SOLVE_MEM_MIN = "solve_memory_min";
 	public static String HEADER_APPLY_MEM_MIN = "apply_memory_min";
-	
-	private static String[] CSV_COLUMNS = {
-			HEADER_ID,
-			HEADER_TYPE,
-			HEADER_PROJECTS,
-			HEADER_TASKS,
-			HEADER_REQS,
-			HEADER_OFFERS,
-			HEADER_WEEKS,
-			HEADER_PERSONS,
-			HEADER_NODES,
-			HEADER_MAPPINGS,
-			HEADER_VARS,
-			HEADER_CONSTRAINTS,
-			HEADER_OPTIMAL,
-			HEADER_SOLVED_RATIO,
-			HEADER_PROJECT_RATIO,
+
+	private static String[] CSV_COLUMNS = { HEADER_ID, HEADER_TYPE, HEADER_PROJECTS, HEADER_TASKS, HEADER_REQS,
+			HEADER_OFFERS, HEADER_WEEKS, HEADER_PERSONS, HEADER_NODES, HEADER_MAPPINGS, HEADER_VARS, HEADER_CONSTRAINTS,
+			HEADER_OPTIMAL, HEADER_SOLVED_RATIO, HEADER_PROJECT_RATIO,
 			//
-			HEADER_TOTAL_T,
-			HEADER_BUILD_T,
-			HEADER_PM_T,
-			HEADER_BUILD_GIPS_T,
-			HEADER_BUILD_SOLVER_T,
-			HEADER_SOLVE_T,
+			HEADER_TOTAL_T, HEADER_BUILD_T, HEADER_PM_T, HEADER_BUILD_GIPS_T, HEADER_BUILD_SOLVER_T, HEADER_SOLVE_T,
 			HEADER_APPLY_T,
 			//
-			HEADER_PM_T_MAX,
-			HEADER_BUILD_T_MAX,
-			HEADER_BUILD_GIPS_T_MAX,
-			HEADER_BUILD_SOLVER_T_MAX,
-			HEADER_SOLVE_T_MAX,
+			HEADER_PM_T_MAX, HEADER_BUILD_T_MAX, HEADER_BUILD_GIPS_T_MAX, HEADER_BUILD_SOLVER_T_MAX, HEADER_SOLVE_T_MAX,
 			HEADER_APPLY_T_MAX,
 			//
-			HEADER_PM_T_MIN,
-			HEADER_BUILD_T_MIN,
-			HEADER_BUILD_GIPS_T_MIN,
-			HEADER_BUILD_SOLVER_T_MIN,
-			HEADER_SOLVE_T_MIN,
+			HEADER_PM_T_MIN, HEADER_BUILD_T_MIN, HEADER_BUILD_GIPS_T_MIN, HEADER_BUILD_SOLVER_T_MIN, HEADER_SOLVE_T_MIN,
 			HEADER_APPLY_T_MIN,
 			//
-			HEADER_PM_MEM,
-			HEADER_BUILD_MEM,
-			HEADER_BUILD_GIPS_MEM,
-			HEADER_BUILD_SOLVER_MEM,
-			HEADER_SOLVE_MEM,
+			HEADER_PM_MEM, HEADER_BUILD_MEM, HEADER_BUILD_GIPS_MEM, HEADER_BUILD_SOLVER_MEM, HEADER_SOLVE_MEM,
 			HEADER_APPLY_MEM,
 			//
-			HEADER_PM_MEM_MAX,
-			HEADER_BUILD_MEM_MAX,
-			HEADER_BUILD_GIPS_MEM_MAX,
-			HEADER_BUILD_SOLVER_MEM_MAX,
-			HEADER_SOLVE_MEM_MAX,
-			HEADER_APPLY_MEM_MAX,
+			HEADER_PM_MEM_MAX, HEADER_BUILD_MEM_MAX, HEADER_BUILD_GIPS_MEM_MAX, HEADER_BUILD_SOLVER_MEM_MAX,
+			HEADER_SOLVE_MEM_MAX, HEADER_APPLY_MEM_MAX,
 			//
-			HEADER_PM_MEM_MIN,
-			HEADER_BUILD_MEM_MIN,
-			HEADER_BUILD_GIPS_MEM_MIN,
-			HEADER_BUILD_SOLVER_MEM_MIN,
-			HEADER_SOLVE_MEM_MIN,
-			HEADER_APPLY_MEM_MIN,
+			HEADER_PM_MEM_MIN, HEADER_BUILD_MEM_MIN, HEADER_BUILD_GIPS_MEM_MIN, HEADER_BUILD_SOLVER_MEM_MIN,
+			HEADER_SOLVE_MEM_MIN, HEADER_APPLY_MEM_MIN,
 			//
-			HEADER_MAPPINGS_STDV,
-			HEADER_VARS_STDV,
-			HEADER_CONSTRAINTS_STDV
-			};
+			HEADER_MAPPINGS_STDV, HEADER_VARS_STDV, HEADER_CONSTRAINTS_STDV };
 
-	
 	private static CSVFormat CSV_FORMAT = CSVFormat.DEFAULT.builder().setHeader(CSV_COLUMNS).build();
-	
+
 	public static void main(final String[] args) {
 		HouseConstructionHeadless ctrl = new HouseConstructionHeadless();
 		try {
@@ -175,20 +129,28 @@ public class HouseConstructionHeadless {
 		}
 		System.exit(0);
 	}
-	
+
 	public static ScenarioRunner<?> createRunner(String type, String id) {
-		switch(type) {
-			case HouseConstructionBatchA.TYPE : return new HouseConstructionBatchA(id);
-			case HouseConstructionBatchB.TYPE : return new HouseConstructionBatchB(id);
-			case HouseConstructionBatchC.TYPE : return new HouseConstructionBatchC(id);
-			case HouseConstructionBatchD.TYPE : return new HouseConstructionBatchD(id);
-			case HouseConstructionBatchE.TYPE : return new HouseConstructionBatchE(id);
-			case HouseConstructionIncF.TYPE : return new HouseConstructionIncF(id);
-			case HouseConstructionIncG.TYPE : return new HouseConstructionIncG(id);
-			default: throw new IllegalArgumentException("Unknown runner type: "+type);
+		switch (type) {
+		case HouseConstructionBatchA.TYPE:
+			return new HouseConstructionBatchA(id);
+		case HouseConstructionBatchB.TYPE:
+			return new HouseConstructionBatchB(id);
+		case HouseConstructionBatchC.TYPE:
+			return new HouseConstructionBatchC(id);
+		case HouseConstructionBatchD.TYPE:
+			return new HouseConstructionBatchD(id);
+		case HouseConstructionBatchE.TYPE:
+			return new HouseConstructionBatchE(id);
+		case HouseConstructionIncF.TYPE:
+			return new HouseConstructionIncF(id);
+		case HouseConstructionIncG.TYPE:
+			return new HouseConstructionIncG(id);
+		default:
+			throw new IllegalArgumentException("Unknown runner type: " + type);
 		}
 	}
-	
+
 	/**
 	 * Checks if a file for the given path exists and throws an exception otherwise.
 	 * 
@@ -200,7 +162,7 @@ public class HouseConstructionHeadless {
 			throw new IllegalArgumentException("Input file <" + path + "> could not be found.");
 		}
 	}
-	
+
 	public static void writeCsvLine(final String csvPath, final String[] content) throws IOException {
 		BufferedWriter out;
 		// If file does not exist, write header to it
@@ -216,10 +178,11 @@ public class HouseConstructionHeadless {
 		printer.close();
 		out.close();
 	}
-	
-	public static void resultToCSV(final String csvPath, final EvaluationResult result, final ScenarioRunner<?> runner) throws Exception {
+
+	public static void resultToCSV(final String csvPath, final EvaluationResult result, final ScenarioRunner<?> runner)
+			throws Exception {
 		String[] content = new String[CSV_COLUMNS.length];
-		
+
 		setColumn(HEADER_ID, result.id(), content);
 		setColumn(HEADER_TYPE, runner.getType(), content);
 		setColumn(HEADER_PROJECTS, result.validator().getNumberOfProjects(), content);
@@ -229,78 +192,93 @@ public class HouseConstructionHeadless {
 		setColumn(HEADER_WEEKS, result.validator().getNumberOfWeeks(), content);
 		setColumn(HEADER_PERSONS, result.validator().getNumberOfPersons(), content);
 		setColumn(HEADER_NODES, result.validator().getModelSize(), content);
-		double avg_mappings = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().mappings()).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
-		double avg_vars = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().vars()).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
-		double avg_constraints = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().constraints()).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		double avg_mappings = result.output().getOutputs().values().stream().filter(o -> o.stats() != null)
+				.map(o -> (double) o.stats().mappings()).reduce(0.0, (sum, value) -> sum + value)
+				/ result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		double avg_vars = result.output().getOutputs().values().stream().filter(o -> o.stats() != null)
+				.map(o -> (double) o.stats().vars()).reduce(0.0, (sum, value) -> sum + value)
+				/ result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		double avg_constraints = result.output().getOutputs().values().stream().filter(o -> o.stats() != null)
+				.map(o -> (double) o.stats().constraints()).reduce(0.0, (sum, value) -> sum + value)
+				/ result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
 		setColumn(HEADER_MAPPINGS, avg_mappings, content);
 		setColumn(HEADER_VARS, avg_vars, content);
 		setColumn(HEADER_CONSTRAINTS, avg_constraints, content);
 		setColumn(HEADER_OPTIMAL, result.validator().isValid(), content);
 		setColumn(HEADER_SOLVED_RATIO, result.output().optimality(), content);
 		setColumn(HEADER_PROJECT_RATIO, result.validator().getSuccessRate(), content);
-		
+
 		setColumn(HEADER_PM_T, result.measurements().get("PM").totalDurationSeconds(), content);
 		setColumn(HEADER_PM_T_MIN, result.measurements().get("PM").minDurationSeconds(), content);
 		setColumn(HEADER_PM_T_MAX, result.measurements().get("PM").maxDurationSeconds(), content);
 		setColumn(HEADER_PM_MEM, result.measurements().get("PM").avgMemoryMB(), content);
 		setColumn(HEADER_PM_MEM_MIN, result.measurements().get("PM").minMemoryMB(), content);
 		setColumn(HEADER_PM_MEM_MAX, result.measurements().get("PM").maxMemoryMB(), content);
-		
+
 		setColumn(HEADER_BUILD_T, result.measurements().get("BUILD").totalDurationSeconds(), content);
 		setColumn(HEADER_BUILD_T_MIN, result.measurements().get("BUILD").minDurationSeconds(), content);
 		setColumn(HEADER_BUILD_T_MAX, result.measurements().get("BUILD").maxDurationSeconds(), content);
 		setColumn(HEADER_BUILD_MEM, result.measurements().get("BUILD").avgMemoryMB(), content);
 		setColumn(HEADER_BUILD_MEM_MIN, result.measurements().get("BUILD").minMemoryMB(), content);
 		setColumn(HEADER_BUILD_MEM_MAX, result.measurements().get("BUILD").maxMemoryMB(), content);
-		
+
 		setColumn(HEADER_BUILD_GIPS_T, result.measurements().get("BUILD_GIPS").totalDurationSeconds(), content);
 		setColumn(HEADER_BUILD_GIPS_T_MIN, result.measurements().get("BUILD_GIPS").minDurationSeconds(), content);
 		setColumn(HEADER_BUILD_GIPS_T_MAX, result.measurements().get("BUILD_GIPS").maxDurationSeconds(), content);
 		setColumn(HEADER_BUILD_GIPS_MEM, result.measurements().get("BUILD_GIPS").avgMemoryMB(), content);
 		setColumn(HEADER_BUILD_GIPS_MEM_MIN, result.measurements().get("BUILD_GIPS").minMemoryMB(), content);
 		setColumn(HEADER_BUILD_GIPS_MEM_MAX, result.measurements().get("BUILD_GIPS").maxMemoryMB(), content);
-		
+
 		setColumn(HEADER_BUILD_SOLVER_T, result.measurements().get("BUILD_SOLVER").totalDurationSeconds(), content);
 		setColumn(HEADER_BUILD_SOLVER_T_MIN, result.measurements().get("BUILD_SOLVER").minDurationSeconds(), content);
 		setColumn(HEADER_BUILD_SOLVER_T_MAX, result.measurements().get("BUILD_SOLVER").maxDurationSeconds(), content);
 		setColumn(HEADER_BUILD_SOLVER_MEM, result.measurements().get("BUILD_SOLVER").avgMemoryMB(), content);
 		setColumn(HEADER_BUILD_SOLVER_MEM_MIN, result.measurements().get("BUILD_SOLVER").minMemoryMB(), content);
 		setColumn(HEADER_BUILD_SOLVER_MEM_MAX, result.measurements().get("BUILD_SOLVER").maxMemoryMB(), content);
-		
+
 		setColumn(HEADER_SOLVE_T, result.measurements().get("SOLVE_PROBLEM").totalDurationSeconds(), content);
 		setColumn(HEADER_SOLVE_T_MIN, result.measurements().get("SOLVE_PROBLEM").minDurationSeconds(), content);
 		setColumn(HEADER_SOLVE_T_MAX, result.measurements().get("SOLVE_PROBLEM").maxDurationSeconds(), content);
 		setColumn(HEADER_SOLVE_MEM, result.measurements().get("SOLVE_PROBLEM").avgMemoryMB(), content);
 		setColumn(HEADER_SOLVE_MEM_MIN, result.measurements().get("SOLVE_PROBLEM").minMemoryMB(), content);
 		setColumn(HEADER_SOLVE_MEM_MAX, result.measurements().get("SOLVE_PROBLEM").maxMemoryMB(), content);
-		
+
 		setColumn(HEADER_APPLY_T, result.measurements().get("APPLY").totalDurationSeconds(), content);
 		setColumn(HEADER_APPLY_T_MIN, result.measurements().get("APPLY").minDurationSeconds(), content);
 		setColumn(HEADER_APPLY_T_MAX, result.measurements().get("APPLY").maxDurationSeconds(), content);
 		setColumn(HEADER_APPLY_MEM, result.measurements().get("APPLY").avgMemoryMB(), content);
 		setColumn(HEADER_APPLY_MEM_MIN, result.measurements().get("APPLY").minMemoryMB(), content);
 		setColumn(HEADER_APPLY_MEM_MAX, result.measurements().get("APPLY").maxMemoryMB(), content);
-		
-		double stdv_mappings = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().mappings()).map(m -> Math.abs(avg_mappings-m)).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+
+		double stdv_mappings = result.output().getOutputs().values().stream().filter(o -> o.stats() != null)
+				.map(o -> (double) o.stats().mappings()).map(m -> Math.abs(avg_mappings - m))
+				.reduce(0.0, (sum, value) -> sum + value)
+				/ result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
 		setColumn(HEADER_MAPPINGS_STDV, stdv_mappings, content);
-		double stdv_vars = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().vars()).map(v -> Math.abs(avg_vars-v)).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		double stdv_vars = result.output().getOutputs().values().stream().filter(o -> o.stats() != null)
+				.map(o -> (double) o.stats().vars()).map(v -> Math.abs(avg_vars - v))
+				.reduce(0.0, (sum, value) -> sum + value)
+				/ result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
 		setColumn(HEADER_VARS_STDV, stdv_vars, content);
-		double stdv_constraints = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().constraints()).map(c -> Math.abs(avg_vars-c)).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		double stdv_constraints = result.output().getOutputs().values().stream().filter(o -> o.stats() != null)
+				.map(o -> (double) o.stats().constraints()).map(c -> Math.abs(avg_vars - c))
+				.reduce(0.0, (sum, value) -> sum + value)
+				/ result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
 		setColumn(HEADER_CONSTRAINTS_STDV, stdv_constraints, content);
-		
-		double total_time = result.measurements().get("BUILD").totalDurationSeconds() + 
-				result.measurements().get("SOLVE_PROBLEM").totalDurationSeconds() + 
-				result.measurements().get("APPLY").totalDurationSeconds();
-		
+
+		double total_time = result.measurements().get("BUILD").totalDurationSeconds()
+				+ result.measurements().get("SOLVE_PROBLEM").totalDurationSeconds()
+				+ result.measurements().get("APPLY").totalDurationSeconds();
+
 		setColumn(HEADER_TOTAL_T, total_time, content);
-		
+
 		writeCsvLine(csvPath, content);
 	}
-	
+
 	public static <T> void setColumn(String header, T value, String[] target) {
 		int idx = 0;
-		for(String entry : CSV_COLUMNS) {
-			if(entry.equals(header)) {
+		for (String entry : CSV_COLUMNS) {
+			if (entry.equals(header)) {
 				target[idx] = String.valueOf(value);
 				return;
 			}
@@ -314,22 +292,23 @@ public class HouseConstructionHeadless {
 	private String runnerType;
 	private String csvOutputPath;
 	private boolean printSolution;
-	
+
 	public void run() throws Exception {
 		checkIfFileExists(xmiInputPath);
-		//checkIfFileExists(xmiOutputPath);
-		//checkIfFileExists(csvOutputPath);
+		// checkIfFileExists(xmiOutputPath);
+		// checkIfFileExists(csvOutputPath);
 		ScenarioRunner<?> runner = createRunner(runnerType, scenarioID);
 		Observer obs = Observer.getInstance();
 		obs.setCurrentSeries(scenarioID);
-		obs.observe("INIT", ()->runner.init(runner.getGipsModelPath(), xmiInputPath, runner.getIbexModelPath(), runner.getHiPEModelPath(), runner.getHiPEEngineFQN()));
+		obs.observe("INIT", () -> runner.init(runner.getGipsModelPath(), xmiInputPath, runner.getIbexModelPath(),
+				runner.getHiPEModelPath(), runner.getHiPEEngineFQN()));
 		EvaluationResult result = runner.run(xmiOutputPath);
-		if(printSolution)
+		if (printSolution)
 			System.out.println(result);
-		
+
 		resultToCSV(csvOutputPath, result, runner);
 	}
-	
+
 	/**
 	 * Parses the given arguments to configure the runner.
 	 * <ol>
@@ -353,13 +332,14 @@ public class HouseConstructionHeadless {
 		final Option xmiOutputFile = new Option("o", "outputxmi", true, "output XMI file to save");
 		xmiOutputFile.setRequired(true);
 		options.addOption(xmiOutputFile);
-		
+
 		// Id or label of the evaluation scenario.
 		final Option scenarioID = new Option("id", "scenarioid", true, "label of the scenario");
 		scenarioID.setRequired(true);
 		options.addOption(scenarioID);
-		
-		// Runner type, i.e., which runner type to use (e.g., BATCH-A = HouseConstructionBatchA)
+
+		// Runner type, i.e., which runner type to use (e.g., BATCH-A =
+		// HouseConstructionBatchA)
 		final Option runnerType = new Option("r", "runnertype", true, "runner type to use");
 		runnerType.setRequired(true);
 		options.addOption(runnerType);

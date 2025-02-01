@@ -2,21 +2,20 @@ package pta.scenario.house;
 
 import java.io.IOException;
 
-
 import PTAConstraintConfigA.api.gips.PTAConstraintConfigAGipsAPI;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
 import pta.evaluation.util.EvaluationResult;
 import pta.scenario.ScenarioGenerator;
 
-public class HouseConstructionBatchA extends HouseConstructionGeneric<PTAConstraintConfigAGipsAPI>{
-	
-	final public static String TYPE = "BATCH-A"; 
-	
+public class HouseConstructionBatchA extends HouseConstructionGeneric<PTAConstraintConfigAGipsAPI> {
+
+	final public static String TYPE = "BATCH-A";
+
 	public HouseConstructionBatchA(String name) {
 		super(name);
 	}
 
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		HouseConstructionBatchA runner = new HouseConstructionBatchA("Batch-A");
 		ScenarioGenerator generator = new ScenarioGenerator();
 		generator.nProjects = ScenarioGenerator.mkRange(1, 2);

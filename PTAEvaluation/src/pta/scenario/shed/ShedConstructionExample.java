@@ -33,6 +33,6 @@ public class ShedConstructionExample {
 
 		gipsApi.terminate();
 		System.exit(0);
-	} 
+	}
 
 }
