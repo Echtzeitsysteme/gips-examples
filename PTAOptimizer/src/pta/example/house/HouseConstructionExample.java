@@ -3,7 +3,7 @@ package pta.example.house;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 
 import PTAOptimizer.api.gips.PTAOptimizerGipsAPI;
 
@@ -24,8 +24,8 @@ public class HouseConstructionExample {
 //		PTAOptimizerAPI api = app.initAPI();
 //		api.updateMatches();
 
-		gipsApi.buildILPProblem(true);
-		ILPSolverOutput output = gipsApi.solveILPProblem();
+		gipsApi.buildProblem(true);
+		SolverOutput output = gipsApi.solveProblem();
 		gipsApi.getAom().applyNonZeroMappings();
 
 		String outputFile = instancesFolder + "/ConstructionProject1_solved.xmi";
