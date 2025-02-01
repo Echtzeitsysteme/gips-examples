@@ -72,7 +72,9 @@ pattern personToOffer {
 	}
 	
 	offer : Offer
-}
+} when freeOffer
+
+condition freeOffer = forbid offerToRequirement
 
 //pattern weekToTask2 {
 //	prevWeek: Week {
@@ -149,7 +151,9 @@ pattern taskToRequirement{
 		-requirements->requirement
 	}
 	requirement : Requirement
-}
+} when freeRequirement
+
+condition freeRequirement = forbid requirementToOffer
 
 mapping aom with assignOffer {
 	var hours : EInt

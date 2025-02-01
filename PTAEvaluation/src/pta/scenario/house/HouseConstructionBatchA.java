@@ -42,8 +42,8 @@ public class HouseConstructionBatchA extends HouseConstructionGeneric<PTAConstra
 
 	@Override
 	public void executeGT() {
-		api.getAom().applyNonZeroMappings();
-		api.getProjectCost().applyNonZeroMappings();
+		api.getAom().applyNonZeroMappings(false);
+		api.getProjectCost().applyNonZeroMappings(false);
 	}
 
 	@Override

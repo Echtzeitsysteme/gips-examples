@@ -27,45 +27,45 @@ public class HouseConstructionTest {
 		Map<String, EvaluationResult> results = new LinkedHashMap<>();
 		runners.forEach(runner -> {
 			ScenarioGenerator generator = new ScenarioGenerator();
-//			generator.nProjects = ScenarioGenerator.mkRange(3, 6);
-//			generator.tasksPerProject = ScenarioGenerator.mkRange(4, 8);
-//			generator.reqPerTask = ScenarioGenerator.mkRange(4, 8);
 			generator.offerSplitRate = 0.0;
 			
-			generator.additionalOfferRate = 0.4;
-			/*	Config and upper Limit for the Batch evaluation Scenario for Runners using BATCH-A through D
+			generator.additionalOfferRate = 0.25;
+			/*	Config and upper Limit for the Batch evaluation Scenario for Runners using BATCH-A through E
 			 *  generator.offerSplitRate = 0.5;
 			 *  generator.additionalOfferRate = 0.2;
 			 * 	generator.scale(10, 1, 0, 6, 0, 5, 0);
 			 */
-			/*	Config and upper Limit for the Batch evaluation Scenario for Runners using BATCH-E, which will not find a valid but optimal solution.
-			 *  generator.offerSplitRate = 0.5;
-			 *  generator.additionalOfferRate = 0.2;	
-			 *  generator.scale(7, 1, 0, 6, 0, 5, 0);
-			 */
 			
 			/*	Upper Limit for the Incremental evaluation Scenario for Runners using BATCH-A, BATCH-F and BATCH-G, where the two latter of which will not find all optimal solutions.
 			 *  generator.offerSplitRate = 0.0;
-			 *  generator.additionalOfferRate = 0.4;	
-			 *  generator.scale(10, 1, 0, 10, 0, 15, 0);
+			 *  generator.additionalOfferRate = 0.25;	
+			 *  generator.scale(10, 1, 0, 5, 0, 30, 0);
 			 */
-			generator.scale(1, 1, 0, 10, 0, 15, 0);
+			int scale = 2;
+			int run = 4;
+			generator.scale(scale, 1, 0, 6, 0, 5, 0);
+			//PersonTaskAssignmentModel model = generator.generate("EpicSeed".hashCode());
+			// Seed used for Scale 1-10 with the exception of 7, 9 and 10: "EpicSeed"
+			// Seed used for Scale 7: "EpicSeed12"
+			// Seed used for Scale 9: "EpicSeed1"
+			// Seed used for Scale 10: "EpicSeed2"
 			PersonTaskAssignmentModel model = generator.generate("EpicSeed".hashCode());
+			String runId = runner.getType()+"-inc-"+scale+"-"+run;
 
-			System.out.println("##########\tRunning "+runner.name+" ...\t##########");
+			System.out.println("##########\tRunning "+runId+" ...\t##########");
 			Observer obs = Observer.getInstance();
-			obs.setCurrentSeries(runner.name);
+			obs.setCurrentSeries(runId);
 			obs.observe("INIT", ()->runner.init(model));
 			EvaluationResult result;
 			try {
 				result = runner.run();
 				System.out.println(result);
 				results.put(runner.name, result);
-				HouseConstructionHeadless.resultToCSV("./test.csv", result, runner);
+				HouseConstructionHeadless.resultToCSV("./inc-eval-2024-11-13-1.csv", result, runner);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.out.println("##########\tFinished "+runner.name+".\t##########");
+			System.out.println("##########\tFinished "+runId+".\t##########");
 		});
 	}
 

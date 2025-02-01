@@ -69,6 +69,16 @@ public class EvaluationGenerator {
 		jarFile.setRequired(true);
 		options.addOption(jarFile);
 		
+		// Generate Batch
+		final Option batchScaling = new Option("b", "batch", true, "Upper scaling of batch scenarios. Set to 0 to create not batch scenarios.");
+		batchScaling.setRequired(true);
+		options.addOption(batchScaling);
+		
+		// Generate Incremental
+		final Option incrementalScaling = new Option("i", "incremental", true, "Upper scaling of incremental scenarios. Set to 0 to create not incremental scenarios.");
+		incrementalScaling.setRequired(true);
+		options.addOption(incrementalScaling);
+		
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -113,8 +123,9 @@ public class EvaluationGenerator {
 		String csvPrefix = csvFolder + "/results";
 		List<String> generatedScripts = new LinkedList<>();
 		
+		int batchUpper = Integer.parseInt(cmd.getOptionValue("batch"));
 		// Generate batch scenarios
-		for(int i = 1; i<=10; i++) {
+		for(int i = 1; i<=batchUpper; i++) {
 			String src = instancesFolder + "/Batch"+i+".xmi";
 			String trg = solutionFolder + "/Batch"+i+"_solved.xmi";
 			PersonTaskAssignmentModel model = generateBatch(i);
@@ -142,11 +153,12 @@ public class EvaluationGenerator {
 
 		}
 		
+		int incrementalUpper = Integer.parseInt(cmd.getOptionValue("incremental"));
 		// Generate incremental scenarios
-		for(int i = 1; i<=6; i++) {
-			String src = instancesFolder + "/Batch"+i+".xmi";
-			String trg = solutionFolder + "/Batch"+i+"_solved.xmi";
-			PersonTaskAssignmentModel model = generateBatch(i);
+		for(int i = 1; i<=incrementalUpper; i++) {
+			String src = instancesFolder + "/Inc"+i+".xmi";
+			String trg = solutionFolder + "/Inc"+i+"_solved.xmi";
+			PersonTaskAssignmentModel model = generateIncremental(i);
 			try {
 				PTAModelGenerator.save(model, instancesFolder + "/Inc"+i+".xmi");
 			} catch (IOException e) {
@@ -166,7 +178,7 @@ public class EvaluationGenerator {
 		}
 		
 		// Add largest batch scenario at the end
-		for(int i = 1; i<=10; i++) {
+		for(int i = 1; i<=batchUpper; i++) {
 			String src = instancesFolder + "/Batch"+i+".xmi";
 			String trg = solutionFolder + "/Batch"+i+"_solved.xmi";
 			String id = HouseConstructionBatchE.TYPE+"-batch-"+i;
@@ -213,8 +225,8 @@ public class EvaluationGenerator {
 	public static PersonTaskAssignmentModel generateIncremental(int size) {
 		ScenarioGenerator generator = new ScenarioGenerator();
 		generator.offerSplitRate = 0.0;
-		generator.additionalOfferRate = 0.4;
-		generator.scale(size, 1, 0, 10, 0, 15, 0);
+		generator.additionalOfferRate = 0.25;
+		generator.scale(size, 1, 0, 5, 0, 30, 0);
 		return generator.generate("EpicSeed".hashCode());
 	}
 	

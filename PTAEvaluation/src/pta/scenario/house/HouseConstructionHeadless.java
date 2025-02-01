@@ -41,6 +41,9 @@ public class HouseConstructionHeadless {
 	public static String HEADER_MAPPINGS = "mappings";
 	public static String HEADER_VARS = "vars";
 	public static String HEADER_CONSTRAINTS = "constraints";
+	public static String HEADER_MAPPINGS_STDV = "mappings_stdv";
+	public static String HEADER_VARS_STDV = "vars_stdv";
+	public static String HEADER_CONSTRAINTS_STDV = "constraints_stdv";
 	public static String HEADER_OPTIMAL = "is_optimal";
 	public static String HEADER_SOLVED_RATIO = "solved_ratio";
 	public static String HEADER_PROJECT_RATIO = "project_ratio";
@@ -152,7 +155,11 @@ public class HouseConstructionHeadless {
 			HEADER_BUILD_GIPS_MEM_MIN,
 			HEADER_BUILD_SOLVER_MEM_MIN,
 			HEADER_SOLVE_MEM_MIN,
-			HEADER_APPLY_MEM_MIN
+			HEADER_APPLY_MEM_MIN,
+			//
+			HEADER_MAPPINGS_STDV,
+			HEADER_VARS_STDV,
+			HEADER_CONSTRAINTS_STDV
 			};
 
 	
@@ -222,61 +229,70 @@ public class HouseConstructionHeadless {
 		setColumn(HEADER_WEEKS, result.validator().getNumberOfWeeks(), content);
 		setColumn(HEADER_PERSONS, result.validator().getNumberOfPersons(), content);
 		setColumn(HEADER_NODES, result.validator().getModelSize(), content);
-		setColumn(HEADER_MAPPINGS, result.output().getOutputs().values().iterator().next().stats().mappings(), content);
-		setColumn(HEADER_VARS, result.output().getOutputs().values().iterator().next().stats().vars(), content);
-		setColumn(HEADER_CONSTRAINTS, result.output().getOutputs().values().iterator().next().stats().constraints(), content);
+		double avg_mappings = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().mappings()).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		double avg_vars = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().vars()).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		double avg_constraints = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().constraints()).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		setColumn(HEADER_MAPPINGS, avg_mappings, content);
+		setColumn(HEADER_VARS, avg_vars, content);
+		setColumn(HEADER_CONSTRAINTS, avg_constraints, content);
 		setColumn(HEADER_OPTIMAL, result.validator().isValid(), content);
 		setColumn(HEADER_SOLVED_RATIO, result.output().optimality(), content);
 		setColumn(HEADER_PROJECT_RATIO, result.validator().getSuccessRate(), content);
 		
-		setColumn(HEADER_PM_T, result.measurements().get("PM").avgDurationSeconds(), content);
+		setColumn(HEADER_PM_T, result.measurements().get("PM").totalDurationSeconds(), content);
 		setColumn(HEADER_PM_T_MIN, result.measurements().get("PM").minDurationSeconds(), content);
 		setColumn(HEADER_PM_T_MAX, result.measurements().get("PM").maxDurationSeconds(), content);
 		setColumn(HEADER_PM_MEM, result.measurements().get("PM").avgMemoryMB(), content);
 		setColumn(HEADER_PM_MEM_MIN, result.measurements().get("PM").minMemoryMB(), content);
 		setColumn(HEADER_PM_MEM_MAX, result.measurements().get("PM").maxMemoryMB(), content);
 		
-		setColumn(HEADER_BUILD_T, result.measurements().get("BUILD").avgDurationSeconds(), content);
+		setColumn(HEADER_BUILD_T, result.measurements().get("BUILD").totalDurationSeconds(), content);
 		setColumn(HEADER_BUILD_T_MIN, result.measurements().get("BUILD").minDurationSeconds(), content);
 		setColumn(HEADER_BUILD_T_MAX, result.measurements().get("BUILD").maxDurationSeconds(), content);
 		setColumn(HEADER_BUILD_MEM, result.measurements().get("BUILD").avgMemoryMB(), content);
 		setColumn(HEADER_BUILD_MEM_MIN, result.measurements().get("BUILD").minMemoryMB(), content);
 		setColumn(HEADER_BUILD_MEM_MAX, result.measurements().get("BUILD").maxMemoryMB(), content);
 		
-		setColumn(HEADER_BUILD_GIPS_T, result.measurements().get("BUILD_GIPS").avgDurationSeconds(), content);
+		setColumn(HEADER_BUILD_GIPS_T, result.measurements().get("BUILD_GIPS").totalDurationSeconds(), content);
 		setColumn(HEADER_BUILD_GIPS_T_MIN, result.measurements().get("BUILD_GIPS").minDurationSeconds(), content);
 		setColumn(HEADER_BUILD_GIPS_T_MAX, result.measurements().get("BUILD_GIPS").maxDurationSeconds(), content);
 		setColumn(HEADER_BUILD_GIPS_MEM, result.measurements().get("BUILD_GIPS").avgMemoryMB(), content);
 		setColumn(HEADER_BUILD_GIPS_MEM_MIN, result.measurements().get("BUILD_GIPS").minMemoryMB(), content);
 		setColumn(HEADER_BUILD_GIPS_MEM_MAX, result.measurements().get("BUILD_GIPS").maxMemoryMB(), content);
 		
-		setColumn(HEADER_BUILD_SOLVER_T, result.measurements().get("BUILD_SOLVER").avgDurationSeconds(), content);
+		setColumn(HEADER_BUILD_SOLVER_T, result.measurements().get("BUILD_SOLVER").totalDurationSeconds(), content);
 		setColumn(HEADER_BUILD_SOLVER_T_MIN, result.measurements().get("BUILD_SOLVER").minDurationSeconds(), content);
 		setColumn(HEADER_BUILD_SOLVER_T_MAX, result.measurements().get("BUILD_SOLVER").maxDurationSeconds(), content);
 		setColumn(HEADER_BUILD_SOLVER_MEM, result.measurements().get("BUILD_SOLVER").avgMemoryMB(), content);
 		setColumn(HEADER_BUILD_SOLVER_MEM_MIN, result.measurements().get("BUILD_SOLVER").minMemoryMB(), content);
 		setColumn(HEADER_BUILD_SOLVER_MEM_MAX, result.measurements().get("BUILD_SOLVER").maxMemoryMB(), content);
 		
-		setColumn(HEADER_SOLVE_T, result.measurements().get("SOLVE_PROBLEM").avgDurationSeconds(), content);
+		setColumn(HEADER_SOLVE_T, result.measurements().get("SOLVE_PROBLEM").totalDurationSeconds(), content);
 		setColumn(HEADER_SOLVE_T_MIN, result.measurements().get("SOLVE_PROBLEM").minDurationSeconds(), content);
 		setColumn(HEADER_SOLVE_T_MAX, result.measurements().get("SOLVE_PROBLEM").maxDurationSeconds(), content);
 		setColumn(HEADER_SOLVE_MEM, result.measurements().get("SOLVE_PROBLEM").avgMemoryMB(), content);
 		setColumn(HEADER_SOLVE_MEM_MIN, result.measurements().get("SOLVE_PROBLEM").minMemoryMB(), content);
 		setColumn(HEADER_SOLVE_MEM_MAX, result.measurements().get("SOLVE_PROBLEM").maxMemoryMB(), content);
 		
-		setColumn(HEADER_APPLY_T, result.measurements().get("APPLY").avgDurationSeconds(), content);
+		setColumn(HEADER_APPLY_T, result.measurements().get("APPLY").totalDurationSeconds(), content);
 		setColumn(HEADER_APPLY_T_MIN, result.measurements().get("APPLY").minDurationSeconds(), content);
 		setColumn(HEADER_APPLY_T_MAX, result.measurements().get("APPLY").maxDurationSeconds(), content);
 		setColumn(HEADER_APPLY_MEM, result.measurements().get("APPLY").avgMemoryMB(), content);
 		setColumn(HEADER_APPLY_MEM_MIN, result.measurements().get("APPLY").minMemoryMB(), content);
 		setColumn(HEADER_APPLY_MEM_MAX, result.measurements().get("APPLY").maxMemoryMB(), content);
 		
-		double total_time_avg = result.measurements().get("PM").avgDurationSeconds() + 
-				result.measurements().get("BUILD").avgDurationSeconds() + 
-				result.measurements().get("SOLVE_PROBLEM").avgDurationSeconds() + 
-				result.measurements().get("APPLY").avgDurationSeconds();
+		double stdv_mappings = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().mappings()).map(m -> Math.abs(avg_mappings-m)).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		setColumn(HEADER_MAPPINGS_STDV, stdv_mappings, content);
+		double stdv_vars = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().vars()).map(v -> Math.abs(avg_vars-v)).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		setColumn(HEADER_VARS_STDV, stdv_vars, content);
+		double stdv_constraints = result.output().getOutputs().values().stream().filter(o -> o.stats() != null).map(o -> (double) o.stats().constraints()).map(c -> Math.abs(avg_vars-c)).reduce(0.0, (sum, value) -> sum+value)/result.output().getOutputs().values().stream().filter(o -> o.stats() != null).count();
+		setColumn(HEADER_CONSTRAINTS_STDV, stdv_constraints, content);
 		
-		setColumn(HEADER_TOTAL_T, total_time_avg, content);
+		double total_time = result.measurements().get("BUILD").totalDurationSeconds() + 
+				result.measurements().get("SOLVE_PROBLEM").totalDurationSeconds() + 
+				result.measurements().get("APPLY").totalDurationSeconds();
+		
+		setColumn(HEADER_TOTAL_T, total_time, content);
 		
 		writeCsvLine(csvPath, content);
 	}

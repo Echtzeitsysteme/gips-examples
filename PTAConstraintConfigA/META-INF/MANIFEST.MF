@@ -11,7 +11,8 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt,
  org.emoflon.gips.core,
  org.emoflon.ibex.gt.hipe,
- PersonTaskAssignments;bundle-version="0.0.1"
+ PersonTaskAssignments;bundle-version="0.0.1",
+ org.emoflon.ibex.gt.democles
 Export-Package: PTAConstraintConfigA.api,
  PTAConstraintConfigA.api.gips,
  PTAConstraintConfigA.api.gips.constraint,
