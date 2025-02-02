@@ -54,145 +54,136 @@ constraint with findCurrentRelayConnection {
 	== 1
 }
 
-// TODO: The build of this constraint fails from time to time, resulting in a missing class.
 // Current StreamingClientLS
-//constraint with findCurrentStreamingClientLS {
-//	mappings.currentStreamingClientLS
-//		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.relayClient.id)
-//		-> sum(element.value)
-//	>=
-//	mappings.currentLectureStudioConnections
-//		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.relayClient.id)
-//		-> sum(element.value)
-//	-
-//	mappings.streamingClientRC
-//		-> filter(element.nodes.connectionData.serverId == context.nodes.relayClient.id)
-//		-> sum(element.value)
-//}
+constraint with findCurrentStreamingClientLS {
+	mappings.currentStreamingClientLS
+		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.relayClient.id)
+		-> sum(element.value)
+	>=
+	mappings.currentLectureStudioConnections
+		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.relayClient.id)
+		-> sum(element.value)
+	-
+	mappings.streamingClientRC
+		-> filter(element.nodes.connectionData.serverId == context.nodes.relayClient.id)
+		-> sum(element.value)
+}
 
-// TODO: The build of this constraint fails from time to time, resulting in a missing class.
-//constraint with findAnyConnectionData {
-//	mappings.currentStreamingClientLS
-//		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.connectionData.serverId)
-//		-> sum(element.value)
-//	+
-//	mappings.streamingClientRC
-//		-> filter(element.nodes.connectionData == context.nodes.connectionData)
-//		-> sum(element.value)
-//	<=
-//	mappings.currentLectureStudioConnections
-//		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.connectionData.serverId)
-//		-> sum(element.value)
-//}
+constraint with findAnyConnectionData {
+	mappings.currentStreamingClientLS
+		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.connectionData.serverId)
+		-> sum(element.value)
+	+
+	mappings.streamingClientRC
+		-> filter(element.nodes.connectionData == context.nodes.connectionData)
+		-> sum(element.value)
+	<=
+	mappings.currentLectureStudioConnections
+		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.connectionData.serverId)
+		-> sum(element.value)
+}
 
-// TODO: The build of this constraint fails every time
 // Clients mapped once
-//constraint with findWaitingClient {
-//	mappings.streamingClientLS
-//		-> filter(element.nodes.client == context.nodes.node)
-//		-> sum(element.value)
-//	+
-//	mappings.relayClient
-//		-> filter(element.nodes.client == context.nodes.node)
-//		-> sum(element.value)
-//	+
-//	mappings.streamingClientRC
-//		-> filter(element.nodes.client == context.nodes.node)
-//		-> sum(element.value)
-//	== 1
-//}
+constraint with findWaitingClient {
+	mappings.streamingClientLS
+		-> filter(element.nodes.client == context.nodes.node)
+		-> sum(element.value)
+	+
+	mappings.relayClient
+		-> filter(element.nodes.client == context.nodes.node)
+		-> sum(element.value)
+	+
+	mappings.streamingClientRC
+		-> filter(element.nodes.client == context.nodes.node)
+		-> sum(element.value)
+	== 1
+}
 
-// TODO: The build of this constraint fails every time
 // Every relay client has client(s) => rc != lsStream
-//constraint with findWaitingClient {
-//	mappings.relayClient
-//		-> filter(element.nodes.client == context.nodes.node)
-//		-> sum(element.value)
-//	<=
-//	mappings.streamingClientRC
-//		-> filter(element.nodes.server == context.nodes.node)
-//		-> sum(element.value)
-//}
+constraint with findWaitingClient {
+	mappings.relayClient
+		-> filter(element.nodes.client == context.nodes.node)
+		-> sum(element.value)
+	<=
+	mappings.streamingClientRC
+		-> filter(element.nodes.server == context.nodes.node)
+		-> sum(element.value)
+}
 
-// TODO: The build of this constraint fails every time
 // Every rcStream has a RC
-//constraint with findAnyConnectionData {
-//	mappings.streamingClientRC
-//		-> filter(element.nodes.connectionData == context.nodes.connectionData)
-//		-> sum(element.value)
-//	<=
-//	mappings.relayClient
-//		-> filter(element.nodes.client.id == context.nodes.connectionData.serverId)
-//		-> sum(element.value)
-//	+
-//	mappings.currentLectureStudioConnections
-//		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.connectionData.serverId)
-//		-> sum(element.value)
-//}
+constraint with findAnyConnectionData {
+	mappings.streamingClientRC
+		-> filter(element.nodes.connectionData == context.nodes.connectionData)
+		-> sum(element.value)
+	<=
+	mappings.relayClient
+		-> filter(element.nodes.client.id == context.nodes.connectionData.serverId)
+		-> sum(element.value)
+	+
+	mappings.currentLectureStudioConnections
+		-> filter(element.nodes.lectureStudioConnection.client.id == context.nodes.connectionData.serverId)
+		-> sum(element.value)
+}
 
-// TODO: The build of this constraint fails from time to time, resulting in a missing class.
 // Send to LSStream >= sendToRCStream
-//constraint with findAnyClientAndLsData {
-//	mappings.currentStreamingClientLS
-//		-> filter(element.nodes.lectureStudioConnection.server == context.nodes.lsNode)
-//		-> sum(context.nodes.lsData.size / element.nodes.lectureStudioConnection.server.sendBandwidth * element.value)
-//	+
-//	mappings.streamingClientLS
-//		-> sum(context.nodes.lsData.size / element.nodes.server.sendBandwidth * element.value)
-//	>=
-//	mappings.streamingClientRC
-//		-> filter(element.nodes.connectionData.serverId == context.nodes.node.id)
-//		->sum(context.nodes.lsData.size / element.nodes.server.sendBandwidth * element.value)
-//	+
-//	mappings.currentRelayConnections
-//		-> filter(element.nodes.relayConnection.server == context.nodes.node)
-//		-> sum(context.nodes.lsData.size / element.nodes.relayConnection.server.sendBandwidth * element.value)
-//}
+constraint with findAnyClientAndLsData {
+	mappings.currentStreamingClientLS
+		-> filter(element.nodes.lectureStudioConnection.server == context.nodes.lsNode)
+		-> sum(context.nodes.lsData.size / element.nodes.lectureStudioConnection.server.sendBandwidth * element.value)
+	+
+	mappings.streamingClientLS
+		-> sum(context.nodes.lsData.size / element.nodes.server.sendBandwidth * element.value)
+	>=
+	mappings.streamingClientRC
+		-> filter(element.nodes.connectionData.serverId == context.nodes.node.id)
+		->sum(context.nodes.lsData.size / element.nodes.server.sendBandwidth * element.value)
+	+
+	mappings.currentRelayConnections
+		-> filter(element.nodes.relayConnection.server == context.nodes.node)
+		-> sum(context.nodes.lsData.size / element.nodes.relayConnection.server.sendBandwidth * element.value)
+}
 
-// TODO: The build of this constraint fails every time
-//constraint with findAnyClientAndLsData {
-//	mappings.currentStreamingClientLS
-//		-> filter(element.nodes.lectureStudioConnection.server == context.nodes.lsNode)
-//		-> sum(context.nodes.lsData.size / element.nodes.lectureStudioConnection.transferRate * element.value)
-//	+
-//	mappings.streamingClientLS
-//		-> sum(context.nodes.lsData.size / element.nodes.connectionData.bandwidth * element.value)
-//	>=
-//	mappings.streamingClientRC
-//		-> filter(element.nodes.server == context.nodes.node)
-//		->sum(context.nodes.lsData.size / element.nodes.connectionData.bandwidth * element.value)
-//	+
-//	mappings.currentRelayConnections
-//		-> filter(element.nodes.relayConnection.server == context.nodes.node)
-//		-> sum(context.nodes.lsData.size / element.nodes.relayConnection.transferRate * element.value)
-//}
+constraint with findAnyClientAndLsData {
+	mappings.currentStreamingClientLS
+		-> filter(element.nodes.lectureStudioConnection.server == context.nodes.lsNode)
+		-> sum(context.nodes.lsData.size / element.nodes.lectureStudioConnection.transferRate * element.value)
+	+
+	mappings.streamingClientLS
+		-> sum(context.nodes.lsData.size / element.nodes.connectionData.bandwidth * element.value)
+	>=
+	mappings.streamingClientRC
+		-> filter(element.nodes.server == context.nodes.node)
+		->sum(context.nodes.lsData.size / element.nodes.connectionData.bandwidth * element.value)
+	+
+	mappings.currentRelayConnections
+		-> filter(element.nodes.relayConnection.server == context.nodes.node)
+		-> sum(context.nodes.lsData.size / element.nodes.relayConnection.transferRate * element.value)
+}
 
-// TODO: The function's builds also fail.
+function minStreamLsSendBandwidth with LectureStudioServer {
+	mappings.currentLectureStudioConnections
+		-> filter(element.nodes.lectureStudioConnection.server == context.lsNode)
+		-> sum(context.data.size / element.nodes.lectureStudioConnection.server.sendBandwidth * element.value)
+	+
+	mappings.streamingClientLS
+		-> sum(context.data.size / element.nodes.server.sendBandwidth * element.value)
+	+
+	mappings.relayClient
+		-> sum(context.data.size / element.nodes.server.sendBandwidth * element.value)
+}
 
-//function minStreamLsSendBandwidth with LectureStudioServer {
-//	mappings.currentLectureStudioConnections
-//		-> filter(element.nodes.lectureStudioConnection.server == context.lsNode)
-//		-> sum(context.data.size / element.nodes.lectureStudioConnection.server.sendBandwidth * element.value)
-//	+
-//	mappings.streamingClientLS
-//		-> sum(context.data.size / element.nodes.server.sendBandwidth * element.value)
-//	+
-//	mappings.relayClient
-//		-> sum(context.data.size / element.nodes.server.sendBandwidth * element.value)
-//}
-//
-//function minStreamLsConnectionBandwidth with LectureStudioServer {
-//	mappings.currentLectureStudioConnections
-//		-> filter(element.nodes.lectureStudioConnection.server == context.lsNode)
-//		-> sum(context.data.size / element.nodes.lectureStudioConnection.transferRate * element.value)
-//	+
-//	mappings.streamingClientLS
-//		-> sum(context.data.size / element.nodes.connectionData.bandwidth * element.value)
-//	+
-//	mappings.relayClient
-//		-> sum(context.data.size / element.nodes.connectionData.bandwidth * element.value)
-//}
-//
-//objective : min  {
-//	functions.minStreamLsSendBandwidth + functions.minStreamLsConnectionBandwidth
-//}
+function minStreamLsConnectionBandwidth with LectureStudioServer {
+	mappings.currentLectureStudioConnections
+		-> filter(element.nodes.lectureStudioConnection.server == context.lsNode)
+		-> sum(context.data.size / element.nodes.lectureStudioConnection.transferRate * element.value)
+	+
+	mappings.streamingClientLS
+		-> sum(context.data.size / element.nodes.connectionData.bandwidth * element.value)
+	+
+	mappings.relayClient
+		-> sum(context.data.size / element.nodes.connectionData.bandwidth * element.value)
+}
+
+objective : min  {
+	functions.minStreamLsSendBandwidth + functions.minStreamLsConnectionBandwidth
+}
