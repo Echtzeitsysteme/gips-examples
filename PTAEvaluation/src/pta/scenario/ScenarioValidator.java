@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.emoflon.gips.core.ilp.ILPSolverStatus;
-
 import PersonTaskAssignments.Person;
 import PersonTaskAssignments.PersonTaskAssignmentModel;
 import PersonTaskAssignments.Project;
@@ -144,7 +142,7 @@ public class ScenarioValidator {
 			for (Project p : model.getProjects()) {
 				var out = output.getOutputs().get(p);
 				if (out != null) {
-					skipList.put(p, out.status() != ILPSolverStatus.OPTIMAL);
+					skipList.put(p, out.status() != org.emoflon.gips.core.milp.SolverStatus.OPTIMAL);
 				} else {
 					skipList.put(p, true);
 				}
@@ -154,10 +152,10 @@ public class ScenarioValidator {
 				for (Task t : p.getTasks()) {
 					var out = output.getOutputs().get(t);
 					if (out != null && skipList.containsKey(p)) {
-						skipList.put(p, skipList.get(p) || out.status() != ILPSolverStatus.OPTIMAL);
+						skipList.put(p, skipList.get(p) || out.status() != org.emoflon.gips.core.milp.SolverStatus.OPTIMAL);
 						continue;
 					} else if (out != null && !skipList.containsKey(p)) {
-						skipList.put(p, out.status() != ILPSolverStatus.OPTIMAL);
+						skipList.put(p, out.status() != org.emoflon.gips.core.milp.SolverStatus.OPTIMAL);
 					} else {
 						skipList.put(p, true);
 						continue;

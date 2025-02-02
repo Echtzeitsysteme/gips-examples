@@ -23,7 +23,7 @@ Require-Bundle: PersonTaskAssignments,
 Import-Package: org.emoflon.gips.core,
  org.emoflon.gips.core.api,
  org.emoflon.gips.core.gt,
- org.emoflon.gips.core.ilp,
+ org.emoflon.gips.core.milp,
  org.emoflon.gips.core.util,
  org.emoflon.gips.core.validation,
  org.emoflon.ibex.gt.api
