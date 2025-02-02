@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PersonTaskAssignments:PersonTaskAssignmentModel xmlns:PersonTaskAssignments="platform:/resource/PersonTaskAssignments/model/PersonTaskAssignments.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
+  <persons name="Amy_Weeks" id="0" salary="65.0" overtimeFlexibility="1.25" overtimeBonus="100.0">
+    <skills name="Concrete_work" id="0" level="2" type="//@skillTypes.0" />
+    <offers name="AW_1" id="0" hours="19" week="//@weeks.0" />
+    <offers name="AW_2" id="0" hours="19" week="//@weeks.0" requirements="//@projects.0/@tasks.0/@requirements.0" />
+  </persons>
+  <persons name="Nicholas_Rodgers" id="0" salary="30.0" overtimeFlexibility="1.1" overtimeBonus="65.0">
+    <skills name="Brick_laying" id="0" level="1" type="//@skillTypes.1" />
+    <offers name="NR_1" id="0" hours="6" week="//@weeks.1" requirements="//@projects.0/@tasks.1/@requirements.1" />
+    <offers name="NR_2" id="0" hours="6" week="//@weeks.1" requirements="//@projects.0/@tasks.1/@requirements.1" />
+    <offers name="NR_3" id="0" hours="6" week="//@weeks.1" requirements="//@projects.0/@tasks.1/@requirements.1" />
+  </persons>
+  <persons name="Kimberly_Bowling" id="0" salary="100.0" overtimeFlexibility="1.5" overtimeBonus="150.0">
+    <skills name="Wood_work" id="0" level="3" type="//@skillTypes.2" />
+    <skills name="Roofing" id="0" level="3" type="//@skillTypes.3" />
+    <offers name="KB_1" id="0" hours="38" week="//@weeks.1" requirements="//@projects.0/@tasks.1/@requirements.0" />
+    <offers name="KB_2" id="0" hours="38" week="//@weeks.2" requirements="//@projects.0/@tasks.2/@requirements.0" />
+  </persons>
+  <skillTypes name="Concrete_work" id="0" />
+  <skillTypes name="Brick_laying" id="0" />
+  <skillTypes name="Wood_work" id="0" />
+  <skillTypes name="Roofing" id="0" />
+  <weeks offers="//@persons.0/@offers.0 //@persons.0/@offers.1" name="Week_1" id="0" number="1" next="//@weeks.1" />
+  <weeks previous="//@weeks.0" offers="//@persons.1/@offers.0 //@persons.1/@offers.1 //@persons.1/@offers.2 //@persons.2/@offers.0" name="Week_2" id="0" number="2" next="//@weeks.2" />
+  <weeks previous="//@weeks.1" offers="//@persons.2/@offers.1" name="Week_3" id="0" number="3" />
+  <projects weeks="//@weeks.1 //@weeks.0 //@weeks.2" persons="//@persons.1 //@persons.2 //@persons.0" name="Shed" id="0" weeksUntilLoss="3" initialWeekNumber="1" sumSalary="3400.0">
+    <tasks weeks="//@weeks.0" name="Basement" id="0" next="//@projects.0/@tasks.1">
+      <requirements skillType="//@skillTypes.0" offers="//@persons.0/@offers.1" name="Concrete_work" id="0" hours="8" skillLevel="2" overtimeBonus="100.0" salary="65.0"/>
+    </tasks>
+    <tasks previous="//@projects.0/@tasks.0" weeks="//@weeks.1" name="Building_shell" id="0" next="//@projects.0/@tasks.2">
+      <requirements skillType="//@skillTypes.2" offers="//@persons.2/@offers.0" name="Wood_work" id="0" hours="8" skillLevel="2" overtimeBonus="150.0" salary="100.0"/>
+      <requirements skillType="//@skillTypes.1" offers="//@persons.1/@offers.1 //@persons.1/@offers.0 //@persons.1/@offers.2" name="Brick_laying" id="0" hours="16" skillLevel="1" overtimeBonus="65.0" salary="30.0"/>
+    </tasks>
+    <tasks previous="//@projects.0/@tasks.1" weeks="//@weeks.2" name="Roof" id="0">
+      <requirements skillType="//@skillTypes.3" offers="//@persons.2/@offers.1" name="Roofing" id="0" hours="16" skillLevel="3" overtimeBonus="150.0" salary="100.0"/>
+    </tasks>
+  </projects>
+</PersonTaskAssignments:PersonTaskAssignmentModel>
