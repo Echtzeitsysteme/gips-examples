@@ -96,60 +96,60 @@ pattern taskHasNext {
 	}
 }
 
-mapping aom with assignOffer {
+mapping aom to assignOffer {
 	var hours : EInt
 	var overTime : EInt
 };
 
-mapping projectCost with updateProject {
+mapping projectCost to updateProject {
 	var salary : EDouble bind salary
 };
 
-constraint -> mapping::aom {
-	self.nodes().worker.salary * self.value() <= self.nodes().requirement.salary * self.value()
+constraint with aom {
+	context.nodes.worker.salary * context.value <= context.nodes.requirement.salary * context.value
 }
 
-constraint -> mapping::aom {
-	self.nodes().worker.overtimeBonus * self.value() <= self.nodes().requirement.overtimeBonus * self.value()
+constraint with aom {
+	context.nodes.worker.overtimeBonus * context.value <= context.nodes.requirement.overtimeBonus * context.value
 }
 
-constraint -> mapping::aom {
-	self.nodes().skill.level * self.value() >= self.nodes().requirement.skillLevel * self.value()
+constraint with aom {
+	context.nodes.skill.level * context.value >= context.nodes.requirement.skillLevel * context.value
 }
 
-constraint -> mapping::aom {
-	self.nodes().skill.type.id * self.value() == self.nodes().requirement.skillType.id * self.value()
+constraint with aom {
+	context.nodes.skill.type.id * context.value == context.nodes.requirement.skillType.id * context.value
 }
 
 //The sum of hours over all accepted offers must be at least as high as the requirement's hours, including overtime flexibility
-constraint -> class::Requirement {
-	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().hours) + mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().overTime) >= self.hours
+constraint with Requirement {
+	mappings.aom->filter(element.nodes.requirement == context)->sum(element.variables.hours) + mappings.aom->filter(element.nodes.requirement == context)->sum(element.variables.overTime) >= context.hours
 }
 
-constraint -> class::Project {
-	mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.variables().hours * m.nodes().worker.salary) + mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.variables().overTime * m.nodes().worker.overtimeBonus) ==
-	mappings.projectCost->filter(m | m.nodes().project == self)->sum(m | m.variables().salary)
+constraint with Project {
+	mappings.aom->filter(element.nodes.project == context)->sum(element.variables.hours *element.nodes.worker.salary) + mappings.aom->filter(element.nodes.project == context)->sum(element.variables.overTime * element.nodes.worker.overtimeBonus) ==
+	mappings.projectCost->filter(element.nodes.project == context)->sum(element.variables.salary)
 }
 
-constraint -> mapping::projectCost {
-	self.variables().salary >= 0 &
-	self.value() >= 1
+constraint with projectCost {
+	context.variables.salary >= 0 &
+	context.value >= 1
 }
 
-constraint -> pattern::personToOffer {
-	self.nodes().offer.hours * self.nodes().person.overtimeFlexibility >= mappings.aom->filter(m | m.nodes().offer == self.nodes().offer)->sum(m | m.variables().hours) + mappings.aom->filter(m | m.nodes().offer == self.nodes().offer)->sum(m | m.variables().overTime)
+constraint with personToOffer {
+	context.nodes.offer.hours * context.nodes.person.overtimeFlexibility >= mappings.aom->filter(element.nodes.offer == context.nodes.offer)->sum(element.variables.hours) + mappings.aom->filter(element.nodes.offer == context.nodes.offer)->sum(element.variables.overTime)
 }
 
-constraint -> mapping::aom {
+constraint with aom {
 	// A <=> B : If hour variables of a mapping are non-zero, then the corresponding mapping variable must also be non-zero (and the other way around)
-	[self.variables().hours + self.variables().overTime >= 1 <=> self.value() >= 1]
+	[context.variables.hours + context.variables.overTime >= 1 <=> context.value >= 1]
 	
 	// The variables for hours and overTime must be non-negative
-	& self.variables().hours >= 0
-	& self.variables().overTime >= 0
+	& context.variables.hours >= 0
+	& context.variables.overTime >= 0
 }
  
-constraint -> pattern::taskSequence {
+constraint with taskSequence {
 	// A: Precondition -> The current week gets assigned to the current task
 	// B: Then -> There must be no week with a smaller number assigned to the subsequent task
 	// A => B : If week is a week of the current task assignment, then there must not exist a task assignment to a subsequent task with the identical week number or a lesser week number.
@@ -157,11 +157,11 @@ constraint -> pattern::taskSequence {
 	// 1 => 0 = 0 : Week is part of the current task assignment & a smaller week number in subsequent task exists -> false
 	// 0 => 1 = 1 : Week is not part of the current task assignment & a smaller week number in subsequent task exists -> true
 	// 0 => 0 = 1 : Week is not part of the current task assignment & no smaller week number in subsequent task exists -> true
-	mappings.aom->filter(m | m.nodes().task == self.nodes().task & m.nodes().week == self.nodes().week)->count() >= 1 =>
-	mappings.aom->filter(m | m.nodes().task == self.nodes().next & m.nodes().week.number <= self.nodes().week.number)->count() <= 0
+	mappings.aom->filter(element.nodes.task == context.nodes.task &element.nodes.week == context.nodes.week)->sum(element.value) >= 1 =>
+	mappings.aom->filter(element.nodes.task == context.nodes.next &element.nodes.week.number <= context.nodes.week.number)->sum(element.value) <= 0
 }
 
-constraint -> pattern::finalTaskSequence {
+constraint with finalTaskSequence {
 	// A: Precondition -> The current week gets assigned to the current task
 	// B: Then -> There must be no week with a smaller number assigned to the subsequent task
 	// A => B : If week is a week of the current task assignment, then there must not exist a task assignment to a subsequent task with the identical week number or a lesser week number.
@@ -169,22 +169,22 @@ constraint -> pattern::finalTaskSequence {
 	// 1 => 0 = 0 : Week is part of the current task assignment & a smaller week number in subsequent task exists -> false
 	// 0 => 1 = 1 : Week is not part of the current task assignment & a smaller week number in subsequent task exists -> true
 	// 0 => 0 = 1 : Week is not part of the current task assignment & no smaller week number in subsequent task exists -> true
-	mappings.aom->filter(m | m.nodes().task == self.nodes().finalTask & m.nodes().week == self.nodes().week)->count() >= 1 =>
-	mappings.aom->filter(m | m.nodes().task == self.nodes().previous & m.nodes().week.number >= self.nodes().week.number)->count() <= 0
+	mappings.aom->filter(element.nodes.task == context.nodes.finalTask &element.nodes.week == context.nodes.week)->sum(element.value) >= 1 =>
+	mappings.aom->filter(element.nodes.task == context.nodes.previous &element.nodes.week.number >= context.nodes.week.number)->sum(element.value) <= 0
 }
 
-objective minWorkers -> class::Requirement {
-	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().hours * m.nodes().worker.salary)
+function minWorkers with Requirement {
+	mappings.aom->filter(element.nodes.requirement == context)->sum(element.variables.hours * element.nodes.worker.salary)
 }
 
-objective minOvertime -> class::Requirement {
-	mappings.aom->filter(m | m.nodes().requirement == self)->sum(m | m.variables().overTime * m.nodes().worker.overtimeBonus)
+function minOvertime with Requirement {
+	mappings.aom->filter(element.nodes.requirement == context)->sum(element.variables.overTime * element.nodes.worker.overtimeBonus)
 }
 
-objective finishEarly -> class::Project {
-	mappings.aom->filter(m | m.nodes().project == self)->sum(m | m.value() * m.nodes().week.number * 0.1) 
+function finishEarly with Project {
+	mappings.aom->filter(element.nodes.project == context)->sum(element.value * element.nodes.week.number * 0.1) 
 } 
 
-global objective : min {
-	minWorkers + minOvertime + finishEarly
+objective : min {
+	functions.minWorkers + functions.minOvertime + functions.finishEarly
 }

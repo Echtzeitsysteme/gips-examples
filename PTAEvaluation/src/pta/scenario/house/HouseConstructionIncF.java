@@ -2,8 +2,6 @@ package pta.scenario.house;
 
 import java.io.IOException;
 
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
-import org.emoflon.gips.core.ilp.ILPSolverStatus;
 import org.emoflon.gips.core.util.Observer;
 
 import PTAConstraintConfigF.api.gips.PTAConstraintConfigFGipsAPI;
@@ -39,9 +37,9 @@ public class HouseConstructionIncF extends HouseConstructionGeneric<PTAConstrain
 			api.getEMoflonAPI().taskToRequirement().bindProject(p);
 			api.getEMoflonAPI().taskSequence().bindProject(p);
 			api.getEMoflonAPI().finalTaskSequence().bindProject(p);
-			api.buildILPProblemTimed(true);
-			ILPSolverOutput out = api.solveILPProblemTimed();
-			if (out.status() == ILPSolverStatus.OPTIMAL) {
+			api.buildProblemTimed(true);
+			org.emoflon.gips.core.milp.SolverOutput out = api.solveProblemTimed();
+			if (out.status() == org.emoflon.gips.core.milp.SolverStatus.OPTIMAL) {
 				obs.observe("APPLY", () -> executeGT());
 			}
 			output.addOutput(p, out);
