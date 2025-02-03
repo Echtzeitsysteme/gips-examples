@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
-import org.emoflon.gips.core.ilp.ILPSolverStatus;
+import org.emoflon.gips.core.milp.SolverOutput;
+import org.emoflon.gips.core.milp.SolverStatus;
 import org.emoflon.gips.gipsl.examples.lsp2pInc.api.gips.Lsp2pIncGipsAPI;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
@@ -38,7 +38,7 @@ public class LSp2pIncremental {
 		gipsApi.init(rs);
 		int i = 0;
 		int limit = 10;
-		ILPSolverOutput output = null;
+		SolverOutput output = null;
 		do {
 			if (i != 0) {
 				gen.insertRndClients(net.getLectureStudioServer().get(0), new GenParameter(GenDistribution.CONST, 8),
@@ -46,8 +46,8 @@ public class LSp2pIncremental {
 			}
 
 			do {
-				gipsApi.buildILPProblem(true);
-				output = gipsApi.solveILPProblem();
+				gipsApi.buildProblem(true);
+				output = gipsApi.solveProblem();
 
 				gipsApi.getInitRoot2Client().applyNonZeroMappings(false);
 				gipsApi.getRoot2Client().applyNonZeroMappings(false);
@@ -55,9 +55,9 @@ public class LSp2pIncremental {
 				gipsApi.getRelay2Client().applyNonZeroMappings(false);
 				gipsApi.getUpdateTT().applyNonZeroMappings(false);
 			} while (gipsApi.getEMoflonAPI().ls2Waiting().hasMatches(true) && output != null
-					&& output.status() == ILPSolverStatus.OPTIMAL);
+					&& output.status() == SolverStatus.OPTIMAL);
 
-			if (output == null || output.status() != ILPSolverStatus.OPTIMAL)
+			if (output == null || output.status() != SolverStatus.OPTIMAL)
 				break;
 
 			i++;

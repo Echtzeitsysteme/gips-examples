@@ -24,4 +24,3 @@ Export-Package: org.gips.examples.incrementalp2p.gips.incrementaldistribution.ap
  org.gips.examples.incrementalp2p.gipsl.api,
  org.gips.examples.incrementalp2p.gipsl.api.matches,
  org.gips.examples.incrementalp2p.gipsl.api.rules
-

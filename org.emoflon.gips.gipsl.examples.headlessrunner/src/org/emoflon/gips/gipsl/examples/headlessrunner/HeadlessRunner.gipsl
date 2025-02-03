@@ -11,7 +11,7 @@ config {
 
 rule setNodeZero {
 	root : Root {
-		++ -nodes -> node
+		++ -nodess -> node
 	}
 	
 	node : Node {
@@ -22,16 +22,16 @@ rule setNodeZero {
 }
 
 // create a mapping on the rule
-mapping zeroNode with setNodeZero;
+mapping zeroNode to setNodeZero;
 
-constraint -> class::Node {
-	mappings.zeroNode->filter(m | m.nodes().node == self)->count() == 1
+constraint with Node {
+	mappings.zeroNode->filter(element.nodes.node == context)->sum(element.value) == 1
 }
 
-objective nodeObj -> mapping::zeroNode {
+function nodeObj with zeroNode {
 	1
 }
 
-global objective : max {
-	nodeObj
+objective : max {
+	functions.nodeObj
 }

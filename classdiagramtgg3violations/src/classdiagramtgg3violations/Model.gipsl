@@ -52,15 +52,15 @@ pattern findAMMTriple {
 // Objectives to count all found violations
 //
 
-objective objViolationA -> pattern::findViolationA {
+function objViolationA with findViolationA {
 	1
 }
 
-objective objViolationB -> pattern::findViolationB {
+function objViolationB with findViolationB {
 	1
 }
 
-global objective : min {
-	objViolationA
-	+ objViolationB
+objective : min {
+	functions.objViolationA
+	+ functions.objViolationB
 }

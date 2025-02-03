@@ -4,43 +4,40 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
-import org.emoflon.gips.core.ilp.ILPSolverStatus;
-
 public class SolverOutput {
-	protected Map<Object, ILPSolverOutput> outputs = Collections.synchronizedMap(new LinkedHashMap<>());
+	protected Map<Object, org.emoflon.gips.core.milp.SolverOutput> outputs = Collections.synchronizedMap(new LinkedHashMap<>());
 
 	public SolverOutput() {
 	};
 
-	public SolverOutput(final ILPSolverOutput output) {
+	public SolverOutput(final org.emoflon.gips.core.milp.SolverOutput output) {
 		this.outputs.put(null, output);
 	}
 
-	public SolverOutput(final Object problem, final ILPSolverOutput output) {
+	public SolverOutput(final Object problem, final org.emoflon.gips.core.milp.SolverOutput output) {
 		this.outputs.put(problem, output);
 	}
 
-	public SolverOutput(final SolverOutput other, final ILPSolverOutput output) {
+	public SolverOutput(final SolverOutput other, final org.emoflon.gips.core.milp.SolverOutput output) {
 		this.outputs.putAll(other.outputs);
 		this.outputs.put(null, output);
 	}
 
-	public SolverOutput(final Object problem, final SolverOutput other, final ILPSolverOutput output) {
+	public SolverOutput(final Object problem, final SolverOutput other, final org.emoflon.gips.core.milp.SolverOutput output) {
 		this.outputs.putAll(other.outputs);
 		this.outputs.put(problem, output);
 	}
 
-	public void addOutput(final Object problem, final ILPSolverOutput output) {
+	public void addOutput(final Object problem, final org.emoflon.gips.core.milp.SolverOutput output) {
 		outputs.put(problem, output);
 	}
 
 	public boolean isOptimal() {
-		return !outputs.values().stream().filter(o -> o.status() != ILPSolverStatus.OPTIMAL).findAny().isPresent();
+		return !outputs.values().stream().filter(o -> o.status() != org.emoflon.gips.core.milp.SolverStatus.OPTIMAL).findAny().isPresent();
 	}
 
 	public double optimality() {
-		return outputs.values().stream().filter(o -> o.status() == ILPSolverStatus.OPTIMAL).map(o -> 1.0).reduce(0.0,
+		return outputs.values().stream().filter(o -> o.status() == org.emoflon.gips.core.milp.SolverStatus.OPTIMAL).map(o -> 1.0).reduce(0.0,
 				(sum, val) -> sum + val) / outputs.size();
 	}
 
@@ -54,13 +51,13 @@ public class SolverOutput {
 
 	public String getSolverStatus() {
 		StringBuilder sb = new StringBuilder();
-		for (ILPSolverOutput out : outputs.values()) {
+		for (org.emoflon.gips.core.milp.SolverOutput out : outputs.values()) {
 			sb.append(out.status() + "\n");
 		}
 		return sb.toString();
 	}
 
-	public Map<Object, ILPSolverOutput> getOutputs() {
+	public Map<Object, org.emoflon.gips.core.milp.SolverOutput> getOutputs() {
 		return outputs;
 	}
 }

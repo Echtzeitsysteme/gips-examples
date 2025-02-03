@@ -3,8 +3,6 @@ package pta.scenario.house;
 import java.io.IOException;
 
 import org.emoflon.gips.core.api.GipsEngineAPI;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
-import org.emoflon.gips.core.ilp.ILPSolverStatus;
 import org.emoflon.gips.core.util.Observer;
 
 import PersonTaskAssignments.PersonTaskAssignmentModel;
@@ -26,9 +24,9 @@ public abstract class HouseConstructionGeneric<API extends GipsEngineAPI<?, ?>> 
 	@Override
 	public EvaluationResult run(String outputFile) throws IOException {
 		Observer obs = Observer.getInstance();
-		api.buildILPProblemTimed(true);
-		ILPSolverOutput output = api.solveILPProblemTimed();
-		if (output.status() == ILPSolverStatus.OPTIMAL) {
+		api.buildProblemTimed(true);
+		org.emoflon.gips.core.milp.SolverOutput output = api.solveProblemTimed();
+		if (output.status() == org.emoflon.gips.core.milp.SolverStatus.OPTIMAL) {
 			obs.observe("APPLY", () -> executeGT());
 		}
 
