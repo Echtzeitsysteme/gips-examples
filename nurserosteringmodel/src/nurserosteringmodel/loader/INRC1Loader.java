@@ -60,8 +60,9 @@ public class INRC1Loader {
 
 	public static void main(final String[] args) {
 		final INRC1Loader loader = new INRC1Loader();
+		final String projectFolder = System.getProperty("user.dir");
 		try {
-			loader.loadFromXmlFile("./resources/sprint/sprint01.xml");
+			loader.loadFromXmlFile(projectFolder + "/../nurserosteringmodel/resources/sprint/sprint01.xml");
 		} catch (final ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -71,7 +72,7 @@ public class INRC1Loader {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-		System.exit(0);
+		System.out.println("=> Loaded INRC1 model from file.");
 	}
 
 	public void loadFromXmlFile(final String filepath) throws ParserConfigurationException, SAXException, IOException {

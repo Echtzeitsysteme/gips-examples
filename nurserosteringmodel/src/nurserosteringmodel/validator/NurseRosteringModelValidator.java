@@ -32,7 +32,7 @@ public class NurseRosteringModelValidator {
 
 	private void run() {
 		final String projectFolder = System.getProperty("user.dir");
-		final String instanceFolder = projectFolder + "/resources/";
+		final String instanceFolder = projectFolder + "/../nurserosteringmodel/resources/";
 		final String filePath = instanceFolder + SCENARIO_FILE_NAME;
 
 		final ResourceSet rs = new ResourceSetImpl();
@@ -45,9 +45,9 @@ public class NurseRosteringModelValidator {
 		final boolean valid = validate(model);
 
 		if (valid) {
-			System.out.println("Result: Model is valid.");
+			System.out.println("=> Result: Model is valid.");
 		} else {
-			System.out.println("Result: Model is not valid.");
+			System.out.println("=> Result: Model is not valid.");
 		}
 	}
 
