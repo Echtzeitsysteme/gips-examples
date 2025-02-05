@@ -3,7 +3,7 @@ package nurserosteringgipsl.runner;
 import java.io.File;
 import java.io.IOException;
 
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 
 import nurserosteringgipsl.api.gips.NurserosteringgipslGipsAPI;
 
@@ -17,8 +17,8 @@ public abstract class AbstractNurseRosteringRunner {
 	}
 
 	protected double buildAndSolve(final NurserosteringgipslGipsAPI gipsApi) {
-		gipsApi.buildILPProblem(true);
-		final ILPSolverOutput output = gipsApi.solveILPProblem();
+		gipsApi.buildProblem(true);
+		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
 			throw new InternalError("No solution found!");
 		}
