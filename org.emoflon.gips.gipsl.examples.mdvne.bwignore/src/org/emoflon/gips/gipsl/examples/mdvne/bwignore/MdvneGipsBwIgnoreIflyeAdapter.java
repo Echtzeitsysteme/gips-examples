@@ -2,7 +2,8 @@ package org.emoflon.gips.gipsl.examples.mdvne.bwignore;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
+import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapterUtil;
 import org.emoflon.gips.gipsl.examples.mdvne.bwignore.api.gips.BwignoreGipsAPI;
 
 import hipe.engine.config.HiPEPathOptions;
@@ -70,6 +71,9 @@ public class MdvneGipsBwIgnoreIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
 		return buildAndSolve();
 	}
 
@@ -96,20 +100,23 @@ public class MdvneGipsBwIgnoreIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
 		return buildAndSolve();
 	}
 
-	/** 
-	 * Builds and solves the ILP problem using the GIPS API object. 
-	 *  
-	 * @return true, if a valid solution could be found. 
-	 */ 
+	/**
+	 * Builds and solves the ILP problem using the GIPS API object.
+	 * 
+	 * @return true, if a valid solution could be found.
+	 */
 	private static boolean buildAndSolve() {
 		// Build the ILP problem (including updates)
-		api.buildILPProblem(true);
+		api.buildProblem(true);
 
 		// Solve the ILP problem
-		final ILPSolverOutput output = api.solveILPProblem();
+		final SolverOutput output = api.solveProblem();
 
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());

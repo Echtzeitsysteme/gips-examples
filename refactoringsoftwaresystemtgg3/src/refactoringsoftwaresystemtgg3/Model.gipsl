@@ -2,7 +2,7 @@ package "refactoringsoftwaresystemtgg3"
 import "platform:/resource/SoftwareSystem/model/softwareSystem.ecore"
 
 config {  
-	solver := GUROBI [home:="fu", license:="bar"];
+	solver := GUROBI;
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
 	presolve := true;
@@ -65,60 +65,60 @@ pattern findNonImportTriple {
 }
 when componentTupleNoImport
 
-mapping embed with embedCSTuple;
+mapping embed to embedCSTuple;
 
 // iii) every component must be embedded
-constraint -> pattern::findSingleComponent {
-	mappings.embed->filter(m | m.nodes().c == self.nodes().c)->count() == 1
+constraint with findSingleComponent {
+	mappings.embed->filter(element.nodes.c == context.nodes.c)->sum(element.value) == 1
 }
 
 // i) variables for non-existing violations
-mapping vari with findImportTriple;
+mapping vari to findImportTriple;
 
 // connect vari mapping with the respective c1 and c2 mappings
-constraint -> pattern::findImportTriple {
+constraint with findImportTriple {
 	// workaround for == in <=> constraints
-	mappings.vari->filter(m | m.nodes().c1 == self.nodes().c1 & m.nodes().c2 == self.nodes().c2 & m.nodes().s == self.nodes().s)->count() >= 1
+	mappings.vari->filter(element.nodes.c1 == context.nodes.c1 & element.nodes.c2 == context.nodes.c2 & element.nodes.s == context.nodes.s)->sum(element.value) >= 1
 	<=>
 	[
-		mappings.embed->filter(m | m.nodes().c == self.nodes().c1 & m.nodes().snew == self.nodes().s)->count() >= 1
+		mappings.embed->filter(element.nodes.c == context.nodes.c1 & element.nodes.snew == context.nodes.s)->sum(element.value) >= 1
 		&
-		mappings.embed->filter(m | m.nodes().c == self.nodes().c2 & m.nodes().snew == self.nodes().s)->count() >= 1
+		mappings.embed->filter(element.nodes.c == context.nodes.c2 & element.nodes.snew == context.nodes.s)->sum(element.value) >= 1
 	]
 	// TODO: reformulate this with a more efficient constraint
 }
 
 // ii) variables for existing violations
-mapping varii with findNonImportTriple;
+mapping varii to findNonImportTriple;
 
 // connect varii mapping with the respective c1 and c2 mappings
-constraint -> pattern::findNonImportTriple {
+constraint with findNonImportTriple {
 	// workaround for == in <=> constraints
-	mappings.varii->filter(m | m.nodes().c1 == self.nodes().c1 & m.nodes().c2 == self.nodes().c2 & m.nodes().s == self.nodes().s)->count() >= 1
+	mappings.varii->filter(element.nodes.c1 == context.nodes.c1 & element.nodes.c2 == context.nodes.c2 & element.nodes.s == context.nodes.s)->sum(element.value) >= 1
 	<=>
 	[
-		mappings.embed->filter(m | m.nodes().c == self.nodes().c1 & m.nodes().snew == self.nodes().s)->count() >= 1
+		mappings.embed->filter(element.nodes.c == context.nodes.c1 & element.nodes.snew == context.nodes.s)->sum(element.value) >= 1
 		&
-		mappings.embed->filter(m | m.nodes().c == self.nodes().c2 & m.nodes().snew == self.nodes().s)->count() >= 1
+		mappings.embed->filter(element.nodes.c == context.nodes.c2 & element.nodes.snew == context.nodes.s)->sum(element.value) >= 1
 	]
 	// TODO: reformulate this with a more efficient constraint
 }
 
-objective oi -> mapping::vari {
-	1
+function oi with vari {
+	1 * context.value
 }
 
-objective oii -> mapping::varii {
-	1
+function oii with varii {
+	1 * context.value
 }
 
 // iv) motivate the solver to chose the same embedding as before
-objective oiii -> pattern::findPrevEmbeddingTuple {
-	mappings.embed->filter(m | m.nodes().c == self.nodes().c & m.nodes().snew == self.nodes().s)->count()
+function oiii with findPrevEmbeddingTuple {
+	mappings.embed->filter(element.nodes.c == context.nodes.c & element.nodes.snew == context.nodes.s)->sum(element.value)
 }
 
-global objective : max {
-	oi
-	- oii
-	+ 0.001 * oiii
+objective : max {
+	functions.oi
+	- functions.oii
+	+ 0.001 * functions.oiii
 }

@@ -17,5 +17,5 @@ public class FixedIncrementStrategy implements IncrementStrategy {
 	public List<WaitingClient> getClients(final List<WaitingClient> all, final List<WaitingClient> left) {
 		return left.stream().limit(count).collect(Collectors.toList());
 	}
-	
+
 }

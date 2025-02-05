@@ -20,15 +20,6 @@ public class CsvUtil {
 			"total_solve_time", //
 			"total_run_time", //
 			"objective_value" //
-//			"violation_a_counter", //
-//			"violation_c_counter", //
-//			"violation_d1_counter", //
-//			"violation_d2_counter", //
-//			"cohesion", //
-//			"coupling", //
-//			"cra", //
-//			"violations_max", //
-//			"violations_lars" //
 	).build();
 
 	public static void writeCsvLine(final String csvPath, final String[] content) {

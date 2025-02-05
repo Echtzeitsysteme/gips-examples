@@ -1,0 +1,6 @@
+xtend-gen
+!instances/examples
+instances/
+scripts
+*.jar
+*.csv

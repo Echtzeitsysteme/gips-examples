@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.eclipse.emf.common.util.URI;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 
 import classdiagramtgg3.api.gips.Classdiagramtgg3GipsAPI;
 
@@ -22,8 +22,8 @@ public class ClassDiagramExampleRunner {
 		final URI uri = URI.createFileURI(file);
 		gipsApi.init(uri);
 
-		gipsApi.buildILPProblem(true);
-		final ILPSolverOutput output = gipsApi.solveILPProblem();
+		gipsApi.buildProblem(true);
+		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
 			throw new InternalError("No solution found!");
 		}

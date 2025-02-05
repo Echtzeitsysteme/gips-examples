@@ -7,7 +7,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import teachingassistant.gipssolution.api.gips.GipssolutionGipsAPI;
@@ -61,8 +61,8 @@ public abstract class AbstractTeachingAssistantRunner {
 	 * @return Returns the objective value.
 	 */
 	protected double buildAndSolve(final GipssolutionGipsAPI gipsApi) {
-		gipsApi.buildILPProblem(true);
-		final ILPSolverOutput output = gipsApi.solveILPProblem();
+		gipsApi.buildProblem(true);
+		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
 			throw new InternalError("No solution found!");
 		}

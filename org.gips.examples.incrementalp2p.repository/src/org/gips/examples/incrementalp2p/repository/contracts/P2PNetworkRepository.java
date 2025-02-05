@@ -22,5 +22,5 @@ public interface P2PNetworkRepository extends ApiSaver {
 	List<ClientModel> removeRelayClientsAndAttachOrphansAsWaiting(int count);
 
 	void removeAllPossibleConnections();
-	
+
 }

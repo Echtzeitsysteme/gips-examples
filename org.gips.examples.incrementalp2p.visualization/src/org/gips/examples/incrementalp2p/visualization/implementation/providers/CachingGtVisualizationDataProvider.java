@@ -44,5 +44,5 @@ public class CachingGtVisualizationDataProvider implements CachingVisualizationD
 		}
 		return connections;
 	}
-	
+
 }

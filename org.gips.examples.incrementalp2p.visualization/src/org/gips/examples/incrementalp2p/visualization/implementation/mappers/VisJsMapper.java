@@ -58,5 +58,5 @@ public class VisJsMapper {
 	private static boolean isRoot(final VisualizationNode node) {
 		return node.id().equals(CommonConstants.RootName);
 	}
-	
+
 }

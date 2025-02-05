@@ -195,5 +195,5 @@ public class VisJsGraphVisualizer implements GraphVisualizer {
 	public File getGraphFile(final String path, final String id) {
 		return new File(path, targetHtmlFileName(id));
 	}
-	
+
 }

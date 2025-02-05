@@ -2,7 +2,7 @@ package org.emoflon.gips.gipsl.examples.mdvne;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 
 import hipe.engine.config.HiPEPathOptions;
@@ -75,6 +75,9 @@ public class MdvneGipsLookaheadIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
 		return buildAndSolve(networkId);
 	}
 
@@ -107,6 +110,9 @@ public class MdvneGipsLookaheadIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
 		return buildAndSolve(networkId);
 	}
 
@@ -118,10 +124,10 @@ public class MdvneGipsLookaheadIflyeAdapter {
 	 */
 	private static boolean buildAndSolve(final String networkId) {
 		// Build the ILP problem (including updates)
-		api.buildILPProblem(true);
+		api.buildProblem(true);
 
 		// Solve the ILP problem
-		final ILPSolverOutput output = api.solveILPProblem();
+		final SolverOutput output = api.solveProblem();
 
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());

@@ -1,7 +1,7 @@
 package org.emoflon.gips.gipsl.examples.headlessrunnerxmi.runner;
 
 import org.eclipse.emf.common.util.URI;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.gipsl.examples.headlessrunnerxmi.api.gips.HeadlessrunnerxmiGipsAPI;
 
 import hipe.engine.config.HiPEPathOptions;
@@ -39,8 +39,8 @@ public class HeadlessXmiRunner {
 		final HeadlessrunnerxmiGipsAPI api = new HeadlessrunnerxmiGipsAPI();
 		api.init(URI.createFileURI(gipsXmi), URI.createFileURI(arg), URI.createFileURI(ibexXmi));
 
-		api.buildILPProblem(true);
-		final ILPSolverOutput output = api.solveILPProblem();
+		api.buildProblem(true);
+		final SolverOutput output = api.solveProblem();
 		System.out.println("Solver status: " + output.status());
 		System.out.println("Objective value: " + output.objectiveValue());
 

@@ -62,7 +62,7 @@ public class IncrementalModelConverter extends BasicModelConverter {
 			long sumCpu = 0;
 			long sumMem = 0;
 			long sumSto = 0;
-			for (final Node n : vnet.getNodes()) {
+			for (final Node n : vnet.getNodess()) {
 				if (n instanceof VirtualServer) {
 					final VirtualServer vsrv = (VirtualServer) n;
 					sumCpu += vsrv.getCpu();

@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.emoflon.gips.core.gt.GTMapping;
-import org.emoflon.gips.core.ilp.ILPIntegerVariable;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.gt.GipsGTMapping;
+import org.emoflon.gips.core.milp.SolverOutput;
+import org.emoflon.gips.core.milp.model.IntegerVariable;
+import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapterUtil;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.gips.SeqGipsAPI;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2PathRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2ServerRuleMatch;
@@ -78,6 +79,9 @@ public class MdvneSeqGipsIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
 		return buildAndSolve();
 	}
 
@@ -104,6 +108,9 @@ public class MdvneSeqGipsIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
 		return buildAndSolve();
 	}
 
@@ -114,17 +121,17 @@ public class MdvneSeqGipsIflyeAdapter {
 	 */
 	private static boolean buildAndSolve() {
 		// Build the ILP problem (including updates)
-		api.buildILPProblem(true);
+		api.buildProblem(true);
 
 		// Solve the ILP problem
-		final ILPSolverOutput output = api.solveILPProblem();
+		final SolverOutput output = api.solveProblem();
 
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
 		System.out.println("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
 
 		@SuppressWarnings("rawtypes")
-		final var allSelectedMappings = new ArrayList<GTMapping>();
+		final var allSelectedMappings = new ArrayList<GipsGTMapping>();
 
 		// Server 2 Server
 		final var srv2srvMappings = api.getSrv2srv().getNonZeroVariableMappings();
@@ -153,14 +160,14 @@ public class MdvneSeqGipsIflyeAdapter {
 
 		// Sort all mappings according to their index variable value
 		allSelectedMappings.sort((o1, o2) -> {
-			return ((ILPIntegerVariable) o1.getFreeVariables().get("index")).getValue()
-					- ((ILPIntegerVariable) o2.getFreeVariables().get("index")).getValue();
+			return ((IntegerVariable) o1.getFreeVariables().get("index")).getValue()
+					- ((IntegerVariable) o2.getFreeVariables().get("index")).getValue();
 		});
 
 		// Apply all selected mappings in their respective index order
 		allSelectedMappings.forEach(m -> {
 			System.out
-					.println(m.getName() + ": " + ((ILPIntegerVariable) m.getFreeVariables().get("index")).getValue());
+					.println(m.getName() + ": " + ((IntegerVariable) m.getFreeVariables().get("index")).getValue());
 			if (m.getMatch() instanceof Server2ServerRuleMatch) {
 				srv2srvRule.apply((Server2ServerRuleMatch) m.getMatch(), true);
 			} else if (m.getMatch() instanceof Switch2NodeRuleMatch) {
