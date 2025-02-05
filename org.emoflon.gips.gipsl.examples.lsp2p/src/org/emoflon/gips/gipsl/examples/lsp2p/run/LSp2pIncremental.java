@@ -3,7 +3,7 @@ package org.emoflon.gips.gipsl.examples.lsp2p.run;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.gipsl.examples.lsp2p.api.gips.Lsp2pGipsAPI;
 
 public class LSp2pIncremental {
@@ -16,8 +16,8 @@ public class LSp2pIncremental {
 		URI uri = URI.createFileURI(file);
 		gipsApi.init(uri);
 
-		gipsApi.buildILPProblem(true);
-		ILPSolverOutput output = gipsApi.solveILPProblem();
+		gipsApi.buildProblem(true);
+		SolverOutput output = gipsApi.solveProblem();
 		gipsApi.getRelay2Client().applyNonZeroMappings();
 		gipsApi.getNode2Cfg().applyNonZeroMappings();
 

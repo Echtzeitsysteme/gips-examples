@@ -86,7 +86,7 @@ public class Dijkstra implements IPathGen {
 	 * @param start SubstrateNode to use as a start.
 	 */
 	private void init(final SubstrateNetwork net, final SubstrateNode start) {
-		for (final Node n : net.getNodes()) {
+		for (final Node n : net.getNodess()) {
 			final SubstrateNode sn = (SubstrateNode) n;
 			dists.put(sn, Integer.MAX_VALUE);
 			prevs.put(sn, null);
@@ -198,7 +198,7 @@ public class Dijkstra implements IPathGen {
 				.synchronizedMap(new HashMap<SubstrateNode, List<SubstrateLink>>());
 		dijkstra(net, start);
 
-		net.getNodes().stream().forEach((n) -> {
+		net.getNodess().stream().forEach((n) -> {
 			final SubstrateNode sn = (SubstrateNode) n;
 			if (!sn.equals(start)) {
 				paths.put(sn, shortestPath(sn));
@@ -222,7 +222,7 @@ public class Dijkstra implements IPathGen {
 
 		dijkstra(net, start);
 
-		net.getNodes().stream().forEach((n) -> {
+		net.getNodess().stream().forEach((n) -> {
 			final SubstrateNode sn = (SubstrateNode) n;
 			if (!sn.equals(start)) {
 				final List<List<SubstrateLink>> act = new LinkedList<>();

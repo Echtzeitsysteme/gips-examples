@@ -65,23 +65,22 @@ rule itemToZero {
 // in this case, the mapping with the name "setItemToZero"
 // will create a binary ILP variable for every match of
 // the left-hand side of the GT rule "itemToZero"
-mapping setItemToZero with itemToZero;
+mapping setItemToZero to itemToZero;
 
 //
 // constraints
 //
 
 // constraint which ensures the application of GT rule "itemToZero" at least once
-constraint -> pattern::itemToZero {
+constraint with itemToZero {
 	// get all instances of the mapping "setItemToZero"
 	mappings.setItemToZero
 		// overlap it with the context of the constraint, i.e., the
 		// matches of the left-hand side of the GT rule "itemToZero"
-		->filter(m | 
-			m.nodes().i == self.nodes().i & m.nodes().r == self.nodes().r
+		->filter(element.nodes.i == context.nodes.i & element.nodes.r == context.nodes.r
 		)
 		// sum their values
-		->count()
+		->sum(element.value)
 		// ensure that this sum is at least 1
 		>= 1
 }
@@ -91,18 +90,18 @@ constraint -> pattern::itemToZero {
 //
 
 // objective with name "a" and context mapping with name "setItemToZero"
-objective a -> mapping::setItemToZero {
+function a with setItemToZero {
 	// use the ID of the item of the GT rule's match
-	self.nodes().i.id
+	context.nodes.i.id
 }
 
 // global objective
 // the global objective can be minimized or maximized
 // it is a linear combination of all local objectives
 // (in this case "a") and constants
-global objective : min {
+objective : min {
 	// use all values of the local objective "a"
-	a
+	functions.a
 	// add a constant offset
 	+ 1
 }

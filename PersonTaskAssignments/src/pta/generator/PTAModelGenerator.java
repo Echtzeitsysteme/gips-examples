@@ -25,8 +25,215 @@ import PersonTaskAssignments.Task;
 import PersonTaskAssignments.Week;
 
 public class PTAModelGenerator {
+	
+	final public static String[] firstNames = { //
+			"Michael", //
+			"Christopher", //
+			"Jessica", //
+			"Matthew", //
+			"Ashley", //
+			"Jennifer", //
+			"Joshua", //
+			"Amanda", //
+			"Daniel", //
+			"David", //
+			"James", //
+			"Robert", //
+			"John", //
+			"Joseph", //
+			"Andrew", //
+			"Ryan", //
+			"Brandon", //
+			"Jason", //
+			"Justin", //
+			"Sarah", //
+			"William", //
+			"Jonathan", //
+			"Stephanie", //
+			"Brian", //
+			"Nicole", //
+			"Nicholas", //
+			"Anthony", //
+			"Heather", //
+			"Eric", //
+			"Elizabeth", //
+			"Adam", //
+			"Megan", //
+			"Melissa", //
+			"Kevin", //
+			"Steven", //
+			"Thomas", //
+			"Timothy", //
+			"Christina", //
+			"Kyle", //
+			"Rachel", //
+			"Laura", //
+			"Lauren", //
+			"Amber", //
+			"Brittany", //
+			"Danielle", //
+			"Richard", //
+			"Kimberly", //
+			"Jeffrey", //
+			"Amy", //
+			"Crystal", //
+			"Michelle", //
+			"Tiffany", //
+			"Jeremy", //
+			"Benjamin", //
+			"Mark", //
+			"Emily", //
+			"Aaron", //
+			"Charles", //
+			"Rebecca", //
+			"Jacob", //
+			"Stephen", //
+			"Patrick", //
+			"Sean", //
+			"Erin", //
+			"Zachary", //
+			"Jamie", //
+			"Kelly", //
+			"Samantha", //
+			"Nathan", //
+			"Sara", //
+			"Dustin", //
+			"Paul", //
+			"Angela", //
+			"Tyler", //
+			"Scott", //
+			"Katherine", //
+			"Andrea", //
+			"Gregory", //
+			"Erica", //
+			"Mary", //
+			"Travis", //
+			"Lisa", //
+			"Kenneth", //
+			"Bryan", //
+			"Lindsey", //
+			"Kristen", //
+			"Jose", //
+			"Alexander", //
+			"Jesse", //
+			"Katie", //
+			"Lindsay", //
+			"Shannon", //
+			"Vanessa", //
+			"Courtney", //
+			"Christine", //
+			"Alicia", //
+			"Cody", //
+			"Allison", //
+			"Bradley", //
+			"Samuel" //
+	};
+
+	final public static String[] lastNames = { "Chung", //
+			"Chen", //
+			"Melton", //
+			"Hill", //
+			"Puckett", //
+			"Song", //
+			"Hamilton", //
+			"Bender", //
+			"Wagner", //
+			"McLaughlin", //
+			"McNamara", //
+			"Raynor", //
+			"Moon", //
+			"Woodard", //
+			"Desai", //
+			"Wallace", //
+			"Lawrence", //
+			"Griffin", //
+			"Dougherty", //
+			"Powers", //
+			"May", //
+			"Steele", //
+			"Teague", //
+			"Vick", //
+			"Gallagher", //
+			"Solomon", //
+			"Walsh", //
+			"Monroe", //
+			"Connolly", //
+			"Hawkins", //
+			"Middleton", //
+			"Goldstein", //
+			"Watts", //
+			"Johnston", //
+			"Weeks", //
+			"Wilkerson", //
+			"Barton", //
+			"Walton", //
+			"Hall", //
+			"Ross", //
+			"Woods", //
+			"Mangum", //
+			"Joseph", //
+			"Rosenthal", //
+			"Bowden", //
+			"Underwood", //
+			"Jones", //
+			"Baker", //
+			"Merritt", //
+			"Cross", //
+			"Cooper", //
+			"Holmes", //
+			"Sharpe", //
+			"Morgan", //
+			"Hoyle", //
+			"Allen", //
+			"Rich", //
+			"Grant", //
+			"Proctor", //
+			"Diaz", //
+			"Graham", //
+			"Watkins", //
+			"Hinton", //
+			"Marsh", //
+			"Hewitt", //
+			"Branch", //
+			"O'Brien", //
+			"Case", //
+			"Christensen", //
+			"Parks", //
+			"Hardin", //
+			"Lucas", //
+			"Eason", //
+			"Davidson", //
+			"Whitehead", //
+			"Rose", //
+			"Sparks", //
+			"Moore", //
+			"Pearson", //
+			"Rodgers", //
+			"Graves", //
+			"Scarborough", //
+			"Sutton", //
+			"Sinclair", //
+			"Bowman", //
+			"Olsen", //
+			"Love", //
+			"McLean", //
+			"Christian", //
+			"Lamb", //
+			"James", //
+			"Chandler", //
+			"Stout", //
+			"Cowan", //
+			"Golden", //
+			"Bowling", //
+			"Beasley", //
+			"Clapp", //
+			"Abrams", //
+			"Tilley" //
+	};
+	
 	protected PersonTaskAssignmentsFactory factory = PersonTaskAssignmentsFactory.eINSTANCE;
 
+	int id = 1;
 	protected Map<String, SkillType> skillTypes = new LinkedHashMap<>();
 	protected Map<String, Person> persons = new LinkedHashMap<>();
 	protected Map<Integer, Week> weeks = new LinkedHashMap<>();
@@ -67,8 +274,12 @@ public class PTAModelGenerator {
 	}
 
 	public SkillType addSkillType(String name) {
+		if(skillTypes.containsKey(name))
+			return skillTypes.get(name);
+		
 		SkillType type = factory.createSkillType();
 		type.setName(name);
+		type.setId(id++);
 		skillTypes.put(name, type);
 		return type;
 	}
@@ -76,55 +287,76 @@ public class PTAModelGenerator {
 	public Collection<SkillType> addSkillType(String... names) {
 		Collection<SkillType> st = new LinkedHashSet<>();
 		for (String name : names) {
-			SkillType type = factory.createSkillType();
-			type.setName(name);
-			skillTypes.put(name, type);
-			st.add(type);
+			st.add(addSkillType(name));
 		}
 		return st;
 	}
 
 	public Person addPerson(String name, double salary, double flexibility, double overtimeSalary,
 			Map<String, Integer> skills) {
+		if(persons.containsKey(name))
+			return persons.get(name);
+		
 		Person p = factory.createPerson();
 		p.setName(name);
+		p.setId(id++);
 		p.setSalary(salary);
 		p.setOvertimeFlexibility(flexibility);
 		p.setOvertimeBonus(overtimeSalary);
 		skills.forEach((sName, sLevel) -> {
-			Skill skill = factory.createSkill();
-			SkillType type = skillTypes.get(sName);
-			if (type == null) {
-				type = addSkillType(sName);
-			}
-			skill.setName(type.getName());
-			skill.setType(skillTypes.get(sName));
-			skill.setLevel(sLevel);
-			p.getSkills().add(skill);
+			addSkill(name, sLevel, sName);
 		});
 		persons.put(name, p);
 		return p;
+	}
+	
+	public Skill addSkill(String person, int level, String skillType) {
+		Person p  = persons.get(person);
+		Skill s = p.getSkills().stream()
+			.filter(skill -> skill.getLevel() == level && skill.getType().getName().equals(skillType))
+			.findAny()
+			.orElseGet(() -> {
+				Skill skill = factory.createSkill();
+				SkillType type = skillTypes.get(skillType);
+				if (type == null) {
+					type = addSkillType(skillType);
+				}
+				skill.setName(type.getName());
+				skill.setId(id++);
+				skill.setType(type);
+				skill.setLevel(level);
+				p.getSkills().add(skill);
+				return skill;
+			});
+		return s;
 	}
 
 	public Collection<Offer> addOffer(String person, int week, int... hours) {
 		Collection<Offer> os = new LinkedHashSet<>();
 		for (int hour : hours) {
-			Offer offer = factory.createOffer();
-			offer.setHours(hour);
-			os.add(offer);
-			offer.setWeek(weeks.get(week));
+			os.add(addOffer(person, week, hour));
 		}
 		persons.get(person).getOffers().addAll(os);
 		return os;
 	}
+	
+	public Offer addOffer(String person, int week, int hours) {
+		Offer offer = factory.createOffer();
+		offer.setId(id++);
+		offer.setHours(hours);
+		offer.setWeek(weeks.get(week));
+		persons.get(person).getOffers().add(offer);
+		return offer;
+	}
 
 	public Project addProject(String name, double reward, int weeksUntilLoss, double lossPerWeek, int start) {
+		if(projects.containsKey(name))
+			return projects.get(name);
+		
 		Project p = factory.createProject();
 		p.setName(name);
-		p.setStart(weeks.get(start));
-		p.setReward(reward);
+		p.setId(id++);
 		p.setWeeksUntilLoss(weeksUntilLoss);
-		p.setLossPerWeek(lossPerWeek);
 		p.setInitialWeekNumber(start);
 		projects.put(name, p);
 		return p;
@@ -133,6 +365,7 @@ public class PTAModelGenerator {
 	public Task addTask(String project, String name, String... previousTasks) {
 		Task t = factory.createTask();
 		t.setName(name);
+		t.setId(id++);
 		projects.get(project).getTasks().add(t);
 		Map<String, Task> pTasks = tasks.get(project);
 		if (pTasks == null) {
@@ -153,6 +386,7 @@ public class PTAModelGenerator {
 		t.getRequirements().add(r);
 		r.setSkillType(skillTypes.get(skill));
 		r.setName(r.getSkillType().getName());
+		r.setId(id++);
 		r.setHours(hours);
 		r.setSkillLevel(skillLevel);
 		r.setSalary(salary);
@@ -165,6 +399,7 @@ public class PTAModelGenerator {
 		Week prev = null;
 		for (int i = start; i <= end; i++) {
 			Week w = factory.createWeek();
+			w.setId(id++);
 			w.setNumber(i);
 			weeks.put(i, w);
 			ws.add(w);
@@ -175,5 +410,22 @@ public class PTAModelGenerator {
 		}
 
 		return ws;
+	}
+	
+	public Week addWeek() {
+		Week prev = null;
+		if(!weeks.isEmpty()) {
+			prev = weeks.values().stream().toList().getLast();
+		}
+		
+		Week w = factory.createWeek();
+		w.setId(id++);
+		w.setNumber((prev == null) ? 1 : prev.getNumber()+1);
+		if(prev != null) {
+			w.setPrevious(prev);
+		}
+		weeks.put(w.getNumber(), w);
+		
+		return w;
 	}
 }
