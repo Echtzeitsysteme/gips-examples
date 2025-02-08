@@ -9,7 +9,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: ihtcmetamodel
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
- org.emoflon.smartemf
+ org.emoflon.smartemf,
+ gips.examples.dependencies;bundle-version="1.0.0"
 Export-Package: ihtcmetamodel,
  ihtcmetamodel.impl
 
