@@ -1,0 +1,12 @@
+package "ihtcgipssolution"
+import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 300.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.000001];
+	threadCount := true [value := 4];
+}
