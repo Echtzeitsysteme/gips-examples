@@ -460,8 +460,14 @@ public class ModelToJsonExporter {
 	 * @return Unscheduled patients cost for the whole model.
 	 */
 	private int calculateUnscheduledPatientsCost(final Hospital model) {
-		int unscheduledPatientsCost = -1;
-		// TODO
+		int unscheduledPatientsCost = 0;
+
+		for (final Patient p : model.getPatients()) {
+			if (p.getAdmissionDay() == null) {
+				unscheduledPatientsCost++;
+			}
+		}
+
 		return unscheduledPatientsCost * model.getWeight().getUnscheduledOptional();
 	}
 
