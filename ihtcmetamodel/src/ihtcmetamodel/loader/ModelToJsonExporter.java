@@ -257,13 +257,68 @@ public class ModelToJsonExporter {
 	/**
 	 * Soft constraint Nurse-to-Room Assignment, S3.
 	 * 
+	 * This implementation is partly inspired by the given C++ validator code.
+	 * 
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Continuity cost for the whole model.
 	 */
 	private int calculateContinuityCost(final Hospital model) {
 		int continuityCost = -1;
-		// TODO
+
+		// Occupants
+		for (final Occupant o : this.model.getOccupants()) {
+			final int localOccupantCount = countOccupantNurses(o);
+			continuityCost += localOccupantCount;
+		}
+
+		// Patients
+		for (final Patient p : this.model.getPatients()) {
+			final int localPatientCount = countPatientNurses(p);
+			continuityCost += localPatientCount;
+		}
+
 		return continuityCost * model.getWeight().getContinuityOfCare();
+	}
+
+	private int countPatientNurses(final Patient patient) {
+		int count = 0;
+
+		for (final Nurse n : this.model.getNurses()) {
+			for (final RoomsShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+				for (final Room r : rsna.getRooms()) {
+					// room must match
+					if (r.getName().equals(patient.getAssignedRoom().getName())) {
+						// time frame must match
+						if (rsna.getShift().getDay().getId() >= patient.getAdmissionDay().getId() && rsna.getShift()
+								.getDay().getId() <= patient.getAdmissionDay().getId() + patient.getLengthOfStay()) {
+							count++;
+						}
+					}
+				}
+			}
+		}
+
+		return count;
+	}
+
+	private int countOccupantNurses(final Occupant occupant) {
+		int count = 0;
+
+		for (final Nurse n : this.model.getNurses()) {
+			for (final RoomsShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+				for (final Room r : rsna.getRooms()) {
+					// room must match
+					if (r.getName().equals(occupant.getRoomId())) {
+						// time frame must match
+						if (rsna.getShift().getDay().getId() <= occupant.getLengthOfStay()) {
+							count++;
+						}
+					}
+				}
+			}
+		}
+
+		return count;
 	}
 
 	/**
