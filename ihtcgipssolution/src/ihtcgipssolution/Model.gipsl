@@ -1,6 +1,10 @@
 package "ihtcgipssolution"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
+//
+// Configuration
+//
+
 config {  
 	solver := GUROBI;
 	timeLimit := true [value := 300.0];
@@ -10,3 +14,81 @@ config {
 	tolerance := true [value := 0.000001];
 	threadCount := true [value := 4];
 }
+
+//
+// GT
+//
+
+rule assignNurseToRoomShift {
+	h : Hospital {
+		- nurses -> n
+		- shifts -> s
+		- rooms -> r
+	}
+	
+	n : Nurse
+		
+	s : Shift
+	
+	r : Room
+	
+	++ rsna : RoomShiftNurseAssignment {
+		++ - nurse -> n
+		++ - shift -> s
+		++ - room -> r
+	}
+}
+
+rule assignAdmissionDayToPatient {
+	h : Hospital {
+		- patients -> p
+		- days -> d
+	}
+	
+	p : Patient {
+		++ - admissionDay -> d
+	}
+	d : Day
+}
+
+rule assignRoomToPatient {
+	h : Hospital {
+		- patients -> p
+		- rooms -> r
+	}
+	
+	p : Patient {
+		++ - assignedRoom -> r
+	}
+	
+	r : Room
+}
+
+rule assignOperatingTheaterToPatient {
+	h : Hospital {
+		- patients -> p
+		- operatingTheaters -> ot
+	}
+	
+	p : Patient {
+		++ - assignedOperatingTheater -> ot
+	}
+	
+	ot : OperatingTheater
+}
+
+//
+// GIPSL
+//
+
+// Assign nurse to a room and shift
+mapping anrs to assignNurseToRoomShift;
+
+// Assign an admission day to a patient
+mapping aadp to assignAdmissionDayToPatient;
+
+// Assign a room to a patient
+mapping arp to assignRoomToPatient;
+
+// Assign an operating theater to patient
+mapping aotp to assignOperatingTheaterToPatient;
