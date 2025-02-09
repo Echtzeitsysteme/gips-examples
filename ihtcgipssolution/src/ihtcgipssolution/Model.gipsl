@@ -32,10 +32,10 @@ rule assignNurseToRoomShift {
 	
 	r : Room
 	
-	++ rsna : RoomShiftNurseAssignment {
+	++ rsna : RoomsShiftNurseAssignment {
 		++ - nurse -> n
 		++ - shift -> s
-		++ - room -> r
+		++ - rooms -> r
 	}
 }
 
