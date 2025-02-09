@@ -56,6 +56,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="shiftMaxLoads" upperBound="-1"
         eType="#//NurseShiftMaxLoad" containment="true" eOpposite="#//NurseShiftMaxLoad/nurse"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRoomShifts" upperBound="-1"
+        eType="#//RoomShiftNurseAssignment" containment="true" eOpposite="#//RoomShiftNurseAssignment/nurse"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Surgeon" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="availabilities" upperBound="-1"
@@ -76,6 +78,10 @@
         eType="#//PatientWorkloadProduced" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="skillLevelsRequired" upperBound="-1"
         eType="#//PatientSkillLevelRequired" containment="true" eOpposite="#//PatientWorkloadProduced/patient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="admissionDay" eType="#//Day"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRoom" eType="#//Room"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedOperatingTheater"
+        eType="#//OperatingTheater"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AgeGroup" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Weight">
@@ -138,5 +144,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="nurse" eType="#//Nurse"
         eOpposite="#//Nurse/shiftMaxLoads"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxLoad" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RoomShiftNurseAssignment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="room" eType="#//Room"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nurse" eType="#//Nurse"
+        eOpposite="#//Nurse/assignedRoomShifts"/>
   </eClassifiers>
 </ecore:EPackage>
