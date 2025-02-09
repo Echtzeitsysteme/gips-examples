@@ -438,8 +438,18 @@ public class ModelToJsonExporter {
 	 * @return Admission delay cost for the whole model.
 	 */
 	private int calculateAdmissionDelayCost(final Hospital model) {
-		int admissionDelayCost = -1;
-		// TODO
+		int admissionDelayCost = 0;
+
+		for (final Patient p : model.getPatients()) {
+			// check if patient was scheduled at all
+			if (p.getAdmissionDay() != null) {
+				// I am not completely sure if this condition is correct
+				if (p.getAdmissionDay().getId() > p.getAdmissionDay().getId() + p.getSurgeryReleaseDay()) {
+					admissionDelayCost += (p.getAdmissionDay().getId() - p.getSurgeryReleaseDay());
+				}
+			}
+		}
+
 		return admissionDelayCost * model.getWeight().getPatientDelay();
 	}
 
