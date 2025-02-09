@@ -18,6 +18,7 @@ import ihtcmetamodel.Room;
 import ihtcmetamodel.RoomsShiftNurseAssignment;
 import ihtcmetamodel.Shift;
 import ihtcmetamodel.ShiftType;
+import ihtcmetamodel.Surgeon;
 import ihtcmetamodel.SurgeonAvailability;
 import ihtcmetamodel.SurgeryAssignment;
 
@@ -407,8 +408,26 @@ public class ModelToJsonExporter {
 	 * @return Surgeon transfer cost for the whole model.
 	 */
 	private int calculateSurgeonTransferCost(final Hospital model) {
-		int surgeonTransferCost = -1;
-		// TODO
+		int surgeonTransferCost = 0;
+
+		for (final Surgeon s : model.getSurgeons()) {
+			final List<SurgeryAssignment> assignments = s.getSurgeryAssignments();
+			for (final OperatingTheater ot : model.getOperatingTheaters()) {
+				for (final Day d : model.getDays()) {
+					for (final SurgeryAssignment sa : assignments) {
+						// day must be matched
+						if (sa.getDay().equals(d)) {
+							// operating theater must be matched
+							if (sa.getOperationTheater().equals(ot)) {
+								surgeonTransferCost++;
+							}
+						}
+					}
+				}
+			}
+
+		}
+
 		return surgeonTransferCost * model.getWeight().getSurgeonTransfer();
 	}
 
