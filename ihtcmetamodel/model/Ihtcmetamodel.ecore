@@ -48,6 +48,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="OperatingTheater" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="availabilities" upperBound="-1"
         eType="#//OperatingTheaterAvailability" containment="true" eOpposite="#//OperatingTheaterAvailability/operatingTheater"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="surgeryAssignments" upperBound="-1"
+        eType="#//SurgeryAssignment" containment="true" eOpposite="#//SurgeryAssignment/operationTheater"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Room" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="capacity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -62,6 +64,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Surgeon" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="availabilities" upperBound="-1"
         eType="#//SurgeonAvailability" containment="true" eOpposite="#//SurgeonAvailability/surgeon"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="surgeryAssignments" upperBound="-1"
+        eType="#//SurgeryAssignment" eOpposite="#//SurgeryAssignment/surgeon"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Patient" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandatory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -82,6 +86,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRoom" eType="#//Room"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedOperatingTheater"
         eType="#//OperatingTheater"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="surgeryAssignment" eType="#//SurgeryAssignment"
+        eOpposite="#//SurgeryAssignment/patient"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AgeGroup" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Weight">
@@ -152,5 +158,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="nurse" eType="#//Nurse"
         eOpposite="#//Nurse/assignedRoomShifts"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SurgeryAssignment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//Patient"
+        eOpposite="#//Patient/surgeryAssignment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="surgeon" eType="#//Surgeon"
+        eOpposite="#//Surgeon/surgeryAssignments"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operationTheater" eType="#//OperatingTheater"
+        eOpposite="#//OperatingTheater/surgeryAssignments"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="day" eType="#//Day"/>
   </eClassifiers>
 </ecore:EPackage>

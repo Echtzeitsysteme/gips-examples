@@ -11,11 +11,15 @@ import ihtcmetamodel.Day;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.Nurse;
 import ihtcmetamodel.Occupant;
+import ihtcmetamodel.OperatingTheater;
+import ihtcmetamodel.OperatingTheaterAvailability;
 import ihtcmetamodel.Patient;
 import ihtcmetamodel.Room;
 import ihtcmetamodel.RoomsShiftNurseAssignment;
 import ihtcmetamodel.Shift;
 import ihtcmetamodel.ShiftType;
+import ihtcmetamodel.SurgeonAvailability;
+import ihtcmetamodel.SurgeryAssignment;
 
 /**
  * TODO.
@@ -378,8 +382,21 @@ public class ModelToJsonExporter {
 	 * @return Number of open OTs cost for the whole model.
 	 */
 	private int calculateOpenOtCost(final Hospital model) {
-		int openOtCost = -1;
-		// TODO
+		int openOtCost = 0;
+
+		for (final OperatingTheater ot : model.getOperatingTheaters()) {
+			final List<SurgeryAssignment> assignments = ot.getSurgeryAssignments();
+			for (final Day d : model.getDays()) {
+				// check if `ot` has at least one surgery on day `d`
+				for (final SurgeryAssignment sa : assignments) {
+					if (sa.getDay().equals(d)) {
+						openOtCost++;
+						break;
+					}
+				}
+			}
+		}
+
 		return openOtCost * model.getWeight().getOpenOperatingTheater();
 	}
 
