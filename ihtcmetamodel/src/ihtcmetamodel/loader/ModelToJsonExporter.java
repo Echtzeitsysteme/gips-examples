@@ -3,8 +3,11 @@ package ihtcmetamodel.loader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import ihtcmetamodel.AgeGroup;
+import ihtcmetamodel.Day;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.Nurse;
+import ihtcmetamodel.Occupant;
 import ihtcmetamodel.Patient;
 import ihtcmetamodel.Room;
 import ihtcmetamodel.RoomsShiftNurseAssignment;
@@ -165,8 +168,12 @@ public class ModelToJsonExporter {
 	 * @return Age mix cost for the whole model.
 	 */
 	private int calculateAgeMixCost(final Hospital model) {
-		int ageMixCost = -1;
-		// TODO
+		int ageMixCost = 0;
+		for (final Day d : model.getDays()) {
+			for (final Room r : model.getRooms()) {
+				ageMixCost += getMaxAgeDifferenceInRoomAtDay(r, d);
+			}
+		}
 		return ageMixCost * model.getWeight().getRoomMixedAge();
 	}
 
@@ -252,6 +259,76 @@ public class ModelToJsonExporter {
 		int unscheduledPatientsCost = -1;
 		// TODO
 		return unscheduledPatientsCost * model.getWeight().getUnscheduledOptional();
+	}
+
+	/**
+	 * This method calculates the maximum age difference for a given room `r` on day
+	 * `d` for all new patients and all previously assigned occupants which are
+	 * already placed in this room.
+	 * 
+	 * @param r Room.
+	 * @param d Day.
+	 * @return Maximum age difference of all persons in room `r` on day `d`.
+	 */
+	private int getMaxAgeDifferenceInRoomAtDay(final Room r, final Day d) {
+		int maxAgeFound = Integer.MIN_VALUE;
+		int minAgeFound = Integer.MAX_VALUE;
+
+		// find minimum and maximum age of new patients assigned to room `r` on day `d`
+		for (final Patient p : this.model.getPatients()) {
+			// assigned room must match
+			if (p.getAssignedRoom() != null && p.getAssignedRoom().equals(r)) {
+				// time frame must match
+				if (d.getId() >= p.getAdmissionDay().getId()
+						&& d.getId() <= p.getAdmissionDay().getId() + p.getLengthOfStay()) {
+					final int age = convertAgeGroupToInt(p.getAgeGroup());
+					if (maxAgeFound < age) {
+						maxAgeFound = age;
+					}
+					if (minAgeFound > age) {
+						minAgeFound = age;
+					}
+				}
+			}
+		}
+
+		// find minimum and maximum age of occupants previously assigned to room `r` on
+		// day `d`
+		for (final Occupant o : this.model.getOccupants()) {
+			// previously assigned room must match
+			if (o.getRoomId() == r.getName()) {
+				// time frame must match
+				if (o.getLengthOfStay() <= d.getId()) {
+					final int age = convertAgeGroupToInt(o.getAgeGroup());
+					if (maxAgeFound < age) {
+						maxAgeFound = age;
+					}
+					if (minAgeFound > age) {
+						minAgeFound = age;
+					}
+				}
+			}
+		}
+
+		return maxAgeFound - minAgeFound;
+	}
+
+	/**
+	 * Converts the name of a given age group to an integer value. I.e., this method
+	 * searches the index (starting with 0) of the given name of an age group in all
+	 * possible age groups within the hospital model.
+	 * 
+	 * @param ageGroup Given age group to find the integer value (index) for.
+	 * @return Integer value (index) of the given age group.
+	 */
+	private int convertAgeGroupToInt(final String ageGroup) {
+		int ageCounter = 0;
+		for (final AgeGroup ag : this.model.getAgeGroups()) {
+			if (ag.getName().equals(ageGroup)) {
+				break;
+			}
+		}
+		return ageCounter;
 	}
 
 }
