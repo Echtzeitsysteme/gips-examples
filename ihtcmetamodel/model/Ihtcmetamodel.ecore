@@ -75,9 +75,9 @@
         eType="#//Room"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ageGroup" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="workloadsProduced" upperBound="-1"
-        eType="#//PatientWorkloadProduced" containment="true"/>
+        eType="#//PatientWorkloadProduced" containment="true" eOpposite="#//PatientWorkloadProduced/patient"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="skillLevelsRequired" upperBound="-1"
-        eType="#//PatientSkillLevelRequired" containment="true" eOpposite="#//PatientWorkloadProduced/patient"/>
+        eType="#//PatientSkillLevelRequired" containment="true" eOpposite="#//PatientSkillLevelRequired/patient"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="admissionDay" eType="#//Day"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRoom" eType="#//Room"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedOperatingTheater"
@@ -129,14 +129,15 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevelRequired" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PatientWorkloadProduced">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shiftOffset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//Patient"
-        eOpposite="#//Patient/skillLevelsRequired"/>
+        eOpposite="#//Patient/workloadsProduced"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="workloadProduced" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PatientSkillLevelRequired">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//Patient"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shiftOffset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//Patient"
+        eOpposite="#//Patient/skillLevelsRequired"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevelRequired" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NurseShiftMaxLoad">

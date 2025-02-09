@@ -354,15 +354,15 @@ public class JsonToModelLoader {
 		for (final JsonElement incompatibleRoom : incompatibleRoomIds) {
 			p.getIncompatibleRooms().add(findRoomByName(incompatibleRoom.getAsString()));
 		}
-		int dayCounter = 0;
+		int shiftOffsetCounter = 0;
 		for (final JsonElement workload : workloadProduced) {
-			p.getWorkloadsProduced().add(createPatientWorkloadProduced(dayCounter, workload.getAsInt()));
-			dayCounter++;
+			p.getWorkloadsProduced().add(createPatientWorkloadProduced(shiftOffsetCounter, workload.getAsInt()));
+			shiftOffsetCounter++;
 		}
-		dayCounter = 0;
+		shiftOffsetCounter = 0;
 		for (final JsonElement skillLevel : skillLevelRequired) {
-			p.getSkillLevelsRequired().add(createPatientSkillLevelRequired(dayCounter, skillLevel.getAsInt()));
-			dayCounter++;
+			p.getSkillLevelsRequired().add(createPatientSkillLevelRequired(shiftOffsetCounter, skillLevel.getAsInt()));
+			shiftOffsetCounter++;
 		}
 
 		this.model.getPatients().add(p);
@@ -386,18 +386,16 @@ public class JsonToModelLoader {
 		throw new UnsupportedOperationException("Room with name <" + name + "> not found.");
 	}
 
-	private PatientSkillLevelRequired createPatientSkillLevelRequired(final int shiftId, int skillLevel) {
+	private PatientSkillLevelRequired createPatientSkillLevelRequired(final int shiftOffset, int skillLevel) {
 		final PatientSkillLevelRequired psr = IhtcmetamodelFactory.eINSTANCE.createPatientSkillLevelRequired();
-		final Shift shift = getShiftById(shiftId);
-		psr.setShift(shift);
+		psr.setShiftOffset(shiftOffset);
 		psr.setSkillLevelRequired(skillLevel);
 		return psr;
 	}
 
-	private PatientWorkloadProduced createPatientWorkloadProduced(int shiftId, int workload) {
+	private PatientWorkloadProduced createPatientWorkloadProduced(int shiftOffset, int workload) {
 		final PatientWorkloadProduced pwp = IhtcmetamodelFactory.eINSTANCE.createPatientWorkloadProduced();
-		final Shift shift = getShiftById(shiftId);
-		pwp.setShift(shift);
+		pwp.setShiftOffset(shiftOffset);
 		pwp.setWorkloadProduced(workload);
 		return pwp;
 	}
