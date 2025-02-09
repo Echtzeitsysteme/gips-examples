@@ -29,7 +29,7 @@ import ihtcmetamodel.SurgeonAvailability;
 import ihtcmetamodel.Weight;
 
 /**
- * TODO.
+ * JSON file to EMF model loader for the IHTC 2024 example.
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
@@ -38,21 +38,35 @@ public class JsonToModelLoader {
 	private Hospital model = null;
 	private int skillLevel = -1;
 
+	/**
+	 * Creates a new instance of this class with an empty hospital model.
+	 */
 	public JsonToModelLoader() {
 		model = IhtcmetamodelFactory.eINSTANCE.createHospital();
 	}
 
+	/**
+	 * Returns the hospital model contained in this loader object.
+	 * 
+	 * @return Hospital model.
+	 */
 	public Hospital getModel() {
 		return model;
 	}
 
-	public void jsonToModel(final String path) {
-		if (path == null || path.isBlank()) {
-			throw new IllegalArgumentException("Given path <" + path + "> was null or blank.");
+	/**
+	 * Loads a JSON input file from the given path and converts it to an EMF model
+	 * instance.
+	 * 
+	 * @param inputPath File path for the JSON input file to read.
+	 */
+	public void jsonToModel(final String inputPath) {
+		if (inputPath == null || inputPath.isBlank()) {
+			throw new IllegalArgumentException("Given path <" + inputPath + "> was null or blank.");
 		}
 
 		// global JSON object
-		final JsonObject json = FileUtils.readFileToJson(path);
+		final JsonObject json = FileUtils.readFileToJson(inputPath);
 
 		// number of days
 		final JsonPrimitive days = json.getAsJsonPrimitive("days");

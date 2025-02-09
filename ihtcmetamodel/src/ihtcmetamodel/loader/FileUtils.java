@@ -134,22 +134,23 @@ public class FileUtils {
 	}
 
 	/**
-	 * TODO.
+	 * Creates a new folder at the given path if it is non-existent beforehand.
 	 * 
-	 * @param path
+	 * @param folderPath Path to create a new folder at.
 	 */
-	public static void prepareFolder(final String path) {
-		final File f = new File(path);
+	public static void prepareFolder(final String folderPath) {
+		final File f = new File(folderPath);
 		if (!f.exists()) {
 			f.mkdirs();
 		}
 	}
 
 	/**
-	 * TODO.
+	 * Checks if the given object is null and, if it is null, throws an exception
+	 * with a type-specific error message.
 	 * 
-	 * @param o
-	 * @param type
+	 * @param o    Object to check null for.
+	 * @param type Type-specific value for the error message.
 	 */
 	private static void checkNotNull(final Object o, final String type) {
 		if (o == null) {
@@ -158,11 +159,11 @@ public class FileUtils {
 	}
 
 	/**
-	 * TODO.
+	 * Saves the given model as XMI to the given path.
 	 * 
-	 * @param model
-	 * @param path
-	 * @throws IOException
+	 * @param model Model to be saved.
+	 * @param path  Output (XMI) path for the model to be saved at.
+	 * @throws IOException Throws an IOException if the file could not be written.
 	 */
 	public static void save(final Hospital model, final String path) throws IOException {
 		final Resource r = saveAndReturn(model, path);
@@ -170,7 +171,13 @@ public class FileUtils {
 	}
 
 	/**
-	 * TODO.
+	 * Saves the given model as XMI to the given path and returns the respective
+	 * resource.
+	 * 
+	 * @param model Model to be saved.
+	 * @param path  Output (XMI) path for the model to be saved at.
+	 * @return Respective resource of the model.
+	 * @throws IOException Throws an IOException if the file could not be written.
 	 */
 	public static Resource saveAndReturn(final Hospital model, final String path) throws IOException {
 		checkNotNull(model, "Model");

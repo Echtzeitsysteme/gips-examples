@@ -5,14 +5,14 @@ import java.io.IOException;
 import ihtcmetamodel.Hospital;
 
 /**
- * TODO.
+ * This runner can be used to load a given JSON model and save it as XMI model.
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public class JsonToModelRunner {
 
 	/**
-	 * TODO.
+	 * Main method to start the runner.
 	 * 
 	 * @param args
 	 */
@@ -21,15 +21,17 @@ public class JsonToModelRunner {
 	}
 
 	/**
-	 * TODO.
+	 * No instances of this class allowed.
 	 */
 	private JsonToModelRunner() {
 	}
 
 	/**
-	 * TODO.
+	 * Uses the `JsonToModelLoader` to read a given JSON file (first argument is the
+	 * input path), convert it to an XMI file, and write this file to the output
+	 * path (second argument is the output path).
 	 * 
-	 * @param args
+	 * @param args first argument = input path, second argument = output path.
 	 */
 	private void run(final String[] args) {
 		if (args == null || args.length == 0) {
