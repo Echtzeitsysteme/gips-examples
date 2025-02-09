@@ -104,17 +104,17 @@ public class ModelToJsonExporter {
 	}
 
 	private JsonArray convertModelToCostsJson(final Hospital model) {
-		final int costs = -1;
-		final int unscheduled = -1;
-		final int delay = -1;
-		final int openOt = -1;
-		final int ageMix = -1;
-		final int skill = -1;
-		final int excess = -1;
-		final int continuity = -1;
-		final int surgeonTransfer = -1;
+		final int unscheduled = calculateUnscheduledPatientsCost(model);
+		final int delay = calculateAdmissionDelayCost(model);
+		final int openOt = calculateOpenOtCost(model);
+		final int ageMix = calculateAgeMixCost(model);
+		final int skill = calculateSkillLevelCost(model);
+		final int excess = calculateExcessCost(model);
+		final int continuity = calculateContinuityCost(model);
+		final int surgeonTransfer = calculateSurgeonTransferCost(model);
 
-		// TODO: calculate and add actual values here
+		// total cost is the sum of all individual costs
+		final int costs = unscheduled + delay + openOt + ageMix + skill + excess + continuity + surgeonTransfer;
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Cost: ");
@@ -156,6 +156,102 @@ public class ModelToJsonExporter {
 		default:
 			throw new IllegalArgumentException("Unexpected shift type: " + shiftType.getName());
 		}
+	}
+
+	/**
+	 * Soft constraint Patient Admission Scheduling, S1.
+	 * 
+	 * @param model Hospital model to calculate the cost from.
+	 * @return Age mix cost for the whole model.
+	 */
+	private int calculateAgeMixCost(final Hospital model) {
+		int ageMixCost = -1;
+		// TODO
+		return ageMixCost * model.getWeight().getRoomMixedAge();
+	}
+
+	/**
+	 * Soft constraint Nurse-to-Room Assignment, S2.
+	 * 
+	 * @param model Hospital model to calculate the cost from.
+	 * @return Skill level cost for the whole model.
+	 */
+	private int calculateSkillLevelCost(final Hospital model) {
+		int skillLevelCost = -1;
+		// TODO
+		return skillLevelCost * model.getWeight().getRoomNurseSkill();
+	}
+
+	/**
+	 * Soft constraint Nurse-to-Room Assignment, S3.
+	 * 
+	 * @param model Hospital model to calculate the cost from.
+	 * @return Continuity cost for the whole model.
+	 */
+	private int calculateContinuityCost(final Hospital model) {
+		int continuityCost = -1;
+		// TODO
+		return continuityCost * model.getWeight().getContinuityOfCare();
+	}
+
+	/**
+	 * Soft constraint Nurse-to-Room Assignment, S4.
+	 * 
+	 * @param model Hospital model to calculate the cost from.
+	 * @return Excess cost for the whole model.
+	 */
+	private int calculateExcessCost(final Hospital model) {
+		int excessCost = -1;
+		// TODO
+		return excessCost * model.getWeight().getNurseEccessiveWorkload();
+	}
+
+	/**
+	 * Soft constraint Surgical Case Planning, S5.
+	 * 
+	 * @param model Hospital model to calculate the cost from.
+	 * @return Number of open OTs cost for the whole model.
+	 */
+	private int calculateOpenOtCost(final Hospital model) {
+		int openOtCost = -1;
+		// TODO
+		return openOtCost * model.getWeight().getOpenOperatingTheater();
+	}
+
+	/**
+	 * Soft constraint Surgical Case Planning, S6.
+	 * 
+	 * @param model Hospital model to calculate the cost from.
+	 * @return Surgeon transfer cost for the whole model.
+	 */
+	private int calculateSurgeonTransferCost(final Hospital model) {
+		int surgeonTransferCost = -1;
+		// TODO
+		return surgeonTransferCost * model.getWeight().getSurgeonTransfer();
+	}
+
+	/**
+	 * Soft constraint Global constraints, S7.
+	 * 
+	 * @param model Hospital model to calculate the cost from.
+	 * @return Admission delay cost for the whole model.
+	 */
+	private int calculateAdmissionDelayCost(final Hospital model) {
+		int admissionDelayCost = -1;
+		// TODO
+		return admissionDelayCost * model.getWeight().getPatientDelay();
+	}
+
+	/**
+	 * Soft constraint Global constraints, S8.
+	 * 
+	 * @param model Hospital model to calculate the cost from.
+	 * @return Unscheduled patients cost for the whole model.
+	 */
+	private int calculateUnscheduledPatientsCost(final Hospital model) {
+		int unscheduledPatientsCost = -1;
+		// TODO
+		return unscheduledPatientsCost * model.getWeight().getUnscheduledOptional();
 	}
 
 }
