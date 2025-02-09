@@ -1,5 +1,8 @@
 package ihtcmetamodel.loader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -11,6 +14,7 @@ import ihtcmetamodel.Occupant;
 import ihtcmetamodel.Patient;
 import ihtcmetamodel.Room;
 import ihtcmetamodel.RoomsShiftNurseAssignment;
+import ihtcmetamodel.Shift;
 import ihtcmetamodel.ShiftType;
 
 /**
@@ -184,9 +188,70 @@ public class ModelToJsonExporter {
 	 * @return Skill level cost for the whole model.
 	 */
 	private int calculateSkillLevelCost(final Hospital model) {
-		int skillLevelCost = -1;
-		// TODO
+		int skillLevelCost = 0;
+		for (final Nurse n : model.getNurses()) {
+			for (final RoomsShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+				for (final Room r : rsna.getRooms()) {
+					// all patients in this room
+					final List<Patient> patientsInRoom = getPatientsInRoomOnDay(r, rsna.getShift().getDay());
+					for (final Patient p : patientsInRoom) {
+						skillLevelCost += calculateSkillLevelCostPerNursePatientShift(n, p, rsna.getShift());
+					}
+
+					// all occupants in this room
+					final List<Occupant> occupantsInRoom = getOccupantsInRoomOnDay(r, rsna.getShift().getDay());
+					for (final Occupant o : occupantsInRoom) {
+						skillLevelCost += calculateSkillLevelCostPerNurseOccupantShift(n, o, rsna.getShift());
+					}
+				}
+			}
+		}
 		return skillLevelCost * model.getWeight().getRoomNurseSkill();
+	}
+
+	private int calculateSkillLevelCostPerNursePatientShift(final Nurse nurse, final Patient patient,
+			final Shift shift) {
+		int cost = 0;
+		final int nurseLevel = nurse.getSkillLevel();
+
+		// calculate relative shift index to get the correct required skill level from
+		// patient
+		final int index = patient.getAdmissionDay().getShifts().get(0).getId() + shift.getId();
+		final int patientLevel = patient.getSkillLevelsRequired().get(index).getSkillLevelRequired();
+
+		/*
+		 * "If the skill level of the nurse assigned to a patient’s room in a shift does
+		 * not reach the minimum level required by that patient, a penalty is incurred
+		 * equal to the difference between the two skill levels. Note that a nurse with
+		 * a skill level greater than the minimum required can be assigned to the room
+		 * at no additional cost."
+		 */
+		if (patientLevel > nurseLevel) {
+			cost = patientLevel - nurseLevel;
+		}
+		return cost;
+	}
+
+	private int calculateSkillLevelCostPerNurseOccupantShift(final Nurse nurse, final Occupant occupant,
+			final Shift shift) {
+		int cost = 0;
+		final int nurseLevel = nurse.getSkillLevel();
+		final int occupantLevel = occupant.getSkillLevelsRequired().get(shift.getId()).getSkillLevelRequired();
+
+		/*
+		 * "If the skill level of the nurse assigned to a patient’s room in a shift does
+		 * not reach the minimum level required by that patient, a penalty is incurred
+		 * equal to the difference between the two skill levels. Note that a nurse with
+		 * a skill level greater than the minimum required can be assigned to the room
+		 * at no additional cost."
+		 * 
+		 * Assumption: We assume this also holds true for all occupants that are not
+		 * strictly speaking new patients.
+		 */
+		if (occupantLevel > nurseLevel) {
+			cost = occupantLevel - nurseLevel;
+		}
+		return cost;
 	}
 
 	/**
@@ -329,6 +394,35 @@ public class ModelToJsonExporter {
 			}
 		}
 		return ageCounter;
+	}
+
+	private List<Patient> getPatientsInRoomOnDay(final Room room, final Day day) {
+		final List<Patient> patientsInRoom = new ArrayList<Patient>();
+		for (final Patient p : this.model.getPatients()) {
+			// room must match
+			if (p.getAssignedRoom() != null && p.getAssignedRoom().equals(room)) {
+				// day must match
+				if (day.getId() >= p.getAdmissionDay().getId()
+						&& day.getId() <= p.getAdmissionDay().getId() + p.getLengthOfStay()) {
+					patientsInRoom.add(p);
+				}
+			}
+		}
+		return patientsInRoom;
+	}
+
+	private List<Occupant> getOccupantsInRoomOnDay(final Room room, final Day day) {
+		final List<Occupant> occupantsInRoom = new ArrayList<Occupant>();
+		for (final Occupant o : this.model.getOccupants()) {
+			// room must match
+			if (o.getRoomId() != null && o.getRoomId().equals(room.getName())) {
+				// day must match
+				if (day.getId() <= o.getLengthOfStay()) {
+					occupantsInRoom.add(o);
+				}
+			}
+		}
+		return occupantsInRoom;
 	}
 
 }
