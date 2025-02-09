@@ -263,7 +263,7 @@ public class ModelToJsonExporter {
 	 * @return Continuity cost for the whole model.
 	 */
 	private int calculateContinuityCost(final Hospital model) {
-		int continuityCost = -1;
+		int continuityCost = 0;
 
 		// Occupants
 		for (final Occupant o : this.model.getOccupants()) {
@@ -328,9 +328,47 @@ public class ModelToJsonExporter {
 	 * @return Excess cost for the whole model.
 	 */
 	private int calculateExcessCost(final Hospital model) {
-		int excessCost = -1;
-		// TODO
+		int excessCost = 0;
+
+		for (final Nurse n : model.getNurses()) {
+			for (final RoomsShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+				// accumulate all workloads in this shift across all rooms
+				int nurseSpecificAssignedWorkload = 0;
+				for (final Room r : rsna.getRooms()) {
+					final List<Occupant> occupants = getOccupantsInRoomOnDay(r, rsna.getShift().getDay());
+					final List<Patient> patients = getPatientsInRoomOnDay(r, rsna.getShift().getDay());
+
+					// calculate actual work load in this room and shift
+					int workloadInRoomAndShift = 0;
+					for (final Occupant o : occupants) {
+						workloadInRoomAndShift += getWorkloadOfOccupantByShift(o, rsna.getShift());
+					}
+					for (final Patient p : patients) {
+						workloadInRoomAndShift += getWorkloadOfPatientByShift(p, rsna.getShift());
+					}
+
+					nurseSpecificAssignedWorkload += workloadInRoomAndShift;
+				}
+
+				// check if workload of nurse `n` was exceeded for this shift
+				final int nurseMaximumWorkload = n.getShiftMaxLoads().get(rsna.getShift().getId()).getMaxLoad();
+				if (nurseMaximumWorkload < nurseSpecificAssignedWorkload) {
+					excessCost += (nurseSpecificAssignedWorkload - nurseMaximumWorkload);
+				}
+			}
+
+		}
+
 		return excessCost * model.getWeight().getNurseEccessiveWorkload();
+	}
+
+	private int getWorkloadOfOccupantByShift(final Occupant o, final Shift s) {
+		return o.getWorkloadsProduced().get(s.getId()).getWorkloadProduced();
+	}
+
+	private int getWorkloadOfPatientByShift(final Patient p, final Shift shift) {
+		return p.getWorkloadsProduced().get(p.getAdmissionDay().getShifts().get(0).getId() + shift.getId())
+				.getWorkloadProduced();
 	}
 
 	/**
