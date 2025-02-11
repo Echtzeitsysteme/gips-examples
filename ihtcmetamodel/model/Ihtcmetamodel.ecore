@@ -59,7 +59,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="shiftMaxLoads" upperBound="-1"
         eType="#//NurseShiftMaxLoad" containment="true" eOpposite="#//NurseShiftMaxLoad/nurse"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRoomShifts" upperBound="-1"
-        eType="#//RoomsShiftNurseAssignment" containment="true" eOpposite="#//RoomsShiftNurseAssignment/nurse"/>
+        eType="#//RoomShiftNurseAssignment" containment="true" eOpposite="#//RoomShiftNurseAssignment/nurse"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Surgeon" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="availabilities" upperBound="-1"
@@ -84,8 +84,6 @@
         eType="#//PatientSkillLevelRequired" containment="true" eOpposite="#//PatientSkillLevelRequired/patient"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="admissionDay" eType="#//Day"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRoom" eType="#//Room"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedOperatingTheater"
-        eType="#//OperatingTheater"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="surgeryAssignment" eType="#//SurgeryAssignment"
         eOpposite="#//SurgeryAssignment/patient"/>
   </eClassifiers>
@@ -152,9 +150,8 @@
         eOpposite="#//Nurse/shiftMaxLoads"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxLoad" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RoomsShiftNurseAssignment">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rooms" upperBound="-1"
-        eType="#//Room"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RoomShiftNurseAssignment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="room" eType="#//Room"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="nurse" eType="#//Nurse"
         eOpposite="#//Nurse/assignedRoomShifts"/>

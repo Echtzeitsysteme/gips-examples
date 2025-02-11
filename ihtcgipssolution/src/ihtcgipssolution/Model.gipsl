@@ -27,15 +27,13 @@ rule assignNurseToRoomShift {
 	}
 	
 	n : Nurse
-		
 	s : Shift
-	
 	r : Room
 	
-	++ rsna : RoomsShiftNurseAssignment {
+	++ rsna : RoomShiftNurseAssignment {
 		++ - nurse -> n
 		++ - shift -> s
-		++ - rooms -> r
+		++ - room -> r
 	}
 }
 
@@ -48,6 +46,7 @@ rule assignAdmissionDayToPatient {
 	p : Patient {
 		++ - admissionDay -> d
 	}
+	
 	d : Day
 }
 
@@ -64,17 +63,30 @@ rule assignRoomToPatient {
 	r : Room
 }
 
-rule assignOperatingTheaterToPatient {
+rule assignSurgeryToPatient {
 	h : Hospital {
 		- patients -> p
+		- surgeons -> s
+		- days -> d
 		- operatingTheaters -> ot
 	}
 	
 	p : Patient {
-		++ - assignedOperatingTheater -> ot
+		++ - surgeryAssignment -> sa
+		- surgeon -> s
 	}
 	
+	s : Surgeon
+	
+	d : Day
 	ot : OperatingTheater
+	
+	++ sa : SurgeryAssignment {
+		++ - patient -> p
+		++ - surgeon -> s
+		++ - operationTheater -> ot
+		++ - day -> d
+	}
 }
 
 //
@@ -90,5 +102,5 @@ mapping aadp to assignAdmissionDayToPatient;
 // Assign a room to a patient
 mapping arp to assignRoomToPatient;
 
-// Assign an operating theater to patient
-mapping aotp to assignOperatingTheaterToPatient;
+// Assign a surgery to a patient
+mapping asp to assignSurgeryToPatient;

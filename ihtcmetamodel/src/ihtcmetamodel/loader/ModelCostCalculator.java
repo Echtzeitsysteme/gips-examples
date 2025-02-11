@@ -11,7 +11,7 @@ import ihtcmetamodel.Occupant;
 import ihtcmetamodel.OperatingTheater;
 import ihtcmetamodel.Patient;
 import ihtcmetamodel.Room;
-import ihtcmetamodel.RoomsShiftNurseAssignment;
+import ihtcmetamodel.RoomShiftNurseAssignment;
 import ihtcmetamodel.Shift;
 import ihtcmetamodel.Surgeon;
 import ihtcmetamodel.SurgeryAssignment;
@@ -48,19 +48,19 @@ public class ModelCostCalculator {
 	protected int calculateSkillLevelCost(final Hospital model) {
 		int skillLevelCost = 0;
 		for (final Nurse n : model.getNurses()) {
-			for (final RoomsShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
-				for (final Room r : rsna.getRooms()) {
-					// all patients in this room
-					final List<Patient> patientsInRoom = getPatientsInRoomOnDay(model, r, rsna.getShift().getDay());
-					for (final Patient p : patientsInRoom) {
-						skillLevelCost += calculateSkillLevelCostPerNursePatientShift(n, p, rsna.getShift());
-					}
+			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+				// all patients in this room
+				final List<Patient> patientsInRoom = getPatientsInRoomOnDay(model, rsna.getRoom(),
+						rsna.getShift().getDay());
+				for (final Patient p : patientsInRoom) {
+					skillLevelCost += calculateSkillLevelCostPerNursePatientShift(n, p, rsna.getShift());
+				}
 
-					// all occupants in this room
-					final List<Occupant> occupantsInRoom = getOccupantsInRoomOnDay(model, r, rsna.getShift().getDay());
-					for (final Occupant o : occupantsInRoom) {
-						skillLevelCost += calculateSkillLevelCostPerNurseOccupantShift(n, o, rsna.getShift());
-					}
+				// all occupants in this room
+				final List<Occupant> occupantsInRoom = getOccupantsInRoomOnDay(model, rsna.getRoom(),
+						rsna.getShift().getDay());
+				for (final Occupant o : occupantsInRoom) {
+					skillLevelCost += calculateSkillLevelCostPerNurseOccupantShift(n, o, rsna.getShift());
 				}
 			}
 		}
@@ -103,24 +103,23 @@ public class ModelCostCalculator {
 		int excessCost = 0;
 
 		for (final Nurse n : model.getNurses()) {
-			for (final RoomsShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
 				// accumulate all workloads in this shift across all rooms
 				int nurseSpecificAssignedWorkload = 0;
-				for (final Room r : rsna.getRooms()) {
-					final List<Occupant> occupants = getOccupantsInRoomOnDay(model, r, rsna.getShift().getDay());
-					final List<Patient> patients = getPatientsInRoomOnDay(model, r, rsna.getShift().getDay());
+				final List<Occupant> occupants = getOccupantsInRoomOnDay(model, rsna.getRoom(),
+						rsna.getShift().getDay());
+				final List<Patient> patients = getPatientsInRoomOnDay(model, rsna.getRoom(), rsna.getShift().getDay());
 
-					// calculate actual work load in this room and shift
-					int workloadInRoomAndShift = 0;
-					for (final Occupant o : occupants) {
-						workloadInRoomAndShift += getWorkloadOfOccupantByShift(o, rsna.getShift());
-					}
-					for (final Patient p : patients) {
-						workloadInRoomAndShift += getWorkloadOfPatientByShift(p, rsna.getShift());
-					}
-
-					nurseSpecificAssignedWorkload += workloadInRoomAndShift;
+				// calculate actual work load in this room and shift
+				int workloadInRoomAndShift = 0;
+				for (final Occupant o : occupants) {
+					workloadInRoomAndShift += getWorkloadOfOccupantByShift(o, rsna.getShift());
 				}
+				for (final Patient p : patients) {
+					workloadInRoomAndShift += getWorkloadOfPatientByShift(p, rsna.getShift());
+				}
+
+				nurseSpecificAssignedWorkload += workloadInRoomAndShift;
 
 				// check if workload of nurse `n` was exceeded for this shift
 				final int nurseMaximumWorkload = n.getShiftMaxLoads().get(rsna.getShift().getId()).getMaxLoad();
@@ -392,15 +391,13 @@ public class ModelCostCalculator {
 		int count = 0;
 
 		for (final Nurse n : model.getNurses()) {
-			for (final RoomsShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
-				for (final Room r : rsna.getRooms()) {
-					// room must match
-					if (r.getName().equals(patient.getAssignedRoom().getName())) {
-						// time frame must match
-						if (rsna.getShift().getDay().getId() >= patient.getAdmissionDay().getId() && rsna.getShift()
-								.getDay().getId() <= patient.getAdmissionDay().getId() + patient.getLengthOfStay()) {
-							count++;
-						}
+			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+				// room must match
+				if (rsna.getRoom().getName().equals(patient.getAssignedRoom().getName())) {
+					// time frame must match
+					if (rsna.getShift().getDay().getId() >= patient.getAdmissionDay().getId() && rsna.getShift()
+							.getDay().getId() <= patient.getAdmissionDay().getId() + patient.getLengthOfStay()) {
+						count++;
 					}
 				}
 			}
@@ -413,14 +410,12 @@ public class ModelCostCalculator {
 		int count = 0;
 
 		for (final Nurse n : model.getNurses()) {
-			for (final RoomsShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
-				for (final Room r : rsna.getRooms()) {
-					// room must match
-					if (r.getName().equals(occupant.getRoomId())) {
-						// time frame must match
-						if (rsna.getShift().getDay().getId() <= occupant.getLengthOfStay()) {
-							count++;
-						}
+			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+				// room must match
+				if (rsna.getRoom().getName().equals(occupant.getRoomId())) {
+					// time frame must match
+					if (rsna.getShift().getDay().getId() <= occupant.getLengthOfStay()) {
+						count++;
 					}
 				}
 			}

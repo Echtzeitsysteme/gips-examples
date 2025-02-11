@@ -6,8 +6,7 @@ import com.google.gson.JsonObject;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.Nurse;
 import ihtcmetamodel.Patient;
-import ihtcmetamodel.Room;
-import ihtcmetamodel.RoomsShiftNurseAssignment;
+import ihtcmetamodel.RoomShiftNurseAssignment;
 import ihtcmetamodel.ShiftType;
 
 /**
@@ -69,7 +68,8 @@ public class ModelToJsonExporter {
 		if (patient.getAdmissionDay() != null) {
 			patientJson.addProperty("admission_day", patient.getAdmissionDay().getId());
 			patientJson.addProperty("room", patient.getAssignedRoom().getName());
-			patientJson.addProperty("operating_theater", patient.getAssignedOperatingTheater().getName());
+			patientJson.addProperty("operating_theater",
+					patient.getSurgeryAssignment().getOperationTheater().getName());
 		} else {
 			patientJson.addProperty("admission_day", "none");
 		}
@@ -82,7 +82,7 @@ public class ModelToJsonExporter {
 		nurseJson.addProperty("id", nurse.getName());
 
 		final JsonArray assignmentsJson = new JsonArray();
-		for (final RoomsShiftNurseAssignment rsna : nurse.getAssignedRoomShifts()) {
+		for (final RoomShiftNurseAssignment rsna : nurse.getAssignedRoomShifts()) {
 			// Sanity check
 			if (!nurse.equals(rsna.getNurse())) {
 				throw new InternalError("Nurse <" + nurse.getName()
@@ -92,9 +92,7 @@ public class ModelToJsonExporter {
 			assignment.addProperty("day", rsna.getShift().getDay().getId());
 			assignment.addProperty("shift", convertShiftTypeName(rsna.getShift().getType()));
 			final JsonArray roomsJson = new JsonArray();
-			for (final Room r : rsna.getRooms()) {
-				roomsJson.add(r.getName());
-			}
+			roomsJson.add(rsna.getRoom().getName());
 			assignment.add("rooms", roomsJson);
 			assignmentsJson.add(assignment);
 		}
