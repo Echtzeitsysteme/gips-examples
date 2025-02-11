@@ -50,6 +50,21 @@ rule assignAdmissionDayToPatient {
 	d : Day
 }
 
+// H2: Compatible rooms: Patients can only be assigned to one of
+// their compatible rooms
+pattern roomPatientIncompatible {
+	h : Hospital {
+		- patients -> p
+		- rooms -> r
+	}
+	
+	p : Patient {
+		- incompatibleRooms -> r
+	}
+	r : Room
+}
+condition roomNotIncompatible = forbid roomPatientIncompatible
+
 rule assignRoomToPatient {
 	h : Hospital {
 		- patients -> p
@@ -62,6 +77,7 @@ rule assignRoomToPatient {
 	
 	r : Room
 }
+when roomNotIncompatible
 
 rule assignSurgeryToPatient {
 	h : Hospital {
@@ -89,8 +105,52 @@ rule assignSurgeryToPatient {
 	}
 }
 
+pattern patientTuple {
+	h : Hospital {
+		- patients -> p1
+		- patients -> p2
+	}
+	
+	p1 : Patient
+	p2 : Patient
+}
+
+pattern dayRoomTuple {
+	h : Hospital {
+		- days -> d
+		- rooms -> r
+	}
+	
+	d : Day
+	r : Room
+}
+
+pattern daySurgeonTuple {
+	h : Hospital {
+		- days -> d
+		- surgeons -> s	
+	}
+	
+	d : Day
+	s : Surgeon
+}
+
+pattern dayOperatingTheaterTuple {
+	h : Hospital {
+		- days -> d
+		- operatingTheaters -> ot
+	}
+	
+	d : Day
+	ot : OperatingTheater
+}
+
 //
 // GIPSL
+//
+
+//
+// Mappings
 //
 
 // Assign nurse to a room and shift
@@ -104,3 +164,55 @@ mapping arp to assignRoomToPatient;
 
 // Assign a surgery to a patient
 mapping asp to assignSurgeryToPatient;
+
+//
+// Constraints
+//
+
+// H1: No gender mix per room
+constraint with patientTuple {
+	[
+		mappings.arp->filter(element.nodes.p == context.nodes.p1)->sum(element.value) == 1
+		&
+		mappings.arp->filter(element.nodes.p == context.nodes.p2)->sum(element.value) == 1
+	]
+	=>
+	context.nodes.p1.gender == context.nodes.p2.gender
+}
+
+// H7: Room capacity: The number of patients in each room in each day cannot
+// exceed the capacity of the room.
+//constraint with dayRoomTuple {
+//	// TODO: this can only be specified if the patient time frame mapping was done beforehand.
+//}
+
+// H3: Surgeon overtime: The maximum surgery time of a surgeon must not be exceeded.
+constraint with daySurgeonTuple {
+	// find variable assigned surgery time for a specific day and surgeon
+	mappings.asp->filter( //
+		element.nodes.d == context.nodes.d //
+		& element.nodes.s == context.nodes.s
+	)->sum(element.nodes.p.surgeryDuration * element.value)
+	
+	// must be smaller or equal to the surgeon's availability
+	<=
+	
+	// get the surgeon's availability for the same specific day
+	context.nodes.s.availabilities->filter(element.day == context.nodes.d)->sum(element.availability)
+}
+
+// H4: OT overtime: The duration of all surgeries allocated to an OT on a day
+// must not exceed its maximum capacity.
+constraint with dayOperatingTheaterTuple {
+	// find variable assigned surgeries for a specific day and operating theater
+	mappings.asp->filter( //
+		element.nodes.d == context.nodes.d //
+		& element.nodes.ot == context.nodes.ot //
+	)->sum(element.nodes.p.surgeryDuration * element.value)
+	
+	// must be smaller of equal to the operating theater's maximum capacity
+	<=
+	
+	// get the operating theater's capacity for the same specific day
+	context.nodes.ot.availabilities->filter(element.day == context.nodes.d)->sum(element.availability)
+}
