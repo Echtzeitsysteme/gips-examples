@@ -186,6 +186,29 @@ pattern findMandatoryPatient {
 	# p.mandatory == true
 }
 
+pattern dayPatientTuple {
+	h : Hospital {
+		- patients -> p
+		- days -> d
+	}
+	
+	p : Patient
+	d : Day
+	// TODO: it may be useful to add attribute constraint(s) to 
+	// only include days which are within the patient's time frame
+}
+
+pattern roomShiftTuple {
+	h : Hospital {
+		- rooms -> r
+		- shifts -> s
+	}
+	
+	r : Room
+	
+	s : Shift
+}
+
 //
 // GIPSL
 //
@@ -279,3 +302,53 @@ constraint with findMandatoryPatient {
 	)->sum(element.value)
 	== 1
 }
+
+// 2.2 Solution: "Note that a patient stays in only one room during the entire length of their
+// stay, meaning a patient cannot be transferred from one room to another."
+//
+// This constraint ensures that each patient is located in at most one room.
+constraint with Patient {
+	mappings.arp->filter(element.nodes.p == context)->sum(element.value) <= 1
+}
+
+// 2.2 Solution: "We also assume that all patients undergo surgery, and that this takes place
+// on the day of admission."
+//
+// Connect all patient admission days to the surgery days.
+constraint with dayPatientTuple {
+	// This is a shortcut specification for the following constraint:
+	// "If the admission day `d` will be assigned to patient `p`, the patient `p` must
+	// also have their surgery on day `d` (and vice versa)."
+	// Normally, one would implement this with the Boolean equivalence operator `<=>`
+	// but since we do only allow one surgery per patient and also only one admission
+	// day per patient, this constraint effectively does the same but with way less
+	// helper constraints necessary.
+	mappings.aadp->filter(element.nodes.p == context.nodes.p & element.nodes.d == context.nodes.d)->sum(element.value)
+	==
+	mappings.asp->filter(element.nodes.p == context.nodes.p & element.nodes.d == context.nodes.d)->sum(element.value)
+}
+
+// 2.2 Solution: "A nurse can be assigned to more than one room in each shift (but only one
+// nurse is assigned to a room in a shift). Finally, note that it is necessary to assign
+// a nurse to a room on a given shift only if that room contains patients on the day
+// to which the shift belongs. Nevertheless, assigning nurses to empty rooms would
+// be feasible and does not incur additional costs."
+//
+// This constraint ensures that there is at most one nurse per room per shift.
+constraint with roomShiftTuple {
+	mappings.anrs->filter(element.nodes.r == context.nodes.r & element.nodes.s == context.nodes.s)->sum(element.value)
+	<= 1
+}
+
+// 2.2 Solution: "A nurse can be assigned to more than one room in each shift (but only one
+// nurse is assigned to a room in a shift). Finally, note that it is necessary to assign
+// a nurse to a room on a given shift only if that room contains patients on the day
+// to which the shift belongs. Nevertheless, assigning nurses to empty rooms would
+// be feasible and does not incur additional costs."
+//
+// This constraint ensures that there is at least one nurse per room that contains patients in a shift.
+//constraint with roomShiftTuple {
+//	// If there is at least one patient `p` assigned to room `r` on day `d`
+//	mappings.arp->filter(element.nodes.r == context.nodes.r)->sum(element.value) >= 1
+//	// TODO
+//}
