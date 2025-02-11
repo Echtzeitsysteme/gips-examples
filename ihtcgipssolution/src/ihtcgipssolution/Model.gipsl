@@ -26,7 +26,10 @@ rule assignNurseToRoomShift {
 		- rooms -> r
 	}
 	
-	n : Nurse
+	n : Nurse {
+		- shiftMaxLoads -> sml
+	}
+	
 	s : Shift
 	r : Room
 	
@@ -35,6 +38,12 @@ rule assignNurseToRoomShift {
 		++ - shift -> s
 		++ - room -> r
 	}
+	
+	sml : NurseShiftMaxLoad {
+		- shift -> s
+	}
+	
+	# sml.maxLoad > 0
 }
 
 rule assignAdmissionDayToPatient {
@@ -48,6 +57,8 @@ rule assignAdmissionDayToPatient {
 	}
 	
 	d : Day
+	// TODO: it may be useful to add attribute constraint(s) to 
+	// only include days which are within the patient's time frame
 }
 
 // H2: Compatible rooms: Patients can only be assigned to one of
@@ -92,10 +103,14 @@ rule assignSurgeryToPatient {
 		- surgeon -> s
 	}
 	
-	s : Surgeon
+	s : Surgeon {
+		- availabilities -> as
+	}
 	
 	d : Day
-	ot : OperatingTheater
+	ot : OperatingTheater {
+		- availabilities -> aot
+	}
 	
 	++ sa : SurgeryAssignment {
 		++ - patient -> p
@@ -103,6 +118,16 @@ rule assignSurgeryToPatient {
 		++ - operationTheater -> ot
 		++ - day -> d
 	}
+	
+	aot : OperatingTheaterAvailability {
+		- day -> d
+	}
+	# aot.availability > 0
+	
+	as : SurgeonAvailability {
+		- day -> d
+	}
+	# as.availability > 0
 }
 
 pattern patientTuple {
@@ -142,7 +167,23 @@ pattern dayOperatingTheaterTuple {
 	}
 	
 	d : Day
-	ot : OperatingTheater
+	
+	ot : OperatingTheater {
+		- availabilities -> aot
+	}
+	
+	aot : OperatingTheaterAvailability
+	# aot.availability > 0
+}
+
+pattern findMandatoryPatient {
+	h : Hospital {
+		- patients -> p
+	}
+	
+	p : Patient
+	
+	# p.mandatory == true
 }
 
 //
@@ -215,4 +256,26 @@ constraint with dayOperatingTheaterTuple {
 	
 	// get the operating theater's capacity for the same specific day
 	context.nodes.ot.availabilities->filter(element.day == context.nodes.d)->sum(element.availability)
+}
+
+// H5: Mandatory versus optional patients: All mandatory patients must be admitted within the
+// scheduling period, whereas optional patients may be postponed to future scheduling periods.
+//
+// This constraint ensures that all mandatory patients get an admission day.
+constraint with findMandatoryPatient {
+	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
+}
+
+// H6: Admission day: A patient can be admitted on any day from their release
+// date to their due date. Given that optional patients do not have a due date,
+// they can be admitted on any day after their release date.
+//
+// Part 1: A patient can be admitted on any day from their release date to their due date.
+constraint with findMandatoryPatient {
+	mappings.aadp->filter( //
+		element.nodes.p == context.nodes.p //
+		& element.nodes.d.id >= context.nodes.p.surgeryReleaseDay //
+		& element.nodes.d.id <= context.nodes.p.surgeryDueDate //
+	)->sum(element.value)
+	== 1
 }
