@@ -344,9 +344,16 @@ public class JsonToModelLoader {
 			int surgeryDueDay = -1;
 			if (mandatory) {
 				surgeryDueDay = ((JsonObject) p).get("surgery_due_day").getAsInt();
+			} else {
+				surgeryDueDay = 100;
 			}
 
 			// TODO: add relative days
+			
+			// TODO: remove me
+//			if(!mandatory) {
+//				return;
+//			}
 			
 			createPatient(name, mandatory, gender, ageGroup, lengthOfStay, surgeryReleaseDay, surgeryDueDay,
 					surgeryDuration, surgeonId, incompatibleRoomIds, workloadProduced, skillLevelRequired);
@@ -364,9 +371,10 @@ public class JsonToModelLoader {
 		p.setAgeGroup(ageGroup);
 		p.setLengthOfStay(lengthOfStay);
 		p.setSurgeryReleaseDay(surgeryReleaseDay);
-		if (surgeryDueDay != -1) {
-			p.setSurgeryDueDate(surgeryDueDay);
-		}
+//		if (surgeryDueDay != -1) {
+//			p.setSurgeryDueDate(surgeryDueDay);
+//		}
+		p.setSurgeryDueDate(surgeryDueDay);
 		p.setSurgeryDuration(surgeryDuration);
 		final Surgeon s = findSurgeonByName(surgeonId);
 		p.setSurgeon(s);

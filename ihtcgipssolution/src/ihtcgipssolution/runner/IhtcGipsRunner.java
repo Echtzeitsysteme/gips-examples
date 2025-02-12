@@ -3,6 +3,7 @@ package ihtcgipssolution.runner;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 
 import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
 import ihtcmetamodel.Hospital;
@@ -20,7 +21,7 @@ import ihtcmetamodel.loader.ModelToJsonExporter;
  */
 public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 
-	private final String scenarioFileName = "test01.json";
+	private final String scenarioFileName = "toy.json";
 
 	public static void main(final String[] args) {
 		new IhtcGipsRunner().run();
@@ -34,7 +35,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		final String projectFolder = System.getProperty("user.dir");
 
 		// Input JSON file
-		final String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
+		final String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/";
 		final String inputPath = datasetFolder + scenarioFileName;
 
 		// Input XMI file
@@ -46,7 +47,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
 
 		// Output JSON file
-		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_solutions/";
+		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/";
 		final String outputPath = datasetSolutionFolder + "sol_"
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
@@ -96,7 +97,9 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		// Convert solution XMI model to JSON output file
 		//
 
-		final ModelToJsonExporter exporter = new ModelToJsonExporter(model);
+		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
+		final Hospital solvedHospital = (Hospital) loadedResource.getContents().get(0);
+		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
 		exporter.modelToJson(outputPath);
 
 		//

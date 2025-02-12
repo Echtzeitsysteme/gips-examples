@@ -193,4 +193,21 @@ public class FileUtils {
 		return r;
 	}
 
+	/**
+	 * TODO
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public static Resource loadModel(final String path) {
+		checkNotNull(path, "Path");
+		final URI pathUri = URI.createFileURI(path);
+		final ResourceSet resourceSet = new ResourceSetImpl();
+		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
+		resourceSet.getPackageRegistry().put(IhtcmetamodelPackage.eNS_URI, IhtcmetamodelPackage.eINSTANCE);
+		resourceSet.getResource(pathUri, true);
+		return resourceSet.getResources().getFirst();
+	}
+
 }

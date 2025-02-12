@@ -48,7 +48,9 @@ public class ModelToJsonExporter {
 			nursesJson.add(convertNurseToJson(n));
 		}
 
-		final JsonArray costsJson = convertModelToCostsJson(this.model);
+//		final JsonArray costsJson = convertModelToCostsJson(this.model);
+		final JsonArray costsJson = new JsonArray();
+		// TODO: ^
 
 		// Global JSON object
 		final JsonObject json = new JsonObject();
@@ -67,7 +69,10 @@ public class ModelToJsonExporter {
 		// If patient was scheduled
 		if (patient.getAdmissionDay() != null) {
 			patientJson.addProperty("admission_day", patient.getAdmissionDay().getId());
-			patientJson.addProperty("room", patient.getAssignedRoom().getName());
+			if (patient.getAssignedRoom() != null) {
+				patientJson.addProperty("room", patient.getAssignedRoom().getName());
+			}
+
 			patientJson.addProperty("operating_theater",
 					patient.getSurgeryAssignment().getOperationTheater().getName());
 		} else {

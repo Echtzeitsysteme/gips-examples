@@ -12,6 +12,7 @@ config {
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.000001];
+	lpOutput := true [path := "gurobi.lp"];
 	threadCount := true [value := 4];
 }
 
@@ -43,7 +44,7 @@ rule assignNurseToRoomShift {
 		- shift -> s
 	}
 	
-	# sml.maxLoad > 0
+//	# sml.maxLoad > 0
 }
 
 rule assignAdmissionDayToPatient {
@@ -122,12 +123,12 @@ rule assignSurgeryToPatient {
 	aot : OperatingTheaterAvailability {
 		- day -> d
 	}
-	# aot.availability > 0
+//	# aot.availability > 0
 	
 	as : SurgeonAvailability {
 		- day -> d
 	}
-	# as.availability > 0
+//	# as.availability > 0
 }
 
 pattern patientTuple {
@@ -173,7 +174,7 @@ pattern dayOperatingTheaterTuple {
 	}
 	
 	aot : OperatingTheaterAvailability
-	# aot.availability > 0
+//	# aot.availability > 0
 }
 
 pattern findMandatoryPatient {
@@ -184,6 +185,16 @@ pattern findMandatoryPatient {
 	p : Patient
 	
 	# p.mandatory == true
+}
+
+pattern findOptionalPatient {
+	h : Hospital {
+		- patients -> p
+	}
+	
+	p : Patient
+	
+	# p.mandatory == false
 }
 
 pattern dayPatientTuple {
@@ -220,8 +231,8 @@ pattern personRoomDay {
 	p : Patient
 	d : Day
 	
-	# p.surgeryReleaseDay >= d.id
-	# p.surgeryDueDate <= d.id + p.lengthOfStay
+//	# p.surgeryReleaseDay >= d.id
+//	# p.surgeryDueDate <= d.id + p.lengthOfStay
 }
 
 //
@@ -293,16 +304,17 @@ constraint with roomDayLoad {
 // Constraints
 //
 
-// H1: No gender mix per room
-constraint with patientTuple {
-	[
-		mappings.arp->filter(element.nodes.p == context.nodes.p1)->sum(element.value) == 1
-		&
-		mappings.arp->filter(element.nodes.p == context.nodes.p2)->sum(element.value) == 1
-	]
-	=>
-	context.nodes.p1.gender == context.nodes.p2.gender
-}
+// TODO: fix this constraint
+//// H1: No gender mix per room
+//constraint with patientTuple {
+//	[
+//		mappings.arp->filter(element.nodes.p == context.nodes.p1)->sum(element.value) == 1
+//		&
+//		mappings.arp->filter(element.nodes.p == context.nodes.p2)->sum(element.value) == 1
+//	]
+//	=>
+//	context.nodes.p1.gender == context.nodes.p2.gender
+//}
 
 // H7: Room capacity: The number of patients in each room in each day cannot
 // exceed the capacity of the room.
@@ -351,6 +363,13 @@ constraint with findMandatoryPatient {
 	&
 	// All mandatory patients get a room.
 	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
+}
+
+// TODO: temporary workaround: do not schedule optional patients at all
+constraint with findOptionalPatient {
+	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
+	&
+	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
 }
 
 // H6: Admission day: A patient can be admitted on any day from their release
