@@ -86,6 +86,9 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		//
 
 		applySolution(gipsApi);
+		
+		// TODO: remove me
+		printVariableValues(gipsApi);
 
 		//
 		// Save output XMI file

@@ -2,6 +2,9 @@ package ihtcgipssolution.runner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -11,6 +14,7 @@ import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
+import ihtcgipssolution.api.gips.mapping.RoomDayLoadMapping;
 
 /**
  * This abstract runner contains utility methods to wrap a given GIPS API object
@@ -19,6 +23,42 @@ import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public abstract class AbstractIhtcGipsRunner {
+
+	protected void printVariableValues(final IhtcgipssolutionGipsAPI gipsApi) {
+		System.out.println("=> Day, room: load");
+		final List<RoomDayLoadMapping> roomDayLoadMappings = new ArrayList<RoomDayLoadMapping>();
+		roomDayLoadMappings.addAll(gipsApi.getRoomDayLoad().getMappings().values());
+		roomDayLoadMappings.sort(new Comparator<RoomDayLoadMapping>() {
+			@Override
+			public int compare(RoomDayLoadMapping arg0, RoomDayLoadMapping arg1) {
+				if (arg0.getMatch().getD().getId() == arg1.getMatch().getD().getId()) {
+					return arg0.getMatch().getR().getName().compareTo(arg1.getMatch().getR().getName());
+				}
+				return arg0.getMatch().getD().getId() - arg1.getMatch().getD().getId();
+			}
+		});
+		roomDayLoadMappings.forEach(m -> {
+			System.out.println("Day : " + m.getMatch().getD().getId() + ", room : " + m.getMatch().getR().getName()
+					+ ", value : " + m.getValueOfLoad());
+		});
+
+		System.out.println("=> Patient: room");
+		gipsApi.getArp().getMappings().values().forEach(m -> {
+			if (m.getValue() == 1) {
+				System.out.println(
+						"Patient : " + m.getMatch().getP().getName() + ", room : " + m.getMatch().getR().getName());
+			}
+		});
+
+		System.out.println("=> Patient from, to (day)");
+		gipsApi.getAadp().getMappings().values().forEach(m -> {
+			if (m.getValue() == 1) {
+				System.out.println(
+						"Patient : " + m.getMatch().getP().getName() + ", from : " + m.getMatch().getD().getId()
+								+ ", to " + (m.getMatch().getP().getLengthOfStay() + m.getMatch().getD().getId() - 1));
+			}
+		});
+	}
 
 	/**
 	 * Saves the result of a run of a given GIPS API to a given path as XMI file.
