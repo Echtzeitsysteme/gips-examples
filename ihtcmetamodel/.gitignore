@@ -5,3 +5,5 @@
 /resources/ihtc2024_test_solutions/*_gips.json
 /instances/*_solved.xmi
 /instances/*.xmi
+
+/resources/sol_toy_gips.json

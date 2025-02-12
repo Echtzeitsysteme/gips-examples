@@ -235,6 +235,21 @@ pattern personRoomDay {
 //	# p.surgeryDueDate <= d.id + p.lengthOfStay
 }
 
+pattern occupantRoomDay {
+	h : Hospital {
+		- rooms -> r
+		- occupants -> o
+		- days -> d
+	}
+	
+	r : Room
+	o : Occupant
+	d : Day
+	
+	# r.name == o.roomId
+	# o.lengthOfStay >= d.id
+}
+
 //
 // GIPSL
 //
@@ -257,6 +272,8 @@ mapping asp to assignSurgeryToPatient;
 
 // Mapping that holds the information if a patient `p` is scheduled for day `d` in room `r`
 mapping roomDayPersonLoad to personRoomDay;
+
+mapping roomDayOccupantLoad to occupantRoomDay;
 
 // Mapping that holds the cumulative number of all patients on day `d` in room `r`
 mapping roomDayLoad to dayRoomTuple {
@@ -291,10 +308,24 @@ constraint with roomDayPersonLoad {
 	context.value == 1
 }
 
+// TODO: maybe this mapping can be completely removed and the constraint be
+// re-worked with the number of matches only?
+constraint with roomDayOccupantLoad {
+	context.value == 1
+}
+
 constraint with roomDayLoad {
 	context.variables.load
 	==
+	// patients
 	mappings.roomDayPersonLoad->filter( //
+		element.nodes.r == context.nodes.r //
+		& element.nodes.d == context.nodes.d //
+	)->sum(element.value)
+	
+	+
+	// occupants
+	mappings.roomDayOccupantLoad->filter( //
 		element.nodes.r == context.nodes.r //
 		& element.nodes.d == context.nodes.d //
 	)->sum(element.value)
