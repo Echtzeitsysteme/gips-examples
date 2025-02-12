@@ -283,6 +283,9 @@ public class JsonToModelLoader {
 			final JsonArray workloadProduced = ((JsonObject) o).get("workload_produced").getAsJsonArray();
 			final JsonArray skillLevelRequired = ((JsonObject) o).get("skill_level_required").getAsJsonArray();
 			final String roomId = ((JsonObject) o).get("room_id").getAsString();
+			
+			// TODO: add relative days
+			
 			createOccupant(name, gender, ageGroup, lengthOfStay, workloadProduced, skillLevelRequired, roomId);
 		}
 	}
@@ -343,6 +346,8 @@ public class JsonToModelLoader {
 				surgeryDueDay = ((JsonObject) p).get("surgery_due_day").getAsInt();
 			}
 
+			// TODO: add relative days
+			
 			createPatient(name, mandatory, gender, ageGroup, lengthOfStay, surgeryReleaseDay, surgeryDueDay,
 					surgeryDuration, surgeonId, incompatibleRoomIds, workloadProduced, skillLevelRequired);
 		}

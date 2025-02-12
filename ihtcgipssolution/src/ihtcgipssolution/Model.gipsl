@@ -209,6 +209,21 @@ pattern roomShiftTuple {
 	s : Shift
 }
 
+pattern personRoomDay {
+	h : Hospital {
+		- rooms -> r
+		- patients -> p
+		- days -> d
+	}
+	
+	r : Room
+	p : Patient
+	d : Day
+	
+	# p.surgeryReleaseDay >= d.id
+	# p.surgeryDueDate <= d.id + p.lengthOfStay
+}
+
 //
 // GIPSL
 //
@@ -229,6 +244,28 @@ mapping arp to assignRoomToPatient;
 // Assign a surgery to a patient
 mapping asp to assignSurgeryToPatient;
 
+// Mapping that holds the information if a patient `p` is scheduled for day `d` in room `r`
+mapping roomDayPersonLoad to personRoomDay;
+
+// Mapping that holds the cumulative number of all patients on day `d` in room `r`
+mapping roomDayLoad to dayRoomTuple {
+	var load : EInt
+};
+
+constraint with roomDayPersonLoad {
+	context.value == 1
+	// TODO: here, I have to assign the information if patient `p` is mapped to room `r` on day `d`
+}
+
+constraint with roomDayLoad {
+	context.variables.load
+	==
+	mappings.roomDayPersonLoad->filter( //
+		element.nodes.r == context.nodes.r //
+		& element.nodes.d == context.nodes.d //
+	)->sum(element.value)
+}
+
 //
 // Constraints
 //
@@ -246,9 +283,9 @@ constraint with patientTuple {
 
 // H7: Room capacity: The number of patients in each room in each day cannot
 // exceed the capacity of the room.
-//constraint with dayRoomTuple {
-//	// TODO: this can only be specified if the patient time frame mapping was done beforehand.
-//}
+constraint with roomDayLoad {
+	context.variables.load <= context.nodes.r.capacity
+}
 
 // H3: Surgeon overtime: The maximum surgery time of a surgeon must not be exceeded.
 constraint with daySurgeonTuple {
@@ -347,8 +384,10 @@ constraint with roomShiftTuple {
 // be feasible and does not incur additional costs."
 //
 // This constraint ensures that there is at least one nurse per room that contains patients in a shift.
-//constraint with roomShiftTuple {
-//	// If there is at least one patient `p` assigned to room `r` on day `d`
-//	mappings.arp->filter(element.nodes.r == context.nodes.r)->sum(element.value) >= 1
-//	// TODO
-//}
+constraint with roomShiftTuple {
+	// If there is at least one patient `p` assigned to room `r` on day `d` ...
+	mappings.roomDayLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.s.day)->sum(element.variables.load) > 0
+	=>
+	// ... there must be exactly one nurse assigned to room `r` in shift `s` (that is part of day `d`).
+	mappings.anrs->filter(element.nodes.r == context.nodes.r & element.nodes.s == context.nodes.s)->sum(element.value) == 1
+}
