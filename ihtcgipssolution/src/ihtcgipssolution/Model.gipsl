@@ -58,8 +58,9 @@ rule assignAdmissionDayToPatient {
 	}
 	
 	d : Day
-	// TODO: it may be useful to add attribute constraint(s) to 
-	// only include days which are within the patient's time frame
+	
+	# p.surgeryReleaseDay <= d.id
+	# p.surgeryDueDate >= d.id
 }
 
 // H2: Compatible rooms: Patients can only be assigned to one of
@@ -231,8 +232,9 @@ pattern personRoomDay {
 	p : Patient
 	d : Day
 	
-//	# p.surgeryReleaseDay >= d.id
+	# p.surgeryReleaseDay >= d.id
 //	# p.surgeryDueDate <= d.id + p.lengthOfStay
+	# p.surgeryDueDate <= d.id
 }
 
 pattern occupantRoomDay {
@@ -273,8 +275,6 @@ mapping asp to assignSurgeryToPatient;
 // Mapping that holds the information if a patient `p` is scheduled for day `d` in room `r`
 mapping roomDayPersonLoad to personRoomDay;
 
-mapping roomDayOccupantLoad to occupantRoomDay;
-
 // Mapping that holds the cumulative number of all patients on day `d` in room `r`
 mapping roomDayLoad to dayRoomTuple {
 	var load : EInt
@@ -294,7 +294,7 @@ constraint with roomDayPersonLoad {
 		// and if the assigned admission day.id + p.lengthOfStay is >= day.id
 		context.nodes.d.id <= mappings.aadp->filter( //
 			element.nodes.p == context.nodes.p //
-		)->sum(element.nodes.d.id * element.value) + context.nodes.p.lengthOfStay
+		)->sum(element.nodes.d.id * element.value) + context.nodes.p.lengthOfStay - 1
 		&
 		// and if the room `r` is the same as the one chosen for patient `p`
 		mappings.arp->filter( //
@@ -305,12 +305,6 @@ constraint with roomDayPersonLoad {
 	
 	// then the mapping of person `p` in room `r` on day `d` should be set to 1
 	<=>
-	context.value == 1
-}
-
-// TODO: maybe this mapping can be completely removed and the constraint be
-// re-worked with the number of matches only?
-constraint with roomDayOccupantLoad {
 	context.value == 1
 }
 
@@ -325,10 +319,7 @@ constraint with roomDayLoad {
 	
 	+
 	// occupants
-	mappings.roomDayOccupantLoad->filter( //
-		element.nodes.r == context.nodes.r //
-		& element.nodes.d == context.nodes.d //
-	)->sum(element.value)
+	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
 }
 
 //
@@ -411,8 +402,9 @@ constraint with findOptionalPatient {
 constraint with findMandatoryPatient {
 	mappings.aadp->filter( //
 		element.nodes.p == context.nodes.p //
-		& element.nodes.d.id >= context.nodes.p.surgeryReleaseDay //
-		& element.nodes.d.id <= context.nodes.p.surgeryDueDate //
+		// the following two constraints will be checked via the LHS of the GT rule
+//		& element.nodes.d.id >= context.nodes.p.surgeryReleaseDay //
+//		& element.nodes.d.id <= context.nodes.p.surgeryDueDate //
 	)->sum(element.value)
 	== 1
 }
