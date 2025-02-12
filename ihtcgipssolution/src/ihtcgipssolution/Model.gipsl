@@ -234,9 +234,9 @@ pattern personRoomDay {
 	p : Patient
 	d : Day
 	
-	# p.surgeryReleaseDay <= d.id + 1
+	# p.surgeryReleaseDay <= d.id
 //	# p.surgeryDueDate <= d.id + p.lengthOfStay
-	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id + 1
+	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
 }
 
 pattern occupantRoomDay {
@@ -287,25 +287,45 @@ constraint with roomDayPersonLoad {
 	// - the context day must be later or equal to the patients admission day
 	// - the context day must not be later as the patients admission day + length of stay
 	// - the context room must be the same room that will be assigned to the patient
-	[
-		// If the assigned admission day.id of the person `p` is <= day.id
-		context.nodes.d.id >= mappings.aadp->filter( //
-			element.nodes.p == context.nodes.p //
-		)->sum(element.nodes.d.id * element.value)
-		&
-		// and if the assigned admission day.id + p.lengthOfStay is >= day.id
-		context.nodes.d.id <= mappings.aadp->filter( //
-			element.nodes.p == context.nodes.p //
-		)->sum(element.nodes.d.id * element.value) + context.nodes.p.lengthOfStay - 1
-		&
-		// and if the room `r` is the same as the one chosen for patient `p`
-		mappings.arp->filter( //
-			element.nodes.p == context.nodes.p //
-			& element.nodes.r == context.nodes.r //
-		)->sum(element.value) == 1
-	]
+//	[
+//		// If the assigned admission day.id of the person `p` is <= day.id
+//		context.nodes.d.id >= mappings.aadp->filter( //
+//			element.nodes.p == context.nodes.p //
+//		)->sum(element.nodes.d.id * element.value) - 1 // TODO: ?
+//		&
+//		// and if the assigned admission day.id + p.lengthOfStay -1 is >= day.id
+//		context.nodes.d.id <= mappings.aadp->filter( //
+//			element.nodes.p == context.nodes.p //
+//		)->sum(element.nodes.d.id * element.value) + context.nodes.p.lengthOfStay - 1 - 1
+//		&
+//		// and if the room `r` is the same as the one chosen for patient `p`
+//		mappings.arp->filter( //
+//			element.nodes.p == context.nodes.p //
+//			& element.nodes.r == context.nodes.r //
+//		)->sum(element.value) == 1
+//	]
+//	
+//	// then the mapping of person `p` in room `r` on day `d` should be set to 1
+//	<=>
+//	context.value == 1
+//	
+//	&
 	
-	// then the mapping of person `p` in room `r` on day `d` should be set to 1
+	mappings.aadp->filter( //
+		element.nodes.p == context.nodes.p //
+		& element.nodes.d.id - 1 <= context.nodes.d.id //
+	)->sum(element.value)
+	+
+	mappings.aadp->filter( //
+		element.nodes.p == context.nodes.p //
+		& element.nodes.d.id + context.nodes.p.lengthOfStay - 1 >= context.nodes.d.id //
+	)->sum(element.value)
+	+
+	mappings.arp->filter( //
+		element.nodes.p == context.nodes.p //
+		& element.nodes.r == context.nodes.r //
+	)->sum(element.value)
+	== 3
 	<=>
 	context.value == 1
 }
@@ -328,17 +348,17 @@ constraint with roomDayLoad {
 // Constraints
 //
 
-// H1: No gender mix per room
-constraint with patientDayTriple {
-	context.nodes.p1.gender != context.nodes.p2.gender
-	
-	=>
-	
-	mappings.roomDayPersonLoad->filter(element.nodes.p == context.nodes.p1 & element.nodes.d == context.nodes.d)->sum(element.value)
-	+
-	mappings.roomDayPersonLoad->filter(element.nodes.p == context.nodes.p2 & element.nodes.d == context.nodes.d)->sum(element.value)
-	<= 1
-}
+//// H1: No gender mix per room
+//constraint with patientDayTriple {
+//	context.nodes.p1.gender != context.nodes.p2.gender
+//	
+//	=>
+//	
+//	mappings.roomDayPersonLoad->filter(element.nodes.p == context.nodes.p1 & element.nodes.d == context.nodes.d)->sum(element.value)
+//	+
+//	mappings.roomDayPersonLoad->filter(element.nodes.p == context.nodes.p2 & element.nodes.d == context.nodes.d)->sum(element.value)
+//	<= 1
+//}
 
 // H7: Room capacity: The number of patients in each room in each day cannot
 // exceed the capacity of the room.

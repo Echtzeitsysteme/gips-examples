@@ -15,6 +15,7 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
 import ihtcgipssolution.api.gips.mapping.RoomDayLoadMapping;
+import ihtcgipssolution.api.gips.mapping.RoomDayPersonLoadMapping;
 
 /**
  * This abstract runner contains utility methods to wrap a given GIPS API object
@@ -40,6 +41,28 @@ public abstract class AbstractIhtcGipsRunner {
 		roomDayLoadMappings.forEach(m -> {
 			System.out.println("Day : " + m.getMatch().getD().getId() + ", room : " + m.getMatch().getR().getName()
 					+ ", value : " + m.getValueOfLoad());
+		});
+
+		System.out.println("=> Day, room, patient: load");
+		final List<RoomDayPersonLoadMapping> roomDayPersonLoadMappings = new ArrayList<RoomDayPersonLoadMapping>();
+		roomDayPersonLoadMappings.addAll(gipsApi.getRoomDayPersonLoad().getMappings().values());
+		roomDayPersonLoadMappings.sort(new Comparator<RoomDayPersonLoadMapping>() {
+			@Override
+			public int compare(RoomDayPersonLoadMapping arg0, RoomDayPersonLoadMapping arg1) {
+				if (arg0.getMatch().getD().getId() == arg1.getMatch().getD().getId()) {
+					if (arg0.getMatch().getR().getName().compareTo(arg1.getMatch().getR().getName()) == 0) {
+						return arg0.getMatch().getP().getName().compareTo(arg1.getMatch().getP().getName());
+					}
+					return arg0.getMatch().getR().getName().compareTo(arg1.getMatch().getR().getName());
+				}
+				return arg0.getMatch().getD().getId() - arg1.getMatch().getD().getId();
+			}
+		});
+		roomDayPersonLoadMappings.forEach(m -> {
+			if (m.getValue() == 1) {
+				System.out.println("Day : " + m.getMatch().getD().getId() + ", room : " + m.getMatch().getR().getName()
+						+ ", patient : " + m.getMatch().getP().getName() + ", load : " + m.getValue());
+			}
 		});
 
 		System.out.println("=> Patient: room");
