@@ -223,7 +223,7 @@ pattern roomShiftTuple {
 	s : Shift
 }
 
-pattern personRoomDay {
+pattern patientRoomDay {
 	h : Hospital {
 		- rooms -> r
 		- patients -> p
@@ -275,14 +275,14 @@ mapping arp to assignRoomToPatient;
 mapping asp to assignSurgeryToPatient;
 
 // Mapping that holds the information if a patient `p` is scheduled for day `d` in room `r`
-mapping roomDayPersonLoad to personRoomDay;
+mapping roomDayPatientLoad to patientRoomDay;
 
 // Mapping that holds the cumulative number of all patients on day `d` in room `r`
 mapping roomDayLoad to dayRoomTuple {
 	var load : EInt
 };
 
-constraint with roomDayPersonLoad {
+constraint with roomDayPatientLoad {
 	// If the following holds true:
 	// - the context day must be later or equal to the patients admission day
 	// - the context day must not be later as the patients admission day + length of stay
@@ -334,7 +334,7 @@ constraint with roomDayLoad {
 	context.variables.load
 	==
 	// patients
-	mappings.roomDayPersonLoad->filter( //
+	mappings.roomDayPatientLoad->filter( //
 		element.nodes.r == context.nodes.r //
 		& element.nodes.d == context.nodes.d //
 	)->sum(element.value)
@@ -348,15 +348,15 @@ constraint with roomDayLoad {
 // Constraints
 //
 
-//// H1: No gender mix per room
+// H1: No gender mix per room
 //constraint with patientDayTriple {
 //	context.nodes.p1.gender != context.nodes.p2.gender
 //	
 //	=>
 //	
-//	mappings.roomDayPersonLoad->filter(element.nodes.p == context.nodes.p1 & element.nodes.d == context.nodes.d)->sum(element.value)
+//	mappings.roomDayPatientLoad->filter(element.nodes.p == context.nodes.p1 & element.nodes.d == context.nodes.d)->sum(element.value)
 //	+
-//	mappings.roomDayPersonLoad->filter(element.nodes.p == context.nodes.p2 & element.nodes.d == context.nodes.d)->sum(element.value)
+//	mappings.roomDayPatientLoad->filter(element.nodes.p == context.nodes.p2 & element.nodes.d == context.nodes.d)->sum(element.value)
 //	<= 1
 //}
 
