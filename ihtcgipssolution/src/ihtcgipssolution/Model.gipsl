@@ -253,8 +253,31 @@ mapping roomDayLoad to dayRoomTuple {
 };
 
 constraint with roomDayPersonLoad {
+	// If the following holds true:
+	// - the context day must be later or equal to the patients admission day
+	// - the context day must not be later as the patients admission day + length of stay
+	// - the context room must be the same room that will be assigned to the patient
+	[
+		// If the assigned admission day.id of the person `p` is <= day.id
+		context.nodes.d.id >= mappings.aadp->filter( //
+			element.nodes.p == context.nodes.p //
+		)->sum(element.nodes.d.id * element.value)
+		&
+		// and if the assigned admission day.id + p.lengthOfStay is >= day.id
+		context.nodes.d.id <= mappings.aadp->filter( //
+			element.nodes.p == context.nodes.p //
+		)->sum(element.nodes.d.id * element.value) + context.nodes.p.lengthOfStay
+		&
+		// and if the room `r` is the same as the one chosen for patient `p`
+		mappings.arp->filter( //
+			element.nodes.p == context.nodes.p //
+			& element.nodes.r == context.nodes.r //
+		)->sum(element.value) == 1
+	]
+	
+	// then the mapping of person `p` in room `r` on day `d` should be set to 1
+	<=>
 	context.value == 1
-	// TODO: here, I have to assign the information if patient `p` is mapped to room `r` on day `d`
 }
 
 constraint with roomDayLoad {
@@ -321,9 +344,13 @@ constraint with dayOperatingTheaterTuple {
 // H5: Mandatory versus optional patients: All mandatory patients must be admitted within the
 // scheduling period, whereas optional patients may be postponed to future scheduling periods.
 //
-// This constraint ensures that all mandatory patients get an admission day.
+// This constraint ensures that all mandatory patients will be included.
 constraint with findMandatoryPatient {
+	// All mandatory patients get an admission day.
 	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
+	&
+	// All mandatory patients get a room.
+	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
 }
 
 // H6: Admission day: A patient can be admitted on any day from their release
