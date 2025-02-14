@@ -68,7 +68,7 @@ public class INRC1Loader {
 		}
 		final Root root = loader.transform();
 		try {
-			save(root, "./resources/model.xmi");
+			save(root, projectFolder + "/../nurserosteringmodel/resources/model.xmi");
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
