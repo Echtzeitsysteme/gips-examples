@@ -1,5 +1,9 @@
 package ihtcmetamodel.loader;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.emoflon.smartemf.runtime.collections.LinkedSmartESet;
 
 import com.google.gson.JsonArray;
@@ -9,6 +13,7 @@ import com.google.gson.JsonPrimitive;
 
 import ihtcmetamodel.AgeGroup;
 import ihtcmetamodel.Day;
+import ihtcmetamodel.Gender;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.IhtcmetamodelFactory;
 import ihtcmetamodel.Nurse;
@@ -37,6 +42,7 @@ public class JsonToModelLoader {
 
 	private Hospital model = null;
 	private int skillLevel = -1;
+	private Set<String> foundGenders = new HashSet<String>();
 
 	/**
 	 * Creates a new instance of this class with an empty hospital model.
@@ -101,6 +107,9 @@ public class JsonToModelLoader {
 		convertOperatingTheaters(operatingTheaters);
 		final JsonArray nurses = json.getAsJsonArray("nurses");
 		convertNurses(nurses);
+
+		// create one gender object per found gender of all patients
+		createGenders(this.foundGenders);
 
 		// global weights
 		final JsonObject weights = json.getAsJsonObject("weights");
@@ -283,9 +292,9 @@ public class JsonToModelLoader {
 			final JsonArray workloadProduced = ((JsonObject) o).get("workload_produced").getAsJsonArray();
 			final JsonArray skillLevelRequired = ((JsonObject) o).get("skill_level_required").getAsJsonArray();
 			final String roomId = ((JsonObject) o).get("room_id").getAsString();
-			
+
 			// TODO: add relative days
-			
+
 			createOccupant(name, gender, ageGroup, lengthOfStay, workloadProduced, skillLevelRequired, roomId);
 		}
 	}
@@ -349,12 +358,15 @@ public class JsonToModelLoader {
 			}
 
 			// TODO: add relative days
-			
+
 			// TODO: remove me
 //			if(!mandatory) {
 //				return;
 //			}
-			
+
+			// add gender to all found genders if not already existent
+			this.foundGenders.add(gender);
+
 			createPatient(name, mandatory, gender, ageGroup, lengthOfStay, surgeryReleaseDay, surgeryDueDay,
 					surgeryDuration, surgeonId, incompatibleRoomIds, workloadProduced, skillLevelRequired);
 		}
@@ -457,6 +469,14 @@ public class JsonToModelLoader {
 		nsml.setMaxLoad(maxLoad);
 		// nsml.setNurse(...) will be set automatically by EMF
 		return nsml;
+	}
+
+	private void createGenders(final Set<String> foundGenders) {
+		foundGenders.forEach(g -> {
+			final Gender newGender = IhtcmetamodelFactory.eINSTANCE.createGender();
+			newGender.setName(g);
+			this.model.getGenders().add(newGender);
+		});
 	}
 
 	private Shift getShift(final int dayId, final ShiftType type) {

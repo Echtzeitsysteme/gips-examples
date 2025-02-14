@@ -29,6 +29,8 @@
         eType="#//AgeGroup" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="weight" eType="#//Weight"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="genders" upperBound="-1"
+        eType="#//Gender" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Day" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -179,4 +181,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="occupant" eType="#//Occupant"
         eOpposite="#//Occupant/stayDays"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Gender" eSuperTypes="#//NamedElement"/>
 </ecore:EPackage>

@@ -254,6 +254,18 @@ pattern occupantRoomDay {
 	# o.lengthOfStay >= d.id
 }
 
+pattern dayRoomGender {
+	h : Hospital {
+		- days -> d
+		- rooms -> r
+		- genders -> g
+	}
+	
+	d : Day
+	r : Room
+	g : Gender
+}
+
 //
 // GIPSL
 //
@@ -349,16 +361,31 @@ constraint with roomDayLoad {
 //
 
 // H1: No gender mix per room
-//constraint with patientDayTriple {
-//	context.nodes.p1.gender != context.nodes.p2.gender
-//	
-//	=>
-//	
-//	mappings.roomDayPatientLoad->filter(element.nodes.p == context.nodes.p1 & element.nodes.d == context.nodes.d)->sum(element.value)
-//	+
-//	mappings.roomDayPatientLoad->filter(element.nodes.p == context.nodes.p2 & element.nodes.d == context.nodes.d)->sum(element.value)
-//	<= 1
-//}
+constraint with dayRoomGender {
+	mappings.roomDayPatientLoad->filter( //
+		element.nodes.d == context.nodes.d //
+		& element.nodes.r == context.nodes.r //
+		& element.nodes.p.gender == context.nodes.g.name //
+	)->sum(element.value)
+	+
+	patterns.occupantRoomDay->filter( //
+		element.nodes.d == context.nodes.d & //
+		element.nodes.r == context.nodes.r & //
+		element.nodes.o.gender == context.nodes.g.name //
+	)->sum(1)
+	>= 1
+	=>
+	mappings.roomDayPatientLoad->filter( //
+		element.nodes.d == context.nodes.d //
+		& element.nodes.r == context.nodes.r //
+		& element.nodes.p.gender == context.nodes.g.name //
+	)->sum(element.value)
+	==
+	mappings.roomDayPatientLoad->filter( //
+		element.nodes.d == context.nodes.d //
+		& element.nodes.r == context.nodes.r //
+	)->sum(element.value)
+}
 
 // H7: Room capacity: The number of patients in each room in each day cannot
 // exceed the capacity of the room.
