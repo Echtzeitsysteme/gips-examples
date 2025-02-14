@@ -7,21 +7,21 @@
   <networks
       xsi:type="network.model:SubstrateNetwork"
       name="sub">
-    <nodes xsi:type="network.model:SubstrateSwitch"
+    <nodess xsi:type="network.model:SubstrateSwitch"
         name="sub_csw_0"
         outgoingLinks="//@networks.0/@links.0 //@networks.0/@links.2"
         incomingLinks="//@networks.0/@links.1 //@networks.0/@links.3"
         paths="//@networks.0/@paths.0 //@networks.0/@paths.1 //@networks.0/@paths.6 //@networks.0/@paths.7 //@networks.0/@paths.10 //@networks.0/@paths.11 //@networks.0/@paths.12 //@networks.0/@paths.13 //@networks.0/@paths.14 //@networks.0/@paths.15 //@networks.0/@paths.20 //@networks.0/@paths.21 //@networks.0/@paths.22 //@networks.0/@paths.23 //@networks.0/@paths.24 //@networks.0/@paths.25 //@networks.0/@paths.26 //@networks.0/@paths.27 //@networks.0/@paths.30 //@networks.0/@paths.31 //@networks.0/@paths.36 //@networks.0/@paths.37 //@networks.0/@paths.40 //@networks.0/@paths.41"
         outgoingPaths="//@networks.0/@paths.1 //@networks.0/@paths.15 //@networks.0/@paths.27 //@networks.0/@paths.37"
         incomingPaths="//@networks.0/@paths.0 //@networks.0/@paths.14 //@networks.0/@paths.26 //@networks.0/@paths.36"/>
-    <nodes xsi:type="network.model:SubstrateSwitch"
+    <nodess xsi:type="network.model:SubstrateSwitch"
         name="sub_csw_1"
         outgoingLinks="//@networks.0/@links.4 //@networks.0/@links.6"
         incomingLinks="//@networks.0/@links.5 //@networks.0/@links.7"
         paths="//@networks.0/@paths.2 //@networks.0/@paths.3 //@networks.0/@paths.16 //@networks.0/@paths.17 //@networks.0/@paths.28 //@networks.0/@paths.29 //@networks.0/@paths.38 //@networks.0/@paths.39"
         outgoingPaths="//@networks.0/@paths.3 //@networks.0/@paths.17 //@networks.0/@paths.29 //@networks.0/@paths.39"
         incomingPaths="//@networks.0/@paths.2 //@networks.0/@paths.16 //@networks.0/@paths.28 //@networks.0/@paths.38"/>
-    <nodes xsi:type="network.model:SubstrateSwitch"
+    <nodess xsi:type="network.model:SubstrateSwitch"
         name="sub_rsw_0"
         depth="1"
         outgoingLinks="//@networks.0/@links.1 //@networks.0/@links.5 //@networks.0/@links.8 //@networks.0/@links.10"
@@ -29,7 +29,7 @@
         paths="//@networks.0/@paths.0 //@networks.0/@paths.1 //@networks.0/@paths.2 //@networks.0/@paths.3 //@networks.0/@paths.4 //@networks.0/@paths.5 //@networks.0/@paths.6 //@networks.0/@paths.7 //@networks.0/@paths.8 //@networks.0/@paths.9 //@networks.0/@paths.10 //@networks.0/@paths.11 //@networks.0/@paths.12 //@networks.0/@paths.13 //@networks.0/@paths.14 //@networks.0/@paths.15 //@networks.0/@paths.16 //@networks.0/@paths.17 //@networks.0/@paths.18 //@networks.0/@paths.19 //@networks.0/@paths.20 //@networks.0/@paths.21 //@networks.0/@paths.22 //@networks.0/@paths.23 //@networks.0/@paths.24 //@networks.0/@paths.25 //@networks.0/@paths.30 //@networks.0/@paths.31 //@networks.0/@paths.40 //@networks.0/@paths.41"
         outgoingPaths="//@networks.0/@paths.5 //@networks.0/@paths.19 //@networks.0/@paths.31 //@networks.0/@paths.41"
         incomingPaths="//@networks.0/@paths.4 //@networks.0/@paths.18 //@networks.0/@paths.30 //@networks.0/@paths.40"/>
-    <nodes xsi:type="network.model:SubstrateSwitch"
+    <nodess xsi:type="network.model:SubstrateSwitch"
         name="sub_rsw_1"
         depth="1"
         outgoingLinks="//@networks.0/@links.3 //@networks.0/@links.7 //@networks.0/@links.12 //@networks.0/@links.14"
@@ -37,7 +37,7 @@
         paths="//@networks.0/@paths.6 //@networks.0/@paths.7 //@networks.0/@paths.10 //@networks.0/@paths.11 //@networks.0/@paths.12 //@networks.0/@paths.13 //@networks.0/@paths.20 //@networks.0/@paths.21 //@networks.0/@paths.22 //@networks.0/@paths.23 //@networks.0/@paths.24 //@networks.0/@paths.25 //@networks.0/@paths.26 //@networks.0/@paths.27 //@networks.0/@paths.28 //@networks.0/@paths.29 //@networks.0/@paths.30 //@networks.0/@paths.31 //@networks.0/@paths.32 //@networks.0/@paths.33 //@networks.0/@paths.34 //@networks.0/@paths.35 //@networks.0/@paths.36 //@networks.0/@paths.37 //@networks.0/@paths.38 //@networks.0/@paths.39 //@networks.0/@paths.40 //@networks.0/@paths.41 //@networks.0/@paths.42 //@networks.0/@paths.43"
         outgoingPaths="//@networks.0/@paths.7 //@networks.0/@paths.21 //@networks.0/@paths.33 //@networks.0/@paths.43"
         incomingPaths="//@networks.0/@paths.6 //@networks.0/@paths.20 //@networks.0/@paths.32 //@networks.0/@paths.42"/>
-    <nodes xsi:type="network.model:SubstrateServer"
+    <nodess xsi:type="network.model:SubstrateServer"
         name="sub_srv_0"
         depth="2"
         outgoingLinks="//@networks.0/@links.9"
@@ -51,7 +51,7 @@
         residualCpu="1500"
         residualMemory="1500"
         residualStorage="300"/>
-    <nodes xsi:type="network.model:SubstrateServer"
+    <nodess xsi:type="network.model:SubstrateServer"
         name="sub_srv_1"
         depth="2"
         outgoingLinks="//@networks.0/@links.11"
@@ -65,7 +65,7 @@
         residualCpu="1500"
         residualMemory="1500"
         residualStorage="300"/>
-    <nodes xsi:type="network.model:SubstrateServer"
+    <nodess xsi:type="network.model:SubstrateServer"
         name="sub_srv_2"
         depth="2"
         outgoingLinks="//@networks.0/@links.13"
@@ -79,7 +79,7 @@
         residualCpu="1500"
         residualMemory="1500"
         residualStorage="300"/>
-    <nodes xsi:type="network.model:SubstrateServer"
+    <nodess xsi:type="network.model:SubstrateServer"
         name="sub_srv_3"
         depth="2"
         outgoingLinks="//@networks.0/@links.15"
@@ -564,7 +564,7 @@
       cpu="160"
       memory="585"
       storage="130">
-    <nodes xsi:type="network.model:VirtualServer"
+    <nodess xsi:type="network.model:VirtualServer"
         name="v0_srv_0"
         depth="1"
         outgoingLinks="//@networks.1/@links.0"
@@ -572,7 +572,7 @@
         cpu="32"
         memory="117"
         storage="26"/>
-    <nodes xsi:type="network.model:VirtualServer"
+    <nodess xsi:type="network.model:VirtualServer"
         name="v0_srv_1"
         depth="1"
         outgoingLinks="//@networks.1/@links.2"
@@ -580,7 +580,7 @@
         cpu="32"
         memory="117"
         storage="26"/>
-    <nodes xsi:type="network.model:VirtualServer"
+    <nodess xsi:type="network.model:VirtualServer"
         name="v0_srv_2"
         depth="1"
         outgoingLinks="//@networks.1/@links.4"
@@ -588,7 +588,7 @@
         cpu="32"
         memory="117"
         storage="26"/>
-    <nodes xsi:type="network.model:VirtualServer"
+    <nodess xsi:type="network.model:VirtualServer"
         name="v0_srv_3"
         depth="1"
         outgoingLinks="//@networks.1/@links.6"
@@ -596,7 +596,7 @@
         cpu="32"
         memory="117"
         storage="26"/>
-    <nodes xsi:type="network.model:VirtualServer"
+    <nodess xsi:type="network.model:VirtualServer"
         name="v0_srv_4"
         depth="1"
         outgoingLinks="//@networks.1/@links.8"
@@ -604,7 +604,7 @@
         cpu="32"
         memory="117"
         storage="26"/>
-    <nodes xsi:type="network.model:VirtualSwitch"
+    <nodess xsi:type="network.model:VirtualSwitch"
         name="v0_sw_0"
         outgoingLinks="//@networks.1/@links.1 //@networks.1/@links.3 //@networks.1/@links.5 //@networks.1/@links.7 //@networks.1/@links.9"
         incomingLinks="//@networks.1/@links.0 //@networks.1/@links.2 //@networks.1/@links.4 //@networks.1/@links.6 //@networks.1/@links.8"/>
