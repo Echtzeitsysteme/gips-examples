@@ -14,6 +14,7 @@ import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
+import ihtcgipssolution.api.gips.mapping.AadpMapping;
 import ihtcgipssolution.api.gips.mapping.RoomDayLoadMapping;
 import ihtcgipssolution.api.gips.mapping.RoomDayPatientLoadMapping;
 
@@ -81,6 +82,25 @@ public abstract class AbstractIhtcGipsRunner {
 				System.out.println(
 						"Patient : " + m.getMatch().getP().getName() + ", from : " + m.getMatch().getD().getId()
 								+ ", to " + (m.getMatch().getP().getLengthOfStay() + m.getMatch().getD().getId() - 1));
+			}
+		});
+
+		final List<AadpMapping> admissionDays = new ArrayList<AadpMapping>();
+		admissionDays.addAll(gipsApi.getAadp().getMappings().values());
+		admissionDays.sort(new Comparator<AadpMapping>() {
+			@Override
+			public int compare(final AadpMapping arg0, final AadpMapping arg1) {
+				if (arg0.getMatch().getP().getName().compareTo(arg1.getMatch().getP().getName()) == 0) {
+					return arg0.getMatch().getD().getId() - arg1.getMatch().getD().getId();
+				}
+				return arg0.getMatch().getP().getName().compareTo(arg1.getMatch().getP().getName());
+			}
+		});
+		System.out.println("=> Patient admission day");
+		admissionDays.forEach(m -> {
+			if (m.getValue() == 1) {
+				System.out.println("Patient : " + m.getMatch().getP().getName() + ", admission day : "
+						+ m.getMatch().getD().getId());
 			}
 		});
 	}

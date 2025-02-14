@@ -21,7 +21,7 @@ import ihtcmetamodel.loader.ModelToJsonExporter;
  */
 public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 
-	private final String scenarioFileName = "toy.json";
+	protected String scenarioFileName = "test01.json";
 
 	public static void main(final String[] args) {
 		new IhtcGipsRunner().run();
@@ -35,7 +35,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		final String projectFolder = System.getProperty("user.dir");
 
 		// Input JSON file
-		final String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/";
+		final String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
 		final String inputPath = datasetFolder + scenarioFileName;
 
 		// Input XMI file
@@ -86,7 +86,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		//
 
 		applySolution(gipsApi);
-		
+
 		// TODO: remove me
 		printVariableValues(gipsApi);
 

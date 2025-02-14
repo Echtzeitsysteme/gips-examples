@@ -7,3 +7,4 @@
 /instances/*.xmi
 
 /resources/sol_toy_gips.json
+/resources/sol_*_gips.json
