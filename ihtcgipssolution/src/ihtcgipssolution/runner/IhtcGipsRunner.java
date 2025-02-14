@@ -61,6 +61,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		loader.jsonToModel(inputPath);
 		final Hospital model = loader.getModel();
 		try {
+			FileUtils.prepareFolder(instanceFolder);
 			FileUtils.save(model, instancePath);
 		} catch (final IOException e) {
 			throw new InternalError(e.getMessage());
