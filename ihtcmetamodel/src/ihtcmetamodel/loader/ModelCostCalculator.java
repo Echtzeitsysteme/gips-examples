@@ -1,7 +1,9 @@
 package ihtcmetamodel.loader;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ihtcmetamodel.AgeGroup;
 import ihtcmetamodel.Day;
@@ -460,41 +462,31 @@ public class ModelCostCalculator {
 	}
 
 	private int countPatientNurses(final Hospital model, final Patient patient) {
-		int count = 0;
+		final Set<Nurse> foundNurses = new HashSet<Nurse>();
 
 		for (final Nurse n : model.getNurses()) {
 			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
-				// room must match
-				if (patient.getAssignedRoom() != null
-						&& rsna.getRoom().getName().equals(patient.getAssignedRoom().getName())) {
-					// time frame must match
-					if (rsna.getShift().getDay().getId() >= patient.getAdmissionDay().getId() && rsna.getShift()
-							.getDay().getId() <= patient.getAdmissionDay().getId() + patient.getLengthOfStay()) {
-						count++;
-					}
+				if (patientInRoomOnDay(patient, rsna.getRoom(), rsna.getShift().getDay())) {
+					foundNurses.add(n);
 				}
 			}
 		}
 
-		return count;
+		return foundNurses.size();
 	}
 
 	private int countOccupantNurses(final Hospital model, final Occupant occupant) {
-		int count = 0;
+		final Set<Nurse> foundNurses = new HashSet<Nurse>();
 
 		for (final Nurse n : model.getNurses()) {
 			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
-				// room must match
-				if (rsna.getRoom().getName().equals(occupant.getRoomId())) {
-					// time frame must match
-					if (rsna.getShift().getDay().getId() <= occupant.getLengthOfStay()) {
-						count++;
-					}
+				if (occupantInRoomOnDay(occupant, rsna.getRoom(), rsna.getShift().getDay())) {
+					foundNurses.add(n);
 				}
 			}
 		}
 
-		return count;
+		return foundNurses.size();
 	}
 
 }

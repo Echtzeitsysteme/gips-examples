@@ -133,7 +133,7 @@ public class ModelToJsonExporter {
 			System.out.println("AgeMix: " + ageMix);
 			System.out.println("Skill: " + skill);
 			System.out.println("Excess: " + excess);
-			System.out.println("Continuity:" + continuity);
+			System.out.println("Continuity: " + continuity);
 			System.out.println("SurgeonTransfer: " + surgeonTransfer);
 		}
 
