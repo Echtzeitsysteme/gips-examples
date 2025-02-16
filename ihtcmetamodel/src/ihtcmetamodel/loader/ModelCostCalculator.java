@@ -175,21 +175,18 @@ public class ModelCostCalculator {
 		int surgeonTransferCost = 0;
 
 		for (final Surgeon s : model.getSurgeons()) {
-			final List<SurgeryAssignment> assignments = s.getSurgeryAssignments();
-			for (final OperatingTheater ot : model.getOperatingTheaters()) {
-				for (final Day d : model.getDays()) {
-					for (final SurgeryAssignment sa : assignments) {
-						// day must be matched
-						if (sa.getDay().equals(d)) {
-							// operating theater must be matched
-							if (sa.getOperationTheater().equals(ot)) {
-								surgeonTransferCost++;
-							}
-						}
+			for (final Day d : model.getDays()) {
+				final Set<OperatingTheater> otsFound = new HashSet<OperatingTheater>();
+				for (final SurgeryAssignment sa : s.getSurgeryAssignments()) {
+					if (sa.getDay().equals(d)) {
+						otsFound.add(sa.getOperationTheater());
 					}
 				}
-			}
 
+				if (otsFound.size() > 1) {
+					surgeonTransferCost += otsFound.size() - 1;
+				}
+			}
 		}
 
 		return surgeonTransferCost * model.getWeight().getSurgeonTransfer();
