@@ -48,8 +48,8 @@ public class ModelToJsonExporter {
 			nursesJson.add(convertNurseToJson(n));
 		}
 
-//		final JsonArray costsJson = convertModelToCostsJson(this.model);
-		final JsonArray costsJson = new JsonArray();
+		final JsonArray costsJson = convertModelToCostsJson(this.model);
+//		final JsonArray costsJson = new JsonArray();
 		// TODO: ^
 
 		// Global JSON object
@@ -108,6 +108,10 @@ public class ModelToJsonExporter {
 	}
 
 	private JsonArray convertModelToCostsJson(final Hospital model) {
+		return convertModelToCostsJson(model, true);
+	}
+
+	private JsonArray convertModelToCostsJson(final Hospital model, final boolean verbose) {
 		final ModelCostCalculator calc = new ModelCostCalculator();
 		final int unscheduled = calc.calculateUnscheduledPatientsCost(model);
 		final int delay = calc.calculateAdmissionDelayCost(model);
@@ -120,6 +124,18 @@ public class ModelToJsonExporter {
 
 		// total cost is the sum of all individual costs
 		final int costs = unscheduled + delay + openOt + ageMix + skill + excess + continuity + surgeonTransfer;
+
+		if (verbose) {
+			System.out.println("Costs: " + costs);
+			System.out.println("Unscheduled: " + unscheduled);
+			System.out.println("Delay: " + delay);
+			System.out.println("OpenOT: " + openOt);
+			System.out.println("AgeMix: " + ageMix);
+			System.out.println("Skill: " + skill);
+			System.out.println("Excess: " + excess);
+			System.out.println("Continuity:" + continuity);
+			System.out.println("SurgeonTransfer: " + surgeonTransfer);
+		}
 
 		// Weirdly, the output costs is a JSON array with only one concatenated String
 		final StringBuilder sb = new StringBuilder();
