@@ -204,8 +204,7 @@ public class ModelCostCalculator {
 		for (final Patient p : model.getPatients()) {
 			// check if patient was scheduled at all
 			if (p.getAdmissionDay() != null) {
-				// I am not completely sure if this condition is correct
-				if (p.getAdmissionDay().getId() > p.getAdmissionDay().getId() + p.getSurgeryReleaseDay()) {
+				if (p.getAdmissionDay().getId() > p.getSurgeryReleaseDay()) {
 					admissionDelayCost += (p.getAdmissionDay().getId() - p.getSurgeryReleaseDay());
 				}
 			}
