@@ -303,7 +303,8 @@ public class ModelCostCalculator {
 				if (p.getAssignedRoom().equals(r)) {
 					// day must lay within the time frame of the patient's stay
 					final int admissionDayId = p.getAdmissionDay().getId();
-					if (d.getId() >= admissionDayId && d.getId() <= p.getAdmissionDay().getId() + p.getLengthOfStay()) {
+					if (d.getId() >= admissionDayId
+							&& d.getId() <= p.getAdmissionDay().getId() + p.getLengthOfStay() - 1) {
 						return true;
 					}
 				}
@@ -323,7 +324,7 @@ public class ModelCostCalculator {
 	 */
 	private boolean occupantInRoomOnDay(final Occupant o, final Room r, final Day d) {
 		if (o.getRoomId().equals(r.getName())) {
-			if (d.getId() <= o.getLengthOfStay()) {
+			if (d.getId() <= o.getLengthOfStay() - 1) {
 				return true;
 			}
 		}
@@ -358,7 +359,8 @@ public class ModelCostCalculator {
 
 		// calculate relative shift index to get the correct required skill level from
 		// patient
-		final int index = patient.getAdmissionDay().getShifts().get(0).getId() + shift.getId();
+//		final int index = patient.getAdmissionDay().getShifts().get(0).getId() + shift.getId();
+		final int index = shift.getId() - patient.getAdmissionDay().getShifts().get(0).getId();
 
 		// TODO
 		int patientLevel = 0;
@@ -419,13 +421,9 @@ public class ModelCostCalculator {
 	private List<Patient> getPatientsInRoomOnDay(final Hospital model, final Room room, final Day day) {
 		final List<Patient> patientsInRoom = new ArrayList<Patient>();
 		for (final Patient p : model.getPatients()) {
-			// room must match
-			if (p.getAssignedRoom() != null && p.getAssignedRoom().equals(room)) {
-				// day must match
-				if (day.getId() >= p.getAdmissionDay().getId()
-						&& day.getId() <= p.getAdmissionDay().getId() + p.getLengthOfStay()) {
-					patientsInRoom.add(p);
-				}
+			// room and day must match
+			if (patientInRoomOnDay(p, room, day)) {
+				patientsInRoom.add(p);
 			}
 		}
 		return patientsInRoom;
@@ -434,12 +432,9 @@ public class ModelCostCalculator {
 	private List<Occupant> getOccupantsInRoomOnDay(final Hospital model, final Room room, final Day day) {
 		final List<Occupant> occupantsInRoom = new ArrayList<Occupant>();
 		for (final Occupant o : model.getOccupants()) {
-			// room must match
-			if (o.getRoomId() != null && o.getRoomId().equals(room.getName())) {
-				// day must match
-				if (day.getId() <= o.getLengthOfStay()) {
-					occupantsInRoom.add(o);
-				}
+			// room and day must match
+			if (occupantInRoomOnDay(o, room, day)) {
+				occupantsInRoom.add(o);
 			}
 		}
 		return occupantsInRoom;
