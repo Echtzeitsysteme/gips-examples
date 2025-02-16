@@ -194,10 +194,10 @@ public class FileUtils {
 	}
 
 	/**
-	 * TODO
+	 * Loads an EMF resource from a given (XMI) file path.
 	 * 
-	 * @param path
-	 * @return
+	 * @param path (XMI) file path to load resource from.
+	 * @return Loaded resource.
 	 */
 	public static Resource loadModel(final String path) {
 		checkNotNull(path, "Path");

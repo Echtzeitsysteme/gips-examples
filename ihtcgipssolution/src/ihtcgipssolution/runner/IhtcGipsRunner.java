@@ -21,12 +21,29 @@ import ihtcmetamodel.loader.ModelToJsonExporter;
  */
 public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 
+	/**
+	 * The scenario (JSON) file to load.
+	 */
 	protected String scenarioFileName = "test01.json";
 
+	/**
+	 * No public instances of this class allowed.
+	 */
+	protected IhtcGipsRunner() {
+	}
+
+	/**
+	 * Main method to execute the runner. Arguments will be ignored.
+	 * 
+	 * @param args Arguments will be ignored.
+	 */
 	public static void main(final String[] args) {
 		new IhtcGipsRunner().run();
 	}
 
+	/**
+	 * Runs the execution of the configured scenario.
+	 */
 	public void run() {
 		//
 		// Folder and file definitions

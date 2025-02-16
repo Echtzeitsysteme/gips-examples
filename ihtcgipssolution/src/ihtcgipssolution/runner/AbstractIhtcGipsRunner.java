@@ -26,7 +26,15 @@ import ihtcgipssolution.api.gips.mapping.RoomDayPatientLoadMapping;
  */
 public abstract class AbstractIhtcGipsRunner {
 
+	/**
+	 * Prints all relevant GIPS-related variables for a given IHTC GIPS solution API
+	 * object.
+	 * 
+	 * @param gipsApi IHTC GIPS solution API object to print all relevant variable
+	 *                values for.
+	 */
 	protected void printVariableValues(final IhtcgipssolutionGipsAPI gipsApi) {
+		// Load of all rooms on all days
 		System.out.println("=> Day, room: load");
 		final List<RoomDayLoadMapping> roomDayLoadMappings = new ArrayList<RoomDayLoadMapping>();
 		roomDayLoadMappings.addAll(gipsApi.getRoomDayLoad().getMappings().values());
@@ -46,6 +54,7 @@ public abstract class AbstractIhtcGipsRunner {
 			}
 		});
 
+		// Specific loads of all patients on days in rooms
 		System.out.println("=> Day, room, patient: load");
 		final List<RoomDayPatientLoadMapping> roomDayPersonLoadMappings = new ArrayList<RoomDayPatientLoadMapping>();
 		roomDayPersonLoadMappings.addAll(gipsApi.getRoomDayPatientLoad().getMappings().values());
@@ -68,6 +77,7 @@ public abstract class AbstractIhtcGipsRunner {
 			}
 		});
 
+		// Patient to room assignment
 		System.out.println("=> Patient: room");
 		gipsApi.getArp().getMappings().values().forEach(m -> {
 			if (m.getValue() == 1) {
@@ -76,6 +86,7 @@ public abstract class AbstractIhtcGipsRunner {
 			}
 		});
 
+		// Patient start and leave day
 		System.out.println("=> Patient from, to (day)");
 		gipsApi.getAadp().getMappings().values().forEach(m -> {
 			if (m.getValue() == 1) {
@@ -85,6 +96,7 @@ public abstract class AbstractIhtcGipsRunner {
 			}
 		});
 
+		// Patient admission days
 		final List<AadpMapping> admissionDays = new ArrayList<AadpMapping>();
 		admissionDays.addAll(gipsApi.getAadp().getMappings().values());
 		admissionDays.sort(new Comparator<AadpMapping>() {

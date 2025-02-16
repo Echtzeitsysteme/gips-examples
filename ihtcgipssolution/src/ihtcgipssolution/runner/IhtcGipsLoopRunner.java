@@ -17,6 +17,13 @@ public class IhtcGipsLoopRunner extends IhtcGipsRunner {
 	 * List of scenario names to be executed.
 	 */
 	private List<String> scenarioNames = new ArrayList<String>();
+	
+	/**
+	 * No public instances of this class allowed.
+	 */
+	private IhtcGipsLoopRunner() {
+		super();
+	}
 
 	/**
 	 * Main method to execute the runner. Arguments will be ignored.

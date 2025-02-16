@@ -23,7 +23,7 @@ public class JsonToModelRunner {
 	/**
 	 * No instances of this class allowed.
 	 */
-	private JsonToModelRunner() {
+	protected JsonToModelRunner() {
 	}
 
 	/**

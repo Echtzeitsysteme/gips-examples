@@ -17,8 +17,16 @@ import ihtcmetamodel.ShiftType;
  */
 public class ModelToJsonExporter {
 
+	/**
+	 * Hospital model to work with.
+	 */
 	private Hospital model = null;
 
+	/**
+	 * Initializes a new model to JSON exporter object with a given Hospital model.
+	 * 
+	 * @param model Hospital model.
+	 */
 	public ModelToJsonExporter(final Hospital model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Given model was null.");
@@ -27,6 +35,12 @@ public class ModelToJsonExporter {
 		this.model = model;
 	}
 
+	/**
+	 * Converts the contained model to a JSON output file written to the given
+	 * output path.
+	 * 
+	 * @param outputPath Output path to write the JSON output file to.
+	 */
 	public void modelToJson(final String outputPath) {
 		if (outputPath == null || outputPath.isBlank()) {
 			throw new IllegalArgumentException("Given path <" + outputPath + "> was null or blank.");
@@ -49,8 +63,6 @@ public class ModelToJsonExporter {
 		}
 
 		final JsonArray costsJson = convertModelToCostsJson(this.model);
-//		final JsonArray costsJson = new JsonArray();
-		// TODO: ^
 
 		// Global JSON object
 		final JsonObject json = new JsonObject();
@@ -62,6 +74,12 @@ public class ModelToJsonExporter {
 		FileUtils.writeFileFromJson(outputPath, json);
 	}
 
+	/**
+	 * Converts a given patient to a JSON object.
+	 * 
+	 * @param patient Patient.
+	 * @return JSON object.
+	 */
 	private JsonObject convertPatientToJson(final Patient patient) {
 		final JsonObject patientJson = new JsonObject();
 		patientJson.addProperty("id", patient.getName());
@@ -82,6 +100,12 @@ public class ModelToJsonExporter {
 		return patientJson;
 	}
 
+	/**
+	 * Converts a given nurse to a JSON object.
+	 * 
+	 * @param nurse Nurse.
+	 * @return JSON object.
+	 */
 	private JsonObject convertNurseToJson(final Nurse nurse) {
 		final JsonObject nurseJson = new JsonObject();
 		nurseJson.addProperty("id", nurse.getName());
@@ -107,10 +131,24 @@ public class ModelToJsonExporter {
 		return nurseJson;
 	}
 
+	/**
+	 * Converts the overall model costs to a JSON array.
+	 * 
+	 * @param model Complete model to calculate all costs for.
+	 * @return JSON array.
+	 */
 	private JsonArray convertModelToCostsJson(final Hospital model) {
 		return convertModelToCostsJson(model, true);
 	}
 
+	/**
+	 * Converts the overall model costs to a JSON array with the possibility to
+	 * print all values on the console.
+	 * 
+	 * @param model   Complete model to calculate all costs for.
+	 * @param verbose If true, the method will print all costs on the console.
+	 * @return JSON array.
+	 */
 	private JsonArray convertModelToCostsJson(final Hospital model, final boolean verbose) {
 		final ModelCostCalculator calc = new ModelCostCalculator();
 		final int unscheduled = calc.calculateUnscheduledPatientsCost(model);
@@ -163,6 +201,12 @@ public class ModelToJsonExporter {
 		return costsJson;
 	}
 
+	/**
+	 * Converts the given shift type to the corresponding string representation.
+	 * 
+	 * @param shiftType Shift type to convert.
+	 * @return String representation of the given shift type.
+	 */
 	private String convertShiftTypeName(final ShiftType shiftType) {
 		switch (shiftType) {
 		case ShiftType.EARLY: {

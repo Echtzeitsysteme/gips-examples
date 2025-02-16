@@ -89,7 +89,7 @@ public class ModelCostCalculator {
 
 		// Patients
 		for (final Patient p : model.getPatients()) {
-			final int localPatientCount = countPatientNurses(model, p);
+			final int localPatientCount = countPatientsNurses(model, p);
 			continuityCost += localPatientCount;
 		}
 
@@ -145,19 +145,6 @@ public class ModelCostCalculator {
 		}
 
 		return excessCost * model.getWeight().getNurseEccessiveWorkload();
-	}
-
-	private int findNurseMaxLoadInShift(final Nurse n, final Shift s) {
-		int maxLoad = 0;
-
-		for (final NurseShiftMaxLoad nsml : n.getShiftMaxLoads()) {
-			if (nsml.getShift().getId() == s.getId()) {
-				maxLoad = nsml.getMaxLoad();
-				break;
-			}
-		}
-
-		return maxLoad;
 	}
 
 	/**
@@ -254,6 +241,26 @@ public class ModelCostCalculator {
 	/*
 	 * Internal utility methods.
 	 */
+
+	/**
+	 * Returns the maximum load of a nurse `n` in shift `s`.
+	 * 
+	 * @param n Nurse.
+	 * @param s Shift.
+	 * @return Maximum load of nurse `n` in shift `s`.
+	 */
+	private int findNurseMaxLoadInShift(final Nurse n, final Shift s) {
+		int maxLoad = 0;
+
+		for (final NurseShiftMaxLoad nsml : n.getShiftMaxLoads()) {
+			if (nsml.getShift().getId() == s.getId()) {
+				maxLoad = nsml.getMaxLoad();
+				break;
+			}
+		}
+
+		return maxLoad;
+	}
 
 	/**
 	 * This method calculates the maximum age difference for a given room `r` on day
@@ -370,6 +377,15 @@ public class ModelCostCalculator {
 		return ageCounter;
 	}
 
+	/**
+	 * Calculates the (possible) cost of one nurse `nurse` for patient `patient` on
+	 * shift `shift.`
+	 * 
+	 * @param nurse   Nurse.
+	 * @param patient Patient.
+	 * @param shift   Shift.
+	 * @return Cost of the nurse regarding the patient on the given shift.
+	 */
 	private int calculateSkillLevelCostPerNursePatientShift(final Nurse nurse, final Patient patient,
 			final Shift shift) {
 		int cost = 0;
@@ -393,6 +409,15 @@ public class ModelCostCalculator {
 		return cost;
 	}
 
+	/**
+	 * Calculates the (possible) cost of one nurse `nurse` for occupant `occupant`
+	 * on shift `shift.`
+	 * 
+	 * @param nurse    Nurse.
+	 * @param occupant Occupant.
+	 * @param shift    Shift.
+	 * @return Cost of the nurse regarding the occupant on the given shift.
+	 */
 	private int calculateSkillLevelCostPerNurseOccupantShift(final Nurse nurse, final Occupant occupant,
 			final Shift shift) {
 		int cost = 0;
@@ -421,6 +446,16 @@ public class ModelCostCalculator {
 		return cost;
 	}
 
+	/**
+	 * Returns a list of all patients that are scheduled for the given room on the
+	 * given day.
+	 * 
+	 * @param model Hospital model to extract data from.
+	 * @param room  Room.
+	 * @param day   Day.
+	 * @return List of all patients that are scheduled for the given room on the
+	 *         given day.
+	 */
 	private List<Patient> getPatientsInRoomOnDay(final Hospital model, final Room room, final Day day) {
 		final List<Patient> patientsInRoom = new ArrayList<Patient>();
 		for (final Patient p : model.getPatients()) {
@@ -432,6 +467,16 @@ public class ModelCostCalculator {
 		return patientsInRoom;
 	}
 
+	/**
+	 * Returns a list of all occupants that are scheduled for the given room on the
+	 * given day.
+	 * 
+	 * @param model Hospital model to extract data from.
+	 * @param room  Room.
+	 * @param day   Day.
+	 * @return List of all occupants that are scheduled for the given room on the
+	 *         given day.
+	 */
 	private List<Occupant> getOccupantsInRoomOnDay(final Hospital model, final Room room, final Day day) {
 		final List<Occupant> occupantsInRoom = new ArrayList<Occupant>();
 		for (final Occupant o : model.getOccupants()) {
@@ -443,16 +488,37 @@ public class ModelCostCalculator {
 		return occupantsInRoom;
 	}
 
+	/**
+	 * Returns the specific workload of the given occupant `o` on shift `s`.
+	 * 
+	 * @param o Occupant.
+	 * @param s Shift.
+	 * @return Specific workload of the given occupant `o` on shift `s`.
+	 */
 	private int getWorkloadOfOccupantByShift(final Occupant o, final Shift s) {
 		return o.getWorkloadsProduced().get(s.getId()).getWorkloadProduced();
 	}
 
+	/**
+	 * Returns the specific workload of the given patient `p` on shift `s`.
+	 * 
+	 * @param p     Patient.
+	 * @param shift Shift.
+	 * @return Specific workload of the given patient `p` on shift `s`.
+	 */
 	private int getWorkloadOfPatientByShift(final Patient p, final Shift shift) {
 		final int patientsFirstShiftId = p.getAdmissionDay().getShifts().get(0).getId();
 		return p.getWorkloadsProduced().get(shift.getId() - patientsFirstShiftId).getWorkloadProduced();
 	}
 
-	private int countPatientNurses(final Hospital model, final Patient patient) {
+	/**
+	 * Returns the distinct number of nurses a given patient has.
+	 * 
+	 * @param model   Hospital model to extract data from.
+	 * @param patient Patient.
+	 * @return Distinct number of nurses a given patient has.
+	 */
+	private int countPatientsNurses(final Hospital model, final Patient patient) {
 		final Set<Nurse> foundNurses = new HashSet<Nurse>();
 
 		for (final Nurse n : model.getNurses()) {
@@ -466,6 +532,13 @@ public class ModelCostCalculator {
 		return foundNurses.size();
 	}
 
+	/**
+	 * Returns the distinct number of occupants a given patient has.
+	 * 
+	 * @param model    Hospital model to extract data from.
+	 * @param occupant Occupant.
+	 * @return Distinct number of nurses a given occupant has.
+	 */
 	private int countOccupantNurses(final Hospital model, final Occupant occupant) {
 		final Set<Nurse> foundNurses = new HashSet<Nurse>();
 

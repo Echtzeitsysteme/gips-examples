@@ -1,7 +1,6 @@
 package ihtcmetamodel.loader;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.emoflon.smartemf.runtime.collections.LinkedSmartESet;
@@ -40,8 +39,20 @@ import ihtcmetamodel.Weight;
  */
 public class JsonToModelLoader {
 
+	/**
+	 * The hospital model to work with.
+	 */
 	private Hospital model = null;
+
+	/**
+	 * Number of skill levels taken from the input model. Currently, this value is
+	 * not used since we parse the number of skill levels from the model itself.
+	 */
 	private int skillLevel = -1;
+
+	/**
+	 * Contains all found genders represented as strings.
+	 */
 	private Set<String> foundGenders = new HashSet<String>();
 
 	/**
@@ -120,6 +131,12 @@ public class JsonToModelLoader {
 	 * Utility methods.
 	 */
 
+	/**
+	 * Creates all shifts for the given collection of days. Every day will produce
+	 * three shifts ("early", "late", and "night").
+	 * 
+	 * @param days Collection of days to create all shifts for.
+	 */
 	private void createShifts(final LinkedSmartESet<Day> days) {
 		int globalShiftCounter = 0;
 		for (final Day d : days) {
@@ -132,6 +149,14 @@ public class JsonToModelLoader {
 		}
 	}
 
+	/**
+	 * Create a shift with the given parameters.
+	 * 
+	 * @param name Name.
+	 * @param id   ID (number).
+	 * @param day  Day on which the shift takes place.
+	 * @param type Shift type (e.g., "early").
+	 */
 	private void createShift(final String name, final int id, final Day day, final ShiftType type) {
 		final Shift s = IhtcmetamodelFactory.eINSTANCE.createShift();
 		s.setName(name);
@@ -141,6 +166,12 @@ public class JsonToModelLoader {
 		this.model.getShifts().add(s);
 	}
 
+	/**
+	 * Converts the given JSON object representing the input weights to the model
+	 * representation.
+	 * 
+	 * @param weights JSON object containing the input weights.
+	 */
 	private void convertWeights(final JsonObject weights) {
 		final Weight w = IhtcmetamodelFactory.eINSTANCE.createWeight();
 		w.setRoomMixedAge(weights.get("room_mixed_age").getAsInt());
@@ -154,6 +185,11 @@ public class JsonToModelLoader {
 		this.model.setWeight(w);
 	}
 
+	/**
+	 * Converts the given JSON primitive (number of days) to model days.
+	 * 
+	 * @param days JSON primitive containing the number of days to create.
+	 */
 	private void convertDays(final JsonPrimitive days) {
 		final int numberOfDays = days.getAsInt();
 		for (int i = 0; i < numberOfDays; i++) {
@@ -161,6 +197,11 @@ public class JsonToModelLoader {
 		}
 	}
 
+	/**
+	 * Creates one day with the given ID within the model.
+	 * 
+	 * @param id Day ID.
+	 */
 	private void createDay(final int id) {
 		final Day d = IhtcmetamodelFactory.eINSTANCE.createDay();
 		d.setId(id);
@@ -168,10 +209,22 @@ public class JsonToModelLoader {
 		this.model.getDays().add(d);
 	}
 
+	/**
+	 * Saves the number of skill levels from the given JSON primitive.
+	 * 
+	 * @param skillLevels JSON primitive containing the number of skill levels.
+	 */
 	private void convertSkillLevels(final JsonPrimitive skillLevels) {
 		this.skillLevel = skillLevels.getAsInt();
 	}
 
+	/**
+	 * Checks the given JSON array of shift types against all known shift types.
+	 * I.e., there should always be exactly three shift types: "early", "late", and
+	 * "night".
+	 * 
+	 * @param shiftTypes JSON array of shift types to check.
+	 */
 	private void checkShiftTypes(final JsonArray shiftTypes) {
 		// Shift types should always be `early`, `late`, `night`
 		if (shiftTypes.size() != 3) {
@@ -189,6 +242,11 @@ public class JsonToModelLoader {
 		}
 	}
 
+	/**
+	 * Converts the given JSON array of age groups to the model representations.
+	 * 
+	 * @param ageGroups JSON array of age groups.
+	 */
 	private void convertAgeGroups(final JsonArray ageGroups) {
 		for (final JsonElement ag : ageGroups) {
 			final String name = ag.getAsString();
@@ -196,12 +254,22 @@ public class JsonToModelLoader {
 		}
 	}
 
+	/**
+	 * Creates one age group with the given name within the model.
+	 * 
+	 * @param name Age group name.
+	 */
 	private void createAgeGroup(final String name) {
 		final AgeGroup ag = IhtcmetamodelFactory.eINSTANCE.createAgeGroup();
 		ag.setName(name);
 		this.model.getAgeGroups().add(ag);
 	}
 
+	/**
+	 * Converts the given JSON array of rooms to the model representations.
+	 * 
+	 * @param rooms JSON array of rooms.
+	 */
 	private void convertRooms(final JsonArray rooms) {
 		for (final JsonElement r : rooms) {
 			final String name = ((JsonObject) r).get("id").getAsString();
@@ -211,6 +279,12 @@ public class JsonToModelLoader {
 
 	}
 
+	/**
+	 * Creates one room with the given name and given capacity within the model.
+	 * 
+	 * @param name     Room name.
+	 * @param capacity Room capacity.
+	 */
 	private void createRoom(final String name, final int capacity) {
 		final Room r = IhtcmetamodelFactory.eINSTANCE.createRoom();
 		r.setName(name);
@@ -218,6 +292,12 @@ public class JsonToModelLoader {
 		this.model.getRooms().add(r);
 	}
 
+	/**
+	 * Converts the given JSON array of operating theaters to the model
+	 * representations.
+	 * 
+	 * @param operatingTheaters JSON array of operating theaters.
+	 */
 	private void convertOperatingTheaters(final JsonArray operatingTheaters) {
 		for (final JsonElement ot : operatingTheaters) {
 			final String name = ((JsonObject) ot).get("id").getAsString();
@@ -226,6 +306,13 @@ public class JsonToModelLoader {
 		}
 	}
 
+	/**
+	 * Creates one operating theater with the given name and the given JSON array of
+	 * availability values.
+	 * 
+	 * @param name         Operating theater name.
+	 * @param availability Operating theater availabilities.
+	 */
 	private void createOperatingTheater(final String name, final JsonArray availability) {
 		final OperatingTheater ot = IhtcmetamodelFactory.eINSTANCE.createOperatingTheater();
 		ot.setName(name);
@@ -237,6 +324,14 @@ public class JsonToModelLoader {
 		this.model.getOperatingTheaters().add(ot);
 	}
 
+	/**
+	 * Creates and returns a new object of operating theater availability.
+	 * 
+	 * @param dayId        ID of the day on which the availability should be
+	 *                     scheduled.
+	 * @param availability Availability value
+	 * @return New object of operating theater availability.
+	 */
 	private OperatingTheaterAvailability createOperatingTheaterAvailability(final int dayId, final int availability) {
 		final OperatingTheaterAvailability ota = IhtcmetamodelFactory.eINSTANCE.createOperatingTheaterAvailability();
 		final Day day = this.model.getDays().get(dayId);
@@ -250,6 +345,11 @@ public class JsonToModelLoader {
 		return ota;
 	}
 
+	/**
+	 * Converts the given JSON array of all surgeons to the model representations.
+	 * 
+	 * @param surgeons JSON array of all surgeons.
+	 */
 	private void convertSurgeons(final JsonArray surgeons) {
 		for (final JsonElement s : surgeons) {
 			final String name = ((JsonObject) s).get("id").getAsString();
@@ -259,6 +359,13 @@ public class JsonToModelLoader {
 
 	}
 
+	/**
+	 * Creates one new surgeon object with the given name and JSON array of maximum
+	 * surgery times within the model.
+	 * 
+	 * @param name           Surgeon name.
+	 * @param maxSurgeryTime Surgeon maximum surgery time values as JSON array.
+	 */
 	private void createSurgeon(final String name, final JsonArray maxSurgeryTime) {
 		final Surgeon s = IhtcmetamodelFactory.eINSTANCE.createSurgeon();
 		s.setName(name);
@@ -270,6 +377,14 @@ public class JsonToModelLoader {
 		this.model.getSurgeons().add(s);
 	}
 
+	/**
+	 * Creates and returns a new object of surgeon availability with the given
+	 * parameters.
+	 * 
+	 * @param dayId          ID of the day the surgeon availability takes places.
+	 * @param maxSurgeryTime Maximum time of surgery for this specific day.
+	 * @return New object of surgeon availability with the given parameters.
+	 */
 	private SurgeonAvailability createSurgeonAvailability(final int dayId, final int maxSurgeryTime) {
 		final SurgeonAvailability sa = IhtcmetamodelFactory.eINSTANCE.createSurgeonAvailability();
 		final Day day = this.model.getDays().get(dayId);
@@ -283,6 +398,12 @@ public class JsonToModelLoader {
 		return sa;
 	}
 
+	/**
+	 * Converts the given JSON array of all occupants to their model
+	 * representations.
+	 * 
+	 * @param occupants JSON array of all occupants.
+	 */
 	private void convertOccupants(final JsonArray occupants) {
 		for (final JsonElement o : occupants) {
 			final String name = ((JsonObject) o).get("id").getAsString();
@@ -299,6 +420,17 @@ public class JsonToModelLoader {
 		}
 	}
 
+	/**
+	 * Creates one occupant with the given parameters within the model.
+	 * 
+	 * @param name               Name.
+	 * @param gender             Gender.
+	 * @param ageGroup           Age group.
+	 * @param lengthOfStay       Length of the stay in number of days.
+	 * @param workloadProduced   JSON array of the produced work loads per shift.
+	 * @param skillLevelRequired JSON array of the required skill levels per shift.
+	 * @param roomId             ID of the assigned room.
+	 */
 	private void createOccupant(final String name, final String gender, final String ageGroup, final int lengthOfStay,
 			final JsonArray workloadProduced, final JsonArray skillLevelRequired, final String roomId) {
 		final Occupant o = IhtcmetamodelFactory.eINSTANCE.createOccupant();
@@ -320,6 +452,15 @@ public class JsonToModelLoader {
 		this.model.getOccupants().add(o);
 	}
 
+	/**
+	 * Creates and returns a new object representing a produced workload of an
+	 * occupant with the given parameters.
+	 * 
+	 * @param shiftId  Shift ID the workload will be produced.
+	 * @param workload Work load level.
+	 * @return New object representing a produced workload of an occupant with the
+	 *         given parameters.
+	 */
 	private OccupantWorkloadProduced createOccupantWorkloadProduced(final int shiftId, final int workload) {
 		final OccupantWorkloadProduced owp = IhtcmetamodelFactory.eINSTANCE.createOccupantWorkloadProduced();
 		final Shift shift = getShiftById(shiftId);
@@ -328,6 +469,15 @@ public class JsonToModelLoader {
 		return owp;
 	}
 
+	/**
+	 * Creates and returns a new object representing a required skill level of an
+	 * occupant with the given parameters.
+	 * 
+	 * @param shiftId    Shift ID the skill level will be required for.
+	 * @param skillLevel Skill level.
+	 * @return A new object representing a required skill level of an occupant with
+	 *         the given parameters.
+	 */
 	private OccupantSkillLevelRequired createOccupantSkillLevelRequired(final int shiftId, int skillLevel) {
 		final OccupantSkillLevelRequired osr = IhtcmetamodelFactory.eINSTANCE.createOccupantSkillLevelRequired();
 		final Shift shift = getShiftById(shiftId);
@@ -336,6 +486,11 @@ public class JsonToModelLoader {
 		return osr;
 	}
 
+	/**
+	 * Converts a given JSON array of patients to their model representations.
+	 * 
+	 * @param patients JSON array of patients.
+	 */
 	private void convertPatients(final JsonArray patients) {
 		for (final JsonElement p : patients) {
 			final String name = ((JsonObject) p).get("id").getAsString();
@@ -359,11 +514,6 @@ public class JsonToModelLoader {
 
 			// TODO: add relative days
 
-			// TODO: remove me
-//			if(!mandatory) {
-//				return;
-//			}
-
 			// add gender to all found genders if not already existent
 			this.foundGenders.add(gender);
 
@@ -372,6 +522,25 @@ public class JsonToModelLoader {
 		}
 	}
 
+	/**
+	 * Creates a new patient object in the model with the given parameters.
+	 * 
+	 * @param name                Name.
+	 * @param mandatory           If true, the scheduling of the patient is
+	 *                            required.
+	 * @param gender              Gender.
+	 * @param ageGroup            Age group.
+	 * @param lengthOfStay        Length of the stay in number of days.
+	 * @param surgeryReleaseDay   First possible admission day.
+	 * @param surgeryDueDay       Latest possible admission day.
+	 * @param surgeryDuration     Duration of the surgery in minutes.
+	 * @param surgeonId           ID of the surgeon for the surgery.
+	 * @param incompatibleRoomIds JSON array containing incompatible rooms.
+	 * @param workloadProduced    JSON array containing the produced work load per
+	 *                            shift.
+	 * @param skillLevelRequired  JSON array containing the required nurse skill
+	 *                            level per shift.
+	 */
 	private void createPatient(final String name, final boolean mandatory, final String gender, final String ageGroup,
 			final int lengthOfStay, final int surgeryReleaseDay, final int surgeryDueDay, final int surgeryDuration,
 			final String surgeonId, final JsonArray incompatibleRoomIds, final JsonArray workloadProduced,
@@ -383,9 +552,6 @@ public class JsonToModelLoader {
 		p.setAgeGroup(ageGroup);
 		p.setLengthOfStay(lengthOfStay);
 		p.setSurgeryReleaseDay(surgeryReleaseDay);
-//		if (surgeryDueDay != -1) {
-//			p.setSurgeryDueDate(surgeryDueDay);
-//		}
 		p.setSurgeryDueDate(surgeryDueDay);
 		p.setSurgeryDuration(surgeryDuration);
 		final Surgeon s = findSurgeonByName(surgeonId);
@@ -407,6 +573,12 @@ public class JsonToModelLoader {
 		this.model.getPatients().add(p);
 	}
 
+	/**
+	 * Finds the surgeon with the given name within the model.
+	 * 
+	 * @param name Name to find the surgeon object for.
+	 * @return Surgeon object with the given name from the model.
+	 */
 	private Surgeon findSurgeonByName(final String name) {
 		for (final Surgeon s : this.model.getSurgeons()) {
 			if (s.getName() != null && s.getName().equals(name)) {
@@ -416,6 +588,12 @@ public class JsonToModelLoader {
 		throw new UnsupportedOperationException("Surgeon with name <" + name + "> not found.");
 	}
 
+	/**
+	 * Finds the room with the given name within the model.
+	 * 
+	 * @param name Name to find the room object for.
+	 * @return Room object with the given name from the model.
+	 */
 	private Room findRoomByName(final String name) {
 		for (final Room r : this.model.getRooms()) {
 			if (r.getName() != null && r.getName().equals(name)) {
@@ -425,6 +603,14 @@ public class JsonToModelLoader {
 		throw new UnsupportedOperationException("Room with name <" + name + "> not found.");
 	}
 
+	/**
+	 * Creates and returns a new patient skill level required object with the given
+	 * parameters.
+	 * 
+	 * @param shiftOffset Offset of the shift.
+	 * @param skillLevel  Skill level required for the relative shift.
+	 * @return New patient skill level required object with the given parameters.
+	 */
 	private PatientSkillLevelRequired createPatientSkillLevelRequired(final int shiftOffset, int skillLevel) {
 		final PatientSkillLevelRequired psr = IhtcmetamodelFactory.eINSTANCE.createPatientSkillLevelRequired();
 		psr.setShiftOffset(shiftOffset);
@@ -432,6 +618,14 @@ public class JsonToModelLoader {
 		return psr;
 	}
 
+	/**
+	 * Creates and returns a new patient workload produced object with the given
+	 * parameters.
+	 * 
+	 * @param shiftOffset Offset of the shift.
+	 * @param workload    Workload produced by a patient in the relative shift.
+	 * @return New patient workload produced object with the given parameters.
+	 */
 	private PatientWorkloadProduced createPatientWorkloadProduced(int shiftOffset, int workload) {
 		final PatientWorkloadProduced pwp = IhtcmetamodelFactory.eINSTANCE.createPatientWorkloadProduced();
 		pwp.setShiftOffset(shiftOffset);
@@ -439,6 +633,11 @@ public class JsonToModelLoader {
 		return pwp;
 	}
 
+	/**
+	 * Converts the given JSON array of nurses to their model representations.
+	 * 
+	 * @param nurses JSON array of nurses.
+	 */
 	private void convertNurses(final JsonArray nurses) {
 		for (final JsonElement n : nurses) {
 			final String name = ((JsonObject) n).get("id").getAsString();
@@ -449,6 +648,13 @@ public class JsonToModelLoader {
 
 	}
 
+	/**
+	 * Creates one nurse object within the model with the given parameters.
+	 * 
+	 * @param name          Name.
+	 * @param skillLevel    Skill level.
+	 * @param workingShifts JSON array of the working shifts.
+	 */
 	private void createNurse(final String name, final int skillLevel, final JsonArray workingShifts) {
 		final Nurse n = IhtcmetamodelFactory.eINSTANCE.createNurse();
 		n.setName(name);
@@ -462,6 +668,15 @@ public class JsonToModelLoader {
 		this.model.getNurses().add(n);
 	}
 
+	/**
+	 * Creates and returns a new nurse shift max load object with the given
+	 * parameters.
+	 * 
+	 * @param dayId         ID of the day the nurse as the given maximum load.
+	 * @param shiftTypeName Name of the shift.
+	 * @param maxLoad       Maximum load value as integer.
+	 * @return New nurse shift max load object with the given parameters.
+	 */
 	private NurseShiftMaxLoad createNurseShiftMaxLoad(final int dayId, final String shiftTypeName, final int maxLoad) {
 		final NurseShiftMaxLoad nsml = IhtcmetamodelFactory.eINSTANCE.createNurseShiftMaxLoad();
 		final Shift s = getShift(dayId, getShiftTypeByName(shiftTypeName));
@@ -471,6 +686,11 @@ public class JsonToModelLoader {
 		return nsml;
 	}
 
+	/**
+	 * Creates all gender objects for the given set of gender names.
+	 * 
+	 * @param foundGenders Set of gender names.
+	 */
 	private void createGenders(final Set<String> foundGenders) {
 		foundGenders.forEach(g -> {
 			final Gender newGender = IhtcmetamodelFactory.eINSTANCE.createGender();
@@ -479,6 +699,15 @@ public class JsonToModelLoader {
 		});
 	}
 
+	/**
+	 * Returns the shift object from the model that matches the given day ID and
+	 * shift type.
+	 * 
+	 * @param dayId Day ID to search the shift for.
+	 * @param type  Shift type.
+	 * @return Shift object from the model that matches the given day ID and shift
+	 *         type.
+	 */
 	private Shift getShift(final int dayId, final ShiftType type) {
 		for (final Shift s : this.model.getShifts()) {
 			if (s.getDay().getId() == dayId && s.getType() == type) {
@@ -489,6 +718,12 @@ public class JsonToModelLoader {
 				"Shift with day ID <" + dayId + "> and shift type < " + type.getName() + "> not found.");
 	}
 
+	/**
+	 * Converts the given shift name to our internal enumeration representation.
+	 * 
+	 * @param name Shift name as string.
+	 * @return Enumeration representation for the given shift type.
+	 */
 	private ShiftType getShiftTypeByName(final String name) {
 		switch (name) {
 		case "early": {
@@ -505,6 +740,12 @@ public class JsonToModelLoader {
 		}
 	}
 
+	/**
+	 * Returns the shift object from the model represented by the given shift ID.
+	 * 
+	 * @param shiftId Shift ID.
+	 * @return Shift object from the model represented by the given shift ID.
+	 */
 	private Shift getShiftById(final int shiftId) {
 		for (final Shift s : this.model.getShifts()) {
 			if (s.getId() == shiftId) {
