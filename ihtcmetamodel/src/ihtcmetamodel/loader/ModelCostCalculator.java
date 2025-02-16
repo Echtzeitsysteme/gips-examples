@@ -9,6 +9,7 @@ import ihtcmetamodel.AgeGroup;
 import ihtcmetamodel.Day;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.Nurse;
+import ihtcmetamodel.NurseShiftMaxLoad;
 import ihtcmetamodel.Occupant;
 import ihtcmetamodel.OperatingTheater;
 import ihtcmetamodel.Patient;
@@ -105,39 +106,58 @@ public class ModelCostCalculator {
 		int excessCost = 0;
 
 		for (final Nurse n : model.getNurses()) {
-			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+			// find all shifts a nurse works on
+			final Set<Shift> allWorkingShiftsOfNurse = new HashSet<Shift>();
+			n.getShiftMaxLoads().forEach(sml -> {
+				allWorkingShiftsOfNurse.add(sml.getShift());
+			});
+
+			for (final Shift s : allWorkingShiftsOfNurse) {
+				final int nurseMaximumWorkload = findNurseMaxLoadInShift(n, s);
+
 				// accumulate all workloads in this shift across all rooms
 				int nurseSpecificAssignedWorkload = 0;
-				final List<Occupant> occupants = getOccupantsInRoomOnDay(model, rsna.getRoom(),
-						rsna.getShift().getDay());
-				final List<Patient> patients = getPatientsInRoomOnDay(model, rsna.getRoom(), rsna.getShift().getDay());
+				for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
+					// check if shift matches
+					if (!s.equals(rsna.getShift())) {
+						continue;
+					}
 
-				// calculate actual work load in this room and shift
-				int workloadInRoomAndShift = 0;
-				for (final Occupant o : occupants) {
-					workloadInRoomAndShift += getWorkloadOfOccupantByShift(o, rsna.getShift());
-				}
-				for (final Patient p : patients) {
-					workloadInRoomAndShift += getWorkloadOfPatientByShift(p, rsna.getShift());
-				}
+					final List<Occupant> occupants = getOccupantsInRoomOnDay(model, rsna.getRoom(),
+							rsna.getShift().getDay());
+					final List<Patient> patients = getPatientsInRoomOnDay(model, rsna.getRoom(),
+							rsna.getShift().getDay());
 
-				nurseSpecificAssignedWorkload += workloadInRoomAndShift;
+					// calculate actual work load in this room and shift
+					for (final Occupant o : occupants) {
+						nurseSpecificAssignedWorkload += getWorkloadOfOccupantByShift(o, rsna.getShift());
+					}
+					for (final Patient p : patients) {
+						nurseSpecificAssignedWorkload += getWorkloadOfPatientByShift(p, rsna.getShift());
+					}
+				}
 
 				// check if workload of nurse `n` was exceeded for this shift
-				// TODO
-				try {
-					final int nurseMaximumWorkload = n.getShiftMaxLoads().get(rsna.getShift().getId()).getMaxLoad();
-					if (nurseMaximumWorkload < nurseSpecificAssignedWorkload) {
-						excessCost += (nurseSpecificAssignedWorkload - nurseMaximumWorkload);
-					}
-				} catch (final RuntimeException ex) {
-//					System.out.println("");
+				if (nurseMaximumWorkload < nurseSpecificAssignedWorkload) {
+					excessCost += (nurseSpecificAssignedWorkload - nurseMaximumWorkload);
 				}
 			}
-
 		}
 
 		return excessCost * model.getWeight().getNurseEccessiveWorkload();
+	}
+
+	private int findNurseMaxLoadInShift(final Nurse n, final Shift s) {
+		int maxLoad = 0;
+
+		for (final NurseShiftMaxLoad nsml : n.getShiftMaxLoads()) {
+			if (nsml.getShift().getId() == s.getId()) {
+				maxLoad = nsml.getMaxLoad();
+				break;
+			}
+		}
+
+		return maxLoad;
 	}
 
 	/**
@@ -357,16 +377,8 @@ public class ModelCostCalculator {
 
 		// calculate relative shift index to get the correct required skill level from
 		// patient
-//		final int index = patient.getAdmissionDay().getShifts().get(0).getId() + shift.getId();
 		final int index = shift.getId() - patient.getAdmissionDay().getShifts().get(0).getId();
-
-		// TODO
-		int patientLevel = 0;
-		try {
-			patientLevel = patient.getSkillLevelsRequired().get(index).getSkillLevelRequired();
-		} catch (final RuntimeException e) {
-			patientLevel = Integer.MIN_VALUE;
-		}
+		int patientLevel = patient.getSkillLevelsRequired().get(index).getSkillLevelRequired();
 
 		/*
 		 * "If the skill level of the nurse assigned to a patient’s room in a shift does
@@ -389,16 +401,9 @@ public class ModelCostCalculator {
 		// occupant
 		final int shiftId = shift.getId();
 
-		// TODO
-		int occupantLevel = 0;
-		try {
-			final var requiredSkillLevels = occupant.getSkillLevelsRequired();
-			final var requiredSkillLevel = requiredSkillLevels.get(shiftId);
-//		final int occupantLevel = occupant.getSkillLevelsRequired().get(shift.getId()).getSkillLevelRequired();
-			occupantLevel = requiredSkillLevel.getSkillLevelRequired();
-		} catch (final RuntimeException ex) {
-
-		}
+		final var requiredSkillLevels = occupant.getSkillLevelsRequired();
+		final var requiredSkillLevel = requiredSkillLevels.get(shiftId);
+		int occupantLevel = requiredSkillLevel.getSkillLevelRequired();
 
 		/*
 		 * "If the skill level of the nurse assigned to a patient’s room in a shift does
@@ -439,22 +444,12 @@ public class ModelCostCalculator {
 	}
 
 	private int getWorkloadOfOccupantByShift(final Occupant o, final Shift s) {
-		// TODO
-		try {
-			return o.getWorkloadsProduced().get(s.getId()).getWorkloadProduced();
-		} catch (final Exception ex) {
-			return 0;
-		}
+		return o.getWorkloadsProduced().get(s.getId()).getWorkloadProduced();
 	}
 
 	private int getWorkloadOfPatientByShift(final Patient p, final Shift shift) {
-		// TODO
-		try {
-			return p.getWorkloadsProduced().get(p.getAdmissionDay().getShifts().get(0).getId() + shift.getId())
-					.getWorkloadProduced();
-		} catch (final RuntimeException ex) {
-			return 0;
-		}
+		final int patientsFirstShiftId = p.getAdmissionDay().getShifts().get(0).getId();
+		return p.getWorkloadsProduced().get(shift.getId() - patientsFirstShiftId).getWorkloadProduced();
 	}
 
 	private int countPatientNurses(final Hospital model, final Patient patient) {
