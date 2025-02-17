@@ -275,7 +275,7 @@ pattern dayRoomGender {
 	g : Gender
 }
 
-pattern nurseShiftRoom {
+pattern nurseShiftRoomMaxLoad {
 	h : Hospital {
 		- nurses -> n
 		- shifts -> s
@@ -297,7 +297,7 @@ pattern nurseShiftRoom {
 	r : Room
 }
 
-pattern nurseShift {
+pattern nurseShiftMaxLoad {
 	h : Hospital {
 		- nurses -> n
 		- shifts -> s
@@ -342,7 +342,7 @@ pattern patientRoomShiftLoad {
 	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
 }
 
-pattern occupantShiftLoad {
+pattern occupantRoomShiftLoad {
 	h : Hospital {
 		- occupants -> o
 		- rooms -> r
@@ -398,15 +398,25 @@ mapping roomShiftProducedLoad to shiftRoomTuple {
 	var producedLoad : EInt
 };
 
-// Mapping that holds the cumulative workload of a nurse `n` on shift `s`
-mapping nurseShiftRoomLoad to nurseShiftRoom {
+// Mapping that holds the cumulative workload of a nurse `n` on shift `s` in
+// room `r`
+mapping nurseShiftRoomLoad to nurseShiftRoomMaxLoad {
 	var load : EInt
 };
 
-mapping nurseShiftOverload to nurseShift {
+// Mapping that holds the `overload` of nurse `n` in shift `s`
+// `overload` = 0 if the cumulative load of `n` does not exceed the maximum workload
+// `overload` = cumulative_load - n_maximum_workload otherwise
+mapping nurseShiftOverload to nurseShiftMaxLoad {
 	var overload : EInt
 };
 
+//
+// Constraints
+//
+
+// Constraint that saves the produced workload of patient `p` in shift `s`
+// in room `r`
 constraint with roomShiftPatientProducedLoad {
 	context.variables.producedLoad
 	==
@@ -414,6 +424,8 @@ constraint with roomShiftPatientProducedLoad {
 	)->sum(context.nodes.pwp.workloadProduced * element.value)
 }
 
+// Constraint that accumulates all produced loads of all patients and occupants
+// in room `r` on shift `s`
 constraint with roomShiftProducedLoad {
 	context.variables.producedLoad
 	==
@@ -425,11 +437,13 @@ constraint with roomShiftProducedLoad {
 	
 	+
 	// occupants
-	patterns.occupantShiftLoad->filter(element.nodes.r == context.nodes.r //
+	patterns.occupantRoomShiftLoad->filter(element.nodes.r == context.nodes.r //
 		& element.nodes.owp.shift == context.nodes.s //
 	)->sum(element.nodes.owp.workloadProduced)
 }
 
+// Constraint that saves the cumulative load of nurse `n` in room `r`
+// on shift `s` in the variable `load`.
 constraint with nurseShiftRoomLoad {
 	mappings.anrs->filter( //
 		element.nodes.n == context.nodes.n //
@@ -455,6 +469,8 @@ constraint with nurseShiftRoomLoad {
 	context.variables.load == 0
 }
 
+// Constraint that sets the cumulative overload of nurse `n` in
+// shift `s` in the variable `overload`.
 constraint with nurseShiftOverload {
 	mappings.nurseShiftRoomLoad->filter( //
 		element.nodes.n == context.nodes.n //
@@ -462,9 +478,7 @@ constraint with nurseShiftOverload {
 	)->sum(element.variables.load)
 	>
 	context.nodes.sml.maxLoad
-	
 	=>
-		
 	context.variables.overload
 	==
 	mappings.nurseShiftRoomLoad->filter( //
@@ -481,25 +495,11 @@ constraint with nurseShiftOverload {
 	)->sum(element.variables.load)
 	<=
 	context.nodes.sml.maxLoad
-	
 	=>
-		
 	context.variables.overload
 	==
 	0
 }
-//constraint with nurseShift {
-//	context.nodes.sml.maxLoad
-//	>=
-//	mappings.nurseShiftRoomLoad->filter( //
-//		element.nodes.n == context.nodes.n //
-//		& element.nodes.s == context.nodes.s //
-//	)->sum(element.variables.load)
-//}
-
-//
-// Constraints
-//
 
 // If a patient `p` is scheduled for room `r` on a day `d` that is within the
 // patients scheduled time frame, set the respective mapping variable to 1.
