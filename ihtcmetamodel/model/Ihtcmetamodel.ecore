@@ -96,7 +96,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomMixedAge" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomNurseSkill" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="continuityOfCare" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="NurseEccessiveWorkload"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nurseEccessiveWorkload"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="openOperatingTheater" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="surgeonTransfer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>

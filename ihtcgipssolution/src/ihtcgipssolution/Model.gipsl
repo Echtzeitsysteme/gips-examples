@@ -413,11 +413,31 @@ constraint with findMandatoryPatient {
 	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
 }
 
-// TODO: temporary workaround: do not schedule optional patients at all
+// 2.2 Solution: "i. the admission date for patients, or, in the case of optional patients,
+// potentially their postponement to the next scheduling period;"
+//
+// "– mandatory/optional: mandatory patients must be admitted during the
+// scheduling period, while the admission of optional patients can be postponed
+// until a future scheduling period."
+//
+// "H5 Mandatory versus optional patients: All mandatory patients must be admitted within
+// the scheduling period, whereas optional patients may be postponed to future scheduling
+// periods."
+//
+// This constraint ensures that optional patients can (but must not) be included.
 constraint with findOptionalPatient {
-	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
+	// Optional patients can have an admission day
+	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
 	&
-	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
+	// Optional patients can have an assigned room
+	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
+	
+	// If an optional patient has an admission day (assigned room) they must
+	// also have an assigned room (admission day)
+	&
+	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	==
+	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
 }
 
 // H6: Admission day: A patient can be admitted on any day from their release
@@ -488,4 +508,17 @@ constraint with roomShiftTuple {
 	=>
 	// ... there must be exactly one nurse assigned to room `r` in shift `s` (that is part of day `d`).
 	mappings.anrs->filter(element.nodes.r == context.nodes.r & element.nodes.s == context.nodes.s)->sum(element.value) == 1
+}
+
+//
+// Objectives
+//
+
+// Unscheduled optional patients
+function electiveUnscheduledPatients with findOptionalPatient {
+	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+}
+
+objective : min {
+	functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
 }
