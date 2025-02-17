@@ -514,11 +514,21 @@ constraint with roomShiftTuple {
 // Objectives
 //
 
+// S8 Unscheduled patients: The number of optional patients who are not admitted
+// in the current scheduling period should be minimized.
+//
 // Unscheduled optional patients
 function electiveUnscheduledPatients with findOptionalPatient {
 	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
 }
 
+// S7 Admission delay: The number of days between a patient’s release date and
+// their actual date of admission should be minimized.
+function admissionDelay with aadp {
+	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
+}
+
 objective : min {
 	functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
+	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
 }
