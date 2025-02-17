@@ -44,7 +44,7 @@ rule assignNurseToRoomShift {
 		- shift -> s
 	}
 	
-//	# sml.maxLoad > 0
+	# sml.maxLoad > 0
 }
 
 rule assignAdmissionDayToPatient {
@@ -124,12 +124,12 @@ rule assignSurgeryToPatient {
 	aot : OperatingTheaterAvailability {
 		- day -> d
 	}
-//	# aot.availability > 0
+	# aot.availability > 0
 	
 	as : SurgeonAvailability {
 		- day -> d
 	}
-//	# as.availability > 0
+	# as.availability > 0
 }
 
 pattern patientDayTriple {
@@ -177,7 +177,7 @@ pattern dayOperatingTheaterTuple {
 	}
 	
 	aot : OperatingTheaterAvailability
-//	# aot.availability > 0
+	# aot.availability > 0
 }
 
 pattern findMandatoryPatient {
@@ -235,7 +235,6 @@ pattern patientRoomDay {
 	d : Day
 	
 	# p.surgeryReleaseDay <= d.id
-//	# p.surgeryDueDate <= d.id + p.lengthOfStay
 	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
 }
 
