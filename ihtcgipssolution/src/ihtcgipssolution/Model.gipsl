@@ -154,6 +154,16 @@ pattern dayRoomTuple {
 	r : Room
 }
 
+pattern shiftRoomTuple {
+	h : Hospital {
+		- shifts -> s
+		- rooms -> r
+	}
+	
+	s : Shift
+	r : Room
+}
+
 pattern daySurgeonTuple {
 	h : Hospital {
 		- days -> d
@@ -265,6 +275,90 @@ pattern dayRoomGender {
 	g : Gender
 }
 
+pattern nurseShiftRoom {
+	h : Hospital {
+		- nurses -> n
+		- shifts -> s
+		- rooms -> r
+	}
+	
+	n : Nurse {
+		- shiftMaxLoads -> sml
+	}
+	
+	s : Shift
+	
+	sml : NurseShiftMaxLoad {
+		- shift -> s
+	}
+	
+	# sml.maxLoad > 0
+	
+	r : Room
+}
+
+pattern nurseShift {
+	h : Hospital {
+		- nurses -> n
+		- shifts -> s
+	}
+	
+	n : Nurse {
+		- shiftMaxLoads -> sml
+	}
+	
+	s : Shift
+	
+	sml : NurseShiftMaxLoad {
+		- shift -> s
+	}
+	
+	# sml.maxLoad > 0
+}
+
+pattern patientRoomShiftLoad {
+	h : Hospital {
+		- rooms -> r
+		- patients -> p
+		- days -> d
+		- shifts -> s
+	}
+	
+	r : Room
+	
+	p : Patient {
+		- workloadsProduced -> pwp
+	}
+	
+	d : Day {
+		- shifts -> s
+	}
+	
+	s : Shift
+	
+	pwp : PatientWorkloadProduced
+	
+	# p.surgeryReleaseDay <= d.id
+	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
+}
+
+pattern occupantShiftLoad {
+	h : Hospital {
+		- occupants -> o
+		- rooms -> r
+	}
+	
+	o : Occupant {
+		- workloadsProduced -> owp
+	}
+	
+	r : Room
+	
+	owp: OccupantWorkloadProduced
+	
+	# r.name == o.roomId
+}
+
 //
 // GIPSL
 //
@@ -292,6 +386,116 @@ mapping roomDayPatientLoad to patientRoomDay;
 mapping roomDayLoad to dayRoomTuple {
 	var load : EInt
 };
+
+// Mapping that holds the produced load by patient `p` in shift `s` in room `r`
+mapping roomShiftPatientProducedLoad to patientRoomShiftLoad {
+	var producedLoad : EInt
+};
+
+// Mapping that holds the produced load by all patients and occupants in shift `s`
+// in room `r`
+mapping roomShiftProducedLoad to shiftRoomTuple {
+	var producedLoad : EInt
+};
+
+// Mapping that holds the cumulative workload of a nurse `n` on shift `s`
+mapping nurseShiftRoomLoad to nurseShiftRoom {
+	var load : EInt
+};
+
+mapping nurseShiftOverload to nurseShift {
+	var overload : EInt
+};
+
+constraint with roomShiftPatientProducedLoad {
+	context.variables.producedLoad
+	==
+	mappings.aadp->filter(element.nodes.p == context.nodes.p & element.nodes.d.id - 1 <= context.nodes.d.id //
+	)->sum(context.nodes.pwp.workloadProduced * element.value)
+}
+
+constraint with roomShiftProducedLoad {
+	context.variables.producedLoad
+	==
+	// patients
+	mappings.roomShiftPatientProducedLoad->filter( //
+		element.nodes.r == context.nodes.r
+		& element.nodes.s == context.nodes.s
+	)->sum(element.variables.producedLoad)
+	
+	+
+	// occupants
+	patterns.occupantShiftLoad->filter(element.nodes.r == context.nodes.r //
+		& element.nodes.owp.shift == context.nodes.s //
+	)->sum(element.nodes.owp.workloadProduced)
+}
+
+constraint with nurseShiftRoomLoad {
+	mappings.anrs->filter( //
+		element.nodes.n == context.nodes.n //
+		& element.nodes.r == context.nodes.r //
+		& element.nodes.s == context.nodes.s //
+	)->sum(element.value) == 1
+	<=>
+	context.variables.load
+	==
+	mappings.roomShiftProducedLoad->filter( //
+		element.nodes.r == context.nodes.r //
+		& element.nodes.s == context.nodes.s //
+	)->sum(element.variables.producedLoad)
+	
+	&
+	
+	mappings.anrs->filter( //
+		element.nodes.n == context.nodes.n //
+		& element.nodes.r == context.nodes.r //
+		& element.nodes.s == context.nodes.s //
+	)->sum(element.value) == 0
+	<=>
+	context.variables.load == 0
+}
+
+constraint with nurseShiftOverload {
+	mappings.nurseShiftRoomLoad->filter( //
+		element.nodes.n == context.nodes.n //
+		& element.nodes.s == context.nodes.s //
+	)->sum(element.variables.load)
+	>
+	context.nodes.sml.maxLoad
+	
+	=>
+		
+	context.variables.overload
+	==
+	mappings.nurseShiftRoomLoad->filter( //
+		element.nodes.n == context.nodes.n //
+		& element.nodes.s == context.nodes.s //
+	)->sum(element.variables.load)
+	- context.nodes.sml.maxLoad
+	
+	& 
+	
+	mappings.nurseShiftRoomLoad->filter( //
+		element.nodes.n == context.nodes.n //
+		& element.nodes.s == context.nodes.s //
+	)->sum(element.variables.load)
+	<=
+	context.nodes.sml.maxLoad
+	
+	=>
+		
+	context.variables.overload
+	==
+	0
+}
+//constraint with nurseShift {
+//	context.nodes.sml.maxLoad
+//	>=
+//	mappings.nurseShiftRoomLoad->filter( //
+//		element.nodes.n == context.nodes.n //
+//		& element.nodes.s == context.nodes.s //
+//	)->sum(element.variables.load)
+//}
 
 //
 // Constraints
@@ -528,7 +732,17 @@ function admissionDelay with aadp {
 	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
 }
 
+// S4 Maximum workload: For each shift, the total workload induced by patients
+// staying in rooms assigned to a nurse should not exceed the maximum workload
+// of that nurse in that shift. The penalty is the amount by which the total
+// workload exceeds the limit, or 0 if it does not exceed it.
+function maximumWorkload with nurseShiftOverload {
+	context.variables.overload
+}
+
 objective : min {
-	functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
-	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
+	0
+//	functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
+//	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
+	+ functions.maximumWorkload * types.Weight->sum(element.nurseEccessiveWorkload)
 }
