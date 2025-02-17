@@ -293,35 +293,13 @@ mapping roomDayLoad to dayRoomTuple {
 	var load : EInt
 };
 
+//
+// Constraints
+//
+
+// If a patient `p` is scheduled for room `r` on a day `d` that is within the
+// patients scheduled time frame, set the respective mapping variable to 1.
 constraint with roomDayPatientLoad {
-	// If the following holds true:
-	// - the context day must be later or equal to the patients admission day
-	// - the context day must not be later as the patients admission day + length of stay
-	// - the context room must be the same room that will be assigned to the patient
-//	[
-//		// If the assigned admission day.id of the person `p` is <= day.id
-//		context.nodes.d.id >= mappings.aadp->filter( //
-//			element.nodes.p == context.nodes.p //
-//		)->sum(element.nodes.d.id * element.value) - 1 // TODO: ?
-//		&
-//		// and if the assigned admission day.id + p.lengthOfStay -1 is >= day.id
-//		context.nodes.d.id <= mappings.aadp->filter( //
-//			element.nodes.p == context.nodes.p //
-//		)->sum(element.nodes.d.id * element.value) + context.nodes.p.lengthOfStay - 1 - 1
-//		&
-//		// and if the room `r` is the same as the one chosen for patient `p`
-//		mappings.arp->filter( //
-//			element.nodes.p == context.nodes.p //
-//			& element.nodes.r == context.nodes.r //
-//		)->sum(element.value) == 1
-//	]
-//	
-//	// then the mapping of person `p` in room `r` on day `d` should be set to 1
-//	<=>
-//	context.value == 1
-//	
-//	&
-	
 	mappings.aadp->filter( //
 		element.nodes.p == context.nodes.p //
 		& element.nodes.d.id - 1 <= context.nodes.d.id //
@@ -341,6 +319,10 @@ constraint with roomDayPatientLoad {
 	context.value == 1
 }
 
+// The room `r` has a specific load (=number of patients and occupants)
+// on day `d`. This value must be saved in the free mapping variable
+// `load` for each room `r` on each day `d`.
+// load_r = number_of_patients(r,d) + number_of_occupants(r,d) 
 constraint with roomDayLoad {
 	context.variables.load
 	==
@@ -354,10 +336,6 @@ constraint with roomDayLoad {
 	// occupants
 	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
 }
-
-//
-// Constraints
-//
 
 // H1: No gender mix per room
 constraint with dayRoomGender {
@@ -503,7 +481,10 @@ constraint with roomShiftTuple {
 // This constraint ensures that there is at least one nurse per room that contains patients in a shift.
 constraint with roomShiftTuple {
 	// If there is at least one patient `p` assigned to room `r` on day `d` ...
-	mappings.roomDayLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.s.day)->sum(element.variables.load) > 0
+	mappings.roomDayLoad->filter( //
+		element.nodes.r == context.nodes.r //
+		& element.nodes.d == context.nodes.s.day //
+	)->sum(element.variables.load) > 0
 	=>
 	// ... there must be exactly one nurse assigned to room `r` in shift `s` (that is part of day `d`).
 	mappings.anrs->filter(element.nodes.r == context.nodes.r & element.nodes.s == context.nodes.s)->sum(element.value) == 1
