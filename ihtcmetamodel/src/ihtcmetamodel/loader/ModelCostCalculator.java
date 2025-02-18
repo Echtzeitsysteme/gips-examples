@@ -144,7 +144,7 @@ public class ModelCostCalculator {
 			}
 		}
 
-		return excessCost * model.getWeight().getNurseEccessiveWorkload();
+		return excessCost * model.getWeight().getNurseExcessiveWorkload();
 	}
 
 	/**

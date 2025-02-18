@@ -96,7 +96,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomMixedAge" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomNurseSkill" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="continuityOfCare" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nurseEccessiveWorkload"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nurseExcessiveWorkload"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="openOperatingTheater" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="surgeonTransfer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -172,7 +172,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="day" eType="#//Day"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RelativePatientDay">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="relateiveId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="relativeId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//Patient"
         eOpposite="#//Patient/stayDays"/>
   </eClassifiers>

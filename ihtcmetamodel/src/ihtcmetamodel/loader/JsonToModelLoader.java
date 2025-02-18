@@ -177,7 +177,7 @@ public class JsonToModelLoader {
 		w.setRoomMixedAge(weights.get("room_mixed_age").getAsInt());
 		w.setRoomNurseSkill(weights.get("room_nurse_skill").getAsInt());
 		w.setContinuityOfCare(weights.get("continuity_of_care").getAsInt());
-		w.setNurseEccessiveWorkload(weights.get("nurse_eccessive_workload").getAsInt());
+		w.setNurseExcessiveWorkload(weights.get("nurse_eccessive_workload").getAsInt());
 		w.setOpenOperatingTheater(weights.get("open_operating_theater").getAsInt());
 		w.setSurgeonTransfer(weights.get("surgeon_transfer").getAsInt());
 		w.setPatientDelay(weights.get("patient_delay").getAsInt());

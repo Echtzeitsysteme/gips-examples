@@ -740,9 +740,10 @@ function maximumWorkload with nurseShiftOverload {
 	context.variables.overload
 }
 
+// Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
-//	functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
-//	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
-	+ functions.maximumWorkload * types.Weight->sum(element.nurseEccessiveWorkload)
+	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
+	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
+	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
 }
