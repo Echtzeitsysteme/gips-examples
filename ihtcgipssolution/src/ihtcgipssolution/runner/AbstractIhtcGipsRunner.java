@@ -195,10 +195,13 @@ public abstract class AbstractIhtcGipsRunner {
 	 */
 	protected void applySolution(final IhtcgipssolutionGipsAPI gipsApi) {
 		// Apply found solution
-		gipsApi.getAadp().applyNonZeroMappings();
-		gipsApi.getAnrs().applyNonZeroMappings();
-		gipsApi.getArp().applyNonZeroMappings();
-		gipsApi.getAsp().applyNonZeroMappings();
+		final long tick = System.nanoTime();
+		gipsApi.getAadp().applyNonZeroMappings(false);
+		gipsApi.getAnrs().applyNonZeroMappings(false);
+		gipsApi.getArp().applyNonZeroMappings(false);
+		gipsApi.getAsp().applyNonZeroMappings(false);
+		final long tock = System.nanoTime();
+		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
 	}
 
 }
