@@ -10,6 +10,8 @@ Require-Bundle: ihtcgipssolution;bundle-version="1.0.0",
  org.emoflon.gips.core,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
- ihtcgipssolution.hardonly;bundle-version="1.0.0"
+ ihtcgipssolution.hardonly;bundle-version="1.0.0",
+ ihtcgipssolution.nursesrooms;bundle-version="1.0.0",
+ ihtcgipssolution.patientssurgeonsrooms;bundle-version="1.0.0"
 Automatic-Module-Name: ihtcrunner
 Bundle-RequiredExecutionEnvironment: JavaSE-21

@@ -1,39 +1,133 @@
 package "ihtcgipssolution.nursesrooms"
-import "http://www.eclipse.org/emf/2002/Ecore"
-// ^import a metamodel here
+import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
+
+//
+// Configuration
+//
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 42.0];
-	randomSeed := true [value := 73];
+	timeLimit := true [value := 300.0];
+	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
-	tolerance := true [value := 0.000001];
+//	tolerance := true [value := 0.000001];
+	lpOutput := true [path := "gurobi.lp"];
+//	threadCount := true [value := 4];
 }
 
-// specify an example rule
-rule exampleRule {
-	clazz : EClass {
-		++ -eAllOperations -> op
+//
+// GT
+//
+
+rule assignNurseToRoomShift {
+	h : Hospital {
+		- nurses -> n
+		- shifts -> s
+		- rooms -> r
 	}
 	
-	op : EOperation
+	n : Nurse {
+		- shiftMaxLoads -> sml
+	}
+	
+	s : Shift
+	r : Room
+	
+	++ rsna : RoomShiftNurseAssignment {
+		++ - nurse -> n
+		++ - shift -> s
+		++ - room -> r
+	}
+	
+	sml : NurseShiftMaxLoad {
+		- shift -> s
+	}
+	
+	# sml.maxLoad > 0
 }
 
-// create a mapping on the rule
-mapping mapNode to exampleRule;
-
-// create a constraint on one class
-constraint with EOperation {
-	mappings.mapNode->filter(element.nodes.clazz.^abstract)->sum(element.value) > context.lowerBound
+pattern roomShiftTuple {
+	h : Hospital {
+		- rooms -> r
+		- shifts -> s
+	}
+	
+	r : Room
+	
+	s : Shift
 }
 
-// create an objective for the mapping
-function nodeObj with mapNode {
-	context.nodes.op.upperBound * sin(73)
+pattern patientRoomDay {
+	h : Hospital {
+		- rooms -> r
+		- patients -> p
+		- days -> d
+	}
+	
+	r : Room
+	p : Patient
+	d : Day
+	
+	# p.surgeryReleaseDay <= d.id
+	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
 }
 
-// create an overall objective
-objective : min {
-	2 * functions.nodeObj
+pattern occupantRoomDay {
+	h : Hospital {
+		- rooms -> r
+		- occupants -> o
+		- days -> d
+	}
+	
+	r : Room
+	o : Occupant
+	d : Day
+	
+	# r.name == o.roomId
+	# o.lengthOfStay >= d.id
+}
+
+//
+// GIPSL
+//
+
+//
+// Mappings
+//
+
+// Assign nurse to a room and shift
+mapping anrs to assignNurseToRoomShift;
+
+//
+// Constraints
+//
+
+// 2.2 Solution: "A nurse can be assigned to more than one room in each shift (but only one
+// nurse is assigned to a room in a shift). Finally, note that it is necessary to assign
+// a nurse to a room on a given shift only if that room contains patients on the day
+// to which the shift belongs. Nevertheless, assigning nurses to empty rooms would
+// be feasible and does not incur additional costs."
+//
+// This constraint ensures that there is at most one nurse per room per shift.
+constraint with roomShiftTuple {
+	mappings.anrs->filter(element.nodes.r == context.nodes.r & element.nodes.s == context.nodes.s)->sum(element.value)
+	<= 1
+}
+
+// 2.2 Solution: "A nurse can be assigned to more than one room in each shift (but only one
+// nurse is assigned to a room in a shift). Finally, note that it is necessary to assign
+// a nurse to a room on a given shift only if that room contains patients on the day
+// to which the shift belongs. Nevertheless, assigning nurses to empty rooms would
+// be feasible and does not incur additional costs."
+//
+// This constraint ensures that there is at least one nurse per room that contains patients in a shift.
+constraint with roomShiftTuple {
+	patterns.patientRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.s.day)->sum(1)
+	+
+	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.s.day)->sum(1)
+	>= 1
+	<=>
+	// ... there must be exactly one nurse assigned to room `r` in shift `s` (that is part of day `d`).
+	mappings.anrs->filter(element.nodes.r == context.nodes.r & element.nodes.s == context.nodes.s)->sum(element.value) == 1
 }
