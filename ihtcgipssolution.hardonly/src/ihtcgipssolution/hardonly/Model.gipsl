@@ -142,16 +142,6 @@ pattern dayRoomTuple {
 	r : Room
 }
 
-pattern shiftRoomTuple {
-	h : Hospital {
-		- shifts -> s
-		- rooms -> r
-	}
-	
-	s : Shift
-	r : Room
-}
-
 pattern daySurgeonTuple {
 	h : Hospital {
 		- days -> d
