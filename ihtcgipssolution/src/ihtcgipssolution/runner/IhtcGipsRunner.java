@@ -22,6 +22,16 @@ import ihtcmetamodel.loader.ModelToJsonExporter;
 public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 
 	/**
+	 * Runtime tick.
+	 */
+	private long tick = 0;
+
+	/**
+	 * Runtime tock.
+	 */
+	private long tock = 0;
+
+	/**
 	 * The scenario (JSON) file to load.
 	 */
 	protected String scenarioFileName = "test01.json";
@@ -55,6 +65,8 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 	 * Runs the execution of the configured scenario.
 	 */
 	public void run() {
+		tick();
+		
 		//
 		// Folder and file definitions
 		//
@@ -100,9 +112,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		// Build and solve the ILP problem
 		//
 
-		final long tick = System.nanoTime();
 		buildAndSolve(gipsApi);
-		final long tock = System.nanoTime();
 
 		//
 		// Apply the solution
@@ -132,8 +142,44 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		// The end
 		//
 
-		System.out.println("Building + solving took " + 1.0 * (tock - tick) / 1_000_000_000 + "s.");
+		tock();
+		printWallClockRuntime();
 		gipsApi.terminate();
+	}
+
+	/**
+	 * Sets the current system time as tick value. The tock value gets re-set to 0.
+	 */
+	protected void tick() {
+		this.tick = System.nanoTime();
+		this.tock = 0;
+	}
+
+	/**
+	 * Sets the current system time as tock value.
+	 */
+	protected void tock() {
+		this.tock = System.nanoTime();
+	}
+
+	/**
+	 * Prints the measured wall clock runtime value to System.out if its value is
+	 * smaller than 10 minutes and to System.err otherwise.
+	 */
+	protected void printWallClockRuntime() {
+		final double runtime = 1.0 * (tock - tick) / 1_000_000_000;
+
+		if (runtime < 0) {
+			throw new IllegalArgumentException("Runtime value was negative.");
+		}
+
+		if (runtime > 600) {
+			System.err.println("=> Time limit of 10 minutes violated.");
+			System.err.println("=> Wall clock run time: " + runtime + "s.");
+		} else {
+			System.out.println("=> Time limit of 10 minutes respected.");
+			System.out.println("=> Wall clock run time: " + runtime + "s.");
+		}
 	}
 
 }
