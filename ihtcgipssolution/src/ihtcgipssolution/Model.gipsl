@@ -11,7 +11,7 @@ config {
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
-	tolerance := true [value := 0.000001];
+//	tolerance := true [value := 0.000001];
 	lpOutput := true [path := "gurobi.lp"];
 //	threadCount := true [value := 4];
 }
@@ -130,18 +130,6 @@ rule assignSurgeryToPatient {
 		- day -> d
 	}
 	# as.availability > 0
-}
-
-pattern patientDayTriple {
-	h : Hospital {
-		- patients -> p1
-		- patients -> p2
-		- days -> d
-	}
-	
-	p1 : Patient
-	p2 : Patient
-	d : Day
 }
 
 pattern dayRoomTuple {
@@ -442,6 +430,7 @@ constraint with roomShiftProducedLoad {
 	)->sum(element.nodes.owp.workloadProduced)
 }
 
+// TODO:
 // Constraint that saves the cumulative load of nurse `n` in room `r`
 // on shift `s` in the variable `load`.
 constraint with nurseShiftRoomLoad {
