@@ -1144,11 +1144,18 @@ public class ModelFacade {
 		// ^null is okay if all paths are absolute
 		final Resource r = rs.createResource(absPath);
 		// Fetch model contents from eMoflon
-		r.getContents().add(getRoot());
+		final Root root = getRoot();
+		r.getContents().add(root);
 		try {
 			r.save(null);
 		} catch (final IOException e) {
 			e.printStackTrace();
+		} finally {
+			// Re-add the root node (and all of its children) to the resource set contained
+			// within this ModelFacade object.
+			// This fixes a bug were the ModelFacade was basically broken after the persist
+			// method was called.
+			this.resourceSet.getResources().get(0).getContents().add(root);
 		}
 	}
 
