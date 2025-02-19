@@ -206,8 +206,9 @@ pattern dayPatientTuple {
 	
 	p : Patient
 	d : Day
-	// TODO: it may be useful to add attribute constraint(s) to 
-	// only include days which are within the patient's time frame
+	
+	# p.surgeryReleaseDay <= d.id
+	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
 }
 
 pattern roomShiftTuple {
