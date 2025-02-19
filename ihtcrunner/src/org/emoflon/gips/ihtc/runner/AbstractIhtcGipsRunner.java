@@ -19,6 +19,8 @@ import ihtcgipssolution.api.gips.mapping.AadpMapping;
 import ihtcgipssolution.api.gips.mapping.RoomDayLoadMapping;
 import ihtcgipssolution.api.gips.mapping.RoomDayPatientLoadMapping;
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
+import ihtcgipssolution.nursesrooms.api.gips.NursesroomsGipsAPI;
+import ihtcgipssolution.patientssurgeonsrooms.api.gips.PatientssurgeonsroomsGipsAPI;
 
 /**
  * This abstract runner contains utility methods to wrap a given GIPS API object
@@ -206,7 +208,7 @@ public abstract class AbstractIhtcGipsRunner {
 		final long tock = System.nanoTime();
 		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
 	}
-	
+
 	/**
 	 * Applies the best found solution (i.e., all non-zero mappings) with a given
 	 * IHTC 2024 project GIPS API object.
@@ -221,6 +223,38 @@ public abstract class AbstractIhtcGipsRunner {
 		gipsApi.getAnrs().applyNonZeroMappings(false);
 		gipsApi.getArp().applyNonZeroMappings(false);
 		gipsApi.getAsp().applyNonZeroMappings(false);
+		final long tock = System.nanoTime();
+		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+	}
+
+	/**
+	 * Applies the best found solution (i.e., all non-zero mappings) with a given
+	 * IHTC 2024 project GIPS API object.
+	 * 
+	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
+	 *                information from.
+	 */
+	protected void applySolution(final PatientssurgeonsroomsGipsAPI gipsApi) {
+		// Apply found solution
+		final long tick = System.nanoTime();
+		gipsApi.getAadp().applyNonZeroMappings(false);
+		gipsApi.getArp().applyNonZeroMappings(false);
+		gipsApi.getAsp().applyNonZeroMappings(false);
+		final long tock = System.nanoTime();
+		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+	}
+
+	/**
+	 * Applies the best found solution (i.e., all non-zero mappings) with a given
+	 * IHTC 2024 project GIPS API object.
+	 * 
+	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
+	 *                information from.
+	 */
+	protected void applySolution(final NursesroomsGipsAPI gipsApi) {
+		// Apply found solution
+		final long tick = System.nanoTime();
+		gipsApi.getAnrs().applyNonZeroMappings(false);
 		final long tock = System.nanoTime();
 		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
 	}
