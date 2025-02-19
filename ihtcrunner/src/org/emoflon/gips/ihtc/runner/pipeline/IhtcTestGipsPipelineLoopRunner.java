@@ -1,16 +1,16 @@
-package org.emoflon.gips.ihtc.runner.hardonly;
+package org.emoflon.gips.ihtc.runner.pipeline;
 
 /**
  * GIPS-based IHTC 2024 loop runner for the test instances.
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnlyLoopRunner {
+public class IhtcTestGipsPipelineLoopRunner extends AbstractIhtcGipsPipelineLoopRunner {
 
 	/**
 	 * No public instances of this class allowed.
 	 */
-	private IhtcInstancesGipsHardOnlyLoopRunner() {
+	private IhtcTestGipsPipelineLoopRunner() {
 		super();
 	}
 
@@ -20,8 +20,7 @@ public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnl
 	 * @param args Arguments will be ignored.
 	 */
 	public static void main(final String[] args) {
-		final IhtcInstancesGipsHardOnlyLoopRunner runner = new IhtcInstancesGipsHardOnlyLoopRunner();
-		runner.setDatasetFolder("/../ihtcmetamodel/resources/ihtc2024_competition_instances/");
+		final IhtcTestGipsPipelineLoopRunner runner = new IhtcTestGipsPipelineLoopRunner();
 		runner.setUpScenarioNames();
 		runner.printLogSeparator();
 		runner.getScenarioNames().forEach(name -> {
@@ -40,8 +39,8 @@ public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnl
 	 * Sets the scenario names up.
 	 */
 	protected void setUpScenarioNames() {
-		for (int i = 1; i <= 30; i++) {
-			String name = "i";
+		for (int i = 1; i <= 10; i++) {
+			String name = "test";
 			if (i < 10) {
 				name = name.concat("0");
 			}
