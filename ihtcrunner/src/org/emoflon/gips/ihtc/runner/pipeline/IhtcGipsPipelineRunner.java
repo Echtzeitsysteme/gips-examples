@@ -88,7 +88,7 @@ public class IhtcGipsPipelineRunner extends IhtcGipsRunner {
 		gipsApiA.init(URI.createFileURI(instancePath));
 		buildAndSolve(gipsApiA);
 		applySolution(gipsApiA);
-		gipsSave(gipsApiA, gipsOutputPath);
+		gipsSave(gipsApiA, instancePath);
 
 		//
 		// Pipeline stage (2): assign nurses to rooms
