@@ -27,6 +27,16 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 	protected String scenarioFileName = "test01.json";
 
 	/**
+	 * Project folder location.
+	 */
+	protected String projectFolder = System.getProperty("user.dir");
+
+	/**
+	 * Data set folder location.
+	 */
+	protected String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
+
+	/**
 	 * No public instances of this class allowed.
 	 */
 	protected IhtcGipsRunner() {
@@ -48,11 +58,6 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		//
 		// Folder and file definitions
 		//
-
-		final String projectFolder = System.getProperty("user.dir");
-
-		// Input JSON file
-		final String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
 		final String inputPath = datasetFolder + scenarioFileName;
 
 		// Input XMI file
@@ -106,7 +111,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		applySolution(gipsApi);
 
 		// TODO: remove me
-		printVariableValues(gipsApi);
+//		printVariableValues(gipsApi);
 
 		//
 		// Save output XMI file
