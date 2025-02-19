@@ -55,6 +55,13 @@ public abstract class AbstractIhtcGipsLoopRunner extends IhtcGipsRunner {
 	}
 
 	/**
+	 * Prints a log separator line on the console.
+	 */
+	protected void printLogSeparator() {
+		System.out.println("--------------------------------------------------------------------------------");
+	}
+
+	/**
 	 * Sets the scenario names up.
 	 */
 	protected abstract void setUpScenarioNames();

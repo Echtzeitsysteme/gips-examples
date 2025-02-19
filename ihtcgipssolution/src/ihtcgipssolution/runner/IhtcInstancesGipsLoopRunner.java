@@ -23,10 +23,16 @@ public class IhtcInstancesGipsLoopRunner extends AbstractIhtcGipsLoopRunner {
 		final IhtcInstancesGipsLoopRunner runner = new IhtcInstancesGipsLoopRunner();
 		runner.setDatasetFolder("/../ihtcmetamodel/resources/ihtc2024_competition_instances/");
 		runner.setUpScenarioNames();
+		runner.printLogSeparator();
 		runner.getScenarioNames().forEach(name -> {
 			System.out.println("=> Running scenario : " + name);
 			runner.setCurrentScenarioName(name);
-			runner.run();
+			try {
+				runner.run();
+			} catch (final InternalError err) {
+				System.err.println("=> No solution found.");
+			}
+			runner.printLogSeparator();
 		});
 	}
 

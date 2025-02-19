@@ -22,10 +22,16 @@ public class IhtcTestGipsLoopRunner extends AbstractIhtcGipsLoopRunner {
 	public static void main(final String[] args) {
 		final IhtcTestGipsLoopRunner runner = new IhtcTestGipsLoopRunner();
 		runner.setUpScenarioNames();
+		runner.printLogSeparator();
 		runner.getScenarioNames().forEach(name -> {
 			System.out.println("=> Running scenario : " + name);
 			runner.setCurrentScenarioName(name);
-			runner.run();
+			try {
+				runner.run();
+			} catch (final InternalError err) {
+				System.err.println("=> No solution found.");
+			}
+			runner.printLogSeparator();
 		});
 	}
 
@@ -33,7 +39,7 @@ public class IhtcTestGipsLoopRunner extends AbstractIhtcGipsLoopRunner {
 	 * Sets the scenario names up.
 	 */
 	protected void setUpScenarioNames() {
-		for (int i = 1; i <= 9; i++) {
+		for (int i = 1; i <= 10; i++) {
 			String name = "test";
 			if (i < 10) {
 				name = name.concat("0");
