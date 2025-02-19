@@ -1,9 +1,10 @@
-package org.emoflon.gips.ihtc.runner;
+package org.emoflon.gips.ihtc.runner.hardonly;
 
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.emoflon.gips.ihtc.runner.IhtcGipsRunner;
 
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcmetamodel.Hospital;
