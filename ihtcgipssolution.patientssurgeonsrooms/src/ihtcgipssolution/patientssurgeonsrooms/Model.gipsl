@@ -1,0 +1,39 @@
+package "ihtcgipssolution.patientssurgeonsrooms"
+import "http://www.eclipse.org/emf/2002/Ecore"
+// ^import a metamodel here
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 42.0];
+	randomSeed := true [value := 73];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.000001];
+}
+
+// specify an example rule
+rule exampleRule {
+	clazz : EClass {
+		++ -eAllOperations -> op
+	}
+	
+	op : EOperation
+}
+
+// create a mapping on the rule
+mapping mapNode to exampleRule;
+
+// create a constraint on one class
+constraint with EOperation {
+	mappings.mapNode->filter(element.nodes.clazz.^abstract)->sum(element.value) > context.lowerBound
+}
+
+// create an objective for the mapping
+function nodeObj with mapNode {
+	context.nodes.op.upperBound * sin(73)
+}
+
+// create an overall objective
+objective : min {
+	2 * functions.nodeObj
+}
