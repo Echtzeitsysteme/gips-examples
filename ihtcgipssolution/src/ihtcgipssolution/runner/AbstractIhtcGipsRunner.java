@@ -167,6 +167,7 @@ public abstract class AbstractIhtcGipsRunner {
 		gipsApi.buildProblem(true);
 		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
+			gipsApi.terminate();
 			throw new InternalError("No solution found!");
 		}
 		System.out.println("=> Objective value: " + output.objectiveValue());
