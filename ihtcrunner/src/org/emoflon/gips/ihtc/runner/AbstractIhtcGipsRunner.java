@@ -1,4 +1,4 @@
-package ihtcgipssolution.runner;
+package org.emoflon.gips.ihtc.runner;
 
 import java.io.File;
 import java.io.IOException;

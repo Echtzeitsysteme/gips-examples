@@ -1,4 +1,4 @@
-package ihtcgipssolution.runner;
+package org.emoflon.gips.ihtc.runner;
 
 /**
  * GIPS-based IHTC 2024 loop runner for the test instances.

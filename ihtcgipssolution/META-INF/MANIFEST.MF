@@ -4,6 +4,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ihtcgipssolution
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
+Export-Package: ihtcgipssolution.api.gips,
+ ihtcgipssolution.api.gips.mapping,
+ ihtcgipssolution.api.matches
 Bundle-SymbolicName: ihtcgipssolution; singleton:=true
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-21
