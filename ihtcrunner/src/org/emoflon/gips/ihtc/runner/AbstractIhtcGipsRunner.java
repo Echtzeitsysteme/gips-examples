@@ -10,6 +10,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.emoflon.gips.core.api.GipsEngineAPI;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
@@ -17,6 +18,7 @@ import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
 import ihtcgipssolution.api.gips.mapping.AadpMapping;
 import ihtcgipssolution.api.gips.mapping.RoomDayLoadMapping;
 import ihtcgipssolution.api.gips.mapping.RoomDayPatientLoadMapping;
+import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 
 /**
  * This abstract runner contains utility methods to wrap a given GIPS API object
@@ -123,7 +125,7 @@ public abstract class AbstractIhtcGipsRunner {
 	 * @param gipsApi GIPS API to save results from.
 	 * @param path    (XMI) path to save the results to.
 	 */
-	protected void gipsSave(final IhtcgipssolutionGipsAPI gipsApi, final String path) {
+	protected void gipsSave(final GipsEngineAPI<?, ?> gipsApi, final String path) {
 		try {
 			gipsApi.saveResult(path);
 		} catch (final IOException e) {
@@ -163,7 +165,7 @@ public abstract class AbstractIhtcGipsRunner {
 	 * @param gipsApi GIPS API to build and solve the ILP problem for.
 	 * @return Returns the objective value.
 	 */
-	protected double buildAndSolve(final IhtcgipssolutionGipsAPI gipsApi) {
+	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi) {
 		gipsApi.buildProblem(true);
 		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
@@ -195,6 +197,24 @@ public abstract class AbstractIhtcGipsRunner {
 	 *                information from.
 	 */
 	protected void applySolution(final IhtcgipssolutionGipsAPI gipsApi) {
+		// Apply found solution
+		final long tick = System.nanoTime();
+		gipsApi.getAadp().applyNonZeroMappings(false);
+		gipsApi.getAnrs().applyNonZeroMappings(false);
+		gipsApi.getArp().applyNonZeroMappings(false);
+		gipsApi.getAsp().applyNonZeroMappings(false);
+		final long tock = System.nanoTime();
+		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+	}
+	
+	/**
+	 * Applies the best found solution (i.e., all non-zero mappings) with a given
+	 * IHTC 2024 project GIPS API object.
+	 * 
+	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
+	 *                information from.
+	 */
+	protected void applySolution(final HardonlyGipsAPI gipsApi) {
 		// Apply found solution
 		final long tick = System.nanoTime();
 		gipsApi.getAadp().applyNonZeroMappings(false);
