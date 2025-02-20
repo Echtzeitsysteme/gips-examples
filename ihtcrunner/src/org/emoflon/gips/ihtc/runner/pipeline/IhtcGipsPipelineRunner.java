@@ -6,7 +6,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.ihtc.runner.IhtcGipsRunner;
 
-import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.nursesrooms.api.gips.NursesroomsGipsAPI;
 import ihtcgipssolution.patientssurgeonsrooms.api.gips.PatientssurgeonsroomsGipsAPI;
 import ihtcmetamodel.Hospital;
@@ -84,11 +83,14 @@ public class IhtcGipsPipelineRunner extends IhtcGipsRunner {
 		// Pipeline stage (1): assign patients to days, rooms, and operating theaters
 		//
 
+		final long tick = System.nanoTime();
 		final PatientssurgeonsroomsGipsAPI gipsApiA = new PatientssurgeonsroomsGipsAPI();
 		gipsApiA.init(URI.createFileURI(instancePath));
 		buildAndSolve(gipsApiA);
 		applySolution(gipsApiA);
 		gipsSave(gipsApiA, instancePath);
+		final long tock = System.nanoTime();
+		final double stageATimeConsumed = 1.0 * (tock - tick) / 1_000_000_000;
 
 		//
 		// Pipeline stage (2): assign nurses to rooms
@@ -96,6 +98,7 @@ public class IhtcGipsPipelineRunner extends IhtcGipsRunner {
 
 		final NursesroomsGipsAPI gipsApiB = new NursesroomsGipsAPI();
 		gipsApiB.init(URI.createFileURI(instancePath));
+		gipsApiB.setTimeLimit(600 - stageATimeConsumed);
 		buildAndSolve(gipsApiB);
 		applySolution(gipsApiB);
 		gipsSave(gipsApiB, gipsOutputPath);
