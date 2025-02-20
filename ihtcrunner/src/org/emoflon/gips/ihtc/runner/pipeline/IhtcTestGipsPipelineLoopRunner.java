@@ -38,6 +38,7 @@ public class IhtcTestGipsPipelineLoopRunner extends AbstractIhtcGipsPipelineLoop
 	/**
 	 * Sets the scenario names up.
 	 */
+	@Override
 	protected void setUpScenarioNames() {
 		for (int i = 1; i <= 10; i++) {
 			String name = "test";

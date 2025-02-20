@@ -66,7 +66,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 	 */
 	public void run() {
 		tick();
-		
+
 		//
 		// Folder and file definitions
 		//
@@ -173,12 +173,14 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 			throw new IllegalArgumentException("Runtime value was negative.");
 		}
 
+		final String runtimeString = String.format("%,4.2f", runtime);
+
 		if (runtime > 600) {
 			System.err.println("=> Time limit of 10 minutes violated.");
-			System.err.println("=> Wall clock run time: " + runtime + "s.");
+			System.err.println("=> Wall clock run time: " + runtimeString + "s.");
 		} else {
 			System.out.println("=> Time limit of 10 minutes respected.");
-			System.out.println("=> Wall clock run time: " + runtime + "s.");
+			System.out.println("=> Wall clock run time: " + runtimeString + "s.");
 		}
 	}
 

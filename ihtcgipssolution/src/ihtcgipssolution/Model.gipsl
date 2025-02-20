@@ -7,7 +7,7 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 300.0];
+	timeLimit := true [value := 570.0, includeInitTime := true];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
