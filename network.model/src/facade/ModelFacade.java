@@ -69,7 +69,7 @@ public class ModelFacade {
 	/**
 	 * Path to import and export models.
 	 */
-	private static final String PERSISTENT_MODEL_PATH = "./model.xmi";
+	public static final String PERSISTENT_MODEL_PATH = "./model.xmi";
 
 	/*
 	 * Collections for the path creation methods.
@@ -150,6 +150,15 @@ public class ModelFacade {
 	 */
 	public Root getRoot() {
 		return (Root) ModelFacade.instance.resourceSet.getResources().get(0).getContents().get(0);
+	}
+
+	/**
+	 * Returns true if the resource set is empty.
+	 * 
+	 * @return True if resource set is empty.
+	 */
+	private boolean isResourceSetEmpty() {
+		return ModelFacade.instance.resourceSet.getResources().get(0).getContents().size() == 0;
 	}
 
 	/**
@@ -957,7 +966,10 @@ public class ModelFacade {
 	 * networks of the root node.
 	 */
 	public void resetAll() {
-		getRoot().getNetworks().clear();
+		// If the resource set is empty, there is no root to clear networks from
+		if (!isResourceSetEmpty()) {
+			getRoot().getNetworks().clear();
+		}
 		generatedMetaPaths.clear();
 		visitedNodes.clear();
 		linksUntilNode.clear();
@@ -1132,11 +1144,18 @@ public class ModelFacade {
 		// ^null is okay if all paths are absolute
 		final Resource r = rs.createResource(absPath);
 		// Fetch model contents from eMoflon
-		r.getContents().add(getRoot());
+		final Root root = getRoot();
+		r.getContents().add(root);
 		try {
 			r.save(null);
 		} catch (final IOException e) {
 			e.printStackTrace();
+		} finally {
+			// Re-add the root node (and all of its children) to the resource set contained
+			// within this ModelFacade object.
+			// This fixes a bug were the ModelFacade was basically broken after the persist
+			// method was called.
+			this.resourceSet.getResources().get(0).getContents().add(root);
 		}
 	}
 
