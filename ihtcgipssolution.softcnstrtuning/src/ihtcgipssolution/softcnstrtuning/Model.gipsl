@@ -1,4 +1,4 @@
-package "ihtcgipssolution"
+package "ihtcgipssolution.softcnstrtuning"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
@@ -141,16 +141,6 @@ pattern dayRoomTuple {
 	r : Room
 }
 
-pattern shiftRoomTuple {
-	h : Hospital {
-		- shifts -> s
-		- rooms -> r
-	}
-	
-	s : Shift
-	r : Room
-}
-
 pattern daySurgeonTuple {
 	h : Hospital {
 		- days -> d
@@ -263,90 +253,6 @@ pattern dayRoomGender {
 	g : Gender
 }
 
-pattern nurseShiftRoomMaxLoad {
-	h : Hospital {
-		- nurses -> n
-		- shifts -> s
-		- rooms -> r
-	}
-	
-	n : Nurse {
-		- shiftMaxLoads -> sml
-	}
-	
-	s : Shift
-	
-	sml : NurseShiftMaxLoad {
-		- shift -> s
-	}
-	
-	# sml.maxLoad > 0
-	
-	r : Room
-}
-
-pattern nurseShiftMaxLoad {
-	h : Hospital {
-		- nurses -> n
-		- shifts -> s
-	}
-	
-	n : Nurse {
-		- shiftMaxLoads -> sml
-	}
-	
-	s : Shift
-	
-	sml : NurseShiftMaxLoad {
-		- shift -> s
-	}
-	
-	# sml.maxLoad > 0
-}
-
-pattern patientRoomShiftLoad {
-	h : Hospital {
-		- rooms -> r
-		- patients -> p
-		- days -> d
-		- shifts -> s
-	}
-	
-	r : Room
-	
-	p : Patient {
-		- workloadsProduced -> pwp
-	}
-	
-	d : Day {
-		- shifts -> s
-	}
-	
-	s : Shift
-	
-	pwp : PatientWorkloadProduced
-	
-	# p.surgeryReleaseDay <= d.id
-	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
-}
-
-pattern occupantRoomShiftLoad {
-	h : Hospital {
-		- occupants -> o
-		- rooms -> r
-	}
-	
-	o : Occupant {
-		- workloadsProduced -> owp
-	}
-	
-	r : Room
-	
-	owp: OccupantWorkloadProduced
-	
-	# r.name == o.roomId
-}
-
 //
 // GIPSL
 //
@@ -375,120 +281,9 @@ mapping roomDayLoad to dayRoomTuple {
 	var load : EInt
 };
 
-// Mapping that holds the produced load by patient `p` in shift `s` in room `r`
-mapping roomShiftPatientProducedLoad to patientRoomShiftLoad {
-	var producedLoad : EInt
-};
-
-// Mapping that holds the produced load by all patients and occupants in shift `s`
-// in room `r`
-mapping roomShiftProducedLoad to shiftRoomTuple {
-	var producedLoad : EInt
-};
-
-// Mapping that holds the cumulative workload of a nurse `n` on shift `s` in
-// room `r`
-mapping nurseShiftRoomLoad to nurseShiftRoomMaxLoad {
-	var load : EInt
-};
-
-// Mapping that holds the `overload` of nurse `n` in shift `s`
-// `overload` = 0 if the cumulative load of `n` does not exceed the maximum workload
-// `overload` = cumulative_load - n_maximum_workload otherwise
-mapping nurseShiftOverload to nurseShiftMaxLoad {
-	var overload : EInt
-};
-
 //
 // Constraints
 //
-
-// Constraint that saves the produced workload of patient `p` in shift `s`
-// in room `r`
-constraint with roomShiftPatientProducedLoad {
-	context.variables.producedLoad
-	==
-	mappings.aadp->filter(element.nodes.p == context.nodes.p & element.nodes.d.id - 1 <= context.nodes.d.id //
-	)->sum(context.nodes.pwp.workloadProduced * element.value)
-}
-
-// Constraint that accumulates all produced loads of all patients and occupants
-// in room `r` on shift `s`
-constraint with roomShiftProducedLoad {
-	context.variables.producedLoad
-	==
-	// patients
-	mappings.roomShiftPatientProducedLoad->filter( //
-		element.nodes.r == context.nodes.r
-		& element.nodes.s == context.nodes.s
-	)->sum(element.variables.producedLoad)
-	
-	+
-	// occupants
-	patterns.occupantRoomShiftLoad->filter(element.nodes.r == context.nodes.r //
-		& element.nodes.owp.shift == context.nodes.s //
-	)->sum(element.nodes.owp.workloadProduced)
-}
-
-// TODO:
-// Constraint that saves the cumulative load of nurse `n` in room `r`
-// on shift `s` in the variable `load`.
-constraint with nurseShiftRoomLoad {
-	mappings.anrs->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.r == context.nodes.r //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.value) == 1
-	<=>
-	context.variables.load
-	==
-	mappings.roomShiftProducedLoad->filter( //
-		element.nodes.r == context.nodes.r //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.variables.producedLoad)
-	
-	&
-	
-	mappings.anrs->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.r == context.nodes.r //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.value) == 0
-	<=>
-	context.variables.load == 0
-}
-
-// Constraint that sets the cumulative overload of nurse `n` in
-// shift `s` in the variable `overload`.
-constraint with nurseShiftOverload {
-	mappings.nurseShiftRoomLoad->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.variables.load)
-	>
-	context.nodes.sml.maxLoad
-	=>
-	context.variables.overload
-	==
-	mappings.nurseShiftRoomLoad->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.variables.load)
-	- context.nodes.sml.maxLoad
-	
-	& 
-	
-	mappings.nurseShiftRoomLoad->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.variables.load)
-	<=
-	context.nodes.sml.maxLoad
-	=>
-	context.variables.overload
-	==
-	0
-}
 
 // If a patient `p` is scheduled for room `r` on a day `d` that is within the
 // patients scheduled time frame, set the respective mapping variable to 1.
@@ -617,20 +412,13 @@ constraint with findMandatoryPatient {
 // the scheduling period, whereas optional patients may be postponed to future scheduling
 // periods."
 //
-// This constraint ensures that optional patients can (but must not) be included.
+// This constraint ensures that optional patients must not be included.
 constraint with findOptionalPatient {
 	// Optional patients can have an admission day
-	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
+	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
 	&
 	// Optional patients can have an assigned room
-	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
-	
-	// If an optional patient has an admission day (assigned room) they must
-	// also have an assigned room (admission day)
-	&
-	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-	==
-	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
 }
 
 // H6: Admission day: A patient can be admitted on any day from their release
@@ -707,27 +495,19 @@ constraint with roomShiftTuple {
 // Objectives
 //
 
-// S8 Unscheduled patients: The number of optional patients who are not admitted
-// in the current scheduling period should be minimized.
+//// S8 Unscheduled patients: The number of optional patients who are not admitted
+//// in the current scheduling period should be minimized.
+////
+//// Unscheduled optional patients
+//function electiveUnscheduledPatients with findOptionalPatient {
+//	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+//}
 //
-// Unscheduled optional patients
-function electiveUnscheduledPatients with findOptionalPatient {
-	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-}
-
-// S7 Admission delay: The number of days between a patient’s release date and
-// their actual date of admission should be minimized.
-function admissionDelay with aadp {
-	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
-}
-
-// S4 Maximum workload: For each shift, the total workload induced by patients
-// staying in rooms assigned to a nurse should not exceed the maximum workload
-// of that nurse in that shift. The penalty is the amount by which the total
-// workload exceeds the limit, or 0 if it does not exceed it.
-function maximumWorkload with nurseShiftOverload {
-	context.variables.overload
-}
+//// S7 Admission delay: The number of days between a patient’s release date and
+//// their actual date of admission should be minimized.
+//function admissionDelay with aadp {
+//	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
+//}
 
 // S5 Open OTs: The number of OTs opened on each day should be minimized.
 // Note that if an OT has no patients assigned for a particular day, it should
@@ -739,8 +519,7 @@ function openOts with dayOperatingTheaterTuple {
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
-	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
-	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
-	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
+//	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
+//	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
 	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
 }

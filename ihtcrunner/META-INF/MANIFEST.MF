@@ -15,3 +15,4 @@ Require-Bundle: ihtcgipssolution;bundle-version="1.0.0",
  ihtcgipssolution.patientssurgeonsrooms;bundle-version="1.0.0"
 Automatic-Module-Name: ihtcrunner
 Bundle-RequiredExecutionEnvironment: JavaSE-21
+Import-Package: ihtcgipssolution.softcnstrtuning.api.gips
