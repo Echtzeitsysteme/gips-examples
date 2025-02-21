@@ -12,7 +12,9 @@ Require-Bundle: ihtcgipssolution;bundle-version="1.0.0",
  org.emoflon.ibex.gt.hipe,
  ihtcgipssolution.hardonly;bundle-version="1.0.0",
  ihtcgipssolution.nursesrooms;bundle-version="1.0.0",
- ihtcgipssolution.patientssurgeonsrooms;bundle-version="1.0.0"
+ ihtcgipssolution.patientssurgeonsrooms;bundle-version="1.0.0",
+ org.apache.commons.cli;bundle-version="1.9.0"
 Automatic-Module-Name: ihtcrunner
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Import-Package: ihtcgipssolution.softcnstrtuning.api.gips
+Import-Package: ihtcgipssolution.softcnstrtuning.api.gips,
+ org.apache.commons.cli;version="[1.9.0,2.0.0)"
