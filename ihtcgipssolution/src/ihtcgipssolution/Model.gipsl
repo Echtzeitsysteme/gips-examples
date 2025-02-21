@@ -729,10 +729,18 @@ function maximumWorkload with nurseShiftOverload {
 	context.variables.overload
 }
 
+// S5 Open OTs: The number of OTs opened on each day should be minimized.
+// Note that if an OT has no patients assigned for a particular day, it should
+// not open on that day.
+function openOts with dayOperatingTheaterTuple {
+	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
+}
+
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
-	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
-	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
-	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
+//	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
+//	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
+//	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
+	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
 }
