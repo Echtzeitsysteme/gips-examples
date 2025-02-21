@@ -89,13 +89,13 @@ public class IhtcGipsSoftCnstrTuningRunner extends IhtcGipsRunner {
 		// Build and solve the ILP problem
 		//
 
-		buildAndSolve(gipsApi);
+		buildAndSolve(gipsApi, true);
 
 		//
 		// Apply the solution
 		//
 
-		applySolution(gipsApi);
+		applySolution(gipsApi, true);
 
 		//
 		// Save output XMI file

@@ -42,6 +42,18 @@ public class ModelToJsonExporter {
 	 * @param outputPath Output path to write the JSON output file to.
 	 */
 	public void modelToJson(final String outputPath) {
+		modelToJson(outputPath, false);
+	}
+
+	/**
+	 * Converts the contained model to a JSON output file written to the given
+	 * output path.
+	 * 
+	 * @param outputPath Output path to write the JSON output file to.
+	 * @param verbose    If true, the exporter will print more information about the
+	 *                   model.
+	 */
+	public void modelToJson(final String outputPath, final boolean verbose) {
 		if (outputPath == null || outputPath.isBlank()) {
 			throw new IllegalArgumentException("Given path <" + outputPath + "> was null or blank.");
 		}
@@ -62,7 +74,7 @@ public class ModelToJsonExporter {
 			nursesJson.add(convertNurseToJson(n));
 		}
 
-		final JsonArray costsJson = convertModelToCostsJson(this.model);
+		final JsonArray costsJson = convertModelToCostsJson(this.model, verbose);
 
 		// Global JSON object
 		final JsonObject json = new JsonObject();
@@ -129,16 +141,6 @@ public class ModelToJsonExporter {
 		nurseJson.add("assignments", assignmentsJson);
 
 		return nurseJson;
-	}
-
-	/**
-	 * Converts the overall model costs to a JSON array.
-	 * 
-	 * @param model Complete model to calculate all costs for.
-	 * @return JSON array.
-	 */
-	private JsonArray convertModelToCostsJson(final Hospital model) {
-		return convertModelToCostsJson(model, true);
 	}
 
 	/**

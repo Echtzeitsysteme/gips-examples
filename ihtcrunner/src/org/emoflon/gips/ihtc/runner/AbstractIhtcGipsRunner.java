@@ -166,17 +166,21 @@ public abstract class AbstractIhtcGipsRunner {
 	 * found.
 	 * 
 	 * @param gipsApi GIPS API to build and solve the ILP problem for.
+	 * @param verbose If true, the method will print some more information about the
+	 *                objective value.
 	 * @return Returns the objective value.
 	 */
-	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi) {
+	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi, final boolean verbose) {
 		gipsApi.buildProblem(true);
 		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
 			gipsApi.terminate();
 			throw new InternalError("No solution found!");
 		}
-		System.out.println("=> Objective value: " + output.objectiveValue());
-		System.out.println("---");
+		if (verbose) {
+			System.out.println("=> Objective value: " + output.objectiveValue());
+			System.out.println("---");
+		}
 		return output.objectiveValue();
 	}
 
@@ -198,8 +202,10 @@ public abstract class AbstractIhtcGipsRunner {
 	 * 
 	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
 	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
 	 */
-	protected void applySolution(final IhtcgipssolutionGipsAPI gipsApi) {
+	protected void applySolution(final IhtcgipssolutionGipsAPI gipsApi, final boolean verbose) {
 		// Apply found solution
 		final long tick = System.nanoTime();
 		gipsApi.getAadp().applyNonZeroMappings(false);
@@ -207,7 +213,9 @@ public abstract class AbstractIhtcGipsRunner {
 		gipsApi.getArp().applyNonZeroMappings(false);
 		gipsApi.getAsp().applyNonZeroMappings(false);
 		final long tock = System.nanoTime();
-		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		if (verbose) {
+			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
 	}
 
 	/**
@@ -216,8 +224,10 @@ public abstract class AbstractIhtcGipsRunner {
 	 * 
 	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
 	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
 	 */
-	protected void applySolution(final HardonlyGipsAPI gipsApi) {
+	protected void applySolution(final HardonlyGipsAPI gipsApi, final boolean verbose) {
 		// Apply found solution
 		final long tick = System.nanoTime();
 		gipsApi.getAadp().applyNonZeroMappings(false);
@@ -225,7 +235,9 @@ public abstract class AbstractIhtcGipsRunner {
 		gipsApi.getArp().applyNonZeroMappings(false);
 		gipsApi.getAsp().applyNonZeroMappings(false);
 		final long tock = System.nanoTime();
-		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		if (verbose) {
+			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
 	}
 
 	/**
@@ -234,8 +246,10 @@ public abstract class AbstractIhtcGipsRunner {
 	 * 
 	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
 	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
 	 */
-	protected void applySolution(final SoftcnstrtuningGipsAPI gipsApi) {
+	protected void applySolution(final SoftcnstrtuningGipsAPI gipsApi, final boolean verbose) {
 		// Apply found solution
 		final long tick = System.nanoTime();
 		gipsApi.getAadp().applyNonZeroMappings(false);
@@ -243,7 +257,9 @@ public abstract class AbstractIhtcGipsRunner {
 		gipsApi.getArp().applyNonZeroMappings(false);
 		gipsApi.getAsp().applyNonZeroMappings(false);
 		final long tock = System.nanoTime();
-		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		if (verbose) {
+			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
 	}
 
 	/**
@@ -252,15 +268,19 @@ public abstract class AbstractIhtcGipsRunner {
 	 * 
 	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
 	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
 	 */
-	protected void applySolution(final PatientssurgeonsroomsGipsAPI gipsApi) {
+	protected void applySolution(final PatientssurgeonsroomsGipsAPI gipsApi, final boolean verbose) {
 		// Apply found solution
 		final long tick = System.nanoTime();
 		gipsApi.getAadp().applyNonZeroMappings(false);
 		gipsApi.getArp().applyNonZeroMappings(false);
 		gipsApi.getAsp().applyNonZeroMappings(false);
 		final long tock = System.nanoTime();
-		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		if (verbose) {
+			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
 	}
 
 	/**
@@ -269,13 +289,17 @@ public abstract class AbstractIhtcGipsRunner {
 	 * 
 	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
 	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
 	 */
-	protected void applySolution(final NursesroomsGipsAPI gipsApi) {
+	protected void applySolution(final NursesroomsGipsAPI gipsApi, final boolean verbose) {
 		// Apply found solution
 		final long tick = System.nanoTime();
 		gipsApi.getAnrs().applyNonZeroMappings(false);
 		final long tock = System.nanoTime();
-		System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		if (verbose) {
+			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
 	}
 
 }

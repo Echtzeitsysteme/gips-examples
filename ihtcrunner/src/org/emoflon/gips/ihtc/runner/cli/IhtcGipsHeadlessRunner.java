@@ -110,13 +110,13 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 		// Build and solve the ILP problem
 		//
 
-		buildAndSolve(gipsApi);
+		buildAndSolve(gipsApi, debugOutputEnabled);
 
 		//
 		// Apply the solution
 		//
 
-		applySolution(gipsApi);
+		applySolution(gipsApi, debugOutputEnabled);
 
 		//
 		// Convert solution XMI model to JSON output file
@@ -124,7 +124,7 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 
 		final Hospital solvedHospital = (Hospital) gipsApi.getResourceSet().getResources().get(0).getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
-		exporter.modelToJson(jsonOutputPath);
+		exporter.modelToJson(jsonOutputPath, debugOutputEnabled);
 
 		//
 		// Save output XMI file

@@ -86,8 +86,8 @@ public class IhtcGipsPipelineRunner extends IhtcGipsRunner {
 		final long tick = System.nanoTime();
 		final PatientssurgeonsroomsGipsAPI gipsApiA = new PatientssurgeonsroomsGipsAPI();
 		gipsApiA.init(URI.createFileURI(instancePath));
-		buildAndSolve(gipsApiA);
-		applySolution(gipsApiA);
+		buildAndSolve(gipsApiA, true);
+		applySolution(gipsApiA, true);
 		gipsSave(gipsApiA, instancePath);
 		final long tock = System.nanoTime();
 		final double stageATimeConsumed = 1.0 * (tock - tick) / 1_000_000_000;
@@ -106,8 +106,8 @@ public class IhtcGipsPipelineRunner extends IhtcGipsRunner {
 		final NursesroomsGipsAPI gipsApiB = new NursesroomsGipsAPI();
 		gipsApiB.init(URI.createFileURI(instancePath));
 		gipsApiB.setTimeLimit(600 - stageATimeConsumed);
-		buildAndSolve(gipsApiB);
-		applySolution(gipsApiB);
+		buildAndSolve(gipsApiB, true);
+		applySolution(gipsApiB, true);
 		gipsSave(gipsApiB, gipsOutputPath);
 
 		//

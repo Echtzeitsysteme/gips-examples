@@ -112,13 +112,13 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		// Build and solve the ILP problem
 		//
 
-		buildAndSolve(gipsApi);
+		buildAndSolve(gipsApi, true);
 
 		//
 		// Apply the solution
 		//
 
-		applySolution(gipsApi);
+		applySolution(gipsApi, true);
 
 		// TODO: remove me
 //		printVariableValues(gipsApi);
