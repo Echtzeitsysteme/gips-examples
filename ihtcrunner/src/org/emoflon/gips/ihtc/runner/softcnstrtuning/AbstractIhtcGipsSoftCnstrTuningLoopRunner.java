@@ -66,4 +66,19 @@ public abstract class AbstractIhtcGipsSoftCnstrTuningLoopRunner extends IhtcGips
 	 */
 	protected abstract void setUpScenarioNames();
 
+	/**
+	 * Sets the scenario names of all scenarios up that could be solved by the
+	 * hard-constraints-only solution.
+	 */
+	protected void setUpHardOnlySuccessfulScenarios() {
+		final String[] hardOnlySuccessfulRuns = new String[] { //
+				"i01.json", "i02.json", "i03.json", "i04.json", "i05.json", "i06.json", "i07.json", "i08.json", //
+				"i09.json", "i10.json", "i11.json", "i12.json", "i13.json", "i14.json", "i15.json", "i16.json", //
+				"i17.json", "i18.json", "i19.json", "i20.json", "i21.json", "i25.json", "i28.json", "i29.json" };
+
+		for (int i = 0; i < hardOnlySuccessfulRuns.length; i++) {
+			addScenarioName(hardOnlySuccessfulRuns[i]);
+		}
+	}
+
 }
