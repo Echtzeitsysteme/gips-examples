@@ -92,6 +92,13 @@ public class IhtcGipsPipelineRunner extends IhtcGipsRunner {
 		final long tock = System.nanoTime();
 		final double stageATimeConsumed = 1.0 * (tock - tick) / 1_000_000_000;
 
+		if (600 - stageATimeConsumed < 0) {
+			System.err.println("=> StageA consumed more than 600s. Aborting StageB.");
+			tock();
+			printWallClockRuntime();
+			gipsApiA.terminate();
+		}
+
 		//
 		// Pipeline stage (2): assign nurses to rooms
 		//
