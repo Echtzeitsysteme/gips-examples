@@ -38,7 +38,7 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 	/**
 	 * XMI input model file path to save the transformed input model to.
 	 */
-	private static String xmiInputModelPath = "model_in.xmi";
+	private static String xmiInputModelPath = "./model_in.xmi";
 
 	/**
 	 * XMI output model file path to save the transformed output model to.
@@ -105,8 +105,6 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 
 		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
 		gipsApi.init(URI.createFileURI(xmiInputModelPath));
-//		gipsApi.setSolverConfig(gipsApi.getSolverConfig().withEnableOutput(debugOutputEnabled);
-		// TODO: ^add me after restarting the runtime workspace
 
 		//
 		// Build and solve the ILP problem
