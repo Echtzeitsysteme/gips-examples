@@ -502,24 +502,24 @@ constraint with roomShiftTuple {
 //function electiveUnscheduledPatients with findOptionalPatient {
 //	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
 //}
-
-// S7 Admission delay: The number of days between a patient’s release date and
-// their actual date of admission should be minimized.
-function admissionDelay with aadp {
-	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
-}
-
-//// S5 Open OTs: The number of OTs opened on each day should be minimized.
-//// Note that if an OT has no patients assigned for a particular day, it should
-//// not open on that day.
-//function openOts with dayOperatingTheaterTuple {
-//	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
+//
+//// S7 Admission delay: The number of days between a patient’s release date and
+//// their actual date of admission should be minimized.
+//function admissionDelay with aadp {
+//	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
 //}
+
+// S5 Open OTs: The number of OTs opened on each day should be minimized.
+// Note that if an OT has no patients assigned for a particular day, it should
+// not open on that day.
+function openOts with dayOperatingTheaterTuple {
+	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
+}
 
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
 //	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
-	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
-//	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
+//	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
+	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
 }
