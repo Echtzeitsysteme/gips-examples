@@ -412,13 +412,20 @@ constraint with findMandatoryPatient {
 // the scheduling period, whereas optional patients may be postponed to future scheduling
 // periods."
 //
-// This constraint ensures that optional patients must not be included.
+// This constraint ensures that optional patients can (but must not) be included.
 constraint with findOptionalPatient {
 	// Optional patients can have an admission day
-	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
+	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
 	&
 	// Optional patients can have an assigned room
-	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
+	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
+	
+	// If an optional patient has an admission day (assigned room) they must
+	// also have an assigned room (admission day)
+	&
+	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	==
+	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
 }
 
 // H6: Admission day: A patient can be admitted on any day from their release
@@ -495,31 +502,31 @@ constraint with roomShiftTuple {
 // Objectives
 //
 
-//// S8 Unscheduled patients: The number of optional patients who are not admitted
-//// in the current scheduling period should be minimized.
-////
-//// Unscheduled optional patients
-//function electiveUnscheduledPatients with findOptionalPatient {
-//	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-//}
+// S8 Unscheduled patients: The number of optional patients who are not admitted
+// in the current scheduling period should be minimized.
 //
+// Unscheduled optional patients
+function electiveUnscheduledPatients with findOptionalPatient {
+	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+}
+
 //// S7 Admission delay: The number of days between a patient’s release date and
 //// their actual date of admission should be minimized.
 //function admissionDelay with aadp {
 //	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
 //}
-
-// S5 Open OTs: The number of OTs opened on each day should be minimized.
-// Note that if an OT has no patients assigned for a particular day, it should
-// not open on that day.
-function openOts with dayOperatingTheaterTuple {
-	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
-}
+//
+//// S5 Open OTs: The number of OTs opened on each day should be minimized.
+//// Note that if an OT has no patients assigned for a particular day, it should
+//// not open on that day.
+//function openOts with dayOperatingTheaterTuple {
+//	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
+//}
 
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
-//	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
+	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
 //	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
-	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
+//	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
 }
