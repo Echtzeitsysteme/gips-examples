@@ -11,9 +11,8 @@ config {
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
-//	tolerance := true [value := 0.000001];
 	lpOutput := true [path := "gurobi.lp"];
-//	threadCount := true [value := 4];
+	threadCount := true [value := 4];
 }
 
 //
