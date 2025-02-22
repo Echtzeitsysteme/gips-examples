@@ -1,4 +1,4 @@
-package "ihtcgipssolution.softcnstrtuning"
+package "ihtcgipssolution.softcnstr.optionaldelay"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
@@ -167,16 +167,16 @@ pattern dayOperatingTheaterAvailabilityTriple {
 	# aot.availability > 0
 }
 
-pattern dayOperatingTheaterTuple {
-	h : Hospital {
-		- days -> d
-		- operatingTheaters -> ot
-	}
-	
-	d : Day
-	
-	ot : OperatingTheater
-}
+//pattern dayOperatingTheaterTuple {
+//	h : Hospital {
+//		- days -> d
+//		- operatingTheaters -> ot
+//	}
+//	
+//	d : Day
+//	
+//	ot : OperatingTheater
+//}
 
 pattern findMandatoryPatient {
 	h : Hospital {
@@ -294,26 +294,26 @@ mapping roomDayLoad to dayRoomTuple {
 // Mapping that is true if gender `g` is contained in room `r` on day `d`
 mapping roomDayGender to dayRoomGender;
 
-// Mapping that is true if operating theater `ot` has at least one operation on day `d`
-mapping otDayOpened to dayOperatingTheaterTuple;
+//// Mapping that is true if operating theater `ot` has at least one operation on day `d`
+//mapping otDayOpened to dayOperatingTheaterTuple;
 
 //
 // Constraints
 //
 
-// This constraints sets the respective `otDayOpenend` mapping to 1
-// if and only if at least one operation takes place in `ot` on day `d`.
-constraint with otDayOpened {
-	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
-	<=
-	1000 * context.value
-	
-	&
-	
-	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
-	>=
-	context.value
-}
+//// This constraints sets the respective `otDayOpenend` mapping to 1
+//// if and only if at least one operation takes place in `ot` on day `d`.
+//constraint with otDayOpened {
+//	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
+//	<=
+//	1000 * context.value
+//	
+//	&
+//	
+//	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
+//	>=
+//	context.value
+//}
 
 // This constraint sets the respective `roomDayGender` mapping to 1
 // if and only if the gender `g` is present in room `r` on day `d`.
@@ -517,18 +517,24 @@ constraint with findMandatoryPatient {
 //
 // This constraint ensures that optional patients can (but must not) be included.
 constraint with findOptionalPatient {
-	// Optional patients can have an admission day
-	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
+//	// Optional patients can have an admission day
+//	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
+//	&
+//	// Optional patients can have an assigned room
+//	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
+//	
+//	// If an optional patient has an admission day (assigned room) they must
+//	// also have an assigned room (admission day)
+//	&
+//	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+//	==
+//	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+
+	// Optional patients can not have an admission day
+	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
 	&
-	// Optional patients can have an assigned room
-	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
-	
-	// If an optional patient has an admission day (assigned room) they must
-	// also have an assigned room (admission day)
-	&
-	mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-	==
-	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	// Optional patients can not have an assigned room
+	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
 }
 
 // H6: Admission day: A patient can be admitted on any day from their release
@@ -608,13 +614,13 @@ constraint with roomShiftTuple {
 // Objectives
 //
 
-// S8 Unscheduled patients: The number of optional patients who are not admitted
-// in the current scheduling period should be minimized.
-//
-// Unscheduled optional patients
-function electiveUnscheduledPatients with findOptionalPatient {
-	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-}
+//// S8 Unscheduled patients: The number of optional patients who are not admitted
+//// in the current scheduling period should be minimized.
+////
+//// Unscheduled optional patients
+//function electiveUnscheduledPatients with findOptionalPatient {
+//	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+//}
 
 // S7 Admission delay: The number of days between a patient’s release date and
 // their actual date of admission should be minimized.
@@ -622,17 +628,15 @@ function admissionDelay with aadp {
 	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
 }
 
-// S5 Open OTs: The number of OTs opened on each day should be minimized.
-// Note that if an OT has no patients assigned for a particular day, it should
-// not open on that day.
-function openOts with otDayOpened {
-	context.value
-}
+//// S5 Open OTs: The number of OTs opened on each day should be minimized.
+//// Note that if an OT has no patients assigned for a particular day, it should
+//// not open on that day.
+//function openOts with otDayOpened {
+//	context.value
+//}
 
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
-	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
 	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
-	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
 }
