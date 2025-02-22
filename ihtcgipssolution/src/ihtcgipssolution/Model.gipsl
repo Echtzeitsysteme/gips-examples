@@ -161,7 +161,7 @@ pattern daySurgeonTuple {
 	s : Surgeon
 }
 
-pattern dayOperatingTheaterTuple {
+pattern dayOperatingTheaterAvailabilityTriple {
 	h : Hospital {
 		- days -> d
 		- operatingTheaters -> ot
@@ -175,6 +175,17 @@ pattern dayOperatingTheaterTuple {
 	
 	aot : OperatingTheaterAvailability
 	# aot.availability > 0
+}
+
+pattern dayOperatingTheaterTuple {
+	h : Hospital {
+		- days -> d
+		- operatingTheaters -> ot
+	}
+	
+	d : Day
+	
+	ot : OperatingTheater
 }
 
 pattern findMandatoryPatient {
@@ -375,6 +386,9 @@ mapping roomDayLoad to dayRoomTuple {
 	var load : EInt
 };
 
+// Mapping that is true if operating theater `ot` has at least one operation on day `d`
+mapping otDayOpened to dayOperatingTheaterTuple;
+
 // Mapping that holds the produced load by patient `p` in shift `s` in room `r`
 mapping roomShiftPatientProducedLoad to patientRoomShiftLoad {
 	var producedLoad : EInt
@@ -402,6 +416,15 @@ mapping nurseShiftOverload to nurseShiftMaxLoad {
 //
 // Constraints
 //
+
+// This constraints sets the respective `otDayOpenend` mapping to 1
+// if and only if at least one operation takes place in `ot` on day `d`.
+constraint with otDayOpened {
+	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
+	>= 1
+	<=>
+	context.value == 1
+}
 
 // Constraint that saves the produced workload of patient `p` in shift `s`
 // in room `r`
@@ -580,7 +603,7 @@ constraint with daySurgeonTuple {
 
 // H4: OT overtime: The duration of all surgeries allocated to an OT on a day
 // must not exceed its maximum capacity.
-constraint with dayOperatingTheaterTuple {
+constraint with dayOperatingTheaterAvailabilityTriple {
 	// find variable assigned surgeries for a specific day and operating theater
 	mappings.asp->filter( //
 		element.nodes.d == context.nodes.d //
@@ -732,8 +755,8 @@ function maximumWorkload with nurseShiftOverload {
 // S5 Open OTs: The number of OTs opened on each day should be minimized.
 // Note that if an OT has no patients assigned for a particular day, it should
 // not open on that day.
-function openOts with dayOperatingTheaterTuple {
-	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot)->sum(element.value)
+function openOts with otDayOpened {
+	context.value
 }
 
 // Global objective: minimize the weighted sum of all individual costs
