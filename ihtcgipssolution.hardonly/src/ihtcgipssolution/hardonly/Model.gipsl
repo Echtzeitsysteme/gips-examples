@@ -281,9 +281,45 @@ mapping roomDayLoad to dayRoomTuple {
 	var load : EInt
 };
 
+// Mapping that is true if gender `g` is contained in room `r` on day `d`
+mapping roomDayGender to dayRoomGender;
+
 //
 // Constraints
 //
+
+// TODO
+constraint with roomDayGender {
+	mappings.roomDayPatientLoad->filter( //
+		element.nodes.d == context.nodes.d //
+		& element.nodes.r == context.nodes.r //
+		& element.nodes.p.gender == context.nodes.g.name //
+	)->sum(element.value)
+	+
+	patterns.occupantRoomDay->filter( //
+		element.nodes.d == context.nodes.d //
+		& element.nodes.r == context.nodes.r //
+		& element.nodes.o.gender == context.nodes.g.name //
+	)->sum(1)
+	<=
+	1000 * context.value
+	
+	&
+	
+	mappings.roomDayPatientLoad->filter( //
+		element.nodes.d == context.nodes.d //
+		& element.nodes.r == context.nodes.r //
+		& element.nodes.p.gender == context.nodes.g.name //
+	)->sum(element.value)
+	+
+	patterns.occupantRoomDay->filter( //
+		element.nodes.d == context.nodes.d //
+		& element.nodes.r == context.nodes.r //
+		& element.nodes.o.gender == context.nodes.g.name //
+	)->sum(1)
+	>=
+	context.value
+}
 
 // If a patient `p` is scheduled for room `r` on a day `d` that is within the
 // patients scheduled time frame, set the respective mapping variable to 1.
@@ -346,34 +382,148 @@ constraint with roomDayLoad {
 	+
 	// occupants
 	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
+	
+	&
+	
+	
+	// TODO: all that follows is to save the Boolean value 1 if a room is used at all on a day
+	
+	1000 * context.value
+	>=
+	// patients
+	mappings.roomDayPatientLoad->filter( //
+		element.nodes.r == context.nodes.r //
+		& element.nodes.d == context.nodes.d //
+	)->sum(element.value)
+	
+	+
+	// occupants
+	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
+	
+	&
+	
+	context.value
+	<=
+	// patients
+	mappings.roomDayPatientLoad->filter( //
+		element.nodes.r == context.nodes.r //
+		& element.nodes.d == context.nodes.d //
+	)->sum(element.value)
+	
+	+
+	// occupants
+	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
 }
 
 // H1: No gender mix per room
-constraint with dayRoomGender {
-	mappings.roomDayPatientLoad->filter( //
-		element.nodes.d == context.nodes.d //
-		& element.nodes.r == context.nodes.r //
-		& element.nodes.p.gender == context.nodes.g.name //
+//
+// Translation: at most one gender must be present in a room `r` on day `d`
+constraint with dayRoomTuple {
+	mappings.roomDayGender->filter(
+		element.nodes.r == context.nodes.r //
+		& element.nodes.d == context.nodes.d //	
 	)->sum(element.value)
-	+
-	patterns.occupantRoomDay->filter( //
-		element.nodes.d == context.nodes.d & //
-		element.nodes.r == context.nodes.r & //
-		element.nodes.o.gender == context.nodes.g.name //
-	)->sum(1)
-	>= 1
-	=>
-	mappings.roomDayPatientLoad->filter( //
-		element.nodes.d == context.nodes.d //
-		& element.nodes.r == context.nodes.r //
-		& element.nodes.p.gender == context.nodes.g.name //
-	)->sum(element.value)
-	==
-	mappings.roomDayPatientLoad->filter( //
-		element.nodes.d == context.nodes.d //
-		& element.nodes.r == context.nodes.r //
-	)->sum(element.value)
+	<=
+	1
 }
+//constraint with dayRoomGender {
+////	mappings.roomDayPatientLoad->filter( //
+////		element.nodes.d == context.nodes.d //
+////		& element.nodes.r == context.nodes.r //
+////		& element.nodes.p.gender == context.nodes.g.name //
+////	)->sum(element.value)
+////	+
+////	patterns.occupantRoomDay->filter( //
+////		element.nodes.d == context.nodes.d & //
+////		element.nodes.r == context.nodes.r & //
+////		element.nodes.o.gender == context.nodes.g.name //
+////	)->sum(1)
+////	>= 1
+////	=>
+////	mappings.roomDayPatientLoad->filter( //
+////		element.nodes.d == context.nodes.d //
+////		& element.nodes.r == context.nodes.r //
+////		& element.nodes.p.gender == context.nodes.g.name //
+////	)->sum(element.value)
+////	==
+////	mappings.roomDayPatientLoad->filter( //
+////		element.nodes.d == context.nodes.d //
+////		& element.nodes.r == context.nodes.r //
+////	)->sum(element.value)
+//
+////	mappings.roomDayPatientLoad->filter( //
+////		element.nodes.d == context.nodes.d //
+////		& element.nodes.r == context.nodes.r //
+////		& element.nodes.p.gender == context.nodes.g.name //
+////	)->sum(element.value)
+////	+
+////	patterns.occupantRoomDay->filter( //
+////		element.nodes.d == context.nodes.d & //
+////		element.nodes.r == context.nodes.r & //
+////		element.nodes.o.gender == context.nodes.g.name //
+////	)->sum(1)
+////	>=
+////	1000 * mappings.roomDayPatientLoad->filter( //
+////		element.nodes.d == context.nodes.d //
+////		& element.nodes.r == context.nodes.r //
+////		& element.nodes.p.gender == context.nodes.g.name //
+////	)->sum(element.value)
+////	-
+////	1000 * mappings.roomDayPatientLoad->filter( //
+////		element.nodes.d == context.nodes.d //
+////		& element.nodes.r == context.nodes.r //
+////	)->sum(element.value)
+//	
+////	&
+////	
+////	mappings.roomDayPatientLoad->filter( //
+////		element.nodes.d == context.nodes.d //
+////		& element.nodes.r == context.nodes.r //
+////		& element.nodes.p.gender == context.nodes.g.name //
+////	)->sum(element.value)
+////	+
+////	patterns.occupantRoomDay->filter( //
+////		element.nodes.d == context.nodes.d & //
+////		element.nodes.r == context.nodes.r & //
+////		element.nodes.o.gender == context.nodes.g.name //
+////	)->sum(1)
+////	>=
+////	1000 * mappings.roomDayPatientLoad->filter( //
+////		element.nodes.d == context.nodes.d //
+////		& element.nodes.r == context.nodes.r //
+////	)->sum(element.value)
+////	-
+////	1000 * mappings.roomDayPatientLoad->filter( //
+////		element.nodes.d == context.nodes.d //
+////		& element.nodes.r == context.nodes.r //
+////		& element.nodes.p.gender == context.nodes.g.name //
+////	)->sum(element.value)
+//
+//	// TODO: new version
+//	mappings.roomDayGender->filter( //
+//		element.nodes.d == context.nodes.d //
+//		& element.nodes.r == context.nodes.r //
+//		& element.nodes.g == context.nodes.g //
+//	)->sum(element.value)
+////	+
+////	patterns.occupantRoomDay->filter( //
+////		element.nodes.d == context.nodes.d & //
+////		element.nodes.r == context.nodes.r & //
+////		element.nodes.o.gender == context.nodes.g.name //
+////	)->sum(1)
+//	// TODO: ^this should be included in mapping above
+//	<=
+//	mappings.roomDayPatientLoad->filter( //
+//		element.nodes.d == context.nodes.d //
+//		& element.nodes.r == context.nodes.r //
+//		& element.nodes.p.gender == context.nodes.g.name //
+//	)->sum(element.value)
+//	-
+//	mappings.roomDayLoad->filter( //
+//		element.nodes.d == context.nodes.d //
+//		& element.nodes.r == context.nodes.r //
+//	)->sum(element.value)
+//}
 
 // H7: Room capacity: The number of patients in each room in each day cannot
 // exceed the capacity of the room.
