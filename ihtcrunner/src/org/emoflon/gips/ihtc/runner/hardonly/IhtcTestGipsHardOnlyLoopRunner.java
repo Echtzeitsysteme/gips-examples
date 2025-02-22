@@ -38,8 +38,9 @@ public class IhtcTestGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnlyLoop
 	/**
 	 * Sets the scenario names up.
 	 */
+	@Override
 	protected void setUpScenarioNames() {
-		for (int i = 1; i <= 10; i++) {
+		for (int i = 1; i <= 30; i++) {
 			String name = "test";
 			if (i < 10) {
 				name = name.concat("0");

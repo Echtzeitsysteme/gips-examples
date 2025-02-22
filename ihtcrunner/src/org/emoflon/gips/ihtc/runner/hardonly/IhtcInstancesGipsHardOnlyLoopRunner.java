@@ -39,6 +39,7 @@ public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnl
 	/**
 	 * Sets the scenario names up.
 	 */
+	@Override
 	protected void setUpScenarioNames() {
 		for (int i = 1; i <= 30; i++) {
 			String name = "i";

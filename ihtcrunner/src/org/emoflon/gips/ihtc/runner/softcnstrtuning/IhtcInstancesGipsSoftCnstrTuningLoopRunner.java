@@ -41,7 +41,15 @@ public class IhtcInstancesGipsSoftCnstrTuningLoopRunner extends AbstractIhtcGips
 	 */
 	@Override
 	protected void setUpScenarioNames() {
-		super.setUpHardOnlySuccessfulScenarios();
+		for (int i = 1; i <= 30; i++) {
+			String name = "i";
+			if (i < 10) {
+				name = name.concat("0");
+			}
+			name = name.concat(String.valueOf(i));
+			name = name.concat(".json");
+			addScenarioName(name);
+		}
 	}
 
 }

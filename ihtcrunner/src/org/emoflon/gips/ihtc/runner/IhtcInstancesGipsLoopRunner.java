@@ -39,8 +39,9 @@ public class IhtcInstancesGipsLoopRunner extends AbstractIhtcGipsLoopRunner {
 	/**
 	 * Sets the scenario names up.
 	 */
+	@Override
 	protected void setUpScenarioNames() {
-		for (int i = 1; i <= 1; i++) {
+		for (int i = 1; i <= 30; i++) {
 			String name = "i";
 			if (i < 10) {
 				name = name.concat("0");
