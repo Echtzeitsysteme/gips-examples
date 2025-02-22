@@ -21,6 +21,9 @@ import ihtcgipssolution.api.gips.mapping.RoomDayPatientLoadMapping;
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.nursesrooms.api.gips.NursesroomsGipsAPI;
 import ihtcgipssolution.patientssurgeonsrooms.api.gips.PatientssurgeonsroomsGipsAPI;
+import ihtcgipssolution.softcnstr.optionaldelay.api.gips.OptionaldelayGipsAPI;
+import ihtcgipssolution.softcnstr.optionalopenots.api.gips.OptionalopenotsGipsAPI;
+import ihtcgipssolution.softcnstr.optionalpatients.api.gips.OptionalpatientsGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 
 /**
@@ -250,6 +253,72 @@ public abstract class AbstractIhtcGipsRunner {
 	 *                GT rule application.
 	 */
 	protected void applySolution(final SoftcnstrtuningGipsAPI gipsApi, final boolean verbose) {
+		// Apply found solution
+		final long tick = System.nanoTime();
+		gipsApi.getAadp().applyNonZeroMappings(false);
+		gipsApi.getAnrs().applyNonZeroMappings(false);
+		gipsApi.getArp().applyNonZeroMappings(false);
+		gipsApi.getAsp().applyNonZeroMappings(false);
+		final long tock = System.nanoTime();
+		if (verbose) {
+			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
+	}
+
+	/**
+	 * Applies the best found solution (i.e., all non-zero mappings) with a given
+	 * IHTC 2024 project GIPS API object.
+	 * 
+	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
+	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
+	 */
+	protected void applySolution(final OptionaldelayGipsAPI gipsApi, final boolean verbose) {
+		// Apply found solution
+		final long tick = System.nanoTime();
+		gipsApi.getAadp().applyNonZeroMappings(false);
+		gipsApi.getAnrs().applyNonZeroMappings(false);
+		gipsApi.getArp().applyNonZeroMappings(false);
+		gipsApi.getAsp().applyNonZeroMappings(false);
+		final long tock = System.nanoTime();
+		if (verbose) {
+			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
+	}
+
+	/**
+	 * Applies the best found solution (i.e., all non-zero mappings) with a given
+	 * IHTC 2024 project GIPS API object.
+	 * 
+	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
+	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
+	 */
+	protected void applySolution(final OptionalopenotsGipsAPI gipsApi, final boolean verbose) {
+		// Apply found solution
+		final long tick = System.nanoTime();
+		gipsApi.getAadp().applyNonZeroMappings(false);
+		gipsApi.getAnrs().applyNonZeroMappings(false);
+		gipsApi.getArp().applyNonZeroMappings(false);
+		gipsApi.getAsp().applyNonZeroMappings(false);
+		final long tock = System.nanoTime();
+		if (verbose) {
+			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
+	}
+
+	/**
+	 * Applies the best found solution (i.e., all non-zero mappings) with a given
+	 * IHTC 2024 project GIPS API object.
+	 * 
+	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
+	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
+	 */
+	protected void applySolution(final OptionalpatientsGipsAPI gipsApi, final boolean verbose) {
 		// Apply found solution
 		final long tick = System.nanoTime();
 		gipsApi.getAadp().applyNonZeroMappings(false);

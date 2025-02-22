@@ -1,12 +1,11 @@
-package org.emoflon.gips.ihtc.runner.softcnstrtuning;
+package org.emoflon.gips.ihtc.runner.softcnstr.optional.patients;
 
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.ihtc.runner.IhtcGipsRunner;
-
-import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
+import ihtcgipssolution.softcnstr.optionalpatients.api.gips.OptionalpatientsGipsAPI;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.loader.FileUtils;
 import ihtcmetamodel.loader.JsonToModelLoader;
@@ -20,12 +19,12 @@ import ihtcmetamodel.loader.ModelToJsonExporter;
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public class IhtcGipsSoftCnstrTuningRunner extends IhtcGipsRunner {
+public class IhtcGipsSoftCnstrOptionalPatientsRunner extends IhtcGipsRunner {
 
 	/**
 	 * No public instances of this class allowed.
 	 */
-	protected IhtcGipsSoftCnstrTuningRunner() {
+	protected IhtcGipsSoftCnstrOptionalPatientsRunner() {
 	}
 
 	/**
@@ -34,7 +33,7 @@ public class IhtcGipsSoftCnstrTuningRunner extends IhtcGipsRunner {
 	 * @param args Arguments will be ignored.
 	 */
 	public static void main(final String[] args) {
-		new IhtcGipsSoftCnstrTuningRunner().run();
+		new IhtcGipsSoftCnstrOptionalPatientsRunner().run();
 	}
 
 	/**
@@ -58,7 +57,7 @@ public class IhtcGipsSoftCnstrTuningRunner extends IhtcGipsRunner {
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
 
 		// Output JSON file
-		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/soft_cnstr_optional_all/";
+		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/soft_cnstr_optional_patients/";
 		final String outputPath = datasetSolutionFolder + "sol_"
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
@@ -82,7 +81,7 @@ public class IhtcGipsSoftCnstrTuningRunner extends IhtcGipsRunner {
 		// Initialize GIPS API
 		//
 
-		final SoftcnstrtuningGipsAPI gipsApi = new SoftcnstrtuningGipsAPI();
+		final OptionalpatientsGipsAPI gipsApi = new OptionalpatientsGipsAPI();
 		gipsApi.init(URI.createFileURI(instancePath));
 
 		//
