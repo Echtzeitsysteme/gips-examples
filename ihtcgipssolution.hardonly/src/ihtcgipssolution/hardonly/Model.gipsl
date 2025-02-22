@@ -288,6 +288,12 @@ mapping roomDayLoad to dayRoomTuple {
 // If a patient `p` is scheduled for room `r` on a day `d` that is within the
 // patients scheduled time frame, set the respective mapping variable to 1.
 constraint with roomDayPatientLoad {
+	// The following three sub constraints are the complex workaround for not having
+	// to use an Boolean equivalence. This reduces the matrix sizes massively.
+	//
+	// If patient `p` gets assign to room `r`
+	// and if patient `p` is assigned to the correct time frame,
+	// set the context value to 1.
 	mappings.aadp->filter( //
 		element.nodes.p == context.nodes.p //
 		& element.nodes.d.id - 1 <= context.nodes.d.id //
@@ -298,9 +304,30 @@ constraint with roomDayPatientLoad {
 		element.nodes.p == context.nodes.p //
 		& element.nodes.r == context.nodes.r //
 	)->sum(element.value)
-	== 2
-	<=>
-	context.value == 1
+	- 1
+	<=
+	context.value
+	
+	&
+	
+	// If the context value is 1, the patient must have to correct time frame.
+	mappings.aadp->filter( //
+		element.nodes.p == context.nodes.p //
+		& element.nodes.d.id - 1 <= context.nodes.d.id //
+		& element.nodes.d.id + context.nodes.p.lengthOfStay - 1 >= context.nodes.d.id //
+	)->sum(element.value)
+	>=
+	context.value
+	
+	&
+	
+	// If the context value is 1, the patient must be located in the correct room.
+	mappings.arp->filter( //
+		element.nodes.p == context.nodes.p //
+		& element.nodes.r == context.nodes.r //
+	)->sum(element.value)
+	>=
+	context.value
 }
 
 // The room `r` has a specific load (=number of patients and occupants)
