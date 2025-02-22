@@ -39,18 +39,7 @@ public class IhtcInstanceAnalyzer {
 			throw new UnsupportedOperationException("Hospital model was null.");
 		}
 
-//		System.out.println("=> Running Analyzer");
-//		System.out.println("#days: " + model.getDays().size());
-//		System.out.println("#nurses: " + model.getNurses().size());
-//		System.out.println("#occupants: " + model.getOccupants().size());
-//		System.out.println("#patients: " + model.getPatients().size());
-//		System.out.println("#surgeons: " + model.getSurgeons().size());
-//		System.out.println("#ots: " + model.getOperatingTheaters().size());
-//		System.out.println("#rooms: " + model.getRooms().size());
-//		System.out.println("#genders: " + model.getGenders().size());
-//		System.out.println("#age_groups: " + model.getAgeGroups().size());
-
-		final String leftAlignFormat = "| %-12s | %3d |";
+		final String leftAlignFormat = "| %-12s | %6d |%n";
 
 		System.out.format("+--------------+--------+%n");
 		System.out.format("| Metric       | Value  |%n");

@@ -29,7 +29,8 @@ public class IhtcInstanceAnalyzerRunner {
 	 * to the console.
 	 */
 	private void run() {
-		final String instancesFolder = "/../ihtcmetamodel/resources/ihtc2024_competition_instances/";
+		final String instancesFolder = "./resources/ihtc2024_competition_instances/";
+		setUpScenarioNames();
 		scenarioNames.forEach(sn -> {
 			System.out.println("=> " + sn);
 			final IhtcInstanceAnalyzer analyzer = new IhtcInstanceAnalyzer(instancesFolder + sn);
