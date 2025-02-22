@@ -1,0 +1,2203 @@
+--------------------------------------------------------------------------------
+=> Running scenario : i01.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 568.605216684
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 568,605216684
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 4898 rows, 2574 columns and 28612 nonzeros
+Model fingerprint: 0x39ff3fbe
+Variable types: 0 continuous, 2574 integer (2518 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.00 seconds (0.00 work units)
+Thread count was 1 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,605216684
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,605216684
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 1.85s.
+--------------------------------------------------------------------------------
+=> Running scenario : i02.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 569.615913151
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 569,615913151
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 7752 rows, 3983 columns and 44717 nonzeros
+Model fingerprint: 0x83b27340
+Variable types: 0 continuous, 3983 integer (3913 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 6474 rows and 3418 columns
+Presolve time: 0.06s
+Presolved: 1278 rows, 565 columns, 4620 nonzeros
+Variable types: 0 continuous, 565 integer (565 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.07 seconds (0.06 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 569,615913151
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 569,615913151
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 0.59s.
+--------------------------------------------------------------------------------
+=> Running scenario : i03.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 569.576330498
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 569,576330498
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 7733 rows, 3997 columns and 47486 nonzeros
+Model fingerprint: 0x1ce47eea
+Variable types: 0 continuous, 3997 integer (3941 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 7404 rows and 3870 columns
+Presolve time: 0.03s
+Presolved: 329 rows, 127 columns, 1136 nonzeros
+Variable types: 0 continuous, 127 integer (127 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.03 seconds (0.03 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 569,576330498
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 569,576330498
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 0.55s.
+--------------------------------------------------------------------------------
+=> Running scenario : i04.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 569.339260913
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 569,339260913
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 17974 rows, 9359 columns and 106290 nonzeros
+Model fingerprint: 0xfeeef229
+Variable types: 0 continuous, 9359 integer (9233 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 10981 rows and 6293 columns
+Presolve time: 0.32s
+Presolved: 6993 rows, 3066 columns, 29139 nonzeros
+Variable types: 0 continuous, 3066 integer (3066 binary)
+
+Root relaxation: objective 0.000000e+00, 378 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+H    0     0                       0.0000000    0.00000  0.00%     -    0s
+     0     0    0.00000    0   92    0.00000    0.00000  0.00%     -    0s
+
+Explored 1 nodes (378 simplex iterations) in 0.36 seconds (0.27 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 569,339260913
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 569,339260913
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 1.14s.
+--------------------------------------------------------------------------------
+=> Running scenario : i05.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 568.428151659
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 568,428151659
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 55650 rows, 25533 columns and 347425 nonzeros
+Model fingerprint: 0x6ccdb922
+Variable types: 0 continuous, 25533 integer (25323 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 53398 rows and 24802 columns
+Presolve time: 0.30s
+Presolved: 2252 rows, 731 columns, 7031 nonzeros
+Variable types: 0 continuous, 731 integer (731 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.33 seconds (0.32 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,428151659
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,428151659
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 2.18s.
+--------------------------------------------------------------------------------
+=> Running scenario : i06.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 568.996673086
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 568,996673086
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 36339 rows, 17390 columns and 243561 nonzeros
+Model fingerprint: 0x03afd5a5
+Variable types: 0 continuous, 17390 integer (17243 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 30396 rows and 14874 columns
+Presolve time: 0.43s
+Presolved: 5943 rows, 2516 columns, 24085 nonzeros
+Variable types: 0 continuous, 2516 integer (2516 binary)
+
+Root relaxation: objective 0.000000e+00, 539 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+H    0     0                       0.0000000    0.00000  0.00%     -    0s
+     0     0    0.00000    0   20    0.00000    0.00000  0.00%     -    0s
+
+Explored 1 nodes (756 simplex iterations) in 0.48 seconds (0.41 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,996673086
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,996673086
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 1.71s.
+--------------------------------------------------------------------------------
+=> Running scenario : i07.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 569.015406295
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 569,015406295
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 33970 rows, 18564 columns and 207752 nonzeros
+Model fingerprint: 0x725e6f74
+Variable types: 0 continuous, 18564 integer (18382 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 26352 rows and 15212 columns
+Presolve time: 0.32s
+Presolved: 7618 rows, 3352 columns, 32152 nonzeros
+Variable types: 0 continuous, 3352 integer (3352 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.35 seconds (0.30 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 569,015406295
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 569,015406295
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 1.53s.
+--------------------------------------------------------------------------------
+=> Running scenario : i08.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 564.423751399
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 564,423751399
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 147149 rows, 69332 columns and 1099737 nonzeros
+Model fingerprint: 0x6f9255b9
+Variable types: 0 continuous, 69332 integer (68940 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 56896 rows and 32556 columns
+Presolve time: 3.42s
+Presolved: 90253 rows, 36776 columns, 410457 nonzeros
+Variable types: 0 continuous, 36776 integer (36776 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 90249 rows, 36774 columns, 410367 nonzeros
+
+Concurrent spin time: 0.01s
+
+Solved with dual simplex
+
+Root relaxation: objective 0.000000e+00, 2115 iterations, 0.39 seconds (0.27 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+H    0     0                       0.0000000    0.00000  0.00%     -    5s
+     0     0    0.00000    0  103    0.00000    0.00000  0.00%     -    5s
+
+Explored 1 nodes (13456 simplex iterations) in 5.02 seconds (4.97 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 564,423751399
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 564,423751399
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 11.36s.
+--------------------------------------------------------------------------------
+=> Running scenario : i09.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 568.923136997
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 568,923136997
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 42834 rows, 21080 columns and 270912 nonzeros
+Model fingerprint: 0x3c940c7d
+Variable types: 0 continuous, 21080 integer (20912 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 40713 rows and 20310 columns
+Presolve time: 0.20s
+Presolved: 2121 rows, 770 columns, 7742 nonzeros
+Variable types: 0 continuous, 770 integer (770 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.23 seconds (0.24 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,923136997
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,923136997
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 1.52s.
+--------------------------------------------------------------------------------
+=> Running scenario : i10.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 567.908297577
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 567,908297577
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 66221 rows, 31631 columns and 460982 nonzeros
+Model fingerprint: 0x24c4b39c
+Variable types: 0 continuous, 31631 integer (31463 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 52452 rows and 25505 columns
+Presolve time: 1.07s
+Presolved: 13769 rows, 6126 columns, 59564 nonzeros
+Variable types: 0 continuous, 6126 integer (6126 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 1.13 seconds (0.93 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,908297577
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,908297577
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 3.55s.
+--------------------------------------------------------------------------------
+=> Running scenario : i11.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 568.636563394
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 568,636563394
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 53150 rows, 27462 columns and 338897 nonzeros
+Model fingerprint: 0xe21f23b2
+Variable types: 0 continuous, 27462 integer (27252 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 42966 rows and 23190 columns
+Presolve time: 0.65s
+Presolved: 10184 rows, 4272 columns, 46048 nonzeros
+Variable types: 0 continuous, 4272 integer (4272 binary)
+
+Root relaxation: objective 0.000000e+00, 455 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+H    0     0                       0.0000000    0.00000  0.00%     -    0s
+     0     0    0.00000    0  137    0.00000    0.00000  0.00%     -    0s
+
+Explored 1 nodes (455 simplex iterations) in 0.73 seconds (0.63 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,636563394
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,636563394
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 2.37s.
+--------------------------------------------------------------------------------
+=> Running scenario : i12.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 568.843355318
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 568,843355318
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 42946 rows, 24303 columns and 301584 nonzeros
+Model fingerprint: 0x0abfab36
+Variable types: 0 continuous, 24303 integer (24135 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 26649 rows and 16470 columns
+Presolve time: 0.59s
+Presolved: 16297 rows, 7833 columns, 75094 nonzeros
+Variable types: 0 continuous, 7833 integer (7833 binary)
+
+Root relaxation: objective 0.000000e+00, 1645 iterations, 0.08 seconds (0.11 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  149          -    0.00000      -     -    1s
+     0     0    0.00000    0  339          -    0.00000      -     -    1s
+     0     0    0.00000    0  274          -    0.00000      -     -    1s
+     0     0    0.00000    0  101          -    0.00000      -     -    2s
+H    0     0                       0.0000000    0.00000  0.00%     -    2s
+     0     0    0.00000    0   40    0.00000    0.00000  0.00%     -    2s
+
+Cutting planes:
+  Gomory: 9
+  Cover: 43
+  Implied bound: 313
+  Clique: 72
+  MIR: 15
+  StrongCG: 2
+  Zero half: 37
+  RLT: 69
+  Relax-and-lift: 61
+  BQP: 65
+
+Explored 1 nodes (19122 simplex iterations) in 2.50 seconds (2.73 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,843355318
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,843355318
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 3.89s.
+--------------------------------------------------------------------------------
+=> Running scenario : i13.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 568.382889109
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 568,382889109
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 50255 rows, 29643 columns and 403667 nonzeros
+Model fingerprint: 0x28190f97
+Variable types: 0 continuous, 29643 integer (29503 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 44091 rows and 26083 columns
+Presolve time: 0.50s
+Presolved: 6164 rows, 3560 columns, 29215 nonzeros
+Variable types: 0 continuous, 3560 integer (3560 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.54 seconds (0.51 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,382889109
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,382889109
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 2.48s.
+--------------------------------------------------------------------------------
+=> Running scenario : i14.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 567.468484492
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 567,468484492
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 85754 rows, 45816 columns and 535703 nonzeros
+Model fingerprint: 0x31ded4d2
+Variable types: 0 continuous, 45816 integer (45522 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 55400 rows and 32731 columns
+Presolve time: 1.82s
+Presolved: 30354 rows, 13085 columns, 130906 nonzeros
+Variable types: 0 continuous, 13085 integer (13085 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 1.93 seconds (1.55 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,468484492
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,468484492
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 4.85s.
+--------------------------------------------------------------------------------
+=> Running scenario : i15.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 567.246721648
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 567,246721648
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 87888 rows, 46101 columns and 619132 nonzeros
+Model fingerprint: 0x8d38f8ed
+Variable types: 0 continuous, 46101 integer (45877 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 71023 rows and 37999 columns
+Presolve time: 1.48s
+Presolved: 16865 rows, 8102 columns, 77121 nonzeros
+Variable types: 0 continuous, 8102 integer (8102 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 1.54 seconds (1.30 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,246721648
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,246721648
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 4.73s.
+--------------------------------------------------------------------------------
+=> Running scenario : i16.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 567.864379435
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 567,864379435
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 70578 rows, 38472 columns and 464028 nonzeros
+Model fingerprint: 0xac457086
+Variable types: 0 continuous, 38472 integer (38234 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 31303 rows and 20792 columns
+Presolve time: 1.50s
+Presolved: 39275 rows, 17680 columns, 171535 nonzeros
+Variable types: 0 continuous, 17680 integer (17680 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 39271 rows, 17678 columns, 171523 nonzeros
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root relaxation: objective 0.000000e+00, 3488 iterations, 0.26 seconds (0.21 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  431          -    0.00000      -     -    2s
+     0     0    0.00000    0  971          -    0.00000      -     -    4s
+     0     0    0.00000    0 1017          -    0.00000      -     -    4s
+     0     0    0.00000    0  701          -    0.00000      -     -    9s
+     0     0    0.00000    0  891          -    0.00000      -     -    9s
+     0     0    0.00000    0  371          -    0.00000      -     -   15s
+     0     0    0.00000    0  498          -    0.00000      -     -   15s
+     0     0    0.00000    0  497          -    0.00000      -     -   19s
+     0     0    0.00000    0  615          -    0.00000      -     -   19s
+     0     0    0.00000    0  481          -    0.00000      -     -   24s
+     0     0    0.00000    0  368          -    0.00000      -     -   25s
+     0     2    0.00000    0  368          -    0.00000      -     -   28s
+    11    38    0.00000    4  571          -    0.00000      -  1630   30s
+   168   261    0.00000   47  479          -    0.00000      -   577   39s
+   283   310    0.00000   68  625          -    0.00000      -   662   46s
+   365   399 infeasible   73               -    0.00000      -   804   56s
+   509   418    0.00000   74  964          -    0.00000      -   923   66s
+   591   473 infeasible   80               -    0.00000      -  1051   80s
+H  618   268                       0.0000000    0.00000  0.00%  1093   80s
+
+Cutting planes:
+  Gomory: 22
+  Lift-and-project: 3
+  Cover: 538
+  Implied bound: 2162
+  Clique: 714
+  MIR: 254
+  StrongCG: 75
+  Zero half: 150
+  RLT: 347
+  Relax-and-lift: 220
+  BQP: 55
+  PSD: 6
+
+Explored 712 nodes (932613 simplex iterations) in 80.25 seconds (156.43 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,864379435
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,864379435
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 82.73s.
+--------------------------------------------------------------------------------
+=> Running scenario : i17.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 541.454668089
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 541,454668089
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 447334 rows, 199803 columns and 3446519 nonzeros
+Model fingerprint: 0x291f9938
+Variable types: 0 continuous, 199803 integer (199299 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 414072 rows and 174501 columns
+Presolve time: 1.31s
+Presolved: 33262 rows, 25302 columns, 196777 nonzeros
+Variable types: 0 continuous, 25302 integer (24815 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 1.61 seconds (1.17 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 541,454668089
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 541,454668089
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 32.29s.
+--------------------------------------------------------------------------------
+=> Running scenario : i18.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 558.383855497
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 558,383855497
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 230693 rows, 103415 columns and 1478596 nonzeros
+Model fingerprint: 0xb39217d4
+Variable types: 0 continuous, 103415 integer (103016 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 198376 rows and 90194 columns
+Presolve time: 2.82s
+Presolved: 32317 rows, 13221 columns, 138018 nonzeros
+Variable types: 0 continuous, 13221 integer (13221 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 3.01 seconds (2.84 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 558,383855497
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 558,383855497
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 15.67s.
+--------------------------------------------------------------------------------
+=> Running scenario : i19.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 517.580405865
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 517,580405865
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 649433 rows, 299735 columns and 5233826 nonzeros
+Model fingerprint: 0xca3ceb63
+Variable types: 0 continuous, 299735 integer (299035 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 534692 rows and 230464 columns
+Presolve time: 2.33s
+Presolved: 114741 rows, 69271 columns, 763761 nonzeros
+Variable types: 0 continuous, 69271 integer (68573 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 2.97 seconds (1.92 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 517,580405865
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 517,580405865
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 58.66s.
+--------------------------------------------------------------------------------
+=> Running scenario : i20.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 567.545578023
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 567,545578023
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 77566 rows, 43896 columns and 554235 nonzeros
+Model fingerprint: 0xeb890482
+Variable types: 0 continuous, 43896 integer (43686 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 53508 rows and 31736 columns
+Presolve time: 1.78s
+Presolved: 24058 rows, 12160 columns, 107899 nonzeros
+Variable types: 0 continuous, 12160 integer (12160 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root relaxation: objective 0.000000e+00, 1136 iterations, 0.11 seconds (0.13 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  122          -    0.00000      -     -    2s
+     0     0    0.00000    0  307          -    0.00000      -     -    2s
+     0     0    0.00000    0   74          -    0.00000      -     -    3s
+     0     0    0.00000    0   92          -    0.00000      -     -    3s
+     0     0    0.00000    0  190          -    0.00000      -     -    3s
+     0     0    0.00000    0  143          -    0.00000      -     -    4s
+     0     0    0.00000    0   74          -    0.00000      -     -    4s
+     0     0    0.00000    0   77          -    0.00000      -     -    4s
+     0     0    0.00000    0   90          -    0.00000      -     -    5s
+     0     0    0.00000    0   52          -    0.00000      -     -    5s
+     0     2    0.00000    0    7          -    0.00000      -     -    6s
+*    9     8               3       0.0000000    0.00000  0.00%   311    6s
+
+Cutting planes:
+  Gomory: 8
+  Lift-and-project: 4
+  Cover: 73
+  Implied bound: 429
+  Clique: 68
+  MIR: 20
+  StrongCG: 1
+  Zero half: 33
+  RLT: 114
+  Relax-and-lift: 64
+  BQP: 148
+
+Explored 11 nodes (38652 simplex iterations) in 6.85 seconds (7.57 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,545578023
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,545578023
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 9.73s.
+--------------------------------------------------------------------------------
+=> Running scenario : i21.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 552.464147884
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 552,464147884
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 315472 rows, 151781 columns and 2355067 nonzeros
+Model fingerprint: 0x226256f4
+Variable types: 0 continuous, 151781 integer (151340 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 275726 rows and 122982 columns
+Presolve time: 0.84s
+Presolved: 39746 rows, 28799 columns, 238528 nonzeros
+Variable types: 0 continuous, 28799 integer (28388 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 1.08 seconds (0.82 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 552,464147884
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 552,464147884
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 20.08s.
+--------------------------------------------------------------------------------
+=> Running scenario : i22.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 534.893855068
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 534,893855068
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 475849 rows, 236858 columns and 4209647 nonzeros
+Model fingerprint: 0xe67caffe
+Variable types: 0 continuous, 236858 integer (236298 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 286608 rows and 153875 columns (presolve time = 5s)...
+Presolve removed 288233 rows and 155123 columns (presolve time = 10s)...
+Presolve removed 288480 rows and 155202 columns
+Presolve time: 12.76s
+Presolved: 187369 rows, 81656 columns, 912513 nonzeros
+Variable types: 0 continuous, 81656 integer (81656 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 1.05s
+
+Barrier performed 0 iterations in 16.71 seconds (10.62 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 1.34s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 0.000000e+00, 3764 iterations, 2.77 seconds (1.36 work units)
+Total elapsed time = 20.01s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  291          -    0.00000      -     -   21s
+     0     0    0.00000    0  726          -    0.00000      -     -   27s
+     0     0    0.00000    0  682          -    0.00000      -     -   28s
+     0     0    0.00000    0  112          -    0.00000      -     -   32s
+H    0     0                       0.0000000    0.00000  0.00%     -   35s
+     0     0    0.00000    0    6    0.00000    0.00000  0.00%     -   35s
+
+Cutting planes:
+  Gomory: 15
+  Lift-and-project: 2
+  Cover: 74
+  Implied bound: 631
+  Clique: 120
+  MIR: 24
+  StrongCG: 3
+  Zero half: 70
+  RLT: 93
+  Relax-and-lift: 12
+  BQP: 35
+
+Explored 1 nodes (87241 simplex iterations) in 35.77 seconds (34.10 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 534,893855068
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 534,893855068
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 73.57s.
+--------------------------------------------------------------------------------
+=> Running scenario : i23.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 512.912745162
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 512,912745162
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 663922 rows, 299778 columns and 4852333 nonzeros
+Model fingerprint: 0x06862ae2
+Variable types: 0 continuous, 299778 integer (299050 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 465271 rows and 219203 columns (presolve time = 5s)...
+Presolve removed 466668 rows and 219886 columns (presolve time = 10s)...
+Presolve removed 467475 rows and 220835 columns
+Presolve time: 14.66s
+Presolved: 196447 rows, 78943 columns, 908464 nonzeros
+Variable types: 0 continuous, 78943 integer (78943 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 0.73s
+
+Barrier performed 0 iterations in 18.34 seconds (10.88 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 1.11s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 0.000000e+00, 1543 iterations, 2.31 seconds (0.94 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+H    0     0                       0.0000000    0.00000  0.00%     -   18s
+     0     0    0.00000    0    6    0.00000    0.00000  0.00%     -   18s
+
+Explored 1 nodes (4211 simplex iterations) in 18.80 seconds (11.31 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 512,912745162
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 512,912745162
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 79.08s.
+--------------------------------------------------------------------------------
+=> Running scenario : i24.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 504.457940405
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 504,457940405
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 740824 rows, 357176 columns and 5642256 nonzeros
+Model fingerprint: 0x9883da91
+Variable types: 0 continuous, 357176 integer (356252 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 355945 rows and 203160 columns (presolve time = 5s)...
+Presolve removed 364183 rows and 203747 columns (presolve time = 10s)...
+Presolve removed 365928 rows and 204616 columns (presolve time = 18s)...
+Presolve removed 366450 rows and 205679 columns (presolve time = 20s)...
+Presolve removed 366550 rows and 205679 columns (presolve time = 25s)...
+Presolve removed 366550 rows and 205743 columns
+Presolve time: 25.81s
+Presolved: 374274 rows, 151433 columns, 1783259 nonzeros
+Variable types: 0 continuous, 151433 integer (151433 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 3.52s
+
+Barrier performed 0 iterations in 35.91 seconds (19.73 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 2.02s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 0.000000e+00, 9690 iterations, 7.41 seconds (4.72 work units)
+Total elapsed time = 52.53s (DegenMoves)
+Total elapsed time = 55.12s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  599          -    0.00000      -     -   64s
+     0     0    0.00000    0  969          -    0.00000      -     -   78s
+     0     0    0.00000    0  941          -    0.00000      -     -   83s
+     0     0    0.00000    0  490          -    0.00000      -     -   99s
+     0     0    0.00000    0  432          -    0.00000      -     -  101s
+     0     0    0.00000    0  444          -    0.00000      -     -  118s
+     0     0    0.00000    0  434          -    0.00000      -     -  119s
+     0     0    0.00000    0  474          -    0.00000      -     -  129s
+     0     0    0.00000    0  462          -    0.00000      -     -  130s
+     0     0    0.00000    0  445          -    0.00000      -     -  140s
+     0     0    0.00000    0  502          -    0.00000      -     -  142s
+     0     0    0.00000    0  519          -    0.00000      -     -  149s
+     0     0    0.00000    0  503          -    0.00000      -     -  152s
+H    0     0                       0.0000000    0.00000  0.00%     -  160s
+     0     0    0.00000    0  503    0.00000    0.00000  0.00%     -  160s
+
+Cutting planes:
+  Gomory: 10
+  Cover: 149
+  Implied bound: 3104
+  Clique: 308
+  MIR: 16
+  Zero half: 95
+  RLT: 216
+  Relax-and-lift: 497
+  BQP: 516
+
+Explored 1 nodes (279113 simplex iterations) in 160.34 seconds (176.79 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 504,457940405
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 504,457940405
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 229.59s.
+--------------------------------------------------------------------------------
+=> Running scenario : i25.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 558.452721495
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 558,452721495
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 235531 rows, 117183 columns and 1575155 nonzeros
+Model fingerprint: 0xcf0ea6dd
+Variable types: 0 continuous, 117183 integer (116777 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 212925 rows and 91754 columns
+Presolve time: 0.47s
+Presolved: 22606 rows, 25429 columns, 137788 nonzeros
+Variable types: 0 continuous, 25429 integer (25062 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.62 seconds (0.54 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 558,452721495
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 558,452721495
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 13.22s.
+--------------------------------------------------------------------------------
+=> Running scenario : i26.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 502.263275433
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 502,263275433
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 770209 rows, 357301 columns and 6082036 nonzeros
+Model fingerprint: 0x098b955b
+Variable types: 0 continuous, 357301 integer (356573 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 513990 rows and 252150 columns (presolve time = 5s)...
+Presolve removed 520757 rows and 252976 columns (presolve time = 10s)...
+Presolve removed 520757 rows and 253384 columns (presolve time = 16s)...
+Presolve removed 521803 rows and 253991 columns (presolve time = 20s)...
+Presolve removed 522849 rows and 254345 columns
+Presolve time: 24.56s
+Presolved: 247360 rows, 102956 columns, 1093421 nonzeros
+Variable types: 0 continuous, 102956 integer (102956 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 1.03s
+
+Barrier performed 0 iterations in 29.47 seconds (16.47 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 1.39s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 0.000000e+00, 2406 iterations, 3.02 seconds (1.28 work units)
+Total elapsed time = 30.30s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0    5          -    0.00000      -     -   30s
+H    0     0                       0.0000000    0.00000  0.00%     -   32s
+
+Explored 1 nodes (14537 simplex iterations) in 32.71 seconds (19.58 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 502,263275433
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 502,263275433
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 104.32s.
+--------------------------------------------------------------------------------
+=> Running scenario : i27.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 487.21459501699997
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 4,8721459501699997e+02
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 889967 rows, 402934 columns and 6999021 nonzeros
+Model fingerprint: 0x8bb90d33
+Variable types: 0 continuous, 402934 integer (402206 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 719402 rows and 331886 columns (presolve time = 5s)...
+Presolve removed 722715 rows and 332025 columns
+Presolve time: 5.36s
+Presolved: 167252 rows, 70909 columns, 770823 nonzeros
+Variable types: 0 continuous, 70909 integer (70313 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 6.45 seconds (3.90 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 4,8721459501699997e+02
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 4,8721459501699997e+02
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 93.70s.
+--------------------------------------------------------------------------------
+=> Running scenario : i28.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 543.05085082
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 543,05085082
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 400476 rows, 192209 columns and 2870879 nonzeros
+Model fingerprint: 0xfe95a907
+Variable types: 0 continuous, 192209 integer (191663 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 264841 rows and 135268 columns (presolve time = 5s)...
+Presolve removed 267045 rows and 136471 columns
+Presolve time: 10.00s
+Presolved: 133431 rows, 55738 columns, 580317 nonzeros
+Variable types: 0 continuous, 55738 integer (55738 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 0.69s
+
+Barrier performed 0 iterations in 12.19 seconds (8.61 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.37s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 0.000000e+00, 3430 iterations, 1.48 seconds (1.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  405          -    0.00000      -     -   17s
+     0     0    0.00000    0  267          -    0.00000      -     -   21s
+     0     0    0.00000    0  256          -    0.00000      -     -   21s
+     0     0    0.00000    0   31          -    0.00000      -     -   24s
+     0     0    0.00000    0  113          -    0.00000      -     -   25s
+     0     0    0.00000    0  115          -    0.00000      -     -   26s
+     0     0    0.00000    0   76          -    0.00000      -     -   27s
+     0     0    0.00000    0   58          -    0.00000      -     -   28s
+     0     0    0.00000    0   37          -    0.00000      -     -   29s
+     0     0    0.00000    0   47          -    0.00000      -     -   30s
+     0     0    0.00000    0   20          -    0.00000      -     -   31s
+     0     0    0.00000    0   26          -    0.00000      -     -   31s
+     0     0    0.00000    0    7          -    0.00000      -     -   32s
+     0     0    0.00000    0    9          -    0.00000      -     -   33s
+     0     0    0.00000    0    9          -    0.00000      -     -   34s
+H    0     0                       0.0000000    0.00000  0.00%     -   35s
+     0     0    0.00000    0    9    0.00000    0.00000  0.00%     -   35s
+
+Cutting planes:
+  Gomory: 8
+  Cover: 98
+  Implied bound: 567
+  Clique: 239
+  MIR: 33
+  StrongCG: 4
+  Zero half: 44
+  RLT: 98
+  Relax-and-lift: 100
+  BQP: 145
+
+Explored 1 nodes (70874 simplex iterations) in 35.24 seconds (25.99 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 543,05085082
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 543,05085082
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 64.13s.
+--------------------------------------------------------------------------------
+=> Running scenario : i29.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 555.350469318
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 555,350469318
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 268761 rows, 139233 columns and 1963752 nonzeros
+Model fingerprint: 0x9c23ca8a
+Variable types: 0 continuous, 139233 integer (138841 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 227614 rows and 119980 columns
+Presolve time: 1.04s
+Presolved: 41147 rows, 19253 columns, 179037 nonzeros
+Variable types: 0 continuous, 19253 integer (18935 binary)
+Found heuristic solution: objective 0.0000000
+
+Explored 0 nodes (0 simplex iterations) in 1.27 seconds (0.89 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 555,350469318
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 555,350469318
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 17.21s.
+--------------------------------------------------------------------------------
+=> Running scenario : i30.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Debug output: Overwrite specified Gurobi time limit with: 539.234579456
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter TimeLimit to value 539,234579456
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  570
+Presolve  1
+Threads  4
+
+Optimize a model with 432718 rows, 212425 columns and 3346551 nonzeros
+Model fingerprint: 0x7e91844d
+Variable types: 0 continuous, 212425 integer (211900 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 271976 rows and 142131 columns (presolve time = 5s)...
+Presolve removed 274281 rows and 143437 columns (presolve time = 10s)...
+Presolve removed 277447 rows and 144522 columns (presolve time = 15s)...
+Presolve removed 277447 rows and 144522 columns
+Presolve time: 15.25s
+Presolved: 155271 rows, 67903 columns, 731857 nonzeros
+Variable types: 0 continuous, 67903 integer (67903 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 0.69s
+
+Barrier performed 0 iterations in 17.86 seconds (11.01 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.79s (can be avoided by choosing Method=3)
+
+Solved with primal simplex
+
+Root relaxation: objective 0.000000e+00, 3002 iterations, 1.78 seconds (1.03 work units)
+Total elapsed time = 20.08s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  172          -    0.00000      -     -   21s
+     0     0    0.00000    0  245          -    0.00000      -     -   26s
+     0     0    0.00000    0  243          -    0.00000      -     -   26s
+H    0     0                       0.0000000    0.00000  0.00%     -   29s
+     0     0    0.00000    0   36    0.00000    0.00000  0.00%     -   29s
+
+Cutting planes:
+  Gomory: 41
+  Lift-and-project: 1
+  Cover: 74
+  Implied bound: 198
+  Clique: 121
+  MIR: 47
+  StrongCG: 9
+  Zero half: 41
+  RLT: 34
+  Relax-and-lift: 53
+  PSD: 3
+
+Explored 1 nodes (42877 simplex iterations) in 29.23 seconds (20.97 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 539,234579456
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 539,234579456
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 62.16s.
+--------------------------------------------------------------------------------
