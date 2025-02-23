@@ -11,6 +11,7 @@ import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.loader.FileUtils;
 import ihtcmetamodel.loader.JsonToModelLoader;
+import ihtcmetamodel.loader.ModelCostCalculator;
 import ihtcmetamodel.loader.ModelToJsonExporter;
 
 /**
@@ -99,6 +100,10 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 		// Initialize GIPS API: Hard constraints only.
 		//
 
+		if (verbose) {
+			System.out.println("=> Start stage 1.");
+		}
+
 		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
 		gipsApi.init(URI.createFileURI(instancePath));
 
@@ -112,7 +117,7 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 		exportToJson(gipsOutputPath, outputPath);
 		gipsApi.terminate();
 		if (verbose) {
-			System.out.println("=> Stage one found a solution.");
+			System.out.println("=> Stage 1 found a solution.");
 		}
 		final long tockStageOne = System.nanoTime();
 		final double stageOneRuntime = 1.0 * (tockStageOne - tickStageOne) / 1_000_000_000;
@@ -130,20 +135,32 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 		// Run second GIPS solution
 		//
 
+		if (verbose) {
+			System.out.println("=> Start stage 2.");
+		}
+
 		try {
 			buildAndSolve(gipsApiOptional, verbose);
 			applySolution(gipsApiOptional, verbose);
-			gipsSave(gipsApi, gipsOutputPath);
-			// TODO: Maybe we have to remove the previously written file before writing the
-			// new version
-			exportToJson(gipsOutputPath, outputPath);
-			if (verbose) {
-				System.out.println("=> Stage two found a solution.");
+			final int stageATotalCost = getCost(gipsOutputPath);
+			final int stageBTotalCost = getCost(gipsApiOptional.getEMoflonAPI().getModel().getResources().get(0));
+			if (stageBTotalCost < stageATotalCost) {
+				gipsSave(gipsApiOptional, gipsOutputPath);
+				// TODO: Maybe we have to remove the previously written file before writing the
+				// new version
+				exportToJson(gipsOutputPath, outputPath);
+				if (verbose) {
+					System.out.println("=> Stage 2 found a solution.");
+				}
+			} else {
+				if (verbose) {
+					System.out.println("=> Stage 2 found a solution but its cost was higher. Skipping export.");
+				}
 			}
 		} catch (final InternalError e) {
 			// The second stage threw an error -> it does not find a valid solution in time.
 			if (verbose) {
-				System.out.println("=> Second stage did not find a valid solution.");
+				System.out.println("=> Stage 2 did not find a valid solution.");
 			}
 		} finally {
 			gipsApiOptional.terminate();
@@ -170,6 +187,31 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 		final Hospital solvedHospital = (Hospital) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
 		exporter.modelToJson(jsonOutputPath);
+	}
+
+	/**
+	 * Returns the total cost value of a given solved hospital model at the XMI
+	 * path.
+	 * 
+	 * @param xmiPath XMI file path of a solved hospital model.
+	 * @return Total cost of the given solved hospital model.
+	 */
+	private int getCost(final String xmiPath) {
+		final Resource loadedResource = FileUtils.loadModel(xmiPath);
+		return getCost(loadedResource);
+	}
+
+	/**
+	 * Returns the total cost value of a given solved hospital model in the form of
+	 * a resource.
+	 * 
+	 * @param model Resource with the hospital model.
+	 * @return Total cost of the given solved hospital model.
+	 */
+	private int getCost(final Resource model) {
+		final Hospital solvedHospital = (Hospital) model.getContents().get(0);
+		final ModelCostCalculator calc = new ModelCostCalculator();
+		return calc.calculateTotalCost(solvedHospital);
 	}
 
 }

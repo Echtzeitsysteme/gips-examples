@@ -238,6 +238,25 @@ public class ModelCostCalculator {
 		return unscheduledPatientsCost * model.getWeight().getUnscheduledOptional();
 	}
 
+	/**
+	 * Calculates the total cost for a complete hospital model.
+	 * 
+	 * @param model Hospital model to calculate cost from.
+	 * @return Complete hospital cost.
+	 */
+	public int calculateTotalCost(final Hospital model) {
+		int totalCost = 0;
+		totalCost += calculateUnscheduledPatientsCost(model);
+		totalCost += calculateAdmissionDelayCost(model);
+		totalCost += calculateOpenOtCost(model);
+		totalCost += calculateAgeMixCost(model);
+		totalCost += calculateSkillLevelCost(model);
+		totalCost += calculateExcessCost(model);
+		totalCost += calculateContinuityCost(model);
+		totalCost += calculateSurgeonTransferCost(model);
+		return totalCost;
+	}
+
 	/*
 	 * Internal utility methods.
 	 */

@@ -163,6 +163,9 @@ public class ModelToJsonExporter {
 		final int surgeonTransfer = calc.calculateSurgeonTransferCost(model);
 
 		// total cost is the sum of all individual costs
+		//
+		// summing the individual values is faster than re-calculating the complete
+		// model within the cost calculator
 		final int costs = unscheduled + delay + openOt + ageMix + skill + excess + continuity + surgeonTransfer;
 
 		if (verbose) {
