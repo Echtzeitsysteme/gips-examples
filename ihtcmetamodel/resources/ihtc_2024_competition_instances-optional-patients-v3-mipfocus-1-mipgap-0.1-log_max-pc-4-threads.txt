@@ -1,0 +1,3602 @@
+--------------------------------------------------------------------------------
+=> Running scenario : i01.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 568.681545805
+Set parameter TimeLimit to value 568,681545805
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  568.681545805
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 4814 rows, 2574 columns and 26554 nonzeros
+Model fingerprint: 0x17c4a1cb
+Variable types: 0 continuous, 2574 integer (2518 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [4e+02, 4e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Found heuristic solution: objective 9800.0000000
+Presolve removed 1053 rows and 874 columns
+Presolve time: 0.04s
+Presolved: 3761 rows, 1700 columns, 16777 nonzeros
+Variable types: 0 continuous, 1700 integer (1700 binary)
+
+Root relaxation: objective 2.590000e+03, 922 iterations, 0.03 seconds (0.04 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2590.00000    0   31 9800.00000 2590.00000  73.6%     -    0s
+H    0     0                    4200.0000000 2590.00000  38.3%     -    0s
+     0     0 2590.00000    0  113 4200.00000 2590.00000  38.3%     -    0s
+     0     0 2590.00000    0  120 4200.00000 2590.00000  38.3%     -    0s
+H    0     0                    3850.0000000 2590.00000  32.7%     -    0s
+H    0     0                    3500.0000000 2590.00000  26.0%     -    0s
+     0     0 2590.00000    0   42 3500.00000 2590.00000  26.0%     -    0s
+     0     0 2590.00000    0   91 3500.00000 2590.00000  26.0%     -    0s
+     0     0 2590.00000    0   39 3500.00000 2590.00000  26.0%     -    0s
+     0     0 2590.00000    0   28 3500.00000 2590.00000  26.0%     -    0s
+     0     0 2590.00000    0   18 3500.00000 2590.00000  26.0%     -    0s
+H    0     0                    3150.0000000 2590.00000  17.8%     -    0s
+     0     0 2590.00000    0   76 3150.00000 2590.00000  17.8%     -    0s
+     0     0 2590.00000    0   30 3150.00000 2590.00000  17.8%     -    0s
+H    0     2                    2800.0000000 2590.00000  7.50%     -    0s
+     0     2 2590.00000    0   30 2800.00000 2590.00000  7.50%     -    0s
+
+Cutting planes:
+  Gomory: 4
+  Lift-and-project: 4
+  Cover: 25
+  Implied bound: 82
+  Clique: 15
+  MIR: 16
+  StrongCG: 4
+  Zero half: 15
+  Mod-K: 1
+  RLT: 25
+
+Explored 1 nodes (6778 simplex iterations) in 0.73 seconds (0.76 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 6: 2800 3150 3500 ... 9800
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 2.800000000000e+03, best bound 2.800000000000e+03, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,681545805
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,681545805
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 2800.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 2.54s.
+--------------------------------------------------------------------------------
+=> Running scenario : i02.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 569.555735196
+Set parameter TimeLimit to value 569,555735196
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  569.555735196
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 7637 rows, 3983 columns and 40981 nonzeros
+Model fingerprint: 0xd7444830
+Variable types: 0 continuous, 3983 integer (3913 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 3145 rows and 1839 columns
+Presolve time: 0.17s
+Presolved: 4492 rows, 2144 columns, 18802 nonzeros
+Variable types: 0 continuous, 2144 integer (2144 binary)
+Found heuristic solution: objective 3750.0000000
+Found heuristic solution: objective 3600.0000000
+
+Root relaxation: objective 0.000000e+00, 491 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0   28 3600.00000    0.00000   100%     -    0s
+H    0     0                     450.0000000    0.00000   100%     -    0s
+H    0     0                     150.0000000    0.00000   100%     -    0s
+     0     0    0.00000    0   36  150.00000    0.00000   100%     -    0s
+     0     0    0.00000    0   64  150.00000    0.00000   100%     -    0s
+H    0     0                       0.0000000    0.00000  0.00%     -    0s
+     0     0    0.00000    0    7    0.00000    0.00000  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 12
+  Cover: 21
+  Implied bound: 15
+  Clique: 71
+  MIR: 9
+  StrongCG: 4
+  Zero half: 7
+  RLT: 20
+  Relax-and-lift: 14
+
+Explored 1 nodes (4370 simplex iterations) in 0.37 seconds (0.34 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 5: 0 150 450 ... 3750
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 569,555735196
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 569,555735196
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 0.97s.
+--------------------------------------------------------------------------------
+=> Running scenario : i03.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 569.56109495
+Set parameter TimeLimit to value 569,56109495
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  569.56109495
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 7659 rows, 3997 columns and 43915 nonzeros
+Model fingerprint: 0xeb57dfcb
+Variable types: 0 continuous, 3997 integer (3941 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [4e+02, 4e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 2476 rows and 1413 columns
+Presolve time: 0.15s
+Presolved: 5183 rows, 2584 columns, 22648 nonzeros
+Variable types: 0 continuous, 2584 integer (2584 binary)
+Found heuristic solution: objective 15200.000000
+Found heuristic solution: objective 14800.000000
+
+Root relaxation: objective 7.600000e+03, 1238 iterations, 0.04 seconds (0.05 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 7600.00000    0   23 14800.0000 7600.00000  48.6%     -    0s
+H    0     0                    8400.0000000 7600.00000  9.52%     -    0s
+
+Explored 1 nodes (2511 simplex iterations) in 0.26 seconds (0.24 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 3: 8400 14800 15200 
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 8.400000000000e+03, best bound 7.600000000000e+03, gap 9.5238%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 569,56109495
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 569,56109495
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 8400.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 0.78s.
+--------------------------------------------------------------------------------
+=> Running scenario : i04.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 569.430188293
+Set parameter TimeLimit to value 569,430188293
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  569.430188293
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 17740 rows, 9359 columns and 96377 nonzeros
+Model fingerprint: 0xd020b8f3
+Variable types: 0 continuous, 9359 integer (9233 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [3e+02, 3e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 6626 rows and 4470 columns
+Presolve time: 0.38s
+Presolved: 11114 rows, 4889 columns, 48900 nonzeros
+Variable types: 0 continuous, 4889 integer (4889 binary)
+
+Root relaxation: objective 0.000000e+00, 866 iterations, 0.03 seconds (0.04 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+H    0     0                       0.0000000    0.00000  0.00%     -    0s
+     0     0    0.00000    0   12    0.00000    0.00000  0.00%     -    0s
+
+Explored 1 nodes (2484 simplex iterations) in 0.53 seconds (0.44 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 0 
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 569,430188293
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 569,430188293
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 1.22s.
+--------------------------------------------------------------------------------
+=> Running scenario : i05.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 568.408284608
+Set parameter TimeLimit to value 568,408284608
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  568.408284608
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 55317 rows, 25533 columns and 315931 nonzeros
+Model fingerprint: 0xc26007d3
+Variable types: 0 continuous, 25533 integer (25323 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 11470 rows and 7752 columns
+Presolve time: 1.37s
+Presolved: 43847 rows, 17781 columns, 189281 nonzeros
+Variable types: 0 continuous, 17781 integer (17781 binary)
+Found heuristic solution: objective 21750.000000
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 43841 rows, 17778 columns, 189093 nonzeros
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root relaxation: objective 8.187500e+03, 654 iterations, 0.18 seconds (0.13 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 8187.50000    0   12 21750.0000 8187.50000  62.4%     -    2s
+H    0     0                    8500.0000000 8187.50000  3.68%     -    2s
+
+Explored 1 nodes (5546 simplex iterations) in 2.26 seconds (1.97 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 2: 8500 21750 
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 8.500000000000e+03, best bound 8.250000000000e+03, gap 2.9412%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,408284608
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,408284608
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 8500.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 4.13s.
+--------------------------------------------------------------------------------
+=> Running scenario : i06.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 568.998986103
+Set parameter TimeLimit to value 568,998986103
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  568.998986103
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 36122 rows, 17390 columns and 223663 nonzeros
+Model fingerprint: 0xfef9c739
+Variable types: 0 continuous, 17390 integer (17243 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 9206 rows and 5846 columns
+Presolve time: 0.90s
+Presolved: 26916 rows, 11544 columns, 118648 nonzeros
+Variable types: 0 continuous, 11544 integer (11544 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+Concurrent spin time: 0.02s
+
+Solved with primal simplex
+
+Root relaxation: objective 9.825000e+03, 972 iterations, 0.14 seconds (0.14 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 9825.00000    0   53          - 9825.00000      -     -    1s
+H    0     0                    10200.000000 9825.00000  3.68%     -    1s
+
+Explored 1 nodes (5080 simplex iterations) in 1.81 seconds (1.54 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 1: 10200 
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 1.020000000000e+04, best bound 9.900000000000e+03, gap 2.9412%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,998986103
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,998986103
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 10200.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 3.02s.
+--------------------------------------------------------------------------------
+=> Running scenario : i07.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 569.099411043
+Set parameter TimeLimit to value 569,099411043
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  569.099411043
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 33660 rows, 18564 columns and 188761 nonzeros
+Model fingerprint: 0x96f3b04b
+Variable types: 0 continuous, 18564 integer (18382 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [4e+02, 4e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 8577 rows and 7157 columns
+Presolve time: 0.60s
+Presolved: 25083 rows, 11407 columns, 108550 nonzeros
+Variable types: 0 continuous, 11407 integer (11407 binary)
+Found heuristic solution: objective 24300.000000
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+Concurrent spin time: 0.01s
+
+Solved with primal simplex
+
+Root relaxation: objective -3.637979e-12, 1092 iterations, 0.11 seconds (0.12 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0   45 24300.0000    0.00000   100%     -    1s
+H    0     0                    2250.0000000    0.00000   100%     -    1s
+H    0     0                     450.0000000    0.00000   100%     -    1s
+     0     0    0.00000    0  110  450.00000    0.00000   100%     -    1s
+H    0     0                       0.0000000    0.00000  0.00%     -    1s
+     0     0    0.00000    0  110    0.00000    0.00000  0.00%     -    1s
+
+Cutting planes:
+  Gomory: 5
+  Cover: 5
+  Implied bound: 20
+  Clique: 3
+  MIR: 3
+  Zero half: 1
+  RLT: 8
+  Relax-and-lift: 1
+
+Explored 1 nodes (6166 simplex iterations) in 1.43 seconds (1.30 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 4: 0 450 2250 24300 
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 569,099411043
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 569,099411043
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 2.50s.
+--------------------------------------------------------------------------------
+=> Running scenario : i08.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 564.415873164
+Set parameter TimeLimit to value 564,415873164
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  564.415873164
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 146401 rows, 69332 columns and 1009838 nonzeros
+Model fingerprint: 0x0a387d7d
+Variable types: 0 continuous, 69332 integer (68940 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 25854 rows and 20140 columns
+Presolve time: 4.30s
+Presolved: 120547 rows, 49192 columns, 554111 nonzeros
+Variable types: 0 continuous, 49192 integer (49192 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 0.71s
+
+Barrier performed 0 iterations in 6.60 seconds (4.44 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.77s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective -9.094947e-13, 2876 iterations, 1.72 seconds (0.82 work units)
+Total elapsed time = 10.09s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  195          -    0.00000      -     -   11s
+H    0     0                    1600.0000000    0.00000   100%     -   12s
+H    0     0                     600.0000000    0.00000   100%     -   13s
+H    0     0                     400.0000000    0.00000   100%     -   13s
+H    0     0                     200.0000000    0.00000   100%     -   13s
+     0     0    0.00000    0  549  200.00000    0.00000   100%     -   15s
+H    0     0                       0.0000000    0.00000  0.00%     -   16s
+     0     0    0.00000    0  549    0.00000    0.00000  0.00%     -   16s
+
+Cutting planes:
+  Gomory: 12
+  Cover: 19
+  Implied bound: 85
+  Clique: 7
+  MIR: 16
+  StrongCG: 4
+  Zero half: 28
+  RLT: 31
+  Relax-and-lift: 29
+  BQP: 2
+
+Explored 1 nodes (38750 simplex iterations) in 16.63 seconds (13.84 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 5: 0 200 400 ... 1600
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 564,415873164
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 564,415873164
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 22.99s.
+--------------------------------------------------------------------------------
+=> Running scenario : i09.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 568.902415442
+Set parameter TimeLimit to value 568,902415442
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  568.902415442
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 42587 rows, 21080 columns and 246858 nonzeros
+Model fingerprint: 0xaa45a584
+Variable types: 0 continuous, 21080 integer (20912 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [5e+02, 5e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 10144 rows and 6921 columns
+Presolve time: 0.89s
+Presolved: 32443 rows, 14159 columns, 158031 nonzeros
+Variable types: 0 continuous, 14159 integer (14159 binary)
+Found heuristic solution: objective 44500.000000
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 32435 rows, 14155 columns, 158007 nonzeros
+
+Concurrent spin time: 0.02s
+
+Solved with dual simplex
+
+Root relaxation: objective -1.455192e-11, 1442 iterations, 0.16 seconds (0.13 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  264 44500.0000    0.00000   100%     -    1s
+H    0     0                    16000.000000    0.00000   100%     -    1s
+H    0     0                    15500.000000    0.00000   100%     -    1s
+H    0     0                    14000.000000    0.00000   100%     -    1s
+H    0     0                    12000.000000    0.00000   100%     -    1s
+H    0     0                    10500.000000    0.00000   100%     -    1s
+H    0     0                    10000.000000    0.00000   100%     -    1s
+H    0     0                    9000.0000000    0.00000   100%     -    1s
+H    0     0                    7500.0000000    0.00000   100%     -    1s
+H    0     0                    6500.0000000    0.00000   100%     -    2s
+     0     0    0.00000    0  736 6500.00000    0.00000   100%     -    2s
+     0     0    0.00000    0  679 6500.00000    0.00000   100%     -    2s
+H    0     0                    5500.0000000    0.00000   100%     -    4s
+H    0     0                    5000.0000000    0.00000   100%     -    4s
+H    0     0                    4500.0000000    0.00000   100%     -    4s
+     0     0    0.00000    0  433 4500.00000    0.00000   100%     -    4s
+H    0     0                    3500.0000000    0.00000   100%     -    4s
+H    0     0                    3000.0000000    0.00000   100%     -    4s
+H    0     0                    2500.0000000    0.00000   100%     -    4s
+H    0     0                    2000.0000000    0.00000   100%     -    4s
+H    0     0                    1500.0000000    0.00000   100%     -    4s
+     0     0    0.00000    0  425 1500.00000    0.00000   100%     -    4s
+     0     0    0.00000    0  427 1500.00000    0.00000   100%     -    5s
+     0     0    0.00000    0  454 1500.00000    0.00000   100%     -    6s
+     0     0    0.00000    0  271 1500.00000    0.00000   100%     -    7s
+     0     0    0.00000    0  333 1500.00000    0.00000   100%     -    8s
+     0     0    0.00000    0  341 1500.00000    0.00000   100%     -    8s
+     0     2    0.00000    0  211 1500.00000    0.00000   100%     -   11s
+H    8    12                    1000.0000000    0.00000   100%   855   11s
+H   38   124                     500.0000000    0.00000   100%   339   13s
+   128   126    0.00000   20  145  500.00000    0.00000   100%   217   15s
+   137   132    0.00000    9  109  500.00000    0.00000   100%   203   20s
+H  173   167                       0.0000000    0.00000  0.00%   232   22s
+
+Cutting planes:
+  Gomory: 6
+  Lift-and-project: 18
+  Cover: 25
+  Implied bound: 163
+  Clique: 50
+  MIR: 15
+  StrongCG: 6
+  Flow cover: 29
+  GUB cover: 1
+  Zero half: 67
+  RLT: 81
+  Relax-and-lift: 114
+  BQP: 4
+
+Explored 190 nodes (115397 simplex iterations) in 22.52 seconds (26.63 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 0 500 1000 ... 5000
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,902415442
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,902415442
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 0.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 23.84s.
+--------------------------------------------------------------------------------
+=> Running scenario : i10.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 567.915876586
+Set parameter TimeLimit to value 567,915876586
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  567.915876586
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 65992 rows, 31631 columns and 423244 nonzeros
+Model fingerprint: 0x83137fd0
+Variable types: 0 continuous, 31631 integer (31463 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [3e+02, 3e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 14521 rows and 8811 columns
+Presolve time: 0.85s
+Presolved: 51471 rows, 22820 columns, 227903 nonzeros
+Variable types: 0 continuous, 22820 integer (22820 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 51471 rows, 22820 columns, 227903 nonzeros
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root relaxation: objective 1.195000e+04, 1500 iterations, 0.24 seconds (0.19 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 11950.0000    0  377          - 11950.0000      -     -    2s
+H    0     0                    27000.000000 11950.0000  55.7%     -    3s
+H    0     0                    26700.000000 11950.0000  55.2%     -    3s
+H    0     0                    26400.000000 11950.0000  54.7%     -    4s
+H    0     0                    26100.000000 11950.0000  54.2%     -    4s
+H    0     0                    25800.000000 11950.0000  53.7%     -    4s
+     0     0 11950.0000    0  645 25800.0000 11950.0000  53.7%     -    4s
+H    0     0                    25500.000000 11950.0000  53.1%     -    4s
+H    0     0                    24300.000000 11950.0000  50.8%     -    4s
+H    0     0                    24000.000000 11950.0000  50.2%     -    4s
+H    0     0                    23700.000000 11950.0000  49.6%     -    4s
+     0     0 11950.0000    0  678 23700.0000 11950.0000  49.6%     -    5s
+H    0     0                    23100.000000 11950.0000  48.3%     -    5s
+H    0     0                    22800.000000 11950.0000  47.6%     -    5s
+H    0     0                    22500.000000 11950.0000  46.9%     -    7s
+H    0     0                    22200.000000 11950.0000  46.2%     -    7s
+H    0     0                    21600.000000 11950.0000  44.7%     -    7s
+H    0     0                    21300.000000 11950.0000  43.9%     -    7s
+     0     0 11950.0000    0  412 21300.0000 11950.0000  43.9%     -    7s
+H    0     0                    21000.000000 11950.0000  43.1%     -    7s
+     0     0 11950.0000    0  513 21000.0000 11950.0000  43.1%     -    7s
+H    0     0                    20400.000000 11950.0000  41.4%     -   10s
+H    0     0                    19800.000000 11950.0000  39.6%     -   10s
+H    0     0                    19500.000000 11950.0000  38.7%     -   10s
+H    0     0                    19200.000000 11950.0000  37.8%     -   10s
+H    0     0                    18900.000000 11950.0000  36.8%     -   10s
+     0     0 11950.0000    0  442 18900.0000 11950.0000  36.8%     -   10s
+H    0     0                    18300.000000 11950.0000  34.7%     -   10s
+     0     0 11950.0000    0  696 18300.0000 11950.0000  34.7%     -   11s
+     0     0 11950.0000    0  393 18300.0000 11950.0000  34.7%     -   14s
+H    0     0                    18000.000000 11950.0000  33.6%     -   14s
+H    0     0                    17700.000000 11950.0000  32.5%     -   14s
+H    0     0                    17400.000000 11950.0000  31.3%     -   14s
+H    0     0                    17100.000000 11950.0000  30.1%     -   14s
+     0     0 11950.0000    0  706 17100.0000 11950.0000  30.1%     -   15s
+H    0     0                    16800.000000 11950.0000  28.9%     -   15s
+     0     0 11950.0000    0  430 16800.0000 11950.0000  28.9%     -   18s
+H    0     0                    16500.000000 11950.0000  27.6%     -   19s
+H    0     0                    16200.000000 11950.0000  26.2%     -   21s
+H    0     0                    15900.000000 11950.0000  24.8%     -   21s
+H    0     0                    15600.000000 11950.0000  23.4%     -   21s
+H    0     0                    15300.000000 11950.0000  21.9%     -   22s
+     0     2 11950.0000    0  366 15300.0000 11950.0000  21.9%     -   25s
+H   10    12                    15000.000000 11950.0000  20.3%  2184   26s
+    26    47 11950.0000    8  508 15000.0000 11950.0000  20.3%  1082   30s
+   128   131 11950.0000   25  467 15000.0000 11950.0000  20.3%   663   41s
+H  131   131                    14400.000000 11950.0000  17.0%   652   41s
+   132   326 11950.0000   25  475 14400.0000 11950.0000  17.0%   652   49s
+H  189   326                    14100.000000 11950.0000  15.2%   590   49s
+   328   589 12050.0000   68  450 14100.0000 11950.0000  15.2%   569   59s
+H  349   589                    13800.000000 11950.0000  13.4%   579   59s
+   608   595 12050.0000  115  420 13800.0000 11950.0000  13.4%   547   68s
+H  609   595                    13500.000000 11950.0000  11.5%   547   68s
+   618   727 12050.0000  116  423 13500.0000 11950.0000  11.5%   543   76s
+   766   754 12050.0000  134  619 13500.0000 11950.0000  11.5%   546   86s
+   812   777 12100.0000  134  554 13500.0000 11950.0000  11.5%   541   96s
+   840   811 12050.0000  135  633 13500.0000 11950.0000  11.5%   533  106s
+   883   850 infeasible  139      13500.0000 11950.0000  11.5%   530  118s
+   939   905 12100.0000  140  635 13500.0000 11950.0000  11.5%   538  131s
+  1002   970 12250.0000  161  535 13500.0000 11950.0000  11.5%   532  143s
+  1114  1128 12650.0000  173  584 13500.0000 11950.0000  11.5%   522  156s
+  1305  1262 12650.0000  207  723 13500.0000 11950.0000  11.5%   558  170s
+  1518  1480 13099.1071  255  899 13500.0000 11950.0000  11.5%   565  183s
+  1799  1836 11950.0000   62  514 13500.0000 11950.0000  11.5%   574  197s
+  2228  1838 11950.0000   20  423 13500.0000 11950.0000  11.5%   565  202s
+  2230  1840 11965.3482  184  705 13500.0000 11950.0000  11.5%   565  206s
+  2231  1840 11950.0000   54  349 13500.0000 11950.0000  11.5%   564  211s
+  2233  1842 11975.0000   92  350 13500.0000 11950.0000  11.5%   564  216s
+  2235  1843 11950.0000   50  414 13500.0000 11950.0000  11.5%   563  228s
+  2236  1844 12050.0000  131  553 13500.0000 11950.0000  11.5%   563  233s
+  2237  1844 12389.8214  184  368 13500.0000 11950.0000  11.5%   563  235s
+  2245  1855 11950.0000   16  528 13500.0000 11950.0000  11.5%   605  240s
+  2329  1973 11950.0000   26  522 13500.0000 11950.0000  11.5%   617  250s
+  2395  1965 11950.0000   34  472 13500.0000 11950.0000  11.5%   632  261s
+H 2408  1867                    13200.000000 11950.0000  9.47%   634  261s
+
+Cutting planes:
+  Gomory: 38
+  Lift-and-project: 34
+  Cover: 36
+  Implied bound: 465
+  Clique: 362
+  MIR: 27
+  StrongCG: 3
+  Flow cover: 121
+  GUB cover: 7
+  Zero half: 270
+  RLT: 344
+  Relax-and-lift: 76
+  BQP: 21
+
+Explored 2409 nodes (1600957 simplex iterations) in 261.03 seconds (521.27 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 13200 13500 13800 ... 16200
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 1.320000000000e+04, best bound 1.200000000000e+04, gap 9.0909%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,915876586
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,915876586
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 13200.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 263.46s.
+--------------------------------------------------------------------------------
+=> Running scenario : i11.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 568.283444575
+Set parameter TimeLimit to value 568,283444575
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  568.283444575
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 52814 rows, 27462 columns and 308297 nonzeros
+Model fingerprint: 0x77a2f921
+Variable types: 0 continuous, 27462 integer (27252 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [5e+02, 5e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 10464 rows and 9456 columns
+Presolve time: 1.19s
+Presolved: 42350 rows, 18006 columns, 206977 nonzeros
+Variable types: 0 continuous, 18006 integer (18006 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 42346 rows, 18004 columns, 206863 nonzeros
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root relaxation: objective 2.433333e+04, 1455 iterations, 0.23 seconds (0.19 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 24333.3333    0   72          - 24333.3333      -     -    1s
+H    0     0                    35000.000000 24333.3333  30.5%     -    2s
+H    0     0                    27000.000000 24333.3333  9.88%     -    2s
+
+Explored 1 nodes (6182 simplex iterations) in 2.33 seconds (2.00 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 2: 27000 35000 
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 2.700000000000e+04, best bound 2.450000000000e+04, gap 9.2593%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,283444575
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,283444575
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 27000.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 4.32s.
+--------------------------------------------------------------------------------
+=> Running scenario : i12.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 568.608077885
+Set parameter TimeLimit to value 568,608077885
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  568.608077885
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 42657 rows, 24303 columns and 276711 nonzeros
+Model fingerprint: 0x5eef5b24
+Variable types: 0 continuous, 24303 integer (24135 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 11593 rows and 9487 columns
+Presolve time: 0.56s
+Presolved: 31064 rows, 14816 columns, 149420 nonzeros
+Variable types: 0 continuous, 14816 integer (14816 binary)
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root relaxation: objective 4.566667e+03, 3233 iterations, 0.26 seconds (0.29 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 4566.66667    0  567          - 4566.66667      -     -    1s
+     0     0 4566.66667    0 1029          - 4566.66667      -     -    3s
+     0     0 4566.66667    0  915          - 4566.66667      -     -    3s
+     0     0 4642.42424    0  630          - 4642.42424      -     -    6s
+     0     0 4642.42424    0  795          - 4642.42424      -     -    6s
+H    0     0                    9400.0000000 4642.42424  50.6%     -    7s
+     0     0 4642.42424    0  970 9400.00000 4642.42424  50.6%     -    8s
+H    0     0                    8400.0000000 4642.42424  44.7%     -    9s
+H    0     0                    8000.0000000 4642.42424  42.0%     -    9s
+H    0     0                    7800.0000000 4642.42424  40.5%     -    9s
+     0     0 4642.42424    0 1090 7800.00000 4642.42424  40.5%     -   10s
+     0     0 4642.42424    0  416 7800.00000 4642.42424  40.5%     -   16s
+H    0     0                    7600.0000000 4642.42424  38.9%     -   16s
+H    0     0                    7400.0000000 4642.42424  37.3%     -   16s
+     0     0 4642.42424    0  601 7400.00000 4642.42424  37.3%     -   17s
+H    0     0                    7200.0000000 4642.42424  35.5%     -   18s
+H    0     0                    7000.0000000 4642.42424  33.7%     -   18s
+H    0     0                    6800.0000000 4642.42424  31.7%     -   18s
+H    0     0                    6600.0000000 4642.42424  29.7%     -   18s
+H    0     0                    6400.0000000 4642.42424  27.5%     -   18s
+H    0     0                    6200.0000000 4642.42424  25.1%     -   18s
+     0     0 4642.42424    0  287 6200.00000 4642.42424  25.1%     -   22s
+H    0     0                    6000.0000000 4642.42424  22.6%     -   23s
+H    0     0                    5800.0000000 4642.42424  20.0%     -   23s
+H    0     0                    5600.0000000 4642.42424  17.1%     -   24s
+     0     2 4642.42424    0  287 5600.00000 4642.42424  17.1%     -   24s
+     1     4 4642.42424    1  256 5600.00000 4642.42424  17.1%  3820   25s
+    11    16 4642.42424    4  668 5600.00000 4642.42424  17.1%  1562   31s
+H   33    45                    5400.0000000 4642.42424  14.0%   870   33s
+    62    81 4642.42424   11  362 5400.00000 4642.42424  14.0%  1107   35s
+H   82   110                    5200.0000000 4642.42424  10.7%   991   37s
+
+Cutting planes:
+  Gomory: 15
+  Lift-and-project: 14
+  Cover: 186
+  Implied bound: 728
+  Clique: 722
+  MIR: 180
+  StrongCG: 27
+  Zero half: 133
+  RLT: 304
+  Relax-and-lift: 78
+  BQP: 23
+  PSD: 3
+
+Explored 111 nodes (159382 simplex iterations) in 37.06 seconds (51.50 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 5200 5400 5600 ... 7000
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 5.200000000000e+03, best bound 4.800000000000e+03, gap 7.6923%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,608077885
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,608077885
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 5200.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 38.69s.
+--------------------------------------------------------------------------------
+=> Running scenario : i13.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 568.150239453
+Set parameter TimeLimit to value 568,150239453
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  568.150239453
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 50077 rows, 29643 columns and 375511 nonzeros
+Model fingerprint: 0x429f26b2
+Variable types: 0 continuous, 29643 integer (29503 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [5e+02, 5e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 15061 rows and 8780 columns
+Presolve time: 1.14s
+Presolved: 35016 rows, 20863 columns, 177277 nonzeros
+Variable types: 0 continuous, 20863 integer (20863 binary)
+Found heuristic solution: objective 51000.000000
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing primal log only...
+
+Concurrent spin time: 0.06s
+
+Solved with dual simplex
+
+Root relaxation: objective 1.400000e+03, 2763 iterations, 0.32 seconds (0.34 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1400.00000    0  715 51000.0000 1400.00000  97.3%     -    2s
+H    0     0                    30000.000000 1400.00000  95.3%     -    2s
+H    0     0                    28500.000000 1400.00000  95.1%     -    2s
+H    0     0                    28000.000000 1400.00000  95.0%     -    2s
+H    0     0                    26500.000000 1400.00000  94.7%     -    3s
+H    0     0                    25500.000000 1400.00000  94.5%     -    3s
+H    0     0                    25000.000000 1400.00000  94.4%     -    3s
+H    0     0                    24500.000000 1400.00000  94.3%     -    3s
+     0     0 1450.00000    0 1252 24500.0000 1450.00000  94.1%     -    4s
+H    0     0                    23500.000000 1450.00000  93.8%     -    4s
+H    0     0                    22500.000000 1450.00000  93.6%     -    4s
+     0     0 1450.00000    0 1091 22500.0000 1450.00000  93.6%     -    4s
+     0     0 1750.00000    0  997 22500.0000 1750.00000  92.2%     -    5s
+H    0     0                    22000.000000 1750.00000  92.0%     -    7s
+H    0     0                    21500.000000 1750.00000  91.9%     -    7s
+H    0     0                    21000.000000 1750.00000  91.7%     -    7s
+H    0     0                    20500.000000 1750.00000  91.5%     -    7s
+     0     0 1750.00000    0  787 20500.0000 1750.00000  91.5%     -    8s
+H    0     0                    18500.000000 1750.00000  90.5%     -    8s
+H    0     0                    18000.000000 1750.00000  90.3%     -    8s
+H    0     0                    17000.000000 1750.00000  89.7%     -    8s
+     0     0 1750.00000    0  891 17000.0000 1750.00000  89.7%     -    8s
+     0     0 1750.00000    0 1242 17000.0000 1750.00000  89.7%     -   10s
+H    0     0                    16500.000000 1750.00000  89.4%     -   10s
+     0     0 1750.00000    0 1156 16500.0000 1750.00000  89.4%     -   10s
+H    0     0                    16000.000000 1750.00000  89.1%     -   13s
+     0     0 1750.00000    0  797 16000.0000 1750.00000  89.1%     -   13s
+H    0     0                    15500.000000 1750.00000  88.7%     -   14s
+H    0     0                    15000.000000 1750.00000  88.3%     -   14s
+H    0     0                    14500.000000 1750.00000  87.9%     -   14s
+H    0     0                    14000.000000 1750.00000  87.5%     -   15s
+     0     0 1750.00000    0  946 14000.0000 1750.00000  87.5%     -   18s
+     0     0 1750.00000    0  801 14000.0000 1750.00000  87.5%     -   20s
+     0     2 1750.00000    0  741 14000.0000 1750.00000  87.5%     -   22s
+H   11    22                    13500.000000 1750.00000  87.0%  1701   24s
+    21    38 1750.00000    6  874 13500.0000 1750.00000  87.0%  1077   26s
+H   88   118                    13000.000000 1750.00000  86.5%   797   31s
+H  117   214                    12500.000000 1750.00000  86.0%   761   35s
+H  143   214                    12000.000000 1750.00000  85.4%   740   35s
+   213   313 1800.00000   36  651 12000.0000 1750.00000  85.4%   770   41s
+H  214   313                    11500.000000 1750.00000  84.8%   767   41s
+   317   411 1800.00000   52  679 11500.0000 1750.00000  84.8%   759   51s
+H  345   411                    11000.000000 1750.00000  84.1%   759   51s
+   421   502 1800.00000   68  675 11000.0000 1750.00000  84.1%   765   61s
+   525   505 1800.00000   83  709 11000.0000 1750.00000  84.1%   775   69s
+H  526   505                    10000.000000 1750.00000  82.5%   773   69s
+   529   620 1800.00000   84  757 10000.0000 1750.00000  82.5%   775   76s
+H  621   620                    9500.0000000 1750.00000  81.6%   804   76s
+   657   699 1800.00000  103  662 9500.00000 1750.00000  81.6%   816   84s
+   740   789 1800.00000  115  820 9500.00000 1750.00000  81.6%   838   92s
+   840   826 1800.00000  132  702 9500.00000 1750.00000  81.6%   849  101s
+   877   833 1800.00000  138  629 9500.00000 1750.00000  81.6%   858  112s
+   886   837 1800.00000  139  712 9500.00000 1750.00000  81.6%   861  121s
+   890   842 1800.00000  139  691 9500.00000 1750.00000  81.6%   862  131s
+   895   887 1800.00000  140  693 9500.00000 1750.00000  81.6%   865  140s
+   944   903 1800.00000  144  743 9500.00000 1750.00000  81.6%   866  152s
+   964   950 infeasible  144      9500.00000 1750.00000  81.6%   866  165s
+  1013   954 1800.00000  154  864 9500.00000 1750.00000  81.6%   889  175s
+  1017   980 1800.00000  155  747 9500.00000 1750.00000  81.6%   888  186s
+  1045  1074 1800.00000  158  810 9500.00000 1750.00000  81.6%   896  197s
+  1152  1174 1800.00000   43  718 9500.00000 1750.00000  81.6%   915  209s
+  1260  1266 1800.00000   66  618 9500.00000 1750.00000  81.6%   903  220s
+  1361  1308 1800.00000   79  608 9500.00000 1750.00000  81.6%   920  233s
+  1407  1332 1800.00000   80  602 9500.00000 1750.00000  81.6%   922  246s
+H 1426  1332                    9000.0000000 1750.00000  80.6%   920  246s
+  1435  1352 1800.00000   85  576 9000.00000 1750.00000  80.6%   924  259s
+  1461  1417 1800.00000   85  661 9000.00000 1750.00000  80.6%   922  273s
+  1540  1420 1800.00000  102  517 9000.00000 1750.00000  80.6%   913  287s
+  1545  1530 1800.00000  102  640 9000.00000 1750.00000  80.6%   913  301s
+  1684  1637 1800.00000  118  710 9000.00000 1750.00000  80.6%   905  318s
+  1795  1777 1834.37500  151  732 9000.00000 1750.00000  80.6%   921  339s
+  1962  1886 2003.61111  167  958 9000.00000 1750.00000  80.6%   924  364s
+  2085  1889 2080.83333  176  758 9000.00000 1750.00000  80.6%   937  388s
+  2090  1941 2007.50000  177  782 9000.00000 1750.00000  80.6%   938  413s
+  2154  2003 2080.83333  177  820 9000.00000 1750.00000  80.6%   945  437s
+  2228  2005 1800.00000   43  708 9000.00000 1750.00000  80.6%   953  442s
+  2230  2007 1750.00000   92 1078 9000.00000 1750.00000  80.6%   952  448s
+  2231  2007 1800.00000   47 1269 9000.00000 1750.00000  80.6%   952  452s
+  2232  2008 1750.00000   26 1327 9000.00000 1750.00000  80.6%   951  460s
+  2233  2009 1750.00000   98  607 9000.00000 1750.00000  80.6%   951  468s
+  2234  2009 1833.33333  127  855 9000.00000 1750.00000  80.6%   951  471s
+  2235  2010 1800.00000  160  513 9000.00000 1750.00000  80.6%   950  476s
+  2237  2011 1750.00000   64  525 9000.00000 1750.00000  80.6%   949  483s
+  2238  2012 1750.00000  129  525 9000.00000 1750.00000  80.6%   949  486s
+  2245  2022 1750.00000   14  576 9000.00000 1750.00000  80.6%   996  490s
+  2280  2045 1750.00000   19  740 9000.00000 1750.00000  80.6%   994  496s
+  2284  2048 1750.00000   20  745 9000.00000 1750.00000  80.6%   994  500s
+  2288  2068 1750.00000   20  691 9000.00000 1750.00000  80.6%   994  505s
+  2310  2186 1750.00000   21  661 9000.00000 1750.00000  80.6%   992  515s
+  2437  2236 1750.00000   41  671 9000.00000 1750.00000  80.6%   991  530s
+  2529  2266 1750.00000   42  639 9000.00000 1750.00000  80.6%  1002  554s
+  2590  2250 1750.00000   48  535 9000.00000 1750.00000  80.6%  1010  568s
+
+Cutting planes:
+  Gomory: 39
+  Lift-and-project: 48
+  Cover: 41
+  Implied bound: 656
+  Clique: 623
+  MIR: 27
+  StrongCG: 4
+  Flow cover: 105
+  GUB cover: 4
+  Zero half: 379
+  RLT: 287
+  Relax-and-lift: 212
+  BQP: 13
+
+Explored 2594 nodes (2674738 simplex iterations) in 568.16 seconds (1206.20 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 9000 9500 10000 ... 14000
+
+Time limit reached
+Best objective 9.000000000000e+03, best bound 2.000000000000e+03, gap 77.7778%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 568,150239453
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 568,150239453
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 9000.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 570.30s.
+--------------------------------------------------------------------------------
+=> Running scenario : i14.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 567.458572797
+Set parameter TimeLimit to value 567,458572797
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  567.458572797
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 85225 rows, 45816 columns and 484111 nonzeros
+Model fingerprint: 0x07e4ca1a
+Variable types: 0 continuous, 45816 integer (45522 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [4e+02, 4e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 23805 rows and 19576 columns
+Presolve time: 2.22s
+Presolved: 61420 rows, 26240 columns, 269195 nonzeros
+Variable types: 0 continuous, 26240 integer (26240 binary)
+Found heuristic solution: objective 20650.000000
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 61418 rows, 26239 columns, 269117 nonzeros
+
+Concurrent spin time: 0.01s
+
+Solved with dual simplex
+
+Root relaxation: objective 3.762500e+03, 3451 iterations, 0.44 seconds (0.35 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 3762.50000    0  158 20650.0000 3762.50000  81.8%     -    5s
+H    0     0                    6300.0000000 3762.50000  40.3%     -    5s
+H    0     0                    5950.0000000 3762.50000  36.8%     -    5s
+H    0     0                    4550.0000000 3762.50000  17.3%     -    5s
+H    0     0                    4200.0000000 3762.50000  10.4%     -    5s
+     0     0 3762.50000    0  299 4200.00000 3762.50000  10.4%     -    5s
+
+Cutting planes:
+  Gomory: 21
+  Cover: 14
+  Implied bound: 120
+  Clique: 2
+  MIR: 21
+  StrongCG: 2
+  Zero half: 34
+  RLT: 40
+  Relax-and-lift: 36
+  BQP: 1
+
+Explored 1 nodes (26418 simplex iterations) in 5.89 seconds (5.93 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 5: 4200 4550 5950 ... 20650
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 4.200000000000e+03, best bound 3.850000000000e+03, gap 8.3333%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,458572797
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,458572797
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 4200.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 8.83s.
+--------------------------------------------------------------------------------
+=> Running scenario : i15.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 567.259149426
+Set parameter TimeLimit to value 567,259149426
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  567.259149426
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 87542 rows, 46101 columns and 567138 nonzeros
+Model fingerprint: 0xae918333
+Variable types: 0 continuous, 46101 integer (45877 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [4e+02, 4e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 23380 rows and 15168 columns
+Presolve time: 2.54s
+Presolved: 64162 rows, 30933 columns, 301726 nonzeros
+Variable types: 0 continuous, 30933 integer (30933 binary)
+Found heuristic solution: objective 35700.000000
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 64162 rows, 30933 columns, 301726 nonzeros
+
+Concurrent spin time: 0.04s
+
+Solved with dual simplex
+
+Root relaxation: objective 2.100000e+03, 3012 iterations, 0.39 seconds (0.29 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2100.00000    0  497 35700.0000 2100.00000  94.1%     -    5s
+H    0     0                    15050.000000 2100.00000  86.0%     -    5s
+H    0     0                    14700.000000 2100.00000  85.7%     -    5s
+H    0     0                    11200.000000 2100.00000  81.2%     -    5s
+H    0     0                    9450.0000000 2100.00000  77.8%     -    5s
+H    0     0                    9100.0000000 2100.00000  76.9%     -    6s
+H    0     0                    8050.0000000 2100.00000  73.9%     -    6s
+H    0     0                    7700.0000000 2100.00000  72.7%     -    6s
+H    0     0                    7350.0000000 2100.00000  71.4%     -    6s
+H    0     0                    7000.0000000 2100.00000  70.0%     -    6s
+H    0     0                    6650.0000000 2100.00000  68.4%     -    6s
+     0     0 2100.00000    0  743 6650.00000 2100.00000  68.4%     -    6s
+     0     0 2100.00000    0  652 6650.00000 2100.00000  68.4%     -    7s
+     0     0 2100.00000    0  514 6650.00000 2100.00000  68.4%     -   10s
+H    0     0                    4550.0000000 2100.00000  53.8%     -   10s
+     0     0 2100.00000    0  711 4550.00000 2100.00000  53.8%     -   11s
+     0     0 2100.00000    0  650 4550.00000 2100.00000  53.8%     -   14s
+H    0     0                    4200.0000000 2100.00000  50.0%     -   14s
+     0     0 2100.00000    0  800 4200.00000 2100.00000  50.0%     -   15s
+     0     0 2100.00000    0  482 4200.00000 2100.00000  50.0%     -   19s
+H    0     0                    3850.0000000 2100.00000  45.5%     -   20s
+     0     0 2100.00000    0  584 3850.00000 2100.00000  45.5%     -   20s
+     0     0 2100.00000    0  582 3850.00000 2100.00000  45.5%     -   22s
+     0     2 2100.00000    0  486 3850.00000 2100.00000  45.5%     -   29s
+     1     4 2100.00000    1  503 3850.00000 2100.00000  45.5%  3510   30s
+H   71    76                    3500.0000000 2100.00000  40.0%   521   36s
+H   72    76                    3150.0000000 2100.00000  33.3%   519   36s
+   101   115 2100.00000   21  608 3150.00000 2100.00000  33.3%   479   44s
+H  102   115                    2800.0000000 2100.00000  25.0%   474   44s
+   114   350 2100.00000   22  595 2800.00000 2100.00000  25.0%   462   52s
+   356   393 2187.50000   82  374 2800.00000 2100.00000  25.0%   348   60s
+   401   472 infeasible  111      2800.00000 2100.00000  25.0%   334   69s
+H  488   384                    2450.0000000 2100.00000  14.3%   309   69s
+
+Cutting planes:
+  Gomory: 18
+  Lift-and-project: 32
+  Cover: 132
+  Implied bound: 766
+  Clique: 420
+  MIR: 110
+  StrongCG: 21
+  Zero half: 107
+  RLT: 249
+  Relax-and-lift: 151
+  BQP: 14
+  PSD: 2
+
+Explored 489 nodes (223207 simplex iterations) in 70.99 seconds (115.83 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 2450 2800 3150 ... 7350
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 2.450000000000e+03, best bound 2.450000000000e+03, gap 0.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,259149426
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,259149426
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 2450.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 74.15s.
+--------------------------------------------------------------------------------
+=> Running scenario : i16.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 567.89113378
+Set parameter TimeLimit to value 567,89113378
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  567.89113378
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 70131 rows, 38472 columns and 421294 nonzeros
+Model fingerprint: 0xaae3ebdb
+Variable types: 0 continuous, 38472 integer (38234 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [4e+02, 4e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 18903 rows and 15543 columns
+Presolve time: 1.77s
+Presolved: 51228 rows, 22929 columns, 226823 nonzeros
+Variable types: 0 continuous, 22929 integer (22929 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 51228 rows, 22929 columns, 226823 nonzeros
+
+Concurrent spin time: 0.01s
+
+Solved with dual simplex
+
+Root relaxation: objective 2.115000e+03, 4410 iterations, 0.53 seconds (0.48 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2115.00000    0 1027          - 2115.00000      -     -    4s
+     0     0 2565.00000    0 1550          - 2565.00000      -     -    9s
+     0     0 2565.00000    0 1651          - 2565.00000      -     -   11s
+     0     0 2565.00000    0 1897          - 2565.00000      -     -   22s
+     0     0 2565.00000    0 1774          - 2565.00000      -     -   29s
+     0     0 2565.00000    0  833          - 2565.00000      -     -   47s
+     0     0 2565.00000    0 1090          - 2565.00000      -     -   49s
+     0     0 2565.00000    0 1331          - 2565.00000      -     -   64s
+     0     0 2565.00000    0 1485          - 2565.00000      -     -   69s
+     0     0 2565.00000    0 1012          - 2565.00000      -     -   94s
+     0     2 2565.00000    0 1012          - 2565.00000      -     -  148s
+     3     8 2565.00000    2 1095          - 2565.00000      -  4300  151s
+    11    39 2565.00000    4 1164          - 2565.00000      -  3563  155s
+    64    93 2610.00000   14 1041          - 2565.00000      -  1612  161s
+    95   126 2700.00000   22  856          - 2565.00000      -  1477  165s
+   154   177 2700.00000   35  739          - 2565.00000      -  1419  172s
+   203   213 3150.00000   46  735          - 2565.00000      -  1481  178s
+   223   237 3150.00000   50  770          - 2565.00000      -  1530  181s
+   249   255 3150.00000   56  844          - 2565.00000      -  1559  185s
+   289   297 3150.00000   62  734          - 2565.00000      -  1623  192s
+   312   315 3150.00000   65  890          - 2565.00000      -  1636  196s
+   330   334 infeasible   69               - 2565.00000      -  1662  201s
+   357   353 3318.75000   73  862          - 2565.00000      -  1663  205s
+   399   395 2610.00000   15  919          - 2565.00000      -  1698  213s
+   430   429 2610.00000   24  905          - 2565.00000      -  1675  217s
+   468   441 2700.00000   34  924          - 2565.00000      -  1662  225s
+   503   482 2700.00000   44  801          - 2565.00000      -  1693  234s
+   527   496 2700.00000   51  676          - 2565.00000      -  1709  239s
+   544   518 2700.00000   55  861          - 2565.00000      -  1745  243s
+   566   525 2700.00000   63  873          - 2565.00000      -  1741  255s
+   602   563 2700.00000   67  907          - 2565.00000      -  1753  264s
+   624   578 2700.00000   71  831          - 2565.00000      -  1761  269s
+   641   596 2700.00000   75  836          - 2565.00000      -  1800  275s
+   661   605 2700.00000   77  907          - 2565.00000      -  1808  283s
+   676   629 2700.00000   78  832          - 2565.00000      -  1805  288s
+   702   650 2700.00000   81  867          - 2565.00000      -  1818  295s
+   725   671 infeasible   87               - 2565.00000      -  1841  301s
+   748   684 3000.00000   90  828          - 2565.00000      -  1899  315s
+   765   692 2700.00000   93  844          - 2565.00000      -  1909  320s
+   800   746 2587.50000    9  867          - 2565.00000      -  1894  326s
+   856   781 2700.00000   28  701          - 2565.00000      -  1857  333s
+   893   815 2700.00000   32  783          - 2565.00000      -  1878  341s
+   937   826 2700.00000   43  802          - 2565.00000      -  1885  352s
+   952   857 2700.00000   45  862          - 2565.00000      -  1901  360s
+   993   878 2700.00000   53  829          - 2565.00000      -  1893  375s
+  1014   922 2700.00000   58  919          - 2565.00000      -  1886  382s
+  1060   966 2700.00000   71 1022          - 2565.00000      -  1885  390s
+  1105  1003 2700.00000   78  665          - 2565.00000      -  1880  398s
+  1143  1004 2700.00000   30 1012          - 2565.00000      -  1907  400s
+  1145  1005 2700.00000   76 1273          - 2565.00000      -  1904  411s
+  1146  1006 2700.00000   77 2063          - 2565.00000      -  1902  421s
+  1147  1007 2587.50000   10 2128          - 2580.88235      -  1901  434s
+  1148  1007 2700.00000   75 1908          - 2609.99976      -  1899  440s
+  1149  1008 2609.99976   11 1858          - 2609.99976      -  1897  451s
+  1150  1009 2700.00000   45 1935          - 2700.00000      -  1896  467s
+  1151  1009 2700.00000   62 2010          - 2700.00000      -  1894  493s
+  1152  1010 2700.00000   81 2124          - 2700.00000      -  1893  507s
+  1153  1011 2700.00000    9 2081          - 2700.00000      -  1891  542s
+
+Cutting planes:
+  Gomory: 31
+  Lift-and-project: 40
+  Cover: 46
+  Implied bound: 691
+  Clique: 1105
+  MIR: 71
+  StrongCG: 2
+  Flow cover: 285
+  GUB cover: 8
+  Inf proof: 2
+  Zero half: 274
+  RLT: 645
+  Relax-and-lift: 21
+  BQP: 72
+
+Explored 1153 nodes (2456777 simplex iterations) in 567.92 seconds (1012.30 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 0
+
+Time limit reached
+Best objective -, best bound 2.700000000000e+03, gap -
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,89113378
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,89113378
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+--------------------------------------------------------------------------------
+=> No solution found.
+=> Running scenario : i17.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 540.046224544
+Set parameter TimeLimit to value 540,046224544
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  540.046224544
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 446629 rows, 199803 columns and 3172628 nonzeros
+Model fingerprint: 0x3a5d8f93
+Variable types: 0 continuous, 199803 integer (199299 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [5e+02, 5e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 75720 rows and 44222 columns (presolve time = 5s)...
+Presolve removed 75724 rows and 44224 columns (presolve time = 10s)...
+Presolve removed 76365 rows and 44500 columns (presolve time = 15s)...
+Presolve removed 76365 rows and 44500 columns
+Presolve time: 15.95s
+Presolved: 370264 rows, 155303 columns, 1772857 nonzeros
+Variable types: 0 continuous, 155303 integer (155303 binary)
+Found heuristic solution: objective 151500.00000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 3.65s
+
+Barrier performed 0 iterations in 26.70 seconds (14.00 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 4.08s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 1.206250e+04, 9343 iterations, 8.30 seconds (4.21 work units)
+Total elapsed time = 31.91s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 12062.5000    0 1169 151500.000 12062.5000  92.0%     -   46s
+H    0     0                    56500.000000 12062.5000  78.7%     -   46s
+H    0     0                    54500.000000 12062.5000  77.9%     -   48s
+H    0     0                    37000.000000 12062.5000  67.4%     -   48s
+H    0     0                    36500.000000 12062.5000  67.0%     -   48s
+     0     0 12062.5000    0 1868 36500.0000 12062.5000  67.0%     -   66s
+H    0     0                    35000.000000 12062.5000  65.5%     -   69s
+H    0     0                    33500.000000 12062.5000  64.0%     -   69s
+H    0     0                    32500.000000 12062.5000  62.9%     -   69s
+H    0     0                    31500.000000 12062.5000  61.7%     -   69s
+H    0     0                    31000.000000 12062.5000  61.1%     -   69s
+H    0     0                    30000.000000 12062.5000  59.8%     -   69s
+     0     0 12062.5000    0 1805 30000.0000 12062.5000  59.8%     -   74s
+     0     0 12062.5000    0 1390 30000.0000 12062.5000  59.8%     -  101s
+H    0     0                    29000.000000 12062.5000  58.4%     -  105s
+H    0     0                    28500.000000 12062.5000  57.7%     -  105s
+H    0     0                    27000.000000 12062.5000  55.3%     -  105s
+H    0     0                    26500.000000 12062.5000  54.5%     -  105s
+H    0     0                    25000.000000 12062.5000  51.7%     -  106s
+H    0     0                    24000.000000 12062.5000  49.7%     -  107s
+H    0     0                    23000.000000 12062.5000  47.6%     -  108s
+H    0     0                    22000.000000 12062.5000  45.2%     -  110s
+H    0     0                    21500.000000 12062.5000  43.9%     -  112s
+H    0     0                    19500.000000 12062.5000  38.1%     -  114s
+H    0     0                    18500.000000 12062.5000  34.8%     -  116s
+H    0     0                    18000.000000 12062.5000  33.0%     -  119s
+H    0     0                    17500.000000 12062.5000  31.1%     -  125s
+     0     0 12062.5000    0 1494 17500.0000 12062.5000  31.1%     -  129s
+     0     0 12062.5000    0 1244 17500.0000 12062.5000  31.1%     -  146s
+     0     0 12062.5000    0 1362 17500.0000 12062.5000  31.1%     -  151s
+     0     0 12062.5000    0 1371 17500.0000 12062.5000  31.1%     -  166s
+H    0     0                    17000.000000 12062.5000  29.0%     -  176s
+H    0     0                    16500.000000 12062.5000  26.9%     -  178s
+H    0     0                    16000.000000 12062.5000  24.6%     -  179s
+     0     0 12062.5000    0 1259 16000.0000 12062.5000  24.6%     -  185s
+     0     0 12062.5000    0 1341 16000.0000 12062.5000  24.6%     -  195s
+     0     2 12062.5000    0 1309 16000.0000 12062.5000  24.6%     -  226s
+     1     4 12062.5000    1 1307 16000.0000 12062.5000  24.6% 26135  230s
+     3     8 12062.5000    2 1405 16000.0000 12062.5000  24.6% 10443  241s
+     7    12 12062.5000    3 1458 16000.0000 12062.5000  24.6%  6289  248s
+    11    30 12062.5000    4 1342 16000.0000 12062.5000  24.6%  4945  263s
+    29    34 12062.5000    5 1268 16000.0000 12062.5000  24.6%  2111  289s
+    33    74 12062.5000    5 1384 16000.0000 12062.5000  24.6%  2037  336s
+H   36    74                    15500.000000 12062.5000  22.2%  1951  336s
+H   73   134                    14000.000000 12062.5000  13.8%  1314  396s
+   139   219 12062.5000   10 1466 14000.0000 12062.5000  13.8%   934  446s
+   231   369 12104.1667   46 1255 14000.0000 12062.5000  13.8%   828  540s
+H  237   369                    13500.000000 12062.5000  10.6%   809  540s
+H  332   369                    13000.000000 12062.5000  7.21%   752  540s
+
+Cutting planes:
+  Gomory: 35
+  Lift-and-project: 61
+  Cover: 281
+  Implied bound: 1449
+  Clique: 749
+  MIR: 148
+  StrongCG: 21
+  Zero half: 260
+  Mod-K: 1
+  RLT: 481
+  Relax-and-lift: 244
+  BQP: 16
+  PSD: 3
+
+Explored 385 nodes (489995 simplex iterations) in 540.31 seconds (905.49 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 13000 13500 14000 ... 18500
+
+Time limit reached
+Best objective 1.300000000000e+04, best bound 1.250000000000e+04, gap 3.8462%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 540,046224544
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 540,046224544
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 13000.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 572.33s.
+--------------------------------------------------------------------------------
+=> Running scenario : i18.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 558.332820619
+Set parameter TimeLimit to value 558,332820619
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  558.332820619
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 230091 rows, 103415 columns and 1338013 nonzeros
+Model fingerprint: 0x08b14c0d
+Variable types: 0 continuous, 103415 integer (103016 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [3e+02, 3e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 50592 rows and 32002 columns (presolve time = 5s)...
+Presolve removed 51300 rows and 32246 columns
+Presolve time: 7.29s
+Presolved: 178791 rows, 71169 columns, 735043 nonzeros
+Variable types: 0 continuous, 71169 integer (71169 binary)
+Found heuristic solution: objective 58800.000000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 1.37s
+
+Barrier performed 0 iterations in 10.79 seconds (7.18 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 1.13s (can be avoided by choosing Method=3)
+
+Solved with primal simplex
+
+Root relaxation: objective 3.270000e+04, 4697 iterations, 2.63 seconds (1.77 work units)
+Total elapsed time = 16.16s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 32700.0000    0  203 58800.0000 32700.0000  44.4%     -   19s
+H    0     0                    34800.000000 32700.0000  6.03%     -   19s
+
+Explored 1 nodes (50997 simplex iterations) in 19.97 seconds (19.35 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 2: 34800 58800 
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 3.480000000000e+04, best bound 3.270000000000e+04, gap 6.0345%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 558,332820619
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 558,332820619
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 34800.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 32.65s.
+--------------------------------------------------------------------------------
+=> Running scenario : i19.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 516.609519153
+Set parameter TimeLimit to value 516,609519153
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  516.609519153
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 648325 rows, 299735 columns and 4829258 nonzeros
+Model fingerprint: 0x6eeb265c
+Variable types: 0 continuous, 299735 integer (299035 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 96830 rows and 70831 columns (presolve time = 5s)...
+Presolve removed 109186 rows and 70929 columns (presolve time = 10s)...
+Presolve removed 109197 rows and 70929 columns (presolve time = 15s)...
+Presolve removed 109197 rows and 70929 columns (presolve time = 28s)...
+Presolve removed 111572 rows and 72105 columns (presolve time = 30s)...
+Presolve removed 111852 rows and 72105 columns
+Presolve time: 34.17s
+Presolved: 536473 rows, 227630 columns, 2579430 nonzeros
+Variable types: 0 continuous, 227630 integer (227630 binary)
+Found heuristic solution: objective 73000.000000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Ordering time: 5.26s
+
+Barrier performed 0 iterations in 51.51 seconds (25.56 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 5.58s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 2.600000e+03, 9329 iterations, 13.28 seconds (5.89 work units)
+Total elapsed time = 55.02s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2600.00000    0 1427 73000.0000 2600.00000  96.4%     -   83s
+H    0     0                    72500.000000 2600.00000  96.4%     -   86s
+H    0     0                    67500.000000 2600.00000  96.1%     -   86s
+H    0     0                    27000.000000 2600.00000  90.4%     -   86s
+H    0     0                    26500.000000 2600.00000  90.2%     -   86s
+H    0     0                    26000.000000 2600.00000  90.0%     -   86s
+     0     0 2600.00000    0 1831 26000.0000 2600.00000  90.0%     -  112s
+H    0     0                    25750.000000 2600.00000  89.9%     -  116s
+H    0     0                    24750.000000 2600.00000  89.5%     -  117s
+H    0     0                    15750.000000 2600.00000  83.5%     -  117s
+H    0     0                    15500.000000 2600.00000  83.2%     -  117s
+H    0     0                    15250.000000 2600.00000  83.0%     -  117s
+H    0     0                    14750.000000 2600.00000  82.4%     -  117s
+H    0     0                    14500.000000 2600.00000  82.1%     -  117s
+H    0     0                    14250.000000 2600.00000  81.8%     -  117s
+H    0     0                    14000.000000 2600.00000  81.4%     -  117s
+     0     0 2600.00000    0 1961 14000.0000 2600.00000  81.4%     -  125s
+     0     0 2600.00000    0 1578 14000.0000 2600.00000  81.4%     -  171s
+H    0     0                    7750.0000000 2600.00000  66.5%     -  176s
+H    0     0                    7500.0000000 2600.00000  65.3%     -  176s
+H    0     0                    7250.0000000 2600.00000  64.1%     -  177s
+     0     0 2600.00000    0 1886 7250.00000 2600.00000  64.1%     -  187s
+     0     0 2600.00000    0 1438 7250.00000 2600.00000  64.1%     -  235s
+H    0     0                    7000.0000000 2600.00000  62.9%     -  242s
+H    0     0                    6750.0000000 2600.00000  61.5%     -  243s
+     0     0 2600.00000    0 1591 6750.00000 2600.00000  61.5%     -  255s
+     0     0 2600.00000    0 1432 6750.00000 2600.00000  61.5%     -  285s
+H    0     0                    6500.0000000 2600.00000  60.0%     -  292s
+H    0     0                    5500.0000000 2600.00000  52.7%     -  293s
+H    0     0                    5250.0000000 2600.00000  50.5%     -  294s
+H    0     0                    5000.0000000 2600.00000  48.0%     -  295s
+H    0     0                    4500.0000000 2600.00000  42.2%     -  295s
+H    0     0                    4250.0000000 2600.00000  38.8%     -  297s
+     0     0 2600.00000    0 1530 4250.00000 2600.00000  38.8%     -  300s
+     0     0 2600.00000    0 1438 4250.00000 2600.00000  38.8%     -  319s
+     0     2 2600.00000    0 1391 4250.00000 2600.00000  38.8%     -  426s
+     1     4 2600.00000    1 1402 4250.00000 2600.00000  38.8% 22904  431s
+     3     8 2600.00000    2 1599 4250.00000 2600.00000  38.8%  9082  457s
+     7    12 2600.00000    3 1329 4250.00000 2600.00000  38.8%  5855  467s
+    11    16 2600.00000    4 1152 4250.00000 2600.00000  38.8%  4692  490s
+    15    61 2600.00000    5 1149 4250.00000 2600.00000  38.8%  3655  516s
+
+Cutting planes:
+  Gomory: 11
+  Lift-and-project: 16
+  Cover: 346
+  Implied bound: 2134
+  Clique: 1005
+  MIR: 114
+  StrongCG: 25
+  Zero half: 232
+  RLT: 487
+  Relax-and-lift: 381
+  BQP: 45
+
+Explored 60 nodes (396576 simplex iterations) in 516.83 seconds (638.97 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 4250 4500 5000 ... 7500
+
+Time limit reached
+Best objective 4.250000000000e+03, best bound 2.750000000000e+03, gap 35.2941%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 516,609519153
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 516,609519153
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 4250.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 573.30s.
+--------------------------------------------------------------------------------
+=> Running scenario : i20.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 567.28194634
+Set parameter TimeLimit to value 567,28194634
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  567.28194634
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 77226 rows, 43896 columns and 508140 nonzeros
+Model fingerprint: 0x7b91f680
+Variable types: 0 continuous, 43896 integer (43686 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [5e+02, 5e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 25776 rows and 18806 columns
+Presolve time: 2.38s
+Presolved: 51450 rows, 25090 columns, 234069 nonzeros
+Variable types: 0 continuous, 25090 integer (25090 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing primal log only...
+
+Root relaxation presolved: 51450 rows, 25090 columns, 234069 nonzeros
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root relaxation: objective 1.775000e+04, 4679 iterations, 0.41 seconds (0.38 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 17750.0000    0  844          - 17750.0000      -     -    5s
+     0     0 17916.6667    0 1223          - 17916.6667      -     -    9s
+     0     0 17916.6667    0 1362          - 17916.6667      -     -   11s
+     0     0 17916.6667    0 1474          - 17916.6667      -     -   18s
+     0     0 17916.6667    0 1538          - 17916.6667      -     -   22s
+     0     0 17916.6667    0  940          - 17916.6667      -     -   40s
+     0     0 17916.6667    0 1143          - 17916.6667      -     -   43s
+     0     0 17916.6667    0  792          - 17916.6667      -     -   54s
+     0     0 17916.6667    0 1194          - 17916.6667      -     -   57s
+     0     0 17916.6667    0 1157          - 17916.6667      -     -   70s
+     0     2 17916.6667    0  985          - 17916.6667      -     -  102s
+     3     8 18000.0000    2 1153          - 17916.6667      -  6150  106s
+    11    32 18000.0000    4  962          - 17916.6667      -  3751  112s
+    31    51 18000.0000    7  977          - 17916.6667      -  2637  115s
+    50    87 18000.0000    9  942          - 17916.6667      -  2190  121s
+    88    95 infeasible   14               - 17916.6667      -  1977  131s
+   100   139 18000.0000   20  839          - 17916.6667      -  1891  138s
+   148   178 18000.0000   27  866          - 17916.6667      -  1764  146s
+   195   224 18000.0000   34  938          - 17916.6667      -  1835  154s
+   241   266 18000.0000   40  891          - 17916.6667      -  1797  161s
+   284   295 18000.0000   48 1008          - 17916.6667      -  1849  169s
+   313   351 18003.3855   55  973          - 17916.6667      -  1810  178s
+   373   377 18376.9511   68  957          - 17916.6667      -  1754  188s
+   401   447 18770.0645   73  965          - 17916.6667      -  1713  195s
+   475   490 19020.1575   85 1041          - 17916.6667      -  1619  203s
+   524   543 19020.1575   90 1198          - 17916.6667      -  1585  210s
+   580   573 19300.3472   94 1138          - 17916.6667      -  1567  219s
+   613   625 19908.6695   99 1135          - 17916.6667      -  1609  226s
+   665   683 20020.1279  105 1115          - 17916.6667      -  1613  233s
+H  694   683                    32000.000000 17916.6667  44.0%  1598  233s
+H  727   724                    31000.000000 17916.6667  42.2%  1594  242s
+H  729   724                    30500.000000 17916.6667  41.3%  1601  242s
+H  733   724                    30000.000000 17916.6667  40.3%  1603  242s
+H  753   724                    29500.000000 17916.6667  39.3%  1624  242s
+H  754   724                    29000.000000 17916.6667  38.2%  1623  242s
+   772   754 20026.5278  111 1318 29000.0000 17916.6667  38.2%  1630  250s
+H  784   754                    28500.000000 17916.6667  37.1%  1619  250s
+H  807   754                    28000.000000 17916.6667  36.0%  1630  250s
+   808   797 20053.4937  116 1353 28000.0000 17916.6667  36.0%  1629  258s
+   857   807 20265.9651  133 1341 28000.0000 17916.6667  36.0%  1633  267s
+H  859   807                    27500.000000 17916.6667  34.8%  1633  267s
+   875   836 20294.3651  135 1055 27500.0000 17916.6667  34.8%  1635  274s
+   906   847 20351.0317  143 1086 27500.0000 17916.6667  34.8%  1650  281s
+H  923   869                    26500.000000 17916.6667  32.4%  1651  290s
+H  924   869                    25500.000000 17916.6667  29.7%  1654  290s
+   946   901 20374.1751  144 1207 25500.0000 17916.6667  29.7%  1662  299s
+   978   909 20402.3979  156 1183 25500.0000 17916.6667  29.7%  1663  308s
+   986   931 20402.3979  158 1150 25500.0000 17916.6667  29.7%  1671  318s
+  1010   972 20463.3059  168 1063 25500.0000 17916.6667  29.7%  1665  327s
+  1053  1019 20516.4035  179 1101 25500.0000 17916.6667  29.7%  1679  337s
+  1106  1034 21249.7594  186 1010 25500.0000 17916.6667  29.7%  1690  347s
+  1122  1065 infeasible  189      25500.0000 17916.6667  29.7%  1689  356s
+  1180  1093 17916.6667   19  817 25500.0000 17916.6667  29.7%  1689  366s
+  1210  1095 17916.6667   28  791 25500.0000 17916.6667  29.7%  1723  379s
+  1216  1099 17916.6667   28  820 25500.0000 17916.6667  29.7%  1721  390s
+  1220  1103 17916.6667   29  787 25500.0000 17916.6667  29.7%  1717  401s
+  1224  1106 18166.6667   29  843 25500.0000 17916.6667  29.7%  1716  418s
+  1228  1110 17916.6667   30  919 25500.0000 17916.6667  29.7%  1718  429s
+H 1231  1110                    25000.000000 17916.6667  28.3%  1714  429s
+  1232  1174 17916.6667   31  827 25000.0000 17916.6667  28.3%  1715  443s
+  1298  1194 18083.3333   39  885 25000.0000 17916.6667  28.3%  1672  458s
+  1326  1247 18166.6667   39  904 25000.0000 17916.6667  28.3%  1656  473s
+  1384  1248 18000.0000   31 1157 25000.0000 17916.6667  28.3%  1647  479s
+  1386  1249 18083.3333   30  909 25000.0000 17916.6667  28.3%  1644  489s
+  1387  1250 21355.3776  154 1378 25000.0000 17916.6667  28.3%  1643  495s
+  1388  1251 18741.2417   91 1561 25000.0000 17958.3333  28.2%  1642  503s
+  1389  1251 18418.6150   65 1629 25000.0000 17958.3333  28.2%  1641  519s
+  1390  1252 18083.3333   23 1758 25000.0000 18041.6667  27.8%  1640  558s
+
+Cutting planes:
+  Gomory: 45
+  Lift-and-project: 8
+  Cover: 45
+  Implied bound: 673
+  Clique: 655
+  MIR: 99
+  StrongCG: 5
+  Flow cover: 129
+  GUB cover: 1
+  Zero half: 170
+  RLT: 671
+  Relax-and-lift: 156
+  BQP: 77
+
+Explored 1390 nodes (2484512 simplex iterations) in 567.31 seconds (1084.43 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 25000 25500 26500 ... 30500
+
+Time limit reached
+Best objective 2.500000000000e+04, best bound 1.850000000000e+04, gap 26.0000%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 567,28194634
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 567,28194634
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 25000.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 570.44s.
+--------------------------------------------------------------------------------
+=> Running scenario : i21.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 551.352618036
+Set parameter TimeLimit to value 551,352618036
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  551.352618036
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 314847 rows, 151781 columns and 2162710 nonzeros
+Model fingerprint: 0x5f441c94
+Variable types: 0 continuous, 151781 integer (151340 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 53763 rows and 37086 columns (presolve time = 5s)...
+Presolve removed 53774 rows and 37648 columns (presolve time = 10s)...
+Presolve removed 55207 rows and 37648 columns
+Presolve time: 13.37s
+Presolved: 259640 rows, 114133 columns, 1247024 nonzeros
+Variable types: 0 continuous, 114133 integer (114133 binary)
+Found heuristic solution: objective 64250.000000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 2.66s
+
+Barrier performed 0 iterations in 19.81 seconds (11.53 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 1.94s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 4.393750e+03, 8698 iterations, 5.24 seconds (3.44 work units)
+Total elapsed time = 21.67s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 4393.75000    0 1360 64250.0000 4393.75000  93.2%     -   34s
+H    0     0                    28500.000000 4393.75000  84.6%     -   35s
+H    0     0                    28000.000000 4393.75000  84.3%     -   36s
+H    0     0                    27000.000000 4393.75000  83.7%     -   36s
+H    0     0                    21750.000000 4393.75000  79.8%     -   36s
+H    0     0                    21250.000000 4393.75000  79.3%     -   36s
+     0     0 4393.75000    0 2104 21250.0000 4393.75000  79.3%     -   48s
+H    0     0                    20750.000000 4393.75000  78.8%     -   49s
+H    0     0                    19750.000000 4393.75000  77.8%     -   49s
+H    0     0                    19250.000000 4393.75000  77.2%     -   49s
+H    0     0                    19000.000000 4393.75000  76.9%     -   49s
+H    0     0                    18250.000000 4393.75000  75.9%     -   49s
+H    0     0                    18000.000000 4393.75000  75.6%     -   50s
+H    0     0                    17750.000000 4393.75000  75.2%     -   50s
+     0     0 4393.75000    0 1826 17750.0000 4393.75000  75.2%     -   52s
+     0     0 4468.75000    0 1979 17750.0000 4468.75000  74.8%     -   79s
+H    0     0                    16500.000000 4468.75000  72.9%     -   82s
+H    0     0                    15750.000000 4468.75000  71.6%     -   82s
+H    0     0                    15500.000000 4468.75000  71.2%     -   82s
+H    0     0                    14500.000000 4468.75000  69.2%     -   82s
+H    0     0                    14000.000000 4468.75000  68.1%     -   82s
+H    0     0                    13250.000000 4468.75000  66.3%     -   83s
+H    0     0                    12750.000000 4468.75000  65.0%     -   83s
+H    0     0                    12500.000000 4468.75000  64.2%     -   83s
+H    0     0                    12000.000000 4468.75000  62.8%     -   83s
+H    0     0                    11750.000000 4468.75000  62.0%     -   84s
+H    0     0                    11500.000000 4468.75000  61.1%     -   84s
+H    0     0                    11250.000000 4468.75000  60.3%     -   87s
+     0     0 4468.75000    0 1973 11250.0000 4468.75000  60.3%     -   90s
+     0     0 4593.75000    0 2273 11250.0000 4593.75000  59.2%     -   99s
+H    0     0                    11000.000000 4593.75000  58.2%     -  100s
+     0     0 4593.75000    0 2151 11000.0000 4593.75000  58.2%     -  106s
+     0     0 4593.75000    0 2256 11000.0000 4593.75000  58.2%     -  125s
+H    0     0                    10750.000000 4593.75000  57.3%     -  128s
+H    0     0                    10500.000000 4593.75000  56.2%     -  134s
+H    0     0                    10250.000000 4593.75000  55.2%     -  141s
+H    0     0                    9500.0000000 4593.75000  51.6%     -  141s
+H    0     0                    9250.0000000 4593.75000  50.3%     -  164s
+H    0     0                    9000.0000000 4593.75000  49.0%     -  170s
+     0     0 4593.75000    0 2138 9000.00000 4593.75000  49.0%     -  175s
+     0     0 4593.75000    0 1511 9000.00000 4593.75000  49.0%     -  199s
+     0     2 4593.75000    0 1476 9000.00000 4593.75000  49.0%     -  226s
+     3     8 4593.75000    2 1685 9000.00000 4593.75000  49.0%  5549  235s
+     7    12 4593.75000    3 1388 9000.00000 4593.75000  49.0%  4879  240s
+H   11    16                    7750.0000000 4593.75000  40.7%  4137  253s
+    15    57 4593.75000    5 1386 7750.00000 4593.75000  40.7%  3176  270s
+    56   176 4593.75000   11 1402 7750.00000 4593.75000  40.7%  1549  300s
+   175   180 4593.75000   23 1380 7750.00000 4593.75000  40.7%  1606  346s
+H  179   237                    7250.0000000 4593.75000  36.6%  1608  414s
+   239   249 4593.75000   24 1178 7250.00000 4593.75000  36.6%  1582  512s
+H  241   249                    7000.0000000 4593.75000  34.4%  1582  512s
+   251   356 4593.75000   26 1354 7000.00000 4593.75000  34.4%  1607  551s
+
+Cutting planes:
+  Gomory: 22
+  Lift-and-project: 44
+  Cover: 299
+  Implied bound: 1915
+  Clique: 1391
+  MIR: 361
+  StrongCG: 46
+  GUB cover: 1
+  Zero half: 320
+  RLT: 455
+  Relax-and-lift: 234
+  BQP: 67
+  PSD: 1
+
+Explored 358 nodes (693364 simplex iterations) in 551.46 seconds (962.89 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 7000 7250 7750 ... 11000
+
+Time limit reached
+Best objective 7.000000000000e+03, best bound 4.750000000000e+03, gap 32.1429%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 551,352618036
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 551,352618036
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 7000.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 571.55s.
+--------------------------------------------------------------------------------
+=> Running scenario : i22.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 532.704311857
+Set parameter TimeLimit to value 532,704311857
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  532.704311857
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 474939 rows, 236858 columns and 3913612 nonzeros
+Model fingerprint: 0xf6215777
+Variable types: 0 continuous, 236858 integer (236298 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [4e+02, 4e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 63706 rows and 58202 columns (presolve time = 5s)...
+Presolve removed 68124 rows and 58606 columns (presolve time = 10s)...
+Presolve removed 68124 rows and 58606 columns (presolve time = 17s)...
+Presolve removed 69686 rows and 59250 columns (presolve time = 20s)...
+Presolve removed 69686 rows and 59250 columns
+Presolve time: 20.58s
+Presolved: 405253 rows, 177608 columns, 1971784 nonzeros
+Variable types: 0 continuous, 177608 integer (177608 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Ordering time: 7.44s
+
+Barrier performed 0 iterations in 35.45 seconds (21.94 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 2.09s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 2.349375e+04, 20077 iterations, 12.60 seconds (9.11 work units)
+Total elapsed time = 43.91s (DegenMoves)
+Total elapsed time = 48.63s (DegenMoves)
+Total elapsed time = 52.33s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 23493.7500    0 2045          - 23493.7500      -     -   81s
+     0     0 23493.7500    0 2749          - 23493.7500      -     -  110s
+     0     0 23493.7500    0 2740          - 23493.7500      -     -  122s
+     0     0 23493.7500    0 2733          - 23493.7500      -     -  203s
+     0     0 23550.0000    0 2877          - 23550.0000      -     -  212s
+     0     0 23550.0000    0 2682          - 23550.0000      -     -  215s
+     0     0 23550.0000    0 2776          - 23550.0000      -     -  260s
+     0     0 23550.0000    0 2861          - 23550.0000      -     -  269s
+     0     0 23550.0000    0 3550          - 23550.0000      -     -  326s
+     0     0 23550.0000    0 3341          - 23550.0000      -     -  360s
+     0     0 23550.0000    0 2605          - 23550.0000      -     -  471s
+
+Cutting planes:
+  Gomory: 12
+  Lift-and-project: 27
+  Cover: 352
+  Implied bound: 1313
+  Clique: 2920
+  MIR: 235
+  StrongCG: 11
+  Zero half: 334
+  RLT: 641
+  Relax-and-lift: 121
+  BQP: 36
+  PSD: 1
+
+Explored 1 nodes (348524 simplex iterations) in 532.71 seconds (534.15 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 0
+
+Time limit reached
+Best objective -, best bound 2.385000000000e+04, gap -
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 532,704311857
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 532,704311857
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> No solution found.
+--------------------------------------------------------------------------------
+=> Running scenario : i23.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 518.931835287
+Set parameter TimeLimit to value 518,931835287
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  518.931835287
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 662735 rows, 299778 columns and 4435526 nonzeros
+Model fingerprint: 0x75c09a67
+Variable types: 0 continuous, 299778 integer (299050 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 91611 rows and 72127 columns (presolve time = 5s)...
+Presolve removed 99503 rows and 72415 columns (presolve time = 10s)...
+Presolve removed 99509 rows and 72415 columns (presolve time = 15s)...
+Presolve removed 99509 rows and 72415 columns (presolve time = 20s)...
+Presolve removed 99509 rows and 72415 columns (presolve time = 27s)...
+Presolve removed 101174 rows and 73225 columns (presolve time = 30s)...
+Presolve removed 101538 rows and 73225 columns
+Presolve time: 32.35s
+Presolved: 561197 rows, 226553 columns, 2649015 nonzeros
+Variable types: 0 continuous, 226553 integer (226553 binary)
+Found heuristic solution: objective 53800.000000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Ordering time: 7.98s
+
+Barrier performed 0 iterations in 51.97 seconds (25.82 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 4.87s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 8.950000e+03, 18226 iterations, 15.79 seconds (9.87 work units)
+Total elapsed time = 57.58s (DegenMoves)
+Total elapsed time = 61.67s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 8950.00000    0 1805 53800.0000 8950.00000  83.4%     -   91s
+H    0     0                    53400.000000 8950.00000  83.2%     -   94s
+H    0     0                    49800.000000 8950.00000  82.0%     -   94s
+H    0     0                    29800.000000 8950.00000  70.0%     -   94s
+H    0     0                    28400.000000 8950.00000  68.5%     -   94s
+H    0     0                    27800.000000 8950.00000  67.8%     -   94s
+H    0     0                    26400.000000 8950.00000  66.1%     -   94s
+H    0     0                    25800.000000 8950.00000  65.3%     -   95s
+H    0     0                    25600.000000 8950.00000  65.0%     -   95s
+H    0     0                    25400.000000 8950.00000  64.8%     -   95s
+     0     0 8966.66667    0 2254 25400.0000 8966.66667  64.7%     -  117s
+H    0     0                    25000.000000 8966.66667  64.1%     -  121s
+H    0     0                    20400.000000 8966.66667  56.0%     -  121s
+H    0     0                    19200.000000 8966.66667  53.3%     -  121s
+H    0     0                    19000.000000 8966.66667  52.8%     -  121s
+H    0     0                    18200.000000 8966.66667  50.7%     -  121s
+H    0     0                    18000.000000 8966.66667  50.2%     -  121s
+H    0     0                    17400.000000 8966.66667  48.5%     -  121s
+H    0     0                    17200.000000 8966.66667  47.9%     -  122s
+H    0     0                    17000.000000 8966.66667  47.3%     -  122s
+H    0     0                    16800.000000 8966.66667  46.6%     -  122s
+H    0     0                    16600.000000 8966.66667  46.0%     -  122s
+H    0     0                    16400.000000 8966.66667  45.3%     -  123s
+     0     0 8966.66667    0 2181 16400.0000 8966.66667  45.3%     -  133s
+     0     0 9033.33333    0 2368 16400.0000 9033.33333  44.9%     -  162s
+H    0     0                    14600.000000 9033.33333  38.1%     -  166s
+H    0     0                    14000.000000 9033.33333  35.5%     -  166s
+H    0     0                    13600.000000 9033.33333  33.6%     -  167s
+H    0     0                    13400.000000 9033.33333  32.6%     -  167s
+H    0     0                    13200.000000 9033.33333  31.6%     -  168s
+     0     0 9033.33333    0 2093 13200.0000 9033.33333  31.6%     -  180s
+     0     0 9033.33333    0 2656 13200.0000 9033.33333  31.6%     -  216s
+H    0     0                    13000.000000 9033.33333  30.5%     -  221s
+H    0     0                    12800.000000 9033.33333  29.4%     -  221s
+H    0     0                    12600.000000 9033.33333  28.3%     -  221s
+H    0     0                    12400.000000 9033.33333  27.2%     -  222s
+     0     0 9033.33333    0 2334 12400.0000 9033.33333  27.2%     -  253s
+     0     0 9033.33333    0 1802 12400.0000 9033.33333  27.2%     -  383s
+H    0     0                    12200.000000 9033.33333  26.0%     -  388s
+H    0     0                    11800.000000 9033.33333  23.4%     -  388s
+H    0     0                    11600.000000 9033.33333  22.1%     -  389s
+H    0     0                    11400.000000 9033.33333  20.8%     -  390s
+     0     0 9033.33333    0 1871 11400.0000 9033.33333  20.8%     -  399s
+     0     0 9033.33333    0 1706 11400.0000 9033.33333  20.8%     -  419s
+H    0     0                    10600.000000 9033.33333  14.8%     -  473s
+H    0     0                    10400.000000 9033.33333  13.1%     -  474s
+H    0     2                    10200.000000 9033.33333  11.4%     -  518s
+     0     2 9033.33333    0 1706 10200.0000 9033.33333  11.4%     -  518s
+
+Cutting planes:
+  Gomory: 20
+  Lift-and-project: 27
+  Cover: 342
+  Implied bound: 1346
+  Clique: 1781
+  MIR: 175
+  StrongCG: 14
+  Zero half: 250
+  RLT: 650
+  Relax-and-lift: 186
+  BQP: 36
+
+Explored 1 nodes (264190 simplex iterations) in 518.08 seconds (560.78 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 10200 10400 10600 ... 12800
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 1.020000000000e+04, best bound 9.200000000000e+03, gap 9.8039%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 518,931835287
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 518,931835287
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 10200.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 572.13s.
+--------------------------------------------------------------------------------
+=> Running scenario : i24.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 507.169102006
+Set parameter TimeLimit to value 507,169102006
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  507.169102006
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 739113 rows, 357176 columns and 5170900 nonzeros
+Model fingerprint: 0xe2700682
+Variable types: 0 continuous, 357176 integer (356252 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [4e+02, 4e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 103275 rows and 105928 columns (presolve time = 5s)...
+Presolve removed 117054 rows and 106612 columns (presolve time = 10s)...
+Presolve removed 117402 rows and 106760 columns (presolve time = 15s)...
+Presolve removed 117424 rows and 106772 columns (presolve time = 20s)...
+Presolve removed 117424 rows and 106772 columns (presolve time = 28s)...
+Presolve removed 118455 rows and 107264 columns (presolve time = 30s)...
+Presolve removed 118608 rows and 107264 columns
+Presolve time: 32.66s
+Presolved: 620505 rows, 249912 columns, 2981705 nonzeros
+Variable types: 0 continuous, 249912 integer (249912 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Elapsed ordering time = 10s
+Ordering time: 12.54s
+
+Barrier performed 0 iterations in 58.52 seconds (30.97 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 4.93s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 2.788333e+04, 24229 iterations, 21.87 seconds (13.96 work units)
+Total elapsed time = 69.19s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 27883.3333    0 2773          - 27883.3333      -     -   76s
+     0     0 27941.6667    0 4662          - 27941.6667      -     -  131s
+     0     0 27941.6667    0 4532          - 27941.6667      -     -  208s
+     0     0 28000.0000    0 4838          - 28000.0000      -     -  312s
+     0     0 28000.0000    0 4337          - 28000.0000      -     -  396s
+     0     0          -    0               - 28000.0000      -     -  507s
+
+Cutting planes:
+  Gomory: 21
+  Lift-and-project: 45
+  Cover: 845
+  Implied bound: 3121
+  Clique: 4844
+  MIR: 518
+  StrongCG: 41
+  Zero half: 782
+  RLT: 927
+  Relax-and-lift: 387
+  BQP: 44
+
+Explored 1 nodes (127200 simplex iterations) in 507.18 seconds (367.25 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 0
+
+Time limit reached
+Best objective -, best bound 2.800000000000e+04, gap -
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 507,169102006
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 507,169102006
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> No solution found.
+--------------------------------------------------------------------------------
+=> Running scenario : i25.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 558.369512196
+Set parameter TimeLimit to value 558,369512196
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  558.369512196
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 234930 rows, 117183 columns and 1432256 nonzeros
+Model fingerprint: 0x8e467196
+Variable types: 0 continuous, 117183 integer (116777 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 43526 rows and 34968 columns (presolve time = 6s)...
+Presolve removed 44774 rows and 35508 columns
+Presolve time: 8.32s
+Presolved: 190156 rows, 81675 columns, 899036 nonzeros
+Variable types: 0 continuous, 81675 integer (81675 binary)
+Found heuristic solution: objective 31650.000000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 1.28s
+
+Barrier performed 0 iterations in 11.88 seconds (7.50 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.74s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 2.295000e+03, 5433 iterations, 2.76 seconds (1.87 work units)
+Total elapsed time = 20.12s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2295.00000    0  705 31650.0000 2295.00000  92.7%     -   23s
+H    0     0                    30300.000000 2295.00000  92.4%     -   24s
+H    0     0                    28050.000000 2295.00000  91.8%     -   24s
+H    0     0                    7650.0000000 2295.00000  70.0%     -   24s
+H    0     0                    7500.0000000 2295.00000  69.4%     -   24s
+H    0     0                    7350.0000000 2295.00000  68.8%     -   24s
+     0     0 2295.00000    0 1051 7350.00000 2295.00000  68.8%     -   30s
+H    0     0                    7200.0000000 2295.00000  68.1%     -   31s
+H    0     0                    4950.0000000 2295.00000  53.6%     -   31s
+H    0     0                    4800.0000000 2295.00000  52.2%     -   31s
+H    0     0                    4650.0000000 2295.00000  50.6%     -   31s
+     0     0 2295.00000    0  981 4650.00000 2295.00000  50.6%     -   32s
+     0     0 2295.00000    0  890 4650.00000 2295.00000  50.6%     -   40s
+H    0     0                    4200.0000000 2295.00000  45.4%     -   41s
+     0     0 2295.00000    0  870 4200.00000 2295.00000  45.4%     -   42s
+     0     0 2295.00000    0  912 4200.00000 2295.00000  45.4%     -   50s
+H    0     0                    4050.0000000 2295.00000  43.3%     -   51s
+     0     0 2295.00000    0 1105 4050.00000 2295.00000  43.3%     -   52s
+     0     0 2295.00000    0  436 4050.00000 2295.00000  43.3%     -   69s
+H    0     0                    3600.0000000 2295.00000  36.2%     -   71s
+     0     0 2295.00000    0  430 3600.00000 2295.00000  36.2%     -   71s
+     0     0 2295.00000    0  425 3600.00000 2295.00000  36.2%     -   78s
+H    0     0                    3300.0000000 2295.00000  30.5%     -   83s
+H    0     0                    3000.0000000 2295.00000  23.5%     -   83s
+H    0     0                    2700.0000000 2295.00000  15.0%     -   84s
+H    0     0                    2550.0000000 2295.00000  10.0%     -   93s
+
+Cutting planes:
+  Gomory: 8
+  Lift-and-project: 15
+  Cover: 122
+  Implied bound: 1000
+  Clique: 817
+  MIR: 32
+  StrongCG: 4
+  Zero half: 80
+  RLT: 231
+  Relax-and-lift: 222
+  BQP: 39
+
+Explored 1 nodes (198345 simplex iterations) in 93.30 seconds (112.59 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 2550 2700 3000 ... 4950
+
+Optimal solution found (tolerance 1.00e-01)
+Best objective 2.550000000000e+03, best bound 2.400000000000e+03, gap 5.8824%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 558,369512196
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 558,369512196
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 2550.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 105.96s.
+--------------------------------------------------------------------------------
+=> Running scenario : i26.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 500.246457588
+Set parameter TimeLimit to value 500,246457588
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  500.246457588
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 769034 rows, 357301 columns and 5597181 nonzeros
+Model fingerprint: 0xf4fb6cbd
+Variable types: 0 continuous, 357301 integer (356573 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [5e+02, 5e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 123274 rows and 91173 columns (presolve time = 5s)...
+Presolve removed 136695 rows and 92336 columns (presolve time = 10s)...
+Presolve removed 136695 rows and 92336 columns (presolve time = 15s)...
+Presolve removed 136757 rows and 92370 columns (presolve time = 30s)...
+Presolve removed 139355 rows and 93430 columns (presolve time = 35s)...
+Presolve removed 139355 rows and 93430 columns
+Presolve time: 36.33s
+Presolved: 629679 rows, 263871 columns, 2870820 nonzeros
+Variable types: 0 continuous, 263871 integer (263871 binary)
+Found heuristic solution: objective 140500.00000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Ordering time: 8.37s
+
+Barrier performed 0 iterations in 57.71 seconds (30.34 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 5.74s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 3.010417e+04, 18741 iterations, 17.13 seconds (9.91 work units)
+Total elapsed time = 63.57s (DegenMoves)
+Total elapsed time = 69.23s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 30104.1667    0 2167 140500.000 30104.1667  78.6%     -  108s
+H    0     0                    138500.00000 30104.1667  78.3%     -  111s
+H    0     0                    134000.00000 30104.1667  77.5%     -  111s
+H    0     0                    102500.00000 30104.1667  70.6%     -  111s
+H    0     0                    100500.00000 30104.1667  70.0%     -  111s
+H    0     0                    99000.000000 30104.1667  69.6%     -  111s
+H    0     0                    98500.000000 30104.1667  69.4%     -  111s
+     0     0 30458.3333    0 2902 98500.0000 30458.3333  69.1%     -  152s
+H    0     0                    96000.000000 30458.3333  68.3%     -  156s
+H    0     0                    80500.000000 30458.3333  62.2%     -  156s
+H    0     0                    78500.000000 30458.3333  61.2%     -  156s
+H    0     0                    76000.000000 30458.3333  59.9%     -  156s
+H    0     0                    73500.000000 30458.3333  58.6%     -  156s
+H    0     0                    72000.000000 30458.3333  57.7%     -  157s
+H    0     0                    71500.000000 30458.3333  57.4%     -  157s
+H    0     0                    71000.000000 30458.3333  57.1%     -  157s
+     0     0 30458.3333    0 2609 71000.0000 30458.3333  57.1%     -  160s
+     0     0 30458.3333    0 3040 71000.0000 30458.3333  57.1%     -  208s
+H    0     0                    57000.000000 30458.3333  46.6%     -  213s
+H    0     0                    56500.000000 30458.3333  46.1%     -  213s
+H    0     0                    56000.000000 30458.3333  45.6%     -  214s
+     0     0 30458.3333    0 2846 56000.0000 30458.3333  45.6%     -  236s
+     0     0 30458.3333    0 2636 56000.0000 30458.3333  45.6%     -  410s
+H    0     0                    55500.000000 30458.3333  45.1%     -  414s
+H    0     0                    55000.000000 30458.3333  44.6%     -  415s
+H    0     0                    54500.000000 30458.3333  44.1%     -  415s
+H    0     0                    54000.000000 30458.3333  43.6%     -  415s
+     0     0 30458.3333    0 2699 54000.0000 30458.3333  43.6%     -  424s
+     0     0 30458.3333    0 2048 54000.0000 30458.3333  43.6%     -  486s
+H    0     0                    48000.000000 30458.3333  36.5%     -  490s
+     0     0 30458.3333    0 2234 48000.0000 30458.3333  36.5%     -  496s
+
+Cutting planes:
+  Gomory: 10
+  Lift-and-project: 49
+  Cover: 470
+  Implied bound: 3287
+  Clique: 3282
+  MIR: 236
+  StrongCG: 12
+  Zero half: 556
+  RLT: 768
+  Relax-and-lift: 312
+  BQP: 44
+  PSD: 1
+
+Explored 1 nodes (267636 simplex iterations) in 500.46 seconds (441.62 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 48000 54000 54500 ... 71500
+
+Time limit reached
+Best objective 4.800000000000e+04, best bound 3.050000000000e+04, gap 36.4583%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 500,246457588
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 500,246457588
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 48000.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 573.96s.
+--------------------------------------------------------------------------------
+=> Running scenario : i27.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 489.198155056
+Set parameter TimeLimit to value 489,198155056
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  489.198155056
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 888881 rows, 402934 columns and 6440682 nonzeros
+Model fingerprint: 0x30a394f1
+Variable types: 0 continuous, 402934 integer (402206 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [5e+02, 5e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 163852 rows and 103795 columns (presolve time = 5s)...
+Presolve removed 172522 rows and 105712 columns (presolve time = 10s)...
+Presolve removed 185476 rows and 105949 columns (presolve time = 15s)...
+Presolve removed 185476 rows and 105949 columns (presolve time = 20s)...
+Presolve removed 185480 rows and 105957 columns (presolve time = 25s)...
+Presolve removed 185480 rows and 105957 columns (presolve time = 45s)...
+Presolve removed 185480 rows and 107833 columns (presolve time = 46s)...
+Presolve removed 190070 rows and 107833 columns (presolve time = 50s)...
+Presolve removed 190070 rows and 107833 columns
+Presolve time: 54.83s
+Presolved: 698811 rows, 295101 columns, 3191777 nonzeros
+Variable types: 0 continuous, 295101 integer (295101 binary)
+Found heuristic solution: objective 185000.00000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Elapsed ordering time = 5s
+Elapsed ordering time = 10s
+Ordering time: 11.60s
+
+Barrier performed 0 iterations in 81.09 seconds (39.59 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 5.49s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 1.730833e+04, 19497 iterations, 21.93 seconds (12.79 work units)
+Total elapsed time = 86.49s (DegenMoves)
+Total elapsed time = 92.34s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 17308.3333    0 2699 185000.000 17308.3333  90.6%     -  148s
+H    0     0                    184000.00000 17308.3333  90.6%     -  151s
+H    0     0                    177000.00000 17308.3333  90.2%     -  151s
+H    0     0                    110000.00000 17308.3333  84.3%     -  151s
+H    0     0                    107000.00000 17308.3333  83.8%     -  152s
+H    0     0                    105500.00000 17308.3333  83.6%     -  152s
+     0     0 17475.0000    0 3253 105500.000 17475.0000  83.4%     -  201s
+H    0     0                    105000.00000 17475.0000  83.4%     -  206s
+H    0     0                    98000.000000 17475.0000  82.2%     -  206s
+H    0     0                    75500.000000 17475.0000  76.9%     -  206s
+H    0     0                    75000.000000 17475.0000  76.7%     -  206s
+H    0     0                    74500.000000 17475.0000  76.5%     -  206s
+H    0     0                    73500.000000 17475.0000  76.2%     -  206s
+H    0     0                    72000.000000 17475.0000  75.7%     -  207s
+     0     0 17475.0000    0 3121 72000.0000 17475.0000  75.7%     -  227s
+     0     0 17475.0000    0 3567 72000.0000 17475.0000  75.7%     -  337s
+H    0     0                    61000.000000 17475.0000  71.4%     -  345s
+H    0     0                    58500.000000 17475.0000  70.1%     -  345s
+H    0     0                    56000.000000 17475.0000  68.8%     -  345s
+H    0     0                    55500.000000 17475.0000  68.5%     -  345s
+H    0     0                    55000.000000 17475.0000  68.2%     -  346s
+H    0     0                    53000.000000 17475.0000  67.0%     -  347s
+H    0     0                    52500.000000 17475.0000  66.7%     -  347s
+H    0     0                    49000.000000 17475.0000  64.3%     -  349s
+H    0     0                    47000.000000 17475.0000  62.8%     -  349s
+H    0     0                    45500.000000 17475.0000  61.6%     -  352s
+H    0     0                    44500.000000 17475.0000  60.7%     -  352s
+H    0     0                    43500.000000 17475.0000  59.8%     -  355s
+H    0     0                    43000.000000 17475.0000  59.4%     -  358s
+H    0     0                    41500.000000 17475.0000  57.9%     -  358s
+H    0     0                    41000.000000 17475.0000  57.4%     -  360s
+H    0     0                    40500.000000 17475.0000  56.9%     -  362s
+     0     0 17475.0000    0 3297 40500.0000 17475.0000  56.9%     -  410s
+     0     0          -    0      40500.0000 17475.0000  56.9%     -  489s
+
+Cutting planes:
+  Gomory: 35
+  Lift-and-project: 78
+  Cover: 566
+  Implied bound: 2963
+  Clique: 1970
+  MIR: 314
+  StrongCG: 40
+  Zero half: 678
+  RLT: 1039
+  Relax-and-lift: 500
+  BQP: 52
+
+Explored 1 nodes (122534 simplex iterations) in 489.26 seconds (381.28 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 40500 41000 41500 ... 52500
+
+Time limit reached
+Best objective 4.050000000000e+04, best bound 1.750000000000e+04, gap 56.7901%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 489,198155056
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 489,198155056
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 40500.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 574.32s.
+--------------------------------------------------------------------------------
+=> Running scenario : i28.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 542.913142939
+Set parameter TimeLimit to value 542,913142939
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  542.913142939
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 399575 rows, 192209 columns and 2621009 nonzeros
+Model fingerprint: 0x91d387b1
+Variable types: 0 continuous, 192209 integer (191663 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [4e+02, 4e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 72216 rows and 56683 columns (presolve time = 5s)...
+Presolve removed 73693 rows and 57370 columns (presolve time = 10s)...
+Presolve removed 73693 rows and 57370 columns (presolve time = 15s)...
+Presolve removed 75469 rows and 58055 columns
+Presolve time: 18.19s
+Presolved: 324106 rows, 134154 columns, 1470298 nonzeros
+Variable types: 0 continuous, 134154 integer (134154 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 4.67s
+
+Barrier performed 0 iterations in 27.74 seconds (16.55 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 1.07s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 6.300000e+04, 16948 iterations, 7.75 seconds (5.93 work units)
+Total elapsed time = 30.25s (DegenMoves)
+Total elapsed time = 39.73s (DegenMoves)
+Total elapsed time = 41.52s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 63000.0000    0 1063          - 63000.0000      -     -   54s
+     0     0 63450.0000    0 1728          - 63450.0000      -     -   81s
+     0     0 63450.0000    0 1614          - 63450.0000      -     -   89s
+     0     0 63450.0000    0 2139          - 63450.0000      -     -  104s
+     0     0 63450.0000    0 1910          - 63450.0000      -     -  117s
+     0     0 63450.0000    0 1002          - 63450.0000      -     -  158s
+     0     0 63450.0000    0 1341          - 63450.0000      -     -  166s
+     0     0 63450.0000    0  901          - 63450.0000      -     -  197s
+     0     0 63450.0000    0 1157          - 63450.0000      -     -  202s
+     0     0 63450.0000    0  745          - 63450.0000      -     -  218s
+     0     2 63450.0000    0  449          - 63450.0000      -     -  328s
+     3     8 63450.0000    2  785          - 63450.0000      -  5780  332s
+    11    44 63506.2500    4  660          - 63450.0000      -  3261  336s
+    69   118 63506.2500   18  627          - 63450.0000      -   866  340s
+   199   290 63525.0000   44  570          - 63450.0000      -   475  350s
+   309   403 63525.0000   62  615          - 63450.0000      -   374  356s
+   429   518 63675.0000   82  462          - 63450.0000      -   324  362s
+   574   618 64200.0000  104  542          - 63450.0000      -   272  367s
+   700   722 64275.0000  124  548          - 63450.0000      -   250  373s
+   825   860 infeasible  148               - 63450.0000      -   239  379s
+   979  1069 63450.0000   61  635          - 63450.0000      -   227  388s
+  1213  1070 63675.0000   54  745          - 63450.0000      -   212  398s
+  1215  1071 63900.0000  136 1017          - 63450.0000      -   211  453s
+  1216  1072 63506.2500   60 1539          - 63450.0000      -   211  486s
+  1217  1073 64050.0000  138 1312          - 63450.0000      -   211  494s
+  1218  1073 63450.0000   46 1180          - 63450.0000      -   211  505s
+  1219  1074 63525.0000   36 1576          - 63450.0000      -   211  526s
+  1220  1075 63506.2500   19 1339          - 63450.0000      -   210  539s
+
+Cutting planes:
+  Gomory: 37
+  Lift-and-project: 19
+  Cover: 68
+  Implied bound: 977
+  Clique: 587
+  MIR: 106
+  StrongCG: 10
+  Flow cover: 86
+  GUB cover: 5
+  Zero half: 323
+  RLT: 514
+  Relax-and-lift: 548
+  BQP: 80
+
+Explored 1220 nodes (644637 simplex iterations) in 543.12 seconds (535.67 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 0
+
+Time limit reached
+Best objective -, best bound 6.345000000000e+04, gap -
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 542,913142939
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 542,913142939
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+--------------------------------------------------------------------------------
+=> No solution found.
+=> Running scenario : i29.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 555.272114417
+Set parameter TimeLimit to value 555,272114417
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  555.272114417
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 268185 rows, 139233 columns and 1799220 nonzeros
+Model fingerprint: 0xedb2c37e
+Variable types: 0 continuous, 139233 integer (138841 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [3e+02, 3e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 73598 rows and 45971 columns (presolve time = 8s)...
+Presolve removed 76447 rows and 47169 columns (presolve time = 10s)...
+Presolve removed 76447 rows and 47169 columns
+Presolve time: 10.64s
+Presolved: 191738 rows, 92064 columns, 948068 nonzeros
+Variable types: 0 continuous, 92064 integer (92064 binary)
+Found heuristic solution: objective 62400.000000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 1.60s
+
+Barrier performed 0 iterations in 14.65 seconds (9.92 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.55s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 3.532500e+03, 6909 iterations, 3.17 seconds (2.28 work units)
+Total elapsed time = 15.86s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 3532.50000    0 1489 62400.0000 3532.50000  94.3%     -   25s
+H    0     0                    27900.000000 3532.50000  87.3%     -   25s
+H    0     0                    23100.000000 3532.50000  84.7%     -   26s
+     0     0 3532.50000    0 2224 23100.0000 3532.50000  84.7%     -   37s
+H    0     0                    22200.000000 3532.50000  84.1%     -   38s
+H    0     0                    20700.000000 3532.50000  82.9%     -   38s
+H    0     0                    20100.000000 3532.50000  82.4%     -   38s
+H    0     0                    19800.000000 3532.50000  82.2%     -   38s
+     0     0 3532.50000    0 2137 19800.0000 3532.50000  82.2%     -   42s
+     0     0 3532.50000    0 1755 19800.0000 3532.50000  82.2%     -   67s
+H    0     0                    17700.000000 3532.50000  80.0%     -   68s
+H    0     0                    17400.000000 3532.50000  79.7%     -   68s
+H    0     0                    16800.000000 3532.50000  79.0%     -   68s
+H    0     0                    16500.000000 3532.50000  78.6%     -   68s
+H    0     0                    16200.000000 3532.50000  78.2%     -   69s
+H    0     0                    15900.000000 3532.50000  77.8%     -   69s
+     0     0 3532.50000    0 2059 15900.0000 3532.50000  77.8%     -   72s
+     0     0 3532.50000    0 1601 15900.0000 3532.50000  77.8%     -   91s
+H    0     0                    15000.000000 3532.50000  76.4%     -   92s
+H    0     0                    14700.000000 3532.50000  76.0%     -   92s
+H    0     0                    14400.000000 3532.50000  75.5%     -   92s
+     0     0 3532.50000    0 1917 14400.0000 3532.50000  75.5%     -   94s
+     0     0 3532.50000    0 1623 14400.0000 3532.50000  75.5%     -  110s
+H    0     0                    14100.000000 3532.50000  74.9%     -  112s
+H    0     0                    13800.000000 3532.50000  74.4%     -  112s
+H    0     0                    13500.000000 3532.50000  73.8%     -  112s
+H    0     0                    12900.000000 3532.50000  72.6%     -  114s
+H    0     0                    12000.000000 3532.50000  70.6%     -  116s
+H    0     0                    11400.000000 3532.50000  69.0%     -  117s
+H    0     0                    11100.000000 3532.50000  68.2%     -  121s
+     0     0 3532.50000    0 1744 11100.0000 3532.50000  68.2%     -  127s
+     0     0 3532.50000    0 1867 11100.0000 3532.50000  68.2%     -  139s
+H    0     2                    9900.0000000 3532.50000  64.3%     -  172s
+     0     2 3532.50000    0 1866 9900.00000 3532.50000  64.3%     -  172s
+H    2     4                    9600.0000000 3532.50000  63.2%  3650  173s
+     3     8 3532.50000    2 1787 9600.00000 3532.50000  63.2%  4082  179s
+     7    12 3532.50000    3 1813 9600.00000 3532.50000  63.2%  4238  183s
+H   10    12                    9300.0000000 3532.50000  62.0%  3420  183s
+    11    16 3532.50000    4 1608 9300.00000 3532.50000  62.0%  3537  192s
+    15    67 3532.50000    5 1567 9300.00000 3532.50000  62.0%  2676  206s
+H   50    67                    9000.0000000 3532.50000  60.7%  1574  206s
+    66   129 3532.50000   14 1376 9000.00000 3532.50000  60.7%  1653  230s
+H  128   298                    8700.0000000 3532.50000  59.4%  1379  273s
+H  169   298                    8400.0000000 3532.50000  57.9%  1430  273s
+   301   518 3532.50000   48 1166 8400.00000 3532.50000  57.9%  1549  333s
+H  528   621                    8100.0000000 3532.50000  56.4%  1602  389s
+H  542   621                    7500.0000000 3532.50000  52.9%  1606  389s
+   636   712 3540.00000   97 1066 7500.00000 3532.50000  52.9%  1580  454s
+H  637   712                    6900.0000000 3532.50000  48.8%  1578  454s
+   735   900 infeasible  113      6900.00000 3532.50000  48.8%  1585  532s
+   939   904 3540.00000  145 1260 6900.00000 3532.50000  48.8%  1684  555s
+
+Cutting planes:
+  Gomory: 24
+  Lift-and-project: 34
+  Cover: 297
+  Implied bound: 2973
+  Clique: 1362
+  MIR: 203
+  StrongCG: 34
+  Zero half: 319
+  RLT: 530
+  Relax-and-lift: 578
+  BQP: 22
+  PSD: 2
+
+Explored 943 nodes (1759327 simplex iterations) in 555.35 seconds (1043.32 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 10: 6900 7500 8100 ... 11100
+
+Time limit reached
+Best objective 6.900000000000e+03, best bound 3.600000000000e+03, gap 47.8261%
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 555,272114417
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 555,272114417
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> Objective value: 6900.0
+---
+=> GT rule application duration: 0s.
+=> Time limit of 10 minutes respected.
+=> Wall clock run time: 571.32s.
+--------------------------------------------------------------------------------
+=> Running scenario : i30.json
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 570
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 570
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+Set parameter MIPFocus to value 1
+Set parameter MIPGap to value 0,1
+=> Debug output: Overwrite specified Gurobi time limit with: 539.8359865
+Set parameter TimeLimit to value 539,8359865
+Gurobi Optimizer version 12.0.1 build v12.0.1rc0 (linux64 - "Pop!_OS 22.04 LTS")
+
+CPU model: AMD Ryzen 7 5700X 8-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  539.8359865
+MIPGap  0.1
+MIPFocus  1
+Presolve  1
+Threads  4
+
+Optimize a model with 431864 rows, 212425 columns and 3076058 nonzeros
+Model fingerprint: 0xe4344744
+Variable types: 0 continuous, 212425 integer (211900 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+03]
+  Objective range  [2e+02, 2e+02]
+  Bounds range     [1e+00, 1e+04]
+  RHS range        [1e+00, 7e+02]
+Presolve removed 87690 rows and 62320 columns (presolve time = 5s)...
+Presolve removed 87701 rows and 62340 columns (presolve time = 10s)...
+Presolve removed 87701 rows and 62340 columns (presolve time = 18s)...
+Presolve removed 92542 rows and 64562 columns (presolve time = 20s)...
+Presolve removed 93211 rows and 64562 columns
+Presolve time: 22.89s
+Presolved: 338653 rows, 147863 columns, 1618493 nonzeros
+Variable types: 0 continuous, 147863 integer (147863 binary)
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 4.52s
+
+Barrier performed 0 iterations in 33.11 seconds (19.36 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 2.29s (can be avoided by choosing Method=3)
+
+Solved with dual simplex
+
+Root relaxation: objective 1.110000e+04, 13239 iterations, 8.41 seconds (5.81 work units)
+Total elapsed time = 36.60s (DegenMoves)
+Total elapsed time = 41.41s (DegenMoves)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 11100.0000    0 2034          - 11100.0000      -     -   65s
+     0     0 11200.0000    0 2676          - 11200.0000      -     -   94s
+     0     0 11200.0000    0 2804          - 11200.0000      -     -  106s
+     0     0 11200.0000    0 3087          - 11200.0000      -     -  157s
+     0     0 11200.0000    0 3078          - 11200.0000      -     -  189s
+     0     0 11200.0000    0 2499          - 11200.0000      -     -  290s
+     0     0 11200.0000    0 2850          - 11200.0000      -     -  302s
+     0     0 11200.0000    0 2494          - 11200.0000      -     -  361s
+     0     0 11200.0000    0 2864          - 11200.0000      -     -  371s
+     0     0 11200.0000    0 2431          - 11200.0000      -     -  438s
+
+Cutting planes:
+  Gomory: 6
+  Lift-and-project: 33
+  Cover: 255
+  Implied bound: 1595
+  Clique: 3010
+  MIR: 197
+  StrongCG: 9
+  Zero half: 305
+  RLT: 626
+  Relax-and-lift: 279
+  BQP: 37
+
+Explored 1 nodes (279520 simplex iterations) in 540.01 seconds (539.01 work units)
+Thread count was 4 (of 16 available processors)
+
+Solution count 0
+
+Time limit reached
+Best objective -, best bound 1.120000000000e+04, gap -
+Set parameter Username
+Set parameter LicenseID to value 2588219
+Academic license - for non-commercial use only - expires 2025-11-21
+Set parameter Presolve to value 1
+Set parameter Seed to value 0
+Set parameter TimeLimit to value 539,8359865
+Set parameter Presolve to value 1
+Set parameter TimeLimit to value 539,8359865
+Set parameter Seed to value 0
+Set parameter Threads to value 4
+=> No solution found.
+--------------------------------------------------------------------------------
