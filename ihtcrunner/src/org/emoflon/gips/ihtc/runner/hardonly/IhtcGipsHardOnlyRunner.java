@@ -58,7 +58,7 @@ public class IhtcGipsHardOnlyRunner extends IhtcGipsRunner {
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
 
 		// Output JSON file
-		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/";
+		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/hard_only/";
 		final String outputPath = datasetSolutionFolder + "sol_"
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 

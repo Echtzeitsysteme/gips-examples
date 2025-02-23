@@ -151,7 +151,7 @@ pattern daySurgeonTuple {
 	s : Surgeon
 }
 
-pattern dayOperatingTheaterTuple {
+pattern dayOperatingTheaterAvailabilityTriple {
 	h : Hospital {
 		- days -> d
 		- operatingTheaters -> ot
@@ -383,36 +383,35 @@ constraint with roomDayLoad {
 	// occupants
 	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
 	
-	&
-	
-	
-	// TODO: all that follows is to save the Boolean value 1 if a room is used at all on a day
-	
-	1000 * context.value
-	>=
-	// patients
-	mappings.roomDayPatientLoad->filter( //
-		element.nodes.r == context.nodes.r //
-		& element.nodes.d == context.nodes.d //
-	)->sum(element.value)
-	
-	+
-	// occupants
-	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
-	
-	&
-	
-	context.value
-	<=
-	// patients
-	mappings.roomDayPatientLoad->filter( //
-		element.nodes.r == context.nodes.r //
-		& element.nodes.d == context.nodes.d //
-	)->sum(element.value)
-	
-	+
-	// occupants
-	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
+//	&
+//
+//	// TODO: all that follows is to save the Boolean value 1 if a room is used at all on a day
+//	
+//	1000 * context.value
+//	>=
+//	// patients
+//	mappings.roomDayPatientLoad->filter( //
+//		element.nodes.r == context.nodes.r //
+//		& element.nodes.d == context.nodes.d //
+//	)->sum(element.value)
+//	
+//	+
+//	// occupants
+//	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
+//	
+//	&
+//	
+//	context.value
+//	<=
+//	// patients
+//	mappings.roomDayPatientLoad->filter( //
+//		element.nodes.r == context.nodes.r //
+//		& element.nodes.d == context.nodes.d //
+//	)->sum(element.value)
+//	
+//	+
+//	// occupants
+//	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
 }
 
 // H1: No gender mix per room
@@ -450,7 +449,7 @@ constraint with daySurgeonTuple {
 
 // H4: OT overtime: The duration of all surgeries allocated to an OT on a day
 // must not exceed its maximum capacity.
-constraint with dayOperatingTheaterTuple {
+constraint with dayOperatingTheaterAvailabilityTriple {
 	// find variable assigned surgeries for a specific day and operating theater
 	mappings.asp->filter( //
 		element.nodes.d == context.nodes.d //
