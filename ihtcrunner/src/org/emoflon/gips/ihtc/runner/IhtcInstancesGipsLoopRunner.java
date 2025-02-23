@@ -1,7 +1,7 @@
 package org.emoflon.gips.ihtc.runner;
 
 /**
- * GIPS-based IHTC 2024 loop runner for the test instances.
+ * GIPS-based IHTC 2024 loop runner for the competition instances.
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */

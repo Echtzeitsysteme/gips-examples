@@ -1,16 +1,16 @@
-package org.emoflon.gips.ihtc.runner.hardonly;
+package org.emoflon.gips.ihtc.runner.strategy;
 
 /**
- * GIPS-based IHTC 2024 loop runner for the competition instances.
+ * GIPS-based IHTC 2024 loop runner for the test instances.
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnlyLoopRunner {
+public class IhtcTestGipsStrategyLoopRunner extends AbstractIhtcGipsStrategyLoopRunner {
 
 	/**
 	 * No public instances of this class allowed.
 	 */
-	private IhtcInstancesGipsHardOnlyLoopRunner() {
+	private IhtcTestGipsStrategyLoopRunner() {
 		super();
 	}
 
@@ -20,8 +20,7 @@ public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnl
 	 * @param args Arguments will be ignored.
 	 */
 	public static void main(final String[] args) {
-		final IhtcInstancesGipsHardOnlyLoopRunner runner = new IhtcInstancesGipsHardOnlyLoopRunner();
-		runner.setDatasetFolder("/../ihtcmetamodel/resources/ihtc2024_competition_instances/");
+		final IhtcTestGipsStrategyLoopRunner runner = new IhtcTestGipsStrategyLoopRunner();
 		runner.setUpScenarioNames();
 		runner.printLogSeparator();
 		runner.getScenarioNames().forEach(name -> {
@@ -41,8 +40,8 @@ public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnl
 	 */
 	@Override
 	protected void setUpScenarioNames() {
-		for (int i = 1; i <= 30; i++) {
-			String name = "i";
+		for (int i = 1; i <= 10; i++) {
+			String name = "test";
 			if (i < 10) {
 				name = name.concat("0");
 			}

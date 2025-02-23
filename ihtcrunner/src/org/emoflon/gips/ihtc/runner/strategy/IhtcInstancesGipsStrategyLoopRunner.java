@@ -1,16 +1,16 @@
-package org.emoflon.gips.ihtc.runner.hardonly;
+package org.emoflon.gips.ihtc.runner.strategy;
 
 /**
  * GIPS-based IHTC 2024 loop runner for the competition instances.
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnlyLoopRunner {
+public class IhtcInstancesGipsStrategyLoopRunner extends AbstractIhtcGipsStrategyLoopRunner {
 
 	/**
 	 * No public instances of this class allowed.
 	 */
-	private IhtcInstancesGipsHardOnlyLoopRunner() {
+	private IhtcInstancesGipsStrategyLoopRunner() {
 		super();
 	}
 
@@ -20,7 +20,7 @@ public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsHardOnl
 	 * @param args Arguments will be ignored.
 	 */
 	public static void main(final String[] args) {
-		final IhtcInstancesGipsHardOnlyLoopRunner runner = new IhtcInstancesGipsHardOnlyLoopRunner();
+		final IhtcInstancesGipsStrategyLoopRunner runner = new IhtcInstancesGipsStrategyLoopRunner();
 		runner.setDatasetFolder("/../ihtcmetamodel/resources/ihtc2024_competition_instances/");
 		runner.setUpScenarioNames();
 		runner.printLogSeparator();
