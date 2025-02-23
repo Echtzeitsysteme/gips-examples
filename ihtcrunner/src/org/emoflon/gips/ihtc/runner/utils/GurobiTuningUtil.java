@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import org.emoflon.gips.core.GipsEngine;
 import org.emoflon.gips.core.api.GipsEngineAPI;
 import org.emoflon.gips.core.milp.GurobiSolver;
+import org.emoflon.gips.core.milp.Solver;
+import org.emoflon.gips.core.milp.SolverConfig;
 
 import com.gurobi.gurobi.GRB.DoubleParam;
 import com.gurobi.gurobi.GRB.IntParam;
@@ -65,6 +67,66 @@ public class GurobiTuningUtil {
 	}
 
 	/**
+	 * Overwrites the configured value of the time limit of the Gurobi solver within
+	 * the given GIPS API.
+	 * 
+	 * @param gipsApi      GIPS API to overwrite the time limit value for.
+	 * @param newTimeLimit New time limit to set.
+	 */
+	public static void updateTimeLimit(final GipsEngineAPI<?, ?> gipsApi, final double newTimeLimit) {
+		if (newTimeLimit < 0) {
+			throw new IllegalArgumentException("Given new time limit was negative.");
+		}
+
+		// Update Gurobi solver configuration (that is contained within the Gurobi
+		// solver object)
+		try {
+			final GurobiSolver solver = (GurobiSolver) getSolver(gipsApi);
+			Field solverConfigField;
+			solverConfigField = GurobiSolver.class.getDeclaredField("config");
+			solverConfigField.setAccessible(true);
+			final SolverConfig oldConfig = (SolverConfig) solverConfigField.get(solver);
+			solverConfigField.set(solver, oldConfig.withNewTimeLimit(newTimeLimit));
+		} catch (final NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+			throw new UnsupportedOperationException(e);
+		}
+
+		// Update Gurobi solver itself
+		try {
+			final GRBModel grbModel = getGrbModel(gipsApi);
+			grbModel.set(DoubleParam.TimeLimit, newTimeLimit);
+		} catch (final GRBException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Extracts the solver object from the given GIPS Engine API via Java
+	 * reflections.
+	 * 
+	 * @param gipsApi GIPS Engine API to extract solver object from.
+	 * @return Solver object.
+	 */
+	private static Solver getSolver(final GipsEngineAPI<?, ?> gipsApi) {
+		if (gipsApi == null) {
+			throw new IllegalArgumentException("Given GIPS API object was null.");
+		}
+
+		try {
+			final Field solverField = GipsEngine.class.getDeclaredField("solver");
+			solverField.setAccessible(true);
+			if (!(solverField.get(gipsApi) instanceof GurobiSolver)) {
+				throw new UnsupportedOperationException("Solver object of the given GIPS API was not Gurobi.");
+			}
+			return (GurobiSolver) solverField.get(gipsApi);
+		} catch (final NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+			throw new UnsupportedOperationException(e);
+		}
+	}
+
+	/**
 	 * Extracts the Gurobi solver model from the given GIPS Engine API via Java
 	 * reflections.
 	 * 
@@ -77,12 +139,7 @@ public class GurobiTuningUtil {
 		}
 
 		try {
-			final Field solverField = GipsEngine.class.getDeclaredField("solver");
-			solverField.setAccessible(true);
-			if (!(solverField.get(gipsApi) instanceof GurobiSolver)) {
-				throw new UnsupportedOperationException("Solver object of the given GIPS API was not Gurobi.");
-			}
-			final GurobiSolver solver = (GurobiSolver) solverField.get(gipsApi);
+			final GurobiSolver solver = (GurobiSolver) getSolver(gipsApi);
 
 			final Field solverModelField = GurobiSolver.class.getDeclaredField("model");
 			solverModelField.setAccessible(true);

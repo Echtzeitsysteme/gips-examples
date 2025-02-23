@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.ihtc.runner.IhtcGipsRunner;
+import org.emoflon.gips.ihtc.runner.utils.GurobiTuningUtil;
 
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
@@ -121,6 +122,9 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 		}
 		final long tockStageOne = System.nanoTime();
 		final double stageOneRuntime = 1.0 * (tockStageOne - tickStageOne) / 1_000_000_000;
+		if (verbose) {
+			System.out.println("=> Stage 1 run time: " + stageOneRuntime + "s.");
+		}
 
 		//
 		// Initialize GIPS API: All optional constraints included.
@@ -128,7 +132,11 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 
 		final SoftcnstrtuningGipsAPI gipsApiOptional = new SoftcnstrtuningGipsAPI();
 		gipsApiOptional.init(URI.createFileURI(instancePath));
-		gipsApiOptional.setTimeLimit(570 - stageOneRuntime);
+
+		final long tockBeforeRunningStageTwo = System.nanoTime();
+		final double remainingTime = 570 - 1.0 * (tockBeforeRunningStageTwo - tickStageOne) / 1_000_000_000;
+		gipsApiOptional.setTimeLimit(remainingTime);
+		GurobiTuningUtil.updateTimeLimit(gipsApiOptional, remainingTime);
 		// TODO: set MIPFocus parameter here?
 
 		//
@@ -146,9 +154,8 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 			final int stageBTotalCost = getCost(gipsApiOptional.getEMoflonAPI().getModel().getResources().get(0));
 			if (stageBTotalCost < stageATotalCost) {
 				gipsSave(gipsApiOptional, gipsOutputPath);
-				// TODO: Maybe we have to remove the previously written file before writing the
-				// new version
-				exportToJson(gipsOutputPath, outputPath);
+				// TODO: Change this:
+				exportToJson(gipsOutputPath, outputPath + "2");
 				if (verbose) {
 					System.out.println("=> Stage 2 found a solution.");
 				}
