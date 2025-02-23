@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.ihtc.runner.IhtcGipsRunner;
+import org.emoflon.gips.ihtc.runner.utils.GurobiTuningUtil;
+
 import ihtcgipssolution.softcnstr.optionalpatients.api.gips.OptionalpatientsGipsAPI;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.loader.FileUtils;
@@ -57,7 +59,8 @@ public class IhtcGipsSoftCnstrOptionalPatientsRunner extends IhtcGipsRunner {
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
 
 		// Output JSON file
-		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/soft_cnstr_optional_patients/";
+		final String datasetSolutionFolder = projectFolder
+				+ "/../ihtcmetamodel/resources/soft_cnstr_optional_patients/";
 		final String outputPath = datasetSolutionFolder + "sol_"
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
@@ -83,6 +86,10 @@ public class IhtcGipsSoftCnstrOptionalPatientsRunner extends IhtcGipsRunner {
 
 		final OptionalpatientsGipsAPI gipsApi = new OptionalpatientsGipsAPI();
 		gipsApi.init(URI.createFileURI(instancePath));
+
+		// Set Gurobi tuning parameters
+		GurobiTuningUtil.setMipFocus(gipsApi);
+		GurobiTuningUtil.setMipGap(gipsApi);
 
 		//
 		// Build and solve the ILP problem
