@@ -67,6 +67,25 @@ public class GurobiTuningUtil {
 	}
 
 	/**
+	 * Overwrites the configured value of the presolve value of the Gurobi solver
+	 * within the given GIPS API.
+	 * 
+	 * @param gipsApi GIPS API to overwrite the presolve value for.
+	 */
+	public static void updatePresolve(final GipsEngineAPI<?, ?> gipsApi, final int newPresolveValue) {
+		if (newPresolveValue < -1 || newPresolveValue > 2) {
+			throw new IllegalArgumentException("Given presolve value <" + newPresolveValue + "> is invalid.");
+		}
+
+		try {
+			final GRBModel grbModel = getGrbModel(gipsApi);
+			grbModel.set(IntParam.Presolve, newPresolveValue);
+		} catch (final GRBException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Overwrites the configured value of the time limit of the Gurobi solver within
 	 * the given GIPS API.
 	 * 

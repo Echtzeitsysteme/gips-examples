@@ -107,6 +107,8 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 
 		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
 		gipsApi.init(URI.createFileURI(instancePath));
+		// Set presolve to "auto"
+		GurobiTuningUtil.updatePresolve(gipsApi, -1);
 
 		//
 		// Run first GIPS solution
@@ -137,6 +139,8 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 		final double remainingTime = 570 - 1.0 * (tockBeforeRunningStageTwo - tickStageOne) / 1_000_000_000;
 		gipsApiOptional.setTimeLimit(remainingTime);
 		GurobiTuningUtil.updateTimeLimit(gipsApiOptional, remainingTime);
+		// Set presolve to "auto"
+		GurobiTuningUtil.updatePresolve(gipsApiOptional, -1);
 		// TODO: set MIPFocus parameter here?
 
 		//
