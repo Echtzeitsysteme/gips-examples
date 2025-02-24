@@ -7,9 +7,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
 import ihtcmetamodel.Hospital;
-import ihtcmetamodel.loader.FileUtils;
-import ihtcmetamodel.loader.JsonToModelLoader;
-import ihtcmetamodel.loader.ModelToJsonExporter;
+import ihtcmetamodel.importexport.JsonToModelLoader;
+import ihtcmetamodel.importexport.ModelToJsonExporter;
+import ihtcmetamodel.utils.FileUtils;
 
 /**
  * This example runner can be used to load an IHTC 2024 JSON-based problem file,
@@ -20,16 +20,6 @@ import ihtcmetamodel.loader.ModelToJsonExporter;
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
-
-	/**
-	 * Runtime tick.
-	 */
-	private long tick = 0;
-
-	/**
-	 * Runtime tock.
-	 */
-	private long tock = 0;
 
 	/**
 	 * The scenario (JSON) file to load.
@@ -145,43 +135,6 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		tock();
 		printWallClockRuntime();
 		gipsApi.terminate();
-	}
-
-	/**
-	 * Sets the current system time as tick value. The tock value gets re-set to 0.
-	 */
-	protected void tick() {
-		this.tick = System.nanoTime();
-		this.tock = 0;
-	}
-
-	/**
-	 * Sets the current system time as tock value.
-	 */
-	protected void tock() {
-		this.tock = System.nanoTime();
-	}
-
-	/**
-	 * Prints the measured wall clock runtime value to System.out if its value is
-	 * smaller than 10 minutes and to System.err otherwise.
-	 */
-	protected void printWallClockRuntime() {
-		final double runtime = 1.0 * (tock - tick) / 1_000_000_000;
-
-		if (runtime < 0) {
-			throw new IllegalArgumentException("Runtime value was negative.");
-		}
-
-		final String runtimeString = String.format("%,4.2f", runtime);
-
-		if (runtime > 600) {
-			System.err.println("=> Time limit of 10 minutes violated.");
-			System.err.println("=> Wall clock run time: " + runtimeString + "s.");
-		} else {
-			System.out.println("=> Time limit of 10 minutes respected.");
-			System.out.println("=> Wall clock run time: " + runtimeString + "s.");
-		}
 	}
 
 }

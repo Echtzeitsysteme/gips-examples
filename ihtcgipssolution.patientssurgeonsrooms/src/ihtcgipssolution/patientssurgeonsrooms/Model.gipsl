@@ -2,6 +2,14 @@ package "ihtcgipssolution.patientssurgeonsrooms"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
+// This specification solves all hard constraints but does not
+// take the mapping of nurses to rooms into account.
+//
+// Some learnings (i.e., speed up achievements) of other
+// projects may be missing in this specification.
+//
+
+//
 // Configuration
 //
 

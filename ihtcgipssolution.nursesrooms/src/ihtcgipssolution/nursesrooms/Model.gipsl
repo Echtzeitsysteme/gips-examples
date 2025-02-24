@@ -2,6 +2,14 @@ package "ihtcgipssolution.nursesrooms"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
+// This specification only assigns nurses to rooms
+// and does not take any optional constraints into account.
+//
+// Some learnings (i.e., speed up achievements) of other
+// projects may be missing in this specification.
+//
+
+//
 // Configuration
 //
 

@@ -2,6 +2,11 @@ package "ihtcgipssolution.hardonly"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
+// This specification only uses the absolutely necessary
+// hard constraints from the task.
+//
+
+//
 // Configuration
 //
 
