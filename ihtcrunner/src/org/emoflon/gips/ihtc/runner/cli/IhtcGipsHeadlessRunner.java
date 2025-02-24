@@ -14,9 +14,9 @@ import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
 
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcmetamodel.Hospital;
-import ihtcmetamodel.loader.FileUtils;
-import ihtcmetamodel.loader.JsonToModelLoader;
-import ihtcmetamodel.loader.ModelToJsonExporter;
+import ihtcmetamodel.importexport.JsonToModelLoader;
+import ihtcmetamodel.importexport.ModelToJsonExporter;
+import ihtcmetamodel.utils.FileUtils;
 
 /**
  * Runnable headless CLI runner for the IHTC 2024 GIPS-based solution.

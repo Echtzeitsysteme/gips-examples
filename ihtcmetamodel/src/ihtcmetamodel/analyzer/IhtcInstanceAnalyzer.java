@@ -1,7 +1,7 @@
 package ihtcmetamodel.analyzer;
 
 import ihtcmetamodel.Hospital;
-import ihtcmetamodel.loader.JsonToModelLoader;
+import ihtcmetamodel.importexport.JsonToModelLoader;
 
 /**
  * Analyzer class to show details of IHTC instances.

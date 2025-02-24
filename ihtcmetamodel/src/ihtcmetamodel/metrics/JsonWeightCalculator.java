@@ -1,4 +1,4 @@
-package ihtcmetamodel.loader;
+package ihtcmetamodel.metrics;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,6 +7,8 @@ import java.util.Set;
 
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.Weight;
+import ihtcmetamodel.importexport.JsonToModelLoader;
+import ihtcmetamodel.utils.StatisticsResult;
 
 /**
  * This calculator class can be used to read all IHTC 2024 scenario files and

@@ -1,4 +1,4 @@
-package ihtcmetamodel.loader;
+package ihtcmetamodel.importexport;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -8,6 +8,8 @@ import ihtcmetamodel.Nurse;
 import ihtcmetamodel.Patient;
 import ihtcmetamodel.RoomShiftNurseAssignment;
 import ihtcmetamodel.ShiftType;
+import ihtcmetamodel.metrics.ModelCostCalculator;
+import ihtcmetamodel.utils.FileUtils;
 
 /**
  * This model exporter can be used to convert an EMF model to the respective

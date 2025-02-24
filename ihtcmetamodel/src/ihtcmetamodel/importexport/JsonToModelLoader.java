@@ -1,4 +1,4 @@
-package ihtcmetamodel.loader;
+package ihtcmetamodel.importexport;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +31,7 @@ import ihtcmetamodel.ShiftType;
 import ihtcmetamodel.Surgeon;
 import ihtcmetamodel.SurgeonAvailability;
 import ihtcmetamodel.Weight;
+import ihtcmetamodel.utils.FileUtils;
 
 /**
  * JSON file to EMF model loader for the IHTC 2024 example.

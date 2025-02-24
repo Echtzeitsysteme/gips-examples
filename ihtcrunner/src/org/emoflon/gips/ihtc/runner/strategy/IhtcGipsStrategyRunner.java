@@ -10,10 +10,10 @@ import org.emoflon.gips.ihtc.runner.utils.GurobiTuningUtil;
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 import ihtcmetamodel.Hospital;
-import ihtcmetamodel.loader.FileUtils;
-import ihtcmetamodel.loader.JsonToModelLoader;
-import ihtcmetamodel.loader.ModelCostCalculator;
-import ihtcmetamodel.loader.ModelToJsonExporter;
+import ihtcmetamodel.importexport.JsonToModelLoader;
+import ihtcmetamodel.importexport.ModelToJsonExporter;
+import ihtcmetamodel.metrics.ModelCostCalculator;
+import ihtcmetamodel.utils.FileUtils;
 
 /**
  * This strategy runner can be used to load an IHTC 2024 JSON-based problem

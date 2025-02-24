@@ -1,4 +1,4 @@
-package ihtcmetamodel.loader;
+package ihtcmetamodel.metrics;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ public class ModelCostCalculator {
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Age mix cost for the whole model.
 	 */
-	protected int calculateAgeMixCost(final Hospital model) {
+	public int calculateAgeMixCost(final Hospital model) {
 		int ageMixCost = 0;
 		for (final Day d : model.getDays()) {
 			for (final Room r : model.getRooms()) {
@@ -48,7 +48,7 @@ public class ModelCostCalculator {
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Skill level cost for the whole model.
 	 */
-	protected int calculateSkillLevelCost(final Hospital model) {
+	public int calculateSkillLevelCost(final Hospital model) {
 		int skillLevelCost = 0;
 		for (final Nurse n : model.getNurses()) {
 			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
@@ -78,7 +78,7 @@ public class ModelCostCalculator {
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Continuity cost for the whole model.
 	 */
-	protected int calculateContinuityCost(final Hospital model) {
+	public int calculateContinuityCost(final Hospital model) {
 		int continuityCost = 0;
 
 		// Occupants
@@ -102,7 +102,7 @@ public class ModelCostCalculator {
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Excess cost for the whole model.
 	 */
-	protected int calculateExcessCost(final Hospital model) {
+	public int calculateExcessCost(final Hospital model) {
 		int excessCost = 0;
 
 		for (final Nurse n : model.getNurses()) {
@@ -153,7 +153,7 @@ public class ModelCostCalculator {
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Number of open OTs cost for the whole model.
 	 */
-	protected int calculateOpenOtCost(final Hospital model) {
+	public int calculateOpenOtCost(final Hospital model) {
 		int openOtCost = 0;
 
 		for (final OperatingTheater ot : model.getOperatingTheaters()) {
@@ -178,7 +178,7 @@ public class ModelCostCalculator {
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Surgeon transfer cost for the whole model.
 	 */
-	protected int calculateSurgeonTransferCost(final Hospital model) {
+	public int calculateSurgeonTransferCost(final Hospital model) {
 		int surgeonTransferCost = 0;
 
 		for (final Surgeon s : model.getSurgeons()) {
@@ -205,7 +205,7 @@ public class ModelCostCalculator {
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Admission delay cost for the whole model.
 	 */
-	protected int calculateAdmissionDelayCost(final Hospital model) {
+	public int calculateAdmissionDelayCost(final Hospital model) {
 		int admissionDelayCost = 0;
 
 		for (final Patient p : model.getPatients()) {
@@ -226,7 +226,7 @@ public class ModelCostCalculator {
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Unscheduled patients cost for the whole model.
 	 */
-	protected int calculateUnscheduledPatientsCost(final Hospital model) {
+	public int calculateUnscheduledPatientsCost(final Hospital model) {
 		int unscheduledPatientsCost = 0;
 
 		for (final Patient p : model.getPatients()) {

@@ -1,4 +1,4 @@
-package ihtcmetamodel.loader;
+package ihtcmetamodel.utils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -37,7 +37,7 @@ public class FileUtils {
 	 * @param path Path for the file to write.
 	 * @param json JSON object to write to file.
 	 */
-	protected static void writeFileFromJson(final String path, final JsonObject json) {
+	public static void writeFileFromJson(final String path, final JsonObject json) {
 		if (path == null || path.isBlank()) {
 			throw new IllegalArgumentException("Given path was null or blank.");
 		}
@@ -55,7 +55,7 @@ public class FileUtils {
 	 * @param path Path for the file to read.
 	 * @return JSON object read from file.
 	 */
-	protected static JsonObject readFileToJson(final String path) {
+	public static JsonObject readFileToJson(final String path) {
 		if (path == null || path.isBlank()) {
 			throw new IllegalArgumentException("Given path was null or blank.");
 		}

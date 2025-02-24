@@ -9,9 +9,9 @@ import org.emoflon.gips.ihtc.runner.utils.GurobiTuningUtil;
 
 import ihtcgipssolution.softcnstr.optionalpatients.api.gips.OptionalpatientsGipsAPI;
 import ihtcmetamodel.Hospital;
-import ihtcmetamodel.loader.FileUtils;
-import ihtcmetamodel.loader.JsonToModelLoader;
-import ihtcmetamodel.loader.ModelToJsonExporter;
+import ihtcmetamodel.importexport.JsonToModelLoader;
+import ihtcmetamodel.importexport.ModelToJsonExporter;
+import ihtcmetamodel.utils.FileUtils;
 
 /**
  * This example runner can be used to load an IHTC 2024 JSON-based problem file,

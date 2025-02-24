@@ -1,8 +1,9 @@
-package ihtcmetamodel.loader;
+package ihtcmetamodel.importexport;
 
 import java.io.IOException;
 
 import ihtcmetamodel.Hospital;
+import ihtcmetamodel.utils.FileUtils;
 
 /**
  * This runner can be used to load a given JSON model and save it as XMI model.

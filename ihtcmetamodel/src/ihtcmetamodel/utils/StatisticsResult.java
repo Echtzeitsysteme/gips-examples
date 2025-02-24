@@ -1,4 +1,4 @@
-package ihtcmetamodel.loader;
+package ihtcmetamodel.utils;
 
 /**
  * Record that holds the result of a statics run, i.e., a name, maximum value,
@@ -7,5 +7,5 @@ package ihtcmetamodel.loader;
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public record StatisticsResult(String name, int max, int min, double mean, double stddev) {
-	
+
 }
