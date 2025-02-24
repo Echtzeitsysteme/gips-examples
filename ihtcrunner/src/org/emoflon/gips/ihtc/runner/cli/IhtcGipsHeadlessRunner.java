@@ -1,7 +1,5 @@
 package org.emoflon.gips.ihtc.runner.cli;
 
-import java.io.IOException;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -9,22 +7,15 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.eclipse.emf.common.util.URI;
-import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
+import org.emoflon.gips.ihtc.runner.strategy.IhtcGipsStrategyRunner;
 import org.emoflon.gips.ihtc.runner.utils.StringUtils;
-
-import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
-import ihtcmetamodel.Hospital;
-import ihtcmetamodel.importexport.JsonToModelLoader;
-import ihtcmetamodel.importexport.ModelToJsonExporter;
-import ihtcmetamodel.utils.FileUtils;
 
 /**
  * Runnable headless CLI runner for the IHTC 2024 GIPS-based solution.
  * 
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
-public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
+public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 
 	/**
 	 * JSON input file path to load an instance from.
@@ -52,6 +43,11 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 	private static boolean debugOutputEnabled = false;
 
 	/**
+	 * Boolean flag to enable output JSON file splitting.
+	 */
+	private static boolean splitOutputJsonEnabled = false;
+
+	/**
 	 * No public instances of this class allowed.
 	 */
 	protected IhtcGipsHeadlessRunner() {
@@ -65,76 +61,24 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 	 */
 	public static void main(final String[] args) {
 		parseArgs(args);
-		new IhtcGipsHeadlessRunner().run();
+		new IhtcGipsHeadlessRunner().execute();
 	}
 
 	/**
 	 * Runs the execution of the configured scenario. This method relies on the
 	 * previous parsing of arguments.
 	 */
-	private void run() {
-		tick();
-
-		checkIfFileExists(jsonInputPath);
-
-		//
-		// Convert input JSON file to input XMI file
-		//
-
-		final JsonToModelLoader loader = new JsonToModelLoader();
-		loader.jsonToModel(jsonInputPath);
-		final Hospital model = loader.getModel();
-		try {
-			FileUtils.save(model, xmiInputModelPath);
-		} catch (final IOException e) {
-			throw new InternalError(e.getMessage());
-		}
-
-		//
-		// Initialize GIPS API
-		//
-
-		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
-		gipsApi.init(URI.createFileURI(xmiInputModelPath));
-
-		//
-		// Build and solve the ILP problem
-		//
-
-		buildAndSolve(gipsApi, debugOutputEnabled);
-
-		//
-		// Apply the solution
-		//
-
-		applySolution(gipsApi, debugOutputEnabled);
-
-		//
-		// Convert solution XMI model to JSON output file
-		//
-
-		final Hospital solvedHospital = (Hospital) gipsApi.getResourceSet().getResources().get(0).getContents().get(0);
-		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
-		exporter.modelToJson(jsonOutputPath, debugOutputEnabled);
-
-		//
-		// Save output XMI file
-		//
-
+	private void execute() {
+		final IhtcGipsStrategyRunner strategyRunner = new IhtcGipsStrategyRunner();
+		strategyRunner.setVerbose(debugOutputEnabled);
+		strategyRunner.setSplitOutputJsonEnabled(splitOutputJsonEnabled);
+		strategyRunner.setJsonInputPath(jsonInputPath);
+		strategyRunner.setJsonOutputPath(jsonOutputPath);
+		strategyRunner.setXmiInputModelPath(xmiInputModelPath);
 		if (xmiOutputModelPath != null) {
-			gipsSave(gipsApi, xmiOutputModelPath);
+			strategyRunner.setXmiOutputModelPath(xmiOutputModelPath);
 		}
-
-		//
-		// The end
-		//
-
-		tock();
-		if (debugOutputEnabled) {
-			printWallClockRuntime();
-		}
-		gipsApi.terminate();
-		System.exit(0);
+		strategyRunner.run();
 	}
 
 	/**
@@ -145,6 +89,7 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 	 * <li>"q": model input XMI file to store (optional)</li>
 	 * <li>"r": model output XMI file to store (optional)</li>
 	 * <li>"d": debug output flag (optional)</li>
+	 * <li>"s": split output JSON file flag (optional)</li>
 	 * </ol>
 	 * 
 	 * @param args Arguments to parse.
@@ -177,6 +122,11 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 		debugOutputEnabled.setRequired(false);
 		options.addOption(debugOutputEnabled);
 
+		// Split output JSON file flag
+		final Option splitOutputEnabled = new Option("s", "split", false, "split output JSON file flag");
+		splitOutputEnabled.setRequired(false);
+		options.addOption(splitOutputEnabled);
+
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -203,6 +153,7 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 			xmiOutputModelPath = cmd.getOptionValue("modeloutputxmi");
 		}
 		IhtcGipsHeadlessRunner.debugOutputEnabled = cmd.hasOption("debug");
+		IhtcGipsHeadlessRunner.splitOutputJsonEnabled = cmd.hasOption("split");
 	}
 
 }

@@ -38,12 +38,17 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 	/**
 	 * If true, the runner will print more detailed information.
 	 */
-	public boolean verbose = true;
+	private boolean verbose = true;
 
 	/**
-	 * No public instances of this class allowed.
+	 * Boolean flag to enable output JSON file splitting.
 	 */
-	protected IhtcGipsStrategyRunner() {
+	private boolean splitOutputJsonEnabled = false;
+
+	/**
+	 * Create a new instance of this class.
+	 */
+	public IhtcGipsStrategyRunner() {
 	}
 
 	/**
@@ -52,7 +57,55 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 	 * @param args Arguments will be ignored.
 	 */
 	public static void main(final String[] args) {
-		new IhtcGipsStrategyRunner().run();
+		final IhtcGipsStrategyRunner runner = new IhtcGipsStrategyRunner();
+		runner.setupDefaultPaths();
+		runner.run();
+	}
+
+	/**
+	 * Sets the default paths up.
+	 */
+	private void setupDefaultPaths() {
+		// Update output JSON file path
+		this.datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/strategy_runner/";
+		this.outputPath = datasetSolutionFolder + "sol_"
+				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
+	}
+
+	/**
+	 * Sets the JSON input path.
+	 * 
+	 * @param jsonInputPath JSON input path.
+	 */
+	public void setJsonInputPath(final String jsonInputPath) {
+		this.inputPath = jsonInputPath;
+	}
+
+	/**
+	 * Sets the JSON output path.
+	 * 
+	 * @param jsonOutputPath JSON output path.
+	 */
+	public void setJsonOutputPath(final String jsonOutputPath) {
+		this.outputPath = jsonOutputPath;
+	}
+
+	/**
+	 * Sets the XMI input model path.
+	 * 
+	 * @param xmiInputModelPath XMI input model path.
+	 */
+	public void setXmiInputModelPath(final String xmiInputModelPath) {
+		this.instancePath = xmiInputModelPath;
+	}
+
+	/**
+	 * Sets the XMI output model path.
+	 * 
+	 * @param xmiOutputModelPath XMI output model path.
+	 */
+	public void setXmiOutputModelPath(final String xmiOutputModelPath) {
+		this.gipsOutputPath = xmiOutputModelPath;
 	}
 
 	/**
@@ -62,24 +115,6 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 	public void run() {
 		tick();
 		final long tickStageOne = System.nanoTime();
-
-		//
-		// Folder and file definitions
-		//
-		final String inputPath = datasetFolder + scenarioFileName;
-
-		// Input XMI file
-		final String instanceFolder = projectFolder + "/../ihtcmetamodel/instances/";
-		final String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
-
-		// Output XMI file
-		final String gipsOutputPath = instanceFolder
-				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
-
-		// Output JSON file
-		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/strategy_runner/";
-		final String outputPath = datasetSolutionFolder + "sol_"
-				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
 		checkIfFileExists(inputPath);
 
@@ -158,8 +193,7 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 			final int stageBTotalCost = getCost(gipsApiOptional.getEMoflonAPI().getModel().getResources().get(0));
 			if (stageBTotalCost < stageATotalCost) {
 				gipsSave(gipsApiOptional, gipsOutputPath);
-				// TODO: Change this:
-				exportToJson(gipsOutputPath, outputPath + "2");
+				exportToJson(gipsOutputPath, outputPath + (splitOutputJsonEnabled ? "2" : ""));
 				if (verbose) {
 					System.out.println("=> Stage 2 found a solution.");
 				}
@@ -223,6 +257,24 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 		final Hospital solvedHospital = (Hospital) model.getContents().get(0);
 		final ModelCostCalculator calc = new ModelCostCalculator();
 		return calc.calculateTotalCost(solvedHospital);
+	}
+
+	/**
+	 * Sets the verbose flag to the given value.
+	 * 
+	 * @param verbose Verbose flag.
+	 */
+	public void setVerbose(final boolean verbose) {
+		this.verbose = verbose;
+	}
+
+	/**
+	 * Sets the split output JSON flag to the given value.
+	 * 
+	 * @param splitOutputJsonEnabled Split output JSON flag.
+	 */
+	public void setSplitOutputJsonEnabled(final boolean splitOutputJsonEnabled) {
+		this.splitOutputJsonEnabled = splitOutputJsonEnabled;
 	}
 
 }

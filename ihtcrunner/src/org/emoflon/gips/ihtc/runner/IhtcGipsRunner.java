@@ -37,6 +37,38 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 	protected String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
 
 	/**
+	 * Default input path.
+	 */
+	protected String inputPath = datasetFolder + scenarioFileName;
+
+	/**
+	 * Default instance folder path.
+	 */
+	protected String instanceFolder = projectFolder + "/../ihtcmetamodel/instances/";
+
+	/**
+	 * Default instance XMI path.
+	 */
+	protected String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
+
+	/**
+	 * Default instance solved XMI path.
+	 */
+	protected String gipsOutputPath = instanceFolder
+			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
+
+	/**
+	 * Default JSON output folder path.
+	 */
+	protected String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/";
+
+	/**
+	 * Default JSON output file path.
+	 */
+	protected String outputPath = datasetSolutionFolder + "sol_"
+			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
+
+	/**
 	 * No public instances of this class allowed.
 	 */
 	protected IhtcGipsRunner() {
@@ -56,24 +88,6 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 	 */
 	public void run() {
 		tick();
-
-		//
-		// Folder and file definitions
-		//
-		final String inputPath = datasetFolder + scenarioFileName;
-
-		// Input XMI file
-		final String instanceFolder = projectFolder + "/../ihtcmetamodel/instances/";
-		final String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
-
-		// Output XMI file
-		final String gipsOutputPath = instanceFolder
-				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
-
-		// Output JSON file
-		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/";
-		final String outputPath = datasetSolutionFolder + "sol_"
-				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
 		checkIfFileExists(inputPath);
 
