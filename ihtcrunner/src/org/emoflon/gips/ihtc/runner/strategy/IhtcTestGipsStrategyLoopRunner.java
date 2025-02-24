@@ -24,7 +24,7 @@ public class IhtcTestGipsStrategyLoopRunner extends AbstractIhtcGipsLoopRunner {
 	public static void main(final String[] args) {
 		final IhtcTestGipsStrategyLoopRunner runner = new IhtcTestGipsStrategyLoopRunner();
 		runner.setDatasetFolder(runner.testInstancesPath);
-		runner.setUpInstanceScenarioNames();
+		runner.setUpTestScenarioNames();
 		runner.executeScenarios();
 	}
 

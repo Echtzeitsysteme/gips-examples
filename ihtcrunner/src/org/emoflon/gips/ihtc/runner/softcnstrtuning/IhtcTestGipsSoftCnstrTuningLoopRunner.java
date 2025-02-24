@@ -24,7 +24,7 @@ public class IhtcTestGipsSoftCnstrTuningLoopRunner extends AbstractIhtcGipsLoopR
 	public static void main(final String[] args) {
 		final IhtcTestGipsSoftCnstrTuningLoopRunner runner = new IhtcTestGipsSoftCnstrTuningLoopRunner();
 		runner.setDatasetFolder(runner.testInstancesPath);
-		runner.setUpInstanceScenarioNames();
+		runner.setUpTestScenarioNames();
 		runner.executeScenarios();
 	}
 

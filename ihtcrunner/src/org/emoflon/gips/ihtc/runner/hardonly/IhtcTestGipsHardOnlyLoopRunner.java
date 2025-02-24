@@ -24,7 +24,7 @@ public class IhtcTestGipsHardOnlyLoopRunner extends AbstractIhtcGipsLoopRunner {
 	public static void main(final String[] args) {
 		final IhtcTestGipsHardOnlyLoopRunner runner = new IhtcTestGipsHardOnlyLoopRunner();
 		runner.setDatasetFolder(runner.testInstancesPath);
-		runner.setUpInstanceScenarioNames();
+		runner.setUpTestScenarioNames();
 		runner.executeScenarios();
 	}
 
