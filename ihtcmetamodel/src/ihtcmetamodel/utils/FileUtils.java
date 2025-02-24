@@ -210,4 +210,16 @@ public class FileUtils {
 		return resourceSet.getResources().getFirst();
 	}
 
+	/**
+	 * Checks if a file exists at the given path.
+	 * 
+	 * @param path Path to check for file existence.
+	 * @return True if file exists, false otherwise.
+	 */
+	public static boolean checkIfFileExists(final String path) {
+		checkNotNull(path, "Path");
+		final File f = new File(path);
+		return f.exists() && !f.isDirectory();
+	}
+
 }

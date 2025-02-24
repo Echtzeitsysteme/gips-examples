@@ -1,9 +1,9 @@
 package org.emoflon.gips.ihtc.runner.strategy;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
 import org.emoflon.gips.ihtc.runner.utils.GurobiTuningUtil;
+import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
@@ -130,7 +130,7 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		}
 
 		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
-		gipsApi.init(URI.createFileURI(instancePath));
+		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
 		// Set presolve to "auto"
 		GurobiTuningUtil.updatePresolve(gipsApi, -1);
 
@@ -157,7 +157,7 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		//
 
 		final SoftcnstrtuningGipsAPI gipsApiOptional = new SoftcnstrtuningGipsAPI();
-		gipsApiOptional.init(URI.createFileURI(instancePath));
+		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApiOptional, instancePath);
 
 		final long tockBeforeRunningStageTwo = System.nanoTime();
 		final double remainingTime = 570 - 1.0 * (tockBeforeRunningStageTwo - tickStageOne) / 1_000_000_000;
