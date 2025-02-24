@@ -11,6 +11,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.emf.common.util.URI;
 import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
+import org.emoflon.gips.ihtc.runner.utils.StringUtils;
 
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcmetamodel.Hospital;
@@ -49,16 +50,6 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 	 * Boolean flag to enable the debug output.
 	 */
 	private static boolean debugOutputEnabled = false;
-
-	/**
-	 * Runtime tick.
-	 */
-	private long tick = 0;
-
-	/**
-	 * Runtime tock.
-	 */
-	private long tock = 0;
 
 	/**
 	 * No public instances of this class allowed.
@@ -203,7 +194,7 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 		if (cmd.hasOption("outputjson")) {
 			jsonOutputPath = cmd.getOptionValue("outputjson");
 		} else {
-			jsonOutputPath = replaceLast(jsonInputPath, "/", "/sol_");
+			jsonOutputPath = StringUtils.replaceLast(jsonInputPath, "/", "/sol_");
 		}
 		if (cmd.hasOption("modelinputxmi")) {
 			xmiInputModelPath = cmd.getOptionValue("modelinputxmi");
@@ -212,73 +203,6 @@ public class IhtcGipsHeadlessRunner extends AbstractIhtcGipsRunner {
 			xmiOutputModelPath = cmd.getOptionValue("modeloutputxmi");
 		}
 		IhtcGipsHeadlessRunner.debugOutputEnabled = cmd.hasOption("debug");
-	}
-
-	/**
-	 * Sets the current system time as tick value. The tock value gets re-set to 0.
-	 */
-	protected void tick() {
-		this.tick = System.nanoTime();
-		this.tock = 0;
-	}
-
-	/**
-	 * Sets the current system time as tock value.
-	 */
-	protected void tock() {
-		this.tock = System.nanoTime();
-	}
-
-	/**
-	 * Replaces the last occurrence of `toReplace` with `replacement` in the given
-	 * string `string`.
-	 * 
-	 * @param string      String to be altered.
-	 * @param toReplace   Last occurrence of this string should be replaced.
-	 * @param replacement Replacement string.
-	 * @return
-	 */
-	public static String replaceLast(final String string, final String toReplace, final String replacement) {
-		if (string == null) {
-			throw new IllegalArgumentException("Given string was null.");
-		}
-
-		if (toReplace == null) {
-			throw new IllegalArgumentException("Given string to be replaced was null.");
-		}
-
-		if (replacement == null) {
-			throw new IllegalArgumentException("Given string replacement was null.");
-		}
-
-		final int pos = string.lastIndexOf(toReplace);
-		if (pos > -1) {
-			return string.substring(0, pos) + replacement + string.substring(pos + toReplace.length());
-		} else {
-			return string;
-		}
-	}
-
-	/**
-	 * Prints the measured wall clock runtime value to System.out if its value is
-	 * smaller than 10 minutes and to System.err otherwise.
-	 */
-	protected void printWallClockRuntime() {
-		final double runtime = 1.0 * (tock - tick) / 1_000_000_000;
-
-		if (runtime < 0) {
-			throw new IllegalArgumentException("Runtime value was negative.");
-		}
-
-		final String runtimeString = String.format("%,4.2f", runtime);
-
-		if (runtime > 600) {
-			System.err.println("=> Time limit of 10 minutes violated.");
-			System.err.println("=> Wall clock run time: " + runtimeString + "s.");
-		} else {
-			System.out.println("=> Time limit of 10 minutes respected.");
-			System.out.println("=> Wall clock run time: " + runtimeString + "s.");
-		}
 	}
 
 }
