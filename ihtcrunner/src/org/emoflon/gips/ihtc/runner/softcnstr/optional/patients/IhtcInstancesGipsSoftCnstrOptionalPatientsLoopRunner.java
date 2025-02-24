@@ -14,6 +14,7 @@ public class IhtcInstancesGipsSoftCnstrOptionalPatientsLoopRunner extends Abstra
 	 */
 	private IhtcInstancesGipsSoftCnstrOptionalPatientsLoopRunner() {
 		super();
+		this.datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_competition_instances/";
 	}
 
 	/**

@@ -14,6 +14,7 @@ public class IhtcTestGipsPipelineLoopRunner extends AbstractIhtcGipsLoopRunner {
 	 */
 	private IhtcTestGipsPipelineLoopRunner() {
 		super();
+		this.datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
 	}
 
 	/**

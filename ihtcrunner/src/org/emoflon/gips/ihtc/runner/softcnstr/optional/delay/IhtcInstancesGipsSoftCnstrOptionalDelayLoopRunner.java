@@ -14,6 +14,7 @@ public class IhtcInstancesGipsSoftCnstrOptionalDelayLoopRunner extends AbstractI
 	 */
 	private IhtcInstancesGipsSoftCnstrOptionalDelayLoopRunner() {
 		super();
+		this.datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_competition_instances/";
 	}
 
 	/**

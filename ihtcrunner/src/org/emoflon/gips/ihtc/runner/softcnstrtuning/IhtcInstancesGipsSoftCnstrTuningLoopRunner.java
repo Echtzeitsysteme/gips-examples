@@ -14,6 +14,7 @@ public class IhtcInstancesGipsSoftCnstrTuningLoopRunner extends AbstractIhtcGips
 	 */
 	private IhtcInstancesGipsSoftCnstrTuningLoopRunner() {
 		super();
+		this.datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_competition_instances/";
 	}
 
 	/**

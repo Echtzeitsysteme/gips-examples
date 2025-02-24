@@ -14,6 +14,7 @@ public class IhtcTestGipsSoftCnstrTuningLoopRunner extends AbstractIhtcGipsLoopR
 	 */
 	private IhtcTestGipsSoftCnstrTuningLoopRunner() {
 		super();
+		this.datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
 	}
 
 	/**

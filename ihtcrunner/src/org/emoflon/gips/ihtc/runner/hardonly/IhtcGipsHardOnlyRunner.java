@@ -44,22 +44,9 @@ public class IhtcGipsHardOnlyRunner extends IhtcGipsRunner {
 	public void run() {
 		tick();
 
-		//
-		// Folder and file definitions
-		//
-		final String inputPath = datasetFolder + scenarioFileName;
-
-		// Input XMI file
-		final String instanceFolder = projectFolder + "/../ihtcmetamodel/instances/";
-		final String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
-
-		// Output XMI file
-		final String gipsOutputPath = instanceFolder
-				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
-
 		// Output JSON file
-		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/hard_only/";
-		final String outputPath = datasetSolutionFolder + "sol_"
+		this.datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/hard_only/";
+		this.outputPath = datasetSolutionFolder + "sol_"
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
 		checkIfFileExists(inputPath);

@@ -14,6 +14,7 @@ public class IhtcInstancesGipsHardOnlyLoopRunner extends AbstractIhtcGipsLoopRun
 	 */
 	private IhtcInstancesGipsHardOnlyLoopRunner() {
 		super();
+		this.datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_competition_instances/";
 	}
 
 	/**
