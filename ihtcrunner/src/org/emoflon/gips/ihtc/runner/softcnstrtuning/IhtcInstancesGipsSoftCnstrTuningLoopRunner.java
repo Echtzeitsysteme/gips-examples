@@ -29,4 +29,11 @@ public class IhtcInstancesGipsSoftCnstrTuningLoopRunner extends AbstractIhtcGips
 		runner.executeScenarios();
 	}
 
+	@Override
+	protected void run() {
+		final IhtcGipsSoftCnstrTuningRunner gipsRunner = new IhtcGipsSoftCnstrTuningRunner();
+		overwritePaths(gipsRunner, this);
+		gipsRunner.run();
+	}
+
 }

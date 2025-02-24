@@ -29,4 +29,11 @@ public class IhtcTestGipsHardOnlyLoopRunner extends AbstractIhtcGipsLoopRunner {
 		runner.executeScenarios();
 	}
 
+	@Override
+	protected void run() {
+		final IhtcGipsHardOnlyRunner gipsRunner = new IhtcGipsHardOnlyRunner();
+		overwritePaths(gipsRunner, this);
+		gipsRunner.run();
+	}
+
 }

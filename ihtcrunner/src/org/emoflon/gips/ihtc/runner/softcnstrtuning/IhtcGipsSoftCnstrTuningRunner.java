@@ -1,16 +1,9 @@
 package org.emoflon.gips.ihtc.runner.softcnstrtuning;
 
-import java.io.IOException;
-
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.emoflon.gips.ihtc.runner.IhtcGipsRunner;
+import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
 
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
-import ihtcmetamodel.Hospital;
-import ihtcmetamodel.importexport.JsonToModelLoader;
-import ihtcmetamodel.importexport.ModelToJsonExporter;
-import ihtcmetamodel.utils.FileUtils;
 
 /**
  * This example runner can be used to load an IHTC 2024 JSON-based problem file,
@@ -20,7 +13,7 @@ import ihtcmetamodel.utils.FileUtils;
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public class IhtcGipsSoftCnstrTuningRunner extends IhtcGipsRunner {
+public class IhtcGipsSoftCnstrTuningRunner extends AbstractIhtcGipsRunner {
 
 	/**
 	 * No public instances of this class allowed.
@@ -44,22 +37,9 @@ public class IhtcGipsSoftCnstrTuningRunner extends IhtcGipsRunner {
 	public void run() {
 		tick();
 
-		//
-		// Folder and file definitions
-		//
-		final String inputPath = datasetFolder + scenarioFileName;
-
-		// Input XMI file
-		final String instanceFolder = projectFolder + "/../ihtcmetamodel/instances/";
-		final String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
-
-		// Output XMI file
-		final String gipsOutputPath = instanceFolder
-				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
-
 		// Output JSON file
-		final String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/soft_cnstr_optional_all/";
-		final String outputPath = datasetSolutionFolder + "sol_"
+		this.datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/soft_cnstr_optional_all/";
+		this.outputPath = datasetSolutionFolder + "sol_"
 				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
 		checkIfFileExists(inputPath);
@@ -68,15 +48,7 @@ public class IhtcGipsSoftCnstrTuningRunner extends IhtcGipsRunner {
 		// Convert JSON input file to XMI file
 		//
 
-		final JsonToModelLoader loader = new JsonToModelLoader();
-		loader.jsonToModel(inputPath);
-		final Hospital model = loader.getModel();
-		try {
-			FileUtils.prepareFolder(instanceFolder);
-			FileUtils.save(model, instancePath);
-		} catch (final IOException e) {
-			throw new InternalError(e.getMessage());
-		}
+		transformJsonToModel(inputPath, instancePath);
 
 		//
 		// Initialize GIPS API
@@ -107,10 +79,7 @@ public class IhtcGipsSoftCnstrTuningRunner extends IhtcGipsRunner {
 		// Convert solution XMI model to JSON output file
 		//
 
-		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
-		final Hospital solvedHospital = (Hospital) loadedResource.getContents().get(0);
-		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
-		exporter.modelToJson(outputPath);
+		transformModelToJson();
 
 		//
 		// The end

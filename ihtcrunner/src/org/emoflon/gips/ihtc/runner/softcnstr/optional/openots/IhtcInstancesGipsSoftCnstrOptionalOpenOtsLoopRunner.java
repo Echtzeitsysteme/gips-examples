@@ -29,4 +29,11 @@ public class IhtcInstancesGipsSoftCnstrOptionalOpenOtsLoopRunner extends Abstrac
 		runner.executeScenarios();
 	}
 
+	@Override
+	protected void run() {
+		final IhtcGipsSoftCnstrOptionalOpenOtsRunner gipsRunner = new IhtcGipsSoftCnstrOptionalOpenOtsRunner();
+		overwritePaths(gipsRunner, this);
+		gipsRunner.run();
+	}
+
 }

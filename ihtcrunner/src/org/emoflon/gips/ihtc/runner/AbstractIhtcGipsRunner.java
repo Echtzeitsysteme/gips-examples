@@ -25,6 +25,10 @@ import ihtcgipssolution.softcnstr.optionaldelay.api.gips.OptionaldelayGipsAPI;
 import ihtcgipssolution.softcnstr.optionalopenots.api.gips.OptionalopenotsGipsAPI;
 import ihtcgipssolution.softcnstr.optionalpatients.api.gips.OptionalpatientsGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
+import ihtcmetamodel.Hospital;
+import ihtcmetamodel.importexport.JsonToModelLoader;
+import ihtcmetamodel.importexport.ModelToJsonExporter;
+import ihtcmetamodel.utils.FileUtils;
 
 /**
  * This abstract runner contains utility methods to wrap a given GIPS API object
@@ -33,6 +37,53 @@ import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public abstract class AbstractIhtcGipsRunner {
+
+	/**
+	 * The scenario (JSON) file to load.
+	 */
+	public String scenarioFileName = "test01.json";
+
+	/**
+	 * Project folder location.
+	 */
+	public String projectFolder = System.getProperty("user.dir");
+
+	/**
+	 * Data set folder location.
+	 */
+	public String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
+
+	/**
+	 * Default input path.
+	 */
+	public String inputPath = datasetFolder + scenarioFileName;
+
+	/**
+	 * Default instance folder path.
+	 */
+	public String instanceFolder = projectFolder + "/../ihtcmetamodel/instances/";
+
+	/**
+	 * Default instance XMI path.
+	 */
+	public String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
+
+	/**
+	 * Default instance solved XMI path.
+	 */
+	public String gipsOutputPath = instanceFolder + scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json"))
+			+ "_solved.xmi";
+
+	/**
+	 * Default JSON output folder path.
+	 */
+	public String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/";
+
+	/**
+	 * Default JSON output file path.
+	 */
+	public String outputPath = datasetSolutionFolder + "sol_"
+			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
 	/**
 	 * Runtime tick.
@@ -417,5 +468,38 @@ public abstract class AbstractIhtcGipsRunner {
 			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
 		}
 	}
+
+	/**
+	 * Transforms a given JSON file to an XMI file.
+	 * 
+	 * @param inputJsonPath Input JSON file.
+	 * @param outputXmiPath Output XMI file.
+	 */
+	protected void transformJsonToModel(final String inputJsonPath, final String outputXmiPath) {
+		final JsonToModelLoader loader = new JsonToModelLoader();
+		loader.jsonToModel(inputJsonPath);
+		final Hospital model = loader.getModel();
+		try {
+			FileUtils.prepareFolder(instanceFolder);
+			FileUtils.save(model, outputXmiPath);
+		} catch (final IOException e) {
+			throw new InternalError(e.getMessage());
+		}
+	}
+
+	/**
+	 * Transforms the model to JSON.
+	 */
+	protected void transformModelToJson() {
+		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
+		final Hospital solvedHospital = (Hospital) loadedResource.getContents().get(0);
+		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
+		exporter.modelToJson(outputPath);
+	}
+
+	/**
+	 * Runs the execution of the configured scenario.
+	 */
+	protected abstract void run();
 
 }

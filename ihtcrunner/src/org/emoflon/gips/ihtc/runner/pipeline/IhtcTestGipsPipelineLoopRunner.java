@@ -24,9 +24,16 @@ public class IhtcTestGipsPipelineLoopRunner extends AbstractIhtcGipsLoopRunner {
 	 */
 	public static void main(final String[] args) {
 		final IhtcTestGipsPipelineLoopRunner runner = new IhtcTestGipsPipelineLoopRunner();
-		runner.setDatasetFolder(runner.competitionInstancesPath);
+		runner.setDatasetFolder(runner.testInstancesPath);
 		runner.setUpTestScenarioNames();
 		runner.executeScenarios();
+	}
+
+	@Override
+	protected void run() {
+		final IhtcGipsPipelineRunner gipsRunner = new IhtcGipsPipelineRunner();
+		overwritePaths(gipsRunner, this);
+		gipsRunner.run();
 	}
 
 }

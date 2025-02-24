@@ -29,4 +29,11 @@ public class IhtcInstancesGipsSoftCnstrOptionalDelayLoopRunner extends AbstractI
 		runner.executeScenarios();
 	}
 
+	@Override
+	protected void run() {
+		final IhtcGipsSoftCnstrOptionalDelayRunner gipsRunner = new IhtcGipsSoftCnstrOptionalDelayRunner();
+		overwritePaths(gipsRunner, this);
+		gipsRunner.run();
+	}
+
 }

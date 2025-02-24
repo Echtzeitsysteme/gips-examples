@@ -29,4 +29,11 @@ public class IhtcInstancesGipsSoftCnstrOptionalPatientsLoopRunner extends Abstra
 		runner.executeScenarios();
 	}
 
+	@Override
+	protected void run() {
+		final IhtcGipsSoftCnstrOptionalPatientsRunner gipsRunner = new IhtcGipsSoftCnstrOptionalPatientsRunner();
+		overwritePaths(gipsRunner, this);
+		gipsRunner.run();
+	}
+
 }

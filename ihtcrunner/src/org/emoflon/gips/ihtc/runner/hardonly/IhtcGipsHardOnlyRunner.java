@@ -1,16 +1,9 @@
 package org.emoflon.gips.ihtc.runner.hardonly;
 
-import java.io.IOException;
-
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.emoflon.gips.ihtc.runner.IhtcGipsRunner;
+import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
 
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
-import ihtcmetamodel.Hospital;
-import ihtcmetamodel.importexport.JsonToModelLoader;
-import ihtcmetamodel.importexport.ModelToJsonExporter;
-import ihtcmetamodel.utils.FileUtils;
 
 /**
  * This example runner can be used to load an IHTC 2024 JSON-based problem file,
@@ -20,7 +13,7 @@ import ihtcmetamodel.utils.FileUtils;
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public class IhtcGipsHardOnlyRunner extends IhtcGipsRunner {
+public class IhtcGipsHardOnlyRunner extends AbstractIhtcGipsRunner {
 
 	/**
 	 * No public instances of this class allowed.
@@ -55,15 +48,7 @@ public class IhtcGipsHardOnlyRunner extends IhtcGipsRunner {
 		// Convert JSON input file to XMI file
 		//
 
-		final JsonToModelLoader loader = new JsonToModelLoader();
-		loader.jsonToModel(inputPath);
-		final Hospital model = loader.getModel();
-		try {
-			FileUtils.prepareFolder(instanceFolder);
-			FileUtils.save(model, instancePath);
-		} catch (final IOException e) {
-			throw new InternalError(e.getMessage());
-		}
+		transformJsonToModel(inputPath, instancePath);
 
 		//
 		// Initialize GIPS API
@@ -94,10 +79,7 @@ public class IhtcGipsHardOnlyRunner extends IhtcGipsRunner {
 		// Convert solution XMI model to JSON output file
 		//
 
-		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
-		final Hospital solvedHospital = (Hospital) loadedResource.getContents().get(0);
-		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
-		exporter.modelToJson(outputPath);
+		transformModelToJson();
 
 		//
 		// The end

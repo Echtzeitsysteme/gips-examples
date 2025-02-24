@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public abstract class AbstractIhtcGipsLoopRunner extends IhtcGipsRunner {
+public abstract class AbstractIhtcGipsLoopRunner extends AbstractIhtcGipsRunner {
 
 	/**
 	 * Folder path of the competition instances.
@@ -116,6 +116,25 @@ public abstract class AbstractIhtcGipsLoopRunner extends IhtcGipsRunner {
 			}
 			printLogSeparator();
 		});
+	}
+
+	/**
+	 * Overwrites the paths of the given runner with the paths of the given loop
+	 * runner.
+	 * 
+	 * @param runner     Runner whose paths should be overwritten.
+	 * @param loopRunner Loop runner whose paths should be used for overwriting.
+	 */
+	protected void overwritePaths(final AbstractIhtcGipsRunner runner, final AbstractIhtcGipsLoopRunner loopRunner) {
+		runner.scenarioFileName = loopRunner.scenarioFileName;
+		runner.projectFolder = loopRunner.projectFolder;
+		runner.datasetFolder = loopRunner.datasetFolder;
+		runner.inputPath = loopRunner.inputPath;
+		runner.instanceFolder = loopRunner.instanceFolder;
+		runner.instancePath = loopRunner.instancePath;
+		runner.gipsOutputPath = loopRunner.gipsOutputPath;
+		runner.datasetSolutionFolder = loopRunner.datasetSolutionFolder;
+		runner.outputPath = loopRunner.outputPath;
 	}
 
 }

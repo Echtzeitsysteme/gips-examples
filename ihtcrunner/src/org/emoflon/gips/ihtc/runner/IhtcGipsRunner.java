@@ -1,15 +1,8 @@
 package org.emoflon.gips.ihtc.runner;
 
-import java.io.IOException;
-
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 
 import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
-import ihtcmetamodel.Hospital;
-import ihtcmetamodel.importexport.JsonToModelLoader;
-import ihtcmetamodel.importexport.ModelToJsonExporter;
-import ihtcmetamodel.utils.FileUtils;
 
 /**
  * This example runner can be used to load an IHTC 2024 JSON-based problem file,
@@ -20,53 +13,6 @@ import ihtcmetamodel.utils.FileUtils;
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
-
-	/**
-	 * The scenario (JSON) file to load.
-	 */
-	protected String scenarioFileName = "test01.json";
-
-	/**
-	 * Project folder location.
-	 */
-	protected String projectFolder = System.getProperty("user.dir");
-
-	/**
-	 * Data set folder location.
-	 */
-	protected String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
-
-	/**
-	 * Default input path.
-	 */
-	protected String inputPath = datasetFolder + scenarioFileName;
-
-	/**
-	 * Default instance folder path.
-	 */
-	protected String instanceFolder = projectFolder + "/../ihtcmetamodel/instances/";
-
-	/**
-	 * Default instance XMI path.
-	 */
-	protected String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
-
-	/**
-	 * Default instance solved XMI path.
-	 */
-	protected String gipsOutputPath = instanceFolder
-			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_solved.xmi";
-
-	/**
-	 * Default JSON output folder path.
-	 */
-	protected String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/";
-
-	/**
-	 * Default JSON output file path.
-	 */
-	protected String outputPath = datasetSolutionFolder + "sol_"
-			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
 	/**
 	 * No public instances of this class allowed.
@@ -95,15 +41,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		// Convert JSON input file to XMI file
 		//
 
-		final JsonToModelLoader loader = new JsonToModelLoader();
-		loader.jsonToModel(inputPath);
-		final Hospital model = loader.getModel();
-		try {
-			FileUtils.prepareFolder(instanceFolder);
-			FileUtils.save(model, instancePath);
-		} catch (final IOException e) {
-			throw new InternalError(e.getMessage());
-		}
+		transformJsonToModel(inputPath, instancePath);
 
 		//
 		// Initialize GIPS API
@@ -124,9 +62,6 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 
 		applySolution(gipsApi, true);
 
-		// TODO: remove me
-//		printVariableValues(gipsApi);
-
 		//
 		// Save output XMI file
 		//
@@ -137,10 +72,7 @@ public class IhtcGipsRunner extends AbstractIhtcGipsRunner {
 		// Convert solution XMI model to JSON output file
 		//
 
-		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
-		final Hospital solvedHospital = (Hospital) loadedResource.getContents().get(0);
-		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
-		exporter.modelToJson(outputPath);
+		transformModelToJson();
 
 		//
 		// The end

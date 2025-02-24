@@ -29,4 +29,11 @@ public class IhtcInstancesGipsPipelineLoopRunner extends AbstractIhtcGipsLoopRun
 		runner.executeScenarios();
 	}
 
+	@Override
+	protected void run() {
+		final IhtcGipsPipelineRunner gipsRunner = new IhtcGipsPipelineRunner();
+		overwritePaths(gipsRunner, this);
+		gipsRunner.run();
+	}
+
 }

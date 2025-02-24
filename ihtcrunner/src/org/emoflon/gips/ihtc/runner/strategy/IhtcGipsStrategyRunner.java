@@ -1,16 +1,13 @@
 package org.emoflon.gips.ihtc.runner.strategy;
 
-import java.io.IOException;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.emoflon.gips.ihtc.runner.IhtcGipsRunner;
+import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
 import org.emoflon.gips.ihtc.runner.utils.GurobiTuningUtil;
 
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 import ihtcmetamodel.Hospital;
-import ihtcmetamodel.importexport.JsonToModelLoader;
 import ihtcmetamodel.importexport.ModelToJsonExporter;
 import ihtcmetamodel.metrics.ModelCostCalculator;
 import ihtcmetamodel.utils.FileUtils;
@@ -33,7 +30,7 @@ import ihtcmetamodel.utils.FileUtils;
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
+public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 
 	/**
 	 * If true, the runner will print more detailed information.
@@ -65,7 +62,7 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 	/**
 	 * Sets the default paths up.
 	 */
-	private void setupDefaultPaths() {
+	void setupDefaultPaths() {
 		// Update output JSON file path
 		this.datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/strategy_runner/";
 		this.outputPath = datasetSolutionFolder + "sol_"
@@ -122,15 +119,7 @@ public class IhtcGipsStrategyRunner extends IhtcGipsRunner {
 		// Convert JSON input file to XMI file
 		//
 
-		final JsonToModelLoader loader = new JsonToModelLoader();
-		loader.jsonToModel(inputPath);
-		final Hospital model = loader.getModel();
-		try {
-			FileUtils.prepareFolder(instanceFolder);
-			FileUtils.save(model, instancePath);
-		} catch (final IOException e) {
-			throw new InternalError(e.getMessage());
-		}
+		transformJsonToModel(inputPath, instancePath);
 
 		//
 		// Initialize GIPS API: Hard constraints only.
