@@ -2,6 +2,15 @@ package "ihtcgipssolution.softcnstrtuning"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
+// This specification extends the "hard-only" implementation
+// and also takes the three most expensive optional constraints
+// into account:
+// - optional patients
+// - optional delay
+// - optional open OTs
+//
+
+//
 // Configuration
 //
 

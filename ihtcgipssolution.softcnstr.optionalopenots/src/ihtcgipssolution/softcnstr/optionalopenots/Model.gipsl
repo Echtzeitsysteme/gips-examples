@@ -2,6 +2,11 @@ package "ihtcgipssolution.softcnstr.optionalopenots"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
+// This specification extends the "hard-only" implementation
+// and also takes the optional open OTs into account.
+//
+
+//
 // Configuration
 //
 

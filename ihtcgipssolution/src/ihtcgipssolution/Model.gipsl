@@ -2,6 +2,16 @@ package "ihtcgipssolution"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
+// This specification tries to take as much constraints into
+// account as possible.
+//
+// Current state:
+// - Due to some bugs, it is not correctly runnable.
+// - Some learnings (i.e., speed up achievements) of other
+// projects may be missing in this specification.
+//
+
+//
 // Configuration
 //
 
@@ -453,7 +463,8 @@ constraint with roomShiftProducedLoad {
 	)->sum(element.nodes.owp.workloadProduced)
 }
 
-// TODO:
+// TODO: This constraints currently makes the problem infeasible.
+//
 // Constraint that saves the cumulative load of nurse `n` in room `r`
 // on shift `s` in the variable `load`.
 constraint with nurseShiftRoomLoad {

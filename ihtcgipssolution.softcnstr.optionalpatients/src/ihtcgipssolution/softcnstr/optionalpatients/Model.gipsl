@@ -2,6 +2,11 @@ package "ihtcgipssolution.softcnstr.optionalpatients"
 import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
+// This specification extends the "hard-only" implementation
+// and also takes the optional patients soft constraint into account.
+//
+
+//
 // Configuration
 //
 
