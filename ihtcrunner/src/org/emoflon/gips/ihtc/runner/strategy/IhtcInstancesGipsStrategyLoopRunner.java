@@ -1,11 +1,13 @@
 package org.emoflon.gips.ihtc.runner.strategy;
 
+import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsLoopRunner;
+
 /**
  * GIPS-based IHTC 2024 loop runner for the competition instances.
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public class IhtcInstancesGipsStrategyLoopRunner extends AbstractIhtcGipsStrategyLoopRunner {
+public class IhtcInstancesGipsStrategyLoopRunner extends AbstractIhtcGipsLoopRunner {
 
 	/**
 	 * No public instances of this class allowed.
@@ -21,35 +23,9 @@ public class IhtcInstancesGipsStrategyLoopRunner extends AbstractIhtcGipsStrateg
 	 */
 	public static void main(final String[] args) {
 		final IhtcInstancesGipsStrategyLoopRunner runner = new IhtcInstancesGipsStrategyLoopRunner();
-		runner.setDatasetFolder("/../ihtcmetamodel/resources/ihtc2024_competition_instances/");
-		runner.setUpScenarioNames();
-		runner.printLogSeparator();
-		runner.getScenarioNames().forEach(name -> {
-			System.out.println("=> Running scenario : " + name);
-			runner.setCurrentScenarioName(name);
-			try {
-				runner.run();
-			} catch (final InternalError err) {
-				System.err.println("=> No solution found.");
-			}
-			runner.printLogSeparator();
-		});
-	}
-
-	/**
-	 * Sets the scenario names up.
-	 */
-	@Override
-	protected void setUpScenarioNames() {
-		for (int i = 1; i <= 30; i++) {
-			String name = "i";
-			if (i < 10) {
-				name = name.concat("0");
-			}
-			name = name.concat(String.valueOf(i));
-			name = name.concat(".json");
-			addScenarioName(name);
-		}
+		runner.setDatasetFolder(runner.competitionInstancesPath);
+		runner.setUpInstanceScenarioNames();
+		runner.executeScenarios();
 	}
 
 }

@@ -14,6 +14,16 @@ import java.util.List;
 public abstract class AbstractIhtcGipsLoopRunner extends IhtcGipsRunner {
 
 	/**
+	 * Folder path of the competition instances.
+	 */
+	protected final String competitionInstancesPath = "/../ihtcmetamodel/resources/ihtc2024_competition_instances/";
+
+	/**
+	 * Folder path of the test instances.
+	 */
+	protected final String testInstancesPath = "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
+
+	/**
 	 * List of scenario names to be executed.
 	 */
 	private List<String> scenarioNames = new ArrayList<String>();
@@ -62,8 +72,50 @@ public abstract class AbstractIhtcGipsLoopRunner extends IhtcGipsRunner {
 	}
 
 	/**
-	 * Sets the scenario names up.
+	 * Sets the test scenario names up.
 	 */
-	protected abstract void setUpScenarioNames();
+	protected void setUpTestScenarioNames() {
+		for (int i = 1; i <= 10; i++) {
+			String name = "test";
+			if (i < 10) {
+				name = name.concat("0");
+			}
+			name = name.concat(String.valueOf(i));
+			name = name.concat(".json");
+			addScenarioName(name);
+		}
+	}
+
+	/**
+	 * Sets the instance scenario names up.
+	 */
+	protected void setUpInstanceScenarioNames() {
+		for (int i = 1; i <= 30; i++) {
+			String name = "i";
+			if (i < 10) {
+				name = name.concat("0");
+			}
+			name = name.concat(String.valueOf(i));
+			name = name.concat(".json");
+			addScenarioName(name);
+		}
+	}
+
+	/**
+	 * Executes the configured scenarios one by one.
+	 */
+	protected void executeScenarios() {
+		printLogSeparator();
+		getScenarioNames().forEach(name -> {
+			System.out.println("=> Running scenario : " + name);
+			setCurrentScenarioName(name);
+			try {
+				run();
+			} catch (final InternalError err) {
+				System.err.println("=> No solution found.");
+			}
+			printLogSeparator();
+		});
+	}
 
 }
