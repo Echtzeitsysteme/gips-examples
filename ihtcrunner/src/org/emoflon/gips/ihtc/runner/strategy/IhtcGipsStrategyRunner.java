@@ -134,6 +134,10 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		// Set presolve to "auto"
 		GurobiTuningUtil.updatePresolve(gipsApi, -1);
 
+		if (verbose) {
+			GurobiTuningUtil.setDebugOutput(gipsApi);
+		}
+
 		//
 		// Run first GIPS solution
 		//
@@ -166,6 +170,10 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		// Set presolve to "auto"
 		GurobiTuningUtil.updatePresolve(gipsApiOptional, -1);
 		// TODO: set MIPFocus parameter here?
+
+		if (verbose) {
+			GurobiTuningUtil.setDebugOutput(gipsApiOptional);
+		}
 
 		//
 		// Run second GIPS solution
