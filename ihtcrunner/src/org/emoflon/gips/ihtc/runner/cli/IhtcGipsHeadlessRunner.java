@@ -104,6 +104,11 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 		if (setXmiOutputModelPathDelete) {
 			FileUtils.deleteFile(xmiOutputModelPath);
 		}
+
+		// Delete `Gurobi_ILP.log` if no `--debug` configured
+		if (!debugOutputEnabled) {
+			FileUtils.deleteFile("./Gurobi_ILP.log");
+		}
 	}
 
 	/**
