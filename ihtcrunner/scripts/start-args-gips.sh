@@ -61,7 +61,7 @@ run
 
 # Clean up extracted files that are not relevant for the
 # procuded JSON solution file.
-rm -r ./ihtcgipssolution ./model_in.xmi
+rm -r ./ihtcgipssolution
 
 echo "#"
 echo "# => Arg script done."

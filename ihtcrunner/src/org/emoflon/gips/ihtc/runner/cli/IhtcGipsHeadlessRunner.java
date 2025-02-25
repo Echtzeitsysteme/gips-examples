@@ -10,6 +10,8 @@ import org.apache.commons.cli.ParseException;
 import org.emoflon.gips.ihtc.runner.strategy.IhtcGipsStrategyRunner;
 import org.emoflon.gips.ihtc.runner.utils.StringUtils;
 
+import ihtcmetamodel.utils.FileUtils;
+
 /**
  * Runnable headless CLI runner for the IHTC 2024 GIPS-based solution.
  * 
@@ -33,9 +35,21 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 	private static String xmiInputModelPath = "./model_in.xmi";
 
 	/**
+	 * If true, the necessary XMI input model file will be deleted after the
+	 * execution.
+	 */
+	private static boolean setXmiInputModelPathDelete = true;
+
+	/**
 	 * XMI output model file path to save the transformed output model to.
 	 */
-	private static String xmiOutputModelPath = null;
+	private static String xmiOutputModelPath = "./model_out.xmi";
+
+	/**
+	 * If true, the necessary XMI output model file will be deleted after the
+	 * execution.
+	 */
+	private static boolean setXmiOutputModelPathDelete = true;
 
 	/**
 	 * Boolean flag to enable the debug output.
@@ -69,16 +83,27 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 	 * previous parsing of arguments.
 	 */
 	private void execute() {
+		// Create a new IHTC GIPS strategy runner
 		final IhtcGipsStrategyRunner strategyRunner = new IhtcGipsStrategyRunner();
+
+		// Set values configured by the given arguments
 		strategyRunner.setVerbose(debugOutputEnabled);
 		strategyRunner.setSplitOutputJsonEnabled(splitOutputJsonEnabled);
 		strategyRunner.setJsonInputPath(jsonInputPath);
 		strategyRunner.setJsonOutputPath(jsonOutputPath);
 		strategyRunner.setXmiInputModelPath(xmiInputModelPath);
-		if (xmiOutputModelPath != null) {
-			strategyRunner.setXmiOutputModelPath(xmiOutputModelPath);
-		}
+		strategyRunner.setXmiOutputModelPath(xmiOutputModelPath);
+
+		// Execute the runner
 		strategyRunner.run();
+
+		// Delete XMI files if configured
+		if (setXmiInputModelPathDelete) {
+			FileUtils.deleteFile(xmiInputModelPath);
+		}
+		if (setXmiOutputModelPathDelete) {
+			FileUtils.deleteFile(xmiOutputModelPath);
+		}
 	}
 
 	/**
@@ -144,13 +169,18 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 		if (cmd.hasOption("outputjson")) {
 			jsonOutputPath = cmd.getOptionValue("outputjson");
 		} else {
+			// If no value is provided, set the default output path to the same location
+			// as the input path but precede the JSON file name with `sol_` according to
+			// the competition description.
 			jsonOutputPath = StringUtils.replaceLast(jsonInputPath, "/", "/sol_");
 		}
 		if (cmd.hasOption("modelinputxmi")) {
 			xmiInputModelPath = cmd.getOptionValue("modelinputxmi");
+			setXmiInputModelPathDelete = false;
 		}
 		if (cmd.hasOption("modeloutputxmi")) {
 			xmiOutputModelPath = cmd.getOptionValue("modeloutputxmi");
+			setXmiOutputModelPathDelete = false;
 		}
 		IhtcGipsHeadlessRunner.debugOutputEnabled = cmd.hasOption("debug");
 		IhtcGipsHeadlessRunner.splitOutputJsonEnabled = cmd.hasOption("split");

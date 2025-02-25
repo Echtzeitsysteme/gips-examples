@@ -222,4 +222,18 @@ public class FileUtils {
 		return f.exists() && !f.isDirectory();
 	}
 
+	/**
+	 * Deletes the file with the given file path if it is not a directory.
+	 * 
+	 * @param path File path to delete file on.
+	 */
+	public static void deleteFile(final String path) {
+		checkNotNull(path, "Path");
+		final File toDelete = new File(path);
+		if (toDelete.isDirectory()) {
+			throw new IllegalArgumentException("Given path is not a file but a directory.");
+		}
+		toDelete.delete();
+	}
+
 }

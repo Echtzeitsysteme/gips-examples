@@ -249,7 +249,10 @@ public abstract class AbstractIhtcGipsRunner {
 		loader.jsonToModel(inputJsonPath);
 		final Hospital model = loader.getModel();
 		try {
-			FileUtils.prepareFolder(instanceFolder);
+			// Prepare folder if necessary
+			if (inputJsonPath.contains("/")) {
+				FileUtils.prepareFolder(inputJsonPath.substring(0, inputJsonPath.lastIndexOf("/")));
+			}
 			FileUtils.save(model, outputXmiPath);
 		} catch (final IOException e) {
 			throw new InternalError(e.getMessage());
