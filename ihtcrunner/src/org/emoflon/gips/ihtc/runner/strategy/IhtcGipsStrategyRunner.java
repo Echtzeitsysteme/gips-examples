@@ -43,6 +43,11 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 	private boolean splitOutputJsonEnabled = false;
 
 	/**
+	 * Random seed for the (M(ILP solver.
+	 */
+	private int randomSeed = -1;
+
+	/**
 	 * Create a new instance of this class.
 	 */
 	public IhtcGipsStrategyRunner() {
@@ -106,6 +111,15 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 	}
 
 	/**
+	 * Sets the random seed of the (M)ILP solver.
+	 * 
+	 * @param randomSeed Random seed to set for the (M)ILP solver.
+	 */
+	public void setRandomSeed(final int randomSeed) {
+		this.randomSeed = randomSeed;
+	}
+
+	/**
 	 * Runs the execution of the configured scenario.
 	 */
 	@Override
@@ -133,6 +147,9 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
 		// Set presolve to "auto"
 		GurobiTuningUtil.updatePresolve(gipsApi, -1);
+		if (randomSeed != -1) {
+			GurobiTuningUtil.updateRandomSeed(gipsApi, randomSeed);
+		}
 
 		if (verbose) {
 			GurobiTuningUtil.setDebugOutput(gipsApi);
@@ -171,6 +188,9 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		// Set presolve to "auto"
 		GurobiTuningUtil.updatePresolve(gipsApiOptional, -1);
 		// TODO: set MIPFocus parameter here?
+		if (randomSeed != -1) {
+			GurobiTuningUtil.updateRandomSeed(gipsApiOptional, randomSeed);
+		}
 
 		if (verbose) {
 			GurobiTuningUtil.setDebugOutput(gipsApiOptional);

@@ -62,6 +62,11 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 	private static boolean splitOutputJsonEnabled = false;
 
 	/**
+	 * Random seed for the (M(ILP solver.
+	 */
+	private static int randomSeed = -1;
+
+	/**
 	 * No public instances of this class allowed.
 	 */
 	protected IhtcGipsHeadlessRunner() {
@@ -93,6 +98,9 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 		strategyRunner.setJsonOutputPath(jsonOutputPath);
 		strategyRunner.setXmiInputModelPath(xmiInputModelPath);
 		strategyRunner.setXmiOutputModelPath(xmiOutputModelPath);
+		if (randomSeed != -1) {
+			strategyRunner.setRandomSeed(randomSeed);
+		}
 
 		// Execute the runner
 		strategyRunner.run();
@@ -120,6 +128,7 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 	 * <li>"r": model output XMI file to store (optional)</li>
 	 * <li>"d": debug output flag (optional)</li>
 	 * <li>"s": split output JSON file flag (optional)</li>
+	 * <li>"n": random seed for the (M)ILP solver (optional)</li>
 	 * </ol>
 	 * 
 	 * @param args Arguments to parse.
@@ -157,6 +166,11 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 		splitOutputEnabled.setRequired(false);
 		options.addOption(splitOutputEnabled);
 
+		// XMI model file path to save the output model to
+		final Option randomSeed = new Option("n", "randomseed", true, "random seed for the (M)ILP solver");
+		xmiModelOutputFile.setRequired(false);
+		options.addOption(randomSeed);
+
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -189,6 +203,17 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 		}
 		IhtcGipsHeadlessRunner.debugOutputEnabled = cmd.hasOption("debug");
 		IhtcGipsHeadlessRunner.splitOutputJsonEnabled = cmd.hasOption("split");
+		if (cmd.hasOption("randomseed")) {
+			final String randomSeedParameter = cmd.getOptionValue("randomseed");
+			try {
+				IhtcGipsHeadlessRunner.randomSeed = Integer.valueOf(randomSeedParameter);
+				if (IhtcGipsHeadlessRunner.randomSeed < 0) {
+					throw new IllegalArgumentException("Given random seed was negative, which is not supported.");
+				}
+			} catch (final Exception e) {
+				throw new IllegalArgumentException("Given random seed was not an integer.");
+			}
+		}
 	}
 
 }

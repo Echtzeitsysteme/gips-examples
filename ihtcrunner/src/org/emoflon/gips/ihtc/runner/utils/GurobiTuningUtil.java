@@ -139,6 +139,22 @@ public class GurobiTuningUtil {
 	}
 
 	/**
+	 * Updates the random seed with the given value.
+	 * 
+	 * @param gipsApi       GIPS API to update the Gurobi solver random seed for.
+	 * @param newRandomSeed New random seed to set.
+	 */
+	public static void updateRandomSeed(final GipsEngineAPI<?, ?> gipsApi, final int newRandomSeed) {
+		final var model = getGrbModel(gipsApi);
+		try {
+			model.set(IntParam.Seed, newRandomSeed);
+		} catch (final GRBException e) {
+			e.printStackTrace();
+			throw new UnsupportedOperationException(e);
+		}
+	}
+
+	/**
 	 * Extracts the solver object from the given GIPS Engine API via Java
 	 * reflections.
 	 * 
