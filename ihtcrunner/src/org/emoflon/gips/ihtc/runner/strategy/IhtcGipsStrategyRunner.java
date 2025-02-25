@@ -166,7 +166,8 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		final long tockBeforeRunningStageTwo = System.nanoTime();
 		final double remainingTime = 570 - 1.0 * (tockBeforeRunningStageTwo - tickStageOne) / 1_000_000_000;
 		gipsApiOptional.setTimeLimit(remainingTime);
-		GurobiTuningUtil.updateTimeLimit(gipsApiOptional, remainingTime);
+		// TODO: This should now be redundant
+//		GurobiTuningUtil.updateTimeLimit(gipsApiOptional, remainingTime);
 		// Set presolve to "auto"
 		GurobiTuningUtil.updatePresolve(gipsApiOptional, -1);
 		// TODO: set MIPFocus parameter here?
