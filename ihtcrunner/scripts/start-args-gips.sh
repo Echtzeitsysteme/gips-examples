@@ -37,6 +37,7 @@ setup
 # $1
 
 export inputXmi=$1
+export randomSeed=$2
 
 # Extract needed XMI files
 echo "=> Applying GIPS XMI workarounds."
@@ -52,7 +53,12 @@ unzip -qq -o $JAR "ihtcgipssolution/softcnstrtuning/api/ibex-patterns.xmi"
 
 # Actual run
 export RUN_NAME=$(date +%Y-%m-%d"_"%H-%M-%S)
-export ARGS="-i $inputXmi --debug --split"
+if [ ! -z "$randomSeed" ]; then
+	export ARGS="-i $inputXmi --debug --randomseed $randomSeed"
+else
+    export ARGS="-i $inputXmi --debug"
+fi
+
 echo "#"
 echo "# => Using ARGS: $ARGS"
 echo "#"
