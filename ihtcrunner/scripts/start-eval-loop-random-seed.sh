@@ -46,6 +46,6 @@ do
 done
 
 echo "#"
-echo "# => Eval loop random seedscript done."
+echo "# => Eval loop random seed script done."
 echo "#"
 
