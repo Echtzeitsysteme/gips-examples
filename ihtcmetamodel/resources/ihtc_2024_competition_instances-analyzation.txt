@@ -1,0 +1,420 @@
+=> i01.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     12 |
+| #occupants   |      3 |
+| #patients    |     28 |
+| #surgeons    |      1 |
+| #ots         |      2 |
+| #rooms       |      4 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i02.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     13 |
+| #occupants   |      8 |
+| #patients    |     37 |
+| #surgeons    |      1 |
+| #ots         |      2 |
+| #rooms       |      5 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i03.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     10 |
+| #occupants   |      3 |
+| #patients    |     45 |
+| #surgeons    |      1 |
+| #ots         |      2 |
+| #rooms       |      4 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i04.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     21 |
+| #occupants   |      9 |
+| #patients    |     54 |
+| #surgeons    |      2 |
+| #ots         |      2 |
+| #rooms       |      9 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i05.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     21 |
+| #nurses      |     25 |
+| #occupants   |     13 |
+| #patients    |     93 |
+| #surgeons    |      1 |
+| #ots         |      2 |
+| #rooms       |     10 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i06.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     21 |
+| #nurses      |     16 |
+| #occupants   |     12 |
+| #patients    |    105 |
+| #surgeons    |      1 |
+| #ots         |      2 |
+| #rooms       |      7 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i07.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     29 |
+| #occupants   |     20 |
+| #patients    |     79 |
+| #surgeons    |      3 |
+| #ots         |      4 |
+| #rooms       |     13 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i08.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     28 |
+| #nurses      |     32 |
+| #occupants   |     21 |
+| #patients    |    174 |
+| #surgeons    |      4 |
+| #ots         |      3 |
+| #rooms       |     14 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i09.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     26 |
+| #occupants   |     17 |
+| #patients    |     96 |
+| #surgeons    |      4 |
+| #ots         |      3 |
+| #rooms       |     12 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i10.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     21 |
+| #nurses      |     20 |
+| #occupants   |      8 |
+| #patients    |    156 |
+| #surgeons    |      2 |
+| #ots         |      3 |
+| #rooms       |      8 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i11.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     34 |
+| #occupants   |     15 |
+| #patients    |    112 |
+| #surgeons    |      2 |
+| #ots         |      3 |
+| #rooms       |     15 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i12.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     29 |
+| #occupants   |     21 |
+| #patients    |    121 |
+| #surgeons    |      3 |
+| #ots         |      5 |
+| #rooms       |     12 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i13.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     24 |
+| #occupants   |     18 |
+| #patients    |    129 |
+| #surgeons    |      5 |
+| #ots         |      8 |
+| #rooms       |     10 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i14.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     44 |
+| #occupants   |     36 |
+| #patients    |    138 |
+| #surgeons    |      3 |
+| #ots         |      4 |
+| #rooms       |     21 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i15.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     34 |
+| #occupants   |     27 |
+| #patients    |    146 |
+| #surgeons    |      5 |
+| #ots         |      7 |
+| #rooms       |     16 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i16.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     36 |
+| #occupants   |     16 |
+| #patients    |    154 |
+| #surgeons    |      5 |
+| #ots         |      5 |
+| #rooms       |     17 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i17.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     28 |
+| #nurses      |     37 |
+| #occupants   |     15 |
+| #patients    |    325 |
+| #surgeons    |      6 |
+| #ots         |      5 |
+| #rooms       |     18 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i18.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     21 |
+| #nurses      |     41 |
+| #occupants   |     15 |
+| #patients    |    257 |
+| #surgeons    |      3 |
+| #ots         |      4 |
+| #rooms       |     19 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i19.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     28 |
+| #nurses      |     52 |
+| #occupants   |     26 |
+| #patients    |    359 |
+| #surgeons    |      7 |
+| #ots         |      8 |
+| #rooms       |     25 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i20.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     33 |
+| #occupants   |     20 |
+| #patients    |    188 |
+| #surgeons    |      5 |
+| #ots         |      7 |
+| #rooms       |     15 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i21.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     21 |
+| #nurses      |     44 |
+| #occupants   |     31 |
+| #patients    |    294 |
+| #surgeons    |      6 |
+| #ots         |      7 |
+| #rooms       |     21 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i22.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     28 |
+| #nurses      |     44 |
+| #occupants   |     22 |
+| #patients    |    409 |
+| #surgeons    |      6 |
+| #ots         |      7 |
+| #rooms       |     20 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i23.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     28 |
+| #nurses      |     55 |
+| #occupants   |     43 |
+| #patients    |    426 |
+| #surgeons    |      5 |
+| #ots         |      5 |
+| #rooms       |     26 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i24.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     28 |
+| #nurses      |     65 |
+| #occupants   |     29 |
+| #patients    |    443 |
+| #surgeons    |      4 |
+| #ots         |      6 |
+| #rooms       |     33 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i25.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     57 |
+| #occupants   |     36 |
+| #patients    |    230 |
+| #surgeons    |      9 |
+| #ots         |      7 |
+| #rooms       |     29 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i26.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     28 |
+| #nurses      |     54 |
+| #occupants   |     33 |
+| #patients    |    476 |
+| #surgeons    |      7 |
+| #ots         |      8 |
+| #rooms       |     26 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i27.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     28 |
+| #nurses      |     55 |
+| #occupants   |     41 |
+| #patients    |    493 |
+| #surgeons    |      8 |
+| #ots         |      8 |
+| #rooms       |     26 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i28.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     21 |
+| #nurses      |     51 |
+| #occupants   |     29 |
+| #patients    |    383 |
+| #surgeons    |      5 |
+| #ots         |      6 |
+| #rooms       |     26 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i29.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     14 |
+| #nurses      |     60 |
+| #occupants   |     44 |
+| #patients    |    264 |
+| #surgeons    |     10 |
+| #ots         |     10 |
+| #rooms       |     28 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+
+=> i30.json
++--------------+--------+
+| Metric       | Value  |
++--------------+--------+
+| #days        |     21 |
+| #nurses      |     50 |
+| #occupants   |     39 |
+| #patients    |    408 |
+| #surgeons    |      7 |
+| #ots         |      7 |
+| #rooms       |     25 |
+| #genders     |      2 |
+| #age_groups  |      3 |
++--------------+--------+

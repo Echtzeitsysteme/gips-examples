@@ -1,0 +1,140 @@
+package "ihtcgipssolution.nursesrooms"
+import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
+
+//
+// This specification only assigns nurses to rooms
+// and does not take any optional constraints into account.
+//
+// Some learnings (i.e., speed up achievements) of other
+// projects may be missing in this specification.
+//
+
+//
+// Configuration
+//
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 570.0, includeInitTime := true];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	lpOutput := true [path := "gurobi.lp"];
+	threadCount := true [value := 4];
+}
+
+//
+// GT
+//
+
+rule assignNurseToRoomShift {
+	h : Hospital {
+		- nurses -> n
+		- shifts -> s
+		- rooms -> r
+	}
+	
+	n : Nurse {
+		- shiftMaxLoads -> sml
+	}
+	
+	s : Shift
+	r : Room
+	
+	++ rsna : RoomShiftNurseAssignment {
+		++ - nurse -> n
+		++ - shift -> s
+		++ - room -> r
+	}
+	
+	sml : NurseShiftMaxLoad {
+		- shift -> s
+	}
+	
+	# sml.maxLoad > 0
+}
+
+pattern roomShiftTuple {
+	h : Hospital {
+		- rooms -> r
+		- shifts -> s
+	}
+	
+	r : Room
+	
+	s : Shift
+}
+
+pattern patientRoomDay {
+	h : Hospital {
+		- rooms -> r
+		- patients -> p
+		- days -> d
+	}
+	
+	r : Room
+	p : Patient
+	d : Day
+	
+	# p.surgeryReleaseDay <= d.id
+	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
+}
+
+pattern occupantRoomDay {
+	h : Hospital {
+		- rooms -> r
+		- occupants -> o
+		- days -> d
+	}
+	
+	r : Room
+	o : Occupant
+	d : Day
+	
+	# r.name == o.roomId
+	# o.lengthOfStay >= d.id
+}
+
+//
+// GIPSL
+//
+
+//
+// Mappings
+//
+
+// Assign nurse to a room and shift
+mapping anrs to assignNurseToRoomShift;
+
+//
+// Constraints
+//
+
+// 2.2 Solution: "A nurse can be assigned to more than one room in each shift (but only one
+// nurse is assigned to a room in a shift). Finally, note that it is necessary to assign
+// a nurse to a room on a given shift only if that room contains patients on the day
+// to which the shift belongs. Nevertheless, assigning nurses to empty rooms would
+// be feasible and does not incur additional costs."
+//
+// This constraint ensures that there is at most one nurse per room per shift.
+constraint with roomShiftTuple {
+	mappings.anrs->filter(element.nodes.r == context.nodes.r & element.nodes.s == context.nodes.s)->sum(element.value)
+	<= 1
+}
+
+// 2.2 Solution: "A nurse can be assigned to more than one room in each shift (but only one
+// nurse is assigned to a room in a shift). Finally, note that it is necessary to assign
+// a nurse to a room on a given shift only if that room contains patients on the day
+// to which the shift belongs. Nevertheless, assigning nurses to empty rooms would
+// be feasible and does not incur additional costs."
+//
+// This constraint ensures that there is at least one nurse per room that contains patients in a shift.
+constraint with roomShiftTuple {
+	patterns.patientRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.s.day)->sum(1)
+	+
+	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.s.day)->sum(1)
+	>= 1
+	<=>
+	// ... there must be exactly one nurse assigned to room `r` in shift `s` (that is part of day `d`).
+	mappings.anrs->filter(element.nodes.r == context.nodes.r & element.nodes.s == context.nodes.s)->sum(element.value) == 1
+}
