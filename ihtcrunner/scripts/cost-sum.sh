@@ -45,5 +45,6 @@ done
 
 echo "=> Found solutions: ${#solutionFiles[@]}"
 echo "=> Total cost: $sum"
+echo "=> Average: $(($sum / ${#solutionFiles[@]}))"
 
 exit 0
