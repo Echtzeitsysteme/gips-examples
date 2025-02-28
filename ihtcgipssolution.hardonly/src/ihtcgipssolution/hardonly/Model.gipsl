@@ -3,7 +3,7 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 //
 // This specification only uses the absolutely necessary
-// hard constraints from the task.
+// hard constraints from the task (H1-H6).
 //
 
 //
@@ -12,8 +12,8 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 570.0, includeInitTime := true];
-	randomSeed := true [value := 0];
+	timeLimit := true [value := 590.0, includeInitTime := true];
+	randomSeed := true [value := 7];
 	presolve := true;
 	debugOutput := false;
 //	lpOutput := true [path := "gurobi.lp"];
@@ -387,36 +387,6 @@ constraint with roomDayLoad {
 	+
 	// occupants
 	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
-	
-//	&
-//
-//	// TODO: all that follows is to save the Boolean value 1 if a room is used at all on a day
-//	
-//	1000 * context.value
-//	>=
-//	// patients
-//	mappings.roomDayPatientLoad->filter( //
-//		element.nodes.r == context.nodes.r //
-//		& element.nodes.d == context.nodes.d //
-//	)->sum(element.value)
-//	
-//	+
-//	// occupants
-//	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
-//	
-//	&
-//	
-//	context.value
-//	<=
-//	// patients
-//	mappings.roomDayPatientLoad->filter( //
-//		element.nodes.r == context.nodes.r //
-//		& element.nodes.d == context.nodes.d //
-//	)->sum(element.value)
-//	
-//	+
-//	// occupants
-//	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
 }
 
 // H1: No gender mix per room
