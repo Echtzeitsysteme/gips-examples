@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: ihtcgipssolution.softcnstrtuning
+Bundle-ManifestVersion: 2
+Bundle-Name: ihtcgipssolution.softcnstrtuning
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Export-Package: ihtcgipssolution.softcnstrtuning.api.gips
+Bundle-SymbolicName: ihtcgipssolution.softcnstrtuning; singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Require-Bundle: org.emoflon.ibex.common,
+ org.emoflon.ibex.gt,
+ org.emoflon.gips.core,
+ org.emoflon.ibex.gt.democles,
+ org.emoflon.ibex.gt.hipe,
+ ihtcmetamodel;bundle-version="0.0.1"
