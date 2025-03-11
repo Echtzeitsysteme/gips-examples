@@ -1,7 +1,7 @@
 package teachingassistant.kcl.gipssolution.runner;
 
 import teachingassistant.kcl.metamodel.generator.SimpleTaKclGenerator;
-import teachingassistant.metamodel.validator.TeachingAssistantKclValidator;
+import teachingassistant.kcl.metamodel.validator.TeachingAssistantKclValidator;
 
 /**
  * Runs the teaching assistant pipeline (scenario generator, GIPSL optimization,

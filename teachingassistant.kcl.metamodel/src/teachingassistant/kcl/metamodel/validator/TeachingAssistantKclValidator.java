@@ -1,4 +1,4 @@
-package teachingassistant.metamodel.validator;
+package teachingassistant.kcl.metamodel.validator;
 
 import java.util.Collection;
 import java.util.HashMap;

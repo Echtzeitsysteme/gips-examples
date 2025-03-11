@@ -16,5 +16,5 @@ Require-Bundle: org.eclipse.core.runtime,
 Export-Package: metamodel,
  metamodel.impl,
  teachingassistant.kcl.metamodel.generator,
- teachingassistant.metamodel.validator
+ teachingassistant.kcl.metamodel.validator
 
