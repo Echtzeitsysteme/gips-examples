@@ -9,6 +9,7 @@ import metamodel.Day;
 import metamodel.Department;
 import metamodel.Lecturer;
 import metamodel.Week;
+import teachingassistant.kcl.metamodel.export.ModelToJsonExporter;
 
 public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 
@@ -53,6 +54,9 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+
+		final ModelToJsonExporter exporter = new ModelToJsonExporter(model);
+		exporter.modelToJson(instanceFolderPath + "/kcl_department.json");
 
 		System.out.println("=> Scenario generation finished.");
 	}
