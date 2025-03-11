@@ -50,3 +50,7 @@ org.emoflon.gips.gipsl.examples.headlessrunnerxmi/scripts/ibex-patterns.xmi
 teachingassistant.kcl.metamodel/instances/kcl_department.xmi
 
 teachingassistant.kcl.metamodel/instances/solved.xmi
+
+ihtcrunner/model_in.xmi
+
+.DS_Store
