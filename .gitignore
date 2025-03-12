@@ -56,3 +56,5 @@ ihtcrunner/model_in.xmi
 .DS_Store
 
 teachingassistant.kcl.metamodel/instances/kcl_department.json
+
+teachingassistant.kcl.metamodel/model.json

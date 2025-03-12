@@ -1,0 +1,15 @@
+{
+    "number_of_lectures": 2,
+    "lecturers_minimum_number_of_assistants": 1,
+    "lecturers_maximum_number_of_assistants": 8,
+    "number_of_assistants": 10,
+	"assistants_maximum_number_of_days_per_week" : 3,
+	"assistants_minimum_number_of_hours_per_week" : 0,
+	"assistants_maximum_number_of_hours_per_week" : 20,
+	"assistants_maximum_hours_total" : 312,
+	"assistants_minimum_number_of_blocked_days" : 0,
+	"assistants_maximum_number_of_blocked_days" : 1,
+	"number_of_time_slots_per_week" : 10,
+	"number_of_tutorials_per_week" : 6,
+	"number_of_weeks": 1
+}

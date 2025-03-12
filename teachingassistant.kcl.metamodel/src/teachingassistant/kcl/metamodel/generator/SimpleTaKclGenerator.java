@@ -21,27 +21,27 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	//
 
 	// Lecturers
-	private final int NUMBER_OF_LECTURERS = 2;
-	private final int LECTURERS_MINIMUM_NUMBER_OF_ASSISTANTS = 1;
-	private final int LECTURERS_MAXIMUM_NUMBER_OF_ASSISTANTS = 8;
+	int NUMBER_OF_LECTURERS = 2;
+	int LECTURERS_MINIMUM_NUMBER_OF_ASSISTANTS = 1;
+	int LECTURERS_MAXIMUM_NUMBER_OF_ASSISTANTS = 8;
 
 	// Assistants
-	private final int NUMBER_OF_ASSISTANTS = 10;
-	private final int ASSISTANTS_MAXIMUM_NUMBER_OF_DAYS_PER_WEEK = 3;
-	private final int ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK = 0;
-	private final int ASSISTANTS_MAXIMUM_NUMBER_OF_HOURS_PER_WEEK = 20; // KCL
-	private final int ASSISTANTS_MAXIMUM_HOURS_TOTAL = 312; // KCL
-	private final int ASSISTANTS_MINIMUM_NUMBER_OF_BLOCKED_DAYS = 0;
-	private final int ASSISTANTS_MAXIMUM_NUMBER_OF_BLOCKED_DAYS = 1;
+	int NUMBER_OF_ASSISTANTS = 10;
+	int ASSISTANTS_MAXIMUM_NUMBER_OF_DAYS_PER_WEEK = 3;
+	int ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK = 0;
+	int ASSISTANTS_MAXIMUM_NUMBER_OF_HOURS_PER_WEEK = 20; // KCL
+	int ASSISTANTS_MAXIMUM_HOURS_TOTAL = 312; // KCL
+	int ASSISTANTS_MINIMUM_NUMBER_OF_BLOCKED_DAYS = 0;
+	int ASSISTANTS_MAXIMUM_NUMBER_OF_BLOCKED_DAYS = 1;
 
 	// Time slots
-	private final int NUMBER_OF_TIMESLOTS_PER_WEEK = 10; // Must be at least 5 = 1 per day
+	int NUMBER_OF_TIMESLOTS_PER_WEEK = 10; // Must be at least 5 = 1 per day
 
 	// Tutorials
-	private final int NUMBER_OF_TUTORIALS_PER_WEEK = 6;
+	int NUMBER_OF_TUTORIALS_PER_WEEK = 6;
 
 	// Weeks
-	private final int NUMBER_OF_WEEKS = 1;
+	int NUMBER_OF_WEEKS = 1;
 
 	/**
 	 * Runs the scenario generation and writes a XMI file to the configured output
@@ -186,5 +186,5 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		final List<String> lecturerSkillTypes = getAllLecturerSkills();
 		return lecturerSkillTypes.get(getRandInt(0, lecturerSkillTypes.size() - 1));
 	}
-	
+
 }
