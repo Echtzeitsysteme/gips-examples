@@ -2,8 +2,11 @@ package teachingassistant.kcl.metamodel.generator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import metamodel.Day;
 import metamodel.Department;
@@ -28,6 +31,8 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	private final int ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK = 0;
 	private final int ASSISTANTS_MAXIMUM_NUMBER_OF_HOURS_PER_WEEK = 20; // KCL
 	private final int ASSISTANTS_MAXIMUM_HOURS_TOTAL = 312; // KCL
+	private final int ASSISTANTS_MINIMUM_NUMBER_OF_BLOCKED_DAYS = 0;
+	private final int ASSISTANTS_MAXIMUM_NUMBER_OF_BLOCKED_DAYS = 1;
 
 	// Time slots
 	private final int NUMBER_OF_TIMESLOTS_PER_WEEK = 10; // Must be at least 5 = 1 per day
@@ -106,6 +111,19 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 					1, //
 					ASSISTANTS_MAXIMUM_NUMBER_OF_DAYS_PER_WEEK //
 			));
+
+			// Assumption: every assistant gets a random number of blocked dates equally
+			// drawn from MIN to MAX as configured above.
+			final Set<Day> blockedDates = new HashSet<Day>();
+			final int numberOfBlockedDays = getRandInt(ASSISTANTS_MINIMUM_NUMBER_OF_BLOCKED_DAYS,
+					ASSISTANTS_MAXIMUM_NUMBER_OF_BLOCKED_DAYS);
+			int counter = 0;
+			while (counter < numberOfBlockedDays) {
+				if (blockedDates.add(getRandomDay())) {
+					counter++;
+				}
+			}
+			assistants.get("Assistant_" + i).getBlockedDates().addAll(blockedDates);
 		}
 
 		// Time slots
@@ -135,6 +153,21 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		return generate("KCL-Department");
 	}
 
+	private Day getRandomDay() {
+		final int randomDayIndex = getRandInt(0, days.size() - 1);
+		int counter = 0;
+		final Iterator<Day> it = days.values().iterator();
+		Day d = null;
+		while (it.hasNext()) {
+			d = it.next();
+			counter++;
+			if (counter == randomDayIndex) {
+				break;
+			}
+		}
+		return d;
+	}
+
 	private List<String> getAllLecturerSkills() {
 		final List<String> lecturerSkillTypes = new ArrayList<String>();
 		for (final Lecturer l : this.lecturers.values()) {
@@ -153,4 +186,5 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		final List<String> lecturerSkillTypes = getAllLecturerSkills();
 		return lecturerSkillTypes.get(getRandInt(0, lecturerSkillTypes.size() - 1));
 	}
+	
 }
