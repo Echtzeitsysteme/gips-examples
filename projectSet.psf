@@ -28,6 +28,7 @@
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.lsp2pInc"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.mdvne"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.mdvne.bwignore"/>
+<project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.mdvne.heap"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.mdvne.migration"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.mdvne.seq"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.sdr"/>
@@ -111,5 +112,6 @@
 <item elementID="=ihtcmetamodel" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=ihtcrunner" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=ihtcgipssolution" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.emoflon.gips.gipsl.examples.mdvne.heap" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 </psf>
