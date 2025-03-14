@@ -12,6 +12,7 @@ public class ExampleMdVNE {
 		// Create new MdVNE Gips API and load a model
 		final MdvneGipsAPI api = new MdvneGipsAPI();
 		api.init(URI.createFileURI("./resources/example-models/model-in.xmi"));
+		api.getTracer().enableTracing(true);
 
 		// Build the ILP problem (including updates)
 		api.buildProblem(true);
