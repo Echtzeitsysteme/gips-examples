@@ -62,7 +62,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 
 		// Set the parsed configuration from the read JSON file
 		final GeneratorConfig config = parseJsonConfig(jsonInputPath);
-		gen.NUMBER_OF_LECTURERS = config.numberOfLectures;
+		gen.NUMBER_OF_LECTURERS = config.numberOfLecturers;
 		gen.LECTURERS_MINIMUM_NUMBER_OF_ASSISTANTS = config.lecturersMinimumNumberOfAssistants;
 		gen.LECTURERS_MAXIMUM_NUMBER_OF_ASSISTANTS = config.lecturersMaximumNumberOfAssistants;
 		gen.NUMBER_OF_ASSISTANTS = config.numberOfAssistants;
@@ -88,7 +88,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 	private GeneratorConfig parseJsonConfig(final String jsonInputPath) {
 		final JsonObject json = FileUtils.readFileToJson(jsonInputPath);
 		return new GeneratorConfig( //
-				json.getAsJsonPrimitive("number_of_lectures").getAsInt(), //
+				json.getAsJsonPrimitive("number_of_lecturers").getAsInt(), //
 				json.getAsJsonPrimitive("lecturers_minimum_number_of_assistants").getAsInt(), //
 				json.getAsJsonPrimitive("lecturers_maximum_number_of_assistants").getAsInt(), //
 				json.getAsJsonPrimitive("number_of_assistants").getAsInt(), //
@@ -162,7 +162,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 		}
 	}
 
-	public record GeneratorConfig(int numberOfLectures, int lecturersMinimumNumberOfAssistants,
+	public record GeneratorConfig(int numberOfLecturers, int lecturersMinimumNumberOfAssistants,
 			int lecturersMaximumNumberOfAssistants, int numberOfAssistants, int assistantsMaximumNumberOfDaysPerWeek,
 			int assistantsMinimumNumberOfHoursPerWeek, int assistantsMaximumNumberOfHoursPerWeek,
 			int assistantsMaximumHoursTotal, int assistantsMinimumNumberOfBlockedDays,
