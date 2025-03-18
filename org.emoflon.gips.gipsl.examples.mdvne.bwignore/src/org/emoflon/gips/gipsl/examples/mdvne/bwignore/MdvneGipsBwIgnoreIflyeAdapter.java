@@ -140,6 +140,8 @@ public class MdvneGipsBwIgnoreIflyeAdapter {
 		if (api != null) {
 			api.terminate();
 		}
+		HiPEPathOptions.getInstance().resetNetworkPath();
+		HiPEPathOptions.getInstance().resetEngineClassName();
 	}
 
 }
