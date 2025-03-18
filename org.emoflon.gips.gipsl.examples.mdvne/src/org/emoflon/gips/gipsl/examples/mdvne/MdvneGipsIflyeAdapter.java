@@ -136,6 +136,8 @@ public class MdvneGipsIflyeAdapter {
 	public static void resetInit() {
 		init = false;
 		api.terminate();
+		HiPEPathOptions.getInstance().resetNetworkPath();
+		HiPEPathOptions.getInstance().resetEngineClassName();
 	}
 
 }
