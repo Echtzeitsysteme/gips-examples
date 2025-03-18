@@ -49,4 +49,6 @@ org.emoflon.gips.gipsl.examples.headlessrunnerxmi/scripts/ibex-patterns.xmi
 
 ihtcrunner/model_in.xmi
 
-.DS_Store
+**/.DS_Store
+
+**/trace_cache.bin

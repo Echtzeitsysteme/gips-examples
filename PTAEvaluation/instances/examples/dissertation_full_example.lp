@@ -487,5 +487,5 @@ Generals
  aom#2->hours aom#2->overTime aom#3->hours aom#3->overTime aom#0->hours
  aom#0->overTime aom#1->hours aom#1->overTime aom#6->hours aom#6->overTime
  aom#7->hours aom#7->overTime aom#4->hours aom#4->overTime aom#5->hours
- aom#5->overTime aom#8->hours aom#8->overTime
+ aom#5->overTime aom#8->hours aom#8->overTime projectCost#0->salary
 End

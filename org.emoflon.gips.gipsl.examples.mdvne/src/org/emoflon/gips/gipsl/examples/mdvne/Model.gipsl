@@ -10,6 +10,7 @@ config {
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.000001];
+	lpOutput := true [path := "./problem.lp"];
 }
 
 // NACS
