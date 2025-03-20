@@ -105,7 +105,8 @@ public class GurobiTuningUtil {
 			solverConfigField = GurobiSolver.class.getDeclaredField("config");
 			solverConfigField.setAccessible(true);
 			final SolverConfig oldConfig = (SolverConfig) solverConfigField.get(solver);
-			solverConfigField.set(solver, oldConfig.withNewTimeLimit(newTimeLimit));
+			oldConfig.setTimeLimit(newTimeLimit);
+			solverConfigField.set(solver, oldConfig);
 		} catch (final NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 			throw new UnsupportedOperationException(e);
