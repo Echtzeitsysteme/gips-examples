@@ -74,7 +74,7 @@ public class ExtendedDijkstra extends Dijkstra {
 	 * @param start SubstrateNode to use as a start.
 	 */
 	private void init(final SubstrateNetwork net, final SubstrateNode start) {
-		for (final Node n : net.getNodes()) {
+		for (final Node n : net.getNodess()) {
 			final SubstrateNode sn = (SubstrateNode) n;
 
 			// Check if sn must be ignored

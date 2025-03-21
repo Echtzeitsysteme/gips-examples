@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: PTAConstraintConfigD
+Bundle-ManifestVersion: 2
+Bundle-Name: PTAConstraintConfigD
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: PTAConstraintConfigD; singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Require-Bundle: org.emoflon.ibex.common,
+ org.emoflon.ibex.gt,
+ org.emoflon.gips.core,
+ org.emoflon.ibex.gt.hipe,
+ PersonTaskAssignments;bundle-version="0.0.1",
+ org.emoflon.ibex.gt.democles
+Export-Package: PTAConstraintConfigD.api,
+ PTAConstraintConfigD.api.gips,
+ PTAConstraintConfigD.api.gips.constraint,
+ PTAConstraintConfigD.api.gips.mapper,
+ PTAConstraintConfigD.api.gips.mapping,
+ PTAConstraintConfigD.api.gips.objective,
+ PTAConstraintConfigD.api.matches,
+ PTAConstraintConfigD.api.rules,
+ PTAConstraintConfigD.hipe.engine,
+ PTAConstraintConfigD.hipe.engine.actor,
+ PTAConstraintConfigD.hipe.engine.actor.edge,
+ PTAConstraintConfigD.hipe.engine.actor.junction

@@ -20,7 +20,7 @@ public class EvaluationApp {
 
 		Logger.getRootLogger().setLevel(Level.INFO);
 		logger.info("Start");
-		
+
 		try {
 			run(args);
 		} catch (final Exception e) {
@@ -38,7 +38,8 @@ public class EvaluationApp {
 
 		final long tock = System.nanoTime();
 		sb.append(";");
-		sb.append((1.0 * (tock - tick) / 1_000_000) - TimeAggregator.getGtTimeMillis() - TimeAggregator.getIlpTimeMillis());
+		sb.append((1.0 * (tock - tick) / 1_000_000) - TimeAggregator.getGtTimeMillis()
+				- TimeAggregator.getIlpTimeMillis());
 
 		System.out.println(sb.toString());
 		System.exit(0);

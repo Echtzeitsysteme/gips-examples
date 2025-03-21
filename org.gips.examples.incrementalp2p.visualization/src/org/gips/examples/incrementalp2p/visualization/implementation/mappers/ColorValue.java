@@ -12,5 +12,5 @@ public class ColorValue {
 	public static String LightGreen = "rgba(133, 245, 179, 0.76)";
 
 	public static String LightBlue = "rgba(151, 194, 252, 1)";
-	
+
 }

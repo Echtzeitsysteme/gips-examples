@@ -1,7 +1,7 @@
 package classdiagramtgg3violations.example;
 
 import org.eclipse.emf.common.util.URI;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 
 import classdiagramtgg3violations.api.gips.Classdiagramtgg3violationsGipsAPI;
 
@@ -17,8 +17,8 @@ public class ClassDiagramViolationsExampleRunner {
 		final URI uri = URI.createFileURI(file);
 		gipsApi.init(uri);
 
-		gipsApi.buildILPProblem(true);
-		final ILPSolverOutput output = gipsApi.solveILPProblem();
+		gipsApi.buildProblem(true);
+		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
 			throw new InternalError("No solution found!");
 		}

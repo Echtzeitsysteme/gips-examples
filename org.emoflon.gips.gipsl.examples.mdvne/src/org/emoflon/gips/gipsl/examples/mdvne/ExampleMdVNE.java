@@ -3,7 +3,7 @@ package org.emoflon.gips.gipsl.examples.mdvne;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
+import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 
 public class ExampleMdVNE {
@@ -12,10 +12,11 @@ public class ExampleMdVNE {
 		// Create new MdVNE Gips API and load a model
 		final MdvneGipsAPI api = new MdvneGipsAPI();
 		api.init(URI.createFileURI("./resources/example-models/model-in.xmi"));
+		api.getTracer().enableTracing(true);
 
 		// Build the ILP problem (including updates)
-		api.buildILPProblem(true);
-		final ILPSolverOutput output = api.solveILPProblem();
+		api.buildProblem(true);
+		final SolverOutput output = api.solveProblem();
 		System.out.println("Solver status: " + output.status());
 		System.out.println("Objective value: " + output.objectiveValue());
 

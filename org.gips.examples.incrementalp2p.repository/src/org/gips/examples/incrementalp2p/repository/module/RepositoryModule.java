@@ -16,18 +16,18 @@ public class RepositoryModule extends AbstractModule {
 	public RepositoryModule(final URI uri) {
 		var app = new RepositoryHiPEApp();
 		app.createModel(uri);
-		
+
 		TimeAggregator.gtTick();
 		api = app.initAPI();
 		TimeAggregator.gtTock();
-		
+
 	}
 
 	public RepositoryModule(final ResourceSet model) {
 		var app = new RepositoryHiPEApp();
 		app.setModel(model);
 		app.registerMetaModels();
-		
+
 		TimeAggregator.gtTick();
 		api = app.initAPI();
 		TimeAggregator.gtTock();
@@ -47,5 +47,5 @@ public class RepositoryModule extends AbstractModule {
 		bind(P2PNetworkRepository.class).to(GtClientRepository.class);
 		bind(RepositoryAPI.class).toInstance(api);
 	}
-	
+
 }

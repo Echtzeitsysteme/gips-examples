@@ -8,5 +8,5 @@ public record VisualizationConnection(String serverId, String clientId, String l
 	public VisualizationConnection(String serverId, String clientId, String label) {
 		this(serverId, clientId, label, 1, 1.0);
 	}
-	
+
 }

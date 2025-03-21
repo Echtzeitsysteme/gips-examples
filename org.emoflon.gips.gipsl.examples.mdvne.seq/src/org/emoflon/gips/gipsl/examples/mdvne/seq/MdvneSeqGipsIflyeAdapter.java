@@ -3,18 +3,23 @@ package org.emoflon.gips.gipsl.examples.mdvne.seq;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.gt.GTMapping;
-import org.emoflon.gips.core.ilp.ILPIntegerVariable;
-import org.emoflon.gips.core.ilp.ILPSolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
+import org.emoflon.gips.core.gt.GipsGTMapping;
+import org.emoflon.gips.core.milp.SolverOutput;
+import org.emoflon.gips.core.milp.model.IntegerVariable;
+import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapterUtil;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.gips.SeqGipsAPI;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2PathRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2ServerRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Network2NetworkRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Server2ServerRuleMatch;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Switch2NodeRuleMatch;
+
+import hipe.engine.config.HiPEPathOptions;
 
 /**
  * Implementation adapter for GIPS and iflye. This is used to run the GIPS-based
@@ -34,6 +39,55 @@ public class MdvneSeqGipsIflyeAdapter {
 	 * If false, the API must be initialized.
 	 */
 	static boolean init = false;
+
+	/**
+	 * Executes the embedding GIPS-based VNE algorithm.
+	 * 
+	 * @param model   Resource set that contains the model (= the root node of the
+	 *                model).
+	 * @param gipsXmi Path to the GIPS intermediate model XMI file.
+	 * @param ibexXmi Path to the IBeX model XMI file.
+	 * @param hipeXmi Path to the HiPE XMI file.
+	 * @return True if embedding was successful.
+	 */
+	public static boolean execute(final ResourceSet model, final String gipsXmi, final String ibexXmi,
+			final String hipeXmi) {
+		if (model == null) {
+			throw new IllegalArgumentException("Model was null.");
+		}
+
+		if (model.getResources() == null || model.getResources().isEmpty()) {
+			throw new IllegalArgumentException("Model resource set was null or empty.");
+		}
+
+		if (gipsXmi == null || gipsXmi.isBlank()) {
+			throw new IllegalArgumentException("GIPS intermediate XMI path was null or empty.");
+		}
+
+		if (ibexXmi == null || ibexXmi.isBlank()) {
+			throw new IllegalArgumentException("IBeX XMI path was null or empty.");
+		}
+
+		if (hipeXmi == null || hipeXmi.isBlank()) {
+			throw new IllegalArgumentException("HiPE XMI path was null or empty.");
+		}
+
+		// Set HiPE configuration parameters
+		HiPEPathOptions.getInstance().setNetworkPath(URI.createFileURI(hipeXmi));
+		HiPEPathOptions.getInstance()
+				.setEngineClassName("org.emoflon.gips.gipsl.examples.mdvne.seq.hipe.engine.HiPEEngine");
+
+		if (!init) {
+			api = new SeqGipsAPI();
+			api.init(URI.createFileURI(gipsXmi), model, URI.createFileURI(ibexXmi));
+			init = true;
+		}
+
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
+		return buildAndSolve();
+	}
 
 	/**
 	 * Executes the embedding GIPS-based VNE algorithm.
@@ -61,11 +115,23 @@ public class MdvneSeqGipsIflyeAdapter {
 			init = true;
 		}
 
+		// Check if multiple substrate networks are present
+		MdvneGipsIflyeAdapterUtil.checkMultipleSubstrateNetworks(model);
+
+		return buildAndSolve();
+	}
+
+	/**
+	 * Builds and solves the ILP problem using the GIPS API object.
+	 * 
+	 * @return true, if a valid solution could be found.
+	 */
+	private static boolean buildAndSolve() {
 		// Build the ILP problem (including updates)
-		api.buildILPProblem(true);
+		api.buildProblem(true);
 
 		// Solve the ILP problem
-		final ILPSolverOutput output = api.solveILPProblem();
+		final SolverOutput output = api.solveProblem();
 
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
@@ -79,7 +145,7 @@ public class MdvneSeqGipsIflyeAdapter {
 		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
 		@SuppressWarnings("rawtypes")
-		final var allSelectedMappings = new ArrayList<GTMapping>();
+		final var allSelectedMappings = new ArrayList<GipsGTMapping>();
 
 		// Server 2 Server
 		final var srv2srvMappings = api.getSrv2srv().getNonZeroVariableMappings();
@@ -108,14 +174,14 @@ public class MdvneSeqGipsIflyeAdapter {
 
 		// Sort all mappings according to their index variable value
 		allSelectedMappings.sort((o1, o2) -> {
-			return ((ILPIntegerVariable) o1.getFreeVariables().get("index")).getValue()
-					- ((ILPIntegerVariable) o2.getFreeVariables().get("index")).getValue();
+			return ((IntegerVariable) o1.getFreeVariables().get("index")).getValue()
+					- ((IntegerVariable) o2.getFreeVariables().get("index")).getValue();
 		});
 
 		// Apply all selected mappings in their respective index order
 		allSelectedMappings.forEach(m -> {
 			System.out
-					.println(m.getName() + ": " + ((ILPIntegerVariable) m.getFreeVariables().get("index")).getValue());
+					.println(m.getName() + ": " + ((IntegerVariable) m.getFreeVariables().get("index")).getValue());
 			if (m.getMatch() instanceof Server2ServerRuleMatch) {
 				srv2srvRule.apply((Server2ServerRuleMatch) m.getMatch(), true);
 			} else if (m.getMatch() instanceof Switch2NodeRuleMatch) {
@@ -140,6 +206,8 @@ public class MdvneSeqGipsIflyeAdapter {
 	public static void resetInit() {
 		init = false;
 		api.terminate();
+		HiPEPathOptions.getInstance().resetNetworkPath();
+		HiPEPathOptions.getInstance().resetEngineClassName();
 	}
 
 }

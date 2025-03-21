@@ -40,5 +40,5 @@ public class IncrementalGipsModule extends AbstractModule {
 		bind(ConnectionLog.class).to(GipsConnectionLog.class).in(Scopes.SINGLETON);
 		bind(IncrementaldistributionGipsAPI.class).toInstance(api);
 	}
-	
+
 }

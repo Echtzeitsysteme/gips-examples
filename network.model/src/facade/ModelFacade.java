@@ -69,7 +69,7 @@ public class ModelFacade {
 	/**
 	 * Path to import and export models.
 	 */
-	private static final String PERSISTENT_MODEL_PATH = "./model.xmi";
+	public static final String PERSISTENT_MODEL_PATH = "./model.xmi";
 
 	/*
 	 * Collections for the path creation methods.
@@ -153,6 +153,15 @@ public class ModelFacade {
 	}
 
 	/**
+	 * Returns true if the resource set is empty.
+	 * 
+	 * @return True if resource set is empty.
+	 */
+	private boolean isResourceSetEmpty() {
+		return ModelFacade.instance.resourceSet.getResources().get(0).getContents().size() == 0;
+	}
+
+	/**
 	 * Returns a collection of all networks from the model.
 	 *
 	 * @return Collection of all networks from the model.
@@ -169,8 +178,9 @@ public class ModelFacade {
 	 */
 	public List<Node> getAllServersOfNetwork(final String networkId) {
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
-		return getNetworkById(networkId).getNodes().stream().filter(n -> n instanceof Server)
+		return getNetworkById(networkId).getNodess().stream().filter(n -> n instanceof Server)
 				.collect(Collectors.toList());
 	}
 
@@ -182,8 +192,9 @@ public class ModelFacade {
 	 */
 	public List<Node> getAllSwitchesOfNetwork(final String networkId) {
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
-		return getNetworkById(networkId).getNodes().stream().filter(n -> n instanceof Switch)
+		return getNetworkById(networkId).getNodess().stream().filter(n -> n instanceof Switch)
 				.collect(Collectors.toList());
 	}
 
@@ -195,6 +206,7 @@ public class ModelFacade {
 	 */
 	public List<Link> getAllLinksOfNetwork(final String networkId) {
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
 		return getNetworkById(networkId).getLinks();
 	}
@@ -207,6 +219,7 @@ public class ModelFacade {
 	 */
 	public List<SubstratePath> getAllPathsOfNetwork(final String networkId) {
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
 		final Network net = getNetworkById(networkId);
 		if (net instanceof VirtualNetwork) {
@@ -224,8 +237,53 @@ public class ModelFacade {
 	 */
 	public Network getNetworkById(final String id) {
 		checkStringValid(id);
+		ifNetworkNotExistentThrowException(id);
 
 		return getRoot().getNetworks().stream().filter(n -> n.getName().equals(id)).collect(Collectors.toList()).get(0);
+	}
+
+	/**
+	 * If there is no network with the given ID in the model, throw an exception.
+	 * 
+	 * @param networkId Network ID to search for.
+	 */
+	private void ifNetworkNotExistentThrowException(final String networkId) {
+		if (!networkExists(networkId)) {
+			throw new IllegalArgumentException("The network with id <" + networkId + "> does not exist.");
+		}
+	}
+
+	/**
+	 * If there is no server with the given ID in the model, throw an exception.
+	 * 
+	 * @param serverId Server ID to search for.
+	 */
+	private void ifServerNotExistentThrowException(final String serverId) {
+		if (!serverExists(serverId)) {
+			throw new IllegalArgumentException("The server with id <" + serverId + "> does not exist.");
+		}
+	}
+
+	/**
+	 * If there is no switch with the given ID in the model, throw an exception.
+	 * 
+	 * @param switchId Switch ID to search for.
+	 */
+	private void ifSwitchNotExistentThrowException(final String switchId) {
+		if (!switchExists(switchId)) {
+			throw new IllegalArgumentException("The switch with id <" + switchId + "> does not exist.");
+		}
+	}
+
+	/**
+	 * If there is no node with the given ID in the model, throw an exception.
+	 * 
+	 * @param nodeId Node ID to search for.
+	 */
+	private void ifNodeNotExistentThrowException(final String nodeId) {
+		if (!(switchExists(nodeId) || serverExists(nodeId))) {
+			throw new IllegalArgumentException("The node with id <" + nodeId + "> does not exist.");
+		}
 	}
 
 	/**
@@ -250,7 +308,7 @@ public class ModelFacade {
 		try {
 			final Node n = getNodeById(id);
 			return (n != null && n instanceof Server);
-		} catch (final NullPointerException | IndexOutOfBoundsException ex) {
+		} catch (final NullPointerException | IndexOutOfBoundsException | IllegalArgumentException ex) {
 			return false;
 		}
 	}
@@ -265,7 +323,7 @@ public class ModelFacade {
 		try {
 			final Node n = getNodeById(id);
 			return (n != null && n instanceof Switch);
-		} catch (final NullPointerException | IndexOutOfBoundsException ex) {
+		} catch (final NullPointerException | IndexOutOfBoundsException | IllegalArgumentException ex) {
 			return false;
 		}
 	}
@@ -298,6 +356,7 @@ public class ModelFacade {
 	 */
 	public Server getServerById(final String id) {
 		checkStringValid(id);
+		ifServerNotExistentThrowException(id);
 		return (Server) getNodeById(id);
 	}
 
@@ -309,6 +368,7 @@ public class ModelFacade {
 	 */
 	public Switch getSwitchById(final String id) {
 		checkStringValid(id);
+		ifSwitchNotExistentThrowException(id);
 		return (Switch) getNodeById(id);
 	}
 
@@ -324,9 +384,14 @@ public class ModelFacade {
 		List<Network> nets = getRoot().getNetworks();
 		List<Node> nodes = new ArrayList<>();
 		nets.stream().forEach(net -> {
-			net.getNodes().stream().filter(n -> n instanceof Node).filter(n -> n.getName().equals(id))
+			net.getNodess().stream().filter(n -> n instanceof Node).filter(n -> n.getName().equals(id))
 					.forEach(n -> nodes.add(n));
 		});
+
+		if (nodes.size() == 0) {
+			throw new IllegalArgumentException("Node with ID <" + id + "> not found.");
+		}
+
 		return nodes.get(0);
 	}
 
@@ -346,6 +411,11 @@ public class ModelFacade {
 		// links.add(l));
 		// });
 		// return links.get(0);
+
+		if (links.get(id) == null) {
+			throw new IllegalArgumentException("Link with ID <" + id + "> not found.");
+		}
+
 		return links.get(id);
 	}
 
@@ -366,6 +436,11 @@ public class ModelFacade {
 		// });
 		//
 		// return paths.get(0);
+
+		if (paths.get(id) == null) {
+			throw new IllegalArgumentException("Path with ID <" + id + "> not found.");
+		}
+
 		return paths.get(id);
 	}
 
@@ -416,6 +491,8 @@ public class ModelFacade {
 			throw new IllegalArgumentException("A node with id " + id + " already exists!");
 		}
 
+		ifNetworkNotExistentThrowException(networkId);
+
 		final Network net = getNetworkById(networkId);
 		Server server;
 
@@ -439,7 +516,7 @@ public class ModelFacade {
 			subServer.setResidualStorage(storage);
 		}
 
-		return net.getNodes().add(server);
+		return net.getNodess().add(server);
 	}
 
 	/**
@@ -458,6 +535,8 @@ public class ModelFacade {
 			throw new IllegalArgumentException("A node with id " + id + " already exists!");
 		}
 
+		ifNetworkNotExistentThrowException(networkId);
+
 		final Network net = getNetworkById(networkId);
 		Switch sw;
 
@@ -470,7 +549,7 @@ public class ModelFacade {
 		sw.setNetwork(net);
 		sw.setDepth(depth);
 
-		return net.getNodes().add(sw);
+		return net.getNodess().add(sw);
 	}
 
 	/**
@@ -495,6 +574,8 @@ public class ModelFacade {
 		if (!doesNodeIdExist(sourceId, networkId) || !doesNodeIdExist(targetId, networkId)) {
 			throw new IllegalArgumentException("A node with given id does not exist!");
 		}
+
+		ifNetworkNotExistentThrowException(networkId);
 
 		final Network net = getNetworkById(networkId);
 		Link link;
@@ -530,6 +611,7 @@ public class ModelFacade {
 	 */
 	public void createAllPathsForNetwork(final String networkdId) {
 		checkStringValid(networkdId);
+		ifNetworkNotExistentThrowException(networkdId);
 		final Network net = getNetworkById(networkdId);
 
 		if (net instanceof VirtualNetwork) {
@@ -603,6 +685,7 @@ public class ModelFacade {
 	 * @return Maximum path length.
 	 */
 	private int determineMaxPathLengthForTree(final String networkId) {
+		ifNetworkNotExistentThrowException(networkId);
 		int maxServerDepth = Integer.MAX_VALUE;
 
 		final List<Node> servers = getAllServersOfNetwork(networkId);
@@ -856,8 +939,9 @@ public class ModelFacade {
 	 */
 	public boolean doesNodeIdExist(final String id, final String networkId) {
 		checkStringValid(new String[] { id, networkId });
+		ifNetworkNotExistentThrowException(networkId);
 
-		return !getNetworkById(networkId).getNodes().stream().filter(n -> n.getName().equals(id))
+		return !getNetworkById(networkId).getNodess().stream().filter(n -> n.getName().equals(id))
 				.collect(Collectors.toList()).isEmpty();
 	}
 
@@ -871,6 +955,7 @@ public class ModelFacade {
 	public boolean doesLinkIdExist(final String id, final String networkId) {
 		checkStringValid(id);
 		checkStringValid(networkId);
+		ifNetworkNotExistentThrowException(networkId);
 
 		return !getNetworkById(networkId).getLinks().stream().filter(l -> l.getName().equals(id))
 				.collect(Collectors.toList()).isEmpty();
@@ -881,7 +966,10 @@ public class ModelFacade {
 	 * networks of the root node.
 	 */
 	public void resetAll() {
-		getRoot().getNetworks().clear();
+		// If the resource set is empty, there is no root to clear networks from
+		if (!isResourceSetEmpty()) {
+			getRoot().getNetworks().clear();
+		}
 		generatedMetaPaths.clear();
 		visitedNodes.clear();
 		linksUntilNode.clear();
@@ -926,6 +1014,9 @@ public class ModelFacade {
 	 * @return Path if a path between source and target does exist.
 	 */
 	public SubstratePath getPathFromSourceToTarget(final String sourceId, final String targetId) {
+		ifNodeNotExistentThrowException(sourceId);
+		ifNodeNotExistentThrowException(targetId);
+
 		final Node source = getNodeById(sourceId);
 		final Node target = getNodeById(targetId);
 
@@ -1053,11 +1144,18 @@ public class ModelFacade {
 		// ^null is okay if all paths are absolute
 		final Resource r = rs.createResource(absPath);
 		// Fetch model contents from eMoflon
-		r.getContents().add(getRoot());
+		final Root root = getRoot();
+		r.getContents().add(root);
 		try {
 			r.save(null);
 		} catch (final IOException e) {
 			e.printStackTrace();
+		} finally {
+			// Re-add the root node (and all of its children) to the resource set contained
+			// within this ModelFacade object.
+			// This fixes a bug were the ModelFacade was basically broken after the persist
+			// method was called.
+			this.resourceSet.getResources().get(0).getContents().add(root);
 		}
 	}
 
@@ -1515,7 +1613,7 @@ public class ModelFacade {
 			final String hostNameId = vNet.getHost().getName();
 			vNet.getHost().getGuests().remove(vNet);
 
-			for (final Node n : vNet.getNodes()) {
+			for (final Node n : vNet.getNodess()) {
 				if (n instanceof VirtualServer) {
 					final VirtualServer vsrv = (VirtualServer) n;
 					final SubstrateServer host = vsrv.getHost();
@@ -1639,7 +1737,7 @@ public class ModelFacade {
 		});
 
 		// Remove server itself
-		getNetworkById(ssrv.getNetwork().getName()).getNodes().remove(ssrv);
+		getNetworkById(ssrv.getNetwork().getName()).getNodess().remove(ssrv);
 		EcoreUtil.delete(ssrv);
 	}
 
@@ -1756,7 +1854,7 @@ public class ModelFacade {
 			}
 		});
 
-		for (final Node n : sNet.getNodes()) {
+		for (final Node n : sNet.getNodess()) {
 			if (n instanceof SubstrateServer) {
 				final SubstrateServer srv = (SubstrateServer) n;
 
@@ -1931,7 +2029,7 @@ public class ModelFacade {
 			host = null;
 		}
 
-		for (final Node n : vNet.getNodes()) {
+		for (final Node n : vNet.getNodess()) {
 			if (n instanceof VirtualServer) {
 				final VirtualServer vsrv = (VirtualServer) n;
 
@@ -2075,17 +2173,17 @@ public class ModelFacade {
 	 * @return True if virtual network is in a floating state.
 	 */
 	public boolean checkIfFloating(final VirtualNetwork vNet) {
-		for (final Node n : vNet.getNodes()) {
+		for (final Node n : vNet.getNodess()) {
 			if (n instanceof VirtualServer) {
 				final VirtualServer vsrv = (VirtualServer) n;
 				if (vsrv.getHost() == null || vsrv.getHost().getNetwork() == null
-						|| !vsrv.getHost().getNetwork().getNodes().contains(vsrv.getHost())) {
+						|| !vsrv.getHost().getNetwork().getNodess().contains(vsrv.getHost())) {
 					return true;
 				}
 			} else if (n instanceof VirtualSwitch) {
 				final VirtualSwitch vsw = (VirtualSwitch) n;
 				if ((vsw.getHost().getNetwork() == null)
-						|| !vsw.getHost().getNetwork().getNodes().contains(vsw.getHost())) {
+						|| !vsw.getHost().getNetwork().getNodess().contains(vsw.getHost())) {
 					return true;
 				}
 			}
@@ -2100,7 +2198,7 @@ public class ModelFacade {
 				}
 			} else if (vl.getHost() instanceof SubstrateServer) {
 				final SubstrateServer host = (SubstrateServer) vl.getHost();
-				if ((host.getNetwork() == null) || !host.getNetwork().getNodes().contains(host)) {
+				if ((host.getNetwork() == null) || !host.getNetwork().getNodess().contains(host)) {
 					return true;
 				}
 			}

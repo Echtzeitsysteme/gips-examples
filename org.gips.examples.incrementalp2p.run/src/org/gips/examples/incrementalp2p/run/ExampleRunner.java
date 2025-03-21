@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-import org.gips.examples.incrementalp2p.common.TimeAggregator;
 import org.gips.examples.incrementalp2p.common.models.WaitingClient;
 import org.gips.examples.incrementalp2p.distribution.contracts.ConnectionLog;
 import org.gips.examples.incrementalp2p.distribution.contracts.IncrementalNodeDistributionEngine;

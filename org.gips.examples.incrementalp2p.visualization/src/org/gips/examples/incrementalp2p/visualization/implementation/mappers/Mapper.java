@@ -13,5 +13,5 @@ public class Mapper {
 	public static VisualizationConnection toVisualizationConnection(final ConnectionModel x) {
 		return new VisualizationConnection(x.server(), x.client(), (int) x.bandwidth());
 	}
-	
+
 }

@@ -36,5 +36,5 @@ public class VisualizationModule extends AbstractModule {
 		bind(VisualizationUpdatesDataProvider.class).to(InMemoryVisualizationUpdatesDataProvider.class)
 				.in(Scopes.SINGLETON);
 	}
-	
+
 }
