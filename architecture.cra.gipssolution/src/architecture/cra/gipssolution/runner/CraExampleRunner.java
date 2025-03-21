@@ -48,7 +48,7 @@ public class CraExampleRunner extends AbstractCraRunner {
 		//
 		// Initialize GIPS API
 		//
-		
+
 		final Observer obs = Observer.getInstance();
 		obs.setCurrentSeries("Eval");
 
@@ -93,7 +93,7 @@ public class CraExampleRunner extends AbstractCraRunner {
 		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
 		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
 		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
-		
+
 		gipsApi.terminate();
 		java.lang.System.exit(0);
 	}
