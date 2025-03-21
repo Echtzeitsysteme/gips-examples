@@ -1,7 +1,11 @@
 package architecture.cra.gipssolution.runner;
 
+import java.util.Map;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.Observer;
 
 import architecture.cra.gipssolution.api.gips.GipssolutionGipsAPI;
 
@@ -22,7 +26,7 @@ public class CraExampleRunner extends AbstractCraRunner {
 		//
 
 		final String projectFolder = System.getProperty("user.dir");
-		final String scenarioName = "TTC_InputRDG_B";
+		final String scenarioName = "TTC_InputRDG_C";
 		final String file = projectFolder + "/../../TGG-3.0-Prototype/RefactoringAC/resources/architecture/"
 				+ scenarioName + ".xmi";
 
@@ -44,6 +48,9 @@ public class CraExampleRunner extends AbstractCraRunner {
 		//
 		// Initialize GIPS API
 		//
+		
+		final Observer obs = Observer.getInstance();
+		obs.setCurrentSeries("Eval");
 
 		GipssolutionGipsAPI gipsApi = new GipssolutionGipsAPI();
 		gipsApi.init(URI.createFileURI(preprocessedPath));
@@ -80,6 +87,13 @@ public class CraExampleRunner extends AbstractCraRunner {
 		// The end
 		//
 
+		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
+		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
+		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
+		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
+		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
+		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
+		
 		gipsApi.terminate();
 		java.lang.System.exit(0);
 	}
