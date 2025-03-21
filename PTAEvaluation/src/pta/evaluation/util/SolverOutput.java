@@ -5,7 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SolverOutput {
-	protected Map<Object, org.emoflon.gips.core.milp.SolverOutput> outputs = Collections.synchronizedMap(new LinkedHashMap<>());
+	protected Map<Object, org.emoflon.gips.core.milp.SolverOutput> outputs = Collections
+			.synchronizedMap(new LinkedHashMap<>());
 
 	public SolverOutput() {
 	};
@@ -23,7 +24,8 @@ public class SolverOutput {
 		this.outputs.put(null, output);
 	}
 
-	public SolverOutput(final Object problem, final SolverOutput other, final org.emoflon.gips.core.milp.SolverOutput output) {
+	public SolverOutput(final Object problem, final SolverOutput other,
+			final org.emoflon.gips.core.milp.SolverOutput output) {
 		this.outputs.putAll(other.outputs);
 		this.outputs.put(problem, output);
 	}
@@ -33,12 +35,13 @@ public class SolverOutput {
 	}
 
 	public boolean isOptimal() {
-		return !outputs.values().stream().filter(o -> o.status() != org.emoflon.gips.core.milp.SolverStatus.OPTIMAL).findAny().isPresent();
+		return !outputs.values().stream().filter(o -> o.status() != org.emoflon.gips.core.milp.SolverStatus.OPTIMAL)
+				.findAny().isPresent();
 	}
 
 	public double optimality() {
-		return outputs.values().stream().filter(o -> o.status() == org.emoflon.gips.core.milp.SolverStatus.OPTIMAL).map(o -> 1.0).reduce(0.0,
-				(sum, val) -> sum + val) / outputs.size();
+		return outputs.values().stream().filter(o -> o.status() == org.emoflon.gips.core.milp.SolverStatus.OPTIMAL)
+				.map(o -> 1.0).reduce(0.0, (sum, val) -> sum + val) / outputs.size();
 	}
 
 	public boolean noStaticConstraintViolation() {

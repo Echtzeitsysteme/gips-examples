@@ -54,3 +54,9 @@ nurserosteringgipsl/gurobi.lp
 nurserosteringmodel/resources/model.xmi
 
 nurserosteringgipsl/resources/model.xmi
+
+ihtcrunner/model_in.xmi
+
+**/.DS_Store
+
+**/trace_cache.bin
