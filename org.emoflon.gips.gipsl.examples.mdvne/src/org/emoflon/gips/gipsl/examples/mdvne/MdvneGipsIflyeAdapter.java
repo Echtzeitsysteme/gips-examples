@@ -2,10 +2,11 @@ package org.emoflon.gips.gipsl.examples.mdvne;
 
 import java.util.Map;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
-import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 
 import hipe.engine.config.HiPEPathOptions;
@@ -116,8 +117,11 @@ public class MdvneGipsIflyeAdapter {
 	 * @return true, if a valid solution could be found.
 	 */
 	private static boolean buildAndSolve() {
+		final Observer obs = Observer.getInstance();
+		obs.setCurrentSeries("Eval");
+
 		// Build the ILP problem (including updates)
-		api.buildILPProblemTimed(true);
+		api.buildProblemTimed(true);
 
 		// Solve the ILP problem
 		final SolverOutput output = api.solveProblemTimed();

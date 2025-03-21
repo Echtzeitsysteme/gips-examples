@@ -69,15 +69,14 @@ public abstract class AbstractCraRunner {
 	 * @return Returns the objective value.
 	 */
 	protected double buildAndSolve(final GipssolutionGipsAPI gipsApi) {
-		gipsApi.buildILPProblemTimed(true);
-//		final ILPSolverOutput output = gipsApi.solveILPProblemTimed();
-//		if (output.solutionCount() == 0) {
-//			throw new InternalError("No solution found!");
-//		}
-//		System.out.println("=> Objective value: " + output.objectiveValue());
-//		System.out.println("---");
-//		return output.objectiveValue();
-		return -1;
+		gipsApi.buildProblemTimed(true);
+		final SolverOutput output = gipsApi.solveProblemTimed();
+		if (output.solutionCount() == 0) {
+			throw new InternalError("No solution found!");
+		}
+		System.out.println("=> Objective value: " + output.objectiveValue());
+		System.out.println("---");
+		return output.objectiveValue();
 	}
 
 	/**

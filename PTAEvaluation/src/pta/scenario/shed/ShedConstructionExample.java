@@ -4,16 +4,16 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
+import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
-import org.emoflon.gips.core.milp.SolverOutput;
 
 import PTAProblem.api.gips.PTAProblemGipsAPI;
 
 public class ShedConstructionExample {
 
 	public static void main(String[] args) {
-		
+
 		final Observer obs = Observer.getInstance();
 		obs.setCurrentSeries("Eval");
 
@@ -24,11 +24,11 @@ public class ShedConstructionExample {
 		URI uri = URI.createFileURI(file);
 		gipsApi.init(uri);
 
-		gipsApi.buildILPProblemTimed(true);
+		gipsApi.buildProblemTimed(true);
 		SolverOutput output = gipsApi.solveProblemTimed();
 		gipsApi.getAom().applyNonZeroMappings();
 		gipsApi.getProjectCost().applyNonZeroMappings();
-		
+
 		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
 		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
 		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
