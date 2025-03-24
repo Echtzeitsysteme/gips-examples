@@ -54,6 +54,7 @@ public class TimedRunner {
 		api.assignSurgeryToPatient().findMatches().forEach(m -> {
 			api.assignSurgeryToPatient().apply(m);
 		});
+		api.updateMatches();
 		Utilities.deleteFile(MODEL_PATH);
 
 		final long tock = System.nanoTime();
