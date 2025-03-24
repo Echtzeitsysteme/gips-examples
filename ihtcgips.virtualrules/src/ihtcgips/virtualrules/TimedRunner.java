@@ -53,15 +53,19 @@ public class TimedRunner {
 		final long tick = System.nanoTime();
 
 		final VirtualrulesAPI api = new GtApp(model).initAPI();
+		System.out.println("assignNurseToRoomShift: " + api.assignNurseToRoomShift().findMatches().size());
 		api.assignNurseToRoomShift().findMatches().forEach(m -> {
 			api.assignNurseToRoomShift().apply(m);
 		});
+		System.out.println("assignAdmissionDayToPatient: " + api.assignAdmissionDayToPatient().findMatches().size());
 		api.assignAdmissionDayToPatient().findMatches().forEach(m -> {
 			api.assignAdmissionDayToPatient().apply(m);
 		});
+		System.out.println("assignRoomToPatient: " + api.assignRoomToPatient().findMatches().size());
 		api.assignRoomToPatient().findMatches().forEach(m -> {
 			api.assignRoomToPatient().apply(m);
 		});
+		System.out.println("assignSurgeryToPatient: " + api.assignSurgeryToPatient().findMatches().size());
 		api.assignSurgeryToPatient().findMatches().forEach(m -> {
 			api.assignSurgeryToPatient().apply(m);
 		});
