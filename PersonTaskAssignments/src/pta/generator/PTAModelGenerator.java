@@ -25,7 +25,7 @@ import PersonTaskAssignments.Task;
 import PersonTaskAssignments.Week;
 
 public class PTAModelGenerator {
-	
+
 	final public static String[] firstNames = { //
 			"Michael", //
 			"Christopher", //
@@ -230,7 +230,7 @@ public class PTAModelGenerator {
 			"Abrams", //
 			"Tilley" //
 	};
-	
+
 	protected PersonTaskAssignmentsFactory factory = PersonTaskAssignmentsFactory.eINSTANCE;
 
 	int id = 1;
@@ -274,9 +274,9 @@ public class PTAModelGenerator {
 	}
 
 	public SkillType addSkillType(String name) {
-		if(skillTypes.containsKey(name))
+		if (skillTypes.containsKey(name))
 			return skillTypes.get(name);
-		
+
 		SkillType type = factory.createSkillType();
 		type.setName(name);
 		type.setId(id++);
@@ -294,9 +294,9 @@ public class PTAModelGenerator {
 
 	public Person addPerson(String name, double salary, double flexibility, double overtimeSalary,
 			Map<String, Integer> skills) {
-		if(persons.containsKey(name))
+		if (persons.containsKey(name))
 			return persons.get(name);
-		
+
 		Person p = factory.createPerson();
 		p.setName(name);
 		p.setId(id++);
@@ -309,25 +309,24 @@ public class PTAModelGenerator {
 		persons.put(name, p);
 		return p;
 	}
-	
+
 	public Skill addSkill(String person, int level, String skillType) {
-		Person p  = persons.get(person);
+		Person p = persons.get(person);
 		Skill s = p.getSkills().stream()
-			.filter(skill -> skill.getLevel() == level && skill.getType().getName().equals(skillType))
-			.findAny()
-			.orElseGet(() -> {
-				Skill skill = factory.createSkill();
-				SkillType type = skillTypes.get(skillType);
-				if (type == null) {
-					type = addSkillType(skillType);
-				}
-				skill.setName(type.getName());
-				skill.setId(id++);
-				skill.setType(type);
-				skill.setLevel(level);
-				p.getSkills().add(skill);
-				return skill;
-			});
+				.filter(skill -> skill.getLevel() == level && skill.getType().getName().equals(skillType)).findAny()
+				.orElseGet(() -> {
+					Skill skill = factory.createSkill();
+					SkillType type = skillTypes.get(skillType);
+					if (type == null) {
+						type = addSkillType(skillType);
+					}
+					skill.setName(type.getName());
+					skill.setId(id++);
+					skill.setType(type);
+					skill.setLevel(level);
+					p.getSkills().add(skill);
+					return skill;
+				});
 		return s;
 	}
 
@@ -339,7 +338,7 @@ public class PTAModelGenerator {
 		persons.get(person).getOffers().addAll(os);
 		return os;
 	}
-	
+
 	public Offer addOffer(String person, int week, int hours) {
 		Offer offer = factory.createOffer();
 		offer.setId(id++);
@@ -350,9 +349,9 @@ public class PTAModelGenerator {
 	}
 
 	public Project addProject(String name, double reward, int weeksUntilLoss, double lossPerWeek, int start) {
-		if(projects.containsKey(name))
+		if (projects.containsKey(name))
 			return projects.get(name);
-		
+
 		Project p = factory.createProject();
 		p.setName(name);
 		p.setId(id++);
@@ -411,21 +410,21 @@ public class PTAModelGenerator {
 
 		return ws;
 	}
-	
+
 	public Week addWeek() {
 		Week prev = null;
-		if(!weeks.isEmpty()) {
+		if (!weeks.isEmpty()) {
 			prev = weeks.values().stream().toList().getLast();
 		}
-		
+
 		Week w = factory.createWeek();
 		w.setId(id++);
-		w.setNumber((prev == null) ? 1 : prev.getNumber()+1);
-		if(prev != null) {
+		w.setNumber((prev == null) ? 1 : prev.getNumber() + 1);
+		if (prev != null) {
 			w.setPrevious(prev);
 		}
 		weeks.put(w.getNumber(), w);
-		
+
 		return w;
 	}
 }

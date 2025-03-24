@@ -1,8 +1,12 @@
 package org.emoflon.gips.gipsl.examples.mdvne.migration;
 
+import java.util.Map;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.milp.SolverOutput;
+import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapterUtil;
 import org.emoflon.gips.gipsl.examples.mdvne.migration.api.gips.MigrationGipsAPI;
 
@@ -93,6 +97,9 @@ public class MdvneMigrationGipsIflyeAdapter {
 			throw new IllegalArgumentException("Model resource set was null or empty.");
 		}
 
+		final Observer obs = Observer.getInstance();
+		obs.setCurrentSeries("Eval");
+
 		// Init if not already initialized
 		if (!init) {
 			api = new MigrationGipsAPI();
@@ -112,15 +119,25 @@ public class MdvneMigrationGipsIflyeAdapter {
 	 * @return true, if a valid solution could be found.
 	 */
 	private static boolean buildAndSolve() {
+		final Observer obs = Observer.getInstance();
+		obs.setCurrentSeries("Eval");
+
 		// Build the ILP problem (including updates)
-		api.buildProblem(true);
+		api.buildProblemTimed(true);
 
 		// Solve the ILP problem
-		final SolverOutput output = api.solveProblem();
+		final SolverOutput output = api.solveProblemTimed();
 
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
 		System.out.println("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
+
+		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
+		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
+		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
+		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
+		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
+		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
 		// Apply all valid mappings
 		api.getSrv2srv().applyNonZeroMappings();
