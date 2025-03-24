@@ -1,8 +1,12 @@
 package org.emoflon.gips.gipsl.examples.mdvne;
 
+import java.util.Map;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.milp.SolverOutput;
+import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 
 import hipe.engine.config.HiPEPathOptions;
@@ -103,6 +107,9 @@ public class MdvneGipsLookaheadIflyeAdapter {
 			throw new IllegalArgumentException("Given virtual network ID was null or blank.");
 		}
 
+		final Observer obs = Observer.getInstance();
+		obs.setCurrentSeries("Eval");
+
 		// Initialize the API, if necessary
 		if (!init) {
 			api = new MdvneGipsAPI();
@@ -123,6 +130,9 @@ public class MdvneGipsLookaheadIflyeAdapter {
 	 * @return true, if a valid solution could be found.
 	 */
 	private static boolean buildAndSolve(final String networkId) {
+		final Observer obs = Observer.getInstance();
+		obs.setCurrentSeries("Eval");
+
 		// Build the ILP problem (including updates)
 		api.buildProblem(true);
 
@@ -132,6 +142,13 @@ public class MdvneGipsLookaheadIflyeAdapter {
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
 		System.out.println("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
+
+		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
+		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
+		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
+		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
+		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
+		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
 		// Apply only selected mappings filtered according to the network ID
 		api.getSrv2srv().getNonZeroVariableMappings().forEach(t -> {

@@ -152,7 +152,8 @@ public class ScenarioValidator {
 				for (Task t : p.getTasks()) {
 					var out = output.getOutputs().get(t);
 					if (out != null && skipList.containsKey(p)) {
-						skipList.put(p, skipList.get(p) || out.status() != org.emoflon.gips.core.milp.SolverStatus.OPTIMAL);
+						skipList.put(p,
+								skipList.get(p) || out.status() != org.emoflon.gips.core.milp.SolverStatus.OPTIMAL);
 						continue;
 					} else if (out != null && !skipList.containsKey(p)) {
 						skipList.put(p, out.status() != org.emoflon.gips.core.milp.SolverStatus.OPTIMAL);
