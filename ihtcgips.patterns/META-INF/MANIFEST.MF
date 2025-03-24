@@ -18,5 +18,6 @@ Require-Bundle: org.emoflon.ibex.common,
  org.eclipse.emf.ecore
 Export-Package: ihtcgips.patterns.api,
  ihtcgips.patterns.api.matches,
- ihtcgips.patterns.api.rules
+ ihtcgips.patterns.api.rules,
+ ihtcgips.patterns.utils
 

@@ -14,7 +14,8 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.patternmodel,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
- ihtcmetamodel
+ ihtcmetamodel,
+ ihtcgips.patterns
 Export-Package: ihtcgips.virtualrules.api,
  ihtcgips.virtualrules.api.matches,
  ihtcgips.virtualrules.api.rules

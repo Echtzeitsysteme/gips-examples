@@ -1,21 +1,10 @@
 package ihtcgips.virtualrules;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
+import ihtcgips.patterns.utils.Utilities;
 import ihtcgips.virtualrules.api.VirtualrulesAPI;
 import ihtcmetamodel.Hospital;
-import ihtcmetamodel.IhtcmetamodelPackage;
-import ihtcmetamodel.importexport.JsonToModelLoader;
-import ihtcmetamodel.utils.FileUtils;
 
 public class TimedRunner {
 
@@ -40,12 +29,8 @@ public class TimedRunner {
 		INPUT_PATH = INPUT_FOLDER_PATH + "i" + (scenarioNumber <= 9 ? "0" : "") + scenarioNumber + ".json";
 		MODEL_PATH = INPUT_PATH.replace(".json", ".xmi");
 
-		//
-		// Convert JSON input file to XMI file
-		//
-
-		transformJsonToModel(INPUT_PATH, MODEL_PATH);
-		final Hospital model = loadHospitalFromFile(URI.createFileURI(MODEL_PATH));
+		Utilities.transformJsonToModel(INPUT_PATH, MODEL_PATH);
+		final Hospital model = Utilities.loadHospitalFromFile(URI.createFileURI(MODEL_PATH));
 		runGtRules(model);
 	}
 
@@ -69,57 +54,12 @@ public class TimedRunner {
 		api.assignSurgeryToPatient().findMatches().forEach(m -> {
 			api.assignSurgeryToPatient().apply(m);
 		});
-		deleteFile(MODEL_PATH);
+		Utilities.deleteFile(MODEL_PATH);
 
 		final long tock = System.nanoTime();
-		final double time = tickTockToSeconds(tick, tock);
+		final double time = Utilities.tickTockToSeconds(tick, tock);
 		System.out.println("GT application runtime: " + time + "s.");
 		api.terminate();
-	}
-
-	private double tickTockToSeconds(final long tick, final long tock) {
-		return 1.0 * (tock - tick) / 1_000_000_000;
-	}
-
-	/**
-	 * Transforms a given JSON file to an XMI file.
-	 * 
-	 * @param inputJsonPath Input JSON file.
-	 * @param outputXmiPath Output XMI file.
-	 */
-	protected void transformJsonToModel(final String inputJsonPath, final String outputXmiPath) {
-		final JsonToModelLoader loader = new JsonToModelLoader();
-		loader.jsonToModel(inputJsonPath);
-		final Hospital model = loader.getModel();
-		try {
-			// Prepare folder if necessary
-			if (inputJsonPath.contains("/")) {
-				FileUtils.prepareFolder(inputJsonPath.substring(0, inputJsonPath.lastIndexOf("/")));
-			}
-			FileUtils.save(model, outputXmiPath);
-		} catch (final IOException e) {
-			throw new InternalError(e.getMessage());
-		}
-	}
-
-	private static Hospital loadHospitalFromFile(final URI absPath) {
-		final ResourceSet resourceSet = new ResourceSetImpl();
-		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		resourceSet.getPackageRegistry().put(IhtcmetamodelPackage.eINSTANCE.getNsURI(), IhtcmetamodelPackage.eINSTANCE);
-		resourceSet.getResource(absPath, true);
-		return (Hospital) resourceSet.getResources().get(0).getContents().get(0);
-	}
-
-	private void deleteFile(final String path) {
-		if (new File(path).isDirectory()) {
-			throw new IllegalArgumentException("Given path is not a file but a directory.");
-		}
-		try {
-			Files.delete(Path.of(path));
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

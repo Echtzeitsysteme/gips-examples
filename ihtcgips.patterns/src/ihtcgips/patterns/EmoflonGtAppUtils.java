@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import ihtcgips.patterns.api.PatternsAPI;
+import ihtcgips.patterns.utils.Utilities;
 
 public class EmoflonGtAppUtils {
 
@@ -28,11 +29,7 @@ public class EmoflonGtAppUtils {
 	 */
 	public static Path createTempDir() {
 		if (tempDir == null) {
-			try {
-				tempDir = Files.createTempDirectory("eMoflonTmp");
-			} catch (final IOException e) {
-				throw new RuntimeException("Unable to create temporary directory for eMoflon", e);
-			}
+			tempDir = Utilities.createDir("emoflonTmp");
 		}
 		return tempDir;
 	}
