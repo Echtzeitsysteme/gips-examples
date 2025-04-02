@@ -22,6 +22,12 @@ import nurserosteringmodel.Root;
 import nurserosteringmodel.Shift;
 import nurserosteringmodel.Skill;
 
+/**
+ * Validator for EMF-based model instances of the NRC1 solution set.
+ * 
+ * The current state is not fully checking all possible requirements of a given
+ * model.
+ */
 public class NurseRosteringModelValidator {
 
 	public final static String SCENARIO_FILE_NAME = "solved.xmi";
@@ -161,7 +167,7 @@ public class NurseRosteringModelValidator {
 			}
 
 			// Check if assignments are within the boundaries of the respective contract
-			// TODO
+			// TODO: Add missing checks.
 		}
 
 		return true;
@@ -256,7 +262,7 @@ public class NurseRosteringModelValidator {
 			}
 
 			// Check assigned employees
-			// TODO
+			// TODO: Add missing checks.
 		}
 
 		return true;

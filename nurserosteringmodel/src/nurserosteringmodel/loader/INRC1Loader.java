@@ -37,6 +37,13 @@ import nurserosteringmodel.Root;
 import nurserosteringmodel.Shift;
 import nurserosteringmodel.Skill;
 
+/**
+ * This class can be used to load XML files of the NRC1 data set and transform
+ * them to an EMF-based model instance.
+ * 
+ * The current state does not fully parse all fields completely correct. There
+ * are some TODOs left in this class.
+ */
 public class INRC1Loader {
 
 	private NurserosteringmodelFactory modelFactory = NurserosteringmodelFactory.eINSTANCE;
@@ -62,6 +69,7 @@ public class INRC1Loader {
 		final INRC1Loader loader = new INRC1Loader();
 		final String projectFolder = System.getProperty("user.dir");
 		try {
+			// TODO: The loader should not load a file from a hard-coded path.
 			loader.loadFromXmlFile(projectFolder + "/../nurserosteringmodel/resources/sprint/sprint01.xml");
 		} catch (final ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
@@ -114,9 +122,9 @@ public class INRC1Loader {
 					addEmployee(n.getChildNodes().item(employeeNo));
 				}
 			} else if (name.equals("DayOffRequests")) {
-				// TODO
+				// TODO: day off requests are currently missing
 			} else if (name.equals("ShiftOffRequests")) {
-				// TODO
+				// TODO: shift off requests are currently missing
 			} else if (name.equals("Skills")) {
 				for (int skillNo = 0; skillNo < n.getChildNodes().getLength(); skillNo++) {
 					addSkill(n.getChildNodes().item(skillNo));
@@ -230,7 +238,8 @@ public class INRC1Loader {
 	}
 
 	private void addContract(final Node contract) {
-		// TODO
+		// TODO: Some of the fields will not be parsed with the current state of this
+		// method's implementation.
 		final Contract con = modelFactory.createContract();
 
 		if (contract.getNodeName().equals("#text")) {

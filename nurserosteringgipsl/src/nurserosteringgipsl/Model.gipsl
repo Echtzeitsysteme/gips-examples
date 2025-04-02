@@ -2,7 +2,7 @@ package "nurserosteringgipsl"
 import "platform:/resource/nurserosteringmodel/model/Nurserosteringmodel.ecore"
 
 config {  
-	solver := GUROBI [home:="fu", license:="bar"];
+	solver := GUROBI;
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
 	presolve := true;
@@ -11,6 +11,14 @@ config {
 	lpOutput := true [path := "gurobi.lp"];
 }
 
+//
+// This GIPSL specification aims at solving the "Nurse Rostering Competition 1" (NRC1) with GIPS.
+//
+// The current state is incomplete, i.e., not all (soft and hard) constraints are taken into account.
+//
+
+// This rule assigns an employee to a shift on a specific
+// day.
 rule assignEmployeeToShift {
 	root : Root {
 		- employees -> employee
@@ -31,6 +39,7 @@ rule assignEmployeeToShift {
 	// is missing because of IBeX-GT language limitations
 }
 
+// Finds all possible combinations of employee and days.
 pattern findEmployeeDayCombination {
 	root : Root {
 		- days -> day
@@ -40,6 +49,8 @@ pattern findEmployeeDayCombination {
 	day : Day
 }
 
+// Finds all possible combinations of a required skill,
+// a shift, and an employee having this skill.
 pattern findShiftSkillEmployeeCombination {
 	shift : Shift {
 		- skills -> skill
@@ -50,6 +61,8 @@ pattern findShiftSkillEmployeeCombination {
 	}
 }
 
+// Finds all possible combinations of shifts and required
+// skills.
 pattern findNeededShiftSkill {
 	shift : Shift {
 		- skills -> skill
@@ -57,10 +70,13 @@ pattern findNeededShiftSkill {
 	skill : Skill
 }
 
+// Mapping for every employee and shift.
+// If a mapping `m` was selected by the (M)ILP solver,
+// the respective employee `e` will be assigned to shift `s`.
 mapping e2s to assignEmployeeToShift;
 
 // Mapping for every shift, skill, and employee combination.
-// If a mapping `m` was selected by the ILP solver,
+// If a mapping `m` was selected by the (M)ILP solver,
 // the respective employee `e` works on shift `s` and has
 // the required skill `skill`.
 mapping skillShiftAssignment to findShiftSkillEmployeeCombination;
@@ -74,6 +90,8 @@ constraint with CoverRequirement {
 }
 
 // "a nurse can only work one shift per day, i.e. no two shift can be assigned to the same nurse on a day."
+// GIPS interpretation: every combination of employee and day
+// must contain at most one selected mapping.
 constraint with findEmployeeDayCombination {
 	mappings.e2s->filter(
 		element.nodes.employee == context.nodes.employee
@@ -95,8 +113,12 @@ constraint with findShiftSkillEmployeeCombination {
 		& element.nodes.skill == context.nodes.skill
 		& element.nodes.employee == context.nodes.employee
 	)->sum(element.value) == 1
+	// ^notice: the Boolean equivalence operator `<=>` is very expensive
+	// in terms of required compute power.
 }
 
+// TODO: This constraint is currently disabled. Otherwise, the solver
+// does not find a valid solution for `sprint01.xml` -> should be investigated.
 //// Minimum/maximum number of shifts that can be assigned to an employee
 //constraint with Employee {
 //	mappings.e2s->filter(element.nodes.employee == context)->sum(element.value) >= context.contract.minimumNoOfAssignments
