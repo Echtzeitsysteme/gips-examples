@@ -27,6 +27,7 @@ This repository holds some GIPS example projects.
 | `LectureStudioModel`                               | Metamodel of the lectureStudio example                                                  |
 | `LectureStudioModelB`                              | Adapted (meta)model for the lectureStudio P2P example                                   |
 | `network.model`                                    | Network (meta)model with converters and a manipulator for the MdVNE example             |
+| `nurserostering*`/`xsdimport`                      | Nurse rostering example (nurse rostering problem competition)                           |
 | `org.emoflon.gips.gipsl.examples.headlessrunner*`  | Example on how to build and use a GIPS project headlessly - export it to JAR and run it |
 | `org.emoflon.gips.gipsl.examples.helloworld`       | Very simple hello world example for the GIPS language - can not be executed             |
 | `org.emoflon.gips.gipsl.examples.mdvne.*`          | Model-driven Virtual Network Embedding example with and without migration functionality |

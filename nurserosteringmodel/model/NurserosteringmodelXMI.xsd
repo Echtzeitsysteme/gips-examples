@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:nurserosteringmodel="platform:/resource/nurserosteringmodel/model/Nurserosteringmodel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="platform:/resource/nurserosteringmodel/model/Nurserosteringmodel.ecore">
+  <xsd:annotation>
+    <xsd:documentation>TODO: Add documentation for nurserosteringmodel. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ...</xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://www.omg.org/XMI" schemaLocation="platform:/plugin/org.eclipse.emf.ecore/model/XMI.xsd"/>
+  <xsd:complexType name="Root">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="nurses" type="nurserosteringmodel:Nurse"/>
+      <xsd:element name="days" type="nurserosteringmodel:Day"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+  </xsd:complexType>
+  <xsd:element name="Root" type="nurserosteringmodel:Root"/>
+  <xsd:complexType name="Nurse">
+    <xsd:complexContent>
+      <xsd:extension base="nurserosteringmodel:NamedElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="contract" type="nurserosteringmodel:Contract"/>
+        </xsd:choice>
+        <xsd:attribute name="contract" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Nurse" type="nurserosteringmodel:Nurse"/>
+  <xsd:complexType name="Contract">
+    <xsd:complexContent>
+      <xsd:extension base="nurserosteringmodel:NamedElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="requestedDays" type="nurserosteringmodel:Day"/>
+          <xsd:element name="blockedDays" type="nurserosteringmodel:Day"/>
+          <xsd:element name="requestedShifts" type="nurserosteringmodel:Shift"/>
+          <xsd:element name="blockedShifts" type="nurserosteringmodel:Shift"/>
+          <xsd:element name="assignedShifts" type="nurserosteringmodel:Shift"/>
+        </xsd:choice>
+        <xsd:attribute name="maximumNoOfAssignments" type="xsd:int"/>
+        <xsd:attribute name="minimumNoOfAssignments" type="xsd:int"/>
+        <xsd:attribute name="maximumNoOfConsWorkDays" type="xsd:int"/>
+        <xsd:attribute name="minimumNoOfConsWorkDays" type="xsd:int"/>
+        <xsd:attribute name="maximumNoOfConsFreeDays" type="xsd:int"/>
+        <xsd:attribute name="minimumNoOfConsFreeDays" type="xsd:int"/>
+        <xsd:attribute name="maximumNoOfConsWorkWeekends" type="xsd:int"/>
+        <xsd:attribute name="maximumNoOfWorkWeekInFourWeeks" type="xsd:int"/>
+        <xsd:attribute name="noOfDaysOffAfterSeriesOfNightShifts" type="xsd:int"/>
+        <xsd:attribute name="completeWeekends" type="xsd:boolean"/>
+        <xsd:attribute name="identicalShiftTypesDuringTheWeekend" type="xsd:boolean"/>
+        <xsd:attribute name="requestedDays" type="xsd:string"/>
+        <xsd:attribute name="blockedDays" type="xsd:string"/>
+        <xsd:attribute name="requestedShifts" type="xsd:string"/>
+        <xsd:attribute name="blockedShifts" type="xsd:string"/>
+        <xsd:attribute name="assignedShifts" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Contract" type="nurserosteringmodel:Contract"/>
+  <xsd:complexType abstract="true" name="NamedElement">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="name" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="NamedElement" type="nurserosteringmodel:NamedElement"/>
+  <xsd:complexType name="Day">
+    <xsd:complexContent>
+      <xsd:extension base="nurserosteringmodel:NamedElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="shifts" type="nurserosteringmodel:Shift"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Day" type="nurserosteringmodel:Day"/>
+  <xsd:complexType name="Shift">
+    <xsd:complexContent>
+      <xsd:extension base="nurserosteringmodel:NamedElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="assignedNurses" type="nurserosteringmodel:Nurse"/>
+        </xsd:choice>
+        <xsd:attribute name="requiredNoNurses" type="xsd:int"/>
+        <xsd:attribute name="assignedNurses" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Shift" type="nurserosteringmodel:Shift"/>
+</xsd:schema>

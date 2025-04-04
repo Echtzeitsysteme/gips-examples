@@ -20,6 +20,8 @@
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,LectureStudioModel"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,LectureStudioModelB"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,network.model"/>
+<project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,nurserosteringgipsl"/>
+<project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,nurserosteringmodel"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.headlessrunner"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.headlessrunnermodel"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,org.emoflon.gips.gipsl.examples.headlessrunnerxmi"/>
@@ -56,6 +58,7 @@
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,teachingassistant.metamodel"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,testgipsproject"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,testmetamodel"/>
+<project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,xsdimport"/>
 </provider>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1738423366956_4" label="gips-examples" name="gips-examples">
 <item elementID="=architecture.cra.gipssolution" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
@@ -100,7 +103,6 @@
 <item elementID="=PTAConstraintConfigE" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=PTAConstraintConfigF" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=PTAConstraintConfigG" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=PTAEvaluation" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=PTAProblem" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=ihtcgipssolution.hardonly" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=ihtcgipssolution.nursesrooms" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
@@ -113,5 +115,9 @@
 <item elementID="=ihtcrunner" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=ihtcgipssolution" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.emoflon.gips.gipsl.examples.mdvne.heap" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=PTAEvaluation" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=nurserosteringgipsl" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=nurserosteringmodel" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=xsdimport" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 </psf>
