@@ -15,8 +15,8 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import metamodel.Department;
 import metamodel.MetamodelPackage;
+import metamodel.TAAllocation;
 
 /**
  * File utilities for loading and saving files.
@@ -165,7 +165,7 @@ public class FileUtils {
 	 * @param path  Output (XMI) path for the model to be saved at.
 	 * @throws IOException Throws an IOException if the file could not be written.
 	 */
-	public static void save(final Department model, final String path) throws IOException {
+	public static void save(final TAAllocation model, final String path) throws IOException {
 		final Resource r = saveAndReturn(model, path);
 		r.unload();
 	}
@@ -179,7 +179,7 @@ public class FileUtils {
 	 * @return Respective resource of the model.
 	 * @throws IOException Throws an IOException if the file could not be written.
 	 */
-	public static Resource saveAndReturn(final Department model, final String path) throws IOException {
+	public static Resource saveAndReturn(final TAAllocation model, final String path) throws IOException {
 		checkNotNull(model, "Model");
 		checkNotNull(path, "Path");
 

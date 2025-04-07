@@ -8,10 +8,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.google.gson.JsonObject;
-
-import metamodel.Department;
-import teachingassistant.kcl.metamodelalt.export.FileUtils;
+import metamodel.TAAllocation;
 import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
 
 public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
@@ -60,23 +57,24 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 	private void execute() {
 		final SimpleTaKclGenerator gen = new SimpleTaKclGenerator(randomSeed);
 
-		// Set the parsed configuration from the read JSON file
-		final GeneratorConfig config = parseJsonConfig(jsonInputPath);
-		gen.NUMBER_OF_LECTURERS = config.numberOfLecturers;
-		gen.LECTURERS_MINIMUM_NUMBER_OF_ASSISTANTS = config.lecturersMinimumNumberOfAssistants;
-		gen.LECTURERS_MAXIMUM_NUMBER_OF_ASSISTANTS = config.lecturersMaximumNumberOfAssistants;
-		gen.NUMBER_OF_ASSISTANTS = config.numberOfAssistants;
-		gen.ASSISTANTS_MAXIMUM_NUMBER_OF_DAYS_PER_WEEK = config.assistantsMaximumNumberOfDaysPerWeek;
-		gen.ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK = config.assistantsMinimumNumberOfHoursPerWeek;
-		gen.ASSISTANTS_MAXIMUM_NUMBER_OF_HOURS_PER_WEEK = config.assistantsMaximumNumberOfHoursPerWeek;
-		gen.ASSISTANTS_MAXIMUM_HOURS_TOTAL = config.assistantsMaximumHoursTotal;
-		gen.ASSISTANTS_MINIMUM_NUMBER_OF_BLOCKED_DAYS = config.assistantsMinimumNumberOfBlockedDays;
-		gen.ASSISTANTS_MAXIMUM_NUMBER_OF_BLOCKED_DAYS = config.assistantsMaximumNumberOfBlockedDays;
-		gen.NUMBER_OF_TIMESLOTS_PER_WEEK = config.numberOfTimeSlotsPerWeek;
-		gen.NUMBER_OF_TUTORIALS_PER_WEEK = config.numberOfTimeSlotsPerWeek;
-		gen.NUMBER_OF_WEEKS = config.numberOfWeeks;
+		// TODO: This was not adapted to the new metamodel, yet.
+//		// Set the parsed configuration from the read JSON file
+//		final GeneratorConfig config = parseJsonConfig(jsonInputPath);
+//		gen.NUMBER_OF_LECTURERS = config.numberOfLecturers;
+//		gen.LECTURERS_MINIMUM_NUMBER_OF_ASSISTANTS = config.lecturersMinimumNumberOfAssistants;
+//		gen.LECTURERS_MAXIMUM_NUMBER_OF_ASSISTANTS = config.lecturersMaximumNumberOfAssistants;
+//		gen.NUMBER_OF_ASSISTANTS = config.numberOfAssistants;
+//		gen.ASSISTANTS_MAXIMUM_NUMBER_OF_DAYS_PER_WEEK = config.assistantsMaximumNumberOfDaysPerWeek;
+//		gen.ASSISTANTS_MINIMUM_NUMBER_OF_HOURS_PER_WEEK = config.assistantsMinimumNumberOfHoursPerWeek;
+//		gen.ASSISTANTS_MAXIMUM_NUMBER_OF_HOURS_PER_WEEK = config.assistantsMaximumNumberOfHoursPerWeek;
+//		gen.ASSISTANTS_MAXIMUM_HOURS_TOTAL = config.assistantsMaximumHoursTotal;
+//		gen.ASSISTANTS_MINIMUM_NUMBER_OF_BLOCKED_DAYS = config.assistantsMinimumNumberOfBlockedDays;
+//		gen.ASSISTANTS_MAXIMUM_NUMBER_OF_BLOCKED_DAYS = config.assistantsMaximumNumberOfBlockedDays;
+//		gen.NUMBER_OF_TIMESLOTS_PER_WEEK = config.numberOfTimeSlotsPerWeek;
+//		gen.NUMBER_OF_TUTORIALS_PER_WEEK = config.numberOfTimeSlotsPerWeek;
+//		gen.NUMBER_OF_WEEKS = config.numberOfWeeks;
 
-		final Department model = gen.constructModel();
+		final TAAllocation model = gen.constructModel();
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(model);
 		exporter.modelToJson(jsonOutputPath);
 
@@ -85,24 +83,25 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 		}
 	}
 
-	private GeneratorConfig parseJsonConfig(final String jsonInputPath) {
-		final JsonObject json = FileUtils.readFileToJson(jsonInputPath);
-		return new GeneratorConfig( //
-				json.getAsJsonPrimitive("number_of_lecturers").getAsInt(), //
-				json.getAsJsonPrimitive("lecturers_minimum_number_of_assistants").getAsInt(), //
-				json.getAsJsonPrimitive("lecturers_maximum_number_of_assistants").getAsInt(), //
-				json.getAsJsonPrimitive("number_of_assistants").getAsInt(), //
-				json.getAsJsonPrimitive("assistants_maximum_number_of_days_per_week").getAsInt(), //
-				json.getAsJsonPrimitive("assistants_minimum_number_of_hours_per_week").getAsInt(), //
-				json.getAsJsonPrimitive("assistants_maximum_number_of_hours_per_week").getAsInt(), //
-				json.getAsJsonPrimitive("assistants_maximum_hours_total").getAsInt(), //
-				json.getAsJsonPrimitive("assistants_minimum_number_of_blocked_days").getAsInt(), //
-				json.getAsJsonPrimitive("assistants_maximum_number_of_blocked_days").getAsInt(), //
-				json.getAsJsonPrimitive("number_of_time_slots_per_week").getAsInt(), //
-				json.getAsJsonPrimitive("number_of_tutorials_per_week").getAsInt(), //
-				json.getAsJsonPrimitive("number_of_weeks").getAsInt() //
-		);
-	}
+	// TODO: This was not adapted to the new metamodel, yet.
+//	private GeneratorConfig parseJsonConfig(final String jsonInputPath) {
+//		final JsonObject json = FileUtils.readFileToJson(jsonInputPath);
+//		return new GeneratorConfig( //
+//				json.getAsJsonPrimitive("number_of_lecturers").getAsInt(), //
+//				json.getAsJsonPrimitive("lecturers_minimum_number_of_assistants").getAsInt(), //
+//				json.getAsJsonPrimitive("lecturers_maximum_number_of_assistants").getAsInt(), //
+//				json.getAsJsonPrimitive("number_of_assistants").getAsInt(), //
+//				json.getAsJsonPrimitive("assistants_maximum_number_of_days_per_week").getAsInt(), //
+//				json.getAsJsonPrimitive("assistants_minimum_number_of_hours_per_week").getAsInt(), //
+//				json.getAsJsonPrimitive("assistants_maximum_number_of_hours_per_week").getAsInt(), //
+//				json.getAsJsonPrimitive("assistants_maximum_hours_total").getAsInt(), //
+//				json.getAsJsonPrimitive("assistants_minimum_number_of_blocked_days").getAsInt(), //
+//				json.getAsJsonPrimitive("assistants_maximum_number_of_blocked_days").getAsInt(), //
+//				json.getAsJsonPrimitive("number_of_time_slots_per_week").getAsInt(), //
+//				json.getAsJsonPrimitive("number_of_tutorials_per_week").getAsInt(), //
+//				json.getAsJsonPrimitive("number_of_weeks").getAsInt() //
+//		);
+//	}
 
 	private static void parseArgs(final String[] args) {
 		final Options options = new Options();
@@ -162,12 +161,8 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 		}
 	}
 
-	public record GeneratorConfig(int numberOfLecturers, int lecturersMinimumNumberOfAssistants,
-			int lecturersMaximumNumberOfAssistants, int numberOfAssistants, int assistantsMaximumNumberOfDaysPerWeek,
-			int assistantsMinimumNumberOfHoursPerWeek, int assistantsMaximumNumberOfHoursPerWeek,
-			int assistantsMaximumHoursTotal, int assistantsMinimumNumberOfBlockedDays,
-			int assistantsMaximumNumberOfBlockedDays, int numberOfTimeSlotsPerWeek, int numberOfTutorialsPerWeek,
-			int numberOfWeeks) {
+	public record GeneratorConfig(int numberOfModules, int numberOfTas, int taMaximumHoursPerWeek,
+			int taMaximumHoursPerYear, double propabilitySecondSessionType, int startWeek, int endWeek) {
 	}
 
 }

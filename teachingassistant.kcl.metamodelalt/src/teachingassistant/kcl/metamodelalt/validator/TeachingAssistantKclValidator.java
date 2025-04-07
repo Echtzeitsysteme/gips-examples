@@ -1,9 +1,7 @@
 package teachingassistant.kcl.metamodelalt.validator;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -12,15 +10,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
-import metamodel.Assistant;
-import metamodel.Day;
-import metamodel.Department;
-import metamodel.Lecturer;
 import metamodel.MetamodelPackage;
-import metamodel.Skill;
-import metamodel.Timeslot;
-import metamodel.Tutorial;
+import metamodel.NamedElement;
+import metamodel.TA;
+import metamodel.TAAllocation;
 import metamodel.Week;
+import metamodel.TimeTableEntry;
 
 /**
  * Model validator for the teaching assistant example.
@@ -39,7 +34,7 @@ public class TeachingAssistantKclValidator {
 	 */
 	public static void main(final String[] args) {
 		final String projectFolder = System.getProperty("user.dir");
-		final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodel/instances/";
+		final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodelalt/instances/";
 		final String filePath = instanceFolder + SCENARIO_FILE_NAME;
 
 		final ResourceSet rs = new ResourceSetImpl();
@@ -48,7 +43,7 @@ public class TeachingAssistantKclValidator {
 		rs.getPackageRegistry().put(MetamodelPackage.eNS_URI, MetamodelPackage.eINSTANCE);
 		final URI fileURI = URI.createFileURI(filePath);
 		final Resource r = rs.getResource(fileURI, true);
-		final Department model = (Department) r.getContents().get(0);
+		final TAAllocation model = (TAAllocation) r.getContents().get(0);
 		final boolean valid = new TeachingAssistantKclValidator().validate(model);
 
 		if (valid) {
@@ -60,12 +55,12 @@ public class TeachingAssistantKclValidator {
 	}
 
 	/**
-	 * Validate the given Department object.
+	 * Validate the given TAAllocation object.
 	 * 
-	 * @param model Department object to validate.
+	 * @param model TAAllocation object to validate.
 	 * @return True if complete model is valid.
 	 */
-	public boolean validate(final Department model) {
+	public boolean validate(final TAAllocation model) {
 		if (model == null) {
 			System.out.println("=> Given model was null.");
 			return false;
@@ -73,410 +68,118 @@ public class TeachingAssistantKclValidator {
 
 		boolean valid = true;
 
-		// Tutorials
-		{
-			boolean tutorialsValid = true;
-			for (final Tutorial tutorial : model.getTutorials()) {
-				tutorialsValid = tutorialsValid && validate(tutorial);
-			}
-			tutorialsValid = tutorialsValid && validateTutorialNameUnique(model.getTutorials());
-			System.out.println("=> All tutorials valid: " + tutorialsValid);
-			valid = valid && tutorialsValid;
-		}
-
-		// Assistants
-		{
-			boolean assistantsValid = true;
-			for (final Assistant assistant : model.getAssistants()) {
-				assistantsValid = assistantsValid && validate(assistant, model);
-			}
-			assistantsValid = assistantsValid && validateAssistantNameUnique(model.getAssistants());
-			System.out.println("=> All assistants valid: " + assistantsValid);
-			valid = valid && assistantsValid;
-		}
-
-		// Time slots
-		{
-			boolean timeslotsValid = true;
-			for (final Timeslot timeslot : model.getTimeslots()) {
-				timeslotsValid = timeslotsValid && validate(timeslot);
-			}
-			timeslotsValid = timeslotsValid && validateTimeSlotsIdUnique(model.getTimeslots());
-			System.out.println("=> All time slots valid: " + timeslotsValid);
-			valid = valid && timeslotsValid;
-		}
-
 		// Weeks
 		{
+			// Collect all weeks
+			final Set<Week> allFoundWeeks = new HashSet<>();
+			model.getTimetable().forEach(timeTableEntry -> {
+				allFoundWeeks.addAll(timeTableEntry.getTimeTableWeeks());
+			});
+			model.getModules().forEach(module -> {
+				module.getSessions().forEach(session -> {
+					allFoundWeeks.addAll(session.getTimeTableWeeks());
+				});
+			});
 			boolean weeksValid = true;
-			for (final Week week : model.getWeeks()) {
+			for (final Week week : allFoundWeeks) {
 				weeksValid = weeksValid && validate(week);
 			}
-			weeksValid = weeksValid && validateWeekNameUnique(model.getWeeks());
+			weeksValid = weeksValid && validateWeekNumberUnique(allFoundWeeks);
 			System.out.println("=> All weeks are valid: " + weeksValid);
 			valid = valid && weeksValid;
 		}
 
-		// Days
+		// TimeTableEntries
 		{
-			boolean daysValid = true;
-			for (final Day day : model.getDays()) {
-				daysValid = daysValid && validate(day);
+			// Collect all TimeTableEntries
+			final Set<TimeTableEntry> allFoundTimeTableEntries = new HashSet<>();
+			allFoundTimeTableEntries.addAll(model.getTimetable());
+			model.getModules().forEach(module -> {
+				module.getSessions().forEach(session -> {
+					allFoundTimeTableEntries.addAll(session.getEntries());
+				});
+			});
+			model.getTas().forEach(ta -> {
+				allFoundTimeTableEntries.addAll(ta.getUnavailable_because_lessons());
+			});
+			boolean timeTableEntriesValid = true;
+			for (final TimeTableEntry entry : allFoundTimeTableEntries) {
+				timeTableEntriesValid = timeTableEntriesValid && validate(entry);
 			}
-			daysValid = daysValid && validateDayNameUnique(model.getDays());
-			System.out.println("=> All days valid: " + daysValid);
-			valid = valid && daysValid;
+			System.out.println("=> All time table entries are valid: " + timeTableEntriesValid);
+			valid = valid && timeTableEntriesValid;
 		}
 
-		// Lecturers
+		// TAs
 		{
-			boolean lecturersValid = true;
-			for (final Lecturer lecturer : model.getLecturers()) {
-				lecturersValid = lecturersValid && validate(lecturer);
+			boolean tasValid = true;
+			for (final TA ta : model.getTas()) {
+				tasValid = tasValid && validate(ta);
 			}
-			lecturersValid = lecturersValid && validateLecturerNameUnique(model.getLecturers());
-			System.out.println("=> All lecturers valid: " + lecturersValid);
-			valid = valid && lecturersValid;
+			System.out.println("=> All TAs are valid: " + tasValid);
+			valid = valid && tasValid;
 		}
 
 		return valid;
 	}
 
-	/**
-	 * Checks the given collection of tutorials for unique names.
-	 * 
-	 * @param tutorials Collection of tutorials to check.
-	 * @return True if all names were unique.
-	 */
-	private boolean validateTutorialNameUnique(final Collection<Tutorial> tutorials) {
-		if (tutorials == null) {
+	private boolean validate(final TA ta) {
+		if (ta == null) {
 			return false;
 		}
 
-		final Set<String> names = new HashSet<>();
-		for (final Tutorial t : tutorials) {
-			if (!names.add(t.getName())) {
-				return false;
-			}
+		if (!validateName(ta)) {
+			return false;
+		}
+
+		if (ta.getMaxHoursPerWeek() <= 0) {
+			return false;
+		}
+
+		if (ta.getMaxHoursPerYear() <= 0) {
+			return false;
+		}
+
+		// Unavailable sessions will be checked by the time table entry check.
+
+		// TODO: Check time limit per week
+		// TODO: Check time limit per year
+		
+		return true;
+	}
+
+	private boolean validateName(final NamedElement element) {
+		if (element == null) {
+			return false;
+		}
+
+		if (element.getName() == null) {
+			return false;
+		}
+
+		if (element.getName().isBlank()) {
+			return false;
 		}
 
 		return true;
 	}
 
 	/**
-	 * Checks the given collection of assistants for unique names.
-	 * 
-	 * @param assistants Collection of assistants to check.
-	 * @return True if all names were unique.
-	 */
-	private boolean validateAssistantNameUnique(final Collection<Assistant> assistants) {
-		if (assistants == null) {
-			return false;
-		}
-
-		final Set<String> names = new HashSet<>();
-		for (final Assistant a : assistants) {
-			if (!names.add(a.getName())) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Checks the given collection of lecturers for unique names.
-	 * 
-	 * @param lecturers Collection of lecturers to check.
-	 * @return True if all names were unique.
-	 */
-	private boolean validateLecturerNameUnique(final Collection<Lecturer> lecturers) {
-		if (lecturers == null) {
-			return false;
-		}
-
-		final Set<String> names = new HashSet<>();
-		for (final Lecturer l : lecturers) {
-			if (!names.add(l.getName())) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Checks the given collection of time slots for unique IDs.
-	 * 
-	 * @param timeslots Collection of time slots to check.
-	 * @return True if all IDs were unique.
-	 */
-	private boolean validateTimeSlotsIdUnique(final Collection<Timeslot> timeslots) {
-		if (timeslots == null) {
-			return false;
-		}
-
-		final Set<Integer> ids = new HashSet<>();
-		for (final Timeslot ts : timeslots) {
-			if (!ids.add(ts.getId())) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Checks the given collection of weeks for unique names.
+	 * Checks the given collection of weeks for unique numbers.
 	 * 
 	 * @param weeks Collection of weeks to check.
-	 * @return True if all names were unique.
+	 * @return True if all week numbers were unique.
 	 */
-	private boolean validateWeekNameUnique(final Collection<Week> weeks) {
+	private boolean validateWeekNumberUnique(final Collection<Week> weeks) {
 		if (weeks == null) {
 			return false;
 		}
 
-		final Set<String> names = new HashSet<>();
+		final Set<Integer> names = new HashSet<>();
 		for (final Week w : weeks) {
-			if (!names.add(w.getName())) {
+			if (!names.add(w.getNumber())) {
 				return false;
 			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Checks the given collection of days for unique names.
-	 * 
-	 * @param days Collection of days to check.
-	 * @return True if all names were unique.
-	 */
-	private boolean validateDayNameUnique(final Collection<Day> days) {
-		if (days == null) {
-			return false;
-		}
-
-		final Set<String> names = new HashSet<>();
-		for (final Day d : days) {
-			if (!names.add(d.getName())) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	private boolean validate(final Tutorial tutorial) {
-		if (tutorial == null) {
-			return false;
-		}
-
-		// Every tutorial must be given by some assistant
-		if (tutorial.getGivenBy() == null) {
-			return false;
-		}
-
-		// If a tutorial has a lecturer, the tutorial must also be contained in the
-		// collection of tutorials of the same lecturer
-		if (tutorial.getLecturer() != null) {
-			if (!tutorial.getLecturer().getTutorials().contains(tutorial)) {
-				return false;
-			}
-		}
-
-		// The tutorial's skill type must match the lecturer's skill type
-		if (tutorial.getLecturer() != null) {
-			if (!tutorial.getSkillType().equals(tutorial.getLecturer().getSkillTypeName())) {
-				return false;
-			}
-		}
-
-		// The tutorial's duration must be larger than zero
-		if (tutorial.getDuration() <= 0) {
-			return false;
-		}
-
-		// The tutorial's time slot must not be empty
-		if (tutorial.getTimeslot() == null) {
-			return false;
-		}
-
-		return true;
-	}
-
-	private boolean validate(final Assistant assistant, final Department model) {
-		if (assistant == null) {
-			return false;
-		}
-
-		if (model == null) {
-			throw new IllegalArgumentException("Given model was null.");
-		}
-
-		// Name
-		if (assistant.getName() == null || assistant.getName().isBlank()) {
-			return false;
-		}
-
-		int cumulatedTotalHours = 0;
-		final Set<Integer> usedTimeslots = new HashSet<Integer>();
-		final Set<Tutorial> allGivenTutorials = new HashSet<Tutorial>();
-		for (final Tutorial tutorial : model.getTutorials()) {
-			if (tutorial.getGivenBy() != null && tutorial.getGivenBy().equals(assistant)) {
-				allGivenTutorials.add(tutorial);
-				// SkillType of the tutorial must be matched by the assistant
-				boolean skillTypeMatched = false;
-				for (final Skill s : assistant.getSkills()) {
-					if (tutorial.getSkillType().equals(s.getName())) {
-						skillTypeMatched = true;
-					}
-				}
-				if (!skillTypeMatched) {
-					System.out.println("=> Skill type of assistant <" + assistant.getName() + "> and tutorial <"
-							+ tutorial.getName() + "> not matched.");
-					return false;
-				}
-				cumulatedTotalHours += tutorial.getDuration();
-
-				// An assistant must not have two tutorials at the same time slot
-				if (tutorial.getTimeslot() != null) {
-					if (!usedTimeslots.add(tutorial.getTimeslot().getId())) {
-						System.out.println("=> Assistant <" + assistant.getName()
-								+ "> has two tutorials on overlapping time slots: " + tutorial.getTimeslot().getId());
-						;
-						return false;
-					}
-				}
-			}
-		}
-
-		// Assistant's total hour limit must be matched by the cumulative duration
-		if (!(cumulatedTotalHours <= assistant.getMaximumHoursTotal())) {
-			System.err.println(
-					"=> Assistant <" + assistant.getName() + "> exceeds their maximum hours total. Specified limit: "
-							+ assistant.getMaximumHoursTotal() + ", actual assignment: " + cumulatedTotalHours);
-			return false;
-		}
-
-		// Number of assigned work days must be smaller or equal to the maximum number
-		// Check maximum number of work days per week and cumulative hours per week
-		//
-		// Extract two information of all given tutorials:
-		// 1) total number of hours per week
-		// 2) working days per week
-		final Map<Week, Integer> week2Hours = new HashMap<Week, Integer>();
-		final Map<Week, Set<Day>> week2Days = new HashMap<Week, Set<Day>>();
-		for (final Tutorial t : allGivenTutorials) {
-			final Week w = t.getTimeslot().getDay().getWeek();
-
-			// Hours
-			if (!week2Hours.containsKey(w)) {
-				week2Hours.put(w, 0);
-			}
-
-			final int previousValue = week2Hours.remove(w);
-			week2Hours.put(w, previousValue + t.getDuration());
-
-			// Days
-			if (!week2Days.containsKey(w)) {
-				week2Days.put(w, new HashSet<Day>());
-			}
-
-			week2Days.get(w).add(t.getTimeslot().getDay());
-		}
-
-		// Check found values against assistant's values from the model
-		for (final Week w : model.getWeeks()) {
-			if (week2Hours.containsKey(w)) {
-				final int hoursInWeek = week2Hours.get(w);
-				if (hoursInWeek < assistant.getMinimumHoursPerWeek()
-						|| hoursInWeek > assistant.getMaximumHoursPerWeek()) {
-					System.out.println("=> Assistant <" + assistant.getName()
-							+ "> number of hours per week is not within their boundaries: "
-							+ assistant.getMinimumHoursPerWeek() + " <=? " + hoursInWeek + " <=? "
-							+ assistant.getMaximumHoursPerWeek());
-					return false;
-				}
-			}
-
-			if (week2Days.containsKey(w)) {
-				final int daysInWeek = week2Days.get(w).size();
-				if (daysInWeek > assistant.getMaximumDaysPerWeek()) {
-					System.out.println("=> Assistant <" + assistant.getName() + "> maximum number of days exceeded: "
-							+ assistant.getMaximumDaysPerWeek() + " <=? " + daysInWeek);
-					;
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
-
-	private boolean validate(final Lecturer lecturer) {
-		if (lecturer == null) {
-			return false;
-		}
-
-		// Name
-		if (lecturer.getName() == null || lecturer.getName().isBlank()) {
-			return false;
-		}
-
-		// Tutorial types
-		for (final Tutorial t : lecturer.getTutorials()) {
-			if (!t.getSkillType().equals(lecturer.getSkillTypeName())) {
-				System.out.println("=> Lecturer <" + lecturer.getName() + "> has a tutorial <" + t.getName()
-						+ "> with the wrong skill type <" + t.getSkillType() + "> instead of <"
-						+ lecturer.getSkillTypeName() + ">.");
-				return false;
-			}
-		}
-
-		// Maximum number of TAs
-		final Set<Assistant> employedAssistants = new HashSet<>();
-		for (final Tutorial t : lecturer.getTutorials()) {
-			employedAssistants.add(t.getGivenBy());
-		}
-		// lecturers must not have a number of maximum TAs that is smaller than zero
-		if (lecturer.getMaximumNumberOfTas() < 0) {
-			System.out.println("=> The number of maximum number of TAs of lecturer <" + lecturer.getName()
-					+ "> was negative: " + lecturer.getMaximumNumberOfTas());
-			return false;
-		}
-		if (employedAssistants.size() > lecturer.getMaximumNumberOfTas()) {
-			System.out.println("=> The number of assigned TAs (" + employedAssistants.size() + ")of lecturer <"
-					+ lecturer.getName() + "> was larger than the configured limit: "
-					+ lecturer.getMaximumNumberOfTas());
-			return false;
-		}
-
-		// A lecturer must have at least one tutorial
-		if (lecturer.getTutorials().isEmpty()) {
-			System.out.println("=> Lecturer <" + lecturer.getName() + "> has no tutorials.");
-			return false;
-		}
-
-		return true;
-	}
-
-	private boolean validate(final Timeslot timeslot) {
-		if (timeslot == null) {
-			return false;
-		}
-
-		if (timeslot.getName() == null || timeslot.getName().isBlank()) {
-			return false;
-		}
-
-		if (!timeslot.getName().equals(String.valueOf(timeslot.getId()))) {
-			return false;
-		}
-
-		if (timeslot.getDay() == null) {
-			return false;
 		}
 
 		return true;
@@ -487,34 +190,41 @@ public class TeachingAssistantKclValidator {
 			return false;
 		}
 
-		// Name of the week must not be null or blank
-		if (week.getName() == null || week.getName().isBlank()) {
-			return false;
-		}
-
-		// A week must have at least one day
-		if (week.getDays().isEmpty()) {
+		// Number of the week must be between 1 and 52
+		if (week.getNumber() < 0 || week.getNumber() > 52) {
 			return false;
 		}
 
 		return true;
 	}
 
-	private boolean validate(final Day day) {
-		if (day == null) {
+	private boolean validate(final TimeTableEntry entry) {
+		if (entry == null) {
 			return false;
 		}
 
-		// Name of the day must not be null or blank
-		if (day.getName() == null || day.getName().isBlank()) {
+		if (entry.getRoom() == null || entry.getRoom().isBlank()) {
 			return false;
 		}
 
-		if (day.getWeek() == null) {
+		if (entry.getWeekDay() == null || entry.getWeekDay().isBlank()) {
 			return false;
 		}
 
-		// It is allowed for a day to not have any time slots
+		if (entry.getStartTime() == null) {
+			return false;
+		}
+
+		if (entry.getEndTime() == null) {
+			return false;
+		}
+
+		if (entry.getSession() == null) {
+			return false;
+		}
+
+		// TODO: TeachingSession?
+		// TODO: timeTableWeeks?
 
 		return true;
 	}
