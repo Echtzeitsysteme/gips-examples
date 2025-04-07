@@ -96,7 +96,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		// 1) Create the root TAAllocation
 		this.root = factory.createTAAllocation();
 
-		// Create weeks
+		// 1.1) Create all weeks
 		for (int i = START_WEEK; i <= END_WEEK; i++) {
 			final Week week = factory.createWeek();
 			week.setNumber(i);
@@ -110,18 +110,22 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 				"Operating Systems", "Software Engineering", "Machine Learning", "Algorithms" };
 
 		for (int i = 0; i < NUMBER_OF_MODULES; i++) {
-			Module module = factory.createModule();
+			final Module module = factory.createModule();
 			// The new metamodel only has "name", so store code & title in that
+			// TODO: Maybe we can extend the metamodel to hold these values in different
+			// fields?
 			module.setName(moduleCodes[i] + " - " + moduleTitles[i]);
 			modules.put(moduleCodes[i], module);
 		}
 
 		// 3) Create TAs
 		for (int i = 0; i < NUMBER_OF_TAS; i++) {
-			String taName = "TA_" + (i + 1);
-			int maxWeeklyHours = getRandInt(6, TA_MAXIMUM_HOURS_PER_WEEK);
+			final String taName = "TA_" + (i + 1);
+			// TODO: The following constant `6` should probably be moved to a constant field
+			// of this class.
+			final int maxWeeklyHours = getRandInt(6, TA_MAXIMUM_HOURS_PER_WEEK);
 
-			TA ta = factory.createTA();
+			final TA ta = factory.createTA();
 			ta.setName(taName);
 			ta.setMaxHoursPerWeek(maxWeeklyHours);
 			ta.setMaxHoursPerYear(TA_MAXIMUM_HOURS_PER_YEAR);
@@ -130,33 +134,22 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		}
 
 		// 4) Assign EmploymentApprovals
-		for (Module module : modules.values()) {
-			int numApplicants = getRandInt(3, Math.min(NUMBER_OF_TAS, 7));
-			List<TA> shuffledTAs = new ArrayList<>(tas.values());
+		for (final Module module : modules.values()) {
+			final int numApplicants = getRandInt(3, Math.min(NUMBER_OF_TAS, 7));
+			final List<TA> shuffledTAs = new ArrayList<>(tas.values());
 			java.util.Collections.shuffle(shuffledTAs, rand);
 
-			List<TA> applicants = shuffledTAs.subList(0, numApplicants);
+			final List<TA> applicants = shuffledTAs.subList(0, numApplicants);
 			int highestRatingNum = -1;
 
-			for (TA ta : applicants) {
+			for (final TA ta : applicants) {
 				// ratingVal: 0 => RED, 1 => AMBER, 2 => GREEN
-				int ratingVal = getRandInt(0, 2);
-				EmploymentRating rating;
-				switch (ratingVal) {
-				case 0:
-					rating = EmploymentRating.RED;
-					break;
-				case 1:
-					rating = EmploymentRating.AMBER;
-					break;
-				default:
-					rating = EmploymentRating.GREEN;
-					break;
-				}
+				final int ratingVal = getRandInt(0, 2);
+				final EmploymentRating rating = convertRating(ratingVal);
 
 				highestRatingNum = Math.max(highestRatingNum, ratingVal);
 
-				EmploymentApproval approval = factory.createEmploymentApproval();
+				final EmploymentApproval approval = factory.createEmploymentApproval();
 				approval.setTa(ta);
 				approval.setRating(rating);
 
@@ -169,13 +162,14 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 			}
 		}
 
+		// TODO: The following constants should also be moved to the class fields.
 		// 5) Create TeachingSessions + SessionOccurrences + TimeTableEntries
-		LocalDateTime baseWeekMonday = LocalDateTime.of(2024, Month.FEBRUARY, 12, 0, 0);
+		final LocalDateTime baseWeekMonday = LocalDateTime.of(2024, Month.FEBRUARY, 12, 0, 0);
 
-		for (Module module : modules.values()) {
+		for (final Module module : modules.values()) {
 			// Possibly 1 or 2 session types
 			int sessionTypeCount = (rand.nextDouble() < PROBABILITY_SECOND_SESSION_TYPE) ? 2 : 1;
-			List<String> chosenTypes = new ArrayList<>();
+			final List<String> chosenTypes = new ArrayList<>();
 
 			for (int i = 0; i < sessionTypeCount; i++) {
 				String type;
@@ -186,16 +180,17 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 			}
 
 			// Build each TeachingSession
-			for (String typeName : chosenTypes) {
-				TeachingSession session = factory.createTeachingSession();
+			for (final String typeName : chosenTypes) {
+				final TeachingSession session = factory.createTeachingSession();
 				session.setName(module.getName() + "_" + typeName);
 
 				// We'll treat "hoursPaidPerOccurrence" as the 'duration' in hours
-				int durationHours = getRandInt(1, 2);
+				final int durationHours = getRandInt(1, 2);
 				session.setHoursPaidPerOccurrence(durationHours);
 
+				// TODO: Move constants to the class.
 				// TAs needed
-				int requiredTAs = (rand.nextDouble() < 0.7) ? 1 : 2;
+				final int requiredTAs = (rand.nextDouble() < 0.7) ? 1 : 2;
 				session.setNumTAsPerSession(requiredTAs);
 
 				// Attach to module
@@ -216,33 +211,33 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 				// Now create each occurrence
 				for (int occIdx = 0; occIdx < occurrenceCount; occIdx++) {
 					// 5.1) SessionOccurrence
-					SessionOccurrence occ = factory.createSessionOccurrence();
-					int chosenWeek = getRandInt(START_WEEK, END_WEEK);
+					final SessionOccurrence occ = factory.createSessionOccurrence();
+					final int chosenWeek = getRandInt(START_WEEK, END_WEEK);
 					occ.setTimeTableWeek(chosenWeek);
 
 					// Assign 1 or 2 TAs to this occurrence
-					List<TA> allTAs = new ArrayList<>(tas.values());
+					final List<TA> allTAs = new ArrayList<>(tas.values());
 					java.util.Collections.shuffle(allTAs, rand);
-					int nTAsForOccurrence = getRandInt(1, 2);
+					final int nTAsForOccurrence = getRandInt(1, 2);
 					occ.getTas().addAll(allTAs.subList(0, nTAsForOccurrence));
 
 					session.getOccurrences().add(occ);
 
 					// 5.2) TimeTableEntry
-					TimeTableEntry entry = factory.createTimeTableEntry();
+					final TimeTableEntry entry = factory.createTimeTableEntry();
 
 					entry.getTimeTableWeeks().add(getWeek(chosenWeek));
 
 					entry.setRoom("Room" + getRandInt(1, 5));
 
 					// Pick a day offset (0..4 => Mon..Fri)
-					LocalDateTime dayTime = baseWeekMonday.plusDays((chosenWeek - START_WEEK) * 7 + getRandInt(0, 4));
+					final LocalDateTime dayTime = baseWeekMonday.plusDays((chosenWeek - START_WEEK) * 7 + getRandInt(0, 4));
 
 					entry.setWeekDay(dayTime.getDayOfWeek().toString());
 
 					// Convert LocalDateTime => Date
-					Date startDate = Date.from(dayTime.atZone(ZoneId.systemDefault()).toInstant());
-					Date endDate = Date
+					final Date startDate = Date.from(dayTime.atZone(ZoneId.systemDefault()).toInstant());
+					final Date endDate = Date
 							.from(dayTime.plusHours(durationHours).atZone(ZoneId.systemDefault()).toInstant());
 
 					entry.setStartTime(startDate);
@@ -271,6 +266,19 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 			}
 		}
 		throw new IllegalArgumentException("Week with number " + weekNumber + " not found in the model.");
+	}
+
+	private EmploymentRating convertRating(final int rating) {
+		switch (rating) {
+		case 0:
+			return EmploymentRating.RED;
+		case 1:
+			return EmploymentRating.AMBER;
+		case 2:
+			return EmploymentRating.GREEN;
+		default:
+			throw new IllegalArgumentException("Given rating " + rating + " is not valid.");
+		}
 	}
 
 }
