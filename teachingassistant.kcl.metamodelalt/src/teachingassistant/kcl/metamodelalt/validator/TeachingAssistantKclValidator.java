@@ -72,6 +72,7 @@ public class TeachingAssistantKclValidator {
 		{
 			// Collect all weeks
 			final Set<Week> allFoundWeeks = new HashSet<>();
+			allFoundWeeks.addAll(model.getWeeks());
 			model.getTimetable().forEach(timeTableEntry -> {
 				allFoundWeeks.addAll(timeTableEntry.getTimeTableWeeks());
 			});
@@ -119,6 +120,11 @@ public class TeachingAssistantKclValidator {
 			System.out.println("=> All TAs are valid: " + tasValid);
 			valid = valid && tasValid;
 		}
+		
+		// TODO: modules
+		// TODO: employment approvals
+		// TODO: session occurrences
+		// TODO: teaching sessions
 
 		return valid;
 	}
@@ -144,7 +150,7 @@ public class TeachingAssistantKclValidator {
 
 		// TODO: Check time limit per week
 		// TODO: Check time limit per year
-		
+
 		return true;
 	}
 

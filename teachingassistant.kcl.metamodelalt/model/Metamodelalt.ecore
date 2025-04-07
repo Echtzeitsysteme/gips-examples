@@ -12,6 +12,8 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="timetable" upperBound="-1"
         eType="#//TimeTableEntry" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weeks" upperBound="-1"
+        eType="#//Week" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TA" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
@@ -55,7 +57,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="session" lowerBound="1"
         eType="#//TeachingSession" eOpposite="#//TeachingSession/entries"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="timeTableWeeks" upperBound="-1"
-        eType="#//Week" containment="true"/>
+        eType="#//Week"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="EmploymentRating">
     <eLiterals name="RED"/>

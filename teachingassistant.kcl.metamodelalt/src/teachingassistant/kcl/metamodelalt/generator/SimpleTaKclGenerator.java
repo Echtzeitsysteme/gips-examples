@@ -17,6 +17,7 @@ import metamodel.TA;
 import metamodel.TAAllocation;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
+import metamodel.Week;
 import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
 
 /**
@@ -94,6 +95,13 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	public TAAllocation constructModel() {
 		// 1) Create the root TAAllocation
 		this.root = factory.createTAAllocation();
+
+		// Create weeks
+		for (int i = START_WEEK; i <= END_WEEK; i++) {
+			final Week week = factory.createWeek();
+			week.setNumber(i);
+			this.root.getWeeks().add(week);
+		}
 
 		// 2) Create Modules
 		final String[] moduleCodes = { "4CCS1FCOM", "4CCS1DBS", "4CCS1PRP", "5CCS2OS", "5CCS2SEG", "6CCS3ML",
@@ -223,8 +231,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 					// 5.2) TimeTableEntry
 					TimeTableEntry entry = factory.createTimeTableEntry();
 
-					// TODO: Fix this
-					entry.getTimeTableWeeks(); // .add(chosenWeek);
+					entry.getTimeTableWeeks().add(getWeek(chosenWeek));
 
 					entry.setRoom("Room" + getRandInt(1, 5));
 
@@ -256,4 +263,14 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 
 		return root;
 	}
+
+	private Week getWeek(final int weekNumber) {
+		for (final Week itW : this.root.getWeeks()) {
+			if (itW.getNumber() == weekNumber) {
+				return itW;
+			}
+		}
+		throw new IllegalArgumentException("Week with number " + weekNumber + " not found in the model.");
+	}
+
 }
