@@ -1,200 +1,260 @@
 package teachingassistant.kcl.metamodelalt.export;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import metamodel.Assistant;
-import metamodel.Day;
-import metamodel.Department;
-import metamodel.Lecturer;
-import metamodel.Skill;
-import metamodel.Timeslot;
-import metamodel.Tutorial;
-import metamodel.Week;
+import metamodel.EmploymentApproval;
+import metamodel.EmploymentRating;
+import metamodel.Module;
+import metamodel.SessionOccurrence;
+import metamodel.TA;
+import metamodel.TAAllocation;
+import metamodel.TeachingSession;
+import metamodel.TimeTableEntry;
 
 /**
- * This model exporter can be used to convert an EMF model to the respective
- * JSON output format required by the competition.
- * 
- * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
+ * Exports the new metamodel to JSON. This version removes references to old
+ * fields like "code", "status", "minimumHoursPerWeek", etc., and uses only
+ * the new fields from your updated Ecore (TA: name/maxHoursPerWeek/...,
+ * Module: name, TeachingSession: name/hoursPaidPerOccurrence/numTAsPerSession, etc.).
  */
 public class ModelToJsonExporter {
 
-	/**
-	 * Department model to work with.
-	 */
-	private Department model = null;
+    private TAAllocation model;
 
-	/**
-	 * Initializes a new model to JSON exporter object with a given Department
-	 * model.
-	 * 
-	 * @param model Department model.
-	 */
-	public ModelToJsonExporter(final Department model) {
-		if (model == null) {
-			throw new IllegalArgumentException("Given model was null.");
-		}
+    public ModelToJsonExporter(final TAAllocation model) {
+        this.model = model;
+    }
 
-		this.model = model;
-	}
+    public void modelToJson(final String outputPath) {
+        // 1) Flatten TAs
+        JsonArray tasJson = new JsonArray();
+        for (TA ta : model.getTas()) {
+            tasJson.add(convertTAtoJson(ta));
+        }
 
-	/**
-	 * Converts the contained model to a JSON output file written to the given
-	 * output path.
-	 * 
-	 * @param outputPath Output path to write the JSON output file to.
-	 */
-	public void modelToJson(final String outputPath) {
-		modelToJson(outputPath, false);
-	}
+        // 2) Flatten Modules
+        JsonArray modulesJson = new JsonArray();
+        for (Module m : model.getModules()) {
+            modulesJson.add(convertModuleToJson(m));
+        }
 
-	/**
-	 * Converts the contained model to a JSON output file written to the given
-	 * output path.
-	 * 
-	 * @param outputPath Output path to write the JSON output file to.
-	 * @param verbose    If true, the exporter will print more information about the
-	 *                   model.
-	 */
-	public void modelToJson(final String outputPath, final boolean verbose) {
-		if (outputPath == null || outputPath.isBlank()) {
-			throw new IllegalArgumentException("Given path <" + outputPath + "> was null or blank.");
-		}
+        // 3) Flatten TeachingSessions (collected across all modules)
+        JsonArray sessionsJson = flattenTeachingSessionsFromModules();
 
-		// If path contains at least one slash `/`, create the folder if not existent
-		if (outputPath.contains("/")) {
-			final int lastSlashIndex = outputPath.lastIndexOf("/");
-			FileUtils.prepareFolder(outputPath.substring(0, lastSlashIndex));
-		}
+        // 4) Flatten SessionOccurrences
+        JsonArray occurrencesJson = flattenSessionOccurrencesFromModules();
 
-		final JsonArray assistantsJson = new JsonArray();
-		for (final Assistant a : model.getAssistants()) {
-			assistantsJson.add(convertAssistantToJson(a));
-		}
+        // 5) Flatten TimeTableEntries
+        JsonArray timeEntriesJson = flattenTimeTableEntriesFromModules();
 
-		final JsonArray tutorialsJson = new JsonArray();
-		for (final Tutorial t : model.getTutorials()) {
-			tutorialsJson.add(convertTutorialToJson(t));
-		}
+        // 6) Flatten EmploymentApprovals
+        JsonArray approvalsJson = flattenApprovalsFromModules();
 
-		final JsonArray timeslotsJson = new JsonArray();
-		for (final Timeslot t : model.getTimeslots()) {
-			timeslotsJson.add(convertTimeslotToJson(t));
-		}
+        // Build final JSON object
+        JsonObject json = new JsonObject();
+        json.add("tas", tasJson);
+        json.add("modules", modulesJson);
+        json.add("teachingsessions", sessionsJson);
+        json.add("sessionoccurrences", occurrencesJson);
+        json.add("timetableentries", timeEntriesJson);
+        json.add("employmentapprovals", approvalsJson);
 
-		final JsonArray lecturersJson = new JsonArray();
-		for (final Lecturer l : model.getLecturers()) {
-			lecturersJson.add(lecturerToJson(l));
-		}
+        // Write JSON to file (assuming FileUtils is a helper you already have)
+        FileUtils.writeFileFromJson(outputPath, json);
+    }
 
-		final JsonArray daysJson = new JsonArray();
-		for (final Day d : model.getDays()) {
-			daysJson.add(convertDayToJson(d));
-		}
+    // --------------------------------------------------------------------------------
+    // TA flattening
+    // --------------------------------------------------------------------------------
 
-		final JsonArray weeksJson = new JsonArray();
-		for (final Week w : model.getWeeks()) {
-			weeksJson.add(convertWeekToJson(w));
-		}
+    private JsonObject convertTAtoJson(TA ta) {
+        JsonObject taJson = new JsonObject();
+        taJson.addProperty("name", ta.getName());
+        taJson.addProperty("maxHoursPerWeek", ta.getMaxHoursPerWeek());
+        taJson.addProperty("maxHoursPerYear", ta.getMaxHoursPerYear());
+        // Remove old references like setMinimumHoursPerWeek, setMaximumDaysPerWeek, etc.
+        return taJson;
+    }
 
-		// Global JSON object
-		final JsonObject json = new JsonObject();
-		json.add("assistants", assistantsJson);
-		json.add("tutorials", tutorialsJson);
-		json.add("timeslots", timeslotsJson);
-		json.add("lecturers", lecturersJson);
-		json.add("days", daysJson);
-		json.add("weeks", weeksJson);
+    // --------------------------------------------------------------------------------
+    // Module flattening
+    // --------------------------------------------------------------------------------
 
-		// Write to output JSON file
-		FileUtils.writeFileFromJson(outputPath, json);
-	}
+    private JsonObject convertModuleToJson(Module module) {
+        JsonObject moduleJson = new JsonObject();
+        // In the new Ecore, we only have "name" for the module:
+        moduleJson.addProperty("name", module.getName());
+        // If desired, you can also embed the session names or something similar:
+        JsonArray sessionNames = new JsonArray();
+        for (TeachingSession s : module.getSessions()) {
+            sessionNames.add(s.getName());
+        }
+        moduleJson.add("sessionNames", sessionNames);
 
-	private JsonObject convertAssistantToJson(final Assistant assistant) {
-		final JsonObject assistantJson = new JsonObject();
-		assistantJson.addProperty("minimumHoursPerWeek", assistant.getMinimumHoursPerWeek());
-		assistantJson.addProperty("maximumHoursPerWeek", assistant.getMaximumHoursPerWeek());
-		assistantJson.addProperty("maximumDaysPerWeek", assistant.getMaximumDaysPerWeek());
-		assistantJson.addProperty("maximumHoursTotal", assistant.getMaximumHoursTotal());
+        // Also optionally embed the rating summary or something else
+        // but keep it simple for now
+        return moduleJson;
+    }
 
-		final JsonArray skills = new JsonArray();
-		assistant.getSkills().forEach(s -> {
-			skills.add(convertSkillToJson(s));
-		});
-		assistantJson.add("skills", skills);
+    // --------------------------------------------------------------------------------
+    // TeachingSession flattening
+    // --------------------------------------------------------------------------------
 
-		final JsonArray blockedDates = new JsonArray();
-		assistant.getBlockedDates().forEach(bs -> {
-			blockedDates.add(bs.getName());
-		});
+    /**
+     * Gathers all TeachingSessions across all Modules, returns a single JSON array.
+     */
+    private JsonArray flattenTeachingSessionsFromModules() {
+        JsonArray flatSessions = new JsonArray();
+        Set<TeachingSession> seen = new HashSet<>();
+        for (Module m : model.getModules()) {
+            for (TeachingSession s : m.getSessions()) {
+                if (!seen.contains(s)) {
+                    seen.add(s);
+                    JsonObject sessionObj = new JsonObject();
+                    sessionObj.addProperty("name", s.getName());
+                    sessionObj.addProperty("hoursPaidPerOccurrence", s.getHoursPaidPerOccurrence());
+                    sessionObj.addProperty("numTAsPerSession", s.getNumTAsPerSession());
 
-		assistantJson.add("blockedDates", blockedDates);
-		return assistantJson;
-	}
+                    // Add timeTableWeeks as an array
+                    JsonArray weeksArr = new JsonArray();
+                    if (s.getTimeTableWeeks() != null) {
+                        for (Integer week : s.getTimeTableWeeks()) {
+                            if (week != null) {
+                                weeksArr.add(week);
+                            }
+                        }
+                    }
+                    sessionObj.add("timeTableWeeks", weeksArr);
 
-	private JsonObject convertSkillToJson(final Skill skill) {
-		final JsonObject skillJson = new JsonObject();
-		skillJson.addProperty("name", skill.getName());
-		skillJson.addProperty("preference", skill.getPreference());
-		return skillJson;
-	}
+                    // Optionally note which Module it's in:
+                    sessionObj.addProperty("moduleName", m.getName());
 
-	private JsonObject convertWeekToJson(final Week week) {
-		final JsonObject weekJson = new JsonObject();
-		weekJson.addProperty("name", week.getName());
-		final JsonArray days = new JsonArray();
-		week.getDays().forEach(d -> {
-			days.add(d.getName());
-		});
-		weekJson.add("days", days);
-		return weekJson;
-	}
+                    flatSessions.add(sessionObj);
+                }
+            }
+        }
+        return flatSessions;
+    }
 
-	private JsonObject convertDayToJson(final Day day) {
-		final JsonObject dayJson = new JsonObject();
-		dayJson.addProperty("name", day.getName());
-		final JsonArray timeslots = new JsonArray();
-		day.getTimeslots().forEach(ts -> {
-			timeslots.add(ts.getId());
-		});
-		dayJson.add("timeslots", timeslots);
-		dayJson.addProperty("week", day.getWeek().getName());
-		return dayJson;
-	}
+    // --------------------------------------------------------------------------------
+    // SessionOccurrence flattening
+    // --------------------------------------------------------------------------------
 
-	private JsonObject convertTimeslotToJson(final Timeslot timeslot) {
-		final JsonObject timeslotJson = new JsonObject();
-		timeslotJson.addProperty("id", timeslot.getId());
-		timeslotJson.addProperty("day", timeslot.getDay().getName());
-		timeslotJson.addProperty("name", timeslot.getName());
-		return timeslotJson;
-	}
+    private JsonArray flattenSessionOccurrencesFromModules() {
+        JsonArray flatOccurrences = new JsonArray();
+        // We'll collect them from every session in every module
+        for (Module m : model.getModules()) {
+            for (TeachingSession s : m.getSessions()) {
+                for (SessionOccurrence occ : s.getOccurrences()) {
+                    JsonObject occJson = new JsonObject();
+                    // No "id" in the new Ecore unless you added it
+                    occJson.addProperty("timeTableWeek", occ.getTimeTableWeek());
+                    // Collect the TAs assigned
+                    JsonArray assignedTAs = new JsonArray();
+                    for (TA ta : occ.getTas()) {
+                        assignedTAs.add(ta.getName());
+                    }
+                    occJson.add("tas", assignedTAs);
 
-	private JsonObject convertTutorialToJson(final Tutorial tutorial) {
-		final JsonObject tutorialJson = new JsonObject();
-		tutorialJson.addProperty("name", tutorial.getName());
-		if (tutorial.getGivenBy() != null) {
-			tutorialJson.addProperty("givenBy", tutorial.getGivenBy().getName());
-		}
-		tutorialJson.addProperty("duration", tutorial.getDuration());
-		tutorialJson.addProperty("timeslot", tutorial.getTimeslot().getId());
-		tutorialJson.addProperty("lecturer", tutorial.getLecturer().getName());
-		tutorialJson.addProperty("skillType", tutorial.getSkillType());
-		return tutorialJson;
-	}
+                    // Link back to the session/module
+                    occJson.addProperty("sessionName", s.getName());
+                    occJson.addProperty("moduleName", m.getName());
 
-	private JsonObject lecturerToJson(final Lecturer lecturer) {
-		final JsonObject lecturerJson = new JsonObject();
-		lecturerJson.addProperty("name", lecturer.getName());
-		final JsonArray tutorials = new JsonArray();
-		lecturer.getTutorials().forEach(t -> {
-			tutorials.add(t.getName());
-		});
-		lecturerJson.add("tutorials", tutorials);
-		lecturerJson.addProperty("skillTypeName", lecturer.getSkillTypeName());
-		lecturerJson.addProperty("maximumNumberOfTas", lecturer.getMaximumNumberOfTas());
-		return lecturerJson;
-	}
+                    flatOccurrences.add(occJson);
+                }
+            }
+        }
+        return flatOccurrences;
+    }
+
+    // --------------------------------------------------------------------------------
+    // TimeTableEntry flattening
+    // --------------------------------------------------------------------------------
+
+    private JsonArray flattenTimeTableEntriesFromModules() {
+        JsonArray flatEntries = new JsonArray();
+        Set<TimeTableEntry> seen = new HashSet<>();
+
+        // Each TeachingSession has getEntries(), which references TimeTableEntry
+        for (Module m : model.getModules()) {
+            for (TeachingSession s : m.getSessions()) {
+                for (TimeTableEntry entry : s.getEntries()) {
+                    if (!seen.contains(entry)) {
+                        seen.add(entry);
+                        // Convert to JSON
+                        flatEntries.add(convertTimeTableEntryToJson(entry, s, m));
+                    }
+                }
+            }
+        }
+        return flatEntries;
+    }
+
+    private JsonObject convertTimeTableEntryToJson(TimeTableEntry entry, TeachingSession session, Module module) {
+        JsonObject entryJson = new JsonObject();
+        // timeTableWeeks is a multi-valued EAttribute, so we collect them
+        JsonArray weeksArr = new JsonArray();
+        if (entry.getTimeTableWeeks() != null) {
+            for (Integer w : entry.getTimeTableWeeks()) {
+                if (w != null) {
+                    weeksArr.add(w);
+                }
+            }
+        }
+        entryJson.add("timeTableWeeks", weeksArr);
+
+        // day/room/time info
+        entryJson.addProperty("weekDay", entry.getWeekDay());
+        entryJson.addProperty("room", entry.getRoom());
+
+        // The Ecore uses Date for startTime/endTime, so we might format them as strings:
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        entryJson.addProperty("startTime", formatIfNotNull(sdf, entry.getStartTime()));
+        entryJson.addProperty("endTime",   formatIfNotNull(sdf, entry.getEndTime()));
+
+        // Link back to the session
+        entryJson.addProperty("sessionName", session.getName());
+        entryJson.addProperty("moduleName", module.getName());
+
+        return entryJson;
+    }
+
+    private String formatIfNotNull(SimpleDateFormat sdf, Date d) {
+        return (d == null) ? "" : sdf.format(d);
+    }
+
+    // --------------------------------------------------------------------------------
+    // EmploymentApproval flattening
+    // --------------------------------------------------------------------------------
+
+    /**
+     * Each Module has getApprovals() referencing EmploymentApproval objects.
+     * We export them with "moduleName", "taName", and "rating".
+     */
+    private JsonArray flattenApprovalsFromModules() {
+        JsonArray approvalsArr = new JsonArray();
+        for (Module m : model.getModules()) {
+            for (EmploymentApproval ap : m.getApprovals()) {
+                JsonObject apJson = new JsonObject();
+                apJson.addProperty("moduleName", m.getName());
+                if (ap.getTa() != null) {
+                    apJson.addProperty("taName", ap.getTa().getName());
+                }
+                // rating is an EEnum: RED, AMBER, GREEN
+                EmploymentRating rating = ap.getRating();
+                apJson.addProperty("rating", (rating == null ? "UNKNOWN" : rating.toString()));
+
+                approvalsArr.add(apJson);
+            }
+        }
+        return approvalsArr;
+    }
 
 }

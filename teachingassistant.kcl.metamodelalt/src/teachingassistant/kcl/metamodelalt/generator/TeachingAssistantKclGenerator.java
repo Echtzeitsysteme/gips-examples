@@ -2,12 +2,17 @@ package teachingassistant.kcl.metamodelalt.generator;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
+
+import com.google.common.base.Preconditions;
+
+import metamodel.TAAllocation;
+import metamodel.TA;
+import metamodel.Module;
+import metamodel.MetamodelFactory;
+import metamodel.MetamodelPackage;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -15,239 +20,111 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
-import metamodel.Assistant;
-import metamodel.Day;
-import metamodel.Department;
-import metamodel.Lecturer;
-import metamodel.MetamodelFactory;
-import metamodel.MetamodelPackage;
-import metamodel.Skill;
-import metamodel.Timeslot;
-import metamodel.Tutorial;
-import metamodel.Week;
-
+/**
+ * Parent generator class that sets up basic structures and utilities
+ * for generating a TAAllocation model. Updated to remove or rename
+ * any fields that do not exist in the alternative metamodel.
+ */
 public class TeachingAssistantKclGenerator {
-	protected MetamodelFactory factory = MetamodelFactory.eINSTANCE;
-	protected Department root;
+    
+    // Factory for creating model elements
+    protected MetamodelFactory factory = MetamodelFactory.eINSTANCE;
+    // Root model object
+    protected TAAllocation root;
+    
+    // Mappings from code/name => model objects (just for convenience)
+    protected Map<String, TA> tas = new LinkedHashMap<>();
+    protected Map<String, Module> modules = new LinkedHashMap<>();
+    
+    // Random generator for producing synthetic data
+    protected Random rand;
 
-	protected Map<String, Assistant> assistants = new LinkedHashMap<>();
-	protected Map<String, Tutorial> tutorials = new LinkedHashMap<>();
-	protected Map<Integer, Timeslot> timeslots = new LinkedHashMap<>();
-	protected Map<String, Lecturer> lecturers = new LinkedHashMap<>();
-	protected Map<String, Day> days = new LinkedHashMap<>();
-	protected Map<String, Week> weeks = new LinkedHashMap<>();
+    /**
+     * Prepares (creates) a folder path for storing the generated XMI/JSON.
+     * Adjust if you want a different output location.
+     */
+    protected String prepareFolder() {
+        final String projectFolder = System.getProperty("user.dir");
+        final String instancesFolder = projectFolder + "/../teachingassistant.kcl.metamodel/instances";
+        final File f = new File(instancesFolder);
+        if (!f.exists()) {
+            f.mkdirs();
+        }
+        return instancesFolder;
+    }
 
-	protected Random rand;
+    /**
+     * Utility: produce an integer between [min..max], inclusive.
+     */
+    protected int getRandInt(final int min, final int max) {
+        Preconditions.checkArgument(min <= max, "min must be <= max");
+        return rand.nextInt((max - min) + 1) + min;
+    }
 
-	protected static List<String> allSkillTypes;
+    /**
+     * Example helper method: add a new TA, specifying only data fields
+     * that exist in the new metamodel. If your new Ecore has different
+     * attributes, adjust accordingly.
+     */
+    public void addTA(final String name, final int maxHoursPerWeek, final int maxHoursPerYear) {
+        Preconditions.checkNotNull(name, "Name");
+        TA ta = factory.createTA();
+        
+        // According to the new metamodel, TA typically has: name, maxHoursPerWeek, maxHoursPerYear
+        ta.setName(name);
+        ta.setMaxHoursPerWeek(maxHoursPerWeek);
+        ta.setMaxHoursPerYear(maxHoursPerYear);
+        
+        tas.put(name, ta);
+    }
 
-	static {
-		allSkillTypes = new ArrayList<String>();
-		allSkillTypes.add("Mathematics");
-		allSkillTypes.add("Computer_Science");
-		allSkillTypes.add("Electrical_Engineering");
-		allSkillTypes.add("Finance");
-		allSkillTypes.add("Chemistry");
-		allSkillTypes.add("Biology");
-		allSkillTypes.add("Physics");
-		allSkillTypes.add("Mechanics");
-		allSkillTypes.add("Psychology");
-	}
+    /**
+     * Creates and returns the TAAllocation root object,
+     * adding all TAs and Modules that we've accumulated into 'tas'/'modules'.
+     * If your new Ecore doesn't define any extra attributes on TAAllocation,
+     * you can keep it simple like this.
+     */
+    public TAAllocation generate(final String allocationName) {
+        root = factory.createTAAllocation();
+        // If there's a 'name' attribute on TAAllocation, you could set it: 
+        // root.setName(allocationName);
+        
+        // Add the TAs and Modules we've collected
+        root.getTas().addAll(tas.values());
+        root.getModules().addAll(modules.values());
+        // If TAAllocation also has a 'timetable' reference or anything else, populate it here.
+        
+        return root;
+    }
 
-	public Department generate(final String departmentName) {
-		checkNotNull(departmentName, "Name");
+    /**
+     * Helper to save the model to XMI format on disk.
+     */
+    public static void save(final TAAllocation model, final String path) throws IOException {
+        final Resource r = saveAndReturn(model, path);
+        r.unload();
+    }
 
-		populateTutorialsToLecturers();
-		root = factory.createDepartment();
-		root.setName(departmentName);
-		root.getAssistants().addAll(assistants.values());
-		root.getTutorials().addAll(tutorials.values());
-		root.getTimeslots().addAll(timeslots.values());
-		root.getLecturers().addAll(lecturers.values());
-		root.getDays().addAll(days.values());
-		root.getWeeks().addAll(weeks.values());
-		return root;
-	}
-
-	public void addWeekWithDays(final String name) {
-		addWeek(name);
-		weeks.get(name).getDays().add(addDay(name + "_Monday"));
-		weeks.get(name).getDays().add(addDay(name + "_Tuesday"));
-		weeks.get(name).getDays().add(addDay(name + "_Wednesday"));
-		weeks.get(name).getDays().add(addDay(name + "_Thursday"));
-		weeks.get(name).getDays().add(addDay(name + "_Friday"));
-	}
-
-	public void addTutorial(final String name, final String skillType, final int duration) {
-		checkNotNull(name, " Name");
-		checkNotNull(skillType, "Type");
-
-		final Tutorial t = factory.createTutorial();
-		t.setName(name);
-		t.setDuration(duration);
-		t.setSkillType(skillType);
-		this.tutorials.put(name, t);
-	}
-
-	public void addTutorial(final String name, final String skillType, final int duration, final int timeslot) {
-		checkNotNull(timeslot, "Time slot");
-		addTutorial(name, skillType, duration);
-		tutorials.get(name).setTimeslot(timeslots.get(timeslot));
-	}
-
-	public void addAssistant(final String name, final int minHoursPerWeek, final int maxHoursPerWeek) {
-		checkNotNull(name, "Name");
-
-		final Assistant a = factory.createAssistant();
-		a.setMinimumHoursPerWeek(minHoursPerWeek);
-		a.setMaximumHoursPerWeek(maxHoursPerWeek);
-		a.setName(name);
-		assistants.put(name, a);
-	}
-
-	public void addAssistant(final String name, final int minHoursPerWeek, final int maxHoursPerWeek,
-			final int maxDaysPerWeek) {
-		addAssistant(name, minHoursPerWeek, maxHoursPerWeek);
-		assistants.get(name).setMaximumDaysPerWeek(maxDaysPerWeek);
-	}
-
-	public void addAssistant(final String name, final int minHoursPerWeek, final int maxHoursPerWeek,
-			final int maxDaysPerWeek, final int maxHoursTotal) {
-		addAssistant(name, minHoursPerWeek, maxHoursPerWeek);
-		assistants.get(name).setMaximumDaysPerWeek(maxDaysPerWeek);
-		assistants.get(name).setMaximumHoursTotal(maxHoursTotal);
-	}
-
-	public void addSkillToAssistant(final String name, final String skillType, final int preference) {
-		checkNotNull(name, "Name");
-		checkNotNull(skillType, "Type");
-
-		if (!this.assistants.containsKey(name)) {
-			throw new UnsupportedOperationException("Assistant with name <" + name + "> does not exist.");
-		}
-
-		final Skill s = createSkill(skillType, preference);
-		assistants.get(name).getSkills().add(s);
-	}
-
-	private Skill createSkill(final String name, final int preference) {
-		if (preference < 0) {
-			throw new IllegalArgumentException("Skill preference must not be negative.");
-		}
-		checkNotNull(name, "SkillType");
-
-		final Skill s = factory.createSkill();
-		s.setName(name);
-		s.setPreference(preference);
-		return s;
-	}
-
-	public void addTimeslot(final int id) {
-		if (id < 0) {
-			throw new IllegalArgumentException("Time slot ID must not be negative.");
-		}
-		final Timeslot t = factory.createTimeslot();
-		t.setName(String.valueOf(id));
-		t.setId(id);
-		timeslots.put(Integer.valueOf(id), t);
-	}
-
-	public void addLecturer(final String name, final String skillType) {
-		checkNotNull(name, "Name");
-
-		final Lecturer l = factory.createLecturer();
-		l.setName(name);
-		l.setSkillTypeName(skillType);
-		lecturers.put(name, l);
-	}
-
-	public void addLecturer(final String name, final String skillType, final int maximumNumberOfTas) {
-		addLecturer(name, skillType);
-		lecturers.get(name).setMaximumNumberOfTas(maximumNumberOfTas);
-	}
-
-	public void populateTutorialsToLecturers() {
-		// This may result in unsolvable models, hence, the sanity check afterwards
-		for (final Tutorial t : tutorials.values()) {
-			final List<Lecturer> filteredLecturers = lecturers.values().stream() //
-					.filter(l -> l.getSkillTypeName().equals(t.getSkillType())) //
-					.collect(Collectors.toList());
-			final Lecturer randomLecturer = filteredLecturers.get(getRandInt(0, filteredLecturers.size() - 1));
-			randomLecturer.getTutorials().add(t);
-			t.setLecturer(randomLecturer);
-		}
-
-		// Sanity check
-		for (final Lecturer l : lecturers.values()) {
-			if (l.getTutorials().isEmpty()) {
-				throw new InternalError("=> Lecturer <" + l.getName() + "> did not get any tutorials.");
-			}
-		}
-	}
-
-	public Day addDay(final String name) {
-		checkNotNull(name, "Name");
-
-		final Day d = factory.createDay();
-		d.setName(name);
-		days.put(name, d);
-		return d;
-	}
-
-	public void addWeek(final String name) {
-		checkNotNull(name, "Name");
-
-		final Week w = factory.createWeek();
-		w.setName(name);
-		weeks.put(name, w);
-	}
-
-	//
-	// Utility methods.
-	//
-
-	private static void checkNotNull(final Object o, final String type) {
-		if (o == null) {
-			throw new IllegalArgumentException(type + " must not be null.");
-		}
-	}
-
-	public static void save(final Department model, final String path) throws IOException {
-		final Resource r = saveAndReturn(model, path);
-		r.unload();
-	}
-
-	public static Resource saveAndReturn(final Department model, final String path) throws IOException {
-		checkNotNull(model, "Model");
-		checkNotNull(path, "Path");
-
-		final URI uri = URI.createFileURI(path);
-		final ResourceSet rs = new ResourceSetImpl();
-		rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		rs.getPackageRegistry().put(MetamodelPackage.eNS_URI, MetamodelPackage.eINSTANCE);
-		final Resource r = rs.createResource(uri);
-		r.getContents().add(model);
-		r.save(null);
-		return r;
-	}
-
-	protected String prepareFolder() {
-		final String projectFolder = System.getProperty("user.dir");
-		final String instancesFolder = projectFolder + "/../teachingassistant.kcl.metamodel" + "/instances";
-		final File f = new File(instancesFolder);
-		if (!f.exists()) {
-			f.mkdirs();
-		}
-		return instancesFolder;
-	}
-
-	protected int getRandInt(final int min, final int max) {
-		return rand.nextInt((max - min) + 1) + min;
-	}
-
-	protected String getRandomSkillType() {
-		final int randomIndex = getRandInt(0, allSkillTypes.size() - 1);
-		return allSkillTypes.get(randomIndex);
-	}
-
+    /**
+     * Same as above, but returns the Resource if needed.
+     */
+    public static Resource saveAndReturn(final TAAllocation model, final String path) throws IOException {
+        Preconditions.checkNotNull(model, "Model");
+        Preconditions.checkNotNull(path,  "Path");
+        
+        final URI uri = URI.createFileURI(path);
+        final ResourceSet rs = new ResourceSetImpl();
+        
+        // If using SmartEMF or a custom factory, register it
+        rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xmi", 
+            new SmartEMFResourceFactoryImpl("../"));
+        
+        // Register your new EPackage
+        rs.getPackageRegistry().put(MetamodelPackage.eNS_URI, MetamodelPackage.eINSTANCE);
+        
+        final Resource r = rs.createResource(uri);
+        r.getContents().add(model);
+        r.save(null);
+        return r;
+    }
 }
