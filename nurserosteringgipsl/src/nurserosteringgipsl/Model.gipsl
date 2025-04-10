@@ -1,0 +1,137 @@
+package "nurserosteringgipsl"
+import "platform:/resource/nurserosteringmodel/model/Nurserosteringmodel.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.00001];
+	lpOutput := true [path := "gurobi.lp"];
+}
+
+//
+// This GIPSL specification aims at solving the "Nurse Rostering Competition 1" (NRC1) with GIPS.
+//
+// The current state is incomplete, i.e., not all (soft and hard) constraints are taken into account.
+//
+
+// This rule assigns an employee to a shift on a specific
+// day.
+rule assignEmployeeToShift {
+	root : Root {
+		- employees -> employee
+		- days -> day
+	}
+	employee : Employee
+	day : Day {
+		- requirements -> cr
+	}
+	cr : CoverRequirement {
+		- shift -> shift
+	}
+	shift : Shift {
+		++ - assignedEmployees -> employee
+	}
+	
+	// check if employee.skills.contains(shift.skills)
+	// is missing because of IBeX-GT language limitations
+}
+
+// Finds all possible combinations of employee and days.
+pattern findEmployeeDayCombination {
+	root : Root {
+		- days -> day
+		- employees -> employee
+	}
+	employee : Employee
+	day : Day
+}
+
+// Finds all possible combinations of a required skill,
+// a shift, and an employee having this skill.
+pattern findShiftSkillEmployeeCombination {
+	shift : Shift {
+		- skills -> skill
+	}
+	skill : Skill
+	employee : Employee {
+		- skills -> skill
+	}
+}
+
+// Finds all possible combinations of shifts and required
+// skills.
+pattern findNeededShiftSkill {
+	shift : Shift {
+		- skills -> skill
+	}
+	skill : Skill
+}
+
+// Mapping for every employee and shift.
+// If a mapping `m` was selected by the (M)ILP solver,
+// the respective employee `e` will be assigned to shift `s`.
+mapping e2s to assignEmployeeToShift;
+
+// Mapping for every shift, skill, and employee combination.
+// If a mapping `m` was selected by the (M)ILP solver,
+// the respective employee `e` works on shift `s` and has
+// the required skill `skill`.
+mapping skillShiftAssignment to findShiftSkillEmployeeCombination;
+
+// "all demanded shifts must be assigned to a nurse;"
+// GIPS interpretation: every cover requirement has a number of preferred employees.
+// This constraint ensures that the shift connected to this cover requirement gets
+// as many employees mapped as this cover requirement's "preferred".
+constraint with CoverRequirement {
+	mappings.e2s->filter(element.nodes.shift == context.shift)->sum(element.value) == context.preferred
+}
+
+// "a nurse can only work one shift per day, i.e. no two shift can be assigned to the same nurse on a day."
+// GIPS interpretation: every combination of employee and day
+// must contain at most one selected mapping.
+constraint with findEmployeeDayCombination {
+	mappings.e2s->filter(
+		element.nodes.employee == context.nodes.employee
+		& element.nodes.shift.day == context.nodes.day
+	)->sum(element.value)
+	<= 1
+}
+
+// Helper constraint: if at least one mapping of employee `e` to shift `s` is selected,
+// set the respective `skillShiftAssignment` mapping to 1.
+constraint with findShiftSkillEmployeeCombination {
+	mappings.e2s->filter(
+		element.nodes.shift == context.nodes.shift
+		& element.nodes.employee == context.nodes.employee
+	)->sum(element.value) >= 1
+	<=>
+	mappings.skillShiftAssignment->filter(
+		element.nodes.shift == context.nodes.shift
+		& element.nodes.skill == context.nodes.skill
+		& element.nodes.employee == context.nodes.employee
+	)->sum(element.value) == 1
+	// ^notice: the Boolean equivalence operator `<=>` is very expensive
+	// in terms of required compute power.
+}
+
+// TODO: This constraint is currently disabled. Otherwise, the solver
+// does not find a valid solution for `sprint01.xml` -> should be investigated.
+//// Minimum/maximum number of shifts that can be assigned to an employee
+//constraint with Employee {
+//	mappings.e2s->filter(element.nodes.employee == context)->sum(element.value) >= context.contract.minimumNoOfAssignments
+//	&
+//	mappings.e2s->filter(element.nodes.employee == context)->sum(element.value) <= context.contract.maximumNoOfAssignments
+//}
+
+// Required skills of a shift must be matched.
+// GIPSL interpretation: every skill required by a shift must be present
+// at least once.
+constraint with findNeededShiftSkill {
+	mappings.skillShiftAssignment->filter(
+		element.nodes.shift == context.nodes.shift
+		& element.nodes.skill == context.nodes.skill
+	)->sum(element.value) >= 1
+}
