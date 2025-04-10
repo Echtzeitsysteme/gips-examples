@@ -7,6 +7,8 @@
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,classdiagramtgg3"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,classdiagramtgg3violations"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,gips.examples.dependencies"/>
+<project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,ihtcgips.patterns"/>
+<project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,ihtcgips.virtualrules"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,ihtcgipssolution"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,ihtcgipssolution.hardonly"/>
 <project reference="1.0,git@github.com:Echtzeitsysteme/gips-examples.git,main,ihtcgipssolution.nursesrooms"/>
@@ -118,6 +120,8 @@
 <item elementID="=PTAEvaluation" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=nurserosteringgipsl" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=nurserosteringmodel" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=ihtcgips.patterns" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=ihtcgips.virtualrules" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=xsdimport" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 </psf>
