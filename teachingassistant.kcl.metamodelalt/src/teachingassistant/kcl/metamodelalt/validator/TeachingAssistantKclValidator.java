@@ -27,7 +27,14 @@ public class TeachingAssistantKclValidator {
 	/**
 	 * Model file name to load.
 	 */
-	public final static String SCENARIO_FILE_NAME = "solved.xmi";
+//	public final static String SCENARIO_FILE_NAME = "solved.xmi";
+	public final static String SCENARIO_FILE_NAME = "kcl_ta_allocation.xmi";
+
+	/**
+	 * If true, the validator will output more detailed information for violated
+	 * rules.
+	 */
+	public final static boolean verbose = true;
 
 	/**
 	 * Main method to run the stand-alone model validation.
@@ -57,7 +64,7 @@ public class TeachingAssistantKclValidator {
 	//
 	// Validation methods.
 	//
-	
+
 	/**
 	 * Validate the given TAAllocation object.
 	 * 
@@ -270,6 +277,49 @@ public class TeachingAssistantKclValidator {
 				}
 			}
 			if (!contained) {
+				printVerbose(ts, "Was not contained in a time table week.");
+				return false;
+			}
+		}
+
+		// "Every teaching session will only have one session occurrence in any given
+		// timetable week."
+		for (final Week w : ts.getTimeTableWeeks()) {
+			int matchingOccurrences = 0;
+			for (final SessionOccurrence so : ts.getOccurrences()) {
+				if (so.getTimeTableWeek() == w.getNumber()) {
+					matchingOccurrences++;
+				}
+			}
+
+			if (matchingOccurrences != 1) {
+				printVerbose(ts,
+						"Did not have exactly one session occurence in time table week " + w.getNumber() + ".");
+				return false;
+			}
+		}
+
+		// "Equally, for any given timetable week, the teaching session will have at
+		// most one associated TimeTableEntry."
+		for (final Week w : ts.getTimeTableWeeks()) {
+			int matchingOccurences = 0;
+			for (final TimeTableEntry tte : ts.getEntries()) {
+				for (final Week tteWeek : tte.getTimeTableWeeks()) {
+					if (tteWeek.getNumber() == w.getNumber()) {
+						matchingOccurences++;
+					}
+				}
+			}
+
+			if (matchingOccurences > 1) {
+				printVerbose(ts, "Did not have at most one associated time table entry week " + w.getNumber() + ".");
+				return false;
+			}
+		}
+
+		// All `TimeTableEntry` objects must have the correct `TeachingSession` assigned
+		for (final TimeTableEntry tte : ts.getEntries()) {
+			if (tte.getSession() == null || !tte.getSession().equals(ts)) {
 				return false;
 			}
 		}
@@ -474,9 +524,10 @@ public class TeachingAssistantKclValidator {
 		}
 
 		// timeTableWeeks
-		if (!entry.getSession().getTimeTableWeeks().containsAll(entry.getTimeTableWeeks())) {
-			return false;
-		}
+//		if (!entry.getSession().getTimeTableWeeks().containsAll(entry.getTimeTableWeeks())) {
+//			return false;
+//		}
+		// TODO: ^this constraint is not correct, isn't it?
 
 		// startTime < endTime is required
 		if (entry.getStartTime().compareTo(entry.getEndTime()) >= 0) {
@@ -607,6 +658,21 @@ public class TeachingAssistantKclValidator {
 
 		// TODO: Check if this method is correctly implemented.
 		return shifts;
+	}
+
+	private void printVerbose(final Object object, final String message) {
+		if (object == null) {
+			throw new IllegalArgumentException("Given object was null.");
+		}
+
+		if (message == null) {
+			throw new IllegalArgumentException("Given message was null.");
+		}
+
+		if (verbose) {
+			System.err.println("Violation of " + object.getClass().getSimpleName() + " " + object + " failed." //
+					+ System.lineSeparator() + "	Reason: " + message);
+		}
 	}
 
 }

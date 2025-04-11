@@ -227,6 +227,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 					final TimeTableEntry entry = factory.createTimeTableEntry();
 
 					entry.getTimeTableWeeks().add(getWeek(chosenWeek));
+					session.getTimeTableWeeks().add(getWeek(chosenWeek));
 
 					entry.setRoom("Room" + getRandInt(1, 5));
 
