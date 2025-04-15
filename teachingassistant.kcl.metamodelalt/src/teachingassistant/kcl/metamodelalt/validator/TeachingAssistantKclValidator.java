@@ -37,14 +37,14 @@ public class TeachingAssistantKclValidator {
 	 * If true, the validator will output more detailed information for violated
 	 * rules.
 	 */
-	public final static boolean verbose = true;
+	public static boolean verbose = true;
 
 	/**
 	 * If true, the validator will check all relevant constraints regarding
 	 * assignments. For example: TA hour limits, session occurrences and their
 	 * requested number of TAs, etc.
 	 */
-	public final static boolean checkForValidSolution = false;
+	public static boolean checkForValidSolution = false;
 
 	/**
 	 * Main method to run the stand-alone model validation.
@@ -572,6 +572,14 @@ public class TeachingAssistantKclValidator {
 	// Utility methods.
 	//
 
+	/**
+	 * Checks the given set of `TimeTableEntry` objects for conflicting time frames.
+	 * 
+	 * @param entries Set of `TimeTableEntry` objects to check for conflicting time
+	 *                frames.
+	 * @return If true, there are at least two overlapping time frames in the given
+	 *         set of `TimeTableEntry` objects.
+	 */
 	private boolean checkForConflicts(final Set<TimeTableEntry> entries) {
 		for (final TimeTableEntry tte : entries) {
 			for (final TimeTableEntry other : entries) {
@@ -609,7 +617,7 @@ public class TeachingAssistantKclValidator {
 
 		return false;
 	}
-	
+
 	/**
 	 * Converts the hours, minutes, and seconds of the given date object to a sum of
 	 * seconds. All other date-specific parts (like day, week, month, year) will be
@@ -791,6 +799,14 @@ public class TeachingAssistantKclValidator {
 		return shifts;
 	}
 
+	/**
+	 * If the global verbose setting is activated, this method prints an error
+	 * message constructed by the class name of the given object as well as the
+	 * given error message.
+	 * 
+	 * @param object  Object to print verbose error message for.
+	 * @param message Error message to print.
+	 */
 	private void printVerbose(final Object object, final String message) {
 		if (object == null) {
 			throw new IllegalArgumentException("Given object was null.");
