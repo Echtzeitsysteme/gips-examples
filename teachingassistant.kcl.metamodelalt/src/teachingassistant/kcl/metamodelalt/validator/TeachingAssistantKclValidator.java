@@ -40,6 +40,13 @@ public class TeachingAssistantKclValidator {
 	public final static boolean verbose = true;
 
 	/**
+	 * If true, the validator will check all relevant constraints regarding
+	 * assignments. For example: TA hour limits, session occurrences and their
+	 * requested number of TAs, etc.
+	 */
+	public final static boolean checkForValidSolution = false;
+
+	/**
 	 * Main method to run the stand-alone model validation.
 	 * 
 	 * @param args Arguments that will be ignored.
@@ -351,7 +358,7 @@ public class TeachingAssistantKclValidator {
 			return false;
 		}
 
-		if (so.getTas().isEmpty()) {
+		if (checkForValidSolution && so.getTas().isEmpty()) {
 			return false;
 		}
 
@@ -446,44 +453,6 @@ public class TeachingAssistantKclValidator {
 		}
 
 		return true;
-	}
-
-	private boolean checkForConflicts(final Set<TimeTableEntry> entries) {
-		for (final TimeTableEntry tte : entries) {
-			for (final TimeTableEntry other : entries) {
-				// Skip check if `tte` == `other`
-				if (tte.equals(other)) {
-					continue;
-				}
-
-				// Find overlapping weeks
-				final Set<Week> overlappingWeeks = new HashSet<Week>();
-				tte.getTimeTableWeeks().forEach(w -> {
-					if (other.getTimeTableWeeks().contains(w)) {
-						overlappingWeeks.add(w);
-					}
-				});
-
-				// If the weekday does not match, we do not have to check for an overlapping
-				// time frame
-				if (tte.getWeekDay() != null && !tte.getWeekDay().equals(other.getWeekDay())) {
-					continue;
-				}
-
-				// If there is at least one overlapping week check if the time frames overlaps
-				if (!overlappingWeeks.isEmpty()) {
-					final int firstStart = convertDateTimeToSeconds(tte.getStartTime());
-					final int firstEnd = convertDateTimeToSeconds(tte.getEndTime());
-					final int secondStart = convertDateTimeToSeconds(other.getStartTime());
-					final int secondEnd = convertDateTimeToSeconds(other.getEndTime());
-					if ((firstStart < secondEnd && firstEnd > secondStart)) {
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
 	}
 
 	/**
@@ -603,6 +572,44 @@ public class TeachingAssistantKclValidator {
 	// Utility methods.
 	//
 
+	private boolean checkForConflicts(final Set<TimeTableEntry> entries) {
+		for (final TimeTableEntry tte : entries) {
+			for (final TimeTableEntry other : entries) {
+				// Skip check if `tte` == `other`
+				if (tte.equals(other)) {
+					continue;
+				}
+
+				// Find overlapping weeks
+				final Set<Week> overlappingWeeks = new HashSet<Week>();
+				tte.getTimeTableWeeks().forEach(w -> {
+					if (other.getTimeTableWeeks().contains(w)) {
+						overlappingWeeks.add(w);
+					}
+				});
+
+				// If the weekday does not match, we do not have to check for an overlapping
+				// time frame
+				if (tte.getWeekDay() != null && !tte.getWeekDay().equals(other.getWeekDay())) {
+					continue;
+				}
+
+				// If there is at least one overlapping week check if the time frames overlaps
+				if (!overlappingWeeks.isEmpty()) {
+					final int firstStart = convertDateTimeToSeconds(tte.getStartTime());
+					final int firstEnd = convertDateTimeToSeconds(tte.getEndTime());
+					final int secondStart = convertDateTimeToSeconds(other.getStartTime());
+					final int secondEnd = convertDateTimeToSeconds(other.getEndTime());
+					if ((firstStart < secondEnd && firstEnd > secondStart)) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+	
 	/**
 	 * Converts the hours, minutes, and seconds of the given date object to a sum of
 	 * seconds. All other date-specific parts (like day, week, month, year) will be

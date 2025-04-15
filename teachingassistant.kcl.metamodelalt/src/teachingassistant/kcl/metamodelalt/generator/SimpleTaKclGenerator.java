@@ -225,11 +225,14 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 					alreadyUsedWeeks.add(chosenWeek);
 					occ.setTimeTableWeek(chosenWeek);
 
-					// Assign 1 or 2 TAs to this occurrence
-					final List<TA> allTAs = new ArrayList<>(tas.values());
-					java.util.Collections.shuffle(allTAs, rand);
-					final int nTAsForOccurrence = getRandInt(1, 2);
-					occ.getTas().addAll(allTAs.subList(0, nTAsForOccurrence));
+					// TODO: I've commented out this code because the assignment of TAs to
+					// occurrences should be done via an external algorithm (e.g., GIPS-based or
+					// something else).
+//					// Assign 1 or 2 TAs to this occurrence
+//					final List<TA> allTAs = new ArrayList<>(tas.values());
+//					java.util.Collections.shuffle(allTAs, rand);
+//					final int nTAsForOccurrence = getRandInt(1, 2);
+//					occ.getTas().addAll(allTAs.subList(0, nTAsForOccurrence));
 
 					session.getOccurrences().add(occ);
 
