@@ -1,6 +1,8 @@
 package teachingassistant.kcl.metamodelalt.validator;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
+import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
 
 /**
  * Model validator for the teaching assistant example (alternative metamodel).
@@ -416,13 +419,71 @@ public class TeachingAssistantKclValidator {
 			}
 		}
 
-		// TODO: Check time limit per week
+		// Check time limit per week
+		for (final Week w : model.getWeeks()) {
+			final Set<TimeTableEntry> weekShifts = findAllShiftsOfTaInWeek(ta, w.getNumber(), model);
+			int hoursPaidInWeek = 0;
+			for (final TimeTableEntry tte : weekShifts) {
+				hoursPaidInWeek += tte.getSession().getHoursPaidPerOccurrence();
+			}
+			if (hoursPaidInWeek > SimpleTaKclGenerator.TA_MAXIMUM_HOURS_PER_WEEK) {
+				return false;
+			}
+		}
 
-		// TODO: Check time limit per year
+		// Check time limit per year
+		int totalHoursPaid = 0;
+		for (final TimeTableEntry tte : allShifts) {
+			totalHoursPaid += tte.getSession().getHoursPaidPerOccurrence();
+		}
+		if (totalHoursPaid > SimpleTaKclGenerator.TA_MAXIMUM_HOURS_PER_YEAR) {
+			return false;
+		}
 
-		// TODO: Check for conflicting assignments per TA
+		// Check for conflicting assignments per TA
+		if (checkForConflicts(allShifts)) {
+			return false;
+		}
 
 		return true;
+	}
+
+	private boolean checkForConflicts(final Set<TimeTableEntry> entries) {
+		for (final TimeTableEntry tte : entries) {
+			for (final TimeTableEntry other : entries) {
+				// Skip check if `tte` == `other`
+				if (tte.equals(other)) {
+					continue;
+				}
+
+				// Find overlapping weeks
+				final Set<Week> overlappingWeeks = new HashSet<Week>();
+				tte.getTimeTableWeeks().forEach(w -> {
+					if (other.getTimeTableWeeks().contains(w)) {
+						overlappingWeeks.add(w);
+					}
+				});
+
+				// If the weekday does not match, we do not have to check for an overlapping
+				// time frame
+				if (tte.getWeekDay() != null && !tte.getWeekDay().equals(other.getWeekDay())) {
+					continue;
+				}
+
+				// If there is at least one overlapping week check if the time frames overlaps
+				if (!overlappingWeeks.isEmpty()) {
+					final int firstStart = convertDateTimeToSeconds(tte.getStartTime());
+					final int firstEnd = convertDateTimeToSeconds(tte.getEndTime());
+					final int secondStart = convertDateTimeToSeconds(other.getStartTime());
+					final int secondEnd = convertDateTimeToSeconds(other.getEndTime());
+					if ((firstStart < secondEnd && firstEnd > secondStart)) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -524,19 +585,16 @@ public class TeachingAssistantKclValidator {
 		}
 
 		// timeTableWeeks
-//		if (!entry.getSession().getTimeTableWeeks().containsAll(entry.getTimeTableWeeks())) {
-//			return false;
-//		}
-		// TODO: ^this constraint is not correct, isn't it?
-
-		// startTime < endTime is required
-		if (entry.getStartTime().compareTo(entry.getEndTime()) >= 0) {
+		// all timeTableWeeks of the entry must be part of the session's timeTableWeeks
+		if (!entry.getSession().getTimeTableWeeks().containsAll(entry.getTimeTableWeeks())) {
 			return false;
 		}
 
-		// TODO: startTime with timeTableWeeks?
-		// TODO: endTime with timeTableWeeks?
-		// TODO: `weekDay` must be correct in `startTime` and `endTime`
+		// startTime < endTime is required
+		// We ignore the date and only check for time
+		if (!startBeforeEndTimeOnly(entry.getStartTime(), entry.getEndTime())) {
+			return false;
+		}
 
 		return true;
 	}
@@ -544,6 +602,56 @@ public class TeachingAssistantKclValidator {
 	//
 	// Utility methods.
 	//
+
+	/**
+	 * Converts the hours, minutes, and seconds of the given date object to a sum of
+	 * seconds. All other date-specific parts (like day, week, month, year) will be
+	 * ignored.
+	 * 
+	 * @param date Date object to extract the sum of seconds from.
+	 * @return Sum of the seconds constructed by hours, minutes, and seconds.
+	 */
+	private int convertDateTimeToSeconds(final Date date) {
+		int seconds = 0;
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		seconds += cal.get(Calendar.SECOND);
+		seconds += (cal.get(Calendar.MINUTE) * 60);
+		seconds += (cal.get(Calendar.HOUR_OF_DAY) * 60 * 60);
+
+		return seconds;
+	}
+
+	/**
+	 * Compares the two given Date objects and returns true if the time of the start
+	 * object lays before the time of the end object. This method ignores the dates
+	 * completely, i.e., it only relies on the hours, minutes, and seconds.
+	 * 
+	 * @param start Date object that represents the start.
+	 * @param end   Date object that represents the end.
+	 * @return True if start.time < end.time (not respecting the date).
+	 */
+	private boolean startBeforeEndTimeOnly(final Date start, final Date end) {
+		final Calendar startCal = Calendar.getInstance();
+		startCal.setTime(start);
+		final Calendar endCal = Calendar.getInstance();
+		endCal.setTime(end);
+
+		if (startCal.get(Calendar.HOUR_OF_DAY) > endCal.get(Calendar.HOUR_OF_DAY)) {
+			return false;
+		} else if (startCal.get(Calendar.HOUR_OF_DAY) == endCal.get(Calendar.HOUR_OF_DAY)) {
+			if (startCal.get(Calendar.MINUTE) > endCal.get(Calendar.MINUTE)) {
+				return false;
+			} else if (startCal.get(Calendar.MINUTE) == endCal.get(Calendar.MINUTE)) {
+				if (startCal.get(Calendar.SECOND) > endCal.get(Calendar.SECOND)) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
 
 	/**
 	 * Returns the number of the earliest week found in the collection of weeks
@@ -610,13 +718,22 @@ public class TeachingAssistantKclValidator {
 			module.getSessions().forEach(session -> {
 				session.getOccurrences().forEach(o -> {
 					if (o.getTas().contains(ta)) {
-						shifts.addAll(session.getEntries());
+						// Add all TimeTableEntry objects that contain the timeTableWeek of the
+						// SessenOccurrence
+						final Set<TimeTableEntry> matchingEntries = new HashSet<>();
+						session.getEntries().forEach(tte -> {
+							for (final Week w : tte.getTimeTableWeeks()) {
+								if (w.getNumber() == o.getTimeTableWeek()) {
+									matchingEntries.add(tte);
+									break;
+								}
+							}
+						});
+						shifts.addAll(matchingEntries);
 					}
 				});
 			});
 		});
-
-		// TODO: Check if this method is correctly implemented.
 		return shifts;
 	}
 
@@ -647,16 +764,23 @@ public class TeachingAssistantKclValidator {
 
 			module.getSessions().forEach(session -> {
 				session.getOccurrences().forEach(o -> {
-					if (o.getTimeTableWeek() == week) {
-						if (o.getTas().contains(ta)) {
-							shifts.addAll(session.getEntries());
-						}
+					if (o.getTas().contains(ta)) {
+						// Add all TimeTableEntry objects that contain the timeTableWeek of the
+						// SessenOccurrence
+						final Set<TimeTableEntry> matchingEntries = new HashSet<>();
+						session.getEntries().forEach(tte -> {
+							for (final Week w : tte.getTimeTableWeeks()) {
+								if (w.getNumber() == o.getTimeTableWeek()) {
+									matchingEntries.add(tte);
+									break;
+								}
+							}
+						});
+						shifts.addAll(matchingEntries);
 					}
 				});
 			});
 		});
-
-		// TODO: Check if this method is correctly implemented.
 		return shifts;
 	}
 
@@ -670,8 +794,11 @@ public class TeachingAssistantKclValidator {
 		}
 
 		if (verbose) {
-			System.err.println("Violation of " + object.getClass().getSimpleName() + " " + object + " failed." //
-					+ System.lineSeparator() + "	Reason: " + message);
+			System.err.println( //
+					"Violation of " + object.getClass().getSimpleName() //
+							+ " " + object + " failed." //
+							+ System.lineSeparator() //
+							+ "	Reason: " + message);
 		}
 	}
 

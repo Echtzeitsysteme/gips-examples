@@ -46,8 +46,8 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	static int NUMBER_OF_TAS = 10;
 
 	// TA constraints
-	static int TA_MAXIMUM_HOURS_PER_WEEK = 20;
-	static int TA_MAXIMUM_HOURS_PER_YEAR = 312;
+	public static int TA_MAXIMUM_HOURS_PER_WEEK = 20;
+	public static int TA_MAXIMUM_HOURS_PER_YEAR = 312;
 
 	// Probability that a module has a second distinct session type
 	static double PROBABILITY_SECOND_SESSION_TYPE = 0.4;
