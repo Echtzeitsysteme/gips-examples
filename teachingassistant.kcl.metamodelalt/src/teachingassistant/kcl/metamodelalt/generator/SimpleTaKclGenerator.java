@@ -6,8 +6,10 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import metamodel.EmploymentApproval;
 import metamodel.EmploymentRating;
@@ -208,11 +210,19 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 					}
 				}
 
+				// If the number of occurrences is > number of weeks, limit it
+				final int numberOfWeeks = END_WEEK - START_WEEK + 1;
+				if (occurrenceCount > numberOfWeeks) {
+					occurrenceCount = numberOfWeeks;
+				}
+
 				// Now create each occurrence
+				final Set<Integer> alreadyUsedWeeks = new HashSet<Integer>();
 				for (int occIdx = 0; occIdx < occurrenceCount; occIdx++) {
 					// 5.1) SessionOccurrence
 					final SessionOccurrence occ = factory.createSessionOccurrence();
-					final int chosenWeek = getRandInt(START_WEEK, END_WEEK);
+					final int chosenWeek = getRandIntWithBlocklist(START_WEEK, END_WEEK, alreadyUsedWeeks);
+					alreadyUsedWeeks.add(chosenWeek);
 					occ.setTimeTableWeek(chosenWeek);
 
 					// Assign 1 or 2 TAs to this occurrence
@@ -232,7 +242,8 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 					entry.setRoom("Room" + getRandInt(1, 5));
 
 					// Pick a day offset (0..4 => Mon..Fri)
-					final LocalDateTime dayTime = baseWeekMonday.plusDays((chosenWeek - START_WEEK) * 7 + getRandInt(0, 4));
+					final LocalDateTime dayTime = baseWeekMonday
+							.plusDays((chosenWeek - START_WEEK) * 7 + getRandInt(0, 4));
 
 					entry.setWeekDay(dayTime.getDayOfWeek().toString());
 

@@ -3,8 +3,11 @@ package teachingassistant.kcl.metamodelalt.generator;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -59,6 +62,40 @@ public class TeachingAssistantKclGenerator {
 	protected int getRandInt(final int min, final int max) {
 		Preconditions.checkArgument(min <= max, "min must be <= max");
 		return rand.nextInt((max - min) + 1) + min;
+	}
+
+	/**
+	 * Returns a random integer between [min..max], inclusive, but never an integer
+	 * that is part of the given set of blocked values.
+	 * 
+	 * @param min     Minimum value.
+	 * @param max     Maximum value.
+	 * @param blocked Set of already taken values, i.e., these values must not be
+	 *                returned.
+	 * @return Random number between [min..max], inclusive, without the values in
+	 *         `blocked`.
+	 */
+	protected int getRandIntWithBlocklist(final int min, final int max, final Set<Integer> blocked) {
+		// Get all valid numbers
+		final List<Integer> numbers = new LinkedList<Integer>();
+		for (int i = min; i <= max; i++) {
+			if (!blocked.contains(i)) {
+				numbers.add(i);
+			}
+		}
+
+		// If there are no valid numbers, throw an exception
+		if (numbers.size() == 0) {
+			throw new IllegalArgumentException("All values are blocked.");
+		}
+
+		// If there is only one number available, return it
+		if (numbers.size() == 1) {
+			return numbers.get(0);
+		}
+
+		// Otherwise, find a random number of the list of available numbers an return it
+		return numbers.get(getRandInt(0, numbers.size() - 1));
 	}
 
 	/**
