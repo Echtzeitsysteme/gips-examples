@@ -1,0 +1,62 @@
+package "teachingassistant.kcl.gipssolutionalt"
+import "platform:/resource/teachingassistant.kcl.metamodelalt/model/Metamodelalt.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	lpOutput := true [path := "problem.lp"];
+}
+
+pattern findSessionOccurrence {
+	root : TAAllocation {
+		- modules -> module
+	}
+	
+	module : Module {
+		- sessions -> session
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+	}
+	
+	occurrence : SessionOccurrence
+}
+
+rule assignTa {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> module
+	}
+	
+	ta : TA
+	
+	module : Module {
+		- sessions -> session
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+	}
+	
+	occurrence : SessionOccurrence {
+		++ - tas -> ta
+	}
+}
+
+//
+// GIPSL
+//
+
+mapping taToOccurrence to assignTa;
+
+constraint with findSessionOccurrence {
+	mappings.taToOccurrence->filter( //
+		element.nodes.occurrence == context.nodes.occurrence //
+	)->sum(element.value)
+	==
+	context.nodes.session.numTAsPerSession
+}
