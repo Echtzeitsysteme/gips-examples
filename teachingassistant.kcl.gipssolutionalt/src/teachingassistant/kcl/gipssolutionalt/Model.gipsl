@@ -70,11 +70,12 @@ rule assignTa {
 	}
 	
 	w : Week
-	# occurrence.timeTableWeek == w.number
 	
 	entry : TimeTableEntry {
 		- timeTableWeeks -> w
 	}
+	
+	# occurrence.timeTableWeek == w.number
 }
 when taAvailableInSession
 
@@ -111,6 +112,16 @@ pattern findConflictingEntriesWithTa {
 	# entryA.endEpoch > entryB.startEpoch
 }
 
+pattern findTaWeekCombination {
+	root : TAAllocation {
+		- weeks -> w
+		- tas -> ta
+	}
+	
+	w : Week
+	ta : TA
+}
+
 //
 // GIPSL
 //
@@ -132,4 +143,23 @@ constraint with findConflictingEntriesWithTa {
 	+
 	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(element.value)
 	<= 1
+}
+
+// Ensure TAs max hours per year
+// GIPSL interpretation: the sum of all assigned working hours per TA
+// must not exceed their yearly hour limit
+constraint with TA {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	<= context.maxHoursPerYear
+}
+
+// Ensure TAs max hours per week
+constraint with findTaWeekCombination {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.w == context.nodes.w
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	<= context.nodes.ta.maxHoursPerWeek
 }
