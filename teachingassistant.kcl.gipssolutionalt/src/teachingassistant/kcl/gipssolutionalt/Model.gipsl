@@ -26,6 +26,28 @@ pattern findSessionOccurrence {
 	occurrence : SessionOccurrence
 }
 
+pattern findTaUnavailableSession {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> module
+	}
+	
+	ta : TA {
+		- unavailable_because_lessons -> entry
+	}
+	
+	module : Module {
+		- sessions -> session
+	}
+	
+	session : TeachingSession {
+		- entries -> entry
+	}
+	
+	entry : TimeTableEntry
+}
+condition taAvailableInSession = forbid findTaUnavailableSession
+
 rule assignTa {
 	root : TAAllocation {
 		- tas -> ta
@@ -46,6 +68,7 @@ rule assignTa {
 		++ - tas -> ta
 	}
 }
+when taAvailableInSession
 
 //
 // GIPSL
@@ -53,6 +76,7 @@ rule assignTa {
 
 mapping taToOccurrence to assignTa;
 
+// Every session occurrence must have exactly `numTAsPerSession` TAs assigned.
 constraint with findSessionOccurrence {
 	mappings.taToOccurrence->filter( //
 		element.nodes.occurrence == context.nodes.occurrence //
