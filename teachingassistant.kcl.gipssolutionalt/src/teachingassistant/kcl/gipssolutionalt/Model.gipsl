@@ -62,13 +62,54 @@ rule assignTa {
 	
 	session : TeachingSession {
 		- occurrences -> occurrence
+		- entries -> entry
 	}
 	
 	occurrence : SessionOccurrence {
 		++ - tas -> ta
 	}
+	
+	w : Week
+	# occurrence.timeTableWeek == w.number
+	
+	entry : TimeTableEntry {
+		- timeTableWeeks -> w
+	}
 }
 when taAvailableInSession
+
+pattern findTaEntryCombination {
+	root : TAAllocation {
+		- tas -> ta
+		- timetable -> entry
+	}
+	
+	ta : TA
+	entry : TimeTableEntry
+}
+
+pattern findConflictingEntriesWithTa {
+	root : TAAllocation {
+		- timetable -> entryA
+		- timetable -> entryB
+		- weeks -> week
+		- tas -> ta
+	}
+	
+	week : Week
+	
+	entryA : TimeTableEntry {
+		- timeTableWeeks -> week
+	}
+	entryB : TimeTableEntry {
+		- timeTableWeeks -> week
+	}
+	
+	ta : TA
+	
+	# entryA.startEpoch < entryB.endEpoch
+	# entryA.endEpoch > entryB.startEpoch
+}
 
 //
 // GIPSL
@@ -83,4 +124,12 @@ constraint with findSessionOccurrence {
 	)->sum(element.value)
 	==
 	context.nodes.session.numTAsPerSession
+}
+
+// TAs must not have conflicting assignments
+constraint with findConflictingEntriesWithTa {
+	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
+	+
+	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(element.value)
+	<= 1
 }

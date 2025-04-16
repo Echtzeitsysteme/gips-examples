@@ -58,6 +58,8 @@
         eType="#//TeachingSession" eOpposite="#//TeachingSession/entries"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="timeTableWeeks" upperBound="-1"
         eType="#//Week"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startEpoch" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endEpoch" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="EmploymentRating">
     <eLiterals name="RED"/>

@@ -17,6 +17,7 @@ import metamodel.TAAllocation;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
+import teachingassistant.kcl.metamodel.utils.DateTimeUtil;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
 import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
 
@@ -449,6 +450,9 @@ public class TeachingAssistantKclValidator {
 
 		// Check for conflicting assignments per TA
 		if (checkForConflicts(allShifts)) {
+			if (verbose) {
+				System.out.println("TA <" + ta.getName() + "> has conflicting assignments.");
+			}
 			return false;
 		}
 
@@ -544,6 +548,14 @@ public class TeachingAssistantKclValidator {
 			return false;
 		}
 
+		if (entry.getStartEpoch() < 0) {
+			return false;
+		}
+
+		if (entry.getEndEpoch() < 0) {
+			return false;
+		}
+
 		if (entry.getSession() == null) {
 			return false;
 		}
@@ -562,6 +574,11 @@ public class TeachingAssistantKclValidator {
 		// startTime < endTime is required
 		// We ignore the date and only check for time
 		if (!startBeforeEndTimeOnly(entry.getStartTime(), entry.getEndTime())) {
+			return false;
+		}
+
+		// startEpoch < endEpoch is required
+		if (!(entry.getStartEpoch() < entry.getEndEpoch())) {
 			return false;
 		}
 
@@ -604,10 +621,10 @@ public class TeachingAssistantKclValidator {
 
 				// If there is at least one overlapping week check if the time frames overlaps
 				if (!overlappingWeeks.isEmpty()) {
-					final int firstStart = convertDateTimeToSeconds(tte.getStartTime());
-					final int firstEnd = convertDateTimeToSeconds(tte.getEndTime());
-					final int secondStart = convertDateTimeToSeconds(other.getStartTime());
-					final int secondEnd = convertDateTimeToSeconds(other.getEndTime());
+					final int firstStart = DateTimeUtil.convertDateTimeToSeconds(tte.getStartTime());
+					final int firstEnd = DateTimeUtil.convertDateTimeToSeconds(tte.getEndTime());
+					final int secondStart = DateTimeUtil.convertDateTimeToSeconds(other.getStartTime());
+					final int secondEnd = DateTimeUtil.convertDateTimeToSeconds(other.getEndTime());
 					if ((firstStart < secondEnd && firstEnd > secondStart)) {
 						return true;
 					}
@@ -616,26 +633,6 @@ public class TeachingAssistantKclValidator {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Converts the hours, minutes, and seconds of the given date object to a sum of
-	 * seconds. All other date-specific parts (like day, week, month, year) will be
-	 * ignored.
-	 * 
-	 * @param date Date object to extract the sum of seconds from.
-	 * @return Sum of the seconds constructed by hours, minutes, and seconds.
-	 */
-	private int convertDateTimeToSeconds(final Date date) {
-		int seconds = 0;
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-
-		seconds += cal.get(Calendar.SECOND);
-		seconds += (cal.get(Calendar.MINUTE) * 60);
-		seconds += (cal.get(Calendar.HOUR_OF_DAY) * 60 * 60);
-
-		return seconds;
 	}
 
 	/**

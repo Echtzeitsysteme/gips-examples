@@ -20,7 +20,9 @@ import metamodel.TAAllocation;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
+import teachingassistant.kcl.metamodel.utils.DateTimeUtil;
 import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
+import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
 
 /**
  * Generator that creates a TAAllocation model aligned with the updated
@@ -43,7 +45,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 
 	// Configuration
 	static int NUMBER_OF_MODULES = 7;
-	static int NUMBER_OF_TAS = 10;
+	static int NUMBER_OF_TAS = 20;
 
 	// TA constraints
 	public static int TA_MAXIMUM_HOURS_PER_WEEK = 20;
@@ -257,6 +259,8 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 
 					entry.setStartTime(startDate);
 					entry.setEndTime(endDate);
+					entry.setStartEpoch(DateTimeUtil.convertDateTimeToSeconds(startDate));
+					entry.setEndEpoch(DateTimeUtil.convertDateTimeToSeconds(endDate));
 
 					// Link session <-> entry
 					entry.setSession(session);
