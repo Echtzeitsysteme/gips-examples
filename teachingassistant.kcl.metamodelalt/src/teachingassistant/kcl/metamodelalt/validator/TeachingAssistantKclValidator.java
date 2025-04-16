@@ -30,8 +30,8 @@ public class TeachingAssistantKclValidator {
 	/**
 	 * Model file name to load.
 	 */
-//	public final static String SCENARIO_FILE_NAME = "solved.xmi";
-	public final static String SCENARIO_FILE_NAME = "kcl_ta_allocation.xmi";
+	public final static String SCENARIO_FILE_NAME = "solved.xmi";
+//	public final static String SCENARIO_FILE_NAME = "kcl_ta_allocation.xmi";
 
 	/**
 	 * If true, the validator will output more detailed information for violated
@@ -44,7 +44,7 @@ public class TeachingAssistantKclValidator {
 	 * assignments. For example: TA hour limits, session occurrences and their
 	 * requested number of TAs, etc.
 	 */
-	public static boolean checkForValidSolution = false;
+	public static boolean checkForValidSolution = true;
 
 	/**
 	 * Main method to run the stand-alone model validation.
