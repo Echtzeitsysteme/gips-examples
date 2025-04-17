@@ -1,0 +1,165 @@
+package "teachingassistant.kcl.gipssolutionalt"
+import "platform:/resource/teachingassistant.kcl.metamodelalt/model/Metamodelalt.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	lpOutput := true [path := "problem.lp"];
+}
+
+pattern findSessionOccurrence {
+	root : TAAllocation {
+		- modules -> module
+	}
+	
+	module : Module {
+		- sessions -> session
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+	}
+	
+	occurrence : SessionOccurrence
+}
+
+pattern findTaUnavailableSession {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> module
+	}
+	
+	ta : TA {
+		- unavailable_because_lessons -> entry
+	}
+	
+	module : Module {
+		- sessions -> session
+	}
+	
+	session : TeachingSession {
+		- entries -> entry
+	}
+	
+	entry : TimeTableEntry
+}
+condition taAvailableInSession = forbid findTaUnavailableSession
+
+rule assignTa {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> module
+	}
+	
+	ta : TA
+	
+	module : Module {
+		- sessions -> session
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+		- entries -> entry
+	}
+	
+	occurrence : SessionOccurrence {
+		++ - tas -> ta
+	}
+	
+	w : Week
+	
+	entry : TimeTableEntry {
+		- timeTableWeeks -> w
+	}
+	
+	# occurrence.timeTableWeek == w.number
+}
+when taAvailableInSession
+
+pattern findTaEntryCombination {
+	root : TAAllocation {
+		- tas -> ta
+		- timetable -> entry
+	}
+	
+	ta : TA
+	entry : TimeTableEntry
+}
+
+pattern findConflictingEntriesWithTa {
+	root : TAAllocation {
+		- timetable -> entryA
+		- timetable -> entryB
+		- weeks -> week
+		- tas -> ta
+	}
+	
+	week : Week
+	
+	entryA : TimeTableEntry {
+		- timeTableWeeks -> week
+	}
+	entryB : TimeTableEntry {
+		- timeTableWeeks -> week
+	}
+	
+	ta : TA
+	
+	# entryA.startEpoch < entryB.endEpoch
+	# entryA.endEpoch > entryB.startEpoch
+}
+
+pattern findTaWeekCombination {
+	root : TAAllocation {
+		- weeks -> w
+		- tas -> ta
+	}
+	
+	w : Week
+	ta : TA
+}
+
+//
+// GIPSL
+//
+
+mapping taToOccurrence to assignTa;
+
+// Every session occurrence must have exactly `numTAsPerSession` TAs assigned.
+constraint with findSessionOccurrence {
+	mappings.taToOccurrence->filter( //
+		element.nodes.occurrence == context.nodes.occurrence //
+	)->sum(element.value)
+	==
+	context.nodes.session.numTAsPerSession
+}
+
+// TAs must not have conflicting assignments
+constraint with findConflictingEntriesWithTa {
+	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
+	+
+	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(element.value)
+	<= 1
+}
+
+// Ensure TAs max hours per year
+// GIPSL interpretation: the sum of all assigned working hours per TA
+// must not exceed their yearly hour limit
+constraint with TA {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	<= context.maxHoursPerYear
+}
+
+// Ensure TAs max hours per week
+constraint with findTaWeekCombination {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.w == context.nodes.w
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	<= context.nodes.ta.maxHoursPerWeek
+}
