@@ -3,9 +3,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/jakarta.inject/jakarta.inject-api-2.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jakarta.inject/jakarta.inject-api-2.0.1-javadoc.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jakarta.inject/jakarta.inject-api-2.0.1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/failureaccess/failureaccess-1.0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/failureaccess/failureaccess-1.0.1-javadoc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/failureaccess/failureaccess-1.0.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/failureaccess/failureaccess-1.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/failureaccess/failureaccess-1.0.3-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/failureaccess/failureaccess-1.0.3-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gson/gson-2.13.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gson/gson-2.13.0-javadoc.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gson/gson-2.13.0-sources.jar"/>
