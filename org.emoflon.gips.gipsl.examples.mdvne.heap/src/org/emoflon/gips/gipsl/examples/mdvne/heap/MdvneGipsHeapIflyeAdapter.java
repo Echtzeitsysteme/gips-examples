@@ -44,7 +44,8 @@ public class MdvneGipsHeapIflyeAdapter extends MdvneGipsIflyeAdapter {
 	 * @return True if embedding was successful.
 	 */
 	@Override
-	public boolean execute(final ResourceSet model, final String gipsXmi, final String ibexXmi, final String hipeXmi) {
+	public MdvneGipsIflyeAdapter.MdvneIflyeOutput execute(final ResourceSet model, final String gipsXmi,
+			final String ibexXmi, final String hipeXmi) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model was null.");
 		}
@@ -90,7 +91,7 @@ public class MdvneGipsHeapIflyeAdapter extends MdvneGipsIflyeAdapter {
 	 * @return True if embedding was successful.
 	 */
 	@Override
-	public boolean execute(final ResourceSet model) {
+	public MdvneGipsIflyeAdapter.MdvneIflyeOutput execute(final ResourceSet model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model was null.");
 		}
@@ -117,7 +118,7 @@ public class MdvneGipsHeapIflyeAdapter extends MdvneGipsIflyeAdapter {
 	 * 
 	 * @return true, if a valid solution could be found.
 	 */
-	private boolean buildAndSolve() {
+	private MdvneGipsIflyeAdapter.MdvneIflyeOutput buildAndSolve() {
 		final Observer obs = Observer.getInstance();
 		obs.setCurrentSeries("Eval");
 
@@ -138,6 +139,8 @@ public class MdvneGipsHeapIflyeAdapter extends MdvneGipsIflyeAdapter {
 		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
 		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
+		final Map<String, String> matches = extractMatchedNodes();
+
 		// Apply all valid mappings
 		api.getSrv2srv().applyNonZeroMappings();
 		api.getSw2node().applyNonZeroMappings();
@@ -145,7 +148,7 @@ public class MdvneGipsHeapIflyeAdapter extends MdvneGipsIflyeAdapter {
 		api.getL2s().applyNonZeroMappings();
 		api.getNet2net().applyNonZeroMappings();
 
-		return output.solutionCount() > 0;
+		return new MdvneIflyeOutput(output, matches, measurements);
 	}
 
 	/**
