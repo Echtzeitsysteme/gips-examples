@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -97,7 +98,7 @@ public class ModelFacade {
 		}
 		return ModelFacade.instance;
 	}
-	
+
 	/**
 	 * Replaces the current model with another one.
 	 * 
@@ -113,7 +114,7 @@ public class ModelFacade {
 	private synchronized void initEmptyRs() {
 		initEmptyRs("model.xmi");
 	}
-	
+
 	/**
 	 * Initializes an empty resource set (model).
 	 */
@@ -121,8 +122,7 @@ public class ModelFacade {
 		this.resourceSet = new ResourceSetImpl();
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		this.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
-				ModelPackage.eINSTANCE);
+		this.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(), ModelPackage.eINSTANCE);
 		this.resourceSet.createResource(URI.createURI("model.xmi"));
 		this.resourceSet.getResources().get(0).getContents().add(ModelFactory.eINSTANCE.createRoot());
 	}
@@ -134,8 +134,7 @@ public class ModelFacade {
 		this.resourceSet = new ResourceSetImpl();
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		this.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
-				ModelPackage.eINSTANCE);
+		this.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(), ModelPackage.eINSTANCE);
 		this.resourceSet.getResource(absPath, true);
 	}
 
@@ -187,6 +186,18 @@ public class ModelFacade {
 	}
 
 	/**
+	 * Returns a list of nodes with all switches of a given network ID.
+	 *
+	 * @param networkId Network ID.
+	 * @return List of nodes with all switches of the given network ID.
+	 */
+	public static List<Node> getAllNodesOfType(final Network network, Class<? extends Node> type) {
+		Objects.requireNonNull(network, "The network has to be non null.");
+
+		return network.getNodess().stream().filter(n -> type.isInstance(n)).collect(Collectors.toList());
+	}
+
+	/**
 	 * Returns a list of nodes with all servers of a given network ID.
 	 *
 	 * @param networkId Network ID.
@@ -196,8 +207,17 @@ public class ModelFacade {
 		checkStringValid(networkId);
 		ifNetworkNotExistentThrowException(networkId);
 
-		return getNetworkById(networkId).getNodess().stream().filter(n -> n instanceof Server)
-				.collect(Collectors.toList());
+		return getAllServersOfNetwork(getNetworkById(networkId));
+	}
+
+	/**
+	 * Returns a list of nodes with all servers of a given network ID.
+	 *
+	 * @param networkId Network ID.
+	 * @return List of nodes with all servers of the given network ID.
+	 */
+	public static List<Node> getAllServersOfNetwork(final Network network) {
+		return getAllNodesOfType(network, Server.class);
 	}
 
 	/**
@@ -210,8 +230,17 @@ public class ModelFacade {
 		checkStringValid(networkId);
 		ifNetworkNotExistentThrowException(networkId);
 
-		return getNetworkById(networkId).getNodess().stream().filter(n -> n instanceof Switch)
-				.collect(Collectors.toList());
+		return getAllSwitchesOfNetwork(getNetworkById(networkId));
+	}
+
+	/**
+	 * Returns a list of nodes with all switches of a given network ID.
+	 *
+	 * @param networkId Network ID.
+	 * @return List of nodes with all switches of the given network ID.
+	 */
+	public static List<Node> getAllSwitchesOfNetwork(final Network network) {
+		return getAllNodesOfType(network, Switch.class);
 	}
 
 	/**
