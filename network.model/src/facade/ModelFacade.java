@@ -64,7 +64,7 @@ public class ModelFacade {
 	/**
 	 * Counter for generating new IDs.
 	 */
-	private static AtomicInteger counter = new AtomicInteger();
+	private AtomicInteger counter = new AtomicInteger();
 
 	/**
 	 * Path to import and export models.
@@ -82,7 +82,8 @@ public class ModelFacade {
 	/**
 	 * Private constructor to disable direct object instantiation.
 	 */
-	private ModelFacade() {
+	public ModelFacade() {
+		this.initEmptyRs();
 	}
 
 	/**
@@ -93,34 +94,49 @@ public class ModelFacade {
 	public static synchronized ModelFacade getInstance() {
 		if (ModelFacade.instance == null) {
 			ModelFacade.instance = new ModelFacade();
-			initEmptyRs();
 		}
 		return ModelFacade.instance;
+	}
+	
+	/**
+	 * Replaces the current model with another one.
+	 * 
+	 * @param instance The new facade to apply
+	 */
+	public static void setInstance(ModelFacade instance) {
+		ModelFacade.instance = instance;
 	}
 
 	/**
 	 * Initializes an empty resource set (model).
 	 */
-	private static synchronized void initEmptyRs() {
-		ModelFacade.instance.resourceSet = new ResourceSetImpl();
+	private synchronized void initEmptyRs() {
+		initEmptyRs("model.xmi");
+	}
+	
+	/**
+	 * Initializes an empty resource set (model).
+	 */
+	private synchronized void initEmptyRs(final String path) {
+		this.resourceSet = new ResourceSetImpl();
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		ModelFacade.instance.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
+		this.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
 				ModelPackage.eINSTANCE);
-		ModelFacade.instance.resourceSet.createResource(URI.createURI("model.xmi"));
-		ModelFacade.instance.resourceSet.getResources().get(0).getContents().add(ModelFactory.eINSTANCE.createRoot());
+		this.resourceSet.createResource(URI.createURI("model.xmi"));
+		this.resourceSet.getResources().get(0).getContents().add(ModelFactory.eINSTANCE.createRoot());
 	}
 
 	/**
 	 * Initializes the resource set (model) from a given file path.
 	 */
-	private static synchronized void initRsFromFile(final URI absPath) {
-		ModelFacade.instance.resourceSet = new ResourceSetImpl();
+	private synchronized void initRsFromFile(final URI absPath) {
+		this.resourceSet = new ResourceSetImpl();
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		ModelFacade.instance.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
+		this.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
 				ModelPackage.eINSTANCE);
-		ModelFacade.instance.resourceSet.getResource(absPath, true);
+		this.resourceSet.getResource(absPath, true);
 	}
 
 	/*
@@ -149,7 +165,7 @@ public class ModelFacade {
 	 * @return Root node.
 	 */
 	public Root getRoot() {
-		return (Root) ModelFacade.instance.resourceSet.getResources().get(0).getContents().get(0);
+		return (Root) this.resourceSet.getResources().get(0).getContents().get(0);
 	}
 
 	/**

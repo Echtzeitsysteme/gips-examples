@@ -23,12 +23,12 @@ public class MdvneGipsIflyeAdapter {
 	/**
 	 * MdVNE GIPS API object.
 	 */
-	static MdvneGipsAPI api;
+	MdvneGipsAPI api;
 
 	/**
 	 * If false, the API must be initialized.
 	 */
-	static boolean init = false;
+	boolean init = false;
 
 	/**
 	 * Executes the embedding GIPS-based VNE algorithm.
@@ -40,8 +40,7 @@ public class MdvneGipsIflyeAdapter {
 	 * @param hipeXmi Path to the HiPE XMI file.
 	 * @return True if embedding was successful.
 	 */
-	public static boolean execute(final ResourceSet model, final String gipsXmi, final String ibexXmi,
-			final String hipeXmi) {
+	public boolean execute(final ResourceSet model, final String gipsXmi, final String ibexXmi, final String hipeXmi) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model was null.");
 		}
@@ -86,7 +85,7 @@ public class MdvneGipsIflyeAdapter {
 	 *              model).
 	 * @return True if embedding was successful.
 	 */
-	public static boolean execute(final ResourceSet model) {
+	public boolean execute(final ResourceSet model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model was null.");
 		}
@@ -116,7 +115,7 @@ public class MdvneGipsIflyeAdapter {
 	 * 
 	 * @return true, if a valid solution could be found.
 	 */
-	private static boolean buildAndSolve() {
+	private boolean buildAndSolve() {
 		final Observer obs = Observer.getInstance();
 		obs.setCurrentSeries("Eval");
 
@@ -150,7 +149,7 @@ public class MdvneGipsIflyeAdapter {
 	/**
 	 * Resets the initialized state of the GIPS API.
 	 */
-	public static void resetInit() {
+	public void resetInit() {
 		init = false;
 		api.terminate();
 		HiPEPathOptions.getInstance().resetNetworkPath();

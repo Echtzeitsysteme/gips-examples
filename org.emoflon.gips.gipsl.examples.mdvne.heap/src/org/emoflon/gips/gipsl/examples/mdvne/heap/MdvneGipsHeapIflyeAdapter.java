@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
+import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapter;
 import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapterUtil;
 import org.emoflon.gips.gipsl.examples.mdvne.heap.api.gips.HeapGipsAPI;
 
@@ -20,7 +21,7 @@ import hipe.engine.config.HiPEPathOptions;
  *
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
-public class MdvneGipsHeapIflyeAdapter {
+public class MdvneGipsHeapIflyeAdapter extends MdvneGipsIflyeAdapter {
 
 	/**
 	 * MdVNE GIPS API object.
@@ -42,8 +43,8 @@ public class MdvneGipsHeapIflyeAdapter {
 	 * @param hipeXmi Path to the HiPE XMI file.
 	 * @return True if embedding was successful.
 	 */
-	public static boolean execute(final ResourceSet model, final String gipsXmi, final String ibexXmi,
-			final String hipeXmi) {
+	@Override
+	public boolean execute(final ResourceSet model, final String gipsXmi, final String ibexXmi, final String hipeXmi) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model was null.");
 		}
@@ -88,7 +89,8 @@ public class MdvneGipsHeapIflyeAdapter {
 	 *              model).
 	 * @return True if embedding was successful.
 	 */
-	public static boolean execute(final ResourceSet model) {
+	@Override
+	public boolean execute(final ResourceSet model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model was null.");
 		}
@@ -115,7 +117,7 @@ public class MdvneGipsHeapIflyeAdapter {
 	 * 
 	 * @return true, if a valid solution could be found.
 	 */
-	private static boolean buildAndSolve() {
+	private boolean buildAndSolve() {
 		final Observer obs = Observer.getInstance();
 		obs.setCurrentSeries("Eval");
 
@@ -149,7 +151,8 @@ public class MdvneGipsHeapIflyeAdapter {
 	/**
 	 * Resets the initialized state of the GIPS API.
 	 */
-	public static void resetInit() {
+	@Override
+	public void resetInit() {
 		init = false;
 		api.terminate();
 		HiPEPathOptions.getInstance().resetNetworkPath();
