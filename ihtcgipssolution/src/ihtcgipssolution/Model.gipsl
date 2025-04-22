@@ -17,12 +17,12 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 570.0, includeInitTime := true];
+	timeLimit := true [value := 60.0, includeInitTime := true];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
 	lpOutput := true [path := "gurobi.lp"];
-	threadCount := true [value := 4];
+//	threadCount := true [value := 4];
 }
 
 //
@@ -463,8 +463,6 @@ constraint with roomShiftProducedLoad {
 	)->sum(element.nodes.owp.workloadProduced)
 }
 
-// TODO: This constraints currently makes the problem infeasible.
-//
 // Constraint that saves the cumulative load of nurse `n` in room `r`
 // on shift `s` in the variable `load`.
 constraint with nurseShiftRoomLoad {
@@ -473,22 +471,21 @@ constraint with nurseShiftRoomLoad {
 		& element.nodes.r == context.nodes.r //
 		& element.nodes.s == context.nodes.s //
 	)->sum(element.value) == 1
-	<=>
+	=>
 	context.variables.load
 	==
 	mappings.roomShiftProducedLoad->filter( //
 		element.nodes.r == context.nodes.r //
 		& element.nodes.s == context.nodes.s //
 	)->sum(element.variables.producedLoad)
-	
-	&
-	
+}
+constraint with nurseShiftRoomLoad {
 	mappings.anrs->filter( //
 		element.nodes.n == context.nodes.n //
 		& element.nodes.r == context.nodes.r //
 		& element.nodes.s == context.nodes.s //
 	)->sum(element.value) == 0
-	<=>
+	=>
 	context.variables.load == 0
 }
 
@@ -509,9 +506,8 @@ constraint with nurseShiftOverload {
 		& element.nodes.s == context.nodes.s //
 	)->sum(element.variables.load)
 	- context.nodes.sml.maxLoad
-	
-	& 
-	
+}
+constraint with nurseShiftOverload {	
 	mappings.nurseShiftRoomLoad->filter( //
 		element.nodes.n == context.nodes.n //
 		& element.nodes.s == context.nodes.s //
