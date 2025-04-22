@@ -13,6 +13,7 @@ public class ExampleMdVNE {
 		final MdvneGipsAPI api = new MdvneGipsAPI();
 		api.init(URI.createFileURI("./resources/example-models/model-in.xmi"));
 		api.getTracer().enableTracing(true);
+		api.getEclipseIntegrationConfig().setSolutionValuesSynchronizationEnabled(true);
 
 		// Build the ILP problem (including updates)
 		api.buildProblem(true);

@@ -60,3 +60,5 @@ ihtcrunner/model_in.xmi
 **/.DS_Store
 
 **/trace_cache.bin
+
+org.emoflon.gips.gipsl.examples.mdvne/problem.lp
