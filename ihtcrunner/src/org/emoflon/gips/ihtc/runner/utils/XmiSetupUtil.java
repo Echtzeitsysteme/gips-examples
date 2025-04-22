@@ -4,6 +4,7 @@ import org.eclipse.emf.common.util.URI;
 import org.emoflon.gips.core.api.GipsEngineAPI;
 
 import hipe.engine.config.HiPEPathOptions;
+import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 import ihtcmetamodel.utils.FileUtils;
@@ -56,6 +57,16 @@ public class XmiSetupUtil {
 					modelPath, //
 					"./ihtcgipssolution/softcnstrtuning/api/ibex-patterns.xmi" //
 			);
+		} else if (gipsApi instanceof IhtcgipssolutionGipsAPI) {
+			setup( //
+					gipsApi, //
+					"./ihtcgipssolution/hipe/engine/hipe-network.xmi", //
+					"ihtcgipssolutionhipe.engine.HiPEEngine", //
+					"./ihtcgipssolution/api/gips/gips-model.xmi", //
+					modelPath, //
+					"./ihtcgipssolution/api/ibex-patterns.xmi" //
+			);
+
 		} else {
 			throw new IllegalArgumentException("Given GIPS API was not supported.");
 		}

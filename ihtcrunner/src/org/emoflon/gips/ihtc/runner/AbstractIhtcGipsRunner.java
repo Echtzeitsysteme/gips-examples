@@ -11,6 +11,7 @@ import org.emoflon.gips.core.api.GipsEngineAPI;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
+import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 import ihtcmetamodel.Hospital;
@@ -191,6 +192,25 @@ public abstract class AbstractIhtcGipsRunner {
 		final File xmiInputFile = new File(path);
 		if (!xmiInputFile.exists() || xmiInputFile.isDirectory()) {
 			throw new IllegalArgumentException("File <" + path + "> could not be found.");
+		}
+	}
+
+	/**
+	 * TODO.
+	 * 
+	 * @param gipsApi
+	 * @param verbose
+	 */
+	protected void applySolution(final IhtcgipssolutionGipsAPI gipsApi, final boolean verbose) {
+		// Apply found solution
+		final long tick = System.nanoTime();
+		gipsApi.getAadp().applyNonZeroMappings(false);
+		gipsApi.getAnrs().applyNonZeroMappings(false);
+		gipsApi.getArp().applyNonZeroMappings(false);
+		gipsApi.getAsp().applyNonZeroMappings(false);
+		final long tock = System.nanoTime();
+		if (verbose) {
+			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
 		}
 	}
 
