@@ -60,3 +60,7 @@ ihtcrunner/model_in.xmi
 **/.DS_Store
 
 **/trace_cache.bin
+
+ihtcmetamodel/resources/dev_runner/
+
+ihtcmetamodel/resources/strategy_runner/

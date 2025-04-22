@@ -137,11 +137,11 @@ public class IhtcGipsDevRunner extends AbstractIhtcGipsRunner {
 			System.out.println("=> GIPS run time: " + stageOneRuntime + "s.");
 		}
 		
-		{
-			gipsApi.getNurseShiftRoomLoad().getMappings().forEach((n,m) -> {
-				System.out.println(n + ": " + m.getValueOfLoad());
-			});
-		}
+//		{
+//			gipsApi.getNurseShiftRoomLoad().getMappings().forEach((n,m) -> {
+//				System.out.println(n + ": " + m.getValueOfLoad());
+//			});
+//		}
 
 		//
 		// The end

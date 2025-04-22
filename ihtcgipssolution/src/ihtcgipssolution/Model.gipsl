@@ -17,7 +17,7 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 60.0, includeInitTime := true];
+	timeLimit := true [value := 1200.0, includeInitTime := true];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
@@ -779,8 +779,8 @@ function openOts with otDayOpened {
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
-//	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
-//	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
+	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
+	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
 	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
-//	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
+	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
 }
