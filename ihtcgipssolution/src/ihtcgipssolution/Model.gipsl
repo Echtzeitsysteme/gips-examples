@@ -466,58 +466,68 @@ constraint with roomShiftProducedLoad {
 // Constraint that saves the cumulative load of nurse `n` in room `r`
 // on shift `s` in the variable `load`.
 constraint with nurseShiftRoomLoad {
-	mappings.anrs->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.r == context.nodes.r //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.value) == 1
-	=>
-	context.variables.load
-	==
-	mappings.roomShiftProducedLoad->filter( //
-		element.nodes.r == context.nodes.r //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.variables.producedLoad)
-}
-constraint with nurseShiftRoomLoad {
-	mappings.anrs->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.r == context.nodes.r //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.value) == 0
-	=>
-	context.variables.load == 0
+	[
+		mappings.anrs->filter( //
+			element.nodes.n == context.nodes.n //
+			& element.nodes.r == context.nodes.r //
+			& element.nodes.s == context.nodes.s //
+		)->sum(element.value) == 1
+		=>
+		context.variables.load
+		==
+		mappings.roomShiftProducedLoad->filter( //
+			element.nodes.r == context.nodes.r //
+			& element.nodes.s == context.nodes.s //
+		)->sum(element.variables.producedLoad)
+	]
+
+	&
+
+	[
+		mappings.anrs->filter( //
+			element.nodes.n == context.nodes.n //
+			& element.nodes.r == context.nodes.r //
+			& element.nodes.s == context.nodes.s //
+		)->sum(element.value) == 0
+		=>
+		context.variables.load == 0
+	]
 }
 
 // Constraint that sets the cumulative overload of nurse `n` in
 // shift `s` in the variable `overload`.
 constraint with nurseShiftOverload {
-	mappings.nurseShiftRoomLoad->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.variables.load)
-	>
-	context.nodes.sml.maxLoad
-	=>
-	context.variables.overload
-	==
-	mappings.nurseShiftRoomLoad->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.variables.load)
-	- context.nodes.sml.maxLoad
-}
-constraint with nurseShiftOverload {	
-	mappings.nurseShiftRoomLoad->filter( //
-		element.nodes.n == context.nodes.n //
-		& element.nodes.s == context.nodes.s //
-	)->sum(element.variables.load)
-	<=
-	context.nodes.sml.maxLoad
-	=>
-	context.variables.overload
-	==
-	0
+	[
+		mappings.nurseShiftRoomLoad->filter( //
+			element.nodes.n == context.nodes.n //
+			& element.nodes.s == context.nodes.s //
+		)->sum(element.variables.load)
+		>
+		context.nodes.sml.maxLoad
+		=>
+		context.variables.overload
+		==
+		mappings.nurseShiftRoomLoad->filter( //
+			element.nodes.n == context.nodes.n //
+			& element.nodes.s == context.nodes.s //
+		)->sum(element.variables.load)
+		- context.nodes.sml.maxLoad
+	]
+	
+	&
+	
+	[
+		mappings.nurseShiftRoomLoad->filter( //
+			element.nodes.n == context.nodes.n //
+			& element.nodes.s == context.nodes.s //
+		)->sum(element.variables.load)
+		<=
+		context.nodes.sml.maxLoad
+		=>
+		context.variables.overload
+		==
+		0
+	]
 }
 
 // If a patient `p` is scheduled for room `r` on a day `d` that is within the
@@ -769,8 +779,8 @@ function openOts with otDayOpened {
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
-	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
-	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
+//	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
+//	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
 	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
-	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
+//	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
 }
