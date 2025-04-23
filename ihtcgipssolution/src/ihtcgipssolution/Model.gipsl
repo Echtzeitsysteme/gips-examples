@@ -368,6 +368,24 @@ pattern occupantRoomShiftLoad {
 	# r.name == o.roomId
 }
 
+pattern surgeonOtDayTriple {
+	h : Hospital {
+		- days -> d
+		- surgeons -> s
+		- operatingTheaters -> ot
+	}
+	
+	d : Day
+	s : Surgeon
+	ot : OperatingTheater {
+		- availabilities -> availability
+	}
+	
+	availability : OperatingTheaterAvailability {
+		- day -> d
+	}
+}
+
 //
 // GIPSL
 //
@@ -426,9 +444,27 @@ mapping nurseShiftOverload to nurseShiftMaxLoad {
 	var overload : EInt
 };
 
+// Mapping that is true if surgeon `s` has at least one operation in `ot` on day `d`
+mapping surgeonOtDay to surgeonOtDayTriple;
+
 //
 // Constraints
 //
+
+// This constraints sets the respective `surgeonOtDay` mapping to 1
+// if and only if at least one operation takes place in `ot` on day `d` by surgeon `s`.
+constraint with surgeonOtDay {
+	// faster reformulation
+	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot & element.nodes.s == context.nodes.s)->sum(element.value)
+	<=
+	1000 * context.value
+	
+	&
+	
+	mappings.asp->filter(element.nodes.d == context.nodes.d & element.nodes.ot == context.nodes.ot & element.nodes.s == context.nodes.s)->sum(element.value)
+	>=
+	context.value
+}
 
 // This constraints sets the respective `otDayOpenend` mapping to 1
 // if and only if at least one operation takes place in `ot` on day `d`.
@@ -864,6 +900,12 @@ function openOts with otDayOpened {
 	context.value
 }
 
+// S6 Surgeon transfer: The number of different OTs a surgeon is assigned to per
+// working day should be minimized.
+function surgeonTransfer with daySurgeonTuple {
+	mappings.surgeonOtDay->filter(element.nodes.s == context.nodes.s & element.nodes.d == context.nodes.d)->sum(element.value)
+}
+
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
@@ -871,4 +913,5 @@ objective : min {
 	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
 	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
 	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
+	+ functions.surgeonTransfer * types.Weight->sum(element.surgeonTransfer)
 }
