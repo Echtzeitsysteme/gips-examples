@@ -29,6 +29,8 @@ public class TeachingAssistantRunner extends AbstractTeachingAssistantRunner {
 
 		final GipssolutionaltGipsAPI gipsApi = new GipssolutionaltGipsAPI();
 		gipsApi.init(URI.createFileURI(filePath));
+		gipsApi.getTracer().enableTracing(true);
+		gipsApi.getEclipseIntegrationConfig().setSolutionValuesSynchronizationEnabled(true);
 
 		//
 		// Build and solve the ILP problem
