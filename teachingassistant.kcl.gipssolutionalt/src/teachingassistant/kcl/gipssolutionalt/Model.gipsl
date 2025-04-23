@@ -134,7 +134,9 @@ pattern findGreenTa {
 		- approvals -> approval
 	}
 	
-	approval : EmploymentApproval
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
 	# approval.ratingNumeric == 2
 }
 
@@ -150,7 +152,9 @@ pattern findYellowTa {
 		- approvals -> approval
 	}
 	
-	approval : EmploymentApproval
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
 	# approval.ratingNumeric == 1
 }
 
