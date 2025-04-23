@@ -1,5 +1,6 @@
 package org.emoflon.gips.gipsl.examples.mdvne.bwignore;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
@@ -135,7 +136,8 @@ public class MdvneGipsBwIgnoreIflyeAdapter extends MdvneGipsIflyeAdapter {
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
 		System.out.println("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
 
-		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
+		final Map<String, IMeasurement> measurements = new LinkedHashMap<>(obs.getMeasurements("Eval"));
+		obs.getMeasurements("Eval").clear();
 		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
 		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
 		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
