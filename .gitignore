@@ -69,6 +69,8 @@ teachingassistant.kcl.metamodel/model.json
 
 **/trace_cache.bin
 
+org.emoflon.gips.gipsl.examples.mdvne/problem.lp
+
 teachingassistant.kcl.metamodelalt/instances/
 
 teachingassistant.kcl.gipssolutionalt/problem.lp
