@@ -4,7 +4,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
 import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
+import ihtcmetamodel.Day;
 import ihtcmetamodel.Hospital;
+import ihtcmetamodel.Room;
 import ihtcmetamodel.importexport.ModelToJsonExporter;
 import ihtcmetamodel.utils.FileUtils;
 
@@ -136,12 +138,28 @@ public class IhtcGipsDevRunner extends AbstractIhtcGipsRunner {
 		if (verbose) {
 			System.out.println("=> GIPS run time: " + stageOneRuntime + "s.");
 		}
-		
+
 //		{
-//			gipsApi.getNurseShiftRoomLoad().getMappings().forEach((n,m) -> {
+//			gipsApi.getNurseShiftRoomLoad().getMappings().forEach((n, m) -> {
 //				System.out.println(n + ": " + m.getValueOfLoad());
 //			});
 //		}
+
+		{
+			gipsApi.getRoomDayLoad().getMappings().forEach((n, m) -> {
+				if (m.getValueOfLoad() > 0) {
+					System.out.println(
+							n + ": " + m.getValueOfLoad() + ", " + m.getValueOfMinAge() + ", " + m.getValueOfMaxAge());
+//					final Room room = m.getR();
+//					final Day day = m.getD();
+//					gipsApi.getArp().getMappings().forEach((x, arp) -> {
+//						if (arp.getR().equals(room)) {
+//
+//						}
+//					});
+				}
+			});
+		}
 
 		//
 		// The end

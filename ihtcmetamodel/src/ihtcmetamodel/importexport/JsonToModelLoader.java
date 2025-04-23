@@ -249,20 +249,24 @@ public class JsonToModelLoader {
 	 * @param ageGroups JSON array of age groups.
 	 */
 	private void convertAgeGroups(final JsonArray ageGroups) {
+		int i = 0;
 		for (final JsonElement ag : ageGroups) {
 			final String name = ag.getAsString();
-			createAgeGroup(name);
+			createAgeGroup(name, i);
+			i++;
 		}
 	}
 
 	/**
 	 * Creates one age group with the given name within the model.
 	 * 
-	 * @param name Age group name.
+	 * @param name          Age group name.
+	 * @param numbericValue Numeric value of the age group.
 	 */
-	private void createAgeGroup(final String name) {
+	private void createAgeGroup(final String name, final int numbericValue) {
 		final AgeGroup ag = IhtcmetamodelFactory.eINSTANCE.createAgeGroup();
 		ag.setName(name);
+		ag.setNumericAge(numbericValue);
 		this.model.getAgeGroups().add(ag);
 	}
 
@@ -550,7 +554,7 @@ public class JsonToModelLoader {
 		p.setName(name);
 		p.setMandatory(mandatory);
 		p.setGender(gender);
-		p.setAgeGroup(ageGroup);
+		p.setAgeGroup(findAgeGroupByName(ageGroup));
 		p.setLengthOfStay(lengthOfStay);
 		p.setSurgeryReleaseDay(surgeryReleaseDay);
 		p.setSurgeryDueDate(surgeryDueDay);
@@ -572,6 +576,21 @@ public class JsonToModelLoader {
 		}
 
 		this.model.getPatients().add(p);
+	}
+
+	/**
+	 * TODO
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private AgeGroup findAgeGroupByName(final String name) {
+		for (final AgeGroup ag : this.model.getAgeGroups()) {
+			if (ag.getName() != null && ag.getName().equals(name)) {
+				return ag;
+			}
+		}
+		throw new UnsupportedOperationException("Age group with name <" + name + "> not found.");
 	}
 
 	/**

@@ -79,7 +79,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="surgeon" eType="#//Surgeon"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="incompatibleRooms" upperBound="-1"
         eType="#//Room"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ageGroup" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="workloadsProduced" upperBound="-1"
         eType="#//PatientWorkloadProduced" containment="true" eOpposite="#//PatientWorkloadProduced/patient"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="skillLevelsRequired" upperBound="-1"
@@ -88,8 +87,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRoom" eType="#//Room"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="surgeryAssignment" eType="#//SurgeryAssignment"
         eOpposite="#//SurgeryAssignment/patient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ageGroup" eType="#//AgeGroup"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AgeGroup" eSuperTypes="#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AgeGroup" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numericAge" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Weight">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomMixedAge" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomNurseSkill" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>

@@ -410,8 +410,12 @@ mapping asp to assignSurgeryToPatient;
 mapping roomDayPatientLoad to patientRoomDay;
 
 // Mapping that holds the cumulative number of all patients on day `d` in room `r`
+// This mapping also holds the minimum and the maximum age assigned to this room `r`
+// on a given day `d`
 mapping roomDayLoad to dayRoomTuple {
 	var load : EInt
+	var minAge : EInt
+	var maxAge : EInt
 };
 
 // Mapping that is true if gender `g` is contained in room `r` on day `d`
@@ -450,6 +454,40 @@ mapping surgeonOtDay to surgeonOtDayTriple;
 //
 // Constraints
 //
+
+constraint with roomDayPatientLoad {
+	mappings.roomDayLoad->filter(
+		element.nodes.r == context.nodes.r
+		& element.nodes.d == context.nodes.d
+	)->sum(element.variables.minAge)
+	<= context.nodes.p.ageGroup.numericAge * context.value
+	
+	&
+	
+	mappings.roomDayLoad->filter(
+		element.nodes.r == context.nodes.r
+		& element.nodes.d == context.nodes.d
+	)->sum(element.variables.maxAge)
+	>= context.nodes.p.ageGroup.numericAge  * context.value
+}
+constraint with roomDayLoad {
+	context.variables.minAge >= 0
+	&
+	context.variables.maxAge >= 0
+	&
+	context.variables.minAge <= context.variables.maxAge
+	
+	&
+	context.variables.minAge <= patterns.findAgeGroup->sum(element.nodes.ag.numericAge)
+}
+
+pattern findAgeGroup {
+	h : Hospital {
+		- ageGroups -> ag
+	}
+	
+	ag : AgeGroup
+}
 
 // This constraints sets the respective `surgeonOtDay` mapping to 1
 // if and only if at least one operation takes place in `ot` on day `d` by surgeon `s`.
@@ -906,12 +944,20 @@ function surgeonTransfer with daySurgeonTuple {
 	mappings.surgeonOtDay->filter(element.nodes.s == context.nodes.s & element.nodes.d == context.nodes.d)->sum(element.value)
 }
 
+// S1 Age groups: For each day of the scheduling period and for each room, the
+// maximum difference between age groups of patients sharing the room should
+// be minimized.
+function roomMixedAge with roomDayLoad {
+	context.variables.maxAge - context.variables.minAge
+}
+
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
-	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
-	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
-	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
-	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
-	+ functions.surgeonTransfer * types.Weight->sum(element.surgeonTransfer)
+//	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
+//	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
+//	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
+//	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
+//	+ functions.surgeonTransfer * types.Weight->sum(element.surgeonTransfer)
+	+ functions.roomMixedAge * types.Weight->sum(element.roomMixedAge)
 }

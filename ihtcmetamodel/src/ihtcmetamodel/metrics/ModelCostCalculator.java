@@ -298,7 +298,7 @@ public class ModelCostCalculator {
 		// find minimum and maximum age of new patients assigned to room `r` on day `d`
 		for (final Patient p : model.getPatients()) {
 			if (patientInRoomOnDay(p, r, d)) {
-				final int age = convertAgeGroupToInt(model, p.getAgeGroup());
+				final int age = convertAgeGroupToInt(model, p.getAgeGroup().getName());
 				if (maxAgeFound < age) {
 					maxAgeFound = age;
 				}
