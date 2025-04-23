@@ -61,6 +61,8 @@ ihtcrunner/model_in.xmi
 
 **/trace_cache.bin
 
+org.emoflon.gips.gipsl.examples.mdvne/problem.lp
+
 ihtcmetamodel/resources/dev_runner/
 
 ihtcmetamodel/resources/strategy_runner/
