@@ -122,6 +122,38 @@ pattern findTaWeekCombination {
 	ta : TA
 }
 
+pattern findGreenTa {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> mod
+	}
+	
+	ta : TA
+	
+	mod : Module {
+		- approvals -> approval
+	}
+	
+	approval : EmploymentApproval
+	# approval.ratingNumeric == 2
+}
+
+pattern findYellowTa {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> mod
+	}
+	
+	ta : TA
+	
+	mod : Module {
+		- approvals -> approval
+	}
+	
+	approval : EmploymentApproval
+	# approval.ratingNumeric == 1
+}
+
 //
 // GIPSL
 //
@@ -162,4 +194,24 @@ constraint with findTaWeekCombination {
 		& element.nodes.w == context.nodes.w
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
 	<= context.nodes.ta.maxHoursPerWeek
+}
+
+function greenTas with findGreenTa {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+}
+
+function yellowTas with findYellowTa {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+}
+
+objective : max {
+	0
+	+ 5 * functions.greenTas
+	+ 1 * functions.yellowTas
 }

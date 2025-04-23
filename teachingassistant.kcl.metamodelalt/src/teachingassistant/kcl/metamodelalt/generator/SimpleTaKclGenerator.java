@@ -22,7 +22,6 @@ import metamodel.TimeTableEntry;
 import metamodel.Week;
 import teachingassistant.kcl.metamodel.utils.DateTimeUtil;
 import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
-import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
 
 /**
  * Generator that creates a TAAllocation model aligned with the updated
@@ -61,8 +60,8 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	static int START_WEEK = 23;
 	static int END_WEEK = 26;
 
-	// Possible daily start times (in hours)
-	static int[] POSSIBLE_START_HOURS = { 9, 11, 13, 15 };
+//	// Possible daily start times (in hours)
+//	static int[] POSSIBLE_START_HOURS = { 9, 11, 13, 15 };
 
 	/**
 	 * Constructor taking a seed for random generation.
@@ -156,6 +155,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 				final EmploymentApproval approval = factory.createEmploymentApproval();
 				approval.setTa(ta);
 				approval.setRating(rating);
+				approval.setRatingNumeric(ratingVal);
 
 				module.getApprovals().add(approval);
 			}
