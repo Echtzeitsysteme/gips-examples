@@ -1,12 +1,15 @@
 package org.emoflon.gips.ihtc.runner;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
 import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
-import ihtcmetamodel.Day;
+import ihtcgipssolution.api.gips.mapping.RoomDayLoadMapping;
 import ihtcmetamodel.Hospital;
-import ihtcmetamodel.Room;
 import ihtcmetamodel.importexport.ModelToJsonExporter;
 import ihtcmetamodel.utils.FileUtils;
 
@@ -146,19 +149,21 @@ public class IhtcGipsDevRunner extends AbstractIhtcGipsRunner {
 //		}
 
 		{
-			gipsApi.getRoomDayLoad().getMappings().forEach((n, m) -> {
+			final List<String> prints = new ArrayList<String>();
+			int sum = 0;
+			for (final String n : gipsApi.getRoomDayLoad().getMappings().keySet()) {
+				final RoomDayLoadMapping m = gipsApi.getRoomDayLoad().getMappings().get(n);
 				if (m.getValueOfLoad() > 0) {
-					System.out.println(
-							n + ": " + m.getValueOfLoad() + ", " + m.getValueOfMinAge() + ", " + m.getValueOfMaxAge());
-//					final Room room = m.getR();
-//					final Day day = m.getD();
-//					gipsApi.getArp().getMappings().forEach((x, arp) -> {
-//						if (arp.getR().equals(room)) {
-//
-//						}
-//					});
+//					System.out.println(
+//							n + ": " + m.getValueOfLoad() + ", " + m.getValueOfMinAge() + ", " + m.getValueOfMaxAge());
+					prints.add(m.getR().getName() + "; " + m.getD().getName() + ": " + m.getValueOfLoad() + ", "
+							+ m.getValueOfMinAge() + ", " + m.getValueOfMaxAge());
+					sum += (m.getValueOfMaxAge() - m.getValueOfMinAge());
 				}
-			});
+			}
+			Collections.sort(prints);
+			prints.forEach(s -> System.out.println(s));
+			System.out.println("Sum : " + sum);
 		}
 
 		//

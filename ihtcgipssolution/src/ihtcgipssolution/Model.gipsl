@@ -17,7 +17,7 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 60.0, includeInitTime := true];
+	timeLimit := true [value := 30.0, includeInitTime := true];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
@@ -407,7 +407,13 @@ mapping arp to assignRoomToPatient;
 mapping asp to assignSurgeryToPatient;
 
 // Mapping that holds the information if a patient `p` is scheduled for day `d` in room `r`
-mapping roomDayPatientLoad to patientRoomDay;
+mapping roomDayPatientLoad to patientRoomDay {
+	var z : EBoolean
+};
+
+mapping occupantRoomDayMapping to occupantRoomDay {
+	var z : EBoolean
+};
 
 // Mapping that holds the cumulative number of all patients on day `d` in room `r`
 // This mapping also holds the minimum and the maximum age assigned to this room `r`
@@ -455,30 +461,129 @@ mapping surgeonOtDay to surgeonOtDayTriple;
 // Constraints
 //
 
-constraint with roomDayPatientLoad {
-	mappings.roomDayLoad->filter(
-		element.nodes.r == context.nodes.r
-		& element.nodes.d == context.nodes.d
-	)->sum(element.variables.minAge)
-	<= context.nodes.p.ageGroup.numericAge * context.value
-	
-	&
-	
-	mappings.roomDayLoad->filter(
-		element.nodes.r == context.nodes.r
-		& element.nodes.d == context.nodes.d
-	)->sum(element.variables.maxAge)
-	>= context.nodes.p.ageGroup.numericAge  * context.value
-}
+//constraint with roomDayPatientLoad {
+//	mappings.roomDayLoad->filter(
+//		element.nodes.r == context.nodes.r
+//		& element.nodes.d == context.nodes.d
+//	)->sum(element.variables.minAge)
+//	<= context.nodes.p.ageGroup.numericAge * context.value
+//	
+//	&
+//	
+//	mappings.roomDayLoad->filter(
+//		element.nodes.r == context.nodes.r
+//		& element.nodes.d == context.nodes.d
+//	)->sum(element.variables.maxAge)
+//	>= context.nodes.p.ageGroup.numericAge  * context.value
+//}
 constraint with roomDayLoad {
 	context.variables.minAge >= 0
 	&
 	context.variables.maxAge >= 0
 	&
 	context.variables.minAge <= context.variables.maxAge
+//	
+//	&
+//	context.variables.minAge <= patterns.findAgeGroup->sum(element.nodes.ag.numericAge)
+}
+// ???
+//constraint with occupantRoomDay {
+//	mappings.roomDayLoad->filter(
+//		element.nodes.r == context.nodes.r
+//		& element.nodes.d == context.nodes.d
+//	)->sum(element.variables.minAge)
+//	<= context.nodes.o.ageGroup.numericAge
+//	
+//	&
+//	
+//	mappings.roomDayLoad->filter(
+//		element.nodes.r == context.nodes.r
+//		& element.nodes.d == context.nodes.d
+//	)->sum(element.variables.maxAge)
+//	>= context.nodes.o.ageGroup.numericAge
+//}
+
+//constraint with roomDayPatientLoad {
+//	mappings.roomDayLoad->filter(
+//		element.nodes.r == context.nodes.r
+//		& element.nodes.d == context.nodes.d
+//	)->sum(element.variables.minAge)
+//	<= context.nodes.p.ageGroup.numericAge * context.value
+//}
+// Max constraint is fine because the nature of the problem's
+// goal is always minimization
+constraint with roomDayPatientLoad {
+	mappings.roomDayLoad->filter(
+		element.nodes.r == context.nodes.r
+		& element.nodes.d == context.nodes.d
+	)->sum(element.variables.maxAge)
+	>= context.nodes.p.ageGroup.numericAge  * context.value
+}
+constraint with occupantRoomDay {
+	mappings.roomDayLoad->filter(
+		element.nodes.r == context.nodes.r
+		& element.nodes.d == context.nodes.d
+	)->sum(element.variables.maxAge)
+	>= context.nodes.o.ageGroup.numericAge
+}
+
+// Min constraint is complicated
+//
+// Q <= a * R_i
+constraint with roomDayPatientLoad {
+	mappings.roomDayLoad->filter(
+		element.nodes.r == context.nodes.r
+		& element.nodes.d == context.nodes.d
+	)->sum(element.variables.minAge)
+	<= context.nodes.p.ageGroup.numericAge  * context.value
+}
+// Q <= a * R_i
+constraint with occupantRoomDay {
+	mappings.roomDayLoad->filter(
+		element.nodes.r == context.nodes.r
+		& element.nodes.d == context.nodes.d
+	)->sum(element.variables.minAge)
+	<= context.nodes.o.ageGroup.numericAge
+}
+// Q >= a * R_i - M(1 - z_i)
+constraint with roomDayPatientLoad {
+	mappings.roomDayLoad->filter(
+		element.nodes.r == context.nodes.r
+		& element.nodes.d == context.nodes.d
+	)->sum(element.variables.minAge)
+	>= context.nodes.p.ageGroup.numericAge  * context.value
+	- 1000 * (1 - context.variables.z)
+}
+// Q >= a * R_i - M(1 - z_i)
+constraint with occupantRoomDayMapping {
+	mappings.roomDayLoad->filter(
+		element.nodes.r == context.nodes.r
+		& element.nodes.d == context.nodes.d
+	)->sum(element.variables.minAge)
+	>= context.nodes.o.ageGroup.numericAge
+	- 1000 * (1 - context.variables.z)
+}
+
+// sum_i(z_i) == 1
+constraint with dayRoomTuple {
+	[
+		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.value)
+		+
+		patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
+		>= 1
+	]
 	
-	&
-	context.variables.minAge <= patterns.findAgeGroup->sum(element.nodes.ag.numericAge)
+	=>
+	
+	[
+		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+		+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+		== 1
+	]
+	
+//	mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+//	+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+//	== 1
 }
 
 pattern findAgeGroup {
@@ -959,5 +1064,5 @@ objective : min {
 //	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
 //	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
 //	+ functions.surgeonTransfer * types.Weight->sum(element.surgeonTransfer)
-	+ functions.roomMixedAge * types.Weight->sum(element.roomMixedAge)
+	+ functions.roomMixedAge //* types.Weight->sum(element.roomMixedAge)
 }

@@ -441,7 +441,7 @@ public class JsonToModelLoader {
 		final Occupant o = IhtcmetamodelFactory.eINSTANCE.createOccupant();
 		o.setName(name);
 		o.setGender(gender);
-		o.setAgeGroup(ageGroup);
+		o.setAgeGroup(findAgeGroupByName(ageGroup));
 		o.setLengthOfStay(lengthOfStay);
 		int shiftCounter = 0;
 		for (final JsonElement workload : workloadProduced) {

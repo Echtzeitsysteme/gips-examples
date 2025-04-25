@@ -36,6 +36,14 @@ public class ModelCostCalculator {
 		int ageMixCost = 0;
 		for (final Day d : model.getDays()) {
 			for (final Room r : model.getRooms()) {
+//				if (getMaxAgeDifferenceInRoomAtDay(model, r, d) > 0) {
+//					System.out.println("Room: " + r.getName() + "; day: " + d.getName() + "; max_age_diff: "
+//							+ getMaxAgeDifferenceInRoomAtDay(model, r, d));
+//				}
+				if (getOccupantsInRoomOnDay(model, r, d).size() + getPatientsInRoomOnDay(model, r, d).size() > 0) {
+					System.out.println("Room: " + r.getName() + "; day: " + d.getName() + "; min_age: "
+							+ getMinAgeInRoomAtDay(model, r, d) + "; max_age: " + getMaxAgeInRoomAtDay(model, r, d));
+				}
 				ageMixCost += getMaxAgeDifferenceInRoomAtDay(model, r, d);
 			}
 		}
@@ -312,7 +320,7 @@ public class ModelCostCalculator {
 		// day `d`
 		for (final Occupant o : model.getOccupants()) {
 			if (occupantInRoomOnDay(o, r, d)) {
-				final int age = convertAgeGroupToInt(model, o.getAgeGroup());
+				final int age = convertAgeGroupToInt(model, o.getAgeGroup().getName());
 				if (maxAgeFound < age) {
 					maxAgeFound = age;
 				}
@@ -328,6 +336,60 @@ public class ModelCostCalculator {
 		}
 
 		return cost;
+	}
+
+	private int getMaxAgeInRoomAtDay(final Hospital model, final Room r, final Day d) {
+		int maxAgeFound = Integer.MIN_VALUE;
+
+		// find minimum and maximum age of new patients assigned to room `r` on day `d`
+		for (final Patient p : model.getPatients()) {
+			if (patientInRoomOnDay(p, r, d)) {
+				final int age = convertAgeGroupToInt(model, p.getAgeGroup().getName());
+				if (maxAgeFound < age) {
+					maxAgeFound = age;
+				}
+			}
+		}
+
+		// find minimum and maximum age of occupants previously assigned to room `r` on
+		// day `d`
+		for (final Occupant o : model.getOccupants()) {
+			if (occupantInRoomOnDay(o, r, d)) {
+				final int age = convertAgeGroupToInt(model, o.getAgeGroup().getName());
+				if (maxAgeFound < age) {
+					maxAgeFound = age;
+				}
+			}
+		}
+
+		return maxAgeFound;
+	}
+
+	private int getMinAgeInRoomAtDay(final Hospital model, final Room r, final Day d) {
+		int minAgeFound = Integer.MAX_VALUE;
+
+		// find minimum and maximum age of new patients assigned to room `r` on day `d`
+		for (final Patient p : model.getPatients()) {
+			if (patientInRoomOnDay(p, r, d)) {
+				final int age = convertAgeGroupToInt(model, p.getAgeGroup().getName());
+				if (minAgeFound > age) {
+					minAgeFound = age;
+				}
+			}
+		}
+
+		// find minimum and maximum age of occupants previously assigned to room `r` on
+		// day `d`
+		for (final Occupant o : model.getOccupants()) {
+			if (occupantInRoomOnDay(o, r, d)) {
+				final int age = convertAgeGroupToInt(model, o.getAgeGroup().getName());
+				if (minAgeFound > age) {
+					minAgeFound = age;
+				}
+			}
+		}
+
+		return minAgeFound;
 	}
 
 	/**

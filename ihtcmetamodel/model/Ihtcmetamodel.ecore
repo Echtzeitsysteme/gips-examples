@@ -117,13 +117,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Occupant" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="gender" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ageGroup" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lengthOfStay" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="workloadsProduced" upperBound="-1"
         eType="#//OccupantWorkloadProduced" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="skillLevelsRequired" upperBound="-1"
         eType="#//OccupantSkillLevelRequired" containment="true" eOpposite="#//OccupantWorkloadProduced/occupant"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ageGroup" eType="#//AgeGroup"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OccupantWorkloadProduced">
     <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"/>
