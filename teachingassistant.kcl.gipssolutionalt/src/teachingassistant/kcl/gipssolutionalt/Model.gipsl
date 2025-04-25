@@ -10,6 +10,11 @@ config {
 	lpOutput := true [path := "problem.lp"];
 }
 
+//
+// GT
+//
+
+// Find session occurrence
 pattern findSessionOccurrence {
 	root : TAAllocation {
 		- modules -> module
@@ -26,6 +31,8 @@ pattern findSessionOccurrence {
 	occurrence : SessionOccurrence
 }
 
+// Construct a condition for a session that a specific TA
+// is available (i.e., they have not blocked this session)
 pattern findTaUnavailableSession {
 	root : TAAllocation {
 		- tas -> ta
@@ -48,6 +55,9 @@ pattern findTaUnavailableSession {
 }
 condition taAvailableInSession = forbid findTaUnavailableSession
 
+// Rule to assign a TA to a specific session occurrence.
+// This rule respects the condition that the TA must not have
+// blocked the respective time table entry of the session occurrence.
 rule assignTa {
 	root : TAAllocation {
 		- tas -> ta
@@ -79,6 +89,8 @@ rule assignTa {
 }
 when taAvailableInSession
 
+// Find every possible combination of TAs
+// and time table entries
 pattern findTaEntryCombination {
 	root : TAAllocation {
 		- tas -> ta
@@ -89,6 +101,10 @@ pattern findTaEntryCombination {
 	entry : TimeTableEntry
 }
 
+// For a specific TA, find all conflicting time table
+// entries in the model.
+// This pattern does respect partly overlapping time
+// table entries.
 pattern findConflictingEntriesWithTa {
 	root : TAAllocation {
 		- timetable -> entryA
@@ -112,6 +128,7 @@ pattern findConflictingEntriesWithTa {
 	# entryA.endEpoch > entryB.startEpoch
 }
 
+// Find all possible combinations of TAs and weeks
 pattern findTaWeekCombination {
 	root : TAAllocation {
 		- weeks -> w
@@ -122,6 +139,8 @@ pattern findTaWeekCombination {
 	ta : TA
 }
 
+// Find a TA with a green employment approval status
+// for a specific module.
 pattern findGreenTa {
 	root : TAAllocation {
 		- tas -> ta
@@ -140,6 +159,8 @@ pattern findGreenTa {
 	# approval.ratingNumeric == 2
 }
 
+// Find a TA with a yellow employment approval status
+// for a specific module.
 pattern findYellowTa {
 	root : TAAllocation {
 		- tas -> ta
@@ -162,6 +183,8 @@ pattern findYellowTa {
 // GIPSL
 //
 
+// If a mapping instance has a value of `1`, the respective TA must
+// be mapped to the respective session occurrence.
 mapping taToOccurrence to assignTa;
 
 // Every session occurrence must have exactly `numTAsPerSession` TAs assigned.
@@ -173,7 +196,9 @@ constraint with findSessionOccurrence {
 	context.nodes.session.numTAsPerSession
 }
 
-// TAs must not have conflicting assignments
+// TAs must not have conflicting assignments.
+// GIPSL formulation: For any pair of conflicting session occurrences (in the
+// context of one TA), a maximum of one of these conflicting session can be chosen.
 constraint with findConflictingEntriesWithTa {
 	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
 	+
@@ -192,6 +217,8 @@ constraint with TA {
 }
 
 // Ensure TAs max hours per week
+// GIPSL interpretation: the sum of all assigned working hours per TA
+// in a specific week must not exceed their weekly hour limit
 constraint with findTaWeekCombination {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
@@ -200,6 +227,9 @@ constraint with findTaWeekCombination {
 	<= context.nodes.ta.maxHoursPerWeek
 }
 
+// Represents the number of assigned session occurrences to a specific
+// TA for a specific session (and the TA needs to have the green
+// employment rating for the respective module).
 function greenTas with findGreenTa {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
@@ -207,6 +237,9 @@ function greenTas with findGreenTa {
 	)->sum(element.value)
 }
 
+// Represents the number of assigned session occurrences to a specific
+// TA for a specific session (and the TA needs to have the yellow
+// employment rating for the respective module).
 function yellowTas with findYellowTa {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
@@ -214,6 +247,9 @@ function yellowTas with findYellowTa {
 	)->sum(element.value)
 }
 
+// Global objective
+// We want to use a higher weight for green TAs compared to the
+// yellow TAs
 objective : max {
 	0
 	+ 5 * functions.greenTas
