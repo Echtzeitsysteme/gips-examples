@@ -63,6 +63,10 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 //	// Possible daily start times (in hours)
 //	static int[] POSSIBLE_START_HOURS = { 9, 11, 13, 15 };
 
+	// Bounds for the randomized creation of blocked time table entries for each TA
+	static int MIN_NUMBER_TA_BLOCKED = 0;
+	static int MAX_NUMBER_TA_BLOCKED = 2;
+
 	/**
 	 * Constructor taking a seed for random generation.
 	 */
@@ -117,6 +121,8 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 			// The new metamodel only has "name", so store code & title in that
 			// TODO: Maybe we can extend the metamodel to hold these values in different
 			// fields?
+			// TODO: The following array accesses result in an IndexOutOfBoundsException if
+			// more than 7 modules are configured above.
 			module.setName(moduleCodes[i] + " - " + moduleTitles[i]);
 			modules.put(moduleCodes[i], module);
 		}
@@ -268,6 +274,21 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 					// Finally, add this entry to root's timetable
 					root.getTimetable().add(entry);
 				}
+			}
+		}
+
+		// 5.3) Add (randomized) blocked time table entries to the TAs
+		for (final TA ta : tas.values()) {
+			final int numberOfBlockedDates = getRandInt(MIN_NUMBER_TA_BLOCKED, MAX_NUMBER_TA_BLOCKED);
+			final List<TimeTableEntry> copiedTtes = new ArrayList<TimeTableEntry>();
+			copiedTtes.addAll(root.getTimetable());
+
+			for (int i = 0; i < numberOfBlockedDates; i++) {
+				if (copiedTtes.isEmpty()) {
+					break;
+				}
+				final int randomTteIndex = getRandInt(0, copiedTtes.size() - 1);
+				ta.getUnavailable_because_lessons().add(copiedTtes.remove(randomTteIndex));
 			}
 		}
 
