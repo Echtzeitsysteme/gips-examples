@@ -568,41 +568,49 @@ constraint with occupantRoomDayMapping {
 }
 
 // sum_i(z_i) == 1
+//constraint with dayRoomTuple {
+//	[
+//		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.value)
+//		+
+//		patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
+//		>= 1
+//	]
+//	
+//	=>
+//	
+//	[
+//		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+//		+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+//		== 1
+//	]
+//	
+////	mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+////	+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+////	== 1
+//}
+//constraint with dayRoomTuple {
+//	[
+//		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.value)
+//		+
+//		patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
+//		== 0
+//	]
+//	
+//	=>
+//	
+//	[
+//		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+//		+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+//		== 0
+//	]
+//}
+// faster implementation of the two constraints above:
 constraint with dayRoomTuple {
-	[
 		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.value)
-		+
-		patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
-		>= 1
-	]
-	
-	=>
-	
-	[
+		+ patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
+		>=
 		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
 		+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
-		== 1
-	]
-	
-//	mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
-//	+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
-//	== 1
-}
-constraint with dayRoomTuple {
-	[
-		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.value)
-		+
-		patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
-		== 0
-	]
-	
-	=>
-	
-	[
-		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
-		+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
-		== 0
-	]
 }
 
 pattern findAgeGroup {
