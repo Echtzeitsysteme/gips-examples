@@ -536,6 +536,9 @@ constraint with roomDayPatientLoad {
 		& element.nodes.d == context.nodes.d
 	)->sum(element.variables.minAge)
 	<= context.nodes.p.ageGroup.numericAge  * context.value
+	
+	// new:
+	+ 1000 * (1 - context.value)
 }
 // Q <= a * R_i
 constraint with occupantRoomDay {
@@ -584,6 +587,22 @@ constraint with dayRoomTuple {
 //	mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
 //	+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
 //	== 1
+}
+constraint with dayRoomTuple {
+	[
+		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.value)
+		+
+		patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
+		== 0
+	]
+	
+	=>
+	
+	[
+		mappings.roomDayPatientLoad->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+		+ mappings.occupantRoomDayMapping->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(element.variables.z)
+		== 0
+	]
 }
 
 pattern findAgeGroup {

@@ -164,6 +164,15 @@ public class IhtcGipsDevRunner extends AbstractIhtcGipsRunner {
 			Collections.sort(prints);
 			prints.forEach(s -> System.out.println(s));
 			System.out.println("Sum : " + sum);
+
+			// Print max age diff in room and day
+			System.out.println("---");
+			gipsApi.getRoomDayLoad().getMappings().values().forEach(m -> {
+				if (Math.abs(m.getMaxAge().getValue() - m.getMinAge().getValue()) != 0) {
+					System.out.println(m.getR().getName() + " " + m.getD().getName() + ": maxAgeDiff = "
+							+ (m.getMaxAge().getValue() - m.getMinAge().getValue()));
+				}
+			});
 		}
 
 		//
