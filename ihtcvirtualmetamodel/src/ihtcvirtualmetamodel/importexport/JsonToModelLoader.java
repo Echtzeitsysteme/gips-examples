@@ -1,5 +1,6 @@
 package ihtcvirtualmetamodel.importexport;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -107,19 +108,18 @@ public class JsonToModelLoader {
 		// This should not be necessary because the IHTC always uses three shift types
 		// per definition.
 
+		final JsonArray rooms = json.getAsJsonArray("rooms");
+		convertRooms(rooms);
+		
 		// age groups as String array
 		final JsonArray ageGroups = json.getAsJsonArray("age_groups");
 		convertAgeGroups(ageGroups);
 
-//		final JsonArray occupants = json.getAsJsonArray("occupants");
-//		convertOccupants(occupants);
-		// TODO
+		final JsonArray occupants = json.getAsJsonArray("occupants");
+		convertOccupants(occupants);
 
 		final JsonArray surgeons = json.getAsJsonArray("surgeons");
 		convertSurgeons(surgeons);
-
-		final JsonArray rooms = json.getAsJsonArray("rooms");
-		convertRooms(rooms);
 
 		final JsonArray patients = json.getAsJsonArray("patients");
 		convertPatients(patients);
@@ -138,6 +138,94 @@ public class JsonToModelLoader {
 	/*
 	 * Utility methods.
 	 */
+
+	/**
+	 * Converts the given JSON array of all occupants to their model
+	 * representations.
+	 * 
+	 * @param occupants JSON array of all occupants.
+	 */
+	private void convertOccupants(final JsonArray occupants) {
+		for (final JsonElement o : occupants) {
+			final String name = ((JsonObject) o).get("id").getAsString();
+			final String gender = ((JsonObject) o).get("gender").getAsString();
+			final String ageGroup = ((JsonObject) o).get("age_group").getAsString();
+			final int lengthOfStay = ((JsonObject) o).get("length_of_stay").getAsInt();
+			final JsonArray workloadProduced = ((JsonObject) o).get("workload_produced").getAsJsonArray();
+			final JsonArray skillLevelRequired = ((JsonObject) o).get("skill_level_required").getAsJsonArray();
+			final String roomId = ((JsonObject) o).get("room_id").getAsString();
+
+			createOccupant(name, gender, ageGroup, lengthOfStay, workloadProduced, skillLevelRequired, roomId);
+		}
+	}
+
+	/**
+	 * Creates one occupant with the given parameters within the model.
+	 * 
+	 * @param name               Name.
+	 * @param gender             Gender.
+	 * @param ageGroup           Age group.
+	 * @param lengthOfStay       Length of the stay in number of days.
+	 * @param workloadProduced   JSON array of the produced work loads per shift.
+	 * @param skillLevelRequired JSON array of the required skill levels per shift.
+	 * @param roomId             ID of the assigned room.
+	 */
+	private void createOccupant(final String name, final String gender, final String ageGroup, final int lengthOfStay,
+			final JsonArray workloadProduced, final JsonArray skillLevelRequired, final String roomId) {
+		final Patient p = IhtcvirtualmetamodelFactory.eINSTANCE.createPatient();
+		p.setName(name);
+		p.setGender(gender);
+		p.setAgeGroup(foundAges.get(ageGroup));
+		p.setStayLength(lengthOfStay);
+		p.setIsOccupant(true);
+
+		// Create workload objects
+		if (workloadProduced.size() != skillLevelRequired.size()) {
+			throw new UnsupportedOperationException(
+					"Number of workloads produced did not match the number of skill levels required.");
+		}
+
+		for (int i = 0; i < workloadProduced.size(); i++) {
+			final JsonElement workload = workloadProduced.get(i);
+			final JsonElement skillLevel = skillLevelRequired.get(i);
+
+			final Workload w = IhtcvirtualmetamodelFactory.eINSTANCE.createWorkload();
+			w.setWorkloadValue(workload.getAsInt());
+			w.setMinNurseSkill(skillLevel.getAsInt());
+
+			// Add "derived" (in case of the occupants pre-determined) workload to shift
+			// assignment
+			{
+				// Get room
+				final Room assignedRoom = name2Room.get(roomId);
+
+				// Get shift
+				final int shiftNumber = p.getEarliestDay() * numberOfShiftsPerDay + i;
+				final Shift assignedShift = shiftNoToObject(shiftNumber, assignedRoom.getShifts());
+
+				// assign workload to shift
+				w.setDerivedShift(assignedShift);
+			}
+
+			p.getWorkloads().add(w);
+
+			if (i == 0) {
+				p.setFirstWorkload(w);
+			}
+		}
+
+		this.model.getPatients().add(p);
+	}
+
+	private Shift shiftNoToObject(final int shiftNo, final Collection<Shift> allShifts) {
+		for (final Shift s : allShifts) {
+			if (s.getShiftNo() == shiftNo) {
+				return s;
+			}
+		}
+
+		throw new IllegalArgumentException("Shift with number <" + shiftNo + "> could not be found.");
+	}
 
 	/**
 	 * Converts a given JSON array of patients to their model representations.
