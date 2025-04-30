@@ -15,12 +15,14 @@ import ihtcvirtualmetamodel.IhtcvirtualmetamodelFactory;
 import ihtcvirtualmetamodel.Nurse;
 import ihtcvirtualmetamodel.OT;
 import ihtcvirtualmetamodel.OpTime;
+import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Room;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
 import ihtcvirtualmetamodel.Surgeon;
 import ihtcvirtualmetamodel.Weight;
+import ihtcvirtualmetamodel.Workload;
 import ihtcvirtualmetamodel.utils.FileUtils;
 
 /**
@@ -51,9 +53,19 @@ public class JsonToModelLoader {
 	private Map<String, Integer> foundAges = new HashMap<String, Integer>();
 
 	/**
-	 * Found genders as map from "name" to integer value.
+	 * Found genders as names.
 	 */
-	private Map<String, Integer> foundGenders = new HashMap<String, Integer>();
+	private Set<String> foundGenders = new HashSet<String>();
+
+	/**
+	 * Look up data structure: mapping of name -> surgeon for all surgeons.
+	 */
+	private Map<String, Surgeon> name2Surgeon = new HashMap<String, Surgeon>();
+
+	/**
+	 * Look up data structure: mapping of name -> room for all rooms.
+	 */
+	private Map<String, Room> name2Room = new HashMap<String, Room>();
 
 	/**
 	 * Creates a new instance of this class with an empty hospital model.
@@ -109,9 +121,8 @@ public class JsonToModelLoader {
 		final JsonArray rooms = json.getAsJsonArray("rooms");
 		convertRooms(rooms);
 
-//		final JsonArray patients = json.getAsJsonArray("patients");
-//		convertPatients(patients);
-		// TODO
+		final JsonArray patients = json.getAsJsonArray("patients");
+		convertPatients(patients);
 
 		final JsonArray operatingTheaters = json.getAsJsonArray("operating_theaters");
 		convertOperatingTheaters(operatingTheaters);
@@ -122,6 +133,106 @@ public class JsonToModelLoader {
 		// global weights
 		final JsonObject weights = json.getAsJsonObject("weights");
 		convertWeights(weights);
+	}
+
+	/*
+	 * Utility methods.
+	 */
+
+	/**
+	 * Converts a given JSON array of patients to their model representations.
+	 * 
+	 * @param patients JSON array of patients.
+	 */
+	private void convertPatients(final JsonArray patients) {
+		for (final JsonElement p : patients) {
+			final String name = ((JsonObject) p).get("id").getAsString();
+			final boolean mandatory = ((JsonObject) p).get("mandatory").getAsBoolean();
+			final String gender = ((JsonObject) p).get("gender").getAsString();
+			final String ageGroup = ((JsonObject) p).get("age_group").getAsString();
+			final int lengthOfStay = ((JsonObject) p).get("length_of_stay").getAsInt();
+			final int surgeryReleaseDay = ((JsonObject) p).get("surgery_release_day").getAsInt();
+			final int surgeryDuration = ((JsonObject) p).get("surgery_duration").getAsInt();
+			final String surgeonId = ((JsonObject) p).get("surgeon_id").getAsString();
+			final JsonArray incompatibleRoomIds = ((JsonObject) p).get("incompatible_room_ids").getAsJsonArray();
+			final JsonArray workloadProduced = ((JsonObject) p).get("workload_produced").getAsJsonArray();
+			final JsonArray skillLevelRequired = ((JsonObject) p).get("skill_level_required").getAsJsonArray();
+
+			int surgeryDueDay = -1;
+			if (mandatory) {
+				surgeryDueDay = ((JsonObject) p).get("surgery_due_day").getAsInt();
+			} else {
+				surgeryDueDay = 100;
+			}
+
+			// add gender to all found genders if not already existent
+			this.foundGenders.add(gender);
+
+			createPatient(name, mandatory, gender, ageGroup, lengthOfStay, surgeryReleaseDay, surgeryDueDay,
+					surgeryDuration, surgeonId, incompatibleRoomIds, workloadProduced, skillLevelRequired);
+		}
+	}
+
+	/**
+	 * Creates a new patient object in the model with the given parameters.
+	 * 
+	 * @param name                Name.
+	 * @param mandatory           If true, the scheduling of the patient is
+	 *                            required.
+	 * @param gender              Gender.
+	 * @param ageGroup            Age group.
+	 * @param lengthOfStay        Length of the stay in number of days.
+	 * @param surgeryReleaseDay   First possible admission day.
+	 * @param surgeryDueDay       Latest possible admission day.
+	 * @param surgeryDuration     Duration of the surgery in minutes.
+	 * @param surgeonId           ID of the surgeon for the surgery.
+	 * @param incompatibleRoomIds JSON array containing incompatible rooms.
+	 * @param workloadProduced    JSON array containing the produced work load per
+	 *                            shift.
+	 * @param skillLevelRequired  JSON array containing the required nurse skill
+	 *                            level per shift.
+	 */
+	private void createPatient(final String name, final boolean mandatory, final String gender, final String ageGroup,
+			final int lengthOfStay, final int surgeryReleaseDay, final int surgeryDueDay, final int surgeryDuration,
+			final String surgeonId, final JsonArray incompatibleRoomIds, final JsonArray workloadProduced,
+			final JsonArray skillLevelRequired) {
+		final Patient p = IhtcvirtualmetamodelFactory.eINSTANCE.createPatient();
+		p.setName(name);
+		p.setMandatory(mandatory);
+		p.setGender(gender);
+		p.setAgeGroup(foundAges.get(ageGroup));
+		p.setStayLength(lengthOfStay);
+		p.setEarliestDay(surgeryReleaseDay);
+		p.setDueDay(surgeryDueDay);
+		p.setSurgeryDuration(surgeryDuration);
+		p.setIsOccupant(false);
+		final Surgeon s = name2Surgeon.get(surgeonId);
+		p.setSurgeon(s);
+		for (final JsonElement incompatibleRoom : incompatibleRoomIds) {
+			p.getIncompatibleRooms().add(name2Room.get((incompatibleRoom.getAsString())));
+		}
+
+		// Create workload objects
+		if (workloadProduced.size() != skillLevelRequired.size()) {
+			throw new UnsupportedOperationException(
+					"Number of workloads produced did not match the number of skill levels required.");
+		}
+
+		for (int i = 0; i < workloadProduced.size(); i++) {
+			final JsonElement workload = workloadProduced.get(i);
+			final JsonElement skillLevel = skillLevelRequired.get(i);
+
+			final Workload w = IhtcvirtualmetamodelFactory.eINSTANCE.createWorkload();
+			w.setWorkloadValue(workload.getAsInt());
+			w.setMinNurseSkill(skillLevel.getAsInt());
+			p.getWorkloads().add(w);
+
+			if (i == 0) {
+				p.setFirstWorkload(w);
+			}
+		}
+
+		this.model.getPatients().add(p);
 	}
 
 	/**
@@ -137,10 +248,6 @@ public class JsonToModelLoader {
 			ageCounter++;
 		}
 	}
-
-	/*
-	 * Utility methods.
-	 */
 
 	/**
 	 * Converts the given JSON object representing the input weights to the model
@@ -224,6 +331,7 @@ public class JsonToModelLoader {
 			s.getOpTimes().add(opt);
 			dayCounter++;
 		}
+		this.name2Surgeon.put(name, s);
 		this.model.getSurgeons().add(s);
 	}
 
@@ -288,6 +396,7 @@ public class JsonToModelLoader {
 			}
 		});
 
+		this.name2Room.put(name, r);
 		this.model.getRooms().add(r);
 	}
 
