@@ -5,8 +5,18 @@
   <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
     <details key="documentation" value="TODO: Add documentation for ihtcvirtualmetamodel. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ..."/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="Root"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Nurse">
+  <eClassifiers xsi:type="ecore:EClass" name="Root">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nurses" upperBound="-1"
+        eType="#//Nurse" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rooms" upperBound="-1"
+        eType="#//Room" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="surgeons" upperBound="-1"
+        eType="#//Surgeon" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ots" upperBound="-1" eType="#//OT"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weight" eType="#//Weight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Nurse" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rosters" upperBound="-1"
         eType="#//Roster" containment="true" eOpposite="#//Roster/nurse"/>
@@ -19,9 +29,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedShifts" upperBound="-1"
         eType="#//Shift" eOpposite="#//Shift/derivedRoster"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Room">
+  <eClassifiers xsi:type="ecore:EClass" name="Room" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="beds" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="shifts" lowerBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="shifts" upperBound="-1"
         eType="#//Shift" containment="true" eOpposite="#//Shift/room"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="incompatiblePatients" upperBound="-1"
         eType="#//Patient"/>
@@ -64,7 +74,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedCapacity" eType="#//Capacity"
         eOpposite="#//Capacity/derivedWorkloads"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Surgeon">
+  <eClassifiers xsi:type="ecore:EClass" name="Surgeon" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="patients" eType="#//Patient"
         eOpposite="#//Patient/surgeon"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="opTimes" upperBound="-1"
@@ -78,7 +88,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedCapacities" upperBound="-1"
         eType="#//Capacity" eOpposite="#//Capacity/derivedOpTimes"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="OT">
+  <eClassifiers xsi:type="ecore:EClass" name="OT" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="capacities" upperBound="-1"
         eType="#//Capacity" containment="true" eOpposite="#//Capacity/ot"/>
   </eClassifiers>
@@ -90,5 +100,19 @@
         eType="#//Workload" eOpposite="#//Workload/derivedCapacity"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedOpTimes" upperBound="-1"
         eType="#//OpTime" eOpposite="#//OpTime/derivedCapacities"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Weight">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomMixedAge" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomNurseSkill" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="continuityOfCare" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nurseExcessiveWorkload"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="openOperatingTheater" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="surgeonTransfer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="patientDelay" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unscheduledOptional" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 </ecore:EPackage>
