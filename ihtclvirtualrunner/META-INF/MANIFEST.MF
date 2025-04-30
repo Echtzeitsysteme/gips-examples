@@ -3,5 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ihtclvirtualrunner
 Bundle-SymbolicName: ihtclvirtualrunner
 Bundle-Version: 1.0.0.qualifier
+Require-Bundle: ihtcvirtualgipssolution;bundle-version="1.0.0",
+ ihtcvirtualmetamodel;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: ihtclvirtualrunner
