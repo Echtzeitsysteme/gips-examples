@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ihtclvirtualrunner
-Bundle-SymbolicName: ihtclvirtualrunner
+Bundle-Name: ihtcvirtualrunner
+Bundle-SymbolicName: ihtcvirtualrunner
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: ihtcvirtualgipssolution;bundle-version="1.0.0",
  ihtcvirtualmetamodel;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
-Automatic-Module-Name: ihtclvirtualrunner
+Automatic-Module-Name: ihtcvirtualrunner
