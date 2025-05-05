@@ -1,10 +1,12 @@
 package org.emoflon.gips.gipsl.examples.mdvne;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.emoflon.gips.core.GipsMapper;
 import org.emoflon.gips.core.gt.GipsGTMapping;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
@@ -25,12 +27,12 @@ public class MdvneGipsIflyeAdapter {
 	/**
 	 * MdVNE GIPS API object.
 	 */
-	MdvneGipsAPI api;
+	private MdvneGipsAPI api;
 
 	/**
 	 * If false, the API must be initialized.
 	 */
-	boolean init = false;
+	private boolean init = false;
 
 	/**
 	 * Number of threads for the ILP solver. If set to -1, the default number of
@@ -169,7 +171,7 @@ public class MdvneGipsIflyeAdapter {
 		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
 		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
-		final Map<String, String> matches = extractMatchedNodes();
+		final Map<String, String> matches = extractMatchedNodes(api.getMappers().values());
 
 		// Apply all valid mappings
 		api.getSrv2srv().applyNonZeroMappings();
@@ -181,8 +183,8 @@ public class MdvneGipsIflyeAdapter {
 		return new MdvneIflyeOutput(output, matches, measurements);
 	}
 
-	protected Map<String, String> extractMatchedNodes() {
-		final Map<String, String> matches = api.getMappers().values().stream()
+	protected Map<String, String> extractMatchedNodes(final Collection<GipsMapper<?>> mappers) {
+		final Map<String, String> matches = mappers.stream()
 				.flatMap((mapper) -> mapper.getNonZeroVariableMappings().stream()).map((m) -> (GipsGTMapping<?, ?>) m)
 				.map(m -> m.getMatch().toIMatch()).map(m -> {
 					switch (m.getPatternName()) {

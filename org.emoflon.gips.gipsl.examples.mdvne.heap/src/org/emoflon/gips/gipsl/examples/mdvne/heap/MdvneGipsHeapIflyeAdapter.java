@@ -26,12 +26,12 @@ public class MdvneGipsHeapIflyeAdapter extends MdvneGipsIflyeAdapter {
 	/**
 	 * MdVNE GIPS API object.
 	 */
-	static HeapGipsAPI api;
+	private HeapGipsAPI api;
 
 	/**
 	 * If false, the API must be initialized.
 	 */
-	static boolean init = false;
+	private boolean init = false;
 
 	/**
 	 * Executes the embedding GIPS-based VNE algorithm.
@@ -139,7 +139,7 @@ public class MdvneGipsHeapIflyeAdapter extends MdvneGipsIflyeAdapter {
 		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
 		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
-		final Map<String, String> matches = extractMatchedNodes();
+		final Map<String, String> matches = extractMatchedNodes(this.api.getMappers().values());
 
 		// Apply all valid mappings
 		api.getSrv2srv().applyNonZeroMappings();
@@ -157,7 +157,9 @@ public class MdvneGipsHeapIflyeAdapter extends MdvneGipsIflyeAdapter {
 	@Override
 	public void resetInit() {
 		init = false;
-		api.terminate();
+		if (api != null) {
+			api.terminate();
+		}
 		HiPEPathOptions.getInstance().resetNetworkPath();
 		HiPEPathOptions.getInstance().resetEngineClassName();
 	}
