@@ -12,6 +12,7 @@ import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
+import org.emoflon.ibex.common.operational.IMatch;
 
 import hipe.engine.config.HiPEPathOptions;
 
@@ -186,28 +187,31 @@ public class MdvneGipsIflyeAdapter {
 	protected Map<String, String> extractMatchedNodes(final Collection<GipsMapper<?>> mappers) {
 		final Map<String, String> matches = mappers.stream()
 				.flatMap((mapper) -> mapper.getNonZeroVariableMappings().stream()).map((m) -> (GipsGTMapping<?, ?>) m)
-				.map(m -> m.getMatch().toIMatch()).map(m -> {
-					switch (m.getPatternName()) {
-					case "serverMatchPositive":
-						return Map.entry(((model.Element) m.get("virtualNode")).getName(),
-								((model.Element) m.get("substrateServer")).getName());
-					case "switchNodeMatchPositive":
-						return Map.entry(((model.Element) m.get("virtualSwitch")).getName(),
-								((model.Element) m.get("substrateNode")).getName());
-					case "networkRule":
-						return Map.entry(((model.Element) m.get("virtualNetwork")).getName(),
-								((model.Element) m.get("substrateNetwork")).getName());
-					case "linkPathMatchPositive":
-						return Map.entry(((model.Element) m.get("virtualLink")).getName(),
-								((model.Element) m.get("substratePath")).getName());
-					case "linkServerMatchPositive":
-						return Map.entry(((model.Element) m.get("virtualLink")).getName(),
-								((model.Element) m.get("substrateServer")).getName());
-					default:
-						return null;
-					}
-				}).collect(Collectors.toUnmodifiableMap((m) -> m.getKey(), (m) -> m.getValue()));
+				.map(m -> m.getMatch().toIMatch()).map(this::extractMatchedNodes).filter((m) -> m != null)
+				.collect(Collectors.toUnmodifiableMap((m) -> m.getKey(), (m) -> m.getValue()));
 		return matches;
+	}
+
+	protected <T extends IMatch> Map.Entry<String, String> extractMatchedNodes(final T m) {
+		switch (m.getPatternName()) {
+		case "serverMatchPositive":
+			return Map.entry(((model.Element) m.get("virtualNode")).getName(),
+					((model.Element) m.get("substrateServer")).getName());
+		case "switchNodeMatchPositive":
+			return Map.entry(((model.Element) m.get("virtualSwitch")).getName(),
+					((model.Element) m.get("substrateNode")).getName());
+		case "networkRule":
+			return Map.entry(((model.Element) m.get("virtualNetwork")).getName(),
+					((model.Element) m.get("substrateNetwork")).getName());
+		case "linkPathMatchPositive":
+			return Map.entry(((model.Element) m.get("virtualLink")).getName(),
+					((model.Element) m.get("substratePath")).getName());
+		case "linkServerMatchPositive":
+			return Map.entry(((model.Element) m.get("virtualLink")).getName(),
+					((model.Element) m.get("substrateServer")).getName());
+		default:
+			return null;
+		}
 	}
 
 	/**
