@@ -269,7 +269,7 @@ pattern occupantRoomDay {
 	d : Day
 	
 	# r.name == o.roomId
-	# o.lengthOfStay >= d.id
+	# o.lengthOfStay - 1 >= d.id
 }
 
 pattern dayRoomGender {
@@ -752,68 +752,76 @@ constraint with nurseShiftOverload {
 	]
 }
 
+constraint with occupantRoomDay {
+	mappings.occupantRoomDayMapping->filter(element.nodes.d == context.nodes.d & element.nodes.o == context.nodes.o)->sum(element.value)
+	==
+	1
+}
+
 // If a patient `p` is scheduled for room `r` on a day `d` that is within the
 // patients scheduled time frame, set the respective mapping variable to 1.
 constraint with roomDayPatientLoad {
-//	mappings.aadp->filter( //
-//		element.nodes.p == context.nodes.p //
-//		& element.nodes.d.id - 1 <= context.nodes.d.id //
-//	)->sum(element.value)
-//	+
-//	mappings.aadp->filter( //
-//		element.nodes.p == context.nodes.p //
-//		& element.nodes.d.id + context.nodes.p.lengthOfStay - 1 >= context.nodes.d.id //
-//	)->sum(element.value)
-//	+
-//	mappings.arp->filter( //
-//		element.nodes.p == context.nodes.p //
-//		& element.nodes.r == context.nodes.r //
-//	)->sum(element.value)
-//	== 3
-//	<=>
-//	context.value == 1
+	mappings.aadp->filter( //
+		element.nodes.p == context.nodes.p //
+		& element.nodes.d.id - 1 <= context.nodes.d.id //
+		// TODO
+//		& element.nodes.d.id <= context.nodes.d.id //
+	)->sum(element.value)
+	+
+	mappings.aadp->filter( //
+		element.nodes.p == context.nodes.p //
+		& element.nodes.d.id + context.nodes.p.lengthOfStay - 1 >= context.nodes.d.id //
+	)->sum(element.value)
+	+
+	mappings.arp->filter( //
+		element.nodes.p == context.nodes.p //
+		& element.nodes.r == context.nodes.r //
+	)->sum(element.value)
+	== 3
+	<=>
+	context.value == 1
 
-	// faster reformulation
-	[
-		mappings.aadp->filter( //
-			element.nodes.p == context.nodes.p //
-			& element.nodes.d.id - 1 <= context.nodes.d.id //
-		)->sum(element.value)
-		+
-		mappings.aadp->filter( //
-			element.nodes.p == context.nodes.p //
-			& element.nodes.d.id + context.nodes.p.lengthOfStay - 1 >= context.nodes.d.id //
-		)->sum(element.value)
-		+
-		mappings.arp->filter( //
-			element.nodes.p == context.nodes.p //
-			& element.nodes.r == context.nodes.r //
-		)->sum(element.value)
-		- 2
-		<=
-		1000 * context.value
-	]
-	
-	&
-	
-	[
-		mappings.aadp->filter( //
-			element.nodes.p == context.nodes.p //
-			& element.nodes.d.id - 1 <= context.nodes.d.id //
-		)->sum(element.value)
-		+
-		mappings.aadp->filter( //
-			element.nodes.p == context.nodes.p //
-			& element.nodes.d.id + context.nodes.p.lengthOfStay - 1 >= context.nodes.d.id //
-		)->sum(element.value)
-		+
-		mappings.arp->filter( //
-			element.nodes.p == context.nodes.p //
-			& element.nodes.r == context.nodes.r //
-		)->sum(element.value)
-		>=
-		3 * context.value
-	]
+//	// faster reformulation
+//	[
+//		mappings.aadp->filter( //
+//			element.nodes.p == context.nodes.p //
+//			& element.nodes.d.id - 1 <= context.nodes.d.id //
+//		)->sum(element.value)
+//		+
+//		mappings.aadp->filter( //
+//			element.nodes.p == context.nodes.p //
+//			& element.nodes.d.id + context.nodes.p.lengthOfStay - 1 >= context.nodes.d.id //
+//		)->sum(element.value)
+//		+
+//		mappings.arp->filter( //
+//			element.nodes.p == context.nodes.p //
+//			& element.nodes.r == context.nodes.r //
+//		)->sum(element.value)
+//		- 2
+//		<=
+//		1000 * context.value
+//	]
+//	
+//	&
+//	
+//	[
+//		mappings.aadp->filter( //
+//			element.nodes.p == context.nodes.p //
+//			& element.nodes.d.id - 1 <= context.nodes.d.id //
+//		)->sum(element.value)
+//		+
+//		mappings.aadp->filter( //
+//			element.nodes.p == context.nodes.p //
+//			& element.nodes.d.id + context.nodes.p.lengthOfStay - 1 >= context.nodes.d.id //
+//		)->sum(element.value)
+//		+
+//		mappings.arp->filter( //
+//			element.nodes.p == context.nodes.p //
+//			& element.nodes.r == context.nodes.r //
+//		)->sum(element.value)
+//		>=
+//		3 * context.value
+//	]
 }
 
 // The room `r` has a specific load (=number of patients and occupants)

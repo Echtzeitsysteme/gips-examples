@@ -40,10 +40,10 @@ public class ModelCostCalculator {
 //					System.out.println("Room: " + r.getName() + "; day: " + d.getName() + "; max_age_diff: "
 //							+ getMaxAgeDifferenceInRoomAtDay(model, r, d));
 //				}
-				if (getOccupantsInRoomOnDay(model, r, d).size() + getPatientsInRoomOnDay(model, r, d).size() > 0) {
-					System.out.println("Room: " + r.getName() + "; day: " + d.getName() + "; min_age: "
-							+ getMinAgeInRoomAtDay(model, r, d) + "; max_age: " + getMaxAgeInRoomAtDay(model, r, d));
-				}
+//				if (getOccupantsInRoomOnDay(model, r, d).size() + getPatientsInRoomOnDay(model, r, d).size() > 0) {
+//					System.out.println("Room: " + r.getName() + "; day: " + d.getName() + "; min_age: "
+//							+ getMinAgeInRoomAtDay(model, r, d) + "; max_age: " + getMaxAgeInRoomAtDay(model, r, d));
+//				}
 				ageMixCost += getMaxAgeDifferenceInRoomAtDay(model, r, d);
 			}
 		}

@@ -2,6 +2,7 @@ package org.emoflon.gips.ihtc.runner;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +12,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
 import ihtcgipssolution.api.gips.IhtcgipssolutionGipsAPI;
-import ihtcgipssolution.api.gips.mapping.RoomDayLoadMapping;
 import ihtcmetamodel.Day;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.Occupant;
@@ -155,31 +155,72 @@ public class IhtcGipsDevRunner extends AbstractIhtcGipsRunner {
 //			});
 //		}
 
-		{
-			final List<String> prints = new ArrayList<String>();
-			int sum = 0;
-			for (final String n : gipsApi.getRoomDayLoad().getMappings().keySet()) {
-				final RoomDayLoadMapping m = gipsApi.getRoomDayLoad().getMappings().get(n);
-				if (m.getValueOfLoad() > 0) {
-//					System.out.println(
-//							n + ": " + m.getValueOfLoad() + ", " + m.getValueOfMinAge() + ", " + m.getValueOfMaxAge());
-					prints.add(m.getR().getName() + "; " + m.getD().getName() + ": " + m.getValueOfLoad() + ", "
-							+ m.getValueOfMinAge() + ", " + m.getValueOfMaxAge());
-					sum += (m.getValueOfMaxAge() - m.getValueOfMinAge());
-				}
-			}
-			Collections.sort(prints);
-			prints.forEach(s -> System.out.println(s));
-			System.out.println("Sum : " + sum);
+//		{
+//			final List<String> prints = new ArrayList<String>();
+//			int sum = 0;
+//			for (final String n : gipsApi.getRoomDayLoad().getMappings().keySet()) {
+//				final RoomDayLoadMapping m = gipsApi.getRoomDayLoad().getMappings().get(n);
+//				if (m.getValueOfLoad() > 0) {
+////					System.out.println(
+////							n + ": " + m.getValueOfLoad() + ", " + m.getValueOfMinAge() + ", " + m.getValueOfMaxAge());
+//					prints.add(m.getR().getName() + "; " + m.getD().getName() + ": " + m.getValueOfLoad() + ", "
+//							+ m.getValueOfMinAge() + ", " + m.getValueOfMaxAge());
+//					sum += (m.getValueOfMaxAge() - m.getValueOfMinAge());
+//				}
+//			}
+//			Collections.sort(prints);
+//			prints.forEach(s -> System.out.println(s));
+//			System.out.println("Sum : " + sum);
+//
+//			// Print max age diff in room and day
+//			System.out.println("---");
+//			gipsApi.getRoomDayLoad().getMappings().values().forEach(m -> {
+//				if (Math.abs(m.getMaxAge().getValue() - m.getMinAge().getValue()) != 0) {
+//					System.out.println(m.getR().getName() + " " + m.getD().getName() + ": maxAgeDiff = "
+//							+ (m.getMaxAge().getValue() - m.getMinAge().getValue()));
+//				}
+//			});
+//		}
 
-			// Print max age diff in room and day
-			System.out.println("---");
-			gipsApi.getRoomDayLoad().getMappings().values().forEach(m -> {
-				if (Math.abs(m.getMaxAge().getValue() - m.getMinAge().getValue()) != 0) {
-					System.out.println(m.getR().getName() + " " + m.getD().getName() + ": maxAgeDiff = "
-							+ (m.getMaxAge().getValue() - m.getMinAge().getValue()));
+		{
+			final List<String> strings = new ArrayList<String>();
+//			gipsApi.getRoomDayLoad().getMappings().forEach((n, m) -> {
+//				if (m.getValueOfLoad() != 0) {
+//					strings.add(m.getMatch().getR().getName() + " " + m.getMatch().getD().getName() + " load = "
+//							+ m.getValueOfLoad());
+//				}
+//			});
+			gipsApi.getRoomDayPatientLoad().getMappings().forEach((n, m) -> {
+				if (m.getValue() != 0) {
+					strings.add(m.getMatch().getR().getName() + " " + m.getMatch().getD().getName() + " lpatient = "
+							+ m.getP().getName());
 				}
 			});
+//			gipsApi.getOccupantRoomDayMapping().getMappings().forEach((n, m) -> {
+//				if (m.getValue() != 0) {
+//					strings.add(m.getMatch().getR().getName() + " " + m.getMatch().getD().getName() + " loccupant = "
+//							+ m.getO().getName());
+//				}
+//			});
+			Collections.sort(strings, new Comparator<String>() {
+				public int compare(String o1, String o2) {
+					final int stringARoom = Integer.valueOf(o1.substring(o1.lastIndexOf("r") + 1, o1.indexOf(" ")));
+					final int stringBRoom = Integer.valueOf(o2.substring(o2.lastIndexOf("r") + 1, o2.indexOf(" ")));
+
+					if (stringARoom == stringBRoom) {
+						final int stringADay = Integer
+								.valueOf(o1.substring(o1.lastIndexOf("_") + 1, o1.lastIndexOf("l") - 1));
+						final int stringBDay = Integer
+								.valueOf(o2.substring(o2.lastIndexOf("_") + 1, o2.lastIndexOf("l") - 1));
+						return stringADay - stringBDay;
+					}
+
+					return stringARoom - stringBRoom;
+				}
+			});
+			System.out.println("==> Mapping values");
+			strings.forEach(System.out::println);
+			System.out.println("---");
 		}
 
 		//
@@ -239,23 +280,44 @@ public class IhtcGipsDevRunner extends AbstractIhtcGipsRunner {
 
 		});
 
-		for (final Room r : r2d2ps.keySet()) {
+		System.out.println("==> Model values");
+		for (final Room r : solvedHospital.getRooms()) {
 			final Map<Day, List<Patient>> day2Patients = r2d2ps.get(r);
-			for (final Day d : day2Patients.keySet()) {
-				for (final Patient p : day2Patients.get(d)) {
-					System.out.println(r.getName() + " " + d.getName() + " " + p.getName() + ", age "
-							+ p.getAgeGroup().getNumericAge());
-				}
-			}
+//			for (final Day d : day2Patients.keySet()) {
+//				for (final Patient p : day2Patients.get(d)) {
+//					System.out.println(r.getName() + " " + d.getName() + " " + p.getName() + ", age "
+//							+ p.getAgeGroup().getNumericAge());
+//				}
+//			}
 
 			final Map<Day, List<Occupant>> day2Occupants = r2d2os.get(r);
-			for (final Day d : day2Occupants.keySet()) {
-				for (final Occupant o : day2Occupants.get(d)) {
-					System.out.println(r.getName() + " " + d.getName() + " " + o.getName() + ", age "
-							+ o.getAgeGroup().getNumericAge());
-				}
+//			for (final Day d : day2Occupants.keySet()) {
+//				for (final Occupant o : day2Occupants.get(d)) {
+//					System.out.println(r.getName() + " " + d.getName() + " " + o.getName() + ", age "
+//							+ o.getAgeGroup().getNumericAge());
+//				}
+//			}
+
+			for (final Day d : solvedHospital.getDays()) {
+//				int load = 0;
+//				load += day2Patients.get(d).size();
+//				load += day2Occupants.get(d).size();
+//				if (load != 0) {
+//					System.out.println(r.getName() + " " + d.getName() + " load = " + load);
+//				}
+				day2Patients.get(d).forEach(patient -> {
+					System.out.println(r.getName() + " " + d.getName() + " lpatient = " + patient.getName());
+				});
+//				day2Occupants.get(d).forEach(occupant -> {
+//					System.out.println(r.getName() + " " + d.getName() + " loccupant = " + occupant.getName());
+//				});
 			}
+
 		}
+		// ---
+
+		// Find room day load (via the model)
+//		solvedHospital.getRooms()
 		// ---
 
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
