@@ -123,7 +123,7 @@ public class ModelFacade {
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
 		this.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(), ModelPackage.eINSTANCE);
-		this.resourceSet.createResource(URI.createURI("model.xmi"));
+		this.resourceSet.createResource(URI.createURI(path));
 		this.resourceSet.getResources().get(0).getContents().add(ModelFactory.eINSTANCE.createRoot());
 	}
 
@@ -173,7 +173,7 @@ public class ModelFacade {
 	 * @return True if resource set is empty.
 	 */
 	private boolean isResourceSetEmpty() {
-		return ModelFacade.instance.resourceSet.getResources().get(0).getContents().size() == 0;
+		return this.resourceSet.getResources().get(0).getContents().size() == 0;
 	}
 
 	/**
@@ -186,15 +186,17 @@ public class ModelFacade {
 	}
 
 	/**
-	 * Returns a list of nodes with all switches of a given network ID.
+	 * Returns a list of nodes with a specific type of a given network.
 	 *
-	 * @param networkId Network ID.
-	 * @return List of nodes with all switches of the given network ID.
+	 * @param network The Network, either virtual or substrate, to get the nodes
+	 *                for.
+	 * @param type    The type of nodes to get. Must be a subclass of Node.
+	 * @return List of all nodes of the given type within the network.
 	 */
-	public static List<Node> getAllNodesOfType(final Network network, Class<? extends Node> type) {
+	public static <T extends Node> List<Node> getAllNodesOfType(final Network network, final Class<T> type) {
 		Objects.requireNonNull(network, "The network has to be non null.");
 
-		return network.getNodess().stream().filter(n -> type.isInstance(n)).collect(Collectors.toList());
+		return network.getNodess().stream().filter(node -> type.isInstance(node)).collect(Collectors.toList());
 	}
 
 	/**
@@ -211,10 +213,11 @@ public class ModelFacade {
 	}
 
 	/**
-	 * Returns a list of nodes with all servers of a given network ID.
+	 * Returns a list of nodes with all servers of a given network.
 	 *
-	 * @param networkId Network ID.
-	 * @return List of nodes with all servers of the given network ID.
+	 * @param network The Network, either virtual or substrate, to get the servers
+	 *                for.
+	 * @return List of nodes with all servers of the given network.
 	 */
 	public static List<Node> getAllServersOfNetwork(final Network network) {
 		return getAllNodesOfType(network, Server.class);
@@ -234,10 +237,11 @@ public class ModelFacade {
 	}
 
 	/**
-	 * Returns a list of nodes with all switches of a given network ID.
+	 * Returns a list of nodes with all switches of a given network.
 	 *
-	 * @param networkId Network ID.
-	 * @return List of nodes with all switches of the given network ID.
+	 * @param network The Network, either virtual or substrate, to get the switches
+	 *                for.
+	 * @return List of nodes with all switches of the given network.
 	 */
 	public static List<Node> getAllSwitchesOfNetwork(final Network network) {
 		return getAllNodesOfType(network, Switch.class);
