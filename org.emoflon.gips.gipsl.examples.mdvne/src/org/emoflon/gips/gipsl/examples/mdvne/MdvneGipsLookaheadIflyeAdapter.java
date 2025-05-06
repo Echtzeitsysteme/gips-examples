@@ -145,10 +145,10 @@ public class MdvneGipsLookaheadIflyeAdapter extends MdvneGipsIflyeAdapter {
 		obs.setCurrentSeries("Eval");
 
 		// Build the ILP problem (including updates)
-		api.buildProblem(true);
+		api.buildProblemTimed(true);
 
 		// Solve the ILP problem
-		final SolverOutput output = api.solveProblem();
+		final SolverOutput output = api.solveProblemTimed();
 
 		// TODO: Remove system outputs
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
