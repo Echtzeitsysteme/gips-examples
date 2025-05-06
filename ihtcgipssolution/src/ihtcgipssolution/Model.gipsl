@@ -17,11 +17,11 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 30.0, includeInitTime := true];
+	timeLimit := true [value := 3600.0, includeInitTime := true];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
-	lpOutput := true [path := "gurobi.lp"];
+//	lpOutput := true [path := "gurobi.lp"];
 //	threadCount := true [value := 4];
 }
 
@@ -659,10 +659,32 @@ constraint with otDayOpened {
 // Constraint that saves the produced workload of patient `p` in shift `s`
 // in room `r`
 constraint with roomShiftPatientProducedLoad {
-	context.variables.producedLoad
-	==
-	mappings.aadp->filter(element.nodes.p == context.nodes.p & element.nodes.d.id - 1 <= context.nodes.d.id //
-	)->sum(context.nodes.pwp.workloadProduced * element.value)
+	[
+		mappings.arp->filter(element.nodes.p == context.nodes.p & element.nodes.r == context.nodes.r)->sum(element.value)
+		== 1
+		
+		=>
+			
+	//	&
+		
+		context.variables.producedLoad
+		==
+		mappings.aadp->filter(element.nodes.p == context.nodes.p & element.nodes.d.id <= context.nodes.d.id //
+		)->sum(context.nodes.pwp.workloadProduced * element.value)
+	]
+	
+	& 
+	
+	[
+		mappings.arp->filter(element.nodes.p == context.nodes.p & element.nodes.r == context.nodes.r)->sum(element.value)
+		== 0
+		
+		=>
+			
+	//	&
+		
+		context.variables.producedLoad == 0
+	]
 }
 
 // Constraint that accumulates all produced loads of all patients and occupants
@@ -1047,19 +1069,19 @@ constraint with roomShiftTuple {
 // Objectives
 //
 
-// S8 Unscheduled patients: The number of optional patients who are not admitted
-// in the current scheduling period should be minimized.
+//// S8 Unscheduled patients: The number of optional patients who are not admitted
+//// in the current scheduling period should be minimized.
+////
+//// Unscheduled optional patients
+//function electiveUnscheduledPatients with findOptionalPatient {
+//	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+//}
 //
-// Unscheduled optional patients
-function electiveUnscheduledPatients with findOptionalPatient {
-	1 - mappings.aadp->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-}
-
-// S7 Admission delay: The number of days between a patient’s release date and
-// their actual date of admission should be minimized.
-function admissionDelay with aadp {
-	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
-}
+//// S7 Admission delay: The number of days between a patient’s release date and
+//// their actual date of admission should be minimized.
+//function admissionDelay with aadp {
+//	(context.nodes.d.id - context.nodes.p.surgeryReleaseDay) * context.value
+//}
 
 // S4 Maximum workload: For each shift, the total workload induced by patients
 // staying in rooms assigned to a nurse should not exceed the maximum workload
@@ -1069,33 +1091,33 @@ function maximumWorkload with nurseShiftOverload {
 	context.variables.overload
 }
 
-// S5 Open OTs: The number of OTs opened on each day should be minimized.
-// Note that if an OT has no patients assigned for a particular day, it should
-// not open on that day.
-function openOts with otDayOpened {
-	context.value
-}
-
-// S6 Surgeon transfer: The number of different OTs a surgeon is assigned to per
-// working day should be minimized.
-function surgeonTransfer with daySurgeonTuple {
-	mappings.surgeonOtDay->filter(element.nodes.s == context.nodes.s & element.nodes.d == context.nodes.d)->sum(element.value)
-}
-
-// S1 Age groups: For each day of the scheduling period and for each room, the
-// maximum difference between age groups of patients sharing the room should
-// be minimized.
-function roomMixedAge with roomDayLoad {
-	context.variables.maxAge - context.variables.minAge
-}
+//// S5 Open OTs: The number of OTs opened on each day should be minimized.
+//// Note that if an OT has no patients assigned for a particular day, it should
+//// not open on that day.
+//function openOts with otDayOpened {
+//	context.value
+//}
+//
+//// S6 Surgeon transfer: The number of different OTs a surgeon is assigned to per
+//// working day should be minimized.
+//function surgeonTransfer with daySurgeonTuple {
+//	mappings.surgeonOtDay->filter(element.nodes.s == context.nodes.s & element.nodes.d == context.nodes.d)->sum(element.value)
+//}
+//
+//// S1 Age groups: For each day of the scheduling period and for each room, the
+//// maximum difference between age groups of patients sharing the room should
+//// be minimized.
+//function roomMixedAge with roomDayLoad {
+//	context.variables.maxAge - context.variables.minAge
+//}
 
 // Global objective: minimize the weighted sum of all individual costs
 objective : min {
 	0
 //	+ functions.electiveUnscheduledPatients * types.Weight->sum(element.unscheduledOptional)
 //	+ functions.admissionDelay * types.Weight->sum(element.patientDelay)
-//	+ functions.maximumWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
+	+ functions.maximumWorkload //* types.Weight->sum(element.nurseExcessiveWorkload)
 //	+ functions.openOts * types.Weight->sum(element.openOperatingTheater)
 //	+ functions.surgeonTransfer * types.Weight->sum(element.surgeonTransfer)
-	+ functions.roomMixedAge //* types.Weight->sum(element.roomMixedAge)
+//	+ functions.roomMixedAge * types.Weight->sum(element.roomMixedAge)
 }
