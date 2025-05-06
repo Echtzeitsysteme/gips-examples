@@ -30,7 +30,7 @@ public abstract class AbstractIhtcGipsRunner {
 	/**
 	 * The scenario (JSON) file to load.
 	 */
-	public String scenarioFileName = "test01.json";
+	public String scenarioFileName = "test04.json";
 
 	/**
 	 * Project folder location.
