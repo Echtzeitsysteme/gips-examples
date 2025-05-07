@@ -5,11 +5,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ihtcvirtualmetamodel.Capacity;
 import ihtcvirtualmetamodel.Nurse;
+import ihtcvirtualmetamodel.OT;
+import ihtcvirtualmetamodel.OpTime;
 import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Room;
 import ihtcvirtualmetamodel.Root;
+import ihtcvirtualmetamodel.Roster;
+import ihtcvirtualmetamodel.Shift;
 import ihtcvirtualmetamodel.Surgeon;
+import ihtcvirtualmetamodel.Workload;
 
 /**
  * This class is a helper to calculate (soft) constraint costs for S1 to S8.
@@ -26,15 +32,48 @@ public class ModelCostCalculator {
 	 */
 	public int calculateAgeMixCost(final Root model) {
 		int ageMixCost = 0;
-//		for (int i = 0; i <= model.get) {
-//			
-//		}
-		for (final Day d : model.getDays()) {
-			for (final Room r : model.getRooms()) {
-				ageMixCost += getMaxAgeDifferenceInRoomAtDay(model, r, d);
+		for (final Room r : model.getRooms()) {
+			for (final Shift s : r.getShifts()) {
+				// Only take shifts with type 'early' into account
+				if (s.getShiftNo() % 3 != 0) {
+					continue;
+				}
+
+				ageMixCost += getMaxAgeDifferenceInShift(s);
 			}
 		}
 		return ageMixCost * model.getWeight().getRoomMixedAge();
+	}
+
+	/**
+	 * This method calculates the maximum age difference for a given room `r` on day
+	 * `d` for all new patients and all previously assigned occupants which are
+	 * already placed in this room. `r` and `d` will be determined by the given
+	 * shift `s`.
+	 * 
+	 * @param s Shift.
+	 * @return Maximum age difference of all persons in room `r` on day `d`.
+	 */
+	private int getMaxAgeDifferenceInShift(final Shift s) {
+		int minAge = Integer.MAX_VALUE;
+		int maxAge = Integer.MIN_VALUE;
+
+		for (final Workload w : s.getDerivedWorkloads()) {
+			final int age = w.getPatient().getAgeGroup();
+			if (age < minAge) {
+				minAge = age;
+			}
+			if (age > maxAge) {
+				maxAge = age;
+			}
+		}
+
+		int cost = 0;
+		if (maxAge > minAge) {
+			cost = maxAge - minAge;
+		}
+
+		return cost;
 	}
 
 	/**
@@ -46,19 +85,13 @@ public class ModelCostCalculator {
 	public int calculateSkillLevelCost(final Root model) {
 		int skillLevelCost = 0;
 		for (final Nurse n : model.getNurses()) {
-			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
-				// all patients in this room
-				final List<Patient> patientsInRoom = getPatientsInRoomOnDay(model, rsna.getRoom(),
-						rsna.getShift().getDay());
-				for (final Patient p : patientsInRoom) {
-					skillLevelCost += calculateSkillLevelCostPerNursePatientShift(n, p, rsna.getShift());
-				}
-
-				// all occupants in this room
-				final List<Occupant> occupantsInRoom = getOccupantsInRoomOnDay(model, rsna.getRoom(),
-						rsna.getShift().getDay());
-				for (final Occupant o : occupantsInRoom) {
-					skillLevelCost += calculateSkillLevelCostPerNurseOccupantShift(n, o, rsna.getShift());
+			for (final Roster r : n.getRosters()) {
+				for (final Shift s : r.getDerivedShifts()) {
+					// all patients in this room
+					final List<Patient> patientsInRoom = getPatientsInRoomOnDay(model, s.getRoom(), shiftToDay(s));
+					for (final Patient p : patientsInRoom) {
+						skillLevelCost += calculateSkillLevelCostPerNursePatientShift(n, p, s.getShiftNo());
+					}
 				}
 			}
 		}
@@ -75,12 +108,6 @@ public class ModelCostCalculator {
 	 */
 	public int calculateContinuityCost(final Root model) {
 		int continuityCost = 0;
-
-		// Occupants
-		for (final Occupant o : model.getOccupants()) {
-			final int localOccupantCount = countOccupantNurses(model, o);
-			continuityCost += localOccupantCount;
-		}
 
 		// Patients
 		for (final Patient p : model.getPatients()) {
@@ -103,33 +130,18 @@ public class ModelCostCalculator {
 		for (final Nurse n : model.getNurses()) {
 			// find all shifts a nurse works on
 			final Set<Shift> allWorkingShiftsOfNurse = new HashSet<Shift>();
-			n.getShiftMaxLoads().forEach(sml -> {
-				allWorkingShiftsOfNurse.add(sml.getShift());
-			});
+			n.getRosters().forEach(r -> r.getDerivedShifts().forEach(s -> allWorkingShiftsOfNurse.add(s)));
 
 			for (final Shift s : allWorkingShiftsOfNurse) {
-				final int nurseMaximumWorkload = findNurseMaxLoadInShift(n, s);
+				final int nurseMaximumWorkload = findNurseMaxLoadInShift(n, s.getShiftNo());
 
 				// accumulate all workloads in this shift across all rooms
 				int nurseSpecificAssignedWorkload = 0;
-				for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
-					// check if shift matches
-					if (!s.equals(rsna.getShift())) {
-						continue;
-					}
 
-					final List<Occupant> occupants = getOccupantsInRoomOnDay(model, rsna.getRoom(),
-							rsna.getShift().getDay());
-					final List<Patient> patients = getPatientsInRoomOnDay(model, rsna.getRoom(),
-							rsna.getShift().getDay());
-
-					// calculate actual work load in this room and shift
-					for (final Occupant o : occupants) {
-						nurseSpecificAssignedWorkload += getWorkloadOfOccupantByShift(o, rsna.getShift());
-					}
-					for (final Patient p : patients) {
-						nurseSpecificAssignedWorkload += getWorkloadOfPatientByShift(p, rsna.getShift());
-					}
+				final List<Patient> patients = getPatientsInRoomOnDay(model, s.getRoom(), shiftToDay(s));
+				// calculate actual work load in this room and shift
+				for (final Patient p : patients) {
+					nurseSpecificAssignedWorkload += getWorkloadOfPatientByShift(p, s.getShiftNo());
 				}
 
 				// check if workload of nurse `n` was exceeded for this shift
@@ -151,15 +163,11 @@ public class ModelCostCalculator {
 	public int calculateOpenOtCost(final Root model) {
 		int openOtCost = 0;
 
-		for (final OperatingTheater ot : model.getOperatingTheaters()) {
-			final List<SurgeryAssignment> assignments = ot.getSurgeryAssignments();
-			for (final Day d : model.getDays()) {
-				// check if `ot` has at least one surgery on day `d`
-				for (final SurgeryAssignment sa : assignments) {
-					if (sa.getDay().equals(d)) {
-						openOtCost++;
-						break;
-					}
+		for (final OT ot : model.getOts()) {
+			// This assumes that there is at most one `Capacity` object per day per OT
+			for (final Capacity c : ot.getCapacities()) {
+				if (c.getDerivedOpTimes().size() > 0 || c.getDerivedWorkloads().size() > 0) {
+					openOtCost++;
 				}
 			}
 		}
@@ -177,16 +185,9 @@ public class ModelCostCalculator {
 		int surgeonTransferCost = 0;
 
 		for (final Surgeon s : model.getSurgeons()) {
-			for (final Day d : model.getDays()) {
-				final Set<OperatingTheater> otsFound = new HashSet<OperatingTheater>();
-				for (final SurgeryAssignment sa : s.getSurgeryAssignments()) {
-					if (sa.getDay().equals(d)) {
-						otsFound.add(sa.getOperationTheater());
-					}
-				}
-
-				if (otsFound.size() > 1) {
-					surgeonTransferCost += otsFound.size() - 1;
+			for (final OpTime opTime : s.getOpTimes()) {
+				if (opTime.getDerivedCapacities().size() > 1) {
+					surgeonTransferCost += opTime.getDerivedCapacities().size() - 1;
 				}
 			}
 		}
@@ -205,9 +206,9 @@ public class ModelCostCalculator {
 
 		for (final Patient p : model.getPatients()) {
 			// check if patient was scheduled at all
-			if (p.getAdmissionDay() != null) {
-				if (p.getAdmissionDay().getId() > p.getSurgeryReleaseDay()) {
-					admissionDelayCost += (p.getAdmissionDay().getId() - p.getSurgeryReleaseDay());
+			if (p.getFirstWorkload().getDerivedShift() != null) {
+				if (shiftToDay(p.getFirstWorkload().getDerivedShift()) > p.getEarliestDay()) {
+					admissionDelayCost += (shiftToDay(p.getFirstWorkload().getDerivedShift()) - p.getEarliestDay());
 				}
 			}
 		}
@@ -225,7 +226,7 @@ public class ModelCostCalculator {
 		int unscheduledPatientsCost = 0;
 
 		for (final Patient p : model.getPatients()) {
-			if (p.getAdmissionDay() == null) {
+			if (p.getFirstWorkload().getDerivedShift() == null) {
 				unscheduledPatientsCost++;
 			}
 		}
@@ -239,7 +240,7 @@ public class ModelCostCalculator {
 	 * @param model Hospital model to calculate cost from.
 	 * @return Complete hospital cost.
 	 */
-	public int calculateTotalCost(final Hospital model) {
+	public int calculateTotalCost(final Root model) {
 		int totalCost = 0;
 		totalCost += calculateUnscheduledPatientsCost(model);
 		totalCost += calculateAdmissionDelayCost(model);
@@ -257,72 +258,49 @@ public class ModelCostCalculator {
 	 */
 
 	/**
+	 * Converts a given shift number to the day number.
+	 * 
+	 * @param s Shift number.
+	 * @return Day number.
+	 */
+	private int shiftToDay(final int s) {
+		return s % 3;
+	}
+
+	/**
+	 * Converts a given shift object to the day number.
+	 * 
+	 * @param s Shift object.
+	 * @return Day number.
+	 */
+	private int shiftToDay(final Shift s) {
+		return shiftToDay(s.getShiftNo());
+	}
+
+	/**
 	 * Returns the maximum load of a nurse `n` in shift `s`.
 	 * 
 	 * @param n Nurse.
 	 * @param s Shift.
 	 * @return Maximum load of nurse `n` in shift `s`.
 	 */
-	private int findNurseMaxLoadInShift(final Nurse n, final Shift s) {
+	private int findNurseMaxLoadInShift(final Nurse n, final int s) {
 		int maxLoad = 0;
 
-		for (final NurseShiftMaxLoad nsml : n.getShiftMaxLoads()) {
-			if (nsml.getShift().getId() == s.getId()) {
-				maxLoad = nsml.getMaxLoad();
-				break;
+		for (final Roster r : n.getRosters()) {
+			if (r.getShiftNo() == s) {
+				for (final Shift shift : r.getDerivedShifts()) {
+					for (final Workload w : shift.getDerivedWorkloads()) {
+						if (w.getWorkloadValue() > maxLoad) {
+							maxLoad = w.getWorkloadValue();
+							// TODO: Is this correct???
+						}
+					}
+				}
 			}
 		}
 
 		return maxLoad;
-	}
-
-	/**
-	 * This method calculates the maximum age difference for a given room `r` on day
-	 * `d` for all new patients and all previously assigned occupants which are
-	 * already placed in this room.
-	 * 
-	 * @param model Complete hospital model.
-	 * @param r     Room.
-	 * @param d     Day.
-	 * @return Maximum age difference of all persons in room `r` on day `d`.
-	 */
-	private int getMaxAgeDifferenceInRoomAtDay(final Root model, final Room r, final Day d) {
-		int maxAgeFound = Integer.MIN_VALUE;
-		int minAgeFound = Integer.MAX_VALUE;
-
-		// find minimum and maximum age of new patients assigned to room `r` on day `d`
-		for (final Patient p : model.getPatients()) {
-			if (patientInRoomOnDay(p, r, d)) {
-				final int age = convertAgeGroupToInt(model, p.getAgeGroup());
-				if (maxAgeFound < age) {
-					maxAgeFound = age;
-				}
-				if (minAgeFound > age) {
-					minAgeFound = age;
-				}
-			}
-		}
-
-		// find minimum and maximum age of occupants previously assigned to room `r` on
-		// day `d`
-		for (final Occupant o : model.getOccupants()) {
-			if (occupantInRoomOnDay(o, r, d)) {
-				final int age = convertAgeGroupToInt(model, o.getAgeGroup());
-				if (maxAgeFound < age) {
-					maxAgeFound = age;
-				}
-				if (minAgeFound > age) {
-					minAgeFound = age;
-				}
-			}
-		}
-
-		int cost = 0;
-		if (maxAgeFound > minAgeFound) {
-			cost = maxAgeFound - minAgeFound;
-		}
-
-		return cost;
 	}
 
 	/**
@@ -333,62 +311,22 @@ public class ModelCostCalculator {
 	 * @param d Day.
 	 * @return True if the condition above holds.
 	 */
-	private boolean patientInRoomOnDay(final Patient p, final Room r, final Day d) {
+	private boolean patientInRoomOnDay(final Patient p, final Room r, final int d) {
 		// patient must have an assigned room
-		if (p.getAssignedRoom() != null) {
-			// patient must have an assigned admission day
-			if (p.getAdmissionDay() != null) {
-				// room must match
-				if (p.getAssignedRoom().equals(r)) {
-					// day must lay within the time frame of the patient's stay
-					final int admissionDayId = p.getAdmissionDay().getId();
-					if (d.getId() >= admissionDayId
-							&& d.getId() <= p.getAdmissionDay().getId() + p.getLengthOfStay() - 1) {
-						return true;
-					}
+		if (p.getFirstWorkload().getDerivedShift() != null) {
+			// room must match
+			if (p.getFirstWorkload().getDerivedShift().getRoom().equals(r)) {
+				// day must lay within the time frame of the patient's stay
+				final int firstDayNo = shiftToDay(p.getFirstWorkload().getDerivedShift());
+				final int stayLength = p.getStayLength();
+
+				if (d >= firstDayNo && d <= firstDayNo + stayLength) {
+					return true;
 				}
 			}
 		}
 
 		return false;
-	}
-
-	/**
-	 * Returns true if the occupant `o` was assigned to stay in room `r` on day `d`.
-	 * 
-	 * @param o Occupant.
-	 * @param r Room.
-	 * @param d Day.
-	 * @return True if the condition above holds.
-	 */
-	private boolean occupantInRoomOnDay(final Occupant o, final Room r, final Day d) {
-		if (o.getRoomId().equals(r.getName())) {
-			if (d.getId() <= o.getLengthOfStay() - 1) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Converts the name of a given age group to an integer value. I.e., this method
-	 * searches the index (starting with 0) of the given name of an age group in all
-	 * possible age groups within the hospital model.
-	 * 
-	 * @param model    Complete hospital model.
-	 * @param ageGroup Given age group to find the integer value (index) for.
-	 * @return Integer value (index) of the given age group.
-	 */
-	private int convertAgeGroupToInt(final Root model, final String ageGroup) {
-		int ageCounter = 0;
-		for (final AgeGroup ag : model.getAgeGroups()) {
-			if (ag.getName().equals(ageGroup)) {
-				break;
-			}
-			ageCounter++;
-		}
-		return ageCounter;
 	}
 
 	/**
@@ -400,15 +338,17 @@ public class ModelCostCalculator {
 	 * @param shift   Shift.
 	 * @return Cost of the nurse regarding the patient on the given shift.
 	 */
-	private int calculateSkillLevelCostPerNursePatientShift(final Nurse nurse, final Patient patient,
-			final Shift shift) {
+	private int calculateSkillLevelCostPerNursePatientShift(final Nurse nurse, final Patient patient, final int shift) {
 		int cost = 0;
 		final int nurseLevel = nurse.getSkillLevel();
 
-		// calculate relative shift index to get the correct required skill level from
-		// patient
-		final int index = shift.getId() - patient.getAdmissionDay().getShifts().get(0).getId();
-		int patientLevel = patient.getSkillLevelsRequired().get(index).getSkillLevelRequired();
+		int patientLevel = 0;
+		for (final Workload w : patient.getWorkloads()) {
+			if (w.getDerivedShift() != null && w.getDerivedShift().getShiftNo() == shift) {
+				patientLevel = w.getMinNurseSkill();
+				break;
+			}
+		}
 
 		/*
 		 * "If the skill level of the nurse assigned to a patient’s room in a shift does
@@ -424,43 +364,6 @@ public class ModelCostCalculator {
 	}
 
 	/**
-	 * Calculates the (possible) cost of one nurse `nurse` for occupant `occupant`
-	 * on shift `shift.`
-	 * 
-	 * @param nurse    Nurse.
-	 * @param occupant Occupant.
-	 * @param shift    Shift.
-	 * @return Cost of the nurse regarding the occupant on the given shift.
-	 */
-	private int calculateSkillLevelCostPerNurseOccupantShift(final Nurse nurse, final Occupant occupant,
-			final Shift shift) {
-		int cost = 0;
-		final int nurseLevel = nurse.getSkillLevel();
-
-		// occupant
-		final int shiftId = shift.getId();
-
-		final var requiredSkillLevels = occupant.getSkillLevelsRequired();
-		final var requiredSkillLevel = requiredSkillLevels.get(shiftId);
-		int occupantLevel = requiredSkillLevel.getSkillLevelRequired();
-
-		/*
-		 * "If the skill level of the nurse assigned to a patient’s room in a shift does
-		 * not reach the minimum level required by that patient, a penalty is incurred
-		 * equal to the difference between the two skill levels. Note that a nurse with
-		 * a skill level greater than the minimum required can be assigned to the room
-		 * at no additional cost."
-		 * 
-		 * Assumption: We assume this also holds true for all occupants that are not
-		 * strictly speaking new patients.
-		 */
-		if (occupantLevel > nurseLevel) {
-			cost = occupantLevel - nurseLevel;
-		}
-		return cost;
-	}
-
-	/**
 	 * Returns a list of all patients that are scheduled for the given room on the
 	 * given day.
 	 * 
@@ -470,7 +373,7 @@ public class ModelCostCalculator {
 	 * @return List of all patients that are scheduled for the given room on the
 	 *         given day.
 	 */
-	private List<Patient> getPatientsInRoomOnDay(final Root model, final Room room, final Day day) {
+	private List<Patient> getPatientsInRoomOnDay(final Root model, final Room room, final int day) {
 		final List<Patient> patientsInRoom = new ArrayList<Patient>();
 		for (final Patient p : model.getPatients()) {
 			// room and day must match
@@ -482,47 +385,22 @@ public class ModelCostCalculator {
 	}
 
 	/**
-	 * Returns a list of all occupants that are scheduled for the given room on the
-	 * given day.
-	 * 
-	 * @param model Hospital model to extract data from.
-	 * @param room  Room.
-	 * @param day   Day.
-	 * @return List of all occupants that are scheduled for the given room on the
-	 *         given day.
-	 */
-	private List<Occupant> getOccupantsInRoomOnDay(final Root model, final Room room, final Day day) {
-		final List<Occupant> occupantsInRoom = new ArrayList<Occupant>();
-		for (final Occupant o : model.getOccupants()) {
-			// room and day must match
-			if (occupantInRoomOnDay(o, room, day)) {
-				occupantsInRoom.add(o);
-			}
-		}
-		return occupantsInRoom;
-	}
-
-	/**
-	 * Returns the specific workload of the given occupant `o` on shift `s`.
-	 * 
-	 * @param o Occupant.
-	 * @param s Shift.
-	 * @return Specific workload of the given occupant `o` on shift `s`.
-	 */
-	private int getWorkloadOfOccupantByShift(final Occupant o, final Shift s) {
-		return o.getWorkloadsProduced().get(s.getId()).getWorkloadProduced();
-	}
-
-	/**
 	 * Returns the specific workload of the given patient `p` on shift `s`.
 	 * 
-	 * @param p     Patient.
-	 * @param shift Shift.
+	 * @param p       Patient.
+	 * @param shiftNo Shift number.
 	 * @return Specific workload of the given patient `p` on shift `s`.
 	 */
-	private int getWorkloadOfPatientByShift(final Patient p, final Shift shift) {
-		final int patientsFirstShiftId = p.getAdmissionDay().getShifts().get(0).getId();
-		return p.getWorkloadsProduced().get(shift.getId() - patientsFirstShiftId).getWorkloadProduced();
+	private int getWorkloadOfPatientByShift(final Patient p, final int shiftNo) {
+		Workload w = p.getFirstWorkload();
+		while (w.getNext() != null) {
+			if (w.getDerivedShift().getShiftNo() == shiftNo) {
+				return w.getWorkloadValue();
+			}
+			w = (Workload) w.getNext();
+		}
+
+		return 0;
 	}
 
 	/**
@@ -535,32 +413,11 @@ public class ModelCostCalculator {
 	private int countPatientsNurses(final Root model, final Patient patient) {
 		final Set<Nurse> foundNurses = new HashSet<Nurse>();
 
-		for (final Nurse n : model.getNurses()) {
-			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
-				if (patientInRoomOnDay(patient, rsna.getRoom(), rsna.getShift().getDay())) {
-					foundNurses.add(n);
-				}
-			}
-		}
-
-		return foundNurses.size();
-	}
-
-	/**
-	 * Returns the distinct number of occupants a given patient has.
-	 * 
-	 * @param model    Hospital model to extract data from.
-	 * @param occupant Occupant.
-	 * @return Distinct number of nurses a given occupant has.
-	 */
-	private int countOccupantNurses(final Root model, final Occupant occupant) {
-		final Set<Nurse> foundNurses = new HashSet<Nurse>();
-
-		for (final Nurse n : model.getNurses()) {
-			for (final RoomShiftNurseAssignment rsna : n.getAssignedRoomShifts()) {
-				if (occupantInRoomOnDay(occupant, rsna.getRoom(), rsna.getShift().getDay())) {
-					foundNurses.add(n);
-				}
+		for (final Workload w : patient.getWorkloads()) {
+			if (w.getDerivedShift() != null //
+					&& w.getDerivedShift().getDerivedRoster() != null //
+					&& w.getDerivedShift().getDerivedRoster().getNurse() != null) {
+				foundNurses.add(w.getDerivedShift().getDerivedRoster().getNurse());
 			}
 		}
 
