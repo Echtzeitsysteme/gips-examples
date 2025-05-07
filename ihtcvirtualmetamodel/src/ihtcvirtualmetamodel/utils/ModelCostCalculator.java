@@ -226,7 +226,7 @@ public class ModelCostCalculator {
 		int unscheduledPatientsCost = 0;
 
 		for (final Patient p : model.getPatients()) {
-			if (p.getFirstWorkload().getDerivedShift() == null) {
+			if (!p.isMandatory() && p.getFirstWorkload().getDerivedShift() == null) {
 				unscheduledPatientsCost++;
 			}
 		}
