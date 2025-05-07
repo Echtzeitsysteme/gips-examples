@@ -1,6 +1,6 @@
 package ihtcvirtualmetamodel.importexport;
 
-import java.io.IOException;
+import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -20,6 +20,7 @@ public class ModelToJsonRunner {
 	 * @param args
 	 */
 	public static void main(final String[] args) {
+		Objects.requireNonNull(args);
 		new ModelToJsonRunner().run(args);
 	}
 
@@ -37,6 +38,8 @@ public class ModelToJsonRunner {
 	 * @param args first argument = input path, second argument = output path.
 	 */
 	private void run(final String[] args) {
+		Objects.requireNonNull(args);
+
 		if (args == null || args.length == 0) {
 			throw new IllegalArgumentException("Given args were null or empty.");
 		}

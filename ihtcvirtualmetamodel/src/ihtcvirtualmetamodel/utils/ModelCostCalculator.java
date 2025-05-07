@@ -3,6 +3,7 @@ package ihtcvirtualmetamodel.utils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import ihtcvirtualmetamodel.Capacity;
@@ -31,10 +32,12 @@ public class ModelCostCalculator {
 	 * @return Age mix cost for the whole model.
 	 */
 	public int calculateAgeMixCost(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+
 		int ageMixCost = 0;
 		for (final Room r : model.getRooms()) {
 			for (final Shift s : r.getShifts()) {
-				// Only take shifts with type 'early' into account
+				// Only take shifts with type 'early' into account and ignore all other shifts
 				if (s.getShiftNo() % 3 != 0) {
 					continue;
 				}
@@ -49,12 +52,15 @@ public class ModelCostCalculator {
 	 * This method calculates the maximum age difference for a given room `r` on day
 	 * `d` for all new patients and all previously assigned occupants which are
 	 * already placed in this room. `r` and `d` will be determined by the given
-	 * shift `s`.
+	 * shift `s`. The virtual metamodel does not differentiate between patients and
+	 * occupants.
 	 * 
 	 * @param s Shift.
 	 * @return Maximum age difference of all persons in room `r` on day `d`.
 	 */
 	private int getMaxAgeDifferenceInShift(final Shift s) {
+		Objects.requireNonNull(s, "Given shift was null.");
+
 		int minAge = Integer.MAX_VALUE;
 		int maxAge = Integer.MIN_VALUE;
 
@@ -83,6 +89,8 @@ public class ModelCostCalculator {
 	 * @return Skill level cost for the whole model.
 	 */
 	public int calculateSkillLevelCost(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+
 		int skillLevelCost = 0;
 		for (final Nurse n : model.getNurses()) {
 			for (final Roster r : n.getRosters()) {
@@ -107,6 +115,8 @@ public class ModelCostCalculator {
 	 * @return Continuity cost for the whole model.
 	 */
 	public int calculateContinuityCost(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+
 		int continuityCost = 0;
 
 		// Patients
@@ -125,6 +135,8 @@ public class ModelCostCalculator {
 	 * @return Excess cost for the whole model.
 	 */
 	public int calculateExcessCost(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+
 		int excessCost = 0;
 
 		for (final Nurse n : model.getNurses()) {
@@ -161,6 +173,8 @@ public class ModelCostCalculator {
 	 * @return Number of open OTs cost for the whole model.
 	 */
 	public int calculateOpenOtCost(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+
 		int openOtCost = 0;
 
 		for (final OT ot : model.getOts()) {
@@ -182,6 +196,8 @@ public class ModelCostCalculator {
 	 * @return Surgeon transfer cost for the whole model.
 	 */
 	public int calculateSurgeonTransferCost(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+
 		int surgeonTransferCost = 0;
 
 		for (final Surgeon s : model.getSurgeons()) {
@@ -202,6 +218,8 @@ public class ModelCostCalculator {
 	 * @return Admission delay cost for the whole model.
 	 */
 	public int calculateAdmissionDelayCost(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+
 		int admissionDelayCost = 0;
 
 		for (final Patient p : model.getPatients()) {
@@ -223,6 +241,8 @@ public class ModelCostCalculator {
 	 * @return Unscheduled patients cost for the whole model.
 	 */
 	public int calculateUnscheduledPatientsCost(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+
 		int unscheduledPatientsCost = 0;
 
 		for (final Patient p : model.getPatients()) {
@@ -241,6 +261,7 @@ public class ModelCostCalculator {
 	 * @return Complete hospital cost.
 	 */
 	public int calculateTotalCost(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
 		int totalCost = 0;
 		totalCost += calculateUnscheduledPatientsCost(model);
 		totalCost += calculateAdmissionDelayCost(model);
@@ -274,6 +295,7 @@ public class ModelCostCalculator {
 	 * @return Day number.
 	 */
 	private int shiftToDay(final Shift s) {
+		Objects.requireNonNull(s, "Given shift was null.");
 		return shiftToDay(s.getShiftNo());
 	}
 
@@ -285,6 +307,8 @@ public class ModelCostCalculator {
 	 * @return Maximum load of nurse `n` in shift `s`.
 	 */
 	private int findNurseMaxLoadInShift(final Nurse n, final int s) {
+		Objects.requireNonNull(n, "Given nurse was null.");
+
 		int maxLoad = 0;
 
 		for (final Roster r : n.getRosters()) {
@@ -306,6 +330,9 @@ public class ModelCostCalculator {
 	 * @return True if the condition above holds.
 	 */
 	private boolean patientInRoomOnDay(final Patient p, final Room r, final int d) {
+		Objects.requireNonNull(p, "Given patient was null.");
+		Objects.requireNonNull(r, "Given room was null.");
+
 		// patient must have an assigned room
 		if (p.getFirstWorkload().getDerivedShift() != null) {
 			// room must match
@@ -325,7 +352,7 @@ public class ModelCostCalculator {
 
 	/**
 	 * Calculates the (possible) cost of one nurse `nurse` for patient `patient` on
-	 * shift `shift.`
+	 * shift `shift`.
 	 * 
 	 * @param nurse   Nurse.
 	 * @param patient Patient.
@@ -333,6 +360,10 @@ public class ModelCostCalculator {
 	 * @return Cost of the nurse regarding the patient on the given shift.
 	 */
 	private int calculateSkillLevelCostPerNursePatientShift(final Nurse nurse, final Patient patient, final int shift) {
+		Objects.requireNonNull(nurse, "Given nurse was null.");
+		Objects.requireNonNull(patient, "Given patient was null.");
+		Objects.requireNonNull(shift, "Given shift was null.");
+
 		int cost = 0;
 		final int nurseLevel = nurse.getSkillLevel();
 
@@ -368,6 +399,9 @@ public class ModelCostCalculator {
 	 *         given day.
 	 */
 	private List<Patient> getPatientsInRoomOnDay(final Root model, final Room room, final int day) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+		Objects.requireNonNull(room, "Given room was null.");
+
 		final List<Patient> patientsInRoom = new ArrayList<Patient>();
 		for (final Patient p : model.getPatients()) {
 			// room and day must match
@@ -379,13 +413,15 @@ public class ModelCostCalculator {
 	}
 
 	/**
-	 * Returns the specific workload of the given patient `p` on shift `s`.
+	 * Returns the specific workload of the given patient `p` on shift `shiftNo`.
 	 * 
 	 * @param p       Patient.
 	 * @param shiftNo Shift number.
-	 * @return Specific workload of the given patient `p` on shift `s`.
+	 * @return Specific workload of the given patient `p` on shift `shiftNo`.
 	 */
 	private int getWorkloadOfPatientByShift(final Patient p, final int shiftNo) {
+		Objects.requireNonNull(p, "Given patient was null.");
+
 		Workload w = p.getFirstWorkload();
 		while (w.getNext() != null) {
 			if (w.getDerivedShift().getShiftNo() == shiftNo) {
@@ -405,6 +441,9 @@ public class ModelCostCalculator {
 	 * @return Distinct number of nurses a given patient has.
 	 */
 	private int countPatientsNurses(final Root model, final Patient patient) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+		Objects.requireNonNull(patient, "Given patient was null.");
+
 		final Set<Nurse> foundNurses = new HashSet<Nurse>();
 
 		for (final Workload w : patient.getWorkloads()) {

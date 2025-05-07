@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -38,13 +39,12 @@ public class FileUtils {
 	 * @param json JSON object to write to file.
 	 */
 	public static void writeFileFromJson(final String path, final JsonObject json) {
-		if (path == null || path.isBlank()) {
-			throw new IllegalArgumentException("Given path was null or blank.");
+		Objects.requireNonNull(path, "Given path was null.");
+		if (path.isBlank()) {
+			throw new IllegalArgumentException("Given path was blank.");
 		}
 
-		if (json == null) {
-			throw new IllegalArgumentException("Given json object was null.");
-		}
+		Objects.requireNonNull(json, "Given JSON object was null");
 
 		FileUtils.writeFile(path, json.toString());
 	}
@@ -56,8 +56,9 @@ public class FileUtils {
 	 * @return JSON object read from file.
 	 */
 	public static JsonObject readFileToJson(final String path) {
-		if (path == null || path.isBlank()) {
-			throw new IllegalArgumentException("Given path was null or blank.");
+		Objects.requireNonNull(path, "Given path was null.");
+		if (path.isBlank()) {
+			throw new IllegalArgumentException("Given path was blank.");
 		}
 		return new Gson().fromJson(FileUtils.readFile(path), JsonObject.class);
 	}
@@ -69,13 +70,12 @@ public class FileUtils {
 	 * @param string Content to write in file.
 	 */
 	public static void writeFile(final String path, final String string) {
-		if (path == null || path.isBlank()) {
-			throw new IllegalArgumentException("Given path was null or blank.");
+		Objects.requireNonNull(path, "Given path was null");
+		if (path.isBlank()) {
+			throw new IllegalArgumentException("Given path was blank.");
 		}
 
-		if (string == null) {
-			throw new IllegalArgumentException("Given String was null.");
-		}
+		Objects.requireNonNull(string, "Given String was null.");
 
 		FileWriter file = null;
 		try {
@@ -100,8 +100,9 @@ public class FileUtils {
 	 * @return File content as string.
 	 */
 	public static String readFile(final String path) {
-		if (path == null || path.isBlank()) {
-			throw new IllegalArgumentException("Given path was null or blank.");
+		Objects.requireNonNull(path, "Given path was null");
+		if (path.isBlank()) {
+			throw new IllegalArgumentException("Given path was blank.");
 		}
 
 		// Check if file exists
@@ -127,9 +128,7 @@ public class FileUtils {
 	 * @return String with converted linebreaks.
 	 */
 	public static String replaceLinebreaks(final String toConvert) {
-		if (toConvert == null) {
-			throw new IllegalArgumentException("Given String was null.");
-		}
+		Objects.requireNonNull(toConvert, "Given String was null.");
 		return toConvert.replace("\r\n", System.lineSeparator()).replace("\n", System.lineSeparator());
 	}
 
@@ -139,22 +138,10 @@ public class FileUtils {
 	 * @param folderPath Path to create a new folder at.
 	 */
 	public static void prepareFolder(final String folderPath) {
+		Objects.requireNonNull(folderPath);
 		final File f = new File(folderPath);
 		if (!f.exists()) {
 			f.mkdirs();
-		}
-	}
-
-	/**
-	 * Checks if the given object is null and, if it is null, throws an exception
-	 * with a type-specific error message.
-	 * 
-	 * @param o    Object to check null for.
-	 * @param type Type-specific value for the error message.
-	 */
-	private static void checkNotNull(final Object o, final String type) {
-		if (o == null) {
-			throw new IllegalArgumentException(type + " must not be null.");
 		}
 	}
 
@@ -166,6 +153,8 @@ public class FileUtils {
 	 * @throws IOException Throws an IOException if the file could not be written.
 	 */
 	public static void save(final Root model, final String path) throws IOException {
+		Objects.requireNonNull(model);
+		Objects.requireNonNull(path);
 		final Resource r = saveAndReturn(model, path);
 		r.unload();
 	}
@@ -180,8 +169,8 @@ public class FileUtils {
 	 * @throws IOException Throws an IOException if the file could not be written.
 	 */
 	public static Resource saveAndReturn(final Root model, final String path) throws IOException {
-		checkNotNull(model, "Model");
-		checkNotNull(path, "Path");
+		Objects.requireNonNull(model);
+		Objects.requireNonNull(path);
 
 		final URI uri = URI.createFileURI(path);
 		final ResourceSet rs = new ResourceSetImpl();
@@ -200,7 +189,7 @@ public class FileUtils {
 	 * @return Loaded resource.
 	 */
 	public static Resource loadModel(final String path) {
-		checkNotNull(path, "Path");
+		Objects.requireNonNull(path);
 		final URI pathUri = URI.createFileURI(path);
 		final ResourceSet resourceSet = new ResourceSetImpl();
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
@@ -218,7 +207,7 @@ public class FileUtils {
 	 * @return True if file exists, false otherwise.
 	 */
 	public static boolean checkIfFileExists(final String path) {
-		checkNotNull(path, "Path");
+		Objects.requireNonNull(path);
 		final File f = new File(path);
 		return f.exists() && !f.isDirectory();
 	}
@@ -229,7 +218,7 @@ public class FileUtils {
 	 * @param path File path to delete file on.
 	 */
 	public static void deleteFile(final String path) {
-		checkNotNull(path, "Path");
+		Objects.requireNonNull(path);
 		final File toDelete = new File(path);
 		if (toDelete.isDirectory()) {
 			throw new IllegalArgumentException("Given path is not a file but a directory.");

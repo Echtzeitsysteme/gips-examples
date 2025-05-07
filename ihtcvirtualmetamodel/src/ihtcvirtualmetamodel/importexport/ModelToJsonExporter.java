@@ -3,6 +3,7 @@ package ihtcvirtualmetamodel.importexport;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.gson.JsonArray;
@@ -35,9 +36,7 @@ public class ModelToJsonExporter {
 	 * @param model Hospital model.
 	 */
 	public ModelToJsonExporter(final Root model) {
-		if (model == null) {
-			throw new IllegalArgumentException("Given model was null.");
-		}
+		Objects.requireNonNull(model, "Given model was null.");
 
 		this.model = model;
 	}
@@ -49,6 +48,7 @@ public class ModelToJsonExporter {
 	 * @param outputPath Output path to write the JSON output file to.
 	 */
 	public void modelToJson(final String outputPath) {
+		Objects.requireNonNull(outputPath);
 		modelToJson(outputPath, false);
 	}
 
@@ -61,8 +61,9 @@ public class ModelToJsonExporter {
 	 *                   model.
 	 */
 	public void modelToJson(final String outputPath, final boolean verbose) {
-		if (outputPath == null || outputPath.isBlank()) {
-			throw new IllegalArgumentException("Given path <" + outputPath + "> was null or blank.");
+		Objects.requireNonNull(outputPath);
+		if (outputPath.isBlank()) {
+			throw new IllegalArgumentException("Given path <" + outputPath + "> or blank.");
 		}
 
 		// If path contains at least one slash `/`, create the folder if not existent
@@ -103,6 +104,8 @@ public class ModelToJsonExporter {
 	 * @return JSON object.
 	 */
 	private JsonObject convertPatientToJson(final Patient patient) {
+		Objects.requireNonNull(patient);
+
 		final JsonObject patientJson = new JsonObject();
 		patientJson.addProperty("id", patient.getName());
 
@@ -130,6 +133,8 @@ public class ModelToJsonExporter {
 	 * @return JSON object.
 	 */
 	private JsonObject convertNurseToJson(final Nurse nurse) {
+		Objects.requireNonNull(nurse);
+
 		final JsonObject nurseJson = new JsonObject();
 		nurseJson.addProperty("id", nurse.getName());
 
@@ -172,6 +177,8 @@ public class ModelToJsonExporter {
 	 * @return JSON array.
 	 */
 	private JsonArray convertModelToCostsJson(final Root model, final boolean verbose) {
+		Objects.requireNonNull(model);
+
 		final ModelCostCalculator calc = new ModelCostCalculator();
 		final int unscheduled = calc.calculateUnscheduledPatientsCost(model);
 		final int delay = calc.calculateAdmissionDelayCost(model);
@@ -226,10 +233,24 @@ public class ModelToJsonExporter {
 		return costsJson;
 	}
 
+	/**
+	 * Converts the given shift number to the corresponding day number.
+	 * 
+	 * @param shift Shift number.
+	 * @return Day number.
+	 */
 	private int convertShiftToDay(final int shift) {
-		return shift % 3;
+		// Division of an integer by 3 to get the floored value.
+		return shift / 3;
 	}
 
+	/**
+	 * Converts the given shift type (number representation) to the corresponding
+	 * string representation.
+	 * 
+	 * @param shiftType Shift type represented by an integer.
+	 * @return Shift type represented by a string.
+	 */
 	private String convertShiftType(final int shiftType) {
 		switch (shiftType) {
 		case 0: {

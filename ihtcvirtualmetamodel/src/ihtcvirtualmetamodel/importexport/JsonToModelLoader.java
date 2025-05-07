@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.gson.JsonArray;
@@ -91,6 +92,8 @@ public class JsonToModelLoader {
 	 * @param inputPath File path for the JSON input file to read.
 	 */
 	public void jsonToModel(final String inputPath) {
+		Objects.requireNonNull(inputPath);
+
 		if (inputPath == null || inputPath.isBlank()) {
 			throw new IllegalArgumentException("Given path <" + inputPath + "> was null or blank.");
 		}
@@ -105,12 +108,12 @@ public class JsonToModelLoader {
 		// shift types as String array
 //		final JsonArray shiftTypes = json.getAsJsonArray("shift_types");
 //		checkShiftTypes(shiftTypes);
-		// This should not be necessary because the IHTC always uses three shift types
-		// per definition.
+		// This should not be necessary because the IHTC always uses three static shift
+		// types per definition.
 
 		final JsonArray rooms = json.getAsJsonArray("rooms");
 		convertRooms(rooms);
-		
+
 		// age groups as String array
 		final JsonArray ageGroups = json.getAsJsonArray("age_groups");
 		convertAgeGroups(ageGroups);
@@ -146,6 +149,8 @@ public class JsonToModelLoader {
 	 * @param occupants JSON array of all occupants.
 	 */
 	private void convertOccupants(final JsonArray occupants) {
+		Objects.requireNonNull(occupants);
+
 		for (final JsonElement o : occupants) {
 			final String name = ((JsonObject) o).get("id").getAsString();
 			final String gender = ((JsonObject) o).get("gender").getAsString();
@@ -172,6 +177,13 @@ public class JsonToModelLoader {
 	 */
 	private void createOccupant(final String name, final String gender, final String ageGroup, final int lengthOfStay,
 			final JsonArray workloadProduced, final JsonArray skillLevelRequired, final String roomId) {
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(gender);
+		Objects.requireNonNull(ageGroup);
+		Objects.requireNonNull(workloadProduced);
+		Objects.requireNonNull(skillLevelRequired);
+		Objects.requireNonNull(roomId);
+
 		final Patient p = IhtcvirtualmetamodelFactory.eINSTANCE.createPatient();
 		p.setName(name);
 		p.setGender(gender);
@@ -217,7 +229,17 @@ public class JsonToModelLoader {
 		this.model.getPatients().add(p);
 	}
 
+	/**
+	 * Returns a shift object for a given shift number of a given collection of
+	 * shifts.
+	 * 
+	 * @param shiftNo   Shift number to search for.
+	 * @param allShifts Collection of all shifts.
+	 * @return Shift object with matching shift number.
+	 */
 	private Shift shiftNoToObject(final int shiftNo, final Collection<Shift> allShifts) {
+		Objects.requireNonNull(allShifts);
+
 		for (final Shift s : allShifts) {
 			if (s.getShiftNo() == shiftNo) {
 				return s;
@@ -233,6 +255,8 @@ public class JsonToModelLoader {
 	 * @param patients JSON array of patients.
 	 */
 	private void convertPatients(final JsonArray patients) {
+		Objects.requireNonNull(patients);
+
 		for (final JsonElement p : patients) {
 			final String name = ((JsonObject) p).get("id").getAsString();
 			final boolean mandatory = ((JsonObject) p).get("mandatory").getAsBoolean();
@@ -284,6 +308,14 @@ public class JsonToModelLoader {
 			final int lengthOfStay, final int surgeryReleaseDay, final int surgeryDueDay, final int surgeryDuration,
 			final String surgeonId, final JsonArray incompatibleRoomIds, final JsonArray workloadProduced,
 			final JsonArray skillLevelRequired) {
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(gender);
+		Objects.requireNonNull(ageGroup);
+		Objects.requireNonNull(surgeonId);
+		Objects.requireNonNull(incompatibleRoomIds);
+		Objects.requireNonNull(workloadProduced);
+		Objects.requireNonNull(skillLevelRequired);
+
 		final Patient p = IhtcvirtualmetamodelFactory.eINSTANCE.createPatient();
 		p.setName(name);
 		p.setMandatory(mandatory);
@@ -329,6 +361,8 @@ public class JsonToModelLoader {
 	 * @param ageGroups JSON array of age groups.
 	 */
 	private void convertAgeGroups(final JsonArray ageGroups) {
+		Objects.requireNonNull(ageGroups);
+
 		int ageCounter = 0;
 		for (final JsonElement ag : ageGroups) {
 			final String name = ag.getAsString();
@@ -344,6 +378,8 @@ public class JsonToModelLoader {
 	 * @param weights JSON object containing the input weights.
 	 */
 	private void convertWeights(final JsonObject weights) {
+		Objects.requireNonNull(weights);
+
 		final Weight w = IhtcvirtualmetamodelFactory.eINSTANCE.createWeight();
 		w.setRoomMixedAge(weights.get("room_mixed_age").getAsInt());
 		w.setRoomNurseSkill(weights.get("room_nurse_skill").getAsInt());
@@ -363,6 +399,8 @@ public class JsonToModelLoader {
 	 * @param operatingTheaters JSON array of operating theaters.
 	 */
 	private void convertOperatingTheaters(final JsonArray operatingTheaters) {
+		Objects.requireNonNull(operatingTheaters);
+
 		for (final JsonElement ot : operatingTheaters) {
 			final String name = ((JsonObject) ot).get("id").getAsString();
 			final JsonArray availability = ((JsonObject) ot).get("availability").getAsJsonArray();
@@ -378,6 +416,9 @@ public class JsonToModelLoader {
 	 * @param availability Operating theater availabilities.
 	 */
 	private void createOperatingTheater(final String name, final JsonArray availability) {
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(availability);
+
 		final OT ot = IhtcvirtualmetamodelFactory.eINSTANCE.createOT();
 		ot.setName(name);
 		// Create capacities, i.e., the `Capacity` objects
@@ -392,7 +433,14 @@ public class JsonToModelLoader {
 		this.model.getOts().add(ot);
 	}
 
+	/**
+	 * Converts the given JSON array of surgeons to model objects.
+	 * 
+	 * @param surgeons JSON array of surgeons to convert.
+	 */
 	private void convertSurgeons(final JsonArray surgeons) {
+		Objects.requireNonNull(surgeons);
+
 		for (final JsonElement s : surgeons) {
 			final String name = ((JsonObject) s).get("id").getAsString();
 			final JsonArray maxSurgeryTime = ((JsonObject) s).get("max_surgery_time").getAsJsonArray();
@@ -408,6 +456,9 @@ public class JsonToModelLoader {
 	 * @param maxSurgeryTime Surgeon maximum surgery time values as JSON array.
 	 */
 	private void createSurgeon(final String name, final JsonArray maxSurgeryTime) {
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(maxSurgeryTime);
+
 		final Surgeon s = IhtcvirtualmetamodelFactory.eINSTANCE.createSurgeon();
 		s.setName(name);
 		// Create max surgery times, i.e., the `OpTime` objects
@@ -423,7 +474,16 @@ public class JsonToModelLoader {
 		this.model.getSurgeons().add(s);
 	}
 
+	/**
+	 * Converts the given JSON primitive of days to actual model information. In
+	 * this case, the method only saves the number of days from the JSON primitive
+	 * to a field of this load class.
+	 * 
+	 * @param days JSON primitive with the day-specific information.
+	 */
 	private void convertDays(final JsonPrimitive days) {
+		Objects.requireNonNull(days);
+
 		final int numberOfDays = days.getAsInt();
 
 		if (numberOfDays <= 0) {
@@ -439,6 +499,8 @@ public class JsonToModelLoader {
 	 * @param rooms JSON array of rooms.
 	 */
 	private void convertRooms(final JsonArray rooms) {
+		Objects.requireNonNull(rooms);
+
 		for (final JsonElement r : rooms) {
 			final String name = ((JsonObject) r).get("id").getAsString();
 			final int capacity = ((JsonObject) r).get("capacity").getAsInt();
@@ -453,6 +515,8 @@ public class JsonToModelLoader {
 	 * @param capacity Room capacity.
 	 */
 	private void createRoom(final String name, final int capacity) {
+		Objects.requireNonNull(name);
+
 		final Room r = IhtcvirtualmetamodelFactory.eINSTANCE.createRoom();
 		r.setName(name);
 		r.setBeds(capacity);
@@ -488,7 +552,14 @@ public class JsonToModelLoader {
 		this.model.getRooms().add(r);
 	}
 
+	/**
+	 * Converts the given JSON array of nurses to actual model elements.
+	 * 
+	 * @param nurses JSON array of nurses.
+	 */
 	private void convertNurses(final JsonArray nurses) {
+		Objects.requireNonNull(nurses);
+
 		for (final JsonElement n : nurses) {
 			final String name = ((JsonObject) n).get("id").getAsString();
 			final int skillLevel = ((JsonObject) n).get("skill_level").getAsInt();
@@ -497,7 +568,17 @@ public class JsonToModelLoader {
 		}
 	}
 
+	/**
+	 * Creates a new nurse object within the model with the given details.
+	 * 
+	 * @param name          Name of the new nurse.
+	 * @param skillLevel    Skill level of the new nurse.
+	 * @param workingShifts JSON array of working shifts for the new nurse.
+	 */
 	private void createNurse(final String name, final int skillLevel, final JsonArray workingShifts) {
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(workingShifts);
+
 		final Nurse nurse = IhtcvirtualmetamodelFactory.eINSTANCE.createNurse();
 		nurse.setName(name);
 		nurse.setSkillLevel(skillLevel);
@@ -506,7 +587,16 @@ public class JsonToModelLoader {
 		this.model.getNurses().add(nurse);
 	}
 
+	/**
+	 * Converts the given JSON array of working shifts to model objects.
+	 * 
+	 * @param workingShifts JSON array representing the working shifts of a nurse.
+	 * @return Set of roster objects representing the given JSON array of working
+	 *         shifts.
+	 */
 	private Set<Roster> convertRosters(final JsonArray workingShifts) {
+		Objects.requireNonNull(workingShifts);
+
 		final Set<Roster> rosters = new HashSet<Roster>();
 		for (final JsonElement s : workingShifts) {
 			final Roster r = IhtcvirtualmetamodelFactory.eINSTANCE.createRoster();
@@ -519,12 +609,24 @@ public class JsonToModelLoader {
 		return rosters;
 	}
 
+	/**
+	 * Converts the given number of days to the corresponding number of shifts.
+	 * 
+	 * @param dayNumber Number Of days.
+	 * @return Number of days times 3 (i.e., 3 shifts per day).
+	 */
 	private int convertDayType(final int dayNumber) {
 		return dayNumber * 3;
 	}
 
+	/**
+	 * Converts the given string to the numeric representation of a shift type.
+	 * 
+	 * @param shiftType String representation of a shift type.
+	 * @return Numeric representation of the given shift type.
+	 */
 	private int convertShiftType(final String shiftType) {
-		checkNotNull(shiftType);
+		Objects.requireNonNull(shiftType);
 
 		switch (shiftType) {
 		case "early": {
@@ -538,12 +640,6 @@ public class JsonToModelLoader {
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + shiftType);
-		}
-	}
-
-	private void checkNotNull(final Object o) {
-		if (o == null) {
-			throw new IllegalArgumentException("Given object was null.");
 		}
 	}
 

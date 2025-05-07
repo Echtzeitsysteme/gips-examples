@@ -1,6 +1,7 @@
 package ihtcvirtualmetamodel.importexport;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.utils.FileUtils;
@@ -18,6 +19,7 @@ public class JsonToModelRunner {
 	 * @param args
 	 */
 	public static void main(final String[] args) {
+		Objects.requireNonNull(args);
 		new JsonToModelRunner().run(args);
 	}
 
@@ -35,6 +37,8 @@ public class JsonToModelRunner {
 	 * @param args first argument = input path, second argument = output path.
 	 */
 	private void run(final String[] args) {
+		Objects.requireNonNull(args);
+
 		if (args == null || args.length == 0) {
 			throw new IllegalArgumentException("Given args were null or empty.");
 		}
