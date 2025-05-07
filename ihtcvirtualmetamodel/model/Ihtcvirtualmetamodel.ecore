@@ -14,7 +14,8 @@
         eType="#//Surgeon" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ots" upperBound="-1" eType="#//OT"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="weight" eType="#//Weight"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weight" eType="#//Weight"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patients" upperBound="-1"
         eType="#//Patient" containment="true"/>
   </eClassifiers>
