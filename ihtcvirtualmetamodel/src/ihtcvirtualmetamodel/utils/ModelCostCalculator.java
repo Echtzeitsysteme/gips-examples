@@ -289,14 +289,8 @@ public class ModelCostCalculator {
 
 		for (final Roster r : n.getRosters()) {
 			if (r.getShiftNo() == s) {
-				for (final Shift shift : r.getDerivedShifts()) {
-					for (final Workload w : shift.getDerivedWorkloads()) {
-						if (w.getWorkloadValue() > maxLoad) {
-							maxLoad = w.getWorkloadValue();
-							// TODO: Is this correct???
-						}
-					}
-				}
+				maxLoad = r.getMaxWorkload();
+				break;
 			}
 		}
 
