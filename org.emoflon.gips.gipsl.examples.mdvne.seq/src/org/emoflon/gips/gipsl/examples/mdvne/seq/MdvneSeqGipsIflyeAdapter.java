@@ -1,7 +1,9 @@
 package org.emoflon.gips.gipsl.examples.mdvne.seq;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -10,6 +12,7 @@ import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.milp.model.IntegerVariable;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
+import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapter;
 import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapterUtil;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.gips.SeqGipsAPI;
 import org.emoflon.gips.gipsl.examples.mdvne.seq.api.matches.Link2PathRuleMatch;
@@ -27,17 +30,17 @@ import hipe.engine.config.HiPEPathOptions;
  *
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
-public class MdvneSeqGipsIflyeAdapter {
+public class MdvneSeqGipsIflyeAdapter extends MdvneGipsIflyeAdapter {
 
 	/**
 	 * MdVNE GIPS API object.
 	 */
-	static SeqGipsAPI api;
+	private SeqGipsAPI api;
 
 	/**
 	 * If false, the API must be initialized.
 	 */
-	static boolean init = false;
+	private boolean init = false;
 
 	/**
 	 * Executes the embedding GIPS-based VNE algorithm.
@@ -49,8 +52,9 @@ public class MdvneSeqGipsIflyeAdapter {
 	 * @param hipeXmi Path to the HiPE XMI file.
 	 * @return True if embedding was successful.
 	 */
-	public static boolean execute(final ResourceSet model, final String gipsXmi, final String ibexXmi,
-			final String hipeXmi) {
+	@Override
+	public MdvneGipsIflyeAdapter.MdvneIflyeOutput execute(final ResourceSet model, final String gipsXmi,
+			final String ibexXmi, final String hipeXmi) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model was null.");
 		}
@@ -95,7 +99,8 @@ public class MdvneSeqGipsIflyeAdapter {
 	 *              model).
 	 * @return True if embedding was successful.
 	 */
-	public static boolean execute(final ResourceSet model) {
+	@Override
+	public MdvneGipsIflyeAdapter.MdvneIflyeOutput execute(final ResourceSet model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Model was null.");
 		}
@@ -125,7 +130,7 @@ public class MdvneSeqGipsIflyeAdapter {
 	 * 
 	 * @return true, if a valid solution could be found.
 	 */
-	private static boolean buildAndSolve() {
+	private MdvneGipsIflyeAdapter.MdvneIflyeOutput buildAndSolve() {
 		final Observer obs = Observer.getInstance();
 		obs.setCurrentSeries("Eval");
 
@@ -139,7 +144,8 @@ public class MdvneSeqGipsIflyeAdapter {
 		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
 		System.out.println("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
 
-		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
+		final Map<String, IMeasurement> measurements = new LinkedHashMap<>(obs.getMeasurements("Eval"));
+		obs.getMeasurements("Eval").clear();
 		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
 		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
 		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
@@ -198,15 +204,22 @@ public class MdvneSeqGipsIflyeAdapter {
 			}
 		});
 
-		return output.solutionCount() > 0;
+		final Map<String, String> matches = allSelectedMappings.stream().map((m) -> m.getMatch().toIMatch())
+				.map(this::extractMatchedNodes).filter((m) -> m != null)
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+		return new MdvneIflyeOutput(output, matches, measurements);
 	}
 
 	/**
 	 * Resets the initialized state of the GIPS API.
 	 */
-	public static void resetInit() {
+	@Override
+	public void resetInit() {
 		init = false;
-		api.terminate();
+		if (api != null) {
+			api.terminate();
+		}
 		HiPEPathOptions.getInstance().resetNetworkPath();
 		HiPEPathOptions.getInstance().resetEngineClassName();
 	}
