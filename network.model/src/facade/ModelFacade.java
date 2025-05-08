@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -64,7 +65,7 @@ public class ModelFacade {
 	/**
 	 * Counter for generating new IDs.
 	 */
-	private static AtomicInteger counter = new AtomicInteger();
+	private AtomicInteger counter = new AtomicInteger();
 
 	/**
 	 * Path to import and export models.
@@ -82,7 +83,8 @@ public class ModelFacade {
 	/**
 	 * Private constructor to disable direct object instantiation.
 	 */
-	private ModelFacade() {
+	public ModelFacade() {
+		this.initEmptyRs();
 	}
 
 	/**
@@ -93,34 +95,47 @@ public class ModelFacade {
 	public static synchronized ModelFacade getInstance() {
 		if (ModelFacade.instance == null) {
 			ModelFacade.instance = new ModelFacade();
-			initEmptyRs();
 		}
 		return ModelFacade.instance;
 	}
 
 	/**
+	 * Replaces the current model with another one.
+	 * 
+	 * @param instance The new facade to apply
+	 */
+	public static void setInstance(ModelFacade instance) {
+		ModelFacade.instance = instance;
+	}
+
+	/**
 	 * Initializes an empty resource set (model).
 	 */
-	private static synchronized void initEmptyRs() {
-		ModelFacade.instance.resourceSet = new ResourceSetImpl();
+	private synchronized void initEmptyRs() {
+		initEmptyRs("model.xmi");
+	}
+
+	/**
+	 * Initializes an empty resource set (model).
+	 */
+	private synchronized void initEmptyRs(final String path) {
+		this.resourceSet = new ResourceSetImpl();
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		ModelFacade.instance.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
-				ModelPackage.eINSTANCE);
-		ModelFacade.instance.resourceSet.createResource(URI.createURI("model.xmi"));
-		ModelFacade.instance.resourceSet.getResources().get(0).getContents().add(ModelFactory.eINSTANCE.createRoot());
+		this.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(), ModelPackage.eINSTANCE);
+		this.resourceSet.createResource(URI.createURI(path));
+		this.resourceSet.getResources().get(0).getContents().add(ModelFactory.eINSTANCE.createRoot());
 	}
 
 	/**
 	 * Initializes the resource set (model) from a given file path.
 	 */
-	private static synchronized void initRsFromFile(final URI absPath) {
-		ModelFacade.instance.resourceSet = new ResourceSetImpl();
+	private synchronized void initRsFromFile(final URI absPath) {
+		this.resourceSet = new ResourceSetImpl();
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
-		ModelFacade.instance.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(),
-				ModelPackage.eINSTANCE);
-		ModelFacade.instance.resourceSet.getResource(absPath, true);
+		this.resourceSet.getPackageRegistry().put(ModelPackage.eINSTANCE.getNsURI(), ModelPackage.eINSTANCE);
+		this.resourceSet.getResource(absPath, true);
 	}
 
 	/*
@@ -149,7 +164,7 @@ public class ModelFacade {
 	 * @return Root node.
 	 */
 	public Root getRoot() {
-		return (Root) ModelFacade.instance.resourceSet.getResources().get(0).getContents().get(0);
+		return (Root) this.resourceSet.getResources().get(0).getContents().get(0);
 	}
 
 	/**
@@ -158,7 +173,7 @@ public class ModelFacade {
 	 * @return True if resource set is empty.
 	 */
 	private boolean isResourceSetEmpty() {
-		return ModelFacade.instance.resourceSet.getResources().get(0).getContents().size() == 0;
+		return this.resourceSet.getResources().get(0).getContents().size() == 0;
 	}
 
 	/**
@@ -171,6 +186,20 @@ public class ModelFacade {
 	}
 
 	/**
+	 * Returns a list of nodes with a specific type of a given network.
+	 *
+	 * @param network The Network, either virtual or substrate, to get the nodes
+	 *                for.
+	 * @param type    The type of nodes to get. Must be a subclass of Node.
+	 * @return List of all nodes of the given type within the network.
+	 */
+	public static <T extends Node> List<Node> getAllNodesOfType(final Network network, final Class<T> type) {
+		Objects.requireNonNull(network, "The network has to be non null.");
+
+		return network.getNodess().stream().filter(node -> type.isInstance(node)).collect(Collectors.toList());
+	}
+
+	/**
 	 * Returns a list of nodes with all servers of a given network ID.
 	 *
 	 * @param networkId Network ID.
@@ -180,8 +209,18 @@ public class ModelFacade {
 		checkStringValid(networkId);
 		ifNetworkNotExistentThrowException(networkId);
 
-		return getNetworkById(networkId).getNodess().stream().filter(n -> n instanceof Server)
-				.collect(Collectors.toList());
+		return getAllServersOfNetwork(getNetworkById(networkId));
+	}
+
+	/**
+	 * Returns a list of nodes with all servers of a given network.
+	 *
+	 * @param network The Network, either virtual or substrate, to get the servers
+	 *                for.
+	 * @return List of nodes with all servers of the given network.
+	 */
+	public static List<Node> getAllServersOfNetwork(final Network network) {
+		return getAllNodesOfType(network, Server.class);
 	}
 
 	/**
@@ -194,8 +233,18 @@ public class ModelFacade {
 		checkStringValid(networkId);
 		ifNetworkNotExistentThrowException(networkId);
 
-		return getNetworkById(networkId).getNodess().stream().filter(n -> n instanceof Switch)
-				.collect(Collectors.toList());
+		return getAllSwitchesOfNetwork(getNetworkById(networkId));
+	}
+
+	/**
+	 * Returns a list of nodes with all switches of a given network.
+	 *
+	 * @param network The Network, either virtual or substrate, to get the switches
+	 *                for.
+	 * @return List of nodes with all switches of the given network.
+	 */
+	public static List<Node> getAllSwitchesOfNetwork(final Network network) {
+		return getAllNodesOfType(network, Switch.class);
 	}
 
 	/**
