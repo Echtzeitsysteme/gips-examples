@@ -55,10 +55,22 @@ nurserosteringmodel/resources/model.xmi
 
 nurserosteringgipsl/resources/model.xmi
 
+teachingassistant.kcl.metamodel/instances/kcl_department.xmi
+
+teachingassistant.kcl.metamodel/instances/solved.xmi
+
 ihtcrunner/model_in.xmi
 
 **/.DS_Store
 
+teachingassistant.kcl.metamodel/instances/kcl_department.json
+
+teachingassistant.kcl.metamodel/model.json
+
 **/trace_cache.bin
 
 org.emoflon.gips.gipsl.examples.mdvne/problem.lp
+
+teachingassistant.kcl.metamodelalt/instances/
+
+teachingassistant.kcl.gipssolutionalt/problem.lp
