@@ -1,0 +1,70 @@
+package "ihtcvirtualgipssolution"
+import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 30.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+}
+
+//
+// GT
+//
+
+// (Utility) pattern to find already assigned surgeon OPs.
+pattern surgeonOpIsAssigned {
+	root : Root {
+		- surgeons -> surgeon
+		- ots -> o
+	}
+	
+	surgeon : Surgeon {
+		- opTimes -> op
+	}
+	
+	op : OpTime {
+		- derivedCapacities -> c
+	}
+
+	o : OT {
+		- capacities -> c
+	}
+	
+	c : Capacity
+	
+	# op.day == c.day
+}
+condition surgeonOpIsNotAssigned = forbid surgeonOpIsAssigned
+
+// GT rule to assign a surgeon to an operation time.
+rule assignSurgeonToOt {
+	root : Root {
+		- surgeons -> surgeon
+		- ots -> o
+	}
+	
+	surgeon : Surgeon {
+		- opTimes -> op
+	}
+	
+	op : OpTime {
+		++ - derivedCapacities -> c
+	}
+
+	o : OT {
+		- capacities -> c
+	}
+	
+	c : Capacity
+	
+	# op.day == c.day
+}
+when surgeonOpIsNotAssigned
+
+//
+// GIPSL
+//
+
+mapping assignSurgeonMapping to assignSurgeonToOt;

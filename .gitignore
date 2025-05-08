@@ -68,3 +68,9 @@ ihtcvirtualmetamodel/resources/loaded.xmi
 ihtcvirtualmetamodel/instances/loaded.xmi
 
 ihtcvirtualmetamodel/resources/ihtc2024_test_dataset/gips-export.json
+
+ihtcvirtualmetamodel/resources/runner/sol_test01_gips.json
+
+ihtcvirtualmetamodel/instances/test01_solved.xmi
+
+ihtcvirtualmetamodel/instances/test01.xmi
