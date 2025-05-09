@@ -55,6 +55,12 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		//
 
 		transformJsonToModel(inputPath, instancePath);
+		
+		//
+		// Pre-processing via a separated GT rule set
+		//
+		
+		preprocess(instancePath);
 
 		//
 		// Initialize GIPS API

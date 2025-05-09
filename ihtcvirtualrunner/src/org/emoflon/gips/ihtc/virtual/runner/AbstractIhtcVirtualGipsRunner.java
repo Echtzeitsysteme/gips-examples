@@ -21,6 +21,7 @@ import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.importexport.JsonToModelLoader;
 import ihtcvirtualmetamodel.importexport.ModelToJsonExporter;
+import ihtcvirtualpreprocessing.PreprocessingGtApp;
 
 /**
  * This abstract runner contains utility methods to wrap a given GIPS API object
@@ -237,6 +238,21 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
 		exporter.modelToJson(outputPath);
+	}
+
+	/**
+	 * Pre-processing method that runs the separated GT rule set. The given
+	 * `instancePath` will be used to load the XMI model. The produced (altered)
+	 * model file will also be written to `instancePath`.
+	 * 
+	 * @param instancePath Model (XMI) to load and overwrite.
+	 */
+	protected void preprocess(final String instancePath) {
+		Objects.requireNonNull(instancePath);
+
+		final PreprocessingGtApp app = new PreprocessingGtApp(instancePath);
+		app.run();
+		// The app will terminate itself
 	}
 
 	/**
