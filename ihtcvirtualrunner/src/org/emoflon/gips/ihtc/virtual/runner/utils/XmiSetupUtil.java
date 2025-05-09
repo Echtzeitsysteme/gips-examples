@@ -1,4 +1,4 @@
-package org.emoflon.gips.ihtc.virtual.runner;
+package org.emoflon.gips.ihtc.virtual.runner.utils;
 
 import java.util.Objects;
 

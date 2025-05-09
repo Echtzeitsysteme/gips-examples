@@ -3,6 +3,8 @@ package org.emoflon.gips.ihtc.virtual.runner;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.emoflon.gips.ihtc.virtual.runner.utils.FileUtils;
+import org.emoflon.gips.ihtc.virtual.runner.utils.XmiSetupUtil;
 
 import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
 import ihtcvirtualmetamodel.Root;
@@ -45,7 +47,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	}
 
 	@Override
-	protected void run() {
+	public void run() {
 		checkIfFileExists(inputPath);
 
 		//
@@ -97,6 +99,15 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
 		exporter.modelToJson(jsonOutputPath);
+	}
+
+	/**
+	 * Sets the verbose flag to the given value.
+	 * 
+	 * @param verbose Verbose flag value.
+	 */
+	public void setVerbose(final boolean verbose) {
+		this.verbose = verbose;
 	}
 
 }
