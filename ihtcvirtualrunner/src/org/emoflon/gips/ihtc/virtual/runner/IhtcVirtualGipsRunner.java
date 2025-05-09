@@ -61,7 +61,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		//
 
 		if (verbose) {
-			System.out.println("=> Start GIPS init.");
+			logger.info("=> Start GIPS init.");
 		}
 
 		final IhtcvirtualgipssolutionGipsAPI gipsApi = new IhtcvirtualgipssolutionGipsAPI();
@@ -98,7 +98,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		final Resource loadedResource = FileUtils.loadModel(xmiOutputPath);
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
-		exporter.modelToJson(jsonOutputPath);
+		exporter.modelToJson(jsonOutputPath, verbose);
 	}
 
 	/**

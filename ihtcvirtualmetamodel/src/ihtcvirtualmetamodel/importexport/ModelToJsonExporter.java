@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -26,6 +30,11 @@ import ihtcvirtualmetamodel.utils.ModelCostCalculator;
 public class ModelToJsonExporter {
 
 	/**
+	 * Logger for system outputs.
+	 */
+	protected final Logger logger = Logger.getLogger(ModelToJsonExporter.class.getName());
+
+	/**
 	 * Hospital model to work with.
 	 */
 	private Root model = null;
@@ -39,6 +48,18 @@ public class ModelToJsonExporter {
 		Objects.requireNonNull(model, "Given model was null.");
 
 		this.model = model;
+
+		// Configure logging
+		logger.setUseParentHandlers(false);
+		final ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new Formatter() {
+			@Override
+			public String format(final LogRecord record) {
+				Objects.requireNonNull(record, "Given log entry was null.");
+				return record.getMessage() + System.lineSeparator();
+			}
+		});
+		logger.addHandler(handler);
 	}
 
 	/**
@@ -196,15 +217,15 @@ public class ModelToJsonExporter {
 		final int costs = unscheduled + delay + openOt + ageMix + skill + excess + continuity + surgeonTransfer;
 
 		if (verbose) {
-			System.out.println("Costs: " + costs);
-			System.out.println("Unscheduled: " + unscheduled);
-			System.out.println("Delay: " + delay);
-			System.out.println("OpenOT: " + openOt);
-			System.out.println("AgeMix: " + ageMix);
-			System.out.println("Skill: " + skill);
-			System.out.println("Excess: " + excess);
-			System.out.println("Continuity: " + continuity);
-			System.out.println("SurgeonTransfer: " + surgeonTransfer);
+			logger.info("Costs: " + costs);
+			logger.info("Unscheduled: " + unscheduled);
+			logger.info("Delay: " + delay);
+			logger.info("OpenOT: " + openOt);
+			logger.info("AgeMix: " + ageMix);
+			logger.info("Skill: " + skill);
+			logger.info("Excess: " + excess);
+			logger.info("Continuity: " + continuity);
+			logger.info("SurgeonTransfer: " + surgeonTransfer);
 		}
 
 		// Weirdly, the output costs is a JSON array with only one concatenated String

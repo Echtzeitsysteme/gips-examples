@@ -3,6 +3,10 @@ package org.emoflon.gips.ihtc.virtual.runner;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -25,6 +29,11 @@ import ihtcvirtualmetamodel.importexport.ModelToJsonExporter;
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public abstract class AbstractIhtcVirtualGipsRunner {
+
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final Logger logger = Logger.getLogger(AbstractIhtcVirtualGipsRunner.class.getName());
 
 	/**
 	 * The scenario (JSON) file to load.
@@ -72,6 +81,20 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	 */
 	public String outputPath = datasetSolutionFolder + "sol_"
 			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
+
+	public AbstractIhtcVirtualGipsRunner() {
+		// Configure logging
+		logger.setUseParentHandlers(false);
+		final ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new Formatter() {
+			@Override
+			public String format(final LogRecord record) {
+				Objects.requireNonNull(record, "Given log entry was null.");
+				return record.getMessage() + System.lineSeparator();
+			}
+		});
+		logger.addHandler(handler);
+	}
 
 	/**
 	 * Saves the result of a run of a given GIPS API to a given path as XMI file.
@@ -135,11 +158,11 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		final SolverOutput output = gipsApi.solveProblemTimed();
 		if (output.solutionCount() == 0) {
 			gipsApi.terminate();
+			logger.warning("No solution found. Aborting.");
 			throw new InternalError("No solution found!");
 		}
 		if (verbose) {
-			System.out.println("=> Objective value: " + output.objectiveValue());
-			System.out.println("---");
+			logger.info("=> Objective value: " + output.objectiveValue());
 		}
 		return output.objectiveValue();
 	}
@@ -175,10 +198,13 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		gipsApi.getAssignSurgeonMapping().applyNonZeroMappings(false);
 
 		// TODO: Add all other mappings and their application here
+		if (gipsApi.getMappers().size() > 1) {
+			throw new InternalError("Implementation is missing other mapping applications.");
+		}
 
 		final long tock = System.nanoTime();
 		if (verbose) {
-			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+			logger.info("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
 		}
 	}
 
