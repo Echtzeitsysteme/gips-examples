@@ -18,6 +18,10 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patients" upperBound="-1"
         eType="#//Patient" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShiftToRoster" upperBound="-1"
+        eType="#//VirtualShiftToRoster" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShiftToWorkload"
+        upperBound="-1" eType="#//VirtualShiftToWorkload" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Nurse" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -31,6 +35,8 @@
         eOpposite="#//Nurse/rosters"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedShifts" upperBound="-1"
         eType="#//Shift" eOpposite="#//Shift/derivedRoster"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShift" eType="#//VirtualShiftToRoster"
+        eOpposite="#//VirtualShiftToRoster/roster"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Room" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="beds" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -46,6 +52,10 @@
         eOpposite="#//Roster/derivedShifts"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedWorkloads" upperBound="-1"
         eType="#//Workload" eOpposite="#//Workload/derivedShift"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualRoster" eType="#//VirtualShiftToRoster"
+        eOpposite="#//VirtualShiftToRoster/shift"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkload" eType="#//VirtualShiftToWorkload"
+        eOpposite="#//VirtualShiftToWorkload/shift"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Ordered" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="prev" eType="#//Ordered"/>
@@ -77,6 +87,8 @@
         eOpposite="#//Shift/derivedWorkloads"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedCapacity" eType="#//Capacity"
         eOpposite="#//Capacity/derivedWorkloads"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkload" eType="#//VirtualShiftToWorkload"
+        eOpposite="#//VirtualShiftToWorkload/workload"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Surgeon" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="patients" eType="#//Patient"
@@ -118,5 +130,21 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="surgeonTransfer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="patientDelay" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unscheduledOptional" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualShiftToWorkload">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="wasImported" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"
+        eOpposite="#//Shift/virtualWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"
+        eOpposite="#//Workload/virtualWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualShiftToRoster">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="wasImported" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"
+        eOpposite="#//Shift/virtualRoster"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roster" eType="#//Roster"
+        eOpposite="#//Roster/virtualShift"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
 </ecore:EPackage>
