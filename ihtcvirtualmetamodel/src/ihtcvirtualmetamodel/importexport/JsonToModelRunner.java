@@ -68,6 +68,7 @@ public class JsonToModelRunner {
 
 		// Write XMI to file
 		try {
+			FileUtils.prepareFolder(outputPath.substring(0, outputPath.lastIndexOf("/")));
 			FileUtils.save(model, outputPath);
 		} catch (final IOException e) {
 			e.printStackTrace();
