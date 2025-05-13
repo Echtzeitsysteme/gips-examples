@@ -89,6 +89,8 @@
         eOpposite="#//Capacity/derivedWorkloads"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShift" upperBound="-1"
         eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/workload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedOpTimes" eType="#//OpTime"
+        eOpposite="#//OpTime/derivedWorkloads"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Surgeon" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="patients" eType="#//Patient"
@@ -103,6 +105,8 @@
         eOpposite="#//Surgeon/opTimes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedCapacities" upperBound="-1"
         eType="#//Capacity" eOpposite="#//Capacity/derivedOpTimes"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedWorkloads" upperBound="-1"
+        eType="#//Workload" eOpposite="#//Workload/derivedOpTimes"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OT" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="capacities" upperBound="-1"
