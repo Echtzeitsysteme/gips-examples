@@ -87,7 +87,7 @@
         eOpposite="#//Shift/derivedWorkloads"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedCapacity" eType="#//Capacity"
         eOpposite="#//Capacity/derivedWorkloads"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkload" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShift" upperBound="-1"
         eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/workload"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Surgeon" eSuperTypes="#//NamedElement">
@@ -136,7 +136,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"
         eOpposite="#//Shift/virtualWorkload"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"
-        eOpposite="#//Workload/virtualWorkload"/>
+        eOpposite="#//Workload/virtualShift"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VirtualShiftToRoster">
