@@ -28,6 +28,8 @@ pattern findVirtualRoster {
 		-roster -> roster
 		-shift -> shift
 	}
+	
+	# roster.shiftNo == shift.shiftNo
 }
 
 condition noVirtualRoster = forbid findVirtualRoster
@@ -60,5 +62,7 @@ rule createVirtualShiftToRoster {
 		.isSelected := false
 		.wasImported := false
 	}
+	
+	# roster.shiftNo == shift.shiftNo
 }
 when noVirtualRoster
