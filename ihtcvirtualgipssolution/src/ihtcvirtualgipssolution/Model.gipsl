@@ -63,8 +63,266 @@ rule assignSurgeonToOt {
 }
 when surgeonOpIsNotAssigned
 
+// Pattern that finds Patients which are assigned to a Room. 
+// Used in assignPatientToRoom to count the Patients in a specific room
+// Needs to Count over different links depending if the pre-existing links are changed to virtual nodes or not 
+pattern findPatientsInRoom {
+	root : Root {
+		- patients -> patient
+//		- virtualShiftToWorkload -> virtualWorkload
+	}
+	
+	patient : Patient {
+		- firstWorkload -> workload
+	}
+	
+	workload : Workload {
+		- derivedShift -> shift
+//		- virtualShift -> virtualWorkload
+	}
+	
+//	virtualWorkload : VirtualShiftToWorkload {
+//		- shift -> shift
+//	}
+	
+	shift : Shift {
+		- room -> r
+	}
+	
+	r : Room
+	
+//	# virtualWorkload.isSelected == true
+}
+
+// Pattern to find assigned first Shifts for Patients
+pattern patientFirstShiftIsAssigned {
+root : Root {
+		- patients -> p
+		- virtualShiftToWorkload -> vsw
+		- rooms -> r
+		- ots -> ot
+	}
+	
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload {
+		- derivedCapacity -> c
+	}
+	
+	ot : OT {
+		- capacities -> c
+	}
+	
+	c : Capacity 
+	
+	vsw : VirtualShiftToWorkload {
+		- workload -> w
+		- shift -> s
+	}
+	
+	s : Shift {
+		- room -> r
+	}
+	
+	r : Room
+	
+}
+condition patientFirstShiftIsNotAssigned = forbid patientFirstShiftIsAssigned
+
+// Pattern that finds incompatible rooms for patients
+pattern uncompatibleRoomForPatient {
+	root : Root {
+		- patients -> p 
+		- rooms -> r
+	}
+	
+	p : Patient {
+		- incompatibleRooms -> r
+	}
+	
+	r : Room
+}
+condition compatibleRoomForPatient = forbid uncompatibleRoomForPatient
+
+condition compatibleRoomAndNotAssigned = compatibleRoomForPatient && patientFirstShiftIsNotAssigned
+
+// Pattern that creates a Virtual Node between Shift and Workload to assign a patient to a room 
+rule assignPatientToRoom {
+	root : Root {
+		- patients -> p
+		++ - virtualShiftToWorkload -> vsw
+		- rooms -> r
+		- ots -> ot
+	}
+	
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload {
+		- derivedCapacity -> c
+	}
+	
+	ot : OT {
+		- capacities -> c
+	}
+	
+	c : Capacity 
+	
+	++ vsw : VirtualShiftToWorkload {
+		++ - workload -> w
+		++ - shift -> s
+		.isSelected := false
+		.wasImported := false
+	}
+	
+	s : Shift {
+		- room -> r
+	}
+	
+	r : Room
+	
+	# s.shiftNo / 3 == c.day
+	# s.shiftNo % 3 == 0
+//	# r.beds > count(findPatientsInRoom) // TODO
+}
+when compatibleRoomAndNotAssigned
+
+pattern patientOperationDayIsAssigned {
+	root : Root {
+		- patients -> p
+		- surgeons -> s
+	}
+	
+	p : Patient {
+		- firstWorkload -> w
+		- surgeon -> s
+	}
+	
+	w : Workload {
+		- derivedOpTimes -> op
+		- derivedCapacity -> c
+	}
+	
+	s : Surgeon {
+		- opTimes -> op
+	}
+	
+	op : OpTime {
+		- derivedCapacities -> c
+	}
+	
+	c : Capacity
+	
+	# p.earliestDay <= op.day 
+	# op.day <= p.dueDay
+	# p.surgeryDuration <= op.maxOpTime
+	# p.surgeryDuration <= c.maxCapacity
+}
+condition patientOperationDayIsnotAssigned = forbid patientOperationDayIsAssigned
+
+// Rule that assigns a specific Operation Day to a Patient TODO: implement virtual
+rule fixOperationday {
+	root : Root {
+		- patients -> p
+		- surgeons -> s
+	}
+	
+	p : Patient {
+		- firstWorkload -> w
+		- surgeon -> s
+	}
+	
+	w : Workload {
+		++ - derivedOpTimes -> op
+		++ - derivedCapacity -> c
+	}
+	
+	s : Surgeon {
+		- opTimes -> op
+	}
+	
+	op : OpTime {
+		- derivedCapacities -> c
+
+	}
+	
+	c : Capacity
+	
+	# p.earliestDay <= op.day 
+	# op.day <= p.dueDay
+	# p.surgeryDuration <= op.maxOpTime
+	# p.surgeryDuration <= c.maxCapacity
+}
+when patientOperationDayIsnotAssigned
+
+rule extendPatientStay {
+	// TODO
+}
+
+pattern nurseToShiftIsAssigned {
+	root : Root {
+		- rooms -> r
+		- nurses -> n
+		- virtualShiftToRoster -> vsr
+	}
+	
+	r : Room {
+		- shifts -> s
+	}
+	
+	s : Shift
+	
+	vsr : VirtualShiftToRoster {
+		- roster -> ro
+		- shift -> s
+	}
+	
+	n : Nurse {
+		- rosters -> ro
+	}
+	
+	ro : Roster
+
+	# ro.shiftNo == s.shiftNo
+}
+condition nurseToShiftIsNotAssigned = forbid nurseToShiftIsAssigned
+
+rule assignNurseToRoom {
+	root : Root {
+		- rooms -> r
+		- nurses -> n
+		++ - virtualShiftToRoster -> vsr
+	}
+	
+	r : Room {
+		- shifts -> s
+	}
+	
+	s : Shift
+	
+	++ vsr : VirtualShiftToRoster {
+		++ - roster -> ro
+		++ - shift -> s
+		.isSelected := false
+		.wasImported := false
+	}
+	
+	n : Nurse {
+		- rosters -> ro
+	}
+	
+	ro : Roster 
+
+	# ro.shiftNo == s.shiftNo
+}
+when nurseToShiftIsNotAssigned
+
+
 //
-// GIPSL
+// GIPSL 
 //
 
 mapping assignSurgeonMapping to assignSurgeonToOt;
