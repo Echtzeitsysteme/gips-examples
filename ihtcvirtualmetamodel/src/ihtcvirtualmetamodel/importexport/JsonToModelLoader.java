@@ -226,7 +226,30 @@ public class JsonToModelLoader {
 			}
 		}
 
+		// Set `prev` and `next` edges for all produced workloads
+		linkWorkloads(p);
 		this.model.getPatients().add(p);
+	}
+
+	/**
+	 * Creates the necessary `prev` and `next` edges for a given patient p's
+	 * workloads.
+	 * 
+	 * @param p Patient to create workload edges for.
+	 */
+	private void linkWorkloads(final Patient p) {
+		// Set `prev` and `next` edges for all produced workloads
+		for (int i = 0; i < p.getWorkloads().size(); i++) {
+			// Prev
+			if (i > 0) {
+				p.getWorkloads().get(i).setPrev(p.getWorkloads().get(i - 1));
+			}
+
+			// Next
+			if (i < p.getWorkloads().size() - 1) {
+				p.getWorkloads().get(i).setNext(p.getWorkloads().get(i + 1));
+			}
+		}
 	}
 
 	/**
@@ -351,6 +374,9 @@ public class JsonToModelLoader {
 				p.setFirstWorkload(w);
 			}
 		}
+
+		// Set `prev` and `next` edges for all produced workloads
+		linkWorkloads(p);
 
 		this.model.getPatients().add(p);
 	}
