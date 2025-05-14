@@ -54,11 +54,19 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		// Convert JSON input file to XMI file
 		//
 
+		if (verbose) {
+			logger.info("=> Start JSON model loader.");
+		}
+
 		transformJsonToModel(inputPath, instancePath);
 
 		//
 		// Pre-processing via a separated GT rule set
 		//
+
+		if (verbose) {
+			logger.info("=> Start pre-processing GT.");
+		}
 
 		preprocess(instancePath);
 
@@ -80,6 +88,11 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		buildAndSolve(gipsApi, verbose);
 		applySolution(gipsApi, verbose);
 		gipsSave(gipsApi, gipsOutputPath);
+
+		if (verbose) {
+			logger.info("=> Start JSON export.");
+		}
+
 		exportToJson(gipsOutputPath, outputPath);
 
 		//
