@@ -3,26 +3,62 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 //
 // GT rules for the pre-processing of a (virtual) model
 //
-
-// TODO: this rule is just an example
-rule assignSurgeonToOt {
+// Finds an existing virtual roster shift object for a specific
+// roster and a specific shift.
+pattern findVirtualRoster {
 	root: Root {
-		-surgeons -> surgeon
-		-ots -> o
+		-nurses -> nurse
+		-rooms -> room
+		-virtualShiftToRoster -> v
 	}
 
-	surgeon: Surgeon {
-		-opTimes -> op
+	nurse: Nurse {
+		-rosters -> roster
 	}
 
-	op: OpTime {
-		++ -derivedCapacities -> c
+	roster: Roster
+
+	room: Room {
+		-shifts -> shift
 	}
 
-	o: OT {
-		-capacities -> c
-	}
+	shift: Shift
 
-	c: Capacity
-	# op.day == c.day
+	v: VirtualShiftToRoster {
+		-roster -> roster
+		-shift -> shift
+	}
 }
+
+condition noVirtualRoster = forbid findVirtualRoster
+
+// Create a new virtual shift to roster object for a specific
+// shift and a specific roster. There must not be an existing
+// virtual shift to roster object connecting those two.
+rule createVirtualShiftToRoster {
+	root: Root {
+		-nurses -> nurse
+		-rooms -> room
+		++ -virtualShiftToRoster -> v
+	}
+
+	nurse: Nurse {
+		-rosters -> roster
+	}
+
+	roster: Roster
+
+	room: Room {
+		-shifts -> shift
+	}
+
+	shift: Shift
+
+	++ v: VirtualShiftToRoster {
+		++ -roster -> roster
+		++ -shift -> shift
+		.isSelected := false
+		.wasImported := false
+	}
+}
+when noVirtualRoster

@@ -1,6 +1,7 @@
 package ihtcvirtualpreprocessing;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
@@ -18,6 +19,7 @@ import ihtcvirtualmetamodel.IhtcvirtualmetamodelPackage;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualpreprocessing.api.IhtcvirtualpreprocessingAPI;
 import ihtcvirtualpreprocessing.api.IhtcvirtualpreprocessingHiPEApp;
+import ihtcvirtualpreprocessing.api.matches.CreateVirtualShiftToRosterMatch;
 
 /**
  * This eMoflon::IBeX-GT app can be used to run all pre-processing rules of the
@@ -35,8 +37,9 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 	/**
 	 * Global limit of the number of GT rule applications per GT rule.
 	 */
-	private static final int GT_RULE_APPLICATION_LIMIT = 1000;
+	private static final int GT_RULE_APPLICATION_LIMIT = 100_000;
 
+	// TODO: This field can be removed
 	/**
 	 * XMI model file path. This value will be used to read the input model and
 	 * write the output model to.
@@ -94,8 +97,8 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 		final IhtcvirtualpreprocessingAPI api = this.initAPI();
 
 		// Apply all GT rule matches until the specified limit hits
-		applyRuleUntilEnd(api.assignSurgeonToOt());
-		// TODO: New GT rules must be added here^
+		// TODO: New GT rules must be added here
+		applyMatches(api.createVirtualShiftToRoster());
 
 		// Persist model to XMI path
 		try {
@@ -115,17 +118,22 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 
 	/**
 	 * Applies the given GT rule until it either does not have any more matches or
-	 * the global GT rule application limit was hit. After each application, the
-	 * pattern matcher will be used to update the list of matches.
+	 * the global GT rule application limit was hit.
 	 * 
 	 * @param rule GT rule to apply.
 	 */
-	private void applyRuleUntilEnd(final GraphTransformationRule<?, ?> rule) {
-		for (int i = 0; i < GT_RULE_APPLICATION_LIMIT; i++) {
-			if (!rule.apply(true).isPresent()) {
+	private void applyMatches(final GraphTransformationRule<CreateVirtualShiftToRosterMatch, ?> rule) {
+		final Collection<CreateVirtualShiftToRosterMatch> matches = rule.findMatches();
+		int counter = 0;
+		for (final var match : matches) {
+			if (counter >= GT_RULE_APPLICATION_LIMIT) {
 				break;
 			}
+			rule.apply(match);
+			counter++;
 		}
+
+		logger.info(this.getClass().getSimpleName() + ": I created " + counter + " VirtualShiftToRoster objects.");
 	}
 
 	/**
