@@ -69,7 +69,7 @@ when surgeonOpIsNotAssigned
 pattern findPatientsInRoom {
 	root : Root {
 		- patients -> patient
-//		- virtualShiftToWorkload -> virtualWorkload
+		- virtualShiftToWorkload -> virtualWorkload
 	}
 	
 	patient : Patient {
@@ -77,21 +77,21 @@ pattern findPatientsInRoom {
 	}
 	
 	workload : Workload {
-		- derivedShift -> shift
-//		- virtualShift -> virtualWorkload
+//		- derivedShift -> shift
+		- virtualShift -> virtualWorkload
 	}
 	
-//	virtualWorkload : VirtualShiftToWorkload {
-//		- shift -> shift
-//	}
+	virtualWorkload : VirtualShiftToWorkload {
+		- shift -> s
+	}
 	
-	shift : Shift {
+	s : Shift {
 		- room -> r
 	}
 	
 	r : Room
 	
-//	# virtualWorkload.isSelected == true
+	# virtualWorkload.wasImported == true 
 }
 
 // Pattern to find assigned first Shifts for Patients
@@ -186,7 +186,7 @@ rule assignPatientToRoom {
 	
 	# s.shiftNo / 3 == c.day
 	# s.shiftNo % 3 == 0
-//	# r.beds > count(findPatientsInRoom) // TODO
+	# r.beds > count(findPatientsInRoom) // TODO vielleicht unnötig
 }
 when compatibleRoomAndNotAssigned
 
@@ -258,9 +258,92 @@ rule fixOperationday {
 }
 when patientOperationDayIsnotAssigned
 
+pattern patientStayCantBeExtended {
+	root : Root {
+		- patients -> p
+		- virtualShiftToWorkload -> prevvsw
+		- virtualShiftToWorkload -> nextvsw
+		- rooms -> r
+	}
+	
+	p : Patient {
+		- workloads -> prevw // Funktioniert das oder ist dann firstworkload exklusive? 
+	}
+	
+	prevw : Workload {
+		- next -> nextw
+	}
+	
+	nextw : Workload
+	
+	prevvsw : VirtualShiftToWorkload {
+		- workload -> prevw
+		- shift -> prevs
+	}
+	
+	prevs : Shift {
+		- next -> nexts
+		- room -> r
+	}
+	
+	nexts : Shift {
+		- room -> r
+	}
+	
+	r : Room
+	
+	nextvsw : VirtualShiftToWorkload {
+		- workload -> nextw
+		- shift -> nexts
+	}
+}
+condition patientStayCanBeExtended = forbid patientStayCantBeExtended
+
 rule extendPatientStay {
 	// TODO
+	root : Root {
+		- patients -> p
+		- virtualShiftToWorkload -> prevvsw
+		++ - virtualShiftToWorkload -> nextvsw
+		- rooms -> r
+	}
+	
+	p : Patient {
+		- workloads -> prevw // Funktioniert das? 
+	}
+	
+	prevw : Workload {
+		- next -> nextw
+	}
+	
+	nextw : Workload
+	
+	prevvsw : VirtualShiftToWorkload {
+		- workload -> prevw
+		- shift -> prevs
+	}
+	
+	prevs : Shift {
+		- next -> nexts
+		- room -> r
+	}
+	
+	nexts : Shift {
+		- room -> r
+	}
+	
+	r : Room
+	
+	++ nextvsw : VirtualShiftToWorkload {
+		++ - workload -> nextw
+		++ - shift -> nexts
+		.isSelected := false
+		.wasImported := false
+	}
+	
+	# nexts.shiftNo == prevs.shiftNo + 1 // Nicht notwendig wenn sortiert 
 }
+when patientStayCanBeExtended
 
 pattern nurseToShiftIsAssigned {
 	root : Root {
