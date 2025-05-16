@@ -28,7 +28,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="ta" lowerBound="1" eType="#//TA"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingNumeric" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SessionOccurrence">
+  <eClassifiers xsi:type="ecore:EClass" name="SessionOccurrence" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeTableWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tas" lowerBound="1" upperBound="-1"
         eType="#//TA"/>

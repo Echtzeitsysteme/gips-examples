@@ -232,6 +232,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 					final int chosenWeek = getRandIntWithBlocklist(START_WEEK, END_WEEK, alreadyUsedWeeks);
 					alreadyUsedWeeks.add(chosenWeek);
 					occ.setTimeTableWeek(chosenWeek);
+					occ.setName(module.getName() + " " + session.getName() + " " + occIdx);
 
 					// TODO: I've commented out this code because the assignment of TAs to
 					// occurrences should be done via an external algorithm (e.g., GIPS-based or
