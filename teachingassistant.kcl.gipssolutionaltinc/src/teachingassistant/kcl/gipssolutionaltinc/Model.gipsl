@@ -179,7 +179,7 @@ pattern findYellowTa {
 	# approval.ratingNumeric == 1
 }
 
-// TODO
+// Finds matches for previous assignments
 pattern findPreviousAssignment {
 	root : TAAllocation {
 		- tas -> ta
@@ -269,7 +269,8 @@ function yellowTas with findYellowTa {
 	)->sum(element.value)
 }
 
-// TODO
+// If a previous found assignment was not chosen again, add `1` to the
+// objective value.
 function previousAssignmentNotChosen with findPreviousAssignment {
 	1 - mappings.taToOccurrence->filter( //
 		element.nodes.occurrence == context.nodes.occurrence //

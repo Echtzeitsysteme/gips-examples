@@ -6,8 +6,6 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
-import metamodel.SessionOccurrence;
-import metamodel.TA;
 import metamodel.TAAllocation;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.PreprocessingGtApp;
 import teachingassistant.kcl.metamodel.utils.Tuple;
@@ -80,6 +78,13 @@ public class TeachingAssistantPipelineRunner {
 		System.exit(0);
 	}
 
+	/**
+	 * Compares to given solutions regarding the number of identical mappings
+	 * chosen.
+	 * 
+	 * @param first  First solution.
+	 * @param second Second solution.
+	 */
 	private static void compareSolutions(final TAAllocation first, final TAAllocation second) {
 		Objects.requireNonNull(first);
 		Objects.requireNonNull(second);
