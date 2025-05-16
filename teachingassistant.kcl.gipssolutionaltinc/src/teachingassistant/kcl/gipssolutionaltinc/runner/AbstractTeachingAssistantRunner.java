@@ -92,8 +92,11 @@ public abstract class AbstractTeachingAssistantRunner {
 	 */
 	protected void applySolution(final GipssolutionaltincGipsAPI gipsApi) {
 		// Apply found solution
-		gipsApi.getTaOccurrenceRemove().applyNonZeroMappings();
+//		gipsApi.getTaOccurrenceRemove().applyNonZeroMappings();
+//		gipsApi.getTaToOccurrence().applyNonZeroMappings();
+		// TODO
 		gipsApi.getTaToOccurrence().applyNonZeroMappings();
+//		throw new InternalError("Not yet implemented.");
 	}
 
 }
