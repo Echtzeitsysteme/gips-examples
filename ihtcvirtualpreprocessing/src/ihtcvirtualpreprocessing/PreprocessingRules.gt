@@ -60,6 +60,9 @@ rule createVirtualShiftToRoster {
 		++ -roster -> roster
 		++ -shift -> shift
 		.isSelected := false
+		// TODO: `wasImported` could be removed from the metamodel
+		// because there are no pre-determined assignments between
+		// `Roster` and `Shift`
 		.wasImported := false
 	}
 	
