@@ -391,7 +391,6 @@ rule assignNurseToRoom {
 		++ - roster -> ro
 		++ - shift -> s
 		.isSelected := false
-		.wasImported := false
 	}
 	
 	n : Nurse {
