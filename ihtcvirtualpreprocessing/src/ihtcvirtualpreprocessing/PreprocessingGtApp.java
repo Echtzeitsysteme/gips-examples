@@ -98,7 +98,12 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 
 		// Apply all GT rule matches until the specified limit hits
 		// TODO: New GT rules must be added here
+//		applyMatches(api.preprocessOccupantsWorkload());
 		applyMatches(api.createVirtualShiftToRoster());
+//		applyMatches(api.assignPatientToRoom());
+//		applyMatches(api.extendPatientStay());
+		// TODO: adapt `applyMatches` to the other types
+		
 
 		// Persist model to XMI path
 		try {

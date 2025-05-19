@@ -3,6 +3,11 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 //
 // GT rules for the pre-processing of a (virtual) model
 //
+
+//
+// Pre-processing for all virtual elements between `Roster` and `Shift`//
+//
+
 // Finds an existing virtual roster shift object for a specific
 // roster and a specific shift.
 pattern findVirtualRoster {
@@ -65,3 +70,235 @@ rule createVirtualShiftToRoster {
 	# roster.shiftNo == shift.shiftNo
 }
 when noVirtualRoster
+
+//
+// Pre-processing for all first virtual elements between `Shift` and `Workload`
+//
+
+// Pattern to find assigned first Shifts for Patients
+pattern patientFirstShiftIsAssigned {
+root : Root {
+		- patients -> p
+		- virtualShiftToWorkload -> vsw
+		- rooms -> r
+		- ots -> ot
+	}
+	
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload {
+		- derivedCapacity -> c
+	}
+	
+	ot : OT {
+		- capacities -> c
+	}
+	
+	c : Capacity 
+	
+	vsw : VirtualShiftToWorkload {
+		- workload -> w
+		- shift -> s
+	}
+	
+	s : Shift {
+		- room -> r
+	}
+	
+	r : Room
+}
+condition patientFirstShiftIsNotAssigned = forbid patientFirstShiftIsAssigned
+
+// Pattern that finds incompatible rooms for patients
+pattern uncompatibleRoomForPatient {
+	root : Root {
+		- patients -> p 
+		- rooms -> r
+	}
+	
+	p : Patient {
+		- incompatibleRooms -> r
+	}
+	
+	r : Room
+}
+condition compatibleRoomForPatient = forbid uncompatibleRoomForPatient
+
+condition compatibleRoomAndNotAssigned = compatibleRoomForPatient && patientFirstShiftIsNotAssigned
+
+// Pattern that creates a Virtual Node between Shift and Workload to assign a patient to a room 
+rule assignPatientToRoom {
+	root : Root {
+		- patients -> p
+		++ - virtualShiftToWorkload -> vsw
+		- rooms -> r
+		- ots -> ot
+	}
+	
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload {
+		- derivedCapacity -> c
+	}
+	
+	ot : OT {
+		- capacities -> c
+	}
+	
+	c : Capacity 
+	
+	++ vsw : VirtualShiftToWorkload {
+		++ - workload -> w
+		++ - shift -> s
+		.isSelected := false
+		.wasImported := false
+	}
+	
+	s : Shift {
+		- room -> r
+	}
+	
+	r : Room
+	
+	# s.shiftNo / 3 == c.day
+	# s.shiftNo % 3 == 0
+//	# r.beds > count(findPatientsInRoom) // TODO vielleicht unnötig
+	// ^ `count(...)` is broken in the code-gen of the pattern matcher
+	# p.isOccupant == false
+}
+when compatibleRoomAndNotAssigned
+
+//
+// Pre-processing for succeeding first virtual elements between `Shift` and `Workload`
+//
+
+pattern nextVirtualShiftToWorkloadExists {
+	root : Root {
+		- patients -> p
+		- virtualShiftToWorkload -> prevvsw
+		- virtualShiftToWorkload -> nextvsw
+		- rooms -> r
+	}
+	
+	p : Patient {
+		- workloads -> prevw // Funktioniert das oder ist dann firstworkload exklusive? 
+	}
+	
+	prevw : Workload {
+		- next -> nextw
+	}
+	
+	nextw : Workload
+	
+	prevvsw : VirtualShiftToWorkload {
+		- workload -> prevw
+		- shift -> prevs
+	}
+	
+	prevs : Shift {
+		- next -> nexts
+		- room -> r
+	}
+	
+	nexts : Shift {
+		- room -> r
+	}
+	
+	r : Room
+	
+	nextvsw : VirtualShiftToWorkload {
+		- workload -> nextw
+		- shift -> nexts
+	}
+	
+	# p.isOccupant == false
+}
+condition nextVirtualShiftToWorkloadDoesNotExist = forbid nextVirtualShiftToWorkloadExists
+
+rule extendPatientStay {
+	root : Root {
+		- patients -> p
+		- virtualShiftToWorkload -> prevvsw
+		++ - virtualShiftToWorkload -> nextvsw
+		- rooms -> r
+	}
+	
+	p : Patient {
+		- workloads -> prevw
+	}
+	
+	prevw : Workload {
+		- next -> nextw
+	}
+	
+	nextw : Workload
+	
+	prevvsw : VirtualShiftToWorkload {
+		- workload -> prevw
+		- shift -> prevs
+	}
+	
+	prevs : Shift {
+		- next -> nexts
+		- room -> r
+	}
+	
+	nexts : Shift {
+		- room -> r
+	}
+	
+	r : Room
+	
+	++ nextvsw : VirtualShiftToWorkload {
+		++ - workload -> nextw
+		++ - shift -> nexts
+		.isSelected := false
+		.wasImported := false
+	}
+	
+	# nexts.shiftNo == prevs.shiftNo + 1 // Nicht notwendig wenn sortiert
+	# p.isOccupant == false
+}
+when nextVirtualShiftToWorkloadDoesNotExist
+
+//
+// Pre-processing for existing (non-virtual) edges between `Shift` and `Workload`
+//
+
+rule preprocessOccupantsWorkload {
+	root : Root {
+		- patients -> p
+		++ - virtualShiftToWorkload -> vsw
+		- rooms -> r
+	}
+	
+	p : Patient {
+		- workloads -> w
+	}
+	
+	w : Workload {
+		-- - derivedShift -> s
+	}
+	
+	s : Shift {
+		- room -> r
+		// Explicitly delete both edges
+		// (Maybe deleting one is sufficient)
+		-- - derivedWorkloads -> w
+	}
+	
+	r : Room
+	
+	++ vsw : VirtualShiftToWorkload {
+		++ - workload -> w
+		++ - shift -> s
+		.isSelected := false
+		.wasImported := true
+	}
+	
+	# p.isOccupant == true
+}
