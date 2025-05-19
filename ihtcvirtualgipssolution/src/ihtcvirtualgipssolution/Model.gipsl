@@ -186,7 +186,8 @@ rule assignPatientToRoom {
 	
 	# s.shiftNo / 3 == c.day
 	# s.shiftNo % 3 == 0
-	# r.beds > count(findPatientsInRoom) // TODO vielleicht unnötig
+//	# r.beds > count(findPatientsInRoom) // TODO vielleicht unnötig
+	// ^ `count(...)` is broken in the code-gen of the pattern matcher
 }
 when compatibleRoomAndNotAssigned
 
