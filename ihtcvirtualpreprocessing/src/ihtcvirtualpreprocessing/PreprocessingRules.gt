@@ -42,6 +42,7 @@ condition noVirtualRoster = forbid findVirtualRoster
 // Create a new virtual shift to roster object for a specific
 // shift and a specific roster. There must not be an existing
 // virtual shift to roster object connecting those two.
+// TODO: The name of the following rule could be adapted to the spec PDF.
 rule createVirtualShiftToRoster {
 	root: Root {
 		-nurses -> nurse
