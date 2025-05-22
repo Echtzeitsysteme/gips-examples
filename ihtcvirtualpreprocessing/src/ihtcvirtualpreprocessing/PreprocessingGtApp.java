@@ -35,7 +35,7 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 	/**
 	 * Global limit of the number of GT rule applications per GT rule.
 	 */
-	private static final int GT_RULE_APPLICATION_LIMIT = 1000;
+	private static final int GT_RULE_APPLICATION_LIMIT = 40_000;
 
 	// TODO: This field can be removed
 	/**
@@ -97,8 +97,8 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 		// Apply all GT rule matches until the specified limit hits
 		// New GT rules (that should be applied) must be added here
 		applyMatches(api.preprocessOccupantsWorkload(), GT_RULE_APPLICATION_LIMIT);
-		applyMatches(api.createVirtualShiftToRoster(), GT_RULE_APPLICATION_LIMIT);
-		applyMatches(api.assignPatientToRoom(), 1);
+		applyMatches(api.assignNurseToRoom(), GT_RULE_APPLICATION_LIMIT);
+		applyMatches(api.assignPatientToRoom(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.extendPatientStay(), GT_RULE_APPLICATION_LIMIT);
 
 		// Persist model to XMI path
