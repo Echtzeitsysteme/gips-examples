@@ -11,21 +11,7 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 // Finds an existing virtual roster shift object for a specific
 // roster and a specific shift.
 pattern findVirtualRoster {
-	root: Root {
-		-nurses -> nurse
-		-rooms -> room
-		-virtualShiftToRoster -> v
-	}
-
-	nurse: Nurse {
-		-rosters -> roster
-	}
-
 	roster: Roster
-
-	room: Room {
-		-shifts -> shift
-	}
 
 	shift: Shift
 
@@ -33,8 +19,6 @@ pattern findVirtualRoster {
 		-roster -> roster
 		-shift -> shift
 	}
-	
-	# roster.shiftNo == shift.shiftNo
 }
 
 condition noVirtualRoster = forbid findVirtualRoster
@@ -78,46 +62,46 @@ when noVirtualRoster
 
 // Pattern to find assigned first Shifts for Patients
 pattern patientFirstShiftIsAssigned {
-root : Root {
-		- patients -> p
-		- virtualShiftToWorkload -> vsw
-		- rooms -> r
-		- ots -> ot
-	}
-	
-	p : Patient {
-		- firstWorkload -> w
-	}
-	
+//root : Root {
+//		- patients -> p
+//		- virtualShiftToWorkload -> vsw
+//		- rooms -> r
+//		- ots -> ot
+//	}
+//	
+//	p : Patient {
+//		- firstWorkload -> w
+//	}
+//	
 	w : Workload {
-		- derivedCapacity -> c
+//		- derivedCapacity -> c
 	}
-	
-	ot : OT {
-		- capacities -> c
-	}
-	
-	c : Capacity 
-	
+//	
+//	ot : OT {
+//		- capacities -> c
+//	}
+//	
+//	c : Capacity 
+//	
 	vsw : VirtualShiftToWorkload {
 		- workload -> w
 		- shift -> s
 	}
 	
 	s : Shift {
-		- room -> r
+//		- room -> r
 	}
-	
-	r : Room
+//	
+//	r : Room
 }
 condition patientFirstShiftIsNotAssigned = forbid patientFirstShiftIsAssigned
 
 // Pattern that finds incompatible rooms for patients
 pattern uncompatibleRoomForPatient {
-	root : Root {
-		- patients -> p 
-		- rooms -> r
-	}
+//	root : Root {
+//		- patients -> p 
+//		- rooms -> r
+//	}
 	
 	p : Patient {
 		- incompatibleRooms -> r
@@ -135,7 +119,7 @@ rule assignPatientToRoom {
 		- patients -> p
 		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
-		- ots -> ot
+//		- ots -> ot
 	}
 	
 	p : Patient {
@@ -143,14 +127,14 @@ rule assignPatientToRoom {
 	}
 	
 	w : Workload {
-		- derivedCapacity -> c
+//		- derivedCapacity -> c
 	}
 	
-	ot : OT {
-		- capacities -> c
-	}
+//	ot : OT {
+//		- capacities -> c
+//	}
 	
-	c : Capacity 
+//	c : Capacity
 	
 	++ vnew : VirtualShiftToWorkload {
 		++ - workload -> w
@@ -165,11 +149,23 @@ rule assignPatientToRoom {
 	
 	r : Room
 	
-	# s.shiftNo / 3 == c.day
+//	# s.shiftNo / 3 == c.day
 	# s.shiftNo % 3 == 0
 //	# r.beds > count(findPatientsInRoom) // TODO vielleicht unnötig
 	// ^ `count(...)` is broken in the code-gen of the pattern matcher
 	# p.isOccupant == false
+	
+	// Optimization: patient must be ready by the current day.
+	// I.e., it is never an option to set the admission day of a patient to
+	// a day before the patient's first possible admission day so we can
+	// already remove these matches using the PM.
+	# s.shiftNo / 3 >= p.earliestDay
+	
+	// Optimization: patient's due date must not be violated.
+	// I.e., it is never an option to set the admission day of a patient to
+	// a day after the patient's due day so we can already remove these
+	// matches using the PM.
+	# s.shiftNo / 3 <= p.dueDay
 }
 when compatibleRoomAndNotAssigned
 
@@ -178,45 +174,45 @@ when compatibleRoomAndNotAssigned
 //
 
 pattern nextVirtualShiftToWorkloadExists {
-	root : Root {
-		- patients -> p
-		- virtualShiftToWorkload -> prevvsw
-		- virtualShiftToWorkload -> nextvsw
-		- rooms -> r
-	}
+//	root : Root {
+//		- patients -> p
+//		- virtualShiftToWorkload -> prevvsw
+//		- virtualShiftToWorkload -> nextvsw
+//		- rooms -> r
+//	}
+//	
+//	p : Patient {
+//		- workloads -> prevw // Funktioniert das oder ist dann firstworkload exklusive? 
+//	}
 	
-	p : Patient {
-		- workloads -> prevw // Funktioniert das oder ist dann firstworkload exklusive? 
-	}
-	
-	prevw : Workload {
-		- next -> nextw
-	}
+//	prevw : Workload {
+//		- next -> nextw
+//	}
 	
 	nextw : Workload
 	
-	prevvsw : VirtualShiftToWorkload {
-		- workload -> prevw
-		- shift -> prevs
-	}
+//	prevvsw : VirtualShiftToWorkload {
+////		- workload -> prevw
+////		- shift -> prevs
+//	}
 	
-	prevs : Shift {
-		- next -> nexts
-		- room -> r
-	}
+//	prevs : Shift {
+//		- next -> nexts
+////		- room -> r
+//	}
 	
 	nexts : Shift {
-		- room -> r
+//		- room -> r
 	}
 	
-	r : Room
+//	r : Room
 	
 	nextvsw : VirtualShiftToWorkload {
 		- workload -> nextw
 		- shift -> nexts
 	}
 	
-	# p.isOccupant == false
+//	# p.isOccupant == false
 }
 condition nextVirtualShiftToWorkloadDoesNotExist = forbid nextVirtualShiftToWorkloadExists
 
