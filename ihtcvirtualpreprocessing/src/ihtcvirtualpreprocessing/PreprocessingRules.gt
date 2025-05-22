@@ -47,7 +47,7 @@ rule createVirtualShiftToRoster {
 	root: Root {
 		-nurses -> nurse
 		-rooms -> room
-		++ -virtualShiftToRoster -> v
+		++ -virtualShiftToRoster -> vnew
 	}
 
 	nurse: Nurse {
@@ -62,7 +62,7 @@ rule createVirtualShiftToRoster {
 
 	shift: Shift
 
-	++ v: VirtualShiftToRoster {
+	++ vnew: VirtualShiftToRoster {
 		++ -roster -> roster
 		++ -shift -> shift
 		.isSelected := false
@@ -133,7 +133,7 @@ condition compatibleRoomAndNotAssigned = compatibleRoomForPatient && patientFirs
 rule assignPatientToRoom {
 	root : Root {
 		- patients -> p
-		++ - virtualShiftToWorkload -> vsw
+		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
 		- ots -> ot
 	}
@@ -152,7 +152,7 @@ rule assignPatientToRoom {
 	
 	c : Capacity 
 	
-	++ vsw : VirtualShiftToWorkload {
+	++ vnew : VirtualShiftToWorkload {
 		++ - workload -> w
 		++ - shift -> s
 		.isSelected := false
@@ -224,7 +224,7 @@ rule extendPatientStay {
 	root : Root {
 		- patients -> p
 		- virtualShiftToWorkload -> prevvsw
-		++ - virtualShiftToWorkload -> nextvsw
+		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
 	}
 	
@@ -254,7 +254,7 @@ rule extendPatientStay {
 	
 	r : Room
 	
-	++ nextvsw : VirtualShiftToWorkload {
+	++ vnew : VirtualShiftToWorkload {
 		++ - workload -> nextw
 		++ - shift -> nexts
 		.isSelected := false
@@ -273,7 +273,7 @@ when nextVirtualShiftToWorkloadDoesNotExist
 rule preprocessOccupantsWorkload {
 	root : Root {
 		- patients -> p
-		++ - virtualShiftToWorkload -> vsw
+		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
 	}
 	
@@ -294,7 +294,7 @@ rule preprocessOccupantsWorkload {
 	
 	r : Room
 	
-	++ vsw : VirtualShiftToWorkload {
+	++ vnew : VirtualShiftToWorkload {
 		++ - workload -> w
 		++ - shift -> s
 		.isSelected := false
