@@ -29,7 +29,7 @@ rule assignNurseToRoom {
 	root: Root {
 		-nurses -> nurse
 		-rooms -> room
-		++ -virtualShiftToRoster -> vnew
+//		++ -virtualShiftToRoster -> vnew
 	}
 
 	nurse: Nurse {
@@ -87,7 +87,7 @@ condition compatibleRoomAndNotAssigned = compatibleRoomForPatient && patientFirs
 rule assignPatientToRoom {
 	root : Root {
 		- patients -> p
-		++ - virtualShiftToWorkload -> vnew
+//		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
 	}
 	
@@ -146,8 +146,8 @@ condition nextVirtualShiftToWorkloadDoesNotExist = forbid nextVirtualShiftToWork
 rule extendPatientStay {
 	root : Root {
 		- patients -> p
-		- virtualShiftToWorkload -> prevvsw
-		++ - virtualShiftToWorkload -> vnew
+//		- virtualShiftToWorkload -> prevvsw
+//		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
 	}
 	
@@ -195,7 +195,7 @@ when nextVirtualShiftToWorkloadDoesNotExist
 rule preprocessOccupantsWorkload {
 	root : Root {
 		- patients -> p
-		++ - virtualShiftToWorkload -> vnew
+//		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
 	}
 	
