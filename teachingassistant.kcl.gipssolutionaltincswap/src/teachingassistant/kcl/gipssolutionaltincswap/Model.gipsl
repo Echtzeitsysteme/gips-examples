@@ -14,92 +14,78 @@ config {
 // GT
 //
 
-// Find session occurrence
-pattern findSessionOccurrence {
-	root : TAAllocation {
-		- modules -> module
-	}
-	
-	module : Module {
-		- sessions -> session
-	}
-	
-	session : TeachingSession {
-		- occurrences -> occurrence
-	}
-	
-	occurrence : SessionOccurrence
-}
-
+// TODO: Adapt documentation
 // Construct a condition for a session that a specific TA
 // is available (i.e., they have not blocked this session)
-pattern findTaUnavailableSession {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
+pattern findTaAUnavailableEntryA {	
+	taA : TA {
+		- unavailable_because_lessons -> entryA
 	}
 	
-	ta : TA {
-		- unavailable_because_lessons -> entry
-	}
-	
-	module : Module {
-		- sessions -> session
-	}
-	
-	session : TeachingSession {
-		- entries -> entry
-	}
-	
-	entry : TimeTableEntry
+	entryA : TimeTableEntry
 }
-condition taAvailableInSession = forbid findTaUnavailableSession
 
+pattern findTaAUnavailableEntryB {
+	taA : TA {
+		- unavailable_because_lessons -> entryB
+	}
+	
+	entryB : TimeTableEntry
+}
+
+pattern findTaBUnavailableEntryA {
+	taB : TA {
+		- unavailable_because_lessons -> entryA
+	}
+	
+	entryA : TimeTableEntry
+}
+
+condition taAandTaBAllCondition = enforce findTaAUnavailableEntryA && forbid findTaAUnavailableEntryB && forbid findTaBUnavailableEntryA
+
+// TODO: Adapt documentation
 // Rule to assign a TA to a specific session occurrence.
 // This rule respects the condition that the TA must not have
 // blocked the respective time table entry of the session occurrence.
-rule assignTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
+rule swapTas {
+	taA : TA
+	taB : TA
+	
+	sessionA : TeachingSession {
+		- occurrences -> occurrenceA
+		- entries -> entryA
 	}
 	
-	ta : TA
-	
-	module : Module {
-		- sessions -> session
+	sessionB : TeachingSession {
+		- occurrences -> occurrenceB
+		- entries -> entryB
 	}
 	
-	session : TeachingSession {
-		- occurrences -> occurrence
-		- entries -> entry
+	occurrenceA : SessionOccurrence {
+		-- - tas -> taA
+		++ - tas -> taB
 	}
 	
-	occurrence : SessionOccurrence {
-		++ - tas -> ta
+	occurrenceB : SessionOccurrence {
+		-- - tas -> taB
+		++ - tas -> taA
 	}
 	
-	w : Week
+	wA : Week
+	wB : Week
 	
-	entry : TimeTableEntry {
-		- timeTableWeeks -> w
+	entryA : TimeTableEntry {
+		- timeTableWeeks -> wA
 	}
 	
-	# occurrence.timeTableWeek == w.number
+	entryB : TimeTableEntry {
+		- timeTableWeeks -> wB
+	}
+	
+	# occurrenceA.timeTableWeek == wA.number
+	# occurrenceB.timeTableWeek == wB.number
 }
-when taAvailableInSession
-
-// Find every possible combination of TAs
-// and time table entries
-pattern findTaEntryCombination {
-	root : TAAllocation {
-		- tas -> ta
-		- timetable -> entry
-	}
-	
-	ta : TA
-	entry : TimeTableEntry
-}
+when taAandTaBAllCondition
 
 // For a specific TA, find all conflicting time table
 // entries in the model.
@@ -139,119 +125,135 @@ pattern findTaWeekCombination {
 	ta : TA
 }
 
-//// Find a TA with a green employment approval status
-//// for a specific module.
-//pattern findGreenTa {
-//	root : TAAllocation {
-//		- tas -> ta
-//		- modules -> mod
-//	}
-//	
-//	ta : TA
-//	
-//	mod : Module {
-//		- approvals -> approval
-//	}
-//	
-//	approval : EmploymentApproval {
-//		- ta -> ta
-//	}
-//	# approval.ratingNumeric == 2
-//}
-//
-//// Find a TA with a yellow employment approval status
-//// for a specific module.
-//pattern findYellowTa {
-//	root : TAAllocation {
-//		- tas -> ta
-//		- modules -> mod
-//	}
-//	
-//	ta : TA
-//	
-//	mod : Module {
-//		- approvals -> approval
-//	}
-//	
-//	approval : EmploymentApproval {
-//		- ta -> ta
-//	}
-//	# approval.ratingNumeric == 1
-//}
+// Construct a condition for a session that a specific TA
+// is available (i.e., they have not blocked this session)
+pattern findTaUnavailableSession {
+	ta : TA {
+		- unavailable_because_lessons -> entry
+	}
+	
+	entry : TimeTableEntry
+}
+condition taBlockedInSession = enforce findTaUnavailableSession
+
+// TODO: Documentation
+pattern findBlockedTa {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> module
+	}
+	
+	ta : TA
+	
+	module : Module {
+		- sessions -> session
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+		- entries -> entry
+	}
+	
+	occurrence : SessionOccurrence {
+		- tas -> ta
+	}
+	
+	w : Week
+	
+	entry : TimeTableEntry {
+		- timeTableWeeks -> w
+	}
+	
+	# occurrence.timeTableWeek == w.number
+}
+when taBlockedInSession
 
 //
 // GIPSL
 //
 
-// If a mapping instance has a value of `1`, the respective TA must
-// be mapped to the respective session occurrence.
-mapping taToOccurrence to assignTa;
+// TODO: Documentation
+mapping swap to swapTas;
 
-// Every session occurrence must have exactly `numTAsPerSession` TAs assigned.
-constraint with findSessionOccurrence {
-	mappings.taToOccurrence->filter( //
-		element.nodes.occurrence == context.nodes.occurrence //
+// Every blocked TA must be swapped out
+constraint with findBlockedTa {
+	mappings.swap->filter( //
+		element.nodes.occurrenceA == context.nodes.occurrence //
+		& element.nodes.taA == context.nodes.ta //
 	)->sum(element.value)
 	==
-	context.nodes.session.numTAsPerSession
+	1
 }
 
 // TAs must not have conflicting assignments.
 // GIPSL formulation: For any pair of conflicting session occurrences (in the
 // context of one TA), a maximum of one of these conflicting session can be chosen.
 constraint with findConflictingEntriesWithTa {
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
+	// No conflict for TA_B
+	mappings.swap->filter(element.nodes.taB == context.nodes.ta & element.nodes.entryA == context.nodes.entryA)->sum(element.value)
 	+
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(element.value)
+	mappings.swap->filter(element.nodes.taB == context.nodes.ta & element.nodes.entryA == context.nodes.entryB)->sum(element.value)
 	<= 1
+	
+	&
+	
+	// No conflict for TA_A
+	mappings.swap->filter(element.nodes.taA == context.nodes.ta & element.nodes.entryB == context.nodes.entryA)->sum(element.value)
+	+
+	mappings.swap->filter(element.nodes.taA == context.nodes.ta & element.nodes.entryB == context.nodes.entryB)->sum(element.value)
+	<= 1
+	
+	// TODO: also check conflicts for already existing entries
 }
 
 // Ensure TAs max hours per year
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // must not exceed their yearly hour limit
 constraint with TA {
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context
-	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	mappings.swap->filter( //
+		element.nodes.taA == context //
+	)->sum( //
+		element.value * element.nodes.sessionB.hoursPaidPerOccurrence //
+		- element.value * element.nodes.sessionA.hoursPaidPerOccurrence //
+	)
 	<= context.maxHoursPerYear
+	
+	&
+	
+	mappings.swap->filter( //
+		element.nodes.taB == context //
+	)->sum( //
+		element.value * element.nodes.sessionA.hoursPaidPerOccurrence //
+		- element.value * element.nodes.sessionB.hoursPaidPerOccurrence //
+	)
+	<= context.maxHoursPerYear
+	
+	// TODO: also check time limits for already existing entries
 }
 
 // Ensure TAs max hours per week
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // in a specific week must not exceed their weekly hour limit
 constraint with findTaWeekCombination {
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.w == context.nodes.w
-	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	mappings.swap->filter( //
+		element.nodes.taA == context.nodes.ta //
+		& element.nodes.wA == context.nodes.w
+	)->sum( //
+		element.value * element.nodes.sessionB.hoursPaidPerOccurrence //
+		- element.value * element.nodes.sessionA.hoursPaidPerOccurrence //
+	)
 	<= context.nodes.ta.maxHoursPerWeek
+	
+	&
+	
+	mappings.swap->filter( //
+		element.nodes.taB == context.nodes.ta //
+		& element.nodes.wB == context.nodes.w
+	)->sum( //
+		element.value * element.nodes.sessionA.hoursPaidPerOccurrence //
+		- element.value * element.nodes.sessionB.hoursPaidPerOccurrence //
+	)
+	<= context.nodes.ta.maxHoursPerWeek
+	
+	// TODO: also check time limits for already existing entries
 }
-
-//// Represents the number of assigned session occurrences to a specific
-//// TA for a specific session (and the TA needs to have the green
-//// employment rating for the respective module).
-//function greenTas with findGreenTa {
-//	mappings.taToOccurrence->filter( //
-//		element.nodes.ta == context.nodes.ta //
-//		& element.nodes.module == context.nodes.mod
-//	)->sum(element.value)
-//}
-//
-//// Represents the number of assigned session occurrences to a specific
-//// TA for a specific session (and the TA needs to have the yellow
-//// employment rating for the respective module).
-//function yellowTas with findYellowTa {
-//	mappings.taToOccurrence->filter( //
-//		element.nodes.ta == context.nodes.ta //
-//		& element.nodes.module == context.nodes.mod
-//	)->sum(element.value)
-//}
-//
-//// Global objective
-//// We want to use a higher weight for green TAs compared to the
-//// yellow TAs
-//objective : max {
-//	0
-//	+ 5 * functions.greenTas
-//	+ 1 * functions.yellowTas
-//}

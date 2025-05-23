@@ -92,8 +92,7 @@ public abstract class AbstractTeachingAssistantRunner {
 	 */
 	protected void applySolution(final GipssolutionaltincswapGipsAPI gipsApi) {
 		// Apply found solution
-		gipsApi.getTaToOccurrence().applyNonZeroMappings();
-		// TODO: Add all rule applications
+		gipsApi.getSwap().applyNonZeroMappings();
 	}
 
 }

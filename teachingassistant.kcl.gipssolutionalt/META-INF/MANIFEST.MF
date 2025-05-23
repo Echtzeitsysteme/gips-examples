@@ -4,6 +4,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: teachingassistant.kcl.gipssolutionalt
 Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
+Export-Package: teachingassistant.kcl.gipssolutionalt.runner
 Bundle-SymbolicName: teachingassistant.kcl.gipssolutionalt; singleton:=true
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-21
