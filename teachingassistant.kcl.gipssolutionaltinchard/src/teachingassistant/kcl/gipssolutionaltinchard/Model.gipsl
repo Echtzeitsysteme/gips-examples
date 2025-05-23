@@ -17,21 +17,8 @@ config {
 // Construct a condition for a session that a specific TA
 // is available (i.e., they have not blocked this session)
 pattern findTaUnavailableSession {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
-	}
-	
 	ta : TA {
 		- unavailable_because_lessons -> entry
-	}
-	
-	module : Module {
-		- sessions -> session
-	}
-	
-	session : TeachingSession {
-		- entries -> entry
 	}
 	
 	entry : TimeTableEntry
