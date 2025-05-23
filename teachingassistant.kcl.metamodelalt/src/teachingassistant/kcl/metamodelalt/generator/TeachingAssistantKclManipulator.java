@@ -1,8 +1,10 @@
 package teachingassistant.kcl.metamodelalt.generator;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -10,6 +12,8 @@ import metamodel.SessionOccurrence;
 import metamodel.TA;
 import metamodel.TAAllocation;
 import metamodel.TeachingSession;
+import metamodel.TimeTableEntry;
+import metamodel.Week;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
 
 public class TeachingAssistantKclManipulator {
@@ -61,7 +65,23 @@ public class TeachingAssistantKclManipulator {
 		Objects.requireNonNull(occ);
 		final TA ta = occ.getTas().get(0);
 		Objects.requireNonNull(ta);
-		ta.getUnavailable_because_lessons().addAll(session.getEntries());
+//		ta.getUnavailable_because_lessons().addAll(session.getEntries());
+		// Use one specific entry that matches the occurrence.
+		// Find matching `TimeTableEntry` for the selected `occurrence`
+		final Set<TimeTableEntry> foundEntries = new HashSet<TimeTableEntry>();
+		for (final TimeTableEntry entry : session.getEntries()) {
+			for (final Week week : entry.getTimeTableWeeks()) {
+				if (week.getNumber() == occ.getTimeTableWeek()) {
+					foundEntries.add(entry);
+					break;
+				}
+			}
+		}
+
+		System.out.println("Number of matched entries: " + foundEntries.size());
+		ta.getUnavailable_because_lessons().addAll(foundEntries);
+
+		// TODO(Max): Make sure occurrence is not in the past.
 	}
 
 }

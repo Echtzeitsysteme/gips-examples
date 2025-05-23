@@ -6,7 +6,7 @@ import teachingassistant.kcl.gipssolutionaltinchard.api.gips.Gipssolutionaltinch
 
 public class TeachingAssistantRunner extends AbstractTeachingAssistantRunner {
 
-	private final String scenarioFileName = "kcl_ta_allocation.xmi";
+	static String scenarioFileName = "kcl_ta_allocation.xmi";
 
 	public static void main(final String[] args) {
 		new TeachingAssistantRunner().run();

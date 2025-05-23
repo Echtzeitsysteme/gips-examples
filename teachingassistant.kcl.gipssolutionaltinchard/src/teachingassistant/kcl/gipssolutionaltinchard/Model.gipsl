@@ -213,7 +213,7 @@ constraint with taOccurrenceRemove {
 // must be a corresponding instance of the type `taToOccurrence` in order
 // to repair the module.
 constraint with taOccurrenceRemove {
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.occurrence == context.nodes.occurrence)->sum(element.value) == 1
+	mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value) == 1
 }
 
 // TAs must not have conflicting assignments.
