@@ -35,7 +35,7 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 	/**
 	 * Global limit of the number of GT rule applications per GT rule.
 	 */
-	private static final int GT_RULE_APPLICATION_LIMIT = 1000;
+	private static final int GT_RULE_APPLICATION_LIMIT = 40_000;
 
 	// TODO: This field can be removed
 	/**
@@ -96,10 +96,10 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 
 		// Apply all GT rule matches until the specified limit hits
 		// New GT rules (that should be applied) must be added here
-		applyMatches(api.preprocessOccupantsWorkload());
-		applyMatches(api.createVirtualShiftToRoster());
-		applyMatches(api.assignPatientToRoom());
-		applyMatches(api.extendPatientStay());
+		applyMatches(api.preprocessOccupantsWorkload(), GT_RULE_APPLICATION_LIMIT);
+		applyMatches(api.assignNurseToRoom(), GT_RULE_APPLICATION_LIMIT);
+		applyMatches(api.assignPatientToRoom(), GT_RULE_APPLICATION_LIMIT);
+		applyMatches(api.extendPatientStay(), GT_RULE_APPLICATION_LIMIT);
 
 		// Persist model to XMI path
 		try {
@@ -121,12 +121,16 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 	 * Applies the given GT rule until it either does not have any more matches or
 	 * the global GT rule application limit was hit.
 	 * 
-	 * @param rule GT rule to apply.
+	 * @param rule  GT rule to apply.
+	 * @param limit Maximum number of GT rule applications.
+	 * @param api
 	 */
-	private void applyMatches(final GraphTransformationRule<?, ?> rule) {
+	private void applyMatches(final GraphTransformationRule<?, ?> rule, final int limit) {
+		logger.info(this.getClass().getSimpleName() + ": Initial number of matches of GT rule " + rule.getPatternName()
+				+ " " + rule.countMatches() + ".");
 		int counter = 0;
 		while (rule.isApplicable()) {
-			if (counter >= GT_RULE_APPLICATION_LIMIT) {
+			if (counter >= limit) {
 				break;
 			}
 			rule.apply();
@@ -135,6 +139,8 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 
 		logger.info(this.getClass().getSimpleName() + ": I applied the GT rule " + rule.getPatternName() + " " + counter
 				+ " times.");
+		logger.info(this.getClass().getSimpleName() + ": Remaining number of matches of GT rule "
+				+ rule.getPatternName() + " " + rule.countMatches() + ".");
 	}
 
 	/**

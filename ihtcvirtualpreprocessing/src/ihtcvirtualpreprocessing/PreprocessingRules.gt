@@ -5,27 +5,13 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 //
 
 //
-// Pre-processing for all virtual elements between `Roster` and `Shift`//
+// Pre-processing for all virtual elements between `Roster` and `Shift`
 //
 
 // Finds an existing virtual roster shift object for a specific
 // roster and a specific shift.
 pattern findVirtualRoster {
-	root: Root {
-		-nurses -> nurse
-		-rooms -> room
-		-virtualShiftToRoster -> v
-	}
-
-	nurse: Nurse {
-		-rosters -> roster
-	}
-
 	roster: Roster
-
-	room: Room {
-		-shifts -> shift
-	}
 
 	shift: Shift
 
@@ -33,21 +19,17 @@ pattern findVirtualRoster {
 		-roster -> roster
 		-shift -> shift
 	}
-	
-	# roster.shiftNo == shift.shiftNo
 }
-
 condition noVirtualRoster = forbid findVirtualRoster
 
 // Create a new virtual shift to roster object for a specific
 // shift and a specific roster. There must not be an existing
 // virtual shift to roster object connecting those two.
-// TODO: The name of the following rule could be adapted to the spec PDF.
-rule createVirtualShiftToRoster {
+rule assignNurseToRoom {
 	root: Root {
 		-nurses -> nurse
 		-rooms -> room
-		++ -virtualShiftToRoster -> v
+		++ -virtualShiftToRoster -> vnew
 	}
 
 	nurse: Nurse {
@@ -62,7 +44,7 @@ rule createVirtualShiftToRoster {
 
 	shift: Shift
 
-	++ v: VirtualShiftToRoster {
+	++ vnew: VirtualShiftToRoster {
 		++ -roster -> roster
 		++ -shift -> shift
 		.isSelected := false
@@ -78,54 +60,26 @@ when noVirtualRoster
 
 // Pattern to find assigned first Shifts for Patients
 pattern patientFirstShiftIsAssigned {
-root : Root {
-		- patients -> p
-		- virtualShiftToWorkload -> vsw
-		- rooms -> r
-		- ots -> ot
-	}
-	
-	p : Patient {
-		- firstWorkload -> w
-	}
-	
-	w : Workload {
-		- derivedCapacity -> c
-	}
-	
-	ot : OT {
-		- capacities -> c
-	}
-	
-	c : Capacity 
+	w : Workload 
 	
 	vsw : VirtualShiftToWorkload {
 		- workload -> w
 		- shift -> s
 	}
 	
-	s : Shift {
-		- room -> r
-	}
-	
-	r : Room
+	s : Shift 
 }
 condition patientFirstShiftIsNotAssigned = forbid patientFirstShiftIsAssigned
 
 // Pattern that finds incompatible rooms for patients
-pattern uncompatibleRoomForPatient {
-	root : Root {
-		- patients -> p 
-		- rooms -> r
-	}
-	
+pattern incompatibleRoomForPatient {
 	p : Patient {
 		- incompatibleRooms -> r
 	}
 	
 	r : Room
 }
-condition compatibleRoomForPatient = forbid uncompatibleRoomForPatient
+condition compatibleRoomForPatient = forbid incompatibleRoomForPatient
 
 condition compatibleRoomAndNotAssigned = compatibleRoomForPatient && patientFirstShiftIsNotAssigned
 
@@ -133,26 +87,17 @@ condition compatibleRoomAndNotAssigned = compatibleRoomForPatient && patientFirs
 rule assignPatientToRoom {
 	root : Root {
 		- patients -> p
-		++ - virtualShiftToWorkload -> vsw
+		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
-		- ots -> ot
 	}
 	
 	p : Patient {
 		- firstWorkload -> w
 	}
 	
-	w : Workload {
-		- derivedCapacity -> c
-	}
+	w : Workload
 	
-	ot : OT {
-		- capacities -> c
-	}
-	
-	c : Capacity 
-	
-	++ vsw : VirtualShiftToWorkload {
+	++ vnew : VirtualShiftToWorkload {
 		++ - workload -> w
 		++ - shift -> s
 		.isSelected := false
@@ -165,11 +110,20 @@ rule assignPatientToRoom {
 	
 	r : Room
 	
-	# s.shiftNo / 3 == c.day
 	# s.shiftNo % 3 == 0
-//	# r.beds > count(findPatientsInRoom) // TODO vielleicht unnötig
-	// ^ `count(...)` is broken in the code-gen of the pattern matcher
 	# p.isOccupant == false
+	
+	// Optimization: patient must be ready by the current day.
+	// I.e., it is never an option to set the admission day of a patient to
+	// a day before the patient's first possible admission day so we can
+	// already remove these matches using the PM.
+	# s.shiftNo / 3 >= p.earliestDay
+	
+	// Optimization: patient's due date must not be violated.
+	// I.e., it is never an option to set the admission day of a patient to
+	// a day after the patient's due day so we can already remove these
+	// matches using the PM.
+	# s.shiftNo / 3 <= p.dueDay
 }
 when compatibleRoomAndNotAssigned
 
@@ -178,45 +132,14 @@ when compatibleRoomAndNotAssigned
 //
 
 pattern nextVirtualShiftToWorkloadExists {
-	root : Root {
-		- patients -> p
-		- virtualShiftToWorkload -> prevvsw
-		- virtualShiftToWorkload -> nextvsw
-		- rooms -> r
-	}
-	
-	p : Patient {
-		- workloads -> prevw // Funktioniert das oder ist dann firstworkload exklusive? 
-	}
-	
-	prevw : Workload {
-		- next -> nextw
-	}
-	
 	nextw : Workload
 	
-	prevvsw : VirtualShiftToWorkload {
-		- workload -> prevw
-		- shift -> prevs
-	}
-	
-	prevs : Shift {
-		- next -> nexts
-		- room -> r
-	}
-	
-	nexts : Shift {
-		- room -> r
-	}
-	
-	r : Room
+	nexts : Shift
 	
 	nextvsw : VirtualShiftToWorkload {
 		- workload -> nextw
 		- shift -> nexts
 	}
-	
-	# p.isOccupant == false
 }
 condition nextVirtualShiftToWorkloadDoesNotExist = forbid nextVirtualShiftToWorkloadExists
 
@@ -224,7 +147,7 @@ rule extendPatientStay {
 	root : Root {
 		- patients -> p
 		- virtualShiftToWorkload -> prevvsw
-		++ - virtualShiftToWorkload -> nextvsw
+		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
 	}
 	
@@ -254,14 +177,13 @@ rule extendPatientStay {
 	
 	r : Room
 	
-	++ nextvsw : VirtualShiftToWorkload {
+	++ vnew : VirtualShiftToWorkload {
 		++ - workload -> nextw
 		++ - shift -> nexts
 		.isSelected := false
 		.wasImported := false
 	}
-	
-	# nexts.shiftNo == prevs.shiftNo + 1 // Nicht notwendig wenn sortiert
+
 	# p.isOccupant == false
 }
 when nextVirtualShiftToWorkloadDoesNotExist
@@ -273,7 +195,7 @@ when nextVirtualShiftToWorkloadDoesNotExist
 rule preprocessOccupantsWorkload {
 	root : Root {
 		- patients -> p
-		++ - virtualShiftToWorkload -> vsw
+		++ - virtualShiftToWorkload -> vnew
 		- rooms -> r
 	}
 	
@@ -294,7 +216,7 @@ rule preprocessOccupantsWorkload {
 	
 	r : Room
 	
-	++ vsw : VirtualShiftToWorkload {
+	++ vnew : VirtualShiftToWorkload {
 		++ - workload -> w
 		++ - shift -> s
 		.isSelected := false
