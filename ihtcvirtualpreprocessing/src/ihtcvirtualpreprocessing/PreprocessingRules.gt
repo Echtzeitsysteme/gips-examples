@@ -236,10 +236,23 @@ rule preprocessOccupantsWorkload {
 // Pre-processing for surgeon and operating theaters
 //
 
+pattern findVirtualOpTimeToCapacity {
+	op : OpTime
+	
+	c: Capacity
+	
+	v: VirtualOpTimeToCapacity {
+		- capacity -> c
+		- opTime -> op
+	}
+}
+condition noOpTimeToCapacity = forbid findVirtualOpTimeToCapacity
+
 rule assignSurgeonToOt {
 	root : Root {
 		- surgeons -> s
 		- ots -> o
+		++ - virtualOpTimeToCapacity -> vnew
 	}
 	
 	s : Surgeon {
@@ -253,4 +266,83 @@ rule assignSurgeonToOt {
 	}
 	
 	c : Capacity
+	
+	++ vnew : VirtualOpTimeToCapacity {
+		++ - opTime -> op
+		++ - capacity -> c
+		.isSelected := false
+	}
 }
+when noOpTimeToCapacity
+
+//
+// Pre-processing for workloads, OP time, and capacity
+//
+
+pattern findVirtualWorkloadToOpTime {
+	w: Workload
+	op: OpTime
+	
+	v : VirtualWorkloadToOpTime {
+		- opTime -> op
+		- workload -> w
+	}
+}
+
+pattern findVirtualWorkloadToCapacity {
+	w: Workload
+	c: Capacity
+	
+	v : VirtualWorkloadToCapacity {
+		- capacity -> c
+		- workload -> w
+	}
+}
+
+condition noWorkloadAssignment = forbid findVirtualWorkloadToOpTime && forbid findVirtualWorkloadToCapacity
+
+rule fixOperationDay {
+	root : Root {
+		- patients -> p
+		- surgeons -> s
+		++ - virtualWorkloadToOpTime -> vnew
+		++ - virtualWorkloadToCapacity -> vnew2
+	}
+	
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload
+	
+	s : Surgeon {
+		- opTimes -> op
+	}
+	
+	op : OpTime
+	
+	c : Capacity
+	
+	vexist : VirtualOpTimeToCapacity {
+		- capacity -> c
+		- opTime -> op
+	}
+	
+	++ vnew : VirtualWorkloadToOpTime {
+		++ - opTime -> op
+		++ - workload -> w
+		.isSelected := false
+	}
+	
+	++ vnew2 : VirtualWorkloadToCapacity {
+		++ - capacity -> c
+		++ - workload -> w
+		.isSelected := false
+	}
+	
+	# p.earliestDay <= op.day
+	# op.day <= p.dueDay
+	# p.surgeryDuration <= op.maxOpTime
+	# p.surgeryDuration <= c.maxCapacity
+}
+when noWorkloadAssignment

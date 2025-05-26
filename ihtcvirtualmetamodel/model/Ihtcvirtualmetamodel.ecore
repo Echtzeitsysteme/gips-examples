@@ -25,7 +25,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkloadToOpTime"
         upperBound="-1" eType="#//VirtualWorkloadToOpTime" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualOpTimeToCapacity"
-        upperBound="-1" eType="#//VirtualWorkloadToCapacity" containment="true"/>
+        upperBound="-1" eType="#//VirtualOpTimeToCapacity" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkloadToCapacity"
         upperBound="-1" eType="#//VirtualWorkloadToCapacity" containment="true"/>
   </eClassifiers>
@@ -156,7 +156,19 @@
         eOpposite="#//Roster/virtualShift"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VirtualWorkloadToOpTime"/>
-  <eClassifiers xsi:type="ecore:EClass" name="VirtualOpTimeToCapacity"/>
-  <eClassifiers xsi:type="ecore:EClass" name="VirtualWorkloadToCapacity"/>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualWorkloadToOpTime">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="opTime" eType="#//OpTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualOpTimeToCapacity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="opTime" eType="#//OpTime"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="capacity" eType="#//Capacity"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualWorkloadToCapacity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="capacity" eType="#//Capacity"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
 </ecore:EPackage>
