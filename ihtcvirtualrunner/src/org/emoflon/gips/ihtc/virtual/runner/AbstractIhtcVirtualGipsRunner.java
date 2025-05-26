@@ -196,7 +196,11 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 
 		// Apply found solution
 		final long tick = System.nanoTime();
-		gipsApi.getAssignSurgeonMapping().applyNonZeroMappings(false);
+//		gipsApi.getAssignSurgeonMapping().applyNonZeroMappings(false);
+		gipsApi.getSelectedOperationDay().applyNonZeroMappings();
+		gipsApi.getSelectedShiftToRoster().applyNonZeroMappings();
+		gipsApi.getSelectedShiftToFirstWorkload().applyNonZeroMappings();
+		gipsApi.getSelectedExtendingShiftToFirstWorkload().applyNonZeroMappings();
 
 		// TODO: Add all other mappings and their application here
 		if (gipsApi.getMappers().size() > 1) {
