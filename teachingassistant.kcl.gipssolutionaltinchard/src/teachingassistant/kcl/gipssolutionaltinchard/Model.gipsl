@@ -283,6 +283,9 @@ constraint with TA {
 	patterns.taExistingAssignment->filter( //
 		element.nodes.ta == context //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
+	- mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta == context //
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
 	<= context.maxHoursPerYear
 }
 
@@ -299,6 +302,10 @@ constraint with findTaWeekCombination {
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.w == context.nodes.w //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
+	- mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.w == context.nodes.w
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
 	<= context.nodes.ta.maxHoursPerWeek
 }
 
