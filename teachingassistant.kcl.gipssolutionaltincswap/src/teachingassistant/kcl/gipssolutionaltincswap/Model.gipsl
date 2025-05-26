@@ -58,9 +58,17 @@ rule swapTas {
 	taA : TA
 	taB : TA
 	
+	moduleA : Module {
+		- sessions -> sessionA
+	}
+	
 	sessionA : TeachingSession {
 		- occurrences -> occurrenceA
 		- entries -> entryA
+	}
+	
+	moduleB : Module {
+		- sessions -> sessionB
 	}
 	
 	sessionB : TeachingSession {
@@ -206,6 +214,20 @@ pattern taExistingAssignment {
 	# occurrence.timeTableWeek == w.number
 }
 
+pattern findQualifiedTa {
+	ta : TA
+	
+	module : Module {
+		- approvals -> approval
+	}
+	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	
+	# approval.ratingNumeric > 0
+}
+
 //
 // GIPSL
 //
@@ -222,6 +244,22 @@ constraint with findBlockedTa {
 	)->sum(element.value)
 	==
 	1
+}
+
+constraint with swap {
+	patterns.findQualifiedTa->filter( //
+		element.nodes.ta == context.nodes.taA //
+		& element.nodes.module == context.nodes.moduleB //
+	)->sum(1)
+	>= context.value
+	
+	&
+	
+	patterns.findQualifiedTa->filter( //
+		element.nodes.ta == context.nodes.taB //
+		& element.nodes.module == context.nodes.moduleA //
+	)->sum(1)
+	>= context.value
 }
 
 // TAs must not have conflicting assignments.
