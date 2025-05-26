@@ -97,6 +97,12 @@ rule assignPatientToRoom {
 	
 	w : Workload
 	
+	ot : OT {
+		- capacities -> c
+	}
+	
+	c : Capacity
+	
 	++ vnew : VirtualShiftToWorkload {
 		++ - workload -> w
 		++ - shift -> s
@@ -224,4 +230,27 @@ rule preprocessOccupantsWorkload {
 	}
 	
 	# p.isOccupant == true
+}
+
+//
+// Pre-processing for surgeon and operating theaters
+//
+
+rule assignSurgeonToOt {
+	root : Root {
+		- surgeons -> s
+		- ots -> o
+	}
+	
+	s : Surgeon {
+		- opTimes -> op
+	}
+	
+	op : OpTime
+	
+	o : OT {
+		- capacities -> c
+	}
+	
+	c : Capacity
 }
