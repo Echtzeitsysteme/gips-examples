@@ -38,6 +38,7 @@ rule assignTa {
 	
 	module : Module {
 		- sessions -> session
+		- approvals -> approval
 	}
 	
 	session : TeachingSession {
@@ -55,7 +56,12 @@ rule assignTa {
 		- timeTableWeeks -> w
 	}
 	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	
 	# occurrence.timeTableWeek == w.number
+	# approval.ratingNumeric > 0
 }
 when taAvailableInSession
 
