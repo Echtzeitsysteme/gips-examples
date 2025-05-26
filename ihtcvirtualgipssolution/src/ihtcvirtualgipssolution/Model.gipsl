@@ -17,7 +17,7 @@ config {
 rule selectShiftToFirstWorkload {
 	root : Root {
 		- patients -> p
-		++ - virtualShiftToWorkload -> vsw // TODO: raus, wenn schon im preprocessing erledigt
+		- virtualShiftToWorkload -> vsw 
 	}
 	
 	p : Patient {
@@ -26,11 +26,16 @@ rule selectShiftToFirstWorkload {
 	
 	w : Workload {
 		- virtualShift -> vsw
-		- derivedCapacity -> c
+		- virtualCapacity -> vwc
+	}
+	
+	vwc : VirtualWorkloadToCapacity {
+		- capacity -> c
 	}
 	
 	vsw : VirtualShiftToWorkload {
 		- shift -> s
+		- requires_virtualWorkloadToCapacity -> vwc
 		.isSelected := true
 	}
 	
@@ -42,7 +47,8 @@ rule selectShiftToFirstWorkload {
 	
 	c : Capacity
 	
-	# s.shiftNo / 3 == c.day // TODO: Sollte schon durch preprocessing gegeben sein 
+	// Already expected in preprocessing. Not mandatory here
+	# s.shiftNo / 3 == c.day 
 	# s.shiftNo % 3 == 0
 }
 
@@ -51,7 +57,7 @@ rule selectExtendingShiftToFirstWorkload {
 	root : Root {
 		- patients -> p
 		- virtualShiftToWorkload -> prevvsw
-		++ - virtualShiftToWorkload -> nextvsw // TODO: raus, wenn schon im preprocessing erledigt
+		- virtualShiftToWorkload -> nextvsw
 	}
 	
 	p : Patient {
@@ -66,7 +72,6 @@ rule selectExtendingShiftToFirstWorkload {
 	
 	prevvsw : VirtualShiftToWorkload {
 		- shift -> prevs
-//		++ - next -> nextvsw // TODO
 	}
 	
 	prevs : Shift {
@@ -80,6 +85,7 @@ rule selectExtendingShiftToFirstWorkload {
 	
 	nextvsw : VirtualShiftToWorkload {
 		- shift -> nexts
+		- requires_virtualShiftToWorkload -> prevvsw
 		.isSelected := true
 	}
 	
@@ -88,13 +94,11 @@ rule selectExtendingShiftToFirstWorkload {
 	}
 	
 	r : Room
-	
-	# prevvsw.isSelected == true // TODO: Hier abfragen oder erst im Constraint? 
 }
 
 // Rule that selects an operation day for a patient. 
 // That includes three edges to be adopted in the final model.
-// I. + II.: between the patient and opTime (to ) and between patient and capacity -> Selects a day and OT for the patient
+// I. + II.: between the patient and opTime and between patient and capacity -> Selects a day and OT for the patient
 // III.: between opTime and Capacity to make sure the predefined surgeon of the patient is working in the correct OT on that day
 rule selectOperationDay {
 	root : Root {
@@ -109,8 +113,20 @@ rule selectOperationDay {
 	}
 	
 	w : Workload {
-		++ - derivedOpTimes -> op // TODO: virtual -> .isSelected := true
-		++ - derivedCapacity -> c // TODO: virtual -> .isSelected := true
+		- virtualCapacity -> vwc
+		- virtualOpTime -> vwop
+	}
+	
+	vwc : VirtualWorkloadToCapacity {
+		- capacity -> c
+		- requires_virtualOpTimeToCapacity -> vopc
+		.isSelected := true
+	}
+	
+	vwop : VirtualWorkloadToOpTime {
+		- opTime -> op
+		- requires_virtualOpTimeToCapacity -> vopc
+		.isSelected := true
 	}
 	
 	s : Surgeon {
@@ -118,7 +134,12 @@ rule selectOperationDay {
 	}
 	
 	op : OpTime {
-		++ - derivedCapacities -> c // TODO: virtual -> .isSelected := true
+		- virtualCapacity -> vopc
+	}
+	
+	vopc : VirtualOpTimeToCapacity {
+		- capacity -> c
+		.isSelected := true
 	}
 	
 	ot : OT {
@@ -127,7 +148,8 @@ rule selectOperationDay {
 	
 	c : Capacity
 	 
-	# op.day == c.day // TODO: Sollte schon durch preprocessing gegeben sein 
+	// Already expected in preprocessing. Not mandatory here
+	# op.day == c.day 
 	# p.earliestDay <= op.day 
 	# op.day <= p.dueDay
 	# p.surgeryDuration <= op.maxOpTime
@@ -139,7 +161,6 @@ rule selectShiftToRoster {
 	root : Root {
 		- nurses -> n
 		- rooms -> r
-		++ - virtualShiftToRoster -> vsr // TODO: raus, wenn schon im preprocessing erledigt
 	}
 	
 	n : Nurse {
@@ -161,7 +182,8 @@ rule selectShiftToRoster {
 	
 	r : Room
 	
-	# ro.shiftNo == s.shiftNo // TODO: Sollte schon durch preprocessing gegeben sein 
+	// Already expected in preprocessing. Not mandatory here
+	# ro.shiftNo == s.shiftNo
 }
 
 //
@@ -186,12 +208,26 @@ pattern assignedSurgeries {
 	}
 	
 	w : Workload {
-		- derivedCapacity -> c // TODO: virtual 
-		- derivedOpTimes -> op // TODO: virtual 
+		- virtualCapacity -> vwc
+		- virtualOpTime -> vwop
+	}
+	
+	vwc : VirtualWorkloadToCapacity {
+		- capacity -> c
+		- requires_virtualOpTimeToCapacity -> vopc
+	}
+	
+	vwop : VirtualWorkloadToOpTime {
+		- opTime -> op
+		- requires_virtualOpTimeToCapacity -> vopc
 	}
 	
 	op : OpTime {
-		- derivedCapacities -> c // TODO: virtual 
+		- virtualCapacity -> vopc
+	}
+	
+	vopc : VirtualOpTimeToCapacity {
+		- capacity -> c
 	}
 	
 	ot : OT
@@ -289,6 +325,65 @@ pattern surgeonCapacity {
 	op : OpTime
 }
 
+pattern checkRequiredShiftToWorkload{
+	root : Root {
+		- virtualShiftToWorkload -> prevvsw
+		- virtualShiftToWorkload -> nextvsw
+	}
+	
+	prevvsw : VirtualShiftToWorkload {
+		- enables_virtualShiftToWorkload -> nextvsw
+	}
+	
+	nextvsw : VirtualShiftToWorkload
+}
+
+pattern checkRequiredWorkloadToCapacity{
+	root : Root {
+		- virtualShiftToWorkload -> vsw
+		- virtualWorkloadToCapacity -> vwc
+	}
+	
+	vsw : VirtualShiftToWorkload
+	
+	vwc : VirtualWorkloadToCapacity {
+		- enables_virtualShiftToWorkload -> vsw
+	}
+}
+
+pattern patientTupel {
+	root : Root {
+		- patients -> p1
+		- patients -> p2
+	}
+	
+	p1 : Patient {
+		- firstWorkload -> w1
+	}
+	
+	w1 : Workload {
+		- virtualShift -> vsw1
+	}
+	
+	vsw1 : VirtualShiftToWorkload {
+		- shift -> s
+	}
+	
+	p2 : Patient {
+		- firstWorkload -> w2
+	}
+	
+	w2 : Workload {
+		- virtualShift -> vsw2
+	}
+	
+	vsw2 : VirtualShiftToWorkload {
+		- shift -> s
+	}
+	
+	s : Shift
+}
+
 //
 // GIPSL 
 //
@@ -325,35 +420,24 @@ mapping assignedPatientsToRoom to patientForRoom;
 // mapping that decides which ots are open on a specific day
 mapping openOTs to otForDay;
 
-// Mapping that holds the information how many ots a surgeon is  assigned to on a specific day
-mapping countOtForSurgeon to surgeonCapacity {
-	var otCount : EInt
-};
-
 //
-// Constraints
+// Hard Constraints
 //
 
 // H1: No gender mix: Patients of different genders may not share a room on any day. 
 // patient.gender is a string variable and the preallocation is assumably not known. -> There can only be the same value for all patients
 
-// TODO: Keine Lösung bis jetzt
-//constraint with countPatientsForRoom {
-//	// summe über alle patienten mit dem ersten gefundenen geschlecht 
-//	// muss so groß sein wie patientCount sonst keine zuweisung von selectedShiftToFirstWorkload
-//	mappings.assignedPatientsToRoom->filter(
-//		element.nodes.s.shiftNo == context.nodes.s.shiftNo // &
-//		// element.nodes.p.gender == 
-//	)->sum(element.value) 
-//	== 
-//	context.variables.patientCount
-//}
+constraint with patientTupel {
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.p == context.nodes.p1 &
+		element.nodes.p.gender != context.nodes.p2.gender 
+	)->sum(element.value) == 0
+}
 
 // H2: Compatible rooms: Patients can only be assigned to one of their compatible rooms.
 // -> Already enforced by GT-Rule "assignPatientToRoom" in preprocessing
 
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded. 
-// TODO: So könnten H3 und H4 zusammen abgefragt werden -> Macht das einen Unterschied bei der Performance?
 
 constraint with assignedSurgeries {
 	mappings.selectedOperationDay->filter(
@@ -381,8 +465,6 @@ constraint with assignedSurgeries {
 
 constraint with mandatoryPatients {
 	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
-	&
-	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1 // TODO: vielleicht unnötig
 }
 
 // H6: Admission day: A patient can be admitted on any day from their release date to their
@@ -407,6 +489,10 @@ constraint with countPatientsForRoom {
 constraint with countPatientsForRoom {
 	 context.variables.patientCount <= context.nodes.r.beds
 }
+
+//
+// General Constraints
+//
 
 // C1: A patient is assigned to the same room during all shifts
 // -> Already enforced by GT-Rule "extendPatientStay" in preprocessing
@@ -442,12 +528,70 @@ constraint with Patient {
 }
 
 // C6: A surgeon without any operations on a specific day is not assigned an operating theater on that day
-// Wenn keine Operationen (menge zugeordneter Patienten pro Tag) -> keine Verbindung zwischen OpTime und Capacity
-// -> Sollte schon so gegeben sein
+// -> Already given, because the rule selectOperationDay only assigns a surgeon to an OT if he has a scheduled
+// operation with a patient on that day
 
-// TODO: Ketten für Shift/Workload werden richtig gesetzt
+//
+// "Virtual" Constraints
+//
 
-// Other utility constraints
+// V1: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
+// the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
+
+constraint with checkRequiredWorkloadToCapacity {
+	mappings.selectedShiftToFirstWorkload->filter(
+		element.nodes.vsw == context.nodes.vsw &
+		element.nodes.vwc == context.nodes.vwc
+	)->sum(element.value) == 1
+	=>
+	mappings.selectedOperationDay->filter(
+		element.nodes.vwc == context.nodes.vwc
+	)->sum(element.value) == 1
+}
+
+// V2: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
+// that is connected to the previous links between the patients workloads to shifts.
+// The following node can only be selected if the previous is already set to true
+
+constraint with checkRequiredShiftToWorkload{
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.prevvsw == context.nodes.prevvsw &
+		element.nodes.nextvsw == context.nodes.nextvsw 
+	)->sum(element.value) == 1
+	=>
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.nextvsw == context.nodes.prevvsw 
+	)->sum(element.value) == 1
+	&
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.prevvsw == context.nodes.prevvsw &
+		element.nodes.nextvsw == context.nodes.nextvsw 
+	)->sum(element.value) == 1
+	=>
+	mappings.selectedShiftToFirstWorkload->filter(
+		element.nodes.vsw == context.nodes.prevvsw 
+	)->sum(element.value) == 1
+}
+
+// V3: TODO: Does the existing logic to set all three 3 nodes to true simultaneously work? 
+
+// V4: Every virtual ShiftToWorkload Node of an Occupant has to be selected in the final model
+
+constraint with VirtualShiftToWorkload {
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.vsw == context & 
+		element.nodes.vsw.wasImported
+	)->sum(element.value) == 1
+	&
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.nextvsw == context & 
+		element.nodes.nextvsw.wasImported
+	)->sum(element.value) == 1
+}
+
+//
+// Utility constraints
+//
 
 // sets the mapping to true if there is at least one surgery assigned to the ot on that day
 constraint with openOTs {
@@ -456,17 +600,7 @@ constraint with openOTs {
 		element.nodes.c.day == context.nodes.c.day
 	)->sum(element.value)
 	>= 
-	context.value // Geht auch >= 0?
-}
-
-// Counts the ots a surgeon is working in for a specific day -> TODO: unnötig wenn untere Lösung funktioniert
-constraint with countOtForSurgeon {
-	context.variables.otCount
-	== 
-	mappings.selectedOperationDay->filter(
-		element.nodes.s == context.nodes.s &
-		element.nodes.op.day == context.nodes.op.day 
-	)->sum(element.value)
+	context.value // TODO: Geht auch >= 0?
 }
 
 //
@@ -474,6 +608,8 @@ constraint with countOtForSurgeon {
 //
 
 // S1: The maximum difference of age groups in one room for each day should be minimized
+
+// TODO: Implement
 
 // S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
 
@@ -487,7 +623,11 @@ function calculateUnqualifiedNurses with assignedPatientsToRoom {
 
 // S3: The number of nurses taking care of a specific patient must be minimized
 
+// TODO: Implement 
+
 // S4: The workload of a nurse should not exceed the assigned maximum workload
+
+// TODO: Implement 
 
 // S5: The number of OTs opened on each day should be minimized
 
@@ -497,8 +637,7 @@ function calculateOPenOTs with openOTs {
 
 // S6: The number of different OTs a surgeon is assigned to per working day should be minimized
 
-function calculateOtsPerSurgeon with countOtForSurgeon {
-	//context.variables.otCount // Geht das?
+function calculateOtsPerSurgeon with surgeonCapacity {
 	mappings.selectedOperationDay->filter(
 		element.nodes.s == context.nodes.s &
 		element.nodes.op.day == context.nodes.op.day 
@@ -506,7 +645,6 @@ function calculateOtsPerSurgeon with countOtForSurgeon {
 }
 
 // S7: The number of days between a patient´s release date and their actual date of admission should be minimized
-// min dayOfSurgery - earliestDay ? -> Sonst constant einfach stayLength
 
 function calculateWaitTime with selectedShiftToFirstWorkload {
 	((context.nodes.s.shiftNo / 3) - context.nodes.p.earliestDay) * context.value
