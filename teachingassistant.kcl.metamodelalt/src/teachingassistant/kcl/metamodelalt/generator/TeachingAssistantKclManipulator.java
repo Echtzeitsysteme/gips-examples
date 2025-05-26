@@ -118,16 +118,34 @@ public class TeachingAssistantKclManipulator {
 			throw new IllegalArgumentException("Given new weekly hour limit was negative.");
 		}
 
-		final metamodel.Module module = model.getModules().get(0);
-		Objects.requireNonNull(module);
-		final TeachingSession session = module.getSessions().get(0);
-		Objects.requireNonNull(session);
-		final SessionOccurrence occ = session.getOccurrences().get(0);
-		Objects.requireNonNull(occ);
-		final TA ta = occ.getTas().get(0);
-		Objects.requireNonNull(ta);
+		for (int i = 0; i < model.getModules().size(); i++) {
+			final metamodel.Module module = model.getModules().get(i);
+			Objects.requireNonNull(module);
 
-		ta.setMaxHoursPerWeek(newWeeklyHourLimit);
+			for (int j = 0; j < module.getSessions().size(); j++) {
+				final TeachingSession session = module.getSessions().get(j);
+				Objects.requireNonNull(session);
+
+				for (int k = 0; k < session.getOccurrences().size(); k++) {
+					final SessionOccurrence occ = session.getOccurrences().get(k);
+					Objects.requireNonNull(occ);
+
+					for (int l = 0; l < occ.getTas().size(); l++) {
+						final TA ta = occ.getTas().get(l);
+						Objects.requireNonNull(ta);
+
+						if (session.getHoursPaidPerOccurrence() > newWeeklyHourLimit) {
+							ta.setMaxHoursPerWeek(newWeeklyHourLimit);
+							return;
+						}
+					}
+				}
+			}
+		}
+
+		throw new UnsupportedOperationException(
+				"There was no possible conflict I could produce with the given new weekly hour limit: "
+						+ newWeeklyHourLimit);
 	}
 
 }
