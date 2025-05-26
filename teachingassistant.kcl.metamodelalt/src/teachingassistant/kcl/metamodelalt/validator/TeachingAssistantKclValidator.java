@@ -809,18 +809,20 @@ public class TeachingAssistantKclValidator {
 	private Set<TimeTableEntry> findAllShiftsOfTaInWeek(final TA ta, final int week, final TAAllocation model) {
 		final Set<TimeTableEntry> shifts = new HashSet<>();
 		model.getModules().forEach(module -> {
-			boolean assigned = false;
-			for (final EmploymentApproval ea : module.getApprovals()) {
-				if (ea.getTa() != null && ea.getTa().equals(ta)) {
-					assigned = true;
-					break;
-				}
-			}
-
-			// If the TA is not assigned in any approval, skip remaining checks.
-			if (!assigned) {
-				return;
-			}
+			// Disabled on purpose to find all shifts of the given TA in the given week
+			// regardless of the approvals.
+//			boolean assigned = false;
+//			for (final EmploymentApproval ea : module.getApprovals()) {
+//				if (ea.getTa() != null && ea.getTa().equals(ta)) {
+//					assigned = true;
+//					break;
+//				}
+//			}
+//
+//			// If the TA is not assigned in any approval, skip remaining checks.
+//			if (!assigned) {
+//				return;
+//			}
 
 			module.getSessions().forEach(session -> {
 				session.getOccurrences().forEach(o -> {
@@ -830,7 +832,8 @@ public class TeachingAssistantKclValidator {
 						final Set<TimeTableEntry> matchingEntries = new HashSet<>();
 						session.getEntries().forEach(tte -> {
 							for (final Week w : tte.getTimeTableWeeks()) {
-								if (w.getNumber() == o.getTimeTableWeek()) {
+								// Week number must match from occurrence to week but also to given week value
+								if (w.getNumber() == o.getTimeTableWeek() && w.getNumber() == week) {
 									matchingEntries.add(tte);
 									break;
 								}
