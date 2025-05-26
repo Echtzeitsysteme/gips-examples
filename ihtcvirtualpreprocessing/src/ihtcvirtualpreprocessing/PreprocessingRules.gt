@@ -106,6 +106,8 @@ rule assignPatientToRoom {
 	vexist : VirtualWorkloadToCapacity {
 		- capacity -> c
 		- workload -> w
+		++ - enables_virtualShiftToWorkload -> vnew
+		// Explicitly set the opposite edge
 	}
 	
 	++ vnew : VirtualShiftToWorkload {
@@ -113,6 +115,7 @@ rule assignPatientToRoom {
 		++ - shift -> s
 		.isSelected := false
 		.wasImported := false
+		++ - requires_virtualWorkloadToCapacity -> vexist
 	}
 	
 	s : Shift {
@@ -175,6 +178,8 @@ rule extendPatientStay {
 	prevvsw : VirtualShiftToWorkload {
 		- workload -> prevw
 		- shift -> prevs
+		++ - enables_virtualShiftToWorkload -> vnew
+		// Explicitly set the opposite edge
 	}
 	
 	prevs : Shift {
@@ -193,6 +198,7 @@ rule extendPatientStay {
 		++ - shift -> nexts
 		.isSelected := false
 		.wasImported := false
+		++ - requires_virtualShiftToWorkload -> prevvsw
 	}
 
 	# p.isOccupant == false
@@ -335,18 +341,23 @@ rule fixOperationDay {
 	vexist : VirtualOpTimeToCapacity {
 		- capacity -> c
 		- opTime -> op
+		// Explicitly set the opposite edge
+		++ - enables_virtualWorkloadToOpTime -> vnew
+		++ - virtual_WorkloadToCapacity -> vnew2
 	}
 	
 	++ vnew : VirtualWorkloadToOpTime {
 		++ - opTime -> op
 		++ - workload -> w
 		.isSelected := false
+		++ - requires_virtualOpTimeToCapacity -> vexist
 	}
 	
 	++ vnew2 : VirtualWorkloadToCapacity {
 		++ - capacity -> c
 		++ - workload -> w
 		.isSelected := false
+		++ - requires_virtualOpTimeToCapacity -> vexist
 	}
 	
 	# p.earliestDay <= op.day

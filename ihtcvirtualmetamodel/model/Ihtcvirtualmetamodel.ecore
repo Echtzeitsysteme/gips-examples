@@ -148,6 +148,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"
         eOpposite="#//Workload/virtualShift"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualShiftToWorkload"
+        upperBound="-1" eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/enables_virtualShiftToWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtualShiftToWorkload"
+        upperBound="-1" eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/requires_virtualShiftToWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualWorkloadToCapacity"
+        upperBound="-1" eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/enables_virtualShiftToWorkload"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VirtualShiftToRoster">
     <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"
@@ -160,15 +166,25 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="opTime" eType="#//OpTime"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualOpTimeToCapacity"
+        upperBound="-1" eType="#//VirtualOpTimeToCapacity" eOpposite="#//VirtualOpTimeToCapacity/enables_virtualWorkloadToOpTime"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VirtualOpTimeToCapacity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="opTime" eType="#//OpTime"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="capacity" eType="#//Capacity"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtualWorkloadToOpTime"
+        upperBound="-1" eType="#//VirtualWorkloadToOpTime" eOpposite="#//VirtualWorkloadToOpTime/requires_virtualOpTimeToCapacity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtual_WorkloadToCapacity"
+        upperBound="-1" eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/requires_virtualOpTimeToCapacity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VirtualWorkloadToCapacity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="capacity" eType="#//Capacity"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtualShiftToWorkload"
+        upperBound="-1" eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/requires_virtualWorkloadToCapacity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualOpTimeToCapacity"
+        upperBound="-1" eType="#//VirtualOpTimeToCapacity" eOpposite="#//VirtualOpTimeToCapacity/virtual_WorkloadToCapacity"/>
   </eClassifiers>
 </ecore:EPackage>

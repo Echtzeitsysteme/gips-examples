@@ -105,6 +105,7 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 
 		// Persist model to XMI path
 		try {
+			logger.info("Started writing the XMI file.");
 			save();
 		} catch (final IOException e) {
 			logger.warning("IOException occurred while writing the output XMI file." + e.getMessage());
