@@ -422,6 +422,29 @@ public class TeachingAssistantKclValidator {
 		final Set<TimeTableEntry> allShifts = findAllShiftsOfTa(ta, model);
 		for (final TimeTableEntry unavailable : ta.getUnavailable_because_lessons()) {
 			if (allShifts.contains(unavailable)) {
+				if (verbose) {
+					System.out.println("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable
+							+ "> but is blocked on this time frame.");
+				}
+				return false;
+			}
+		}
+
+		// Check session approvals
+		for (final TimeTableEntry shift : allShifts) {
+			final Module module = findModuleOfSession(shift.getSession(), model);
+			boolean taApproved = false;
+			for (final EmploymentApproval approval : module.getApprovals()) {
+				if (approval.getTa().equals(ta)) {
+					taApproved = true;
+					break;
+				}
+			}
+			if (!taApproved) {
+				if (verbose) {
+					System.out.println("TA <" + ta.getName() + "> not approved for module <" + module.getName()
+							+ "> but was assigned.");
+				}
 				return false;
 			}
 		}
@@ -434,6 +457,10 @@ public class TeachingAssistantKclValidator {
 				hoursPaidInWeek += tte.getSession().getHoursPaidPerOccurrence();
 			}
 			if (hoursPaidInWeek > ta.getMaxHoursPerWeek()) {
+				if (verbose) {
+					System.out
+							.println("TA <" + ta.getName() + "> time limit violated in week <" + w.getNumber() + ">.");
+				}
 				return false;
 			}
 		}
@@ -444,6 +471,9 @@ public class TeachingAssistantKclValidator {
 			totalHoursPaid += tte.getSession().getHoursPaidPerOccurrence();
 		}
 		if (totalHoursPaid > ta.getMaxHoursPerYear()) {
+			if (verbose) {
+				System.out.println("TA <" + ta.getName() + "> total time limit violated.");
+			}
 			return false;
 		}
 
@@ -456,6 +486,22 @@ public class TeachingAssistantKclValidator {
 		}
 
 		return true;
+	}
+
+	/**
+	 * TODO.
+	 * 
+	 * @param session
+	 * @return
+	 */
+	private Module findModuleOfSession(final TeachingSession session, final TAAllocation model) {
+		for (final Module module : model.getModules()) {
+			if (module.getSessions().contains(session)) {
+				return module;
+			}
+		}
+
+		throw new UnsupportedOperationException("Teaching session <" + session + "> not found in the given model.");
 	}
 
 	/**
@@ -713,18 +759,21 @@ public class TeachingAssistantKclValidator {
 	private Set<TimeTableEntry> findAllShiftsOfTa(final TA ta, final TAAllocation model) {
 		final Set<TimeTableEntry> shifts = new HashSet<>();
 		model.getModules().forEach(module -> {
-			boolean assigned = false;
-			for (final EmploymentApproval ea : module.getApprovals()) {
-				if (ea.getTa() != null && ea.getTa().equals(ta)) {
-					assigned = true;
-					break;
-				}
-			}
-
-			// If the TA is not assigned in any approval, skip remaining checks.
-			if (!assigned) {
-				return;
-			}
+			// Removed on purpose to also find assigned shifts that are not approved.
+			// This is necessary for another check that tests if a TA was assigned to a
+			// module that they have not been approved for.
+//			boolean assigned = false;
+//			for (final EmploymentApproval ea : module.getApprovals()) {
+//				if (ea.getTa() != null && ea.getTa().equals(ta)) {
+//					assigned = true;
+//					break;
+//				}
+//			}
+//
+//			// If the TA is not assigned in any approval, skip remaining checks.
+//			if (!assigned) {
+//				return;
+//			}
 
 			module.getSessions().forEach(session -> {
 				session.getOccurrences().forEach(o -> {
