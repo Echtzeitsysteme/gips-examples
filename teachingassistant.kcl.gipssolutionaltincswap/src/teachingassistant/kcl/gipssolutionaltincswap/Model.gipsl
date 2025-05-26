@@ -168,6 +168,37 @@ pattern findBlockedTa {
 }
 when taBlockedInSession
 
+// Pattern to find an existing TA assignment.
+pattern taExistingAssignment {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> module
+	}
+	
+	ta : TA
+	
+	module : Module {
+		- sessions -> session
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+		- entries -> entry
+	}
+	
+	occurrence : SessionOccurrence {
+		- tas -> ta
+	}
+	
+	w : Week
+	
+	entry : TimeTableEntry {
+		- timeTableWeeks -> w
+	}
+	
+	# occurrence.timeTableWeek == w.number
+}
+
 //
 // GIPSL
 //
@@ -189,7 +220,7 @@ constraint with findBlockedTa {
 // GIPSL formulation: For any pair of conflicting session occurrences (in the
 // context of one TA), a maximum of one of these conflicting session can be chosen.
 constraint with findConflictingEntriesWithTa {
-	// No conflict for TA_B
+	// No conflict for TA_B between multiple swaps
 	mappings.swap->filter(element.nodes.taB == context.nodes.ta & element.nodes.entryA == context.nodes.entryA)->sum(element.value)
 	+
 	mappings.swap->filter(element.nodes.taB == context.nodes.ta & element.nodes.entryA == context.nodes.entryB)->sum(element.value)
@@ -197,13 +228,27 @@ constraint with findConflictingEntriesWithTa {
 	
 	&
 	
-	// No conflict for TA_A
+	// No conflict for TA_A between multiple swaps
 	mappings.swap->filter(element.nodes.taA == context.nodes.ta & element.nodes.entryB == context.nodes.entryA)->sum(element.value)
 	+
 	mappings.swap->filter(element.nodes.taA == context.nodes.ta & element.nodes.entryB == context.nodes.entryB)->sum(element.value)
 	<= 1
 	
-	// TODO: also check conflicts for already existing entries
+	&
+	
+	// No conflict for TA_A between a swap and an existing assignment
+	mappings.swap->filter(element.nodes.taA == context.nodes.ta & element.nodes.entryB == context.nodes.entryB)->sum(element.value)
+	+
+	patterns.taExistingAssignment->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(1)
+	<= 1
+	
+	&
+	
+	// No conflict for TA_B between a swap and an existing assignment
+	mappings.swap->filter(element.nodes.taB == context.nodes.ta & element.nodes.entryA == context.nodes.entryA)->sum(element.value)
+	+
+	patterns.taExistingAssignment->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(1)
+	<= 1
 }
 
 // Ensure TAs max hours per year
