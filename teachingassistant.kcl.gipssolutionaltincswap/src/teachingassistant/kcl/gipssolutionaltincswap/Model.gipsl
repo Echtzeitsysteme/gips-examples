@@ -14,9 +14,8 @@ config {
 // GT
 //
 
-// TODO: Adapt documentation
-// Construct a condition for a session that a specific TA
-// is available (i.e., they have not blocked this session)
+// Finds a TA with the name `taA` that is unavailable in
+// a TimeTableEntry with name `entryA`.
 pattern findTaAUnavailableEntryA {	
 	taA : TA {
 		- unavailable_because_lessons -> entryA
@@ -25,6 +24,8 @@ pattern findTaAUnavailableEntryA {
 	entryA : TimeTableEntry
 }
 
+// Finds a TA with the name `taB` that is unavailable in
+// a TimeTableEntry with name `entryB`.
 pattern findTaAUnavailableEntryB {
 	taA : TA {
 		- unavailable_because_lessons -> entryB
@@ -33,6 +34,8 @@ pattern findTaAUnavailableEntryB {
 	entryB : TimeTableEntry
 }
 
+// Finds a TA with the name `taB` that is unavailable in
+// a TimeTableEntry with name `entryA`.
 pattern findTaBUnavailableEntryA {
 	taB : TA {
 		- unavailable_because_lessons -> entryA
@@ -41,12 +44,16 @@ pattern findTaBUnavailableEntryA {
 	entryA : TimeTableEntry
 }
 
+// Composition condition for the swap GT rule:
+// - TA_A must be blocked in entry A
+// - TA_A must be available (i.e., not blocked) in entry B
+// - TA_B must be available (i.e., not blocked) in entry A
 condition taAandTaBAllCondition = enforce findTaAUnavailableEntryA && forbid findTaAUnavailableEntryB && forbid findTaBUnavailableEntryA
 
-// TODO: Adapt documentation
-// Rule to assign a TA to a specific session occurrence.
-// This rule respects the condition that the TA must not have
-// blocked the respective time table entry of the session occurrence.
+// Rule to swap two TAs for a specific session occurrence.
+// This rule only matches if the first TA (`taA`) has a conflict.
+// I.e., this rule should fix a violated assignment of a TA by swapping
+// two assignments.
 rule swapTas {
 	taA : TA
 	taB : TA
@@ -136,7 +143,7 @@ pattern findTaUnavailableSession {
 }
 condition taBlockedInSession = enforce findTaUnavailableSession
 
-// TODO: Documentation
+// Finds a blocked TA with a corresponding session occurrence.
 pattern findBlockedTa {
 	root : TAAllocation {
 		- tas -> ta
@@ -203,7 +210,8 @@ pattern taExistingAssignment {
 // GIPSL
 //
 
-// TODO: Documentation
+// Mapping that is `true` if a specific match of the swap GT rule
+// must be applied.
 mapping swap to swapTas;
 
 // Every blocked TA must be swapped out
@@ -261,6 +269,9 @@ constraint with TA {
 		element.value * element.nodes.sessionB.hoursPaidPerOccurrence //
 		- element.value * element.nodes.sessionA.hoursPaidPerOccurrence //
 	)
+	+ patterns.taExistingAssignment->filter( //
+		element.nodes.ta == context //
+	)->sum(element.nodes.session.hoursPaidPerOccurrence)
 	<= context.maxHoursPerYear
 	
 	&
@@ -271,9 +282,10 @@ constraint with TA {
 		element.value * element.nodes.sessionA.hoursPaidPerOccurrence //
 		- element.value * element.nodes.sessionB.hoursPaidPerOccurrence //
 	)
+	+ patterns.taExistingAssignment->filter( //
+		element.nodes.ta == context //
+	)->sum(element.nodes.session.hoursPaidPerOccurrence)
 	<= context.maxHoursPerYear
-	
-	// TODO: also check time limits for already existing entries
 }
 
 // Ensure TAs max hours per week
@@ -287,6 +299,10 @@ constraint with findTaWeekCombination {
 		element.value * element.nodes.sessionB.hoursPaidPerOccurrence //
 		- element.value * element.nodes.sessionA.hoursPaidPerOccurrence //
 	)
+	+ patterns.taExistingAssignment->filter( //
+		element.nodes.ta == context //
+		& element.nodes.w == context.nodes.w //
+	)->sum(element.nodes.session.hoursPaidPerOccurrence)
 	<= context.nodes.ta.maxHoursPerWeek
 	
 	&
@@ -298,7 +314,9 @@ constraint with findTaWeekCombination {
 		element.value * element.nodes.sessionA.hoursPaidPerOccurrence //
 		- element.value * element.nodes.sessionB.hoursPaidPerOccurrence //
 	)
+	+ patterns.taExistingAssignment->filter( //
+		element.nodes.ta == context //
+		& element.nodes.w == context.nodes.w //
+	)->sum(element.nodes.session.hoursPaidPerOccurrence)
 	<= context.nodes.ta.maxHoursPerWeek
-	
-	// TODO: also check time limits for already existing entries
 }
