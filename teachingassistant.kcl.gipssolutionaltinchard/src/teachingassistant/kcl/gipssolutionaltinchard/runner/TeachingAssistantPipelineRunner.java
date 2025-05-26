@@ -21,7 +21,7 @@ public class TeachingAssistantPipelineRunner {
 		// Optimize/solve the initial model/problem
 		//
 
-		TeachingAssistantRunner.main(null);
+		teachingassistant.kcl.gipssolutionalt.runner.TeachingAssistantRunner.main(null);
 
 		// Validate the solution
 		TeachingAssistantKclValidator.main(null);

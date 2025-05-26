@@ -38,6 +38,7 @@ rule assignTa {
 	
 	module : Module {
 		- sessions -> session
+		- approvals -> approval
 	}
 	
 	session : TeachingSession {
@@ -55,7 +56,12 @@ rule assignTa {
 		- timeTableWeeks -> w
 	}
 	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	
 	# occurrence.timeTableWeek == w.number
+	# approval.ratingNumeric > 0
 }
 when taAvailableInSession
 
@@ -238,7 +244,7 @@ constraint with TA {
 		element.nodes.ta == context //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
 	- mappings.taOccurrenceRemove->filter( //
-		element.nodes.ta == context
+		element.nodes.ta == context //
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
 	<= context.maxHoursPerYear
 }
@@ -257,7 +263,8 @@ constraint with findTaWeekCombination {
 		& element.nodes.w == context.nodes.w //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
 	- mappings.taOccurrenceRemove->filter( //
-		element.nodes.ta == context
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.w == context.nodes.w //
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
 	<= context.nodes.ta.maxHoursPerWeek
 }
