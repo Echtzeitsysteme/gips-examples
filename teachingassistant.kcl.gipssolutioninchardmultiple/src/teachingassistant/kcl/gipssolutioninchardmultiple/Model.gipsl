@@ -24,7 +24,6 @@ pattern findTaUnavailableSession {
 	entry : TimeTableEntry
 }
 condition taAvailableInSession = forbid findTaUnavailableSession
-condition taBlockedInSession = enforce findTaUnavailableSession
 
 // Rule to assign a TA to a specific session occurrence.
 // This rule respects the condition that the TA must not have
@@ -61,7 +60,7 @@ rule assignTa {
 when taAvailableInSession
 
 // Rule to remove a blocked TA from a specific session occurrence.
-rule removeBlockedTa {
+rule removeTa {
 	root : TAAllocation {
 		- tas -> ta
 		- modules -> module
@@ -90,7 +89,6 @@ rule removeBlockedTa {
 	
 	# occurrence.timeTableWeek == w.number
 }
-when taBlockedInSession
 
 // For a specific TA, find all conflicting time table
 // entries in the model.
@@ -188,19 +186,15 @@ mapping taToOccurrence to assignTa;
 
 // If a mapping instance has a value of `1`, the assignment of the
 // respective TA must be removed from the respective session occurrence.
-mapping taOccurrenceRemove to removeBlockedTa;
-
-// For every mapping instance of the type `taOccurrenceRemove`, set its
-// value to `1`, because we want to solve all conflicts.
-constraint with taOccurrenceRemove {
-	context.value == 1
-}
+mapping taOccurrenceRemove to removeTa;
 
 // For every mapping instance of the type `taOccurrenceRemove`, there
-// must be a corresponding instance of the type `taToOccurrence` in order
-// to repair the module.
+// must be at least one corresponding instance of the type `taToOccurrence`
+// in order to repair the module.
 constraint with taOccurrenceRemove {
-	mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value) == 1
+	mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value)
+	>=
+	mappings.taOccurrenceRemove->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value)
 }
 
 // TAs must not have conflicting assignments.
@@ -243,6 +237,9 @@ constraint with TA {
 	patterns.taExistingAssignment->filter( //
 		element.nodes.ta == context //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
+	- mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta == context
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
 	<= context.maxHoursPerYear
 }
 
@@ -259,6 +256,9 @@ constraint with findTaWeekCombination {
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.w == context.nodes.w //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
+	- mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta == context
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
 	<= context.nodes.ta.maxHoursPerWeek
 }
 

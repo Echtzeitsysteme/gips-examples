@@ -19,7 +19,6 @@ import metamodel.TimeTableEntry;
 import metamodel.Week;
 import teachingassistant.kcl.metamodel.utils.DateTimeUtil;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
-import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
 
 /**
  * Model validator for the teaching assistant example (alternative metamodel).
@@ -434,7 +433,7 @@ public class TeachingAssistantKclValidator {
 			for (final TimeTableEntry tte : weekShifts) {
 				hoursPaidInWeek += tte.getSession().getHoursPaidPerOccurrence();
 			}
-			if (hoursPaidInWeek > SimpleTaKclGenerator.TA_MAXIMUM_HOURS_PER_WEEK) {
+			if (hoursPaidInWeek > ta.getMaxHoursPerWeek()) {
 				return false;
 			}
 		}
@@ -444,7 +443,7 @@ public class TeachingAssistantKclValidator {
 		for (final TimeTableEntry tte : allShifts) {
 			totalHoursPaid += tte.getSession().getHoursPaidPerOccurrence();
 		}
-		if (totalHoursPaid > SimpleTaKclGenerator.TA_MAXIMUM_HOURS_PER_YEAR) {
+		if (totalHoursPaid > ta.getMaxHoursPerYear()) {
 			return false;
 		}
 
