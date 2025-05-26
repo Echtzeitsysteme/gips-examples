@@ -103,6 +103,11 @@ rule assignPatientToRoom {
 	
 	c : Capacity
 	
+	vexist : VirtualWorkloadToCapacity {
+		- capacity -> c
+		- workload -> w
+	}
+	
 	++ vnew : VirtualShiftToWorkload {
 		++ - workload -> w
 		++ - shift -> s
@@ -272,6 +277,10 @@ rule assignSurgeonToOt {
 		++ - capacity -> c
 		.isSelected := false
 	}
+	
+	# op.day == c.day
+	# c.maxCapacity > 0
+	# op.maxOpTime > 0
 }
 when noOpTimeToCapacity
 
