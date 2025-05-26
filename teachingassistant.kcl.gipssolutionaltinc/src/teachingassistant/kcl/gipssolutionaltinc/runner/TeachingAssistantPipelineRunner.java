@@ -48,7 +48,7 @@ public class TeachingAssistantPipelineRunner {
 		//
 
 		final TeachingAssistantKclManipulator manipulator = new TeachingAssistantKclManipulator(filePath);
-		manipulator.execute();
+		manipulator.executeBlocking();
 
 		// Model should now be invalid
 		TeachingAssistantKclValidator.main(null);

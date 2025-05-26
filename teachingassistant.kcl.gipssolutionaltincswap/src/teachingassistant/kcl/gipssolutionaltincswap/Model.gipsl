@@ -320,3 +320,5 @@ constraint with findTaWeekCombination {
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
 	<= context.nodes.ta.maxHoursPerWeek
 }
+
+// TODO: objective function

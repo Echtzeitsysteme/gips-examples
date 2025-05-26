@@ -32,30 +32,57 @@ public class TeachingAssistantKclManipulator {
 		if (args.length < 1) {
 			throw new IllegalArgumentException("Missing argument modelFilePath.");
 		}
-		new TeachingAssistantKclManipulator(args[0]).execute();
+		new TeachingAssistantKclManipulator(args[0]).executeBlocking();
 	}
 
-	public void execute() {
+	public void executeBlocking() {
 		Objects.requireNonNull(modelFilePath);
 
 		// Load model
+		final TAAllocation model = loadModel(modelFilePath);
+
+		// Alter model
+		blockOneTa(model);
+
+		// Persist model
+		writeModel(modelFilePath, model);
+	}
+
+	public void executeHourReduction(final int newWeeklyHourLimit) {
+		Objects.requireNonNull(modelFilePath);
+
+		if (newWeeklyHourLimit < 0) {
+			throw new IllegalArgumentException("Given new weekly hour limit was less than 0.");
+		}
+
+		// Load model
+		final TAAllocation model = loadModel(modelFilePath);
+
+		// Alter model
+		reduceOneTasWeeklyWorkTime(model, newWeeklyHourLimit);
+
+		// Persist model
+		writeModel(modelFilePath, model);
+	}
+
+	private TAAllocation loadModel(final String modelFilePath) {
+		Objects.requireNonNull(modelFilePath);
 		final Resource r = FileUtils.loadModel(modelFilePath);
 		Objects.requireNonNull(r);
 		final TAAllocation model = (TAAllocation) r.getContents().get(0);
 		Objects.requireNonNull(model);
+		return model;
+	}
 
-		// Alter model
-		alterModel(model);
-
-		// Persist model
+	private void writeModel(final String outputFilePath, final TAAllocation model) {
 		try {
-			FileUtils.save(model, modelFilePath);
+			FileUtils.save(model, outputFilePath);
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void alterModel(final TAAllocation model) {
+	private void blockOneTa(final TAAllocation model) {
 		Objects.requireNonNull(model);
 		final metamodel.Module module = model.getModules().get(0);
 		Objects.requireNonNull(module);
@@ -82,6 +109,25 @@ public class TeachingAssistantKclManipulator {
 		ta.getUnavailable_because_lessons().addAll(foundEntries);
 
 		// TODO(Max): Make sure occurrence is not in the past.
+	}
+
+	private void reduceOneTasWeeklyWorkTime(final TAAllocation model, final int newWeeklyHourLimit) {
+		Objects.requireNonNull(model);
+
+		if (newWeeklyHourLimit < 0) {
+			throw new IllegalArgumentException("Given new weekly hour limit was negative.");
+		}
+
+		final metamodel.Module module = model.getModules().get(0);
+		Objects.requireNonNull(module);
+		final TeachingSession session = module.getSessions().get(0);
+		Objects.requireNonNull(session);
+		final SessionOccurrence occ = session.getOccurrences().get(0);
+		Objects.requireNonNull(occ);
+		final TA ta = occ.getTas().get(0);
+		Objects.requireNonNull(ta);
+
+		ta.setMaxHoursPerWeek(newWeeklyHourLimit);
 	}
 
 }
