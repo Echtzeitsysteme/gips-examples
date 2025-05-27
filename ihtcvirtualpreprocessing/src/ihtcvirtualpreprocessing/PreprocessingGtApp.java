@@ -96,6 +96,8 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 
 		// Apply all GT rule matches until the specified limit hits
 		// New GT rules (that should be applied) must be added here
+		applyMatches(api.removeZeroOpTime(), GT_RULE_APPLICATION_LIMIT);
+		applyMatches(api.removeZeroCapcity(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.preprocessOccupantsWorkload(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.assignNurseToRoom(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.assignSurgeonToOt(), GT_RULE_APPLICATION_LIMIT);

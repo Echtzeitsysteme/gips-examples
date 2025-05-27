@@ -5,6 +5,40 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 //
 
 //
+// Remove objects with 0 capacity.
+//
+
+// Remove OpTime objects with `maxOpTime == 0`.
+rule removeZeroOpTime {
+	root: Root {
+		- surgeons -> s
+	}
+	
+	s: Surgeon {
+		-- - opTimes -> op
+	}
+	
+	op: OpTime
+	
+	# op.maxOpTime == 0
+}
+
+// Remove Capacity objects with `maxCapacity == 0`.
+rule removeZeroCapcity {
+	root: Root {
+		- ots -> ot
+	}
+	
+	ot: OT {
+		-- -capacities -> c
+	}
+	
+	c : Capacity
+	
+	# c.maxCapacity == 0
+}
+
+//
 // Pre-processing for all virtual elements between `Roster` and `Shift`
 //
 
