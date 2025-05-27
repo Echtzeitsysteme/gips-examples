@@ -177,11 +177,12 @@ public class MdvneGipsIflyeAdapter {
 		final Map<String, String> matches = extractMatchedNodes(api.getMappers().values());
 
 		// Apply all valid mappings
-		api.getSrv2srv().applyNonZeroMappings();
-		api.getSw2node().applyNonZeroMappings();
-		api.getL2p().applyNonZeroMappings();
-		api.getL2s().applyNonZeroMappings();
-		api.getNet2net().applyNonZeroMappings();
+//		api.getSrv2srv().applyNonZeroMappings();
+//		api.getSw2node().applyNonZeroMappings();
+//		api.getL2p().applyNonZeroMappings();
+//		api.getL2s().applyNonZeroMappings();
+//		api.getNet2net().applyNonZeroMappings();
+		api.applyAllNonZeroMappings();
 
 		return new MdvneIflyeOutput(output, matches, measurements);
 	}
