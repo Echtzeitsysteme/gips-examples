@@ -138,6 +138,8 @@ rule assignPatientToRoom {
 	// a day after the patient's due day so we can already remove these
 	// matches using the PM.
 	# s.shiftNo / 3 <= p.dueDay
+	
+	# c.maxCapacity > 0
 }
 when compatibleRoomAndNotAssigned
 
@@ -364,5 +366,6 @@ rule fixOperationDay {
 	# op.day <= p.dueDay
 	# p.surgeryDuration <= op.maxOpTime
 	# p.surgeryDuration <= c.maxCapacity
+	# c.maxCapacity > 0
 }
 when noWorkloadAssignment
