@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ihtcvirtualmetamodel="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore">
+  <xsd:annotation>
+    <xsd:documentation>TODO: Add documentation for ihtcvirtualmetamodel. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ...</xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://www.omg.org/XMI" schemaLocation="platform:/plugin/org.eclipse.emf.ecore/model/XMI.xsd"/>
+  <xsd:complexType name="Root">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="nurses" type="ihtcvirtualmetamodel:Nurse"/>
+      <xsd:element name="rooms" type="ihtcvirtualmetamodel:Room"/>
+      <xsd:element name="surgeons" type="ihtcvirtualmetamodel:Surgeon"/>
+      <xsd:element name="ots" type="ihtcvirtualmetamodel:OT"/>
+      <xsd:element name="weight" type="ihtcvirtualmetamodel:Weight"/>
+      <xsd:element name="patients" type="ihtcvirtualmetamodel:Patient"/>
+      <xsd:element name="virtualShiftToRoster" type="ihtcvirtualmetamodel:VirtualShiftToRoster"/>
+      <xsd:element name="virtualShiftToWorkload" type="ihtcvirtualmetamodel:VirtualShiftToWorkload"/>
+      <xsd:element name="virtualWorkloadToOpTime" type="ihtcvirtualmetamodel:VirtualWorkloadToOpTime"/>
+      <xsd:element name="virtualOpTimeToCapacity" type="ihtcvirtualmetamodel:VirtualOpTimeToCapacity"/>
+      <xsd:element name="virtualWorkloadToCapacity" type="ihtcvirtualmetamodel:VirtualWorkloadToCapacity"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+  </xsd:complexType>
+  <xsd:element name="Root" type="ihtcvirtualmetamodel:Root"/>
+  <xsd:complexType name="Nurse">
+    <xsd:complexContent>
+      <xsd:extension base="ihtcvirtualmetamodel:NamedElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="rosters" type="ihtcvirtualmetamodel:Roster"/>
+        </xsd:choice>
+        <xsd:attribute name="skillLevel" type="xsd:int"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Nurse" type="ihtcvirtualmetamodel:Nurse"/>
+  <xsd:complexType name="Roster">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="nurse" type="ihtcvirtualmetamodel:Nurse"/>
+      <xsd:element name="derivedShifts" type="ihtcvirtualmetamodel:Shift"/>
+      <xsd:element name="virtualShift" type="ihtcvirtualmetamodel:VirtualShiftToRoster"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="shiftNo" type="xsd:int"/>
+    <xsd:attribute name="maxWorkload" type="xsd:int"/>
+    <xsd:attribute name="nurse" type="xsd:string"/>
+    <xsd:attribute name="derivedShifts" type="xsd:string"/>
+    <xsd:attribute name="virtualShift" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="Roster" type="ihtcvirtualmetamodel:Roster"/>
+  <xsd:complexType name="Room">
+    <xsd:complexContent>
+      <xsd:extension base="ihtcvirtualmetamodel:NamedElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="shifts" type="ihtcvirtualmetamodel:Shift"/>
+          <xsd:element name="incompatiblePatients" type="ihtcvirtualmetamodel:Patient"/>
+        </xsd:choice>
+        <xsd:attribute name="beds" type="xsd:int"/>
+        <xsd:attribute name="incompatiblePatients" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Room" type="ihtcvirtualmetamodel:Room"/>
+  <xsd:complexType name="Shift">
+    <xsd:complexContent>
+      <xsd:extension base="ihtcvirtualmetamodel:Ordered">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="room" type="ihtcvirtualmetamodel:Room"/>
+          <xsd:element name="derivedRoster" type="ihtcvirtualmetamodel:Roster"/>
+          <xsd:element name="derivedWorkloads" type="ihtcvirtualmetamodel:Workload"/>
+          <xsd:element name="virtualRoster" type="ihtcvirtualmetamodel:VirtualShiftToRoster"/>
+          <xsd:element name="virtualWorkload" type="ihtcvirtualmetamodel:VirtualShiftToWorkload"/>
+        </xsd:choice>
+        <xsd:attribute name="shiftNo" type="xsd:int"/>
+        <xsd:attribute name="room" type="xsd:string"/>
+        <xsd:attribute name="derivedRoster" type="xsd:string"/>
+        <xsd:attribute name="derivedWorkloads" type="xsd:string"/>
+        <xsd:attribute name="virtualRoster" type="xsd:string"/>
+        <xsd:attribute name="virtualWorkload" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Shift" type="ihtcvirtualmetamodel:Shift"/>
+  <xsd:complexType abstract="true" name="Ordered">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="prev" type="ihtcvirtualmetamodel:Ordered"/>
+      <xsd:element name="next" type="ihtcvirtualmetamodel:Ordered"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="prev" type="xsd:string"/>
+    <xsd:attribute name="next" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="Ordered" type="ihtcvirtualmetamodel:Ordered"/>
+  <xsd:complexType name="Patient">
+    <xsd:complexContent>
+      <xsd:extension base="ihtcvirtualmetamodel:NamedElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="workloads" type="ihtcvirtualmetamodel:Workload"/>
+          <xsd:element name="firstWorkload" type="ihtcvirtualmetamodel:Workload"/>
+          <xsd:element name="surgeon" type="ihtcvirtualmetamodel:Surgeon"/>
+          <xsd:element name="incompatibleRooms" type="ihtcvirtualmetamodel:Room"/>
+        </xsd:choice>
+        <xsd:attribute name="earliestDay" type="xsd:int"/>
+        <xsd:attribute name="dueDay" type="xsd:int"/>
+        <xsd:attribute name="mandatory" type="xsd:boolean"/>
+        <xsd:attribute name="ageGroup" type="xsd:int"/>
+        <xsd:attribute name="gender" type="xsd:string"/>
+        <xsd:attribute name="stayLength" type="xsd:int"/>
+        <xsd:attribute name="surgeryDuration" type="xsd:int"/>
+        <xsd:attribute name="isOccupant" type="xsd:boolean"/>
+        <xsd:attribute name="firstWorkload" type="xsd:string"/>
+        <xsd:attribute name="surgeon" type="xsd:string"/>
+        <xsd:attribute name="incompatibleRooms" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Patient" type="ihtcvirtualmetamodel:Patient"/>
+  <xsd:complexType name="Workload">
+    <xsd:complexContent>
+      <xsd:extension base="ihtcvirtualmetamodel:Ordered">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="patient" type="ihtcvirtualmetamodel:Patient"/>
+          <xsd:element name="derivedShift" type="ihtcvirtualmetamodel:Shift"/>
+          <xsd:element name="derivedCapacity" type="ihtcvirtualmetamodel:Capacity"/>
+          <xsd:element name="virtualShift" type="ihtcvirtualmetamodel:VirtualShiftToWorkload"/>
+          <xsd:element name="derivedOpTimes" type="ihtcvirtualmetamodel:OpTime"/>
+          <xsd:element name="virtualOpTime" type="ihtcvirtualmetamodel:VirtualWorkloadToOpTime"/>
+          <xsd:element name="virtualCapacity" type="ihtcvirtualmetamodel:VirtualWorkloadToCapacity"/>
+        </xsd:choice>
+        <xsd:attribute name="workloadValue" type="xsd:int"/>
+        <xsd:attribute name="minNurseSkill" type="xsd:int"/>
+        <xsd:attribute name="patient" type="xsd:string"/>
+        <xsd:attribute name="derivedShift" type="xsd:string"/>
+        <xsd:attribute name="derivedCapacity" type="xsd:string"/>
+        <xsd:attribute name="virtualShift" type="xsd:string"/>
+        <xsd:attribute name="derivedOpTimes" type="xsd:string"/>
+        <xsd:attribute name="virtualOpTime" type="xsd:string"/>
+        <xsd:attribute name="virtualCapacity" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Workload" type="ihtcvirtualmetamodel:Workload"/>
+  <xsd:complexType name="Surgeon">
+    <xsd:complexContent>
+      <xsd:extension base="ihtcvirtualmetamodel:NamedElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="patients" type="ihtcvirtualmetamodel:Patient"/>
+          <xsd:element name="opTimes" type="ihtcvirtualmetamodel:OpTime"/>
+        </xsd:choice>
+        <xsd:attribute name="patients" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Surgeon" type="ihtcvirtualmetamodel:Surgeon"/>
+  <xsd:complexType name="OpTime">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="surgeon" type="ihtcvirtualmetamodel:Surgeon"/>
+      <xsd:element name="derivedCapacities" type="ihtcvirtualmetamodel:Capacity"/>
+      <xsd:element name="derivedWorkloads" type="ihtcvirtualmetamodel:Workload"/>
+      <xsd:element name="virtualWorkload" type="ihtcvirtualmetamodel:VirtualWorkloadToOpTime"/>
+      <xsd:element name="virtualCapacity" type="ihtcvirtualmetamodel:VirtualOpTimeToCapacity"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="day" type="xsd:int"/>
+    <xsd:attribute name="maxOpTime" type="xsd:int"/>
+    <xsd:attribute name="surgeon" type="xsd:string"/>
+    <xsd:attribute name="derivedCapacities" type="xsd:string"/>
+    <xsd:attribute name="derivedWorkloads" type="xsd:string"/>
+    <xsd:attribute name="virtualWorkload" type="xsd:string"/>
+    <xsd:attribute name="virtualCapacity" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="OpTime" type="ihtcvirtualmetamodel:OpTime"/>
+  <xsd:complexType name="OT">
+    <xsd:complexContent>
+      <xsd:extension base="ihtcvirtualmetamodel:NamedElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="capacities" type="ihtcvirtualmetamodel:Capacity"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="OT" type="ihtcvirtualmetamodel:OT"/>
+  <xsd:complexType name="Capacity">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="ot" type="ihtcvirtualmetamodel:OT"/>
+      <xsd:element name="derivedWorkloads" type="ihtcvirtualmetamodel:Workload"/>
+      <xsd:element name="derivedOpTimes" type="ihtcvirtualmetamodel:OpTime"/>
+      <xsd:element name="virtualOpTime" type="ihtcvirtualmetamodel:VirtualOpTimeToCapacity"/>
+      <xsd:element name="virtualWorkload" type="ihtcvirtualmetamodel:VirtualWorkloadToCapacity"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="day" type="xsd:int"/>
+    <xsd:attribute name="maxCapacity" type="xsd:int"/>
+    <xsd:attribute name="ot" type="xsd:string"/>
+    <xsd:attribute name="derivedWorkloads" type="xsd:string"/>
+    <xsd:attribute name="derivedOpTimes" type="xsd:string"/>
+    <xsd:attribute name="virtualOpTime" type="xsd:string"/>
+    <xsd:attribute name="virtualWorkload" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="Capacity" type="ihtcvirtualmetamodel:Capacity"/>
+  <xsd:complexType abstract="true" name="NamedElement">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="name" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="NamedElement" type="ihtcvirtualmetamodel:NamedElement"/>
+  <xsd:complexType name="Weight">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="roomMixedAge" type="xsd:int"/>
+    <xsd:attribute name="roomNurseSkill" type="xsd:int"/>
+    <xsd:attribute name="continuityOfCare" type="xsd:int"/>
+    <xsd:attribute name="nurseExcessiveWorkload" type="xsd:int"/>
+    <xsd:attribute name="openOperatingTheater" type="xsd:int"/>
+    <xsd:attribute name="surgeonTransfer" type="xsd:int"/>
+    <xsd:attribute name="patientDelay" type="xsd:int"/>
+    <xsd:attribute name="unscheduledOptional" type="xsd:int"/>
+  </xsd:complexType>
+  <xsd:element name="Weight" type="ihtcvirtualmetamodel:Weight"/>
+  <xsd:complexType name="VirtualShiftToWorkload">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="shift" type="ihtcvirtualmetamodel:Shift"/>
+      <xsd:element name="workload" type="ihtcvirtualmetamodel:Workload"/>
+      <xsd:element name="requires_virtualShiftToWorkload" type="ihtcvirtualmetamodel:VirtualShiftToWorkload"/>
+      <xsd:element name="enables_virtualShiftToWorkload" type="ihtcvirtualmetamodel:VirtualShiftToWorkload"/>
+      <xsd:element name="requires_virtualWorkloadToCapacity" type="ihtcvirtualmetamodel:VirtualWorkloadToCapacity"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="wasImported" type="xsd:boolean"/>
+    <xsd:attribute name="isSelected" type="xsd:boolean"/>
+    <xsd:attribute name="shift" type="xsd:string"/>
+    <xsd:attribute name="workload" type="xsd:string"/>
+    <xsd:attribute name="requires_virtualShiftToWorkload" type="xsd:string"/>
+    <xsd:attribute name="enables_virtualShiftToWorkload" type="xsd:string"/>
+    <xsd:attribute name="requires_virtualWorkloadToCapacity" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="VirtualShiftToWorkload" type="ihtcvirtualmetamodel:VirtualShiftToWorkload"/>
+  <xsd:complexType name="VirtualShiftToRoster">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="shift" type="ihtcvirtualmetamodel:Shift"/>
+      <xsd:element name="roster" type="ihtcvirtualmetamodel:Roster"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="isSelected" type="xsd:boolean"/>
+    <xsd:attribute name="shift" type="xsd:string"/>
+    <xsd:attribute name="roster" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="VirtualShiftToRoster" type="ihtcvirtualmetamodel:VirtualShiftToRoster"/>
+  <xsd:complexType name="VirtualWorkloadToOpTime">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="workload" type="ihtcvirtualmetamodel:Workload"/>
+      <xsd:element name="opTime" type="ihtcvirtualmetamodel:OpTime"/>
+      <xsd:element name="requires_virtualOpTimeToCapacity" type="ihtcvirtualmetamodel:VirtualOpTimeToCapacity"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="isSelected" type="xsd:boolean"/>
+    <xsd:attribute name="workload" type="xsd:string"/>
+    <xsd:attribute name="opTime" type="xsd:string"/>
+    <xsd:attribute name="requires_virtualOpTimeToCapacity" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="VirtualWorkloadToOpTime" type="ihtcvirtualmetamodel:VirtualWorkloadToOpTime"/>
+  <xsd:complexType name="VirtualOpTimeToCapacity">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="opTime" type="ihtcvirtualmetamodel:OpTime"/>
+      <xsd:element name="capacity" type="ihtcvirtualmetamodel:Capacity"/>
+      <xsd:element name="enables_virtualWorkloadToOpTime" type="ihtcvirtualmetamodel:VirtualWorkloadToOpTime"/>
+      <xsd:element name="virtual_WorkloadToCapacity" type="ihtcvirtualmetamodel:VirtualWorkloadToCapacity"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="isSelected" type="xsd:boolean"/>
+    <xsd:attribute name="opTime" type="xsd:string"/>
+    <xsd:attribute name="capacity" type="xsd:string"/>
+    <xsd:attribute name="enables_virtualWorkloadToOpTime" type="xsd:string"/>
+    <xsd:attribute name="virtual_WorkloadToCapacity" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="VirtualOpTimeToCapacity" type="ihtcvirtualmetamodel:VirtualOpTimeToCapacity"/>
+  <xsd:complexType name="VirtualWorkloadToCapacity">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="workload" type="ihtcvirtualmetamodel:Workload"/>
+      <xsd:element name="capacity" type="ihtcvirtualmetamodel:Capacity"/>
+      <xsd:element name="enables_virtualShiftToWorkload" type="ihtcvirtualmetamodel:VirtualShiftToWorkload"/>
+      <xsd:element name="requires_virtualOpTimeToCapacity" type="ihtcvirtualmetamodel:VirtualOpTimeToCapacity"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+    <xsd:attribute name="isSelected" type="xsd:boolean"/>
+    <xsd:attribute name="workload" type="xsd:string"/>
+    <xsd:attribute name="capacity" type="xsd:string"/>
+    <xsd:attribute name="enables_virtualShiftToWorkload" type="xsd:string"/>
+    <xsd:attribute name="requires_virtualOpTimeToCapacity" type="xsd:string"/>
+  </xsd:complexType>
+  <xsd:element name="VirtualWorkloadToCapacity" type="ihtcvirtualmetamodel:VirtualWorkloadToCapacity"/>
+</xsd:schema>
