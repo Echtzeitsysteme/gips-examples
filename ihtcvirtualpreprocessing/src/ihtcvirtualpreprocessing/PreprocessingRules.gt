@@ -343,7 +343,7 @@ rule fixOperationDay {
 		- opTime -> op
 		// Explicitly set the opposite edge
 		++ - enables_virtualWorkloadToOpTime -> vnew
-		++ - virtual_WorkloadToCapacity -> vnew2
+		++ - enables_virtual_WorkloadToCapacity -> vnew2
 	}
 	
 	++ vnew : VirtualWorkloadToOpTime {
