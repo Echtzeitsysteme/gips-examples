@@ -399,6 +399,7 @@ pattern patientTupel {
 	s : Shift
 	
 	# s.shiftNo % 3 == 0
+	# p1.gender != p2.gender
 }
 
 pattern patientShiftTupel {
@@ -469,12 +470,23 @@ mapping openOTs to otForDay;
 // H1: No gender mix: Patients of different genders may not share a room on any day. 
 // patient.gender is a string variable and the preallocation is assumably not known. -> There can only be the same value for all patients
 
-//constraint with patientTupel {
+constraint with patientTupel {
+	mappings.assignedPatientsToRoom->filter(
+		[element.nodes.p == context.nodes.p1 | element.nodes.p == context.nodes.p2] &
+		element.nodes.s == context.nodes.s
+	)->sum(element.value) < 2
+	// Alternative: should do the same
 //	mappings.assignedPatientsToRoom->filter(
 //		element.nodes.p == context.nodes.p1 &
-//		element.nodes.p.gender != context.nodes.p2.gender 
-//	)->sum(element.value) == 0
-//}
+//		element.nodes.s == context.nodes.s
+//	)->sum(element.value) 
+//	+
+//	mappings.assignedPatientsToRoom->filter(
+//		element.nodes.p == context.nodes.p2 &
+//		element.nodes.s == context.nodes.s
+//	)->sum(element.value)
+//	< 2
+}
 
 // H2: Compatible rooms: Patients can only be assigned to one of their compatible rooms.
 // -> Already enforced by GT-Rule "assignPatientToRoom" in preprocessing
