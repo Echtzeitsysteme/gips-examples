@@ -206,10 +206,11 @@ public abstract class AbstractIhtcGipsRunner {
 	protected void applySolution(final HardonlyGipsAPI gipsApi, final boolean verbose) {
 		// Apply found solution
 		final long tick = System.nanoTime();
-		gipsApi.getAadp().applyNonZeroMappings(false);
-		gipsApi.getAnrs().applyNonZeroMappings(false);
-		gipsApi.getArp().applyNonZeroMappings(false);
-		gipsApi.getAsp().applyNonZeroMappings(false);
+		// TODO
+//		gipsApi.getAadp().applyNonZeroMappings(false);
+//		gipsApi.getAnrs().applyNonZeroMappings(false);
+//		gipsApi.getArp().applyNonZeroMappings(false);
+//		gipsApi.getAsp().applyNonZeroMappings(false);
 		final long tock = System.nanoTime();
 		if (verbose) {
 			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");

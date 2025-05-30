@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ihtcmetamodel:Hospital xmlns:ihtcmetamodel="platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
+  <days name="day_0" id="0" shifts="//@shifts.0 //@shifts.1 //@shifts.2" />
+  <days name="day_1" id="1" shifts="//@shifts.3 //@shifts.4 //@shifts.5" />
+  <shifts day="//@days.0" name="shift_0" type="EARLY" id="0" />
+  <shifts day="//@days.0" name="shift_1" type="LATE" id="1" />
+  <shifts day="//@days.0" name="shift_2" type="NIGHT" id="2" />
+  <shifts day="//@days.1" name="shift_3" type="EARLY" id="3" />
+  <shifts day="//@days.1" name="shift_4" type="LATE" id="4" />
+  <shifts day="//@days.1" name="shift_5" type="NIGHT" id="5" />
+  <rooms name="r0" capacity="3" />
+  <rooms name="r1" capacity="2" />
+  <surgeons name="s0">
+    <availabilities day="//@days.0" surgeon="//@surgeons.0" availability="0" />
+    <availabilities day="//@days.1" surgeon="//@surgeons.0" availability="480" />
+  </surgeons>
+  <patients surgeon="//@surgeons.0" name="p00" mandatory="false" gender="A" lengthOfStay="3" surgeryReleaseDay="3" surgeryDueDate="100" surgeryDuration="120" ageGroup="elderly">
+    <workloadsProduced patient="//@patients.0" shiftOffset="0" workloadProduced="3" />
+    <workloadsProduced patient="//@patients.0" shiftOffset="1" workloadProduced="2" />
+    <workloadsProduced patient="//@patients.0" shiftOffset="2" workloadProduced="2" />
+    <workloadsProduced patient="//@patients.0" shiftOffset="3" workloadProduced="2" />
+    <workloadsProduced patient="//@patients.0" shiftOffset="4" workloadProduced="3" />
+    <workloadsProduced patient="//@patients.0" shiftOffset="5" workloadProduced="1" />
+    <workloadsProduced patient="//@patients.0" shiftOffset="6" workloadProduced="2" />
+    <workloadsProduced patient="//@patients.0" shiftOffset="7" workloadProduced="2" />
+    <workloadsProduced patient="//@patients.0" shiftOffset="8" workloadProduced="2" />
+    <skillLevelsRequired patient="//@patients.0" shiftOffset="0" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.0" shiftOffset="1" skillLevelRequired="2" />
+    <skillLevelsRequired patient="//@patients.0" shiftOffset="2" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.0" shiftOffset="3" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.0" shiftOffset="4" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.0" shiftOffset="5" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.0" shiftOffset="6" skillLevelRequired="2" />
+    <skillLevelsRequired patient="//@patients.0" shiftOffset="7" skillLevelRequired="2" />
+    <skillLevelsRequired patient="//@patients.0" shiftOffset="8" skillLevelRequired="0" />
+  </patients>
+  <patients surgeon="//@surgeons.0" name="p01" mandatory="false" gender="B" lengthOfStay="4" surgeryReleaseDay="1" surgeryDueDate="100" surgeryDuration="120" ageGroup="elderly">
+    <workloadsProduced patient="//@patients.1" shiftOffset="0" workloadProduced="3" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="1" workloadProduced="2" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="2" workloadProduced="2" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="3" workloadProduced="1" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="4" workloadProduced="1" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="5" workloadProduced="1" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="6" workloadProduced="2" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="7" workloadProduced="1" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="8" workloadProduced="1" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="9" workloadProduced="2" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="10" workloadProduced="3" />
+    <workloadsProduced patient="//@patients.1" shiftOffset="11" workloadProduced="1" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="0" skillLevelRequired="2" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="1" skillLevelRequired="1" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="2" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="3" skillLevelRequired="2" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="4" skillLevelRequired="1" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="5" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="6" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="7" skillLevelRequired="2" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="8" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="9" skillLevelRequired="2" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="10" skillLevelRequired="0" />
+    <skillLevelsRequired patient="//@patients.1" shiftOffset="11" skillLevelRequired="1" />
+  </patients>
+  <ageGroups name="infant" />
+  <ageGroups name="adult" />
+  <ageGroups name="elderly" />
+  <weight roomMixedAge="5" roomNurseSkill="1" continuityOfCare="5" nurseExcessiveWorkload="1" openOperatingTheater="30" surgeonTransfer="1" patientDelay="5" unscheduledOptional="150" />
+  <genders name="A" />
+  <genders name="B" />
+</ihtcmetamodel:Hospital>

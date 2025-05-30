@@ -1,0 +1,123 @@
+{
+  "days": 2,
+  "skill_levels": 3,
+  "shift_types": [
+    "early",
+    "late",
+    "night"
+  ],
+  "age_groups": [
+    "infant",
+    "adult",
+    "elderly"
+  ],
+  "occupants": [
+  ],
+  "patients": [
+    {
+      "id": "p00",
+      "mandatory": false,
+      "gender": "A",
+      "age_group": "elderly",
+      "length_of_stay": 3,
+      "surgery_release_day": 3,
+      "surgery_duration": 120,
+      "surgeon_id": "s0",
+      "incompatible_room_ids": [],
+      "workload_produced": [
+        3,
+        2,
+        2,
+        2,
+        3,
+        1,
+        2,
+        2,
+        2
+      ],
+      "skill_level_required": [
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        2,
+        0
+      ]
+    },
+    {
+      "id": "p01",
+      "mandatory": false,
+      "gender": "B",
+      "age_group": "elderly",
+      "length_of_stay": 4,
+      "surgery_release_day": 1,
+      "surgery_duration": 120,
+      "surgeon_id": "s0",
+      "incompatible_room_ids": [],
+      "workload_produced": [
+        3,
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        3,
+        1
+      ],
+      "skill_level_required": [
+        2,
+        1,
+        0,
+        2,
+        1,
+        0,
+        0,
+        2,
+        0,
+        2,
+        0,
+        1
+      ]
+    }
+  ],
+  "surgeons": [
+    {
+      "id": "s0",
+      "max_surgery_time": [
+        0,
+        480
+      ]
+    }
+  ],
+  "operating_theaters": [
+  ],
+  "rooms": [
+    {
+      "id": "r0",
+      "capacity": 3
+    },
+    {
+      "id": "r1",
+      "capacity": 2
+    }
+  ],
+  "nurses": [
+  ],
+  "weights": {
+    "room_mixed_age": 5,
+    "room_nurse_skill": 1,
+    "continuity_of_care": 5,
+    "nurse_eccessive_workload": 1,
+    "open_operating_theater": 30,
+    "surgeon_transfer": 1,
+    "patient_delay": 5,
+    "unscheduled_optional": 150
+  }
+}

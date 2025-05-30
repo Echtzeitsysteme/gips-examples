@@ -146,14 +146,14 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
 		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
 		// Set presolve to "auto"
-		GurobiTuningUtil.updatePresolve(gipsApi, -1);
-		if (randomSeed != -1) {
-			GurobiTuningUtil.updateRandomSeed(gipsApi, randomSeed);
-		}
-
-		if (verbose) {
-			GurobiTuningUtil.setDebugOutput(gipsApi);
-		}
+//		GurobiTuningUtil.updatePresolve(gipsApi, -1);
+//		if (randomSeed != -1) {
+//			GurobiTuningUtil.updateRandomSeed(gipsApi, randomSeed);
+//		}
+//
+//		if (verbose) {
+//			GurobiTuningUtil.setDebugOutput(gipsApi);
+//		}
 
 		//
 		// Run first GIPS solution
@@ -172,6 +172,8 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		if (verbose) {
 			System.out.println("=> Stage 1 run time: " + stageOneRuntime + "s.");
 		}
+		
+		System.exit(0);
 
 		//
 		// Initialize GIPS API: All optional constraints included.
@@ -186,15 +188,15 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		// TODO: This should now be redundant
 //		GurobiTuningUtil.updateTimeLimit(gipsApiOptional, remainingTime);
 		// Set presolve to "auto"
-		GurobiTuningUtil.updatePresolve(gipsApiOptional, -1);
-		// TODO: set MIPFocus parameter here?
-		if (randomSeed != -1) {
-			GurobiTuningUtil.updateRandomSeed(gipsApiOptional, randomSeed);
-		}
-
-		if (verbose) {
-			GurobiTuningUtil.setDebugOutput(gipsApiOptional);
-		}
+//		GurobiTuningUtil.updatePresolve(gipsApiOptional, -1);
+//		// TODO: set MIPFocus parameter here?
+//		if (randomSeed != -1) {
+//			GurobiTuningUtil.updateRandomSeed(gipsApiOptional, randomSeed);
+//		}
+//
+//		if (verbose) {
+//			GurobiTuningUtil.setDebugOutput(gipsApiOptional);
+//		}
 
 		//
 		// Run second GIPS solution
