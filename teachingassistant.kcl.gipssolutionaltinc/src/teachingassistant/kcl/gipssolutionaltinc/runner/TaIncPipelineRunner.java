@@ -7,8 +7,8 @@ import java.util.Set;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import metamodel.TAAllocation;
+import teachingassistant.kcl.gips.utils.Tuple;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.PreprocessingGtApp;
-import teachingassistant.kcl.metamodel.utils.Tuple;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
 import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
 import teachingassistant.kcl.metamodelalt.generator.TeachingAssistantKclManipulator;

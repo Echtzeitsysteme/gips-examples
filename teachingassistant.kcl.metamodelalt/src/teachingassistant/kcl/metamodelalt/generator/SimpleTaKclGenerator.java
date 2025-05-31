@@ -21,7 +21,7 @@ import metamodel.TAAllocation;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
-import teachingassistant.kcl.metamodel.utils.DateTimeUtil;
+import teachingassistant.kcl.gips.utils.DateTimeUtil;
 import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
 
 /**

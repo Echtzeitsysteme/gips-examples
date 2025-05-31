@@ -1,4 +1,4 @@
-package teachingassistant.kcl.metamodel.utils;
+package teachingassistant.kcl.gips.utils;
 
 import java.util.Calendar;
 import java.util.Date;
