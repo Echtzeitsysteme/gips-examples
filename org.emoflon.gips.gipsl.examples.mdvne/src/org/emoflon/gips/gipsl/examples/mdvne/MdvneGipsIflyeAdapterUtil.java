@@ -6,11 +6,12 @@ import java.util.Set;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.smartemf.runtime.collections.LinkedSmartESet;
 
+import gips.examples.dependencies.GipsExamplesLogger;
 import model.Network;
 import model.Root;
 import model.SubstrateNetwork;
 
-public class MdvneGipsIflyeAdapterUtil {
+public class MdvneGipsIflyeAdapterUtil extends GipsExamplesLogger {
 
 	private MdvneGipsIflyeAdapterUtil() {
 	}
@@ -33,7 +34,7 @@ public class MdvneGipsIflyeAdapterUtil {
 		}
 
 		if (substrateNetworks.size() > 1) {
-			System.out.println(
+			logger.warning(
 					"=> GIPS adapter found more than 1 substrate network in the model (" + substrateNetworks.size()
 							+ "). The GIPS-based VNE algorithm implementation does not filter the substrate "
 							+ "networks, i.e., it will choose one out of all available substrate networks.");

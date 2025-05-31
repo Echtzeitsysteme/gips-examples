@@ -141,16 +141,16 @@ public class MdvneSeqGipsIflyeAdapter extends MdvneGipsIflyeAdapter {
 		final SolverOutput output = api.solveProblemTimed();
 
 		// TODO: Remove system outputs
-		System.out.println("=> GIPS iflye adapter: Solver status: " + output.status());
-		System.out.println("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
+		logger.info("=> GIPS iflye adapter: Solver status: " + output.status());
+		logger.info("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
 
 		final Map<String, IMeasurement> measurements = new LinkedHashMap<>(obs.getMeasurements("Eval"));
 		obs.getMeasurements("Eval").clear();
-		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
-		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
-		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
-		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
-		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
+		logger.info("PM: " + measurements.get("PM").maxDurationSeconds());
+		logger.info("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
+		logger.info("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
+		logger.info("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
+		logger.info("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
 
 		@SuppressWarnings("rawtypes")
 		final var allSelectedMappings = new ArrayList<GipsGTMapping>();
@@ -188,7 +188,7 @@ public class MdvneSeqGipsIflyeAdapter extends MdvneGipsIflyeAdapter {
 
 		// Apply all selected mappings in their respective index order
 		allSelectedMappings.forEach(m -> {
-			System.out.println(m.getName() + ": " + ((IntegerVariable) m.getFreeVariables().get("index")).getValue());
+			logger.info(m.getName() + ": " + ((IntegerVariable) m.getFreeVariables().get("index")).getValue());
 			if (m.getMatch() instanceof Server2ServerRuleMatch) {
 				srv2srvRule.apply((Server2ServerRuleMatch) m.getMatch(), true);
 			} else if (m.getMatch() instanceof Switch2NodeRuleMatch) {
