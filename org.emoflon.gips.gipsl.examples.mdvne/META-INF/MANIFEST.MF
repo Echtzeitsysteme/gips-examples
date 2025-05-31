@@ -14,3 +14,4 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt.hipe,
  network.model
 Export-Package: org.emoflon.gips.gipsl.examples.mdvne
+Import-Package: gips.examples.dependencies
