@@ -1,18 +1,33 @@
-package teachingassistant.kcl.gipssolutionaltinchard.runner;
+package teachingassistant.kcl.gips.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.emoflon.gips.core.api.GipsEngineAPI;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
-import teachingassistant.kcl.gipssolutionaltinchard.api.gips.GipssolutionaltinchardGipsAPI;
+public abstract class AbstractGipsTeachingAssistantRunner {
 
-public abstract class AbstractTeachingAssistantRunner {
+	public static String scenarioFileName = "kcl_ta_allocation.xmi";
+
+	/**
+	 * Checks if a file for the given path exists and throws an exception otherwise.
+	 * 
+	 * @param path Path to check the file existence for.
+	 */
+	public void checkIfFileExists(final String path) {
+		Objects.requireNonNull(path);
+		final File xmiInputFile = new File(path);
+		if (!xmiInputFile.exists() || xmiInputFile.isDirectory()) {
+			throw new IllegalArgumentException("Input XMI file <" + path + "> could not be found.");
+		}
+	}
 
 	/**
 	 * Saves the result of a run of a given GIPS API to a given path as XMI file.
@@ -20,7 +35,9 @@ public abstract class AbstractTeachingAssistantRunner {
 	 * @param gipsApi GIPS API to save results from.
 	 * @param path    (XMI) path to save the results to.
 	 */
-	protected void gipsSave(final GipssolutionaltinchardGipsAPI gipsApi, final String path) {
+	public void gipsSave(final GipsEngineAPI<?, ?> gipsApi, final String path) {
+		Objects.requireNonNull(gipsApi);
+		Objects.requireNonNull(path);
 		try {
 			gipsApi.saveResult(path);
 		} catch (final IOException e) {
@@ -34,7 +51,10 @@ public abstract class AbstractTeachingAssistantRunner {
 	 * @param path File path to save the ResourceSet's contents to.
 	 * @param rs   ResourceSet which should be saved to file.
 	 */
-	protected void writeXmiToFile(final String path, final ResourceSet rs) {
+	public void writeXmiToFile(final String path, final ResourceSet rs) {
+		Objects.requireNonNull(path);
+		Objects.requireNonNull(rs);
+
 		// Workaround: Always use absolute path
 		final URI absPath = URI.createFileURI(path);
 
@@ -60,7 +80,8 @@ public abstract class AbstractTeachingAssistantRunner {
 	 * @param gipsApi GIPS API to build and solve the ILP problem for.
 	 * @return Returns the objective value.
 	 */
-	protected double buildAndSolve(final GipssolutionaltinchardGipsAPI gipsApi) {
+	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi) {
+		Objects.requireNonNull(gipsApi);
 		gipsApi.buildProblem(true);
 		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
@@ -72,28 +93,27 @@ public abstract class AbstractTeachingAssistantRunner {
 	}
 
 	/**
-	 * Checks if a file for the given path exists and throws an exception otherwise.
-	 * 
-	 * @param path Path to check the file existence for.
-	 */
-	protected void checkIfFileExists(final String path) {
-		final File xmiInputFile = new File(path);
-		if (!xmiInputFile.exists() || xmiInputFile.isDirectory()) {
-			throw new IllegalArgumentException("Input XMI file <" + path + "> could not be found.");
-		}
-	}
-
-	/**
-	 * Prints and applies the best found solution (aka all non-zero mappings) with a
-	 * given Teaching Assistant GIPS API object.
+	 * Applies the best found solution (aka all non-zero mappings) with a given GIPS
+	 * API object.
 	 * 
 	 * @param gipsApi Teaching Assistant GIPS API object to get all mapping
 	 *                information from.
 	 */
-	protected void applySolution(final GipssolutionaltinchardGipsAPI gipsApi) {
+	protected void applySolution(final GipsEngineAPI<?, ?> gipsApi) {
+		Objects.requireNonNull(gipsApi);
 		// Apply found solution
-		gipsApi.getTaOccurrenceRemove().applyNonZeroMappings();
-		gipsApi.getTaToOccurrence().applyNonZeroMappings();
+		gipsApi.applyAllNonZeroMappings();
+	}
+
+	/**
+	 * Enables the tracing feature on the given GIPS API objects.
+	 * 
+	 * @param gipsApi GIPS API object to enable the tracing feature on.
+	 */
+	protected void enableTracing(final GipsEngineAPI<?, ?> gipsApi) {
+		Objects.requireNonNull(gipsApi);
+		gipsApi.getTracer().enableTracing(true);
+		gipsApi.getEclipseIntegrationConfig().setSolutionValuesSynchronizationEnabled(true);
 	}
 
 }

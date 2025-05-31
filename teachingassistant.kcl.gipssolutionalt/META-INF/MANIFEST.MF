@@ -13,4 +13,5 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.gips.core,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
- teachingassistant.kcl.metamodelalt
+ teachingassistant.kcl.metamodelalt,
+ teachingassistant.kcl.gips.utils;bundle-version="1.0.0"

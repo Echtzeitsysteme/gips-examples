@@ -2,11 +2,10 @@ package teachingassistant.kcl.gipssolutionalt.runner;
 
 import org.eclipse.emf.common.util.URI;
 
+import teachingassistant.kcl.gips.utils.AbstractGipsTeachingAssistantRunner;
 import teachingassistant.kcl.gipssolutionalt.api.gips.GipssolutionaltGipsAPI;
 
-public class TeachingAssistantRunner extends AbstractTeachingAssistantRunner {
-
-	private final String scenarioFileName = "kcl_ta_allocation.xmi";
+public class TeachingAssistantRunner extends AbstractGipsTeachingAssistantRunner {
 
 	public static void main(final String[] args) {
 		new TeachingAssistantRunner().run();
@@ -29,8 +28,7 @@ public class TeachingAssistantRunner extends AbstractTeachingAssistantRunner {
 
 		final GipssolutionaltGipsAPI gipsApi = new GipssolutionaltGipsAPI();
 		gipsApi.init(URI.createFileURI(filePath));
-		gipsApi.getTracer().enableTracing(true);
-		gipsApi.getEclipseIntegrationConfig().setSolutionValuesSynchronizationEnabled(true);
+		enableTracing(gipsApi);
 
 		//
 		// Build and solve the ILP problem
