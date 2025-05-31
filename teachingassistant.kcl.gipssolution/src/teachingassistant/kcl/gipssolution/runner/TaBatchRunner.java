@@ -5,10 +5,10 @@ import org.eclipse.emf.common.util.URI;
 import teachingassistant.kcl.gips.utils.AbstractGipsTeachingAssistantRunner;
 import teachingassistant.kcl.gipssolution.api.gips.GipssolutionGipsAPI;
 
-public class TeachingAssistantRunner extends AbstractGipsTeachingAssistantRunner {
+public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 
 	public static void main(final String[] args) {
-		new TeachingAssistantRunner().run();
+		new TaBatchRunner().run();
 	}
 
 	public void run() {

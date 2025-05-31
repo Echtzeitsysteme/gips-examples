@@ -1,14 +1,14 @@
-package teachingassistant.kcl.gipssolutionaltinc.runner;
+package teachingassistant.kcl.gipssolutioninchardmultiple.runner;
 
 import org.eclipse.emf.common.util.URI;
 
 import teachingassistant.kcl.gips.utils.AbstractGipsTeachingAssistantRunner;
-import teachingassistant.kcl.gipssolutionaltinc.api.gips.GipssolutionaltincGipsAPI;
+import teachingassistant.kcl.gipssolutioninchardmultiple.api.gips.GipssolutioninchardmultipleGipsAPI;
 
-public class TeachingAssistantRunner extends AbstractGipsTeachingAssistantRunner {
+public class TaIncMultipleRunner extends AbstractGipsTeachingAssistantRunner {
 
 	public static void main(final String[] args) {
-		new TeachingAssistantRunner().run();
+		new TaIncMultipleRunner().run();
 	}
 
 	public void run() {
@@ -26,7 +26,7 @@ public class TeachingAssistantRunner extends AbstractGipsTeachingAssistantRunner
 		// Initialize GIPS API
 		//
 
-		final GipssolutionaltincGipsAPI gipsApi = new GipssolutionaltincGipsAPI();
+		final GipssolutioninchardmultipleGipsAPI gipsApi = new GipssolutioninchardmultipleGipsAPI();
 		gipsApi.init(URI.createFileURI(filePath));
 		enableTracing(gipsApi);
 

@@ -1,4 +1,4 @@
-package teachingassistant.kcl.gipssolutionaltinchard.runner;
+package teachingassistant.kcl.gipssolutionaltincswap2.runner;
 
 import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
 import teachingassistant.kcl.metamodelalt.generator.TeachingAssistantKclManipulator;
@@ -8,7 +8,7 @@ import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidato
  * Runs the teaching assistant pipeline (scenario generator, GIPSL optimization,
  * and validator).
  */
-public class TeachingAssistantPipelineRunner {
+public class TaIncSwapPipelineRunner {
 
 	public static void main(final String[] args) {
 		//
@@ -21,7 +21,7 @@ public class TeachingAssistantPipelineRunner {
 		// Optimize/solve the initial model/problem
 		//
 
-		teachingassistant.kcl.gipssolutionalt.runner.TeachingAssistantRunner.main(null);
+		teachingassistant.kcl.gipssolutionalt.runner.TaBatchRunner.main(null);
 
 		// Validate the solution
 		TeachingAssistantKclValidator.main(null);
@@ -45,8 +45,8 @@ public class TeachingAssistantPipelineRunner {
 		// Second stage optimization/repair
 		//
 
-		TeachingAssistantRunner.scenarioFileName = TeachingAssistantKclValidator.SCENARIO_FILE_NAME;
-		TeachingAssistantRunner.main(null);
+		TaIncSwapRunner.scenarioFileName = TeachingAssistantKclValidator.SCENARIO_FILE_NAME;
+		TaIncSwapRunner.main(null);
 
 		// Validate the solution
 		TeachingAssistantKclValidator.main(null);

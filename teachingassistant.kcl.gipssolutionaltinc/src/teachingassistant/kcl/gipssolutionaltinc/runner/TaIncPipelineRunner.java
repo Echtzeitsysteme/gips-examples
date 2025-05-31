@@ -18,7 +18,7 @@ import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidato
  * Runs the teaching assistant pipeline (scenario generator, GIPSL optimization,
  * and validator).
  */
-public class TeachingAssistantPipelineRunner {
+public class TaIncPipelineRunner {
 
 	public static void main(final String[] args) {
 		//
@@ -31,7 +31,7 @@ public class TeachingAssistantPipelineRunner {
 		// Optimize/solve the initial model/problem
 		//
 
-		teachingassistant.kcl.gipssolutionalt.runner.TeachingAssistantRunner.main(null);
+		teachingassistant.kcl.gipssolutionalt.runner.TaBatchRunner.main(null);
 
 		// Validate the solution
 		TeachingAssistantKclValidator.main(null);
@@ -62,8 +62,8 @@ public class TeachingAssistantPipelineRunner {
 		pre.run();
 
 		// Optimize/solve the changed model
-		TeachingAssistantRunner.scenarioFileName = TeachingAssistantKclValidator.SCENARIO_FILE_NAME;
-		TeachingAssistantRunner.main(null);
+		TaIncRunner.scenarioFileName = TeachingAssistantKclValidator.SCENARIO_FILE_NAME;
+		TaIncRunner.main(null);
 
 		// Validate the solution
 		TeachingAssistantKclValidator.main(null);

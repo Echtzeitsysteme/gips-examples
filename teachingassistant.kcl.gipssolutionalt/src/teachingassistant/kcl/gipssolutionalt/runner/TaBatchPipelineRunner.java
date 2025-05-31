@@ -7,11 +7,11 @@ import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidato
  * Runs the teaching assistant pipeline (scenario generator, GIPSL optimization,
  * and validator).
  */
-public class TeachingAssistantPipelineRunner {
+public class TaBatchPipelineRunner {
 
 	public static void main(final String[] args) {
 		SimpleTaKclGenerator.main(null);
-		TeachingAssistantRunner.main(null);
+		TaBatchRunner.main(null);
 		TeachingAssistantKclValidator.main(null);
 		System.exit(0);
 	}
