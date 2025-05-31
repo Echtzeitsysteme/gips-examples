@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi,
  org.emoflon.smartemf;bundle-version="1.0.0",
  gips.examples.dependencies;bundle-version="1.0.0",
- org.apache.commons.cli;bundle-version="1.9.0"
+ org.apache.commons.cli;bundle-version="1.9.0",
+ teachingassistant.kcl.gips.utils;bundle-version="1.0.0"
 Export-Package: metamodel,
  metamodel.impl,
  teachingassistant.kcl.metamodel.generator,
