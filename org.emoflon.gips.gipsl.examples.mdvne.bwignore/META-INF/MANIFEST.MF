@@ -14,4 +14,5 @@ Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.gips.core,
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
- network.model
+ network.model,
+ gips.examples.dependencies;bundle-version="1.0.0"
