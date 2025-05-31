@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -76,6 +77,7 @@ public class TeachingAssistantKclGenerator {
 	 *         `blocked`.
 	 */
 	protected int getRandIntWithBlocklist(final int min, final int max, final Set<Integer> blocked) {
+		Objects.requireNonNull(blocked);
 		// Get all valid numbers
 		final List<Integer> numbers = new LinkedList<Integer>();
 		for (int i = min; i <= max; i++) {
@@ -104,8 +106,8 @@ public class TeachingAssistantKclGenerator {
 	 * accordingly.
 	 */
 	public void addTA(final String name, final int maxHoursPerWeek, final int maxHoursPerYear) {
-		Preconditions.checkNotNull(name, "Name");
-		TA ta = factory.createTA();
+		Objects.requireNonNull(name);
+		final TA ta = factory.createTA();
 
 		// According to the new metamodel, TA typically has: name, maxHoursPerWeek,
 		// maxHoursPerYear
@@ -122,6 +124,7 @@ public class TeachingAssistantKclGenerator {
 	 * any extra attributes on TAAllocation, you can keep it simple like this.
 	 */
 	public TAAllocation generate(final String allocationName) {
+		Objects.requireNonNull(allocationName);
 		root = factory.createTAAllocation();
 		// If there's a 'name' attribute on TAAllocation, you could set it:
 		// root.setName(allocationName);
@@ -139,6 +142,8 @@ public class TeachingAssistantKclGenerator {
 	 * Helper to save the model to XMI format on disk.
 	 */
 	public static void save(final TAAllocation model, final String path) throws IOException {
+		Objects.requireNonNull(model);
+		Objects.requireNonNull(path);
 		final Resource r = saveAndReturn(model, path);
 		r.unload();
 	}
@@ -147,8 +152,8 @@ public class TeachingAssistantKclGenerator {
 	 * Same as above, but returns the Resource if needed.
 	 */
 	public static Resource saveAndReturn(final TAAllocation model, final String path) throws IOException {
-		Preconditions.checkNotNull(model, "Model");
-		Preconditions.checkNotNull(path, "Path");
+		Objects.requireNonNull(model);
+		Objects.requireNonNull(path);
 
 		final URI uri = URI.createFileURI(path);
 		final ResourceSet rs = new ResourceSetImpl();

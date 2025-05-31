@@ -3,6 +3,7 @@ package teachingassistant.kcl.metamodelalt.export;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.gson.JsonArray;
@@ -29,36 +30,39 @@ public class ModelToJsonExporter {
 	private TAAllocation model;
 
 	public ModelToJsonExporter(final TAAllocation model) {
+		Objects.requireNonNull(model);
 		this.model = model;
 	}
 
 	public void modelToJson(final String outputPath) {
+		Objects.requireNonNull(outputPath);
+
 		// 1) Flatten TAs
-		JsonArray tasJson = new JsonArray();
-		for (TA ta : model.getTas()) {
+		final JsonArray tasJson = new JsonArray();
+		for (final TA ta : model.getTas()) {
 			tasJson.add(convertTAtoJson(ta));
 		}
 
 		// 2) Flatten Modules
-		JsonArray modulesJson = new JsonArray();
-		for (Module m : model.getModules()) {
+		final JsonArray modulesJson = new JsonArray();
+		for (final Module m : model.getModules()) {
 			modulesJson.add(convertModuleToJson(m));
 		}
 
 		// 3) Flatten TeachingSessions (collected across all modules)
-		JsonArray sessionsJson = flattenTeachingSessionsFromModules();
+		final JsonArray sessionsJson = flattenTeachingSessionsFromModules();
 
 		// 4) Flatten SessionOccurrences
-		JsonArray occurrencesJson = flattenSessionOccurrencesFromModules();
+		final JsonArray occurrencesJson = flattenSessionOccurrencesFromModules();
 
 		// 5) Flatten TimeTableEntries
-		JsonArray timeEntriesJson = flattenTimeTableEntriesFromModules();
+		final JsonArray timeEntriesJson = flattenTimeTableEntriesFromModules();
 
 		// 6) Flatten EmploymentApprovals
-		JsonArray approvalsJson = flattenApprovalsFromModules();
+		final JsonArray approvalsJson = flattenApprovalsFromModules();
 
 		// Build final JSON object
-		JsonObject json = new JsonObject();
+		final JsonObject json = new JsonObject();
 		json.add("tas", tasJson);
 		json.add("modules", modulesJson);
 		json.add("teachingsessions", sessionsJson);
@@ -74,8 +78,9 @@ public class ModelToJsonExporter {
 	// TA flattening
 	// --------------------------------------------------------------------------------
 
-	private JsonObject convertTAtoJson(TA ta) {
-		JsonObject taJson = new JsonObject();
+	private JsonObject convertTAtoJson(final TA ta) {
+		Objects.requireNonNull(ta);
+		final JsonObject taJson = new JsonObject();
 		taJson.addProperty("name", ta.getName());
 		taJson.addProperty("maxHoursPerWeek", ta.getMaxHoursPerWeek());
 		taJson.addProperty("maxHoursPerYear", ta.getMaxHoursPerYear());
@@ -89,12 +94,13 @@ public class ModelToJsonExporter {
 	// --------------------------------------------------------------------------------
 
 	private JsonObject convertModuleToJson(Module module) {
-		JsonObject moduleJson = new JsonObject();
+		Objects.requireNonNull(module);
+		final JsonObject moduleJson = new JsonObject();
 		// In the new Ecore, we only have "name" for the module:
 		moduleJson.addProperty("name", module.getName());
 		// If desired, you can also embed the session names or something similar:
-		JsonArray sessionNames = new JsonArray();
-		for (TeachingSession s : module.getSessions()) {
+		final JsonArray sessionNames = new JsonArray();
+		for (final TeachingSession s : module.getSessions()) {
 			sessionNames.add(s.getName());
 		}
 		moduleJson.add("sessionNames", sessionNames);
@@ -112,21 +118,21 @@ public class ModelToJsonExporter {
 	 * Gathers all TeachingSessions across all Modules, returns a single JSON array.
 	 */
 	private JsonArray flattenTeachingSessionsFromModules() {
-		JsonArray flatSessions = new JsonArray();
-		Set<TeachingSession> seen = new HashSet<>();
-		for (Module m : model.getModules()) {
-			for (TeachingSession s : m.getSessions()) {
+		final JsonArray flatSessions = new JsonArray();
+		final Set<TeachingSession> seen = new HashSet<>();
+		for (final Module m : model.getModules()) {
+			for (final TeachingSession s : m.getSessions()) {
 				if (!seen.contains(s)) {
 					seen.add(s);
-					JsonObject sessionObj = new JsonObject();
+					final JsonObject sessionObj = new JsonObject();
 					sessionObj.addProperty("name", s.getName());
 					sessionObj.addProperty("hoursPaidPerOccurrence", s.getHoursPaidPerOccurrence());
 					sessionObj.addProperty("numTAsPerSession", s.getNumTAsPerSession());
 
 					// Add timeTableWeeks as an array
-					JsonArray weeksArr = new JsonArray();
+					final JsonArray weeksArr = new JsonArray();
 					if (s.getTimeTableWeeks() != null) {
-						for (Week week : s.getTimeTableWeeks()) {
+						for (final Week week : s.getTimeTableWeeks()) {
 							if (week != null) {
 								weeksArr.add(week.getNumber());
 							}
@@ -149,17 +155,17 @@ public class ModelToJsonExporter {
 	// --------------------------------------------------------------------------------
 
 	private JsonArray flattenSessionOccurrencesFromModules() {
-		JsonArray flatOccurrences = new JsonArray();
+		final JsonArray flatOccurrences = new JsonArray();
 		// We'll collect them from every session in every module
-		for (Module m : model.getModules()) {
-			for (TeachingSession s : m.getSessions()) {
-				for (SessionOccurrence occ : s.getOccurrences()) {
-					JsonObject occJson = new JsonObject();
+		for (final Module m : model.getModules()) {
+			for (final TeachingSession s : m.getSessions()) {
+				for (final SessionOccurrence occ : s.getOccurrences()) {
+					final JsonObject occJson = new JsonObject();
 					// No "id" in the new Ecore unless you added it
 					occJson.addProperty("timeTableWeek", occ.getTimeTableWeek());
 					// Collect the TAs assigned
-					JsonArray assignedTAs = new JsonArray();
-					for (TA ta : occ.getTas()) {
+					final JsonArray assignedTAs = new JsonArray();
+					for (final TA ta : occ.getTas()) {
 						assignedTAs.add(ta.getName());
 					}
 					occJson.add("tas", assignedTAs);
@@ -180,13 +186,13 @@ public class ModelToJsonExporter {
 	// --------------------------------------------------------------------------------
 
 	private JsonArray flattenTimeTableEntriesFromModules() {
-		JsonArray flatEntries = new JsonArray();
-		Set<TimeTableEntry> seen = new HashSet<>();
+		final JsonArray flatEntries = new JsonArray();
+		final Set<TimeTableEntry> seen = new HashSet<>();
 
 		// Each TeachingSession has getEntries(), which references TimeTableEntry
-		for (Module m : model.getModules()) {
-			for (TeachingSession s : m.getSessions()) {
-				for (TimeTableEntry entry : s.getEntries()) {
+		for (final Module m : model.getModules()) {
+			for (final TeachingSession s : m.getSessions()) {
+				for (final TimeTableEntry entry : s.getEntries()) {
 					if (!seen.contains(entry)) {
 						seen.add(entry);
 						// Convert to JSON
@@ -198,12 +204,17 @@ public class ModelToJsonExporter {
 		return flatEntries;
 	}
 
-	private JsonObject convertTimeTableEntryToJson(TimeTableEntry entry, TeachingSession session, Module module) {
-		JsonObject entryJson = new JsonObject();
+	private JsonObject convertTimeTableEntryToJson(final TimeTableEntry entry, final TeachingSession session,
+			final Module module) {
+		Objects.requireNonNull(entry);
+		Objects.requireNonNull(session);
+		Objects.requireNonNull(module);
+
+		final JsonObject entryJson = new JsonObject();
 		// timeTableWeeks is a multi-valued EAttribute, so we collect them
-		JsonArray weeksArr = new JsonArray();
+		final JsonArray weeksArr = new JsonArray();
 		if (entry.getTimeTableWeeks() != null) {
-			for (Week w : entry.getTimeTableWeeks()) {
+			for (final Week w : entry.getTimeTableWeeks()) {
 				if (w != null) {
 					weeksArr.add(w.getNumber());
 				}
@@ -217,7 +228,7 @@ public class ModelToJsonExporter {
 
 		// The Ecore uses Date for startTime/endTime, so we might format them as
 		// strings:
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		entryJson.addProperty("startTime", formatIfNotNull(sdf, entry.getStartTime()));
 		entryJson.addProperty("endTime", formatIfNotNull(sdf, entry.getEndTime()));
 
@@ -228,7 +239,7 @@ public class ModelToJsonExporter {
 		return entryJson;
 	}
 
-	private String formatIfNotNull(SimpleDateFormat sdf, Date d) {
+	private String formatIfNotNull(final SimpleDateFormat sdf, final Date d) {
 		return (d == null) ? "" : sdf.format(d);
 	}
 
@@ -241,16 +252,16 @@ public class ModelToJsonExporter {
 	 * export them with "moduleName", "taName", and "rating".
 	 */
 	private JsonArray flattenApprovalsFromModules() {
-		JsonArray approvalsArr = new JsonArray();
-		for (Module m : model.getModules()) {
-			for (EmploymentApproval ap : m.getApprovals()) {
-				JsonObject apJson = new JsonObject();
+		final JsonArray approvalsArr = new JsonArray();
+		for (final Module m : model.getModules()) {
+			for (final EmploymentApproval ap : m.getApprovals()) {
+				final JsonObject apJson = new JsonObject();
 				apJson.addProperty("moduleName", m.getName());
 				if (ap.getTa() != null) {
 					apJson.addProperty("taName", ap.getTa().getName());
 				}
 				// rating is an EEnum: RED, AMBER, GREEN
-				EmploymentRating rating = ap.getRating();
+				final EmploymentRating rating = ap.getRating();
 				apJson.addProperty("rating", (rating == null ? "UNKNOWN" : rating.toString()));
 
 				approvalsArr.add(apJson);

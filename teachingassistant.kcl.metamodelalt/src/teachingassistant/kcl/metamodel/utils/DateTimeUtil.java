@@ -2,6 +2,7 @@ package teachingassistant.kcl.metamodel.utils;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class DateTimeUtil {
 
@@ -17,8 +18,11 @@ public class DateTimeUtil {
 	 * @return Sum of the seconds constructed by hours, minutes, and seconds.
 	 */
 	public static int convertDateTimeToSeconds(final Date date) {
+		Objects.requireNonNull(date);
+		
 		int seconds = 0;
 		final Calendar cal = Calendar.getInstance();
+		Objects.requireNonNull(cal);
 		cal.setTime(date);
 
 		seconds += cal.get(Calendar.SECOND);

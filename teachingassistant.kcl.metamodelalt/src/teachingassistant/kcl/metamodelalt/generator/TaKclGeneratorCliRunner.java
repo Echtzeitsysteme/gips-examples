@@ -1,5 +1,7 @@
 package teachingassistant.kcl.metamodelalt.generator;
 
+import java.util.Objects;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -46,6 +48,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 	 * @param args See {@link #parseArgs(String[])}.
 	 */
 	public static void main(final String[] args) {
+		Objects.requireNonNull(args);
 		parseArgs(args);
 		new TaKclGeneratorCliRunner().execute();
 	}
@@ -104,6 +107,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 //	}
 
 	private static void parseArgs(final String[] args) {
+		Objects.requireNonNull(args);
 		final Options options = new Options();
 
 		// JSON input file to load

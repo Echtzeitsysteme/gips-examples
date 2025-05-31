@@ -75,6 +75,8 @@ public class TeachingAssistantKclManipulator {
 	}
 
 	private void writeModel(final String outputFilePath, final TAAllocation model) {
+		Objects.requireNonNull(outputFilePath);
+		Objects.requireNonNull(model);
 		try {
 			FileUtils.save(model, outputFilePath);
 		} catch (final IOException e) {
