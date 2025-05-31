@@ -3,6 +3,7 @@ package teachingassistant.kcl.gips.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -15,6 +16,11 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 public abstract class AbstractGipsTeachingAssistantRunner {
 
 	public static String scenarioFileName = "kcl_ta_allocation.xmi";
+
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	/**
 	 * Checks if a file for the given path exists and throws an exception otherwise.
@@ -87,8 +93,7 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 		if (output.solutionCount() == 0) {
 			throw new InternalError("No solution found!");
 		}
-		System.out.println("=> Objective value: " + output.objectiveValue());
-		System.out.println("---");
+		logger.info("=> Objective value: " + output.objectiveValue());
 		return output.objectiveValue();
 	}
 

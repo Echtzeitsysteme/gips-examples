@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -27,6 +28,11 @@ import teachingassistant.kcl.metamodelalt.export.FileUtils;
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public class TeachingAssistantKclValidator {
+
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final static Logger logger = Logger.getLogger(TeachingAssistantKclValidator.class.getName());
 
 	/**
 	 * Model file name to load.
@@ -66,9 +72,9 @@ public class TeachingAssistantKclValidator {
 		final boolean valid = new TeachingAssistantKclValidator().validate(model);
 
 		if (valid) {
-			System.out.println("Result: Model is valid.");
+			logger.info("Result: Model is valid.");
 		} else {
-			System.out.println("Result: Model is not valid.");
+			logger.warning("Result: Model is not valid.");
 		}
 	}
 
@@ -84,7 +90,7 @@ public class TeachingAssistantKclValidator {
 	 */
 	public boolean validate(final TAAllocation model) {
 		if (model == null) {
-			System.out.println("=> Given model was null.");
+			logger.warning("=> Given model was null.");
 			return false;
 		}
 
@@ -108,7 +114,7 @@ public class TeachingAssistantKclValidator {
 				weeksValid = weeksValid & validate(week);
 			}
 			weeksValid = weeksValid & validateWeekNumberUnique(allFoundWeeks);
-			System.out.println("=> All weeks are valid: " + weeksValid);
+			logger.info("=> All weeks are valid: " + weeksValid);
 			valid = valid & weeksValid;
 		}
 
@@ -129,7 +135,7 @@ public class TeachingAssistantKclValidator {
 			for (final TimeTableEntry entry : allFoundTimeTableEntries) {
 				timeTableEntriesValid = timeTableEntriesValid & validate(entry);
 			}
-			System.out.println("=> All time table entries are valid: " + timeTableEntriesValid);
+			logger.info("=> All time table entries are valid: " + timeTableEntriesValid);
 			valid = valid & timeTableEntriesValid;
 		}
 
@@ -139,7 +145,7 @@ public class TeachingAssistantKclValidator {
 			for (final TA ta : model.getTas()) {
 				tasValid = tasValid & validate(ta, model);
 			}
-			System.out.println("=> All TAs are valid: " + tasValid);
+			logger.info("=> All TAs are valid: " + tasValid);
 			valid = valid & tasValid;
 		}
 
@@ -149,7 +155,7 @@ public class TeachingAssistantKclValidator {
 			for (final metamodel.Module m : model.getModules()) {
 				modulesValid = modulesValid & validate(m, model);
 			}
-			System.out.println("=> All modules are valid: " + modulesValid);
+			logger.info("=> All modules are valid: " + modulesValid);
 			valid = valid & modulesValid;
 		}
 
@@ -165,7 +171,7 @@ public class TeachingAssistantKclValidator {
 				employmentApprovalsValid = employmentApprovalsValid & validate(ea);
 				employmentApprovalsValid = employmentApprovalsValid & model.getTas().contains(ea.getTa());
 			}
-			System.out.println("=> All employment approvals are valid: " + employmentApprovalsValid);
+			logger.info("=> All employment approvals are valid: " + employmentApprovalsValid);
 			valid = valid & employmentApprovalsValid;
 		}
 
@@ -182,7 +188,7 @@ public class TeachingAssistantKclValidator {
 			for (final SessionOccurrence so : allFoundSessionOccurrences) {
 				sessionOccurrencesValid = sessionOccurrencesValid & validate(so, model);
 			}
-			System.out.println("=> All session occurrences are valid: " + sessionOccurrencesValid);
+			logger.info("=> All session occurrences are valid: " + sessionOccurrencesValid);
 			valid = valid & sessionOccurrencesValid;
 		}
 
@@ -197,7 +203,7 @@ public class TeachingAssistantKclValidator {
 			for (final TeachingSession ts : allFoundTeachingSessions) {
 				teachingSessionsValid = teachingSessionsValid & validate(ts, model);
 			}
-			System.out.println("=> All teaching sessions are valid: " + teachingSessionsValid);
+			logger.info("=> All teaching sessions are valid: " + teachingSessionsValid);
 			valid = valid & teachingSessionsValid;
 		}
 
@@ -288,7 +294,7 @@ public class TeachingAssistantKclValidator {
 				}
 			}
 			if (!contained) {
-				printVerbose(ts, "Was not contained in a time table week.");
+				logVerbose(ts, "Was not contained in a time table week.");
 				return false;
 			}
 		}
@@ -304,8 +310,7 @@ public class TeachingAssistantKclValidator {
 			}
 
 			if (matchingOccurrences != 1) {
-				printVerbose(ts,
-						"Did not have exactly one session occurence in time table week " + w.getNumber() + ".");
+				logVerbose(ts, "Did not have exactly one session occurence in time table week " + w.getNumber() + ".");
 				return false;
 			}
 		}
@@ -323,7 +328,7 @@ public class TeachingAssistantKclValidator {
 			}
 
 			if (matchingOccurences > 1) {
-				printVerbose(ts, "Did not have at most one associated time table entry week " + w.getNumber() + ".");
+				logVerbose(ts, "Did not have at most one associated time table entry week " + w.getNumber() + ".");
 				return false;
 			}
 		}
@@ -424,7 +429,7 @@ public class TeachingAssistantKclValidator {
 		for (final TimeTableEntry unavailable : ta.getUnavailable_because_lessons()) {
 			if (allShifts.contains(unavailable)) {
 				if (verbose) {
-					System.out.println("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable
+					logger.warning("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable
 							+ "> but is blocked on this time frame.");
 				}
 				return false;
@@ -443,7 +448,7 @@ public class TeachingAssistantKclValidator {
 			}
 			if (!taApproved) {
 				if (verbose) {
-					System.out.println("TA <" + ta.getName() + "> not approved for module <" + module.getName()
+					logger.warning("TA <" + ta.getName() + "> not approved for module <" + module.getName()
 							+ "> but was assigned.");
 				}
 				return false;
@@ -459,8 +464,7 @@ public class TeachingAssistantKclValidator {
 			}
 			if (hoursPaidInWeek > ta.getMaxHoursPerWeek()) {
 				if (verbose) {
-					System.out
-							.println("TA <" + ta.getName() + "> time limit violated in week <" + w.getNumber() + ">.");
+					logger.warning("TA <" + ta.getName() + "> time limit violated in week <" + w.getNumber() + ">.");
 				}
 				return false;
 			}
@@ -473,7 +477,7 @@ public class TeachingAssistantKclValidator {
 		}
 		if (totalHoursPaid > ta.getMaxHoursPerYear()) {
 			if (verbose) {
-				System.out.println("TA <" + ta.getName() + "> total time limit violated.");
+				logger.warning("TA <" + ta.getName() + "> total time limit violated.");
 			}
 			return false;
 		}
@@ -481,7 +485,7 @@ public class TeachingAssistantKclValidator {
 		// Check for conflicting assignments per TA
 		if (checkForConflicts(allShifts)) {
 			if (verbose) {
-				System.out.println("TA <" + ta.getName() + "> has conflicting assignments.");
+				logger.warning("TA <" + ta.getName() + "> has conflicting assignments.");
 			}
 			return false;
 		}
@@ -856,17 +860,12 @@ public class TeachingAssistantKclValidator {
 	 * @param object  Object to print verbose error message for.
 	 * @param message Error message to print.
 	 */
-	private void printVerbose(final Object object, final String message) {
-		if (object == null) {
-			throw new IllegalArgumentException("Given object was null.");
-		}
-
-		if (message == null) {
-			throw new IllegalArgumentException("Given message was null.");
-		}
+	private void logVerbose(final Object object, final String message) {
+		Objects.requireNonNull(object);
+		Objects.requireNonNull(message);
 
 		if (verbose) {
-			System.err.println( //
+			logger.warning( //
 					"Violation of " + object.getClass().getSimpleName() //
 							+ " " + object + " failed." //
 							+ System.lineSeparator() //

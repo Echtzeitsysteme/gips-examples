@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -17,6 +18,11 @@ import metamodel.Week;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
 
 public class TeachingAssistantKclManipulator {
+
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	final String modelFilePath;
 	final Random rand;
@@ -107,7 +113,7 @@ public class TeachingAssistantKclManipulator {
 			}
 		}
 
-		System.out.println("Number of matched entries: " + foundEntries.size());
+		logger.info("Number of matched entries: " + foundEntries.size());
 		ta.getUnavailable_because_lessons().addAll(foundEntries);
 
 		// TODO(Max): Make sure occurrence is not in the past.

@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import metamodel.EmploymentApproval;
 import metamodel.EmploymentRating;
@@ -42,6 +42,11 @@ import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
  * </ul>
  */
 public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
+	
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final static Logger logger = Logger.getLogger(SimpleTaKclGenerator.class.getName());
 
 	// Configuration
 	static int NUMBER_OF_MODULES = 7;
@@ -93,7 +98,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(model);
 		exporter.modelToJson(instanceFolderPath + "/kcl_ta_allocation.json");
 
-		System.out.println("=> Scenario generation finished.");
+		logger.info("=> Scenario generation finished.");
 	}
 
 	/**

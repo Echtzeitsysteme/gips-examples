@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,6 +27,11 @@ import metamodel.Week;
  * Model validator for the teaching assistant example.
  */
 public class TeachingAssistantKclValidator {
+
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final static Logger logger = Logger.getLogger(TeachingAssistantKclValidator.class.getName());
 
 	/**
 	 * Model file name to load.
@@ -52,9 +58,9 @@ public class TeachingAssistantKclValidator {
 		final boolean valid = new TeachingAssistantKclValidator().validate(model);
 
 		if (valid) {
-			System.out.println("Result: Model is valid.");
+			logger.info("Result: Model is valid.");
 		} else {
-			System.out.println("Result: Model is not valid.");
+			logger.info("Result: Model is not valid.");
 		}
 
 	}
@@ -67,7 +73,7 @@ public class TeachingAssistantKclValidator {
 	 */
 	public boolean validate(final Department model) {
 		if (model == null) {
-			System.out.println("=> Given model was null.");
+			logger.warning("=> Given model was null.");
 			return false;
 		}
 
@@ -80,7 +86,7 @@ public class TeachingAssistantKclValidator {
 				tutorialsValid = tutorialsValid && validate(tutorial);
 			}
 			tutorialsValid = tutorialsValid && validateTutorialNameUnique(model.getTutorials());
-			System.out.println("=> All tutorials valid: " + tutorialsValid);
+			logger.info("=> All tutorials valid: " + tutorialsValid);
 			valid = valid && tutorialsValid;
 		}
 
@@ -91,7 +97,7 @@ public class TeachingAssistantKclValidator {
 				assistantsValid = assistantsValid && validate(assistant, model);
 			}
 			assistantsValid = assistantsValid && validateAssistantNameUnique(model.getAssistants());
-			System.out.println("=> All assistants valid: " + assistantsValid);
+			logger.info("=> All assistants valid: " + assistantsValid);
 			valid = valid && assistantsValid;
 		}
 
@@ -102,7 +108,7 @@ public class TeachingAssistantKclValidator {
 				timeslotsValid = timeslotsValid && validate(timeslot);
 			}
 			timeslotsValid = timeslotsValid && validateTimeSlotsIdUnique(model.getTimeslots());
-			System.out.println("=> All time slots valid: " + timeslotsValid);
+			logger.info("=> All time slots valid: " + timeslotsValid);
 			valid = valid && timeslotsValid;
 		}
 
@@ -113,7 +119,7 @@ public class TeachingAssistantKclValidator {
 				weeksValid = weeksValid && validate(week);
 			}
 			weeksValid = weeksValid && validateWeekNameUnique(model.getWeeks());
-			System.out.println("=> All weeks are valid: " + weeksValid);
+			logger.info("=> All weeks are valid: " + weeksValid);
 			valid = valid && weeksValid;
 		}
 
@@ -124,7 +130,7 @@ public class TeachingAssistantKclValidator {
 				daysValid = daysValid && validate(day);
 			}
 			daysValid = daysValid && validateDayNameUnique(model.getDays());
-			System.out.println("=> All days valid: " + daysValid);
+			logger.info("=> All days valid: " + daysValid);
 			valid = valid && daysValid;
 		}
 
@@ -135,7 +141,7 @@ public class TeachingAssistantKclValidator {
 				lecturersValid = lecturersValid && validate(lecturer);
 			}
 			lecturersValid = lecturersValid && validateLecturerNameUnique(model.getLecturers());
-			System.out.println("=> All lecturers valid: " + lecturersValid);
+			logger.info("=> All lecturers valid: " + lecturersValid);
 			valid = valid && lecturersValid;
 		}
 
@@ -334,7 +340,7 @@ public class TeachingAssistantKclValidator {
 					}
 				}
 				if (!skillTypeMatched) {
-					System.out.println("=> Skill type of assistant <" + assistant.getName() + "> and tutorial <"
+					logger.warning("=> Skill type of assistant <" + assistant.getName() + "> and tutorial <"
 							+ tutorial.getName() + "> not matched.");
 					return false;
 				}
@@ -343,9 +349,8 @@ public class TeachingAssistantKclValidator {
 				// An assistant must not have two tutorials at the same time slot
 				if (tutorial.getTimeslot() != null) {
 					if (!usedTimeslots.add(tutorial.getTimeslot().getId())) {
-						System.out.println("=> Assistant <" + assistant.getName()
+						logger.warning("=> Assistant <" + assistant.getName()
 								+ "> has two tutorials on overlapping time slots: " + tutorial.getTimeslot().getId());
-						;
 						return false;
 					}
 				}
@@ -354,7 +359,7 @@ public class TeachingAssistantKclValidator {
 
 		// Assistant's total hour limit must be matched by the cumulative duration
 		if (!(cumulatedTotalHours <= assistant.getMaximumHoursTotal())) {
-			System.err.println(
+			logger.warning(
 					"=> Assistant <" + assistant.getName() + "> exceeds their maximum hours total. Specified limit: "
 							+ assistant.getMaximumHoursTotal() + ", actual assignment: " + cumulatedTotalHours);
 			return false;
@@ -393,7 +398,7 @@ public class TeachingAssistantKclValidator {
 				final int hoursInWeek = week2Hours.get(w);
 				if (hoursInWeek < assistant.getMinimumHoursPerWeek()
 						|| hoursInWeek > assistant.getMaximumHoursPerWeek()) {
-					System.out.println("=> Assistant <" + assistant.getName()
+					logger.warning("=> Assistant <" + assistant.getName()
 							+ "> number of hours per week is not within their boundaries: "
 							+ assistant.getMinimumHoursPerWeek() + " <=? " + hoursInWeek + " <=? "
 							+ assistant.getMaximumHoursPerWeek());
@@ -404,7 +409,7 @@ public class TeachingAssistantKclValidator {
 			if (week2Days.containsKey(w)) {
 				final int daysInWeek = week2Days.get(w).size();
 				if (daysInWeek > assistant.getMaximumDaysPerWeek()) {
-					System.out.println("=> Assistant <" + assistant.getName() + "> maximum number of days exceeded: "
+					logger.warning("=> Assistant <" + assistant.getName() + "> maximum number of days exceeded: "
 							+ assistant.getMaximumDaysPerWeek() + " <=? " + daysInWeek);
 					;
 					return false;
@@ -428,7 +433,7 @@ public class TeachingAssistantKclValidator {
 		// Tutorial types
 		for (final Tutorial t : lecturer.getTutorials()) {
 			if (!t.getSkillType().equals(lecturer.getSkillTypeName())) {
-				System.out.println("=> Lecturer <" + lecturer.getName() + "> has a tutorial <" + t.getName()
+				logger.warning("=> Lecturer <" + lecturer.getName() + "> has a tutorial <" + t.getName()
 						+ "> with the wrong skill type <" + t.getSkillType() + "> instead of <"
 						+ lecturer.getSkillTypeName() + ">.");
 				return false;
@@ -442,12 +447,12 @@ public class TeachingAssistantKclValidator {
 		}
 		// lecturers must not have a number of maximum TAs that is smaller than zero
 		if (lecturer.getMaximumNumberOfTas() < 0) {
-			System.out.println("=> The number of maximum number of TAs of lecturer <" + lecturer.getName()
+			logger.warning("=> The number of maximum number of TAs of lecturer <" + lecturer.getName()
 					+ "> was negative: " + lecturer.getMaximumNumberOfTas());
 			return false;
 		}
 		if (employedAssistants.size() > lecturer.getMaximumNumberOfTas()) {
-			System.out.println("=> The number of assigned TAs (" + employedAssistants.size() + ")of lecturer <"
+			logger.warning("=> The number of assigned TAs (" + employedAssistants.size() + ")of lecturer <"
 					+ lecturer.getName() + "> was larger than the configured limit: "
 					+ lecturer.getMaximumNumberOfTas());
 			return false;
@@ -455,7 +460,7 @@ public class TeachingAssistantKclValidator {
 
 		// A lecturer must have at least one tutorial
 		if (lecturer.getTutorials().isEmpty()) {
-			System.out.println("=> Lecturer <" + lecturer.getName() + "> has no tutorials.");
+			logger.warning("=> Lecturer <" + lecturer.getName() + "> has no tutorials.");
 			return false;
 		}
 

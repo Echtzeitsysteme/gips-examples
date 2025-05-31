@@ -1,5 +1,7 @@
 package teachingassistant.kcl.metamodel.generator;
 
+import java.util.logging.Logger;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -15,6 +17,11 @@ import teachingassistant.kcl.metamodel.export.FileUtils;
 import teachingassistant.kcl.metamodel.export.ModelToJsonExporter;
 
 public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
+
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final static Logger logger = Logger.getLogger(TaKclGeneratorCliRunner.class.getName());
 
 	/**
 	 * Boolean flag to enable the debug output.
@@ -81,7 +88,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 		exporter.modelToJson(jsonOutputPath);
 
 		if (debugOutputEnabled) {
-			System.out.println("=> Scenario generation finished.");
+			logger.info("=> Scenario generation finished.");
 		}
 	}
 
@@ -134,7 +141,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 		try {
 			cmd = parser.parse(options, args);
 		} catch (final ParseException ex) {
-			System.err.println(ex.getMessage());
+			logger.warning(ex.getMessage());
 			formatter.printHelp("CLI parameters", options);
 			System.exit(1);
 		}

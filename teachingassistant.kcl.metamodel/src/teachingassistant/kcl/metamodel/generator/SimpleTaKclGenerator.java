@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import metamodel.Day;
 import metamodel.Department;
@@ -15,6 +16,11 @@ import metamodel.Week;
 import teachingassistant.kcl.metamodel.export.ModelToJsonExporter;
 
 public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
+
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final static Logger logger = Logger.getLogger(SimpleTaKclGenerator.class.getName());
 
 	//
 	// Configuration
@@ -63,7 +69,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(model);
 		exporter.modelToJson(instanceFolderPath + "/kcl_department.json");
 
-		System.out.println("=> Scenario generation finished.");
+		logger.info("=> Scenario generation finished.");
 	}
 
 	/**

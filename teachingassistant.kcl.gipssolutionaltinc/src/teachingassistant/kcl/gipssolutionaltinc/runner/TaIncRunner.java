@@ -1,5 +1,7 @@
 package teachingassistant.kcl.gipssolutionaltinc.runner;
 
+import java.util.logging.Logger;
+
 import org.eclipse.emf.common.util.URI;
 
 import teachingassistant.kcl.gips.utils.AbstractGipsTeachingAssistantRunner;
@@ -54,7 +56,7 @@ public class TaIncRunner extends AbstractGipsTeachingAssistantRunner {
 		// The end
 		//
 
-		System.out.println("Building + solving took " + tickTockToSeconds(tick, tock) + "s.");
+		logger.info("Building + solving took " + tickTockToSeconds(tick, tock) + "s.");
 		gipsApi.terminate();
 	}
 

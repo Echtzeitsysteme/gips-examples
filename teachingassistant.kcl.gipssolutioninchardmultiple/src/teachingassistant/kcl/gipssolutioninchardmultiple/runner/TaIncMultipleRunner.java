@@ -54,7 +54,7 @@ public class TaIncMultipleRunner extends AbstractGipsTeachingAssistantRunner {
 		// The end
 		//
 
-		System.out.println("Building + solving took " + tickTockToSeconds(tick, tock) + "s.");
+		logger.info("Building + solving took " + tickTockToSeconds(tick, tock) + "s.");
 		gipsApi.terminate();
 	}
 
