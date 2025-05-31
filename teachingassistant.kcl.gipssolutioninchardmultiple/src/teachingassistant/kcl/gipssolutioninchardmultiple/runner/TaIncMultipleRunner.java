@@ -11,6 +11,10 @@ public class TaIncMultipleRunner extends AbstractGipsTeachingAssistantRunner {
 		new TaIncMultipleRunner().run();
 	}
 
+	public TaIncMultipleRunner() {
+		super();
+	}
+
 	public void run() {
 		//
 		// Load an XMI model

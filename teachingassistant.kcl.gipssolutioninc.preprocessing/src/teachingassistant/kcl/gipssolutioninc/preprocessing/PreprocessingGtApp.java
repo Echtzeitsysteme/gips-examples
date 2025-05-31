@@ -17,6 +17,7 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import metamodel.MetamodelPackage;
 import metamodel.TAAllocation;
+import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.api.PreprocessingAPI;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.api.PreprocessingHiPEApp;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.api.matches.MakeAssignmentEdgePreviousMatch;
@@ -47,6 +48,7 @@ public class PreprocessingGtApp extends PreprocessingHiPEApp {
 	 */
 	public PreprocessingGtApp(final String xmiFilePath) {
 		super(EmoflonGtAppUtils.createTempDir().normalize().toString() + "/");
+		LoggingUtils.configureLogging(logger);
 		Objects.requireNonNull(xmiFilePath);
 		EmoflonGtAppUtils.extractFiles(workspacePath);
 

@@ -15,6 +15,7 @@ import metamodel.TAAllocation;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
+import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
 
 public class TeachingAssistantKclManipulator {
@@ -29,6 +30,7 @@ public class TeachingAssistantKclManipulator {
 
 	public TeachingAssistantKclManipulator(final String modelFilePath) {
 		Objects.requireNonNull(modelFilePath);
+		LoggingUtils.configureLogging(logger);
 		this.modelFilePath = modelFilePath;
 		this.rand = new Random(0);
 	}

@@ -22,6 +22,7 @@ import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
 import teachingassistant.kcl.gips.utils.DateTimeUtil;
+import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
 
 /**
@@ -42,7 +43,7 @@ import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
  * </ul>
  */
 public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
-	
+
 	/**
 	 * Logger for system outputs.
 	 */
@@ -77,6 +78,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	 * Constructor taking a seed for random generation.
 	 */
 	public SimpleTaKclGenerator(int seed) {
+		LoggingUtils.configureLogging(logger);
 		rand = new Random(seed);
 	}
 

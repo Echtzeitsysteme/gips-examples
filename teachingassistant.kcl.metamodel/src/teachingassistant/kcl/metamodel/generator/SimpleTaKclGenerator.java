@@ -13,6 +13,7 @@ import metamodel.Day;
 import metamodel.Department;
 import metamodel.Lecturer;
 import metamodel.Week;
+import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.metamodel.export.ModelToJsonExporter;
 
 public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
@@ -56,6 +57,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	 * @param args Arguments will be ignored.
 	 */
 	public static void main(final String[] args) {
+		LoggingUtils.configureLogging(logger);
 		final SimpleTaKclGenerator gen = new SimpleTaKclGenerator(0);
 		final String instanceFolderPath = gen.prepareFolder();
 

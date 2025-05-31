@@ -22,6 +22,7 @@ import metamodel.Skill;
 import metamodel.Timeslot;
 import metamodel.Tutorial;
 import metamodel.Week;
+import teachingassistant.kcl.gips.utils.LoggingUtils;
 
 /**
  * Model validator for the teaching assistant example.
@@ -44,6 +45,7 @@ public class TeachingAssistantKclValidator {
 	 * @param args Arguments that will be ignored.
 	 */
 	public static void main(final String[] args) {
+		LoggingUtils.configureLogging(logger);
 		final String projectFolder = System.getProperty("user.dir");
 		final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodel/instances/";
 		final String filePath = instanceFolder + SCENARIO_FILE_NAME;

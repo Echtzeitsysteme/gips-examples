@@ -11,6 +11,10 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		new TaBatchRunner().run();
 	}
 
+	public TaBatchRunner() {
+		super();
+	}
+
 	public void run() {
 		//
 		// Load an XMI model

@@ -13,6 +13,7 @@ import org.apache.commons.cli.ParseException;
 import com.google.gson.JsonObject;
 
 import metamodel.Department;
+import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.metamodel.export.FileUtils;
 import teachingassistant.kcl.metamodel.export.ModelToJsonExporter;
 
@@ -56,6 +57,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 	 * @param args See {@link #parseArgs(String[])}.
 	 */
 	public static void main(final String[] args) {
+		LoggingUtils.configureLogging(logger);
 		parseArgs(args);
 		new TaKclGeneratorCliRunner().execute();
 	}

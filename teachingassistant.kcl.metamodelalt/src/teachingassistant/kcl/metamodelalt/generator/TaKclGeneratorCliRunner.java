@@ -12,10 +12,11 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import metamodel.TAAllocation;
+import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
 
 public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
-	
+
 	/**
 	 * Logger for system outputs.
 	 */
@@ -54,6 +55,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 	 * @param args See {@link #parseArgs(String[])}.
 	 */
 	public static void main(final String[] args) {
+		LoggingUtils.configureLogging(logger);
 		Objects.requireNonNull(args);
 		parseArgs(args);
 		new TaKclGeneratorCliRunner().execute();

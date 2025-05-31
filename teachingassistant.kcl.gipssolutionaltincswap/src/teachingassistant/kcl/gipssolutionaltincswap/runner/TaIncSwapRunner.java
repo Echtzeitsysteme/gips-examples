@@ -11,6 +11,10 @@ public class TaIncSwapRunner extends AbstractGipsTeachingAssistantRunner {
 		new TaIncSwapRunner().run();
 	}
 
+	public TaIncSwapRunner() {
+		super();
+	}
+
 	public void run() {
 		//
 		// Load an XMI model

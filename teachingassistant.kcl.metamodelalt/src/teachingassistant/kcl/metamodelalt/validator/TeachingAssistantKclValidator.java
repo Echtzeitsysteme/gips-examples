@@ -20,6 +20,7 @@ import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
 import teachingassistant.kcl.gips.utils.DateTimeUtil;
+import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
 
 /**
@@ -59,6 +60,8 @@ public class TeachingAssistantKclValidator {
 	 * @param args Arguments that will be ignored.
 	 */
 	public static void main(final String[] args) {
+		LoggingUtils.configureLogging(logger);
+
 		// Construct file path
 		final String projectFolder = System.getProperty("user.dir");
 		final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodelalt/instances/";

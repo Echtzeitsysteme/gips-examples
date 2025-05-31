@@ -1,7 +1,5 @@
 package teachingassistant.kcl.gipssolutionaltinchard.runner;
 
-import java.util.logging.Logger;
-
 import org.eclipse.emf.common.util.URI;
 
 import teachingassistant.kcl.gips.utils.AbstractGipsTeachingAssistantRunner;
@@ -11,6 +9,10 @@ public class TaIncHardRunner extends AbstractGipsTeachingAssistantRunner {
 
 	public static void main(final String[] args) {
 		new TaIncHardRunner().run();
+	}
+
+	public TaIncHardRunner() {
+		super();
 	}
 
 	public void run() {

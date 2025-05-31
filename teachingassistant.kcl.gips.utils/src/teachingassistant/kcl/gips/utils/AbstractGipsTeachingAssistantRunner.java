@@ -23,6 +23,13 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 	protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	/**
+	 * Constructor to setup the logging.
+	 */
+	public AbstractGipsTeachingAssistantRunner() {
+		LoggingUtils.configureLogging(logger);
+	}
+
+	/**
 	 * Checks if a file for the given path exists and throws an exception otherwise.
 	 * 
 	 * @param path Path to check the file existence for.
