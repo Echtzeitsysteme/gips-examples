@@ -54,7 +54,7 @@ public class TeachingAssistantRunner extends AbstractGipsTeachingAssistantRunner
 		// The end
 		//
 
-		System.out.println("Building + solving took " + 1.0 * (tock - tick) / 1_000_000_000 + "s.");
+		System.out.println("Building + solving took " + tickTockToSeconds(tick, tock) + "s.");
 		gipsApi.terminate();
 	}
 

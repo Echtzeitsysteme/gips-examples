@@ -116,4 +116,18 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 		gipsApi.getEclipseIntegrationConfig().setSolutionValuesSynchronizationEnabled(true);
 	}
 
+	/**
+	 * Converts the given tick and tock value to a runtime in seconds.
+	 * 
+	 * @param tick Start epoch.
+	 * @param tock End epoch.
+	 * @return Elapsed time between tick and tock in seconds.
+	 */
+	protected double tickTockToSeconds(final long tick, final long tock) {
+		if (tick < 0 || tock < 0) {
+			throw new IllegalArgumentException("tick or tock was smaller than zero.");
+		}
+		return 1.0 * (tock - tick) / 1_000_000_000;
+	}
+
 }
