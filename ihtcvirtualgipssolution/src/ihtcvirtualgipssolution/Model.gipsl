@@ -103,13 +103,13 @@ rule selectExtendingShiftToFirstWorkload {
 rule selectOperationDay {
 	root : Root {
 		- patients -> p
-		- surgeons -> s
+//		- surgeons -> s
 		- ots -> ot
 	}
 	
 	p : Patient {
 		- firstWorkload -> w
-		- surgeon -> s
+//		- surgeon -> s
 	}
 	
 	w : Workload {
@@ -129,9 +129,9 @@ rule selectOperationDay {
 		.isSelected := true
 	}
 	
-	s : Surgeon {
-		- opTimes -> op
-	}
+//	s : Surgeon {
+//		- opTimes -> op
+//	}
 	
 	op : OpTime {
 		- virtualCapacity -> vopc
@@ -432,10 +432,6 @@ mapping selectedExtendingShiftToFirstWorkload to selectExtendingShiftToFirstWork
 // Decides on what day and in which OT a patient is operated on.
 mapping selectedOperationDay to selectOperationDay;
 
-//constraint with mandatoryPatients {
-//	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
-//}
-
 // TODO: Fix Pattern 
 //function maxUse with mandatoryPatients {
 //	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value)
@@ -519,8 +515,8 @@ constraint with patientTupel {
 
 constraint with mandatoryPatients {
 	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
-//	&
-//	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
+	&
+	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
 }
 
 //// TODO. temporary
@@ -585,10 +581,10 @@ constraint with patientShiftTupel {
 //}
 
 // C5: A patient is assigned to at most one operating time slot
-// TODO Patient wahrscheinlich falsch -> Nicht occupant
-//constraint with Patient {
-//	mappings.selectedOperationDay->filter(element.nodes.p == context & !element.nodes.p.isOccupant)->sum(element.value) <= 1
-//}
+
+constraint with Patient {
+	mappings.selectedOperationDay->filter(element.nodes.p == context)->sum(element.value) <= 1
+}
 
 // C6: A surgeon without any operations on a specific day is not assigned an operating theater on that day
 // -> Already given, because the rule selectOperationDay only assigns a surgeon to an OT if he has a scheduled
