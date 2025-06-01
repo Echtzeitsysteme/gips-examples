@@ -459,6 +459,11 @@ mapping assignedPatientsToRoom to patientForRoom;
 // mapping that decides which ots are open on a specific day
 mapping openOTs to otForDay;
 
+// TODO. temporary
+constraint with optionalPatients {
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
+}
+
 //
 // Hard Constraints
 //
@@ -518,11 +523,6 @@ constraint with mandatoryPatients {
 	&
 	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
 }
-
-//// TODO. temporary
-//constraint with optionalPatients {
-//	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
-//}
 
 // H6: Admission day: A patient can be admitted on any day from their release date to their
 // due date.
@@ -590,6 +590,17 @@ constraint with Patient {
 // -> Already given, because the rule selectOperationDay only assigns a surgeon to an OT if he has a scheduled
 // operation with a patient on that day
 
+// C7: The day the first workload of a patient gets scheduled has to be the same day the patient has surgery
+
+constraint with selectedShiftToFirstWorkload {
+  context.value == 1
+  =>
+  mappings.selectedOperationDay->filter(
+    element.nodes.vwc == context.nodes.vwc &
+    context.nodes.s.shiftNo / 3 == element.nodes.c.day
+  )->sum(element.value) == 1
+}
+
 //
 // "Virtual" Constraints
 //
@@ -601,6 +612,7 @@ constraint with selectedOccupantNodes {
 
 // V2: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
+// TODO: This does not enforce that the admission day is the same as the operation day!
 
 constraint with checkRequiredWorkloadToCapacity {
 	mappings.selectedShiftToFirstWorkload->filter(
