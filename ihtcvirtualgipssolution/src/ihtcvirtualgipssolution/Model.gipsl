@@ -192,53 +192,6 @@ rule selectShiftToRoster {
 // Utility Patterns used in Constraints
 //
 
-// Pattern for all surgeries that  are assigned to a surgeon on a specific day
-// TODO: maybe splitten?
-pattern assignedSurgeries {
-	root : Root {
-		- ots -> ot
-		- surgeons -> s
-		- patients -> p
-	}
-	
-	s : Surgeon {
-		- opTimes -> op
-	}
-	
-	p : Patient {
-		- firstWorkload -> w
-	}
-	
-	w : Workload {
-		- virtualCapacity -> vwc
-		- virtualOpTime -> vwop
-	}
-	
-	vwc : VirtualWorkloadToCapacity {
-		- capacity -> c
-		- requires_virtualOpTimeToCapacity -> vopc
-	}
-	
-	vwop : VirtualWorkloadToOpTime {
-		- opTime -> op
-		- requires_virtualOpTimeToCapacity -> vopc
-	}
-	
-	op : OpTime {
-		- virtualCapacity -> vopc
-	}
-	
-	vopc : VirtualOpTimeToCapacity {
-		- capacity -> c
-	}
-	
-	ot : OT
-	
-	c : Capacity {
-		- ot -> ot
-	}
-}
-
 // Pattern to find all mandatory patients
 pattern mandatoryPatients {
 	r : Root {
@@ -284,7 +237,7 @@ pattern roomForShift{
 	
 	s : Shift
 	
-	# s.shiftNo % 3 == 0
+//	# s.shiftNo % 3 == 0 // Can't be included anymore because the mapping is needed in the assignment of the nurses were all shifts are considered 
 }
 
 // Pattern that finds all patients that are assigned to a room -> first and following workloads
@@ -315,7 +268,7 @@ pattern patientForRoom {
 	# s.shiftNo % 3 == 0 
 }
 
-pattern otForDay {
+pattern otCapacityTupel{
 	root : Root {
 		- ots -> ot
 	}
@@ -327,7 +280,7 @@ pattern otForDay {
 	c : Capacity
 }
 
-pattern surgeonCapacity {
+pattern surgeonOptimeTupel {
 		root : Root {
 		- surgeons -> s
 	}
@@ -457,7 +410,7 @@ mapping countPatientsForRoom to roomForShift {
 mapping assignedPatientsToRoom to patientForRoom;
  
 // mapping that decides which ots are open on a specific day
-mapping openOTs to otForDay;
+mapping openOTs to otCapacityTupel;
 
 // TODO. temporary
 constraint with optionalPatients {
@@ -493,11 +446,11 @@ constraint with patientTupel {
 // -> Already enforced by GT-Rule "assignPatientToRoom" in preprocessing
 
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded. 
-
-//constraint with assignedSurgeries {
+// TODO: Exception because the surgeon is not is the model for patient p39 -> Fix in preprocessing
+//constraint with surgeonOptimeTupel {
 //	mappings.selectedOperationDay->filter(
 //		element.nodes.op.day == context.nodes.op.day &
-//		element.nodes.s == context.nodes.s
+//		element.nodes.p.surgeon == context.nodes.s
 //	)->sum(element.nodes.p.surgeryDuration * element.value)
 //	<=
 //	context.nodes.op.maxOpTime
@@ -506,14 +459,14 @@ constraint with patientTupel {
 // H4: OT overtime: The duration of all surgeries allocated to an OT on a day must not exceed 
 // its maximum capacity.
 
-//constraint with assignedSurgeries {
-//	mappings.selectedOperationDay->filter(
-//		element.nodes.c.day == context.nodes.c.day &
-//		element.nodes.ot == context.nodes.ot
-//	)->sum(element.nodes.p.surgeryDuration * element.value)
-//	<= 
-//	context.nodes.c.maxCapacity
-//}
+constraint with otCapacityTupel {
+	mappings.selectedOperationDay->filter(
+		element.nodes.c.day == context.nodes.c.day &
+		element.nodes.ot == context.nodes.ot
+	)->sum(element.nodes.p.surgeryDuration * element.value)
+	<= 
+	context.nodes.c.maxCapacity
+}
 
 // H5: Mandatory versus optional patients: All mandatory patients must be admitted within the 
 // scheduling period, whereas optional patients may be postponed to future scheduling periods.
@@ -530,9 +483,9 @@ constraint with mandatoryPatients {
 
 // H7 Room capacity: The number of patients in each room in each day cannot exceed the 
 // capacity of the room.
-
 // The calculated amount of Patients assigned to each room on each morning shift of a day has to be 
 // smaller or equal to the amount of available beds.
+
 constraint with countPatientsForRoom {
 	 context.variables.patientCount <= context.nodes.r.beds
 }
@@ -545,9 +498,9 @@ constraint with countPatientsForRoom {
 // -> Already enforced by GT-Rule "extendPatientStay" in preprocessing
 
 // C2: A patient is assigned to at most one room in each shift
-constraint with Patient { // TODO: Überflüssig
-	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context)->sum(element.value) <=1
-}
+//constraint with Patient { // TODO: Überflüssig
+//	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context)->sum(element.value) <=1
+//}
 
 constraint with patientShiftTupel {
 	mappings.assignedPatientsToRoom->filter(
@@ -750,7 +703,7 @@ constraint with countPatientsForRoom {
 //
 //// S6: The number of different OTs a surgeon is assigned to per working day should be minimized
 //
-//function calculateOtsPerSurgeon with surgeonCapacity {
+//function calculateOtsPerSurgeon with surgeonOptimeTupel {
 //	mappings.selectedOperationDay->filter(
 //		element.nodes.s == context.nodes.s &
 //		element.nodes.op.day == context.nodes.op.day 
