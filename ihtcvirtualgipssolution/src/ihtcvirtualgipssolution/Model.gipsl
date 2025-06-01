@@ -263,9 +263,11 @@ pattern patientForRoom {
 //		- room -> r
 	}
 	
-	r : Room 
+	r : Room {
+		- shifts -> s
+	}
 	
-	# s.shiftNo % 3 == 0 
+//	# s.shiftNo % 3 == 0 
 }
 
 pattern otCapacityTupel{
@@ -423,7 +425,7 @@ constraint with optionalPatients {
 
 // H1: No gender mix: Patients of different genders may not share a room on any day. 
 // patient.gender is a string variable and the preallocation is assumably not known. -> There can only be the same value for all patients
-
+// TODO: Could be only checked for shiftNo / 3 == 0
 constraint with patientTupel {
 	mappings.assignedPatientsToRoom->filter(
 		[element.nodes.p == context.nodes.p1 | element.nodes.p == context.nodes.p2] &
@@ -498,9 +500,6 @@ constraint with countPatientsForRoom {
 // -> Already enforced by GT-Rule "extendPatientStay" in preprocessing
 
 // C2: A patient is assigned to at most one room in each shift
-//constraint with Patient { // TODO: Überflüssig
-//	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context)->sum(element.value) <=1
-//}
 
 constraint with patientShiftTupel {
 	mappings.assignedPatientsToRoom->filter(
@@ -511,27 +510,25 @@ constraint with patientShiftTupel {
 
 // C3 + C4: Nurses are not assigned to empty rooms and each nonempty room in each shift is assigned to one nurse
 
-//constraint with roomForShift {
-//	mappings.countPatientsForRoom->filter(
-//		element.nodes.r == context.nodes.r &
-//		element.nodes.s.shiftNo == context.nodes.s.shiftNo
-//		)->sum(element.variables.patientCount) == 0
-//	=> 
-//	mappings.selectedShiftToRoster->filter(
-//		element.nodes.r == context.nodes.r &
-//		element.nodes.s.shiftNo == context.nodes.s.shiftNo
-//	)->sum(element.value) == 0
-//	&
-//	mappings.countPatientsForRoom->filter(
-//		element.nodes.r == context.nodes.r &
-//		element.nodes.s.shiftNo == context.nodes.s.shiftNo
-//		)->sum(element.variables.patientCount) > 0
-//	=> 
-//	mappings.selectedShiftToRoster->filter(
-//		element.nodes.r == context.nodes.r &
-//		element.nodes.s.shiftNo == context.nodes.s.shiftNo
-//	)->sum(element.value) == 1
-//}
+constraint with countPatientsForRoom {
+	[	
+	context.variables.patientCount == 0
+	<=> 
+	mappings.selectedShiftToRoster->filter(
+	    element.nodes.r == context.nodes.r &
+	    element.nodes.s.shiftNo == context.nodes.s.shiftNo
+	  )->sum(element.value) == 0
+	]
+	&
+	[
+	context.variables.patientCount > 0
+	<=> 
+	mappings.selectedShiftToRoster->filter(
+	    element.nodes.r == context.nodes.r &
+	    element.nodes.s.shiftNo == context.nodes.s.shiftNo
+	  )->sum(element.value) == 1
+	]
+}
 
 // C5: A patient is assigned to at most one operating time slot
 
@@ -581,7 +578,7 @@ constraint with selectedOccupantNodes {
 
 // V2: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
-// TODO: This does not enforce that the admission day is the same as the operation day!
+// This does not enforce that the admission day is the same as the operation day!
 
 constraint with checkRequiredWorkloadToCapacity {
 	mappings.selectedShiftToFirstWorkload->filter(
