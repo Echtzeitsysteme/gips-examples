@@ -602,56 +602,37 @@ constraint with selectedOccupantNodes {
 // V2: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
 
-//constraint with checkRequiredWorkloadToCapacity {
-//	mappings.selectedShiftToFirstWorkload->filter(
-//		element.nodes.vsw == context.nodes.vsw &
-//		element.nodes.vwc == context.nodes.vwc
-//	)->sum(element.value) == 1
-//	=>
-//	mappings.selectedOperationDay->filter(
-//		element.nodes.vwc == context.nodes.vwc
-//	)->sum(element.value) == 1
-//}
+constraint with checkRequiredWorkloadToCapacity {
+	mappings.selectedShiftToFirstWorkload->filter(
+		element.nodes.vsw == context.nodes.vsw &
+		element.nodes.vwc == context.nodes.vwc
+	)->sum(element.value) == 1
+	=>
+	mappings.selectedOperationDay->filter(
+		element.nodes.vwc == context.nodes.vwc
+	)->sum(element.value) > 0
+}
 
-//// V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
-//// that is connected to the previous links between the patients workloads to shifts.
-//// The following node can only be selected if the previous is already set to true
-//
-//constraint with checkRequiredShiftToWorkload{
-//	mappings.selectedExtendingShiftToFirstWorkload->filter(
-//		element.nodes.prevvsw == context.nodes.prevvsw &
-//		element.nodes.nextvsw == context.nodes.nextvsw 
-//	)->sum(element.value) == 1
-//	=>
-//	mappings.selectedExtendingShiftToFirstWorkload->filter(
-//		element.nodes.nextvsw == context.nodes.prevvsw 
-//	)->sum(element.value) == 1
-//	&
-//	mappings.selectedExtendingShiftToFirstWorkload->filter(
-//		element.nodes.prevvsw == context.nodes.prevvsw &
-//		element.nodes.nextvsw == context.nodes.nextvsw 
-//	)->sum(element.value) == 1
-//	=>
-//	mappings.selectedShiftToFirstWorkload->filter(
-//		element.nodes.vsw == context.nodes.prevvsw 
-//	)->sum(element.value) == 1
-//}
-//
+// V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
+// that is connected to the previous links between the patients workloads to shifts.
+// The following node can only be selected if the previous is already set to true
+
+constraint with checkRequiredShiftToWorkload{
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.prevvsw == context.nodes.prevvsw &
+		element.nodes.nextvsw == context.nodes.nextvsw 
+	)->sum(element.value) == 1
+	=>
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.nextvsw == context.nodes.prevvsw 
+	)->sum(element.value) == 1
+	|
+	mappings.selectedShiftToFirstWorkload->filter(
+		element.nodes.vsw == context.nodes.prevvsw 
+	)->sum(element.value) == 1
+}
+
 // V4: TODO: Does the existing logic to set all three 3 nodes to true simultaneously work? 
-
-// V5: Every virtual ShiftToWorkload Node of an Occupant has to be selected in the final model
-
-//constraint with VirtualShiftToWorkload {
-//	mappings.assignedPatientsToRoom->filter(
-//		element.nodes.vsw == context & 
-//		element.nodes.vsw.wasImported
-//	)->sum(element.value) == 1
-//	&
-//	mappings.selectedExtendingShiftToFirstWorkload->filter(
-//		element.nodes.nextvsw == context & 
-//		element.nodes.nextvsw.wasImported
-//	)->sum(element.value) == 1
-//}
 
 //
 // Utility constraints
