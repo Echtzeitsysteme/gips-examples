@@ -517,6 +517,7 @@ public class JsonToModelLoader {
 		}
 
 		this.numberOfFoundDays = numberOfDays;
+		this.model.setDays(numberOfDays);
 	}
 
 	/**
