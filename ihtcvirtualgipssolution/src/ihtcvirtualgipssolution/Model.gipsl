@@ -449,14 +449,14 @@ constraint with patientTupel {
 
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded. 
 // TODO: Exception because the surgeon is not is the model for patient p39 -> Fix in preprocessing
-//constraint with surgeonOptimeTupel {
-//	mappings.selectedOperationDay->filter(
-//		element.nodes.op.day == context.nodes.op.day &
-//		element.nodes.p.surgeon == context.nodes.s
-//	)->sum(element.nodes.p.surgeryDuration * element.value)
-//	<=
-//	context.nodes.op.maxOpTime
-//}
+constraint with surgeonOptimeTupel {
+	mappings.selectedOperationDay->filter(
+		element.nodes.op.day == context.nodes.op.day &
+		element.nodes.p.surgeon == context.nodes.s
+	)->sum(element.nodes.p.surgeryDuration * element.value)
+	<=
+	context.nodes.op.maxOpTime
+}
 
 // H4: OT overtime: The duration of all surgeries allocated to an OT on a day must not exceed 
 // its maximum capacity.
