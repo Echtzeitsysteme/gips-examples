@@ -103,8 +103,8 @@
         eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/workload"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Surgeon" eSuperTypes="#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="patients" eType="#//Patient"
-        eOpposite="#//Patient/surgeon"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patients" upperBound="-1"
+        eType="#//Patient" eOpposite="#//Patient/surgeon"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="opTimes" upperBound="-1"
         eType="#//OpTime" containment="true" eOpposite="#//OpTime/surgeon"/>
   </eClassifiers>
