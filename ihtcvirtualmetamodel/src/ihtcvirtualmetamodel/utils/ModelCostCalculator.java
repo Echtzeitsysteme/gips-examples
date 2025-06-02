@@ -421,11 +421,21 @@ public class ModelCostCalculator {
 	 */
 	private int getWorkloadOfPatientByShift(final Patient p, final int shiftNo) {
 		Objects.requireNonNull(p, "Given patient was null.");
+		Objects.requireNonNull(p.getFirstWorkload(), "Patient's first workload was null.");
+
+		if (p.getFirstWorkload().getDerivedShift() == null) {
+			return 0;
+		}
 
 		Workload w = p.getFirstWorkload();
 		while (w.getNext() != null) {
-			if (w.getDerivedShift().getShiftNo() == shiftNo) {
-				return w.getWorkloadValue();
+			// If the derived shift is `null`, the model is either not valid or the
+			// respective workload of the patient is outside of the current time frame
+			// (which is okay).
+			if (w.getDerivedShift() != null) {
+				if (w.getDerivedShift().getShiftNo() == shiftNo) {
+					return w.getWorkloadValue();
+				}
 			}
 			w = (Workload) w.getNext();
 		}

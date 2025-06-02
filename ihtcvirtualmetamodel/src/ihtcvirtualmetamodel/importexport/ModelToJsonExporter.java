@@ -173,7 +173,7 @@ public class ModelToJsonExporter {
 			for (final int shiftId : shift2Room.keySet()) {
 				final JsonObject assignment = new JsonObject();
 				assignment.addProperty("day", convertShiftToDay(shiftId));
-				assignment.addProperty("shift", convertShiftType(shiftId));
+				assignment.addProperty("shift", convertShiftType(shiftId % 3));
 				final JsonArray roomsJson = new JsonArray();
 				for (final String room : shift2Room.get(shiftId)) {
 					roomsJson.add(room);
