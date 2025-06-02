@@ -93,6 +93,16 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			logger.info("=> Start JSON export.");
 		}
 
+		//
+		// Post-processing via a separated GT rule set
+		//
+
+		if (verbose) {
+			logger.info("=> Start post-processing GT.");
+		}
+
+		postprocess(gipsOutputPath);
+
 		exportToJson(gipsOutputPath, outputPath);
 
 		//
