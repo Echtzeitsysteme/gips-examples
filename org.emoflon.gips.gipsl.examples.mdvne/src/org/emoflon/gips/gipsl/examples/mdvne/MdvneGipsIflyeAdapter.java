@@ -103,7 +103,7 @@ public class MdvneGipsIflyeAdapter extends GipsExamplesLogger {
 			api.init(URI.createFileURI(gipsXmi), model, URI.createFileURI(ibexXmi));
 			init = true;
 			if (numberOfIlpSolverThreads > 0) {
-				this.api.setIlpSolverThreads(numberOfIlpSolverThreads);
+				this.api.getSolverConfig().setThreadCount(numberOfIlpSolverThreads);
 			}
 		}
 
@@ -138,7 +138,7 @@ public class MdvneGipsIflyeAdapter extends GipsExamplesLogger {
 			api.init(model);
 			init = true;
 			if (numberOfIlpSolverThreads > 0) {
-				this.api.setIlpSolverThreads(numberOfIlpSolverThreads);
+				this.api.getSolverConfig().setThreadCount(numberOfIlpSolverThreads);
 			}
 		}
 
