@@ -398,8 +398,8 @@ mapping assignedPatientsToRoom to patientForRoom;
 mapping openOTs to otCapacityTupel;
 
 // TODO. temporary
-constraint with optionalPatients {
-	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 0
+function maxoOptional with optionalPatients {
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
 }
 
 //
@@ -535,19 +535,33 @@ constraint with selectedShiftToFirstWorkload {
 
 // C8: If a patient is admitted all his workloads have to be scheduled in a shift
 
-// TODO: context.stayLength does not work as upper bound because the stay of a patient can exceed the scheduling period 
-//constraint with Patient {
-//	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context)->sum(element.value) == 1
-//	=>
-//	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.p == context)->sum(element.value) //+ 1
-//	==
-//	(context.stayLength * 3) - 1 
-//}
+constraint with selectShiftToFirstWorkload {
+	[
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.vsw == context.nodes.vsw)->sum(element.value) == 1
+	&
+	(context.nodes.p.stayLength * 3) + context.nodes.vsw.shift.shiftNo > context.nodes.root.days * 3
+	]
+	=>
+	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	== ((context.nodes.root.days * 3) - context.nodes.vsw.shift.shiftNo) - 1
+
+}
+
+constraint with selectShiftToFirstWorkload {
+	[
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.vsw == context.nodes.vsw)->sum(element.value) == 1
+	&
+	(context.nodes.p.stayLength * 3) + context.nodes.vsw.shift.shiftNo <= context.nodes.root.days * 3
+	]
+	=>
+	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	== (context.nodes.p.stayLength * 3) - 1
+}
 
 // temporary solution for C8
-function maxExtend with selectedExtendingShiftToFirstWorkload {
-	context.value
-}
+//function maxExtend with selectedExtendingShiftToFirstWorkload {
+//	context.value
+//}
 
 //
 // "Virtual" Constraints
@@ -702,7 +716,7 @@ constraint with countPatientsForRoom {
 
 objective : max {
 	0
-	+ functions.maxExtend
+	+ functions.maxoOptional
 //	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
 //	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
 //	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
