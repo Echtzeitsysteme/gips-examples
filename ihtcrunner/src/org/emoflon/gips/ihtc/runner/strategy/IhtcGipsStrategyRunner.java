@@ -139,39 +139,39 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		// Initialize GIPS API: Hard constraints only.
 		//
 
-		if (verbose) {
-			System.out.println("=> Start stage 1.");
-		}
-
-		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
-		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
-		// Set presolve to "auto"
-		GurobiTuningUtil.updatePresolve(gipsApi, -1);
-		if (randomSeed != -1) {
-			GurobiTuningUtil.updateRandomSeed(gipsApi, randomSeed);
-		}
-
-		if (verbose) {
-			GurobiTuningUtil.setDebugOutput(gipsApi);
-		}
-
-		//
-		// Run first GIPS solution
-		//
-
-		buildAndSolve(gipsApi, verbose);
-		applySolution(gipsApi, verbose);
-		gipsSave(gipsApi, gipsOutputPath);
-		exportToJson(gipsOutputPath, outputPath);
-		gipsApi.terminate();
-		if (verbose) {
-			System.out.println("=> Stage 1 found a solution.");
-		}
-		final long tockStageOne = System.nanoTime();
-		final double stageOneRuntime = 1.0 * (tockStageOne - tickStageOne) / 1_000_000_000;
-		if (verbose) {
-			System.out.println("=> Stage 1 run time: " + stageOneRuntime + "s.");
-		}
+//		if (verbose) {
+//			System.out.println("=> Start stage 1.");
+//		}
+//
+//		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
+//		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
+//		// Set presolve to "auto"
+//		GurobiTuningUtil.updatePresolve(gipsApi, -1);
+//		if (randomSeed != -1) {
+//			GurobiTuningUtil.updateRandomSeed(gipsApi, randomSeed);
+//		}
+//
+//		if (verbose) {
+//			GurobiTuningUtil.setDebugOutput(gipsApi);
+//		}
+//
+//		//
+//		// Run first GIPS solution
+//		//
+//
+//		buildAndSolve(gipsApi, verbose);
+//		applySolution(gipsApi, verbose);
+//		gipsSave(gipsApi, gipsOutputPath);
+//		exportToJson(gipsOutputPath, outputPath);
+//		gipsApi.terminate();
+//		if (verbose) {
+//			System.out.println("=> Stage 1 found a solution.");
+//		}
+//		final long tockStageOne = System.nanoTime();
+//		final double stageOneRuntime = 1.0 * (tockStageOne - tickStageOne) / 1_000_000_000;
+//		if (verbose) {
+//			System.out.println("=> Stage 1 run time: " + stageOneRuntime + "s.");
+//		}
 
 		//
 		// Initialize GIPS API: All optional constraints included.
@@ -186,15 +186,15 @@ public class IhtcGipsStrategyRunner extends AbstractIhtcGipsRunner {
 		// TODO: This should now be redundant
 //		GurobiTuningUtil.updateTimeLimit(gipsApiOptional, remainingTime);
 		// Set presolve to "auto"
-		GurobiTuningUtil.updatePresolve(gipsApiOptional, -1);
-		// TODO: set MIPFocus parameter here?
-		if (randomSeed != -1) {
-			GurobiTuningUtil.updateRandomSeed(gipsApiOptional, randomSeed);
-		}
-
-		if (verbose) {
-			GurobiTuningUtil.setDebugOutput(gipsApiOptional);
-		}
+//		GurobiTuningUtil.updatePresolve(gipsApiOptional, -1);
+//		// TODO: set MIPFocus parameter here?
+//		if (randomSeed != -1) {
+//			GurobiTuningUtil.updateRandomSeed(gipsApiOptional, randomSeed);
+//		}
+//
+//		if (verbose) {
+//			GurobiTuningUtil.setDebugOutput(gipsApiOptional);
+//		}
 
 		//
 		// Run second GIPS solution

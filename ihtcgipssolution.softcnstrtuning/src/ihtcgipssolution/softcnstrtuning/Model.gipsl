@@ -20,7 +20,7 @@ config {
 	randomSeed := true [value := 7];
 	presolve := true;
 	debugOutput := false;
-//	lpOutput := true [path := "gurobi.lp"];
+	lpOutput := true [path := "gurobi.lp"];
 	threadCount := true [value := 4];
 }
 
