@@ -139,6 +139,46 @@ pattern findSessionOccurrence {
 	occurrence : SessionOccurrence
 }
 
+// Find a TA with a green employment approval status
+// for a specific module.
+pattern findGreenTa {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> mod
+	}
+	
+	ta : TA
+	
+	mod : Module {
+		- approvals -> approval
+	}
+	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	# approval.ratingNumeric == 2
+}
+
+// Find a TA with an amber employment approval status
+// for a specific module.
+pattern findAmberTa {
+	root : TAAllocation {
+		- tas -> ta
+		- modules -> mod
+	}
+	
+	ta : TA
+	
+	mod : Module {
+		- approvals -> approval
+	}
+	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	# approval.ratingNumeric == 1
+}
+
 //
 // GIPSL
 //
@@ -226,4 +266,31 @@ constraint with findTaWeekCombination {
 	<= context.nodes.ta.maxHoursPerWeek
 }
 
-// TODO: objective function
+// Represents the number of assigned session occurrences to a specific
+// TA for a specific session (and the TA needs to have the green
+// employment rating for the respective module).
+function greenTas with findGreenTa {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+}
+
+// Represents the number of assigned session occurrences to a specific
+// TA for a specific session (and the TA needs to have the amber
+// employment rating for the respective module).
+function amberTas with findAmberTa {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+}
+
+// Global objective
+// We want to use a higher weight for green TAs compared to the
+// amber TAs
+objective : max {
+	0
+	+ 5 * functions.greenTas
+	+ 1 * functions.amberTas
+}
