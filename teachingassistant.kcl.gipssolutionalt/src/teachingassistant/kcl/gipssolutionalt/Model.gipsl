@@ -165,9 +165,9 @@ pattern findGreenTa {
 	# approval.ratingNumeric == 2
 }
 
-// Find a TA with a yellow employment approval status
+// Find a TA with an amber employment approval status
 // for a specific module.
-pattern findYellowTa {
+pattern findAmberTa {
 	root : TAAllocation {
 		- tas -> ta
 		- modules -> mod
@@ -244,9 +244,9 @@ function greenTas with findGreenTa {
 }
 
 // Represents the number of assigned session occurrences to a specific
-// TA for a specific session (and the TA needs to have the yellow
+// TA for a specific session (and the TA needs to have the amber
 // employment rating for the respective module).
-function yellowTas with findYellowTa {
+function amberTas with findAmberTa {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.module == context.nodes.mod
@@ -255,9 +255,9 @@ function yellowTas with findYellowTa {
 
 // Global objective
 // We want to use a higher weight for green TAs compared to the
-// yellow TAs
+// amber TAs
 objective : max {
 	0
 	+ 5 * functions.greenTas
-	+ 1 * functions.yellowTas
+	+ 1 * functions.amberTas
 }
