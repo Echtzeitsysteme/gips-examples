@@ -142,11 +142,6 @@ pattern findSessionOccurrence {
 // Find a TA with a green employment approval status
 // for a specific module.
 pattern findGreenTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> mod
-	}
-	
 	ta : TA
 	
 	mod : Module {
@@ -162,11 +157,6 @@ pattern findGreenTa {
 // Find a TA with an amber employment approval status
 // for a specific module.
 pattern findAmberTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> mod
-	}
-	
 	ta : TA
 	
 	mod : Module {
