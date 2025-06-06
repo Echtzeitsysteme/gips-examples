@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import ihtcvirtualmetamodel.IhtcvirtualmetamodelPackage;
@@ -39,6 +40,17 @@ public class FileUtils {
 	 * @param json JSON object to write to file.
 	 */
 	public static void writeFileFromJson(final String path, final JsonObject json) {
+		writeFileFromJson(path, json, false);
+	}
+
+	/**
+	 * Takes a given path and a JSON object and writes it to a file.
+	 *
+	 * @param path   Path for the file to write.
+	 * @param json   JSON object to write to file.
+	 * @param pretty If true, the output file will be pretty printed.
+	 */
+	public static void writeFileFromJson(final String path, final JsonObject json, final boolean pretty) {
 		Objects.requireNonNull(path, "Given path was null.");
 		if (path.isBlank()) {
 			throw new IllegalArgumentException("Given path was blank.");
@@ -46,7 +58,14 @@ public class FileUtils {
 
 		Objects.requireNonNull(json, "Given JSON object was null");
 
-		FileUtils.writeFile(path, json.toString());
+		if (pretty) {
+			final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			final String prettyString = gson.toJson(json);
+			FileUtils.writeFile(path, prettyString);
+
+		} else {
+			FileUtils.writeFile(path, json.toString());
+		}
 	}
 
 	/**

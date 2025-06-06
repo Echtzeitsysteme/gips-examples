@@ -115,7 +115,7 @@ public class ModelToJsonExporter {
 		json.add("costs", costsJson);
 
 		// Write to output JSON file
-		FileUtils.writeFileFromJson(outputPath, json);
+		FileUtils.writeFileFromJson(outputPath, json, true);
 	}
 
 	/**
