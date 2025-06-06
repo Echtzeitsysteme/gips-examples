@@ -58,7 +58,7 @@ public class ModelCostCalculator {
 	 * @param s Shift.
 	 * @return Maximum age difference of all persons in room `r` on day `d`.
 	 */
-	private int getMaxAgeDifferenceInShift(final Shift s) {
+	protected int getMaxAgeDifferenceInShift(final Shift s) {
 		Objects.requireNonNull(s, "Given shift was null.");
 
 		int minAge = Integer.MAX_VALUE;
@@ -294,7 +294,7 @@ public class ModelCostCalculator {
 	 * @param s Shift object.
 	 * @return Day number.
 	 */
-	private int shiftToDay(final Shift s) {
+	protected int shiftToDay(final Shift s) {
 		Objects.requireNonNull(s, "Given shift was null.");
 		return shiftToDay(s.getShiftNo());
 	}
@@ -306,7 +306,7 @@ public class ModelCostCalculator {
 	 * @param s Shift.
 	 * @return Maximum load of nurse `n` in shift `s`.
 	 */
-	private int findNurseMaxLoadInShift(final Nurse n, final int s) {
+	protected int findNurseMaxLoadInShift(final Nurse n, final int s) {
 		Objects.requireNonNull(n, "Given nurse was null.");
 
 		int maxLoad = 0;
@@ -329,7 +329,7 @@ public class ModelCostCalculator {
 	 * @param d Day.
 	 * @return True if the condition above holds.
 	 */
-	private boolean patientInRoomOnDay(final Patient p, final Room r, final int d) {
+	protected boolean patientInRoomOnDay(final Patient p, final Room r, final int d) {
 		Objects.requireNonNull(p, "Given patient was null.");
 		Objects.requireNonNull(r, "Given room was null.");
 
@@ -359,7 +359,7 @@ public class ModelCostCalculator {
 	 * @param shift   Shift.
 	 * @return Cost of the nurse regarding the patient on the given shift.
 	 */
-	private int calculateSkillLevelCostPerNursePatientShift(final Nurse nurse, final Patient patient, final int shift) {
+	protected int calculateSkillLevelCostPerNursePatientShift(final Nurse nurse, final Patient patient, final int shift) {
 		Objects.requireNonNull(nurse, "Given nurse was null.");
 		Objects.requireNonNull(patient, "Given patient was null.");
 		Objects.requireNonNull(shift, "Given shift was null.");
@@ -398,7 +398,7 @@ public class ModelCostCalculator {
 	 * @return List of all patients that are scheduled for the given room on the
 	 *         given day.
 	 */
-	private List<Patient> getPatientsInRoomOnDay(final Root model, final Room room, final int day) {
+	protected List<Patient> getPatientsInRoomOnDay(final Root model, final Room room, final int day) {
 		Objects.requireNonNull(model, "Given hospital model was null.");
 		Objects.requireNonNull(room, "Given room was null.");
 
@@ -419,7 +419,7 @@ public class ModelCostCalculator {
 	 * @param shiftNo Shift number.
 	 * @return Specific workload of the given patient `p` on shift `shiftNo`.
 	 */
-	private int getWorkloadOfPatientByShift(final Patient p, final int shiftNo) {
+	protected int getWorkloadOfPatientByShift(final Patient p, final int shiftNo) {
 		Objects.requireNonNull(p, "Given patient was null.");
 		Objects.requireNonNull(p.getFirstWorkload(), "Patient's first workload was null.");
 
@@ -450,7 +450,7 @@ public class ModelCostCalculator {
 	 * @param patient Patient.
 	 * @return Distinct number of nurses a given patient has.
 	 */
-	private int countPatientsNurses(final Root model, final Patient patient) {
+	protected int countPatientsNurses(final Root model, final Patient patient) {
 		Objects.requireNonNull(model, "Given hospital model was null.");
 		Objects.requireNonNull(patient, "Given patient was null.");
 

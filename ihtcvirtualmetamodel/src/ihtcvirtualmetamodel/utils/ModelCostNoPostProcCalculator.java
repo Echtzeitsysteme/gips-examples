@@ -1,6 +1,5 @@
 package ihtcvirtualmetamodel.utils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -27,29 +26,7 @@ import ihtcvirtualmetamodel.Workload;
  */
 public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
-	/**
-	 * Soft constraint Patient Admission Scheduling, S1.
-	 * 
-	 * @param model Hospital model to calculate the cost from.
-	 * @return Age mix cost for the whole model.
-	 */
-	public int calculateAgeMixCost(final Root model) {
-		Objects.requireNonNull(model, "Given hospital model was null.");
-
-		int ageMixCost = 0;
-		for (final Room r : model.getRooms()) {
-			for (final Shift s : r.getShifts()) {
-				// Only take shifts with type 'early' into account and ignore all other shifts
-				if (s.getShiftNo() % 3 != 0) {
-					continue;
-				}
-
-				ageMixCost += getMaxAgeDifferenceInShift(s);
-			}
-		}
-		return ageMixCost * model.getWeight().getRoomMixedAge();
-	}
-
+	// TODO: Adapt
 	/**
 	 * This method calculates the maximum age difference for a given room `r` on day
 	 * `d` for all new patients and all previously assigned occupants which are
@@ -60,7 +37,8 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 	 * @param s Shift.
 	 * @return Maximum age difference of all persons in room `r` on day `d`.
 	 */
-	private int getMaxAgeDifferenceInShift(final Shift s) {
+	@Override
+	protected int getMaxAgeDifferenceInShift(final Shift s) {
 		Objects.requireNonNull(s, "Given shift was null.");
 
 		int minAge = Integer.MAX_VALUE;
@@ -84,12 +62,14 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return cost;
 	}
 
+	// TODO: Adapt
 	/**
 	 * Soft constraint Nurse-to-Room Assignment, S2.
 	 * 
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Skill level cost for the whole model.
 	 */
+	@Override
 	public int calculateSkillLevelCost(final Root model) {
 		Objects.requireNonNull(model, "Given hospital model was null.");
 
@@ -108,34 +88,14 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return skillLevelCost * model.getWeight().getRoomNurseSkill();
 	}
 
-	/**
-	 * Soft constraint Nurse-to-Room Assignment, S3.
-	 * 
-	 * This implementation is partly inspired by the given C++ validator code.
-	 * 
-	 * @param model Hospital model to calculate the cost from.
-	 * @return Continuity cost for the whole model.
-	 */
-	public int calculateContinuityCost(final Root model) {
-		Objects.requireNonNull(model, "Given hospital model was null.");
-
-		int continuityCost = 0;
-
-		// Patients
-		for (final Patient p : model.getPatients()) {
-			final int localPatientCount = countPatientsNurses(model, p);
-			continuityCost += localPatientCount;
-		}
-
-		return continuityCost * model.getWeight().getContinuityOfCare();
-	}
-
+	// TODO: Adapt
 	/**
 	 * Soft constraint Nurse-to-Room Assignment, S4.
 	 * 
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Excess cost for the whole model.
 	 */
+	@Override
 	public int calculateExcessCost(final Root model) {
 		Objects.requireNonNull(model, "Given hospital model was null.");
 
@@ -168,12 +128,14 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return excessCost * model.getWeight().getNurseExcessiveWorkload();
 	}
 
+	// TODO: Adapt
 	/**
 	 * Soft constraint Surgical Case Planning, S5.
 	 * 
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Number of open OTs cost for the whole model.
 	 */
+	@Override
 	public int calculateOpenOtCost(final Root model) {
 		Objects.requireNonNull(model, "Given hospital model was null.");
 
@@ -191,12 +153,14 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return openOtCost * model.getWeight().getOpenOperatingTheater();
 	}
 
+	// TODO: Adapt
 	/**
 	 * Soft constraint Surgical Case Planning, S6.
 	 * 
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Surgeon transfer cost for the whole model.
 	 */
+	@Override
 	public int calculateSurgeonTransferCost(final Root model) {
 		Objects.requireNonNull(model, "Given hospital model was null.");
 
@@ -213,12 +177,14 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return surgeonTransferCost * model.getWeight().getSurgeonTransfer();
 	}
 
+	// TODO: Adapt
 	/**
 	 * Soft constraint Global constraints, S7.
 	 * 
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Admission delay cost for the whole model.
 	 */
+	@Override
 	public int calculateAdmissionDelayCost(final Root model) {
 		Objects.requireNonNull(model, "Given hospital model was null.");
 
@@ -236,12 +202,14 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return admissionDelayCost * model.getWeight().getPatientDelay();
 	}
 
+	// TODO: Adapt
 	/**
 	 * Soft constraint Global constraints, S8.
 	 * 
 	 * @param model Hospital model to calculate the cost from.
 	 * @return Unscheduled patients cost for the whole model.
 	 */
+	@Override
 	public int calculateUnscheduledPatientsCost(final Root model) {
 		Objects.requireNonNull(model, "Given hospital model was null.");
 
@@ -256,73 +224,11 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return unscheduledPatientsCost * model.getWeight().getUnscheduledOptional();
 	}
 
-	/**
-	 * Calculates the total cost for a complete hospital model.
-	 * 
-	 * @param model Hospital model to calculate cost from.
-	 * @return Complete hospital cost.
-	 */
-	public int calculateTotalCost(final Root model) {
-		Objects.requireNonNull(model, "Given hospital model was null.");
-		int totalCost = 0;
-		totalCost += calculateUnscheduledPatientsCost(model);
-		totalCost += calculateAdmissionDelayCost(model);
-		totalCost += calculateOpenOtCost(model);
-		totalCost += calculateAgeMixCost(model);
-		totalCost += calculateSkillLevelCost(model);
-		totalCost += calculateExcessCost(model);
-		totalCost += calculateContinuityCost(model);
-		totalCost += calculateSurgeonTransferCost(model);
-		return totalCost;
-	}
-
 	/*
 	 * Internal utility methods.
 	 */
 
-	/**
-	 * Converts a given shift number to the day number.
-	 * 
-	 * @param s Shift number.
-	 * @return Day number.
-	 */
-	private int shiftToDay(final int s) {
-		return s % 3;
-	}
-
-	/**
-	 * Converts a given shift object to the day number.
-	 * 
-	 * @param s Shift object.
-	 * @return Day number.
-	 */
-	private int shiftToDay(final Shift s) {
-		Objects.requireNonNull(s, "Given shift was null.");
-		return shiftToDay(s.getShiftNo());
-	}
-
-	/**
-	 * Returns the maximum load of a nurse `n` in shift `s`.
-	 * 
-	 * @param n Nurse.
-	 * @param s Shift.
-	 * @return Maximum load of nurse `n` in shift `s`.
-	 */
-	private int findNurseMaxLoadInShift(final Nurse n, final int s) {
-		Objects.requireNonNull(n, "Given nurse was null.");
-
-		int maxLoad = 0;
-
-		for (final Roster r : n.getRosters()) {
-			if (r.getShiftNo() == s) {
-				maxLoad = r.getMaxWorkload();
-				break;
-			}
-		}
-
-		return maxLoad;
-	}
-
+	// TODO: Adapt
 	/**
 	 * Returns true if the patient `p` was assigned to stay in room `r` on day `d`.
 	 * 
@@ -331,7 +237,8 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 	 * @param d Day.
 	 * @return True if the condition above holds.
 	 */
-	private boolean patientInRoomOnDay(final Patient p, final Room r, final int d) {
+	@Override
+	protected boolean patientInRoomOnDay(final Patient p, final Room r, final int d) {
 		Objects.requireNonNull(p, "Given patient was null.");
 		Objects.requireNonNull(r, "Given room was null.");
 
@@ -352,6 +259,7 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return false;
 	}
 
+	// TODO: Adapt
 	/**
 	 * Calculates the (possible) cost of one nurse `nurse` for patient `patient` on
 	 * shift `shift`.
@@ -361,7 +269,9 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 	 * @param shift   Shift.
 	 * @return Cost of the nurse regarding the patient on the given shift.
 	 */
-	private int calculateSkillLevelCostPerNursePatientShift(final Nurse nurse, final Patient patient, final int shift) {
+	@Override
+	protected int calculateSkillLevelCostPerNursePatientShift(final Nurse nurse, final Patient patient,
+			final int shift) {
 		Objects.requireNonNull(nurse, "Given nurse was null.");
 		Objects.requireNonNull(patient, "Given patient was null.");
 		Objects.requireNonNull(shift, "Given shift was null.");
@@ -390,30 +300,7 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return cost;
 	}
 
-	/**
-	 * Returns a list of all patients that are scheduled for the given room on the
-	 * given day.
-	 * 
-	 * @param model Hospital model to extract data from.
-	 * @param room  Room.
-	 * @param day   Day.
-	 * @return List of all patients that are scheduled for the given room on the
-	 *         given day.
-	 */
-	private List<Patient> getPatientsInRoomOnDay(final Root model, final Room room, final int day) {
-		Objects.requireNonNull(model, "Given hospital model was null.");
-		Objects.requireNonNull(room, "Given room was null.");
-
-		final List<Patient> patientsInRoom = new ArrayList<Patient>();
-		for (final Patient p : model.getPatients()) {
-			// room and day must match
-			if (patientInRoomOnDay(p, room, day)) {
-				patientsInRoom.add(p);
-			}
-		}
-		return patientsInRoom;
-	}
-
+	// TODO: Adapt
 	/**
 	 * Returns the specific workload of the given patient `p` on shift `shiftNo`.
 	 * 
@@ -421,7 +308,8 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 	 * @param shiftNo Shift number.
 	 * @return Specific workload of the given patient `p` on shift `shiftNo`.
 	 */
-	private int getWorkloadOfPatientByShift(final Patient p, final int shiftNo) {
+	@Override
+	protected int getWorkloadOfPatientByShift(final Patient p, final int shiftNo) {
 		Objects.requireNonNull(p, "Given patient was null.");
 		Objects.requireNonNull(p.getFirstWorkload(), "Patient's first workload was null.");
 
@@ -445,6 +333,7 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return 0;
 	}
 
+	// TODO: Adapt
 	/**
 	 * Returns the distinct number of nurses a given patient has.
 	 * 
@@ -452,7 +341,8 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 	 * @param patient Patient.
 	 * @return Distinct number of nurses a given patient has.
 	 */
-	private int countPatientsNurses(final Root model, final Patient patient) {
+	@Override
+	protected int countPatientsNurses(final Root model, final Patient patient) {
 		Objects.requireNonNull(model, "Given hospital model was null.");
 		Objects.requireNonNull(patient, "Given patient was null.");
 
