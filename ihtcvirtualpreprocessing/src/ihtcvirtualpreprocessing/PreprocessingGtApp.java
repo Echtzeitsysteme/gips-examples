@@ -16,6 +16,7 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import ihtcvirtualmetamodel.IhtcvirtualmetamodelPackage;
 import ihtcvirtualmetamodel.Root;
+import ihtcvirtualmetamodel.utils.FileUtils;
 import ihtcvirtualpreprocessing.api.IhtcvirtualpreprocessingAPI;
 import ihtcvirtualpreprocessing.api.IhtcvirtualpreprocessingHiPEApp;
 
@@ -39,26 +40,47 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 
 	// TODO: This field can be removed
 	/**
-	 * XMI model file path. This value will be used to read the input model and
-	 * write the output model to.
+	 * XMI model input file path. This value will be used to read the input model
+	 * and write the output model to.
 	 */
-	private final String xmiFilePath;
+	@Deprecated
+	private final String xmiInputFilePath;
 
 	/**
-	 * Creates a new instance of the pre-processing GT app. The given `xmiFilePath`
-	 * will be used as input and output file path.
-	 * 
-	 * @param xmiFilePath Input and output file path.
+	 * XMI model output file path. This value will be used to write the output model
+	 * to.
 	 */
-	public PreprocessingGtApp(final String xmiFilePath) {
+	private final String xmiOutputFilePath;
+
+	/**
+	 * Creates a new instance of the pre-processing GT app. The given
+	 * `xmiInputFilePath` will be used as input as well as output file path.
+	 * 
+	 * @param xmiInputFilePath Input file path.
+	 */
+	@Deprecated
+	public PreprocessingGtApp(final String xmiInputFilePath) {
+		this(xmiInputFilePath, xmiInputFilePath);
+	}
+
+	/**
+	 * Creates a new instance of the pre-processing GT app. The given
+	 * `xmiInputFilePath` will be used as input file path. The given
+	 * `xmiOutputFilePath` will be used as output file path.
+	 * 
+	 * @param xmiInputFilePath  Input file path.
+	 * @param xmiOutputFilePath Output file path.
+	 */
+	public PreprocessingGtApp(final String xmiInputFilePath, final String xmiOutputFilePath) {
 		super(EmoflonGtAppUtils.createTempDir().normalize().toString() + "/");
-		Objects.requireNonNull(xmiFilePath);
+		Objects.requireNonNull(xmiInputFilePath);
+		Objects.requireNonNull(xmiOutputFilePath);
 		EmoflonGtAppUtils.extractFiles(workspacePath);
 
 		// Load model from given XMI file path
 		Root hospital = null;
 		try {
-			hospital = loadModel(xmiFilePath);
+			hospital = loadModel(xmiInputFilePath);
 		} catch (final IOException e) {
 			logger.warning("IOException occurred while reading the input XMI file." + e.getMessage());
 			System.exit(1);
@@ -66,13 +88,14 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 
 		// Proceed with the app creation
 		if (hospital.eResource() == null) {
-			createModel(URI.createURI(xmiFilePath));
+			createModel(URI.createURI(xmiInputFilePath));
 			resourceSet.getResources().get(0).getContents().add(hospital);
 		} else {
 			resourceSet = hospital.eResource().getResourceSet();
 		}
 
-		this.xmiFilePath = xmiFilePath;
+		this.xmiInputFilePath = xmiInputFilePath;
+		this.xmiOutputFilePath = xmiOutputFilePath;
 
 		// Configure logging
 		logger.setUseParentHandlers(false);
@@ -106,7 +129,9 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 		// Persist model to XMI path
 		try {
 			logger.info("Started writing the XMI file.");
-			save();
+			final Resource res = api.getModel().getResources().get(0);
+			Objects.requireNonNull(res);
+			FileUtils.save((Root) res.getContents().get(0), xmiOutputFilePath);
 		} catch (final IOException e) {
 			logger.warning("IOException occurred while writing the output XMI file." + e.getMessage());
 			System.exit(1);
@@ -162,17 +187,6 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 		rs.getPackageRegistry().put(IhtcvirtualmetamodelPackage.eNS_URI, IhtcvirtualmetamodelPackage.eINSTANCE);
 		final Resource model = rs.getResource(URI.createFileURI(path), true);
 		return (Root) model.getContents().get(0);
-	}
-
-	/**
-	 * Saves the used model as XMI file.
-	 * 
-	 * @throws IOException If an IOException occurs during read, this method will
-	 *                     pass it.
-	 */
-	private void save() throws IOException {
-		Objects.requireNonNull(getModel());
-		getModel().getResources().get(0).save(null);
 	}
 
 }

@@ -16,6 +16,7 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import ihtcvirtualmetamodel.IhtcvirtualmetamodelPackage;
 import ihtcvirtualmetamodel.Root;
+import ihtcvirtualmetamodel.utils.FileUtils;
 import ihtcvirtualpostprocessing.api.IhtcvirtualpostprocessingAPI;
 import ihtcvirtualpostprocessing.api.IhtcvirtualpostprocessingHiPEApp;
 
@@ -37,28 +38,37 @@ public class PostprocessingGtApp extends IhtcvirtualpostprocessingHiPEApp {
 	 */
 	private static final int GT_RULE_APPLICATION_LIMIT = 40_000;
 
-	// TODO: This field can be removed
+	// TODO: This field may be removed.
 	/**
-	 * XMI model file path. This value will be used to read the input model and
-	 * write the output model to.
+	 * XMI model input file path. This value will be used to read the input model.
 	 */
-	private final String xmiFilePath;
+	@Deprecated
+	private final String xmiInputFilePath;
 
 	/**
-	 * Creates a new instance of the pre-processing GT app. The given `xmiFilePath`
-	 * will be used as input and output file path.
-	 * 
-	 * @param xmiFilePath Input and output file path.
+	 * XMI model output file path. This value will be used to write the output model
+	 * to.
 	 */
-	public PostprocessingGtApp(final String xmiFilePath) {
+	private final String xmiOutputFilePath;
+
+	/**
+	 * Creates a new instance of the pre-processing GT app. The given
+	 * `xmiInputFilePath` will be used as input file path. The given
+	 * `xmiOutputFilePath` will be used as output file path.
+	 * 
+	 * @param xmiInputFilePath  Input file path.
+	 * @param xmiOutputFilePath Output file path.
+	 */
+	public PostprocessingGtApp(final String xmiInputFilePath, final String xmiOutputFilePath) {
 		super(EmoflonGtAppUtils.createTempDir().normalize().toString() + "/");
-		Objects.requireNonNull(xmiFilePath);
+		Objects.requireNonNull(xmiInputFilePath);
+		Objects.requireNonNull(xmiOutputFilePath);
 		EmoflonGtAppUtils.extractFiles(workspacePath);
 
 		// Load model from given XMI file path
 		Root hospital = null;
 		try {
-			hospital = loadModel(xmiFilePath);
+			hospital = loadModel(xmiInputFilePath);
 		} catch (final IOException e) {
 			logger.warning("IOException occurred while reading the input XMI file." + e.getMessage());
 			System.exit(1);
@@ -66,13 +76,14 @@ public class PostprocessingGtApp extends IhtcvirtualpostprocessingHiPEApp {
 
 		// Proceed with the app creation
 		if (hospital.eResource() == null) {
-			createModel(URI.createURI(xmiFilePath));
+			createModel(URI.createURI(xmiInputFilePath));
 			resourceSet.getResources().get(0).getContents().add(hospital);
 		} else {
 			resourceSet = hospital.eResource().getResourceSet();
 		}
 
-		this.xmiFilePath = xmiFilePath;
+		this.xmiInputFilePath = xmiInputFilePath;
+		this.xmiOutputFilePath = xmiOutputFilePath;
 
 		// Configure logging
 		logger.setUseParentHandlers(false);
@@ -107,10 +118,12 @@ public class PostprocessingGtApp extends IhtcvirtualpostprocessingHiPEApp {
 		applyMatches(api.virtualWorkloadToCapacity(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.removeVirtualWorkloadToCapacity(), GT_RULE_APPLICATION_LIMIT);
 
-		// Persist model to XMI path
+		// Persist model to XMI output path
 		try {
 			logger.info("Started writing the XMI file.");
-			save();
+			final Resource res = api.getModel().getResources().get(0);
+			Objects.requireNonNull(res);
+			FileUtils.save((Root) res.getContents().get(0), xmiOutputFilePath);
 		} catch (final IOException e) {
 			logger.warning("IOException occurred while writing the output XMI file." + e.getMessage());
 			System.exit(1);
@@ -166,17 +179,6 @@ public class PostprocessingGtApp extends IhtcvirtualpostprocessingHiPEApp {
 		rs.getPackageRegistry().put(IhtcvirtualmetamodelPackage.eNS_URI, IhtcvirtualmetamodelPackage.eINSTANCE);
 		final Resource model = rs.getResource(URI.createFileURI(path), true);
 		return (Root) model.getContents().get(0);
-	}
-
-	/**
-	 * Saves the used model as XMI file.
-	 * 
-	 * @throws IOException If an IOException occurs during read, this method will
-	 *                     pass it.
-	 */
-	private void save() throws IOException {
-		Objects.requireNonNull(getModel());
-		getModel().getResources().get(0).save(null);
 	}
 
 }

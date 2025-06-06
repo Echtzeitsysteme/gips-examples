@@ -68,7 +68,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			logger.info("=> Start pre-processing GT.");
 		}
 
-		preprocess(instancePath);
+		preprocess(instancePath, preprocessingPath);
 
 		//
 		// Initialize GIPS API
@@ -79,7 +79,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		}
 
 		final IhtcvirtualgipssolutionGipsAPI gipsApi = new IhtcvirtualgipssolutionGipsAPI();
-		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
+		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, preprocessingPath);
 
 		//
 		// Run GIPS solution
@@ -101,9 +101,9 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			logger.info("=> Start post-processing GT.");
 		}
 
-		postprocess(gipsOutputPath);
+		postprocess(gipsOutputPath, postProcOutputPath);
 
-		exportToJson(gipsOutputPath, outputPath);
+		exportToJson(postProcOutputPath, outputPath);
 
 		//
 		// The end
