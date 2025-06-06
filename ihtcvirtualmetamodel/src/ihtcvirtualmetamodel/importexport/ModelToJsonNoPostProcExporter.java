@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import com.google.gson.JsonArray;
@@ -18,105 +15,31 @@ import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
-import ihtcvirtualmetamodel.utils.FileUtils;
 import ihtcvirtualmetamodel.utils.ModelCostCalculator;
 
 /**
  * This model exporter can be used to convert an EMF model to the respective
- * JSON output format required by the competition.
+ * JSON output format required by the competition. Noteworthy: This exporter
+ * assumes no post-processing took place, i.e., it directly operates on virtual
+ * objects.
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public class ModelToJsonExporter {
-
-	/**
-	 * Logger for system outputs.
-	 */
-	protected final Logger logger = Logger.getLogger(ModelToJsonExporter.class.getName());
-
-	/**
-	 * Hospital model to work with.
-	 */
-	private Root model = null;
+public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 
 	/**
 	 * Initializes a new model to JSON exporter object with a given Hospital model.
 	 * 
 	 * @param model Hospital model.
 	 */
-	public ModelToJsonExporter(final Root model) {
-		Objects.requireNonNull(model, "Given model was null.");
-
-		this.model = model;
-
-		// Configure logging
-		logger.setUseParentHandlers(false);
-		final ConsoleHandler handler = new ConsoleHandler();
-		handler.setFormatter(new Formatter() {
-			@Override
-			public String format(final LogRecord record) {
-				Objects.requireNonNull(record, "Given log entry was null.");
-				return record.getMessage() + System.lineSeparator();
-			}
-		});
-		logger.addHandler(handler);
+	public ModelToJsonNoPostProcExporter(final Root model) {
+		super(model);
 	}
 
 	/**
-	 * Converts the contained model to a JSON output file written to the given
-	 * output path.
-	 * 
-	 * @param outputPath Output path to write the JSON output file to.
+	 * Logger for system outputs.
 	 */
-	public void modelToJson(final String outputPath) {
-		Objects.requireNonNull(outputPath);
-		modelToJson(outputPath, false);
-	}
-
-	/**
-	 * Converts the contained model to a JSON output file written to the given
-	 * output path.
-	 * 
-	 * @param outputPath Output path to write the JSON output file to.
-	 * @param verbose    If true, the exporter will print more information about the
-	 *                   model.
-	 */
-	public void modelToJson(final String outputPath, final boolean verbose) {
-		Objects.requireNonNull(outputPath);
-		if (outputPath.isBlank()) {
-			throw new IllegalArgumentException("Given path <" + outputPath + "> or blank.");
-		}
-
-		// If path contains at least one slash `/`, create the folder if not existent
-		if (outputPath.contains("/")) {
-			final int lastSlashIndex = outputPath.lastIndexOf("/");
-			FileUtils.prepareFolder(outputPath.substring(0, lastSlashIndex));
-		}
-
-		final JsonArray patientsJson = new JsonArray();
-		for (final Patient p : this.model.getPatients()) {
-			if (p.isIsOccupant()) {
-				continue;
-			}
-			patientsJson.add(convertPatientToJson(p));
-		}
-
-		final JsonArray nursesJson = new JsonArray();
-		for (final Nurse n : this.model.getNurses()) {
-			nursesJson.add(convertNurseToJson(n));
-		}
-
-		final JsonArray costsJson = convertModelToCostsJson(this.model, verbose);
-
-		// Global JSON object
-		final JsonObject json = new JsonObject();
-		json.add("patients", patientsJson);
-		json.add("nurses", nursesJson);
-		json.add("costs", costsJson);
-
-		// Write to output JSON file
-		FileUtils.writeFileFromJson(outputPath, json);
-	}
+	protected final Logger logger = Logger.getLogger(ModelToJsonNoPostProcExporter.class.getName());
 
 	/**
 	 * Converts a given patient to a JSON object.
@@ -124,6 +47,7 @@ public class ModelToJsonExporter {
 	 * @param patient Patient.
 	 * @return JSON object.
 	 */
+	@Override
 	protected JsonObject convertPatientToJson(final Patient patient) {
 		Objects.requireNonNull(patient);
 
@@ -153,6 +77,7 @@ public class ModelToJsonExporter {
 	 * @param nurse Nurse.
 	 * @return JSON object.
 	 */
+	@Override
 	protected JsonObject convertNurseToJson(final Nurse nurse) {
 		Objects.requireNonNull(nurse);
 
@@ -197,6 +122,7 @@ public class ModelToJsonExporter {
 	 * @param verbose If true, the method will print all costs on the console.
 	 * @return JSON array.
 	 */
+	@Override
 	protected JsonArray convertModelToCostsJson(final Root model, final boolean verbose) {
 		Objects.requireNonNull(model);
 
@@ -252,40 +178,6 @@ public class ModelToJsonExporter {
 		final JsonArray costsJson = new JsonArray();
 		costsJson.add(sb.toString());
 		return costsJson;
-	}
-
-	/**
-	 * Converts the given shift number to the corresponding day number.
-	 * 
-	 * @param shift Shift number.
-	 * @return Day number.
-	 */
-	protected int convertShiftToDay(final int shift) {
-		// Division of an integer by 3 to get the floored value.
-		return shift / 3;
-	}
-
-	/**
-	 * Converts the given shift type (number representation) to the corresponding
-	 * string representation.
-	 * 
-	 * @param shiftType Shift type represented by an integer.
-	 * @return Shift type represented by a string.
-	 */
-	protected String convertShiftType(final int shiftType) {
-		switch (shiftType) {
-		case 0: {
-			return "early";
-		}
-		case 1: {
-			return "late";
-		}
-		case 2: {
-			return "night";
-		}
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + shiftType);
-		}
 	}
 
 }
