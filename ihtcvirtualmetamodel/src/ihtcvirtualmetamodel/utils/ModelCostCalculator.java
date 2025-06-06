@@ -1,8 +1,10 @@
 package ihtcvirtualmetamodel.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -144,20 +146,36 @@ public class ModelCostCalculator {
 			final Set<Shift> allWorkingShiftsOfNurse = new HashSet<Shift>();
 			n.getRosters().forEach(r -> r.getDerivedShifts().forEach(s -> allWorkingShiftsOfNurse.add(s)));
 
+			// All shifts (of all rooms) must be grouped by shift number
+			final Map<Integer, Set<Shift>> number2Shifts = new HashMap<>();
 			for (final Shift s : allWorkingShiftsOfNurse) {
-				final int nurseMaximumWorkload = findNurseMaxLoadInShift(n, s.getShiftNo());
+				if (!number2Shifts.containsKey(s.getShiftNo())) {
+					number2Shifts.put(s.getShiftNo(), new HashSet<Shift>());
+				}
+				number2Shifts.get(s.getShiftNo()).add(s);
+			}
+
+			// Check conditions and increase cost if necessary
+			for (final Integer i : number2Shifts.keySet()) {
+				final Set<Shift> allShiftsWithNumber = number2Shifts.get(i);
+
+				final int nurseMaximumWorkload = findNurseMaxLoadInShift(n, i);
 
 				// accumulate all workloads in this shift across all rooms
 				int nurseSpecificAssignedWorkload = 0;
 
-				final List<Patient> patients = getPatientsInRoomOnDay(model, s.getRoom(), shiftToDay(s));
-				// calculate actual work load in this room and shift
-				for (final Patient p : patients) {
-					nurseSpecificAssignedWorkload += getWorkloadOfPatientByShift(p, s.getShiftNo());
+				for (final Shift s : allShiftsWithNumber) {
+					final List<Patient> patients = getPatientsInRoomOnDay(model, s.getRoom(), shiftToDay(s));
+					// calculate actual work load in this room and shift
+					for (final Patient p : patients) {
+						nurseSpecificAssignedWorkload += getWorkloadOfPatientByShift(p, s.getShiftNo());
+					}
 				}
 
-				// check if workload of nurse `n` was exceeded for this shift
+				// check if workload of nurse `n` was exceeded for this shift number
 				if (nurseMaximumWorkload < nurseSpecificAssignedWorkload) {
+//					System.out.println("Excessive workload " + (nurseSpecificAssignedWorkload - nurseMaximumWorkload)
+//							+ " for nurse " + n.getName() + " in shift " + i);
 					excessCost += (nurseSpecificAssignedWorkload - nurseMaximumWorkload);
 				}
 			}
@@ -341,7 +359,7 @@ public class ModelCostCalculator {
 				final int firstDayNo = shiftToDay(p.getFirstWorkload().getDerivedShift());
 				final int stayLength = p.getStayLength();
 
-				if (d >= firstDayNo && d <= firstDayNo + stayLength) {
+				if (d >= firstDayNo && d < firstDayNo + stayLength) {
 					return true;
 				}
 			}
@@ -428,7 +446,7 @@ public class ModelCostCalculator {
 		}
 
 		Workload w = p.getFirstWorkload();
-		while (w.getNext() != null) {
+		while (w != null) {
 			// If the derived shift is `null`, the model is either not valid or the
 			// respective workload of the patient is outside of the current time frame
 			// (which is okay).
