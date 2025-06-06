@@ -285,7 +285,7 @@ public class ModelCostCalculator {
 	 * @return Day number.
 	 */
 	private int shiftToDay(final int s) {
-		return s % 3;
+		return s / 3;
 	}
 
 	/**
