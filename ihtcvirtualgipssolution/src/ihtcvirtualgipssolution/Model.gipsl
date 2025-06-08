@@ -99,7 +99,6 @@ rule selectExtendingShiftToFirstWorkload {
 rule selectOperationDay {
 	root : Root {
 		- patients -> p
-//		- surgeons -> s
 		- ots -> ot
 	}
 	
