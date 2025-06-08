@@ -314,7 +314,6 @@ rule fixOperationDay {
 	root : Root {
 		- patients -> p
 		- surgeons -> s
-		++ - virtualWorkloadToCapacity -> vnew2
 	}
 	
 	p : Patient {

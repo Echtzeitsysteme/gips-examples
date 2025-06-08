@@ -265,9 +265,6 @@ pattern checkRequiredShiftToWorkload{
 }
 
 pattern checkRequiredWorkloadToCapacity{
-	root : Root {
-		- virtualWorkloadToCapacity -> vwc
-	}
 	
 	vsw : VirtualShiftToWorkload
 	
