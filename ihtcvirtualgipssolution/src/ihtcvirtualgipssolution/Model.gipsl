@@ -93,28 +93,12 @@ rule selectOperationDay {
 // Rule that selects an  VirtualShiftToRoster-Node to be adopted in the final model. 
 rule selectShiftToRoster {
 	root : Root {
-		- nurses -> n
-		- rooms -> r
+		- virtualShiftToRoster -> vsr
 	}
-	
-	n : Nurse {
-		- rosters -> ro
-	}
-	
-	ro : Roster {
-		- virtualShift -> vsr
-	}
-	
+
 	vsr : VirtualShiftToRoster {
-		- shift -> s 
 		.isSelected := true
 	}
-	
-	s : Shift {
-		- room -> r
-	}
-	
-	r : Room
 }
 
 //
@@ -372,8 +356,8 @@ constraint with countPatientsForRoom {
 	context.variables.patientCount == 0
 	<=> 
 	mappings.selectedShiftToRoster->filter(
-	    element.nodes.r == context.nodes.r &
-	    element.nodes.s.shiftNo == context.nodes.s.shiftNo
+	    element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
 	  )->sum(element.value) == 0
 	]
 	&
@@ -381,8 +365,8 @@ constraint with countPatientsForRoom {
 	context.variables.patientCount >= 1
 	<=> 
 	mappings.selectedShiftToRoster->filter(
-	    element.nodes.r == context.nodes.r &
-	    element.nodes.s.shiftNo == context.nodes.s.shiftNo
+	    element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
 	  )->sum(element.value) == 1
 	]
 }
