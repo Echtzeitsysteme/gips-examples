@@ -17,7 +17,6 @@ config {
 rule selectShiftToFirstWorkload {
 	root : Root {
 		- patients -> p
-		- virtualShiftToWorkload -> vsw 
 	}
 	
 	p : Patient {
@@ -39,11 +38,7 @@ rule selectShiftToFirstWorkload {
 
 // Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model. 
 rule selectExtendingShiftToFirstWorkload {
-	root : Root {
-		- virtualShiftToWorkload -> prevvsw
-		- virtualShiftToWorkload -> nextvsw
-	}
-	
+
 	prevvsw : VirtualShiftToWorkload {
 		- enables_virtualShiftToWorkload -> nextvsw
 	}
@@ -92,9 +87,6 @@ rule selectOperationDay {
 
 // Rule that selects an  VirtualShiftToRoster-Node to be adopted in the final model. 
 rule selectShiftToRoster {
-	root : Root {
-		- virtualShiftToRoster -> vsr
-	}
 
 	vsr : VirtualShiftToRoster {
 		.isSelected := true

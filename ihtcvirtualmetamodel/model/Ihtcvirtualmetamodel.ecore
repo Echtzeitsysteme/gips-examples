@@ -18,16 +18,6 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patients" upperBound="-1"
         eType="#//Patient" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShiftToRoster" upperBound="-1"
-        eType="#//VirtualShiftToRoster" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShiftToWorkload"
-        upperBound="-1" eType="#//VirtualShiftToWorkload" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkloadToOpTime"
-        upperBound="-1" eType="#//VirtualWorkloadToOpTime" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualOpTimeToCapacity"
-        upperBound="-1" eType="#//VirtualOpTimeToCapacity" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkloadToCapacity"
-        upperBound="-1" eType="#//VirtualWorkloadToCapacity" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="days" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="genders" upperBound="-1"
         eType="#//Gender" containment="true"/>
@@ -45,7 +35,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedShifts" upperBound="-1"
         eType="#//Shift" eOpposite="#//Shift/derivedRoster"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShift" upperBound="-1"
-        eType="#//VirtualShiftToRoster" eOpposite="#//VirtualShiftToRoster/roster"/>
+        eType="#//VirtualShiftToRoster" containment="true" eOpposite="#//VirtualShiftToRoster/roster"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Room" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="beds" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -64,7 +54,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualRoster" upperBound="-1"
         eType="#//VirtualShiftToRoster" eOpposite="#//VirtualShiftToRoster/shift"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkload" upperBound="-1"
-        eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/shift"/>
+        eType="#//VirtualShiftToWorkload" containment="true" eOpposite="#//VirtualShiftToWorkload/shift"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Ordered" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="prev" eType="#//Ordered"/>
@@ -121,7 +111,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedWorkloads" upperBound="-1"
         eType="#//Workload" eOpposite="#//Workload/derivedOpTimes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkload" upperBound="-1"
-        eType="#//VirtualWorkloadToOpTime" eOpposite="#//VirtualWorkloadToOpTime/opTime"/>
+        eType="#//VirtualWorkloadToOpTime" containment="true" eOpposite="#//VirtualWorkloadToOpTime/opTime"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualCapacity" upperBound="-1"
         eType="#//VirtualOpTimeToCapacity" eOpposite="#//VirtualOpTimeToCapacity/opTime"/>
   </eClassifiers>
@@ -138,9 +128,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedOpTimes" upperBound="-1"
         eType="#//OpTime" eOpposite="#//OpTime/derivedCapacities"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualOpTime" upperBound="-1"
-        eType="#//VirtualOpTimeToCapacity" eOpposite="#//VirtualOpTimeToCapacity/capacity"/>
+        eType="#//VirtualOpTimeToCapacity" containment="true" eOpposite="#//VirtualOpTimeToCapacity/capacity"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkload" upperBound="-1"
-        eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/capacity"/>
+        eType="#//VirtualWorkloadToCapacity" containment="true" eOpposite="#//VirtualWorkloadToCapacity/capacity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
