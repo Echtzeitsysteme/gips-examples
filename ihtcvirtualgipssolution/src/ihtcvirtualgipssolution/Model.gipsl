@@ -220,19 +220,6 @@ pattern surgeonOptimeTupel {
 	op : OpTime
 }
 
-pattern checkRequiredWorkloadToCapacity{
-	root : Root {
-		- virtualShiftToWorkload -> vsw
-		- virtualWorkloadToCapacity -> vwc
-	}
-	
-	vsw : VirtualShiftToWorkload
-	
-	vwc : VirtualWorkloadToCapacity {
-		- enables_virtualShiftToWorkload -> vsw
-	}
-}
-
 // Finds pairs of patients that are assigned to the same room on the same morning shift
 pattern patientTupel {
 	root : Root {
@@ -472,7 +459,7 @@ constraint with selectedOccupantNodes {
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
 // This does not enforce that the admission day is the same as the operation day!
 
-constraint with checkRequiredWorkloadToCapacity {
+constraint with selectShiftToFirstWorkload {
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vsw == context.nodes.vsw &
 		element.nodes.vwc == context.nodes.vwc
