@@ -191,43 +191,6 @@ pattern surgeonOptimeTupel {
 	op : OpTime
 }
 
-// Finds pairs of patients that are assigned to the same room on the same morning shift
-pattern patientTupel {
-	root : Root {
-		- patients -> p1
-		- patients -> p2
-	}
-	
-	p1 : Patient {
-		- workloads -> w1
-	}
-	
-	w1 : Workload {
-		- virtualShift -> vsw1
-	}
-	
-	vsw1 : VirtualShiftToWorkload {
-		- shift -> s
-	}
-	
-	p2 : Patient {
-		- workloads -> w2
-	}
-	
-	w2 : Workload {
-		- virtualShift -> vsw2
-	}
-	
-	vsw2 : VirtualShiftToWorkload {
-		- shift -> s
-	}
-	
-	s : Shift
-	
-	# s.shiftNo % 3 == 0
-	# p1.gender != p2.gender
-}
-
 pattern genderRoomShift {
 	root : Root {
 		- genders -> g
@@ -280,6 +243,9 @@ mapping countPatientsForRoom to roomForShift {
 // Mapping for all assigned patients. (occupants and new patients for each workload (first + following))
 mapping assignedPatientsToRoom to patientForRoom;
  
+// Mapping that holds the information if a specific gender is assigned to a room on a specific day. 
+mapping assignedGenderToRoomOnShift to genderRoomShift;
+
 // mapping that decides which ots are open on a specific day
 //mapping openOTs to otCapacityTupel;
 
@@ -294,9 +260,9 @@ function maxoOptional with optionalPatients {
 
 // H1: No gender mix: Patients of different genders may not share a room on any day. 
 // patient.gender is a string variable and the preallocation is assumably not known. -> There can only be the same value for all patients
-constraint with patientTupel {
-	mappings.assignedPatientsToRoom->filter(
-		[element.nodes.p == context.nodes.p1 | element.nodes.p == context.nodes.p2] &
+constraint with countPatientsForRoom {
+	mappings.assignedGenderToRoomOnShift->filter( 
+		 element.nodes.r == context.nodes.r &
 		element.nodes.s == context.nodes.s
 	)->sum(element.value) <= 1
 }
@@ -517,6 +483,17 @@ constraint with countPatientsForRoom {
 		element.nodes.r == context.nodes.r &
 		element.nodes.s.shiftNo == context.nodes.s.shiftNo
 	)->sum(element.value)  
+}
+
+// Utility Constraint that saves the information if a gender is assigned to a room on a specific day. 
+constraint with assignedGenderToRoomOnShift {
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.p.gender == context.nodes.g.name &
+		element.nodes.s == context.nodes.s &
+		element.nodes.r == context.nodes.r
+	)->sum(element.value) >= 1
+	<=>
+	context.value == 1
 }
 
 // sets the mapping to true if there is at least one surgery assigned to the ot on that day
