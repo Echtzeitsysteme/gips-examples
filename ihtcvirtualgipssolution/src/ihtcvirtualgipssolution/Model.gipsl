@@ -29,23 +29,12 @@ rule selectShiftToFirstWorkload {
 		- virtualCapacity -> vwc
 	}
 	
-	vwc : VirtualWorkloadToCapacity {
-		- capacity -> c
-	}
+	vwc : VirtualWorkloadToCapacity
 	
 	vsw : VirtualShiftToWorkload {
-		- shift -> s
 		- requires_virtualWorkloadToCapacity -> vwc
 		.isSelected := true
 	}
-	
-	s : Shift {
-		- room -> r
-	}
-	
-	r : Room
-	
-	c : Capacity
 }
 
 // Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model. 
@@ -481,7 +470,7 @@ constraint with selectedShiftToFirstWorkload {
   =>
   mappings.selectedOperationDay->filter(
     element.nodes.vwc == context.nodes.vwc &
-    context.nodes.s.shiftNo / 3 == element.nodes.c.day
+    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.c.day
   )->sum(element.value) == 1
 }
 
@@ -567,8 +556,8 @@ constraint with assignedPatientsToRoom {
 	[
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.p == context.nodes.p &
-		element.nodes.r == context.nodes.r &
-		element.nodes.s == context.nodes.s
+		element.nodes.vsw.shift.room == context.nodes.r &
+		element.nodes.vsw.shift == context.nodes.s
 	)->sum(element.value) == 1
 	|
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
