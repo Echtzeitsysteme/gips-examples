@@ -40,42 +40,15 @@ rule selectShiftToFirstWorkload {
 // Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model. 
 rule selectExtendingShiftToFirstWorkload {
 	root : Root {
-		- patients -> p
 		- virtualShiftToWorkload -> prevvsw
 		- virtualShiftToWorkload -> nextvsw
-		- rooms -> r
 	}
-	
-	p : Patient {
-		- workloads -> prevw
-	}
-	
-	prevw : Workload {
-		- next -> nextw
-	}
-	
-	nextw : Workload
 	
 	prevvsw : VirtualShiftToWorkload {
-		- workload -> prevw
-		- shift -> prevs
 		- enables_virtualShiftToWorkload -> nextvsw
 	}
 	
-	prevs : Shift {
-		- next -> nexts
-		- room -> r
-	}
-	
-	nexts : Shift {
-		- room -> r
-	}
-	
-	r : Room
-	
 	nextvsw : VirtualShiftToWorkload {
-		- workload -> nextw
-		- shift -> nexts
 		.isSelected := true
 		- requires_virtualShiftToWorkload -> prevvsw
 	}
@@ -483,7 +456,7 @@ constraint with selectShiftToFirstWorkload {
 	(context.nodes.p.stayLength * 3) + context.nodes.vsw.shift.shiftNo > context.nodes.root.days * 3
 	]
 	=>
-	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.prevvsw.workload.patient == context.nodes.p)->sum(element.value)
 	== ((context.nodes.root.days * 3) - context.nodes.vsw.shift.shiftNo) - 1
 
 }
@@ -495,7 +468,7 @@ constraint with selectShiftToFirstWorkload {
 	(context.nodes.p.stayLength * 3) + context.nodes.vsw.shift.shiftNo <= context.nodes.root.days * 3
 	]
 	=>
-	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.prevvsw.workload.patient == context.nodes.p)->sum(element.value)
 	== (context.nodes.p.stayLength * 3) - 1
 }
 
@@ -561,9 +534,9 @@ constraint with assignedPatientsToRoom {
 	)->sum(element.value) == 1
 	|
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.p == context.nodes.p &
-		element.nodes.r == context.nodes.r &
-		element.nodes.nexts == context.nodes.s
+		element.nodes.prevvsw.workload.patient == context.nodes.p &
+		element.nodes.prevvsw.shift.room == context.nodes.r &
+		element.nodes.nextvsw.shift == context.nodes.s
 	)->sum(element.value) == 1
 	|
 	mappings.selectedOccupantNodes->filter(
