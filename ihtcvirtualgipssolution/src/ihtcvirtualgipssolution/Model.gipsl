@@ -17,7 +17,6 @@ config {
 rule selectShiftToFirstWorkload {
 	root : Root {
 		- patients -> p
-		- virtualShiftToWorkload -> vsw 
 	}
 	
 	p : Patient {
@@ -52,8 +51,6 @@ rule selectShiftToFirstWorkload {
 rule selectExtendingShiftToFirstWorkload {
 	root : Root {
 		- patients -> p
-		- virtualShiftToWorkload -> prevvsw
-		- virtualShiftToWorkload -> nextvsw
 		- rooms -> r
 	}
 	
@@ -99,7 +96,6 @@ rule selectExtendingShiftToFirstWorkload {
 rule selectOperationDay {
 	root : Root {
 		- patients -> p
-//		- surgeons -> s
 		- ots -> ot
 	}
 	
@@ -260,10 +256,6 @@ pattern surgeonOptimeTupel {
 }
 
 pattern checkRequiredShiftToWorkload{
-	root : Root {
-		- virtualShiftToWorkload -> prevvsw
-		- virtualShiftToWorkload -> nextvsw
-	}
 	
 	prevvsw : VirtualShiftToWorkload {
 		- enables_virtualShiftToWorkload -> nextvsw
@@ -274,7 +266,6 @@ pattern checkRequiredShiftToWorkload{
 
 pattern checkRequiredWorkloadToCapacity{
 	root : Root {
-		- virtualShiftToWorkload -> vsw
 		- virtualWorkloadToCapacity -> vwc
 	}
 	
