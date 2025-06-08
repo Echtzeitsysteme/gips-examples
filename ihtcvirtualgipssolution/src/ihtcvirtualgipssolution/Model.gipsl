@@ -228,6 +228,21 @@ pattern patientTupel {
 	# p1.gender != p2.gender
 }
 
+pattern genderRoomShift {
+	root : Root {
+		- genders -> g
+		- rooms -> r
+	}
+	
+	g : Gender 
+	
+	r : Room {
+		- shifts -> s
+	}
+	
+	s : Shift
+}
+
 //
 // GIPSL 
 //

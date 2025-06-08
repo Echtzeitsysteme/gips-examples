@@ -29,6 +29,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkloadToCapacity"
         upperBound="-1" eType="#//VirtualWorkloadToCapacity" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="days" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="genders" upperBound="-1"
+        eType="#//Gender" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Nurse" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -206,4 +208,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualOpTimeToCapacity"
         upperBound="-1" eType="#//VirtualOpTimeToCapacity" eOpposite="#//VirtualOpTimeToCapacity/enables_virtual_WorkloadToCapacity"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Gender" eSuperTypes="#//NamedElement"/>
 </ecore:EPackage>
