@@ -61,7 +61,6 @@ rule selectExtendingShiftToFirstWorkload {
 rule selectOperationDay {
 	root : Root {
 		- patients -> p
-		- ots -> ot
 	}
 	
 	p : Patient {
@@ -74,33 +73,21 @@ rule selectOperationDay {
 	}
 	
 	vwc : VirtualWorkloadToCapacity {
-		- capacity -> c
 		- requires_virtualOpTimeToCapacity -> vopc
 		.isSelected := true
 	}
 	
 	vwop : VirtualWorkloadToOpTime {
-		- opTime -> op
 		- requires_virtualOpTimeToCapacity -> vopc
 		.isSelected := true
 	}
 	
-	op : OpTime {
-		- virtualCapacity -> vopc
-	}
-	
 	vopc : VirtualOpTimeToCapacity {
-		- capacity -> c
 		- enables_virtualWorkloadToOpTime -> vwop
 		- enables_virtual_WorkloadToCapacity -> vwc
 		.isSelected := true
 	}
 	
-	ot : OT {
-		- capacities -> c
-	}
-	
-	c : Capacity
 }
 
 // Rule that selects an  VirtualShiftToRoster-Node to be adopted in the final model. 
@@ -321,7 +308,7 @@ constraint with patientTupel {
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded. 
 constraint with surgeonOptimeTupel {
 	mappings.selectedOperationDay->filter(
-		element.nodes.op.day == context.nodes.op.day &
+		element.nodes.vwop.opTime.day == context.nodes.op.day &
 		element.nodes.p.surgeon == context.nodes.s
 	)->sum(element.nodes.p.surgeryDuration * element.value)
 	<=
@@ -333,8 +320,8 @@ constraint with surgeonOptimeTupel {
 
 constraint with otCapacityTupel {
 	mappings.selectedOperationDay->filter(
-		element.nodes.c.day == context.nodes.c.day &
-		element.nodes.ot == context.nodes.ot
+		element.nodes.vopc.capacity.day == context.nodes.c.day &
+		element.nodes.vwc.capacity.ot == context.nodes.ot
 	)->sum(element.nodes.p.surgeryDuration * element.value)
 	<= 
 	context.nodes.c.maxCapacity
@@ -417,7 +404,7 @@ constraint with selectedShiftToFirstWorkload {
   =>
   mappings.selectedOperationDay->filter(
     element.nodes.vwc == context.nodes.vwc &
-    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.c.day
+    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
   )->sum(element.value) == 1
 }
 
