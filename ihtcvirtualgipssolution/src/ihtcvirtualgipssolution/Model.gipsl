@@ -220,19 +220,6 @@ pattern surgeonOptimeTupel {
 	op : OpTime
 }
 
-pattern checkRequiredShiftToWorkload{
-	root : Root {
-		- virtualShiftToWorkload -> prevvsw
-		- virtualShiftToWorkload -> nextvsw
-	}
-	
-	prevvsw : VirtualShiftToWorkload {
-		- enables_virtualShiftToWorkload -> nextvsw
-	}
-	
-	nextvsw : VirtualShiftToWorkload
-}
-
 pattern checkRequiredWorkloadToCapacity{
 	root : Root {
 		- virtualShiftToWorkload -> vsw
@@ -500,7 +487,7 @@ constraint with checkRequiredWorkloadToCapacity {
 // that is connected to the previous links between the patients workloads to shifts.
 // The following node can only be selected if the previous is already set to true
 
-constraint with checkRequiredShiftToWorkload{
+constraint with selectExtendingShiftToFirstWorkload{
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.prevvsw == context.nodes.prevvsw &
 		element.nodes.nextvsw == context.nodes.nextvsw 
