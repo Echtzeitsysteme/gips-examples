@@ -1,5 +1,6 @@
 package ihtcvirtualmetamodel.importexport;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,11 +12,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import ihtcvirtualmetamodel.Nurse;
+import ihtcvirtualmetamodel.OT;
 import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
-import ihtcvirtualmetamodel.utils.ModelCostNoPostProcCalculator;
+import ihtcvirtualmetamodel.VirtualShiftToRoster;
+import ihtcvirtualmetamodel.VirtualShiftToWorkload;
+import ihtcvirtualmetamodel.VirtualWorkloadToCapacity;
 
 /**
  * This model exporter can be used to convert an EMF model to the respective
@@ -54,16 +58,37 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 		final JsonObject patientJson = new JsonObject();
 		patientJson.addProperty("id", patient.getName());
 
+		// Find the selected admission shift
+		final Collection<VirtualShiftToWorkload> possibleShiftAssignments = patient.getFirstWorkload()
+				.getVirtualShift();
+		Shift admissionShift = null;
+		for (final VirtualShiftToWorkload v : possibleShiftAssignments) {
+			if (v.isIsSelected()) {
+				admissionShift = v.getShift();
+				break;
+			}
+		}
+
+		// Find the selected OT
+		final Collection<VirtualWorkloadToCapacity> possibleOtAssignments = patient.getFirstWorkload()
+				.getVirtualCapacity();
+		OT scheduledOt = null;
+		for (final VirtualWorkloadToCapacity v : possibleOtAssignments) {
+			if (v.isIsSelected()) {
+				scheduledOt = v.getCapacity().getOt();
+				break;
+			}
+		}
+
 		// If patient was scheduled
-		if (patient.getFirstWorkload().getDerivedShift() != null) {
-			patientJson.addProperty("admission_day",
-					convertShiftToDay(patient.getFirstWorkload().getDerivedShift().getShiftNo()));
-			if (patient.getFirstWorkload().getDerivedShift().getRoom() != null) {
-				patientJson.addProperty("room", patient.getFirstWorkload().getDerivedShift().getRoom().getName());
+		if (admissionShift != null) {
+			patientJson.addProperty("admission_day", convertShiftToDay(admissionShift.getShiftNo()));
+			if (admissionShift.getRoom() != null) {
+				patientJson.addProperty("room", admissionShift.getRoom().getName());
 			}
 
-			patientJson.addProperty("operating_theater",
-					patient.getFirstWorkload().getDerivedCapacity().getOt().getName());
+			Objects.requireNonNull(scheduledOt);
+			patientJson.addProperty("operating_theater", scheduledOt.getName());
 		} else {
 			patientJson.addProperty("admission_day", "none");
 		}
@@ -87,12 +112,15 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 		final JsonArray assignmentsJson = new JsonArray();
 		for (final Roster r : nurse.getRosters()) {
 			final Map<Integer, Set<String>> shift2Room = new HashMap<>();
-			for (final Shift s : r.getDerivedShifts()) {
-				if (!shift2Room.containsKey(s.getShiftNo())) {
-					shift2Room.put(s.getShiftNo(), new HashSet<String>());
-				}
+			final Collection<VirtualShiftToRoster> assignments = r.getVirtualShift();
+			for (final VirtualShiftToRoster v : assignments) {
+				if (v.isIsSelected()) {
+					if (!shift2Room.containsKey(v.getShift().getShiftNo())) {
+						shift2Room.put(v.getShift().getShiftNo(), new HashSet<String>());
+					}
 
-				shift2Room.get(s.getShiftNo()).add(s.getRoom().getName());
+					shift2Room.get(v.getShift().getShiftNo()).add(v.getShift().getRoom().getName());
+				}
 			}
 
 			for (final int shiftId : shift2Room.keySet()) {
@@ -126,57 +154,57 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 	protected JsonArray convertModelToCostsJson(final Root model, final boolean verbose) {
 		Objects.requireNonNull(model);
 
-		final ModelCostNoPostProcCalculator calc = new ModelCostNoPostProcCalculator();
-		final int unscheduled = calc.calculateUnscheduledPatientsCost(model);
-		final int delay = calc.calculateAdmissionDelayCost(model);
-		final int openOt = calc.calculateOpenOtCost(model);
-		final int ageMix = calc.calculateAgeMixCost(model);
-		final int skill = calc.calculateSkillLevelCost(model);
-		final int excess = calc.calculateExcessCost(model);
-		final int continuity = calc.calculateContinuityCost(model);
-		final int surgeonTransfer = calc.calculateSurgeonTransferCost(model);
-
-		// total cost is the sum of all individual costs
-		//
-		// summing the individual values is faster than re-calculating the complete
-		// model within the cost calculator
-		final int costs = unscheduled + delay + openOt + ageMix + skill + excess + continuity + surgeonTransfer;
-
-		if (verbose) {
-			logger.info("Costs: " + costs);
-			logger.info("Unscheduled: " + unscheduled);
-			logger.info("Delay: " + delay);
-			logger.info("OpenOT: " + openOt);
-			logger.info("AgeMix: " + ageMix);
-			logger.info("Skill: " + skill);
-			logger.info("Excess: " + excess);
-			logger.info("Continuity: " + continuity);
-			logger.info("SurgeonTransfer: " + surgeonTransfer);
-		}
-
-		// Weirdly, the output costs is a JSON array with only one concatenated String
-		final StringBuilder sb = new StringBuilder();
-		sb.append("Cost: ");
-		sb.append(costs);
-		sb.append(", Unscheduled: ");
-		sb.append(unscheduled);
-		sb.append(", Delay: ");
-		sb.append(delay);
-		sb.append(", OpenOT: ");
-		sb.append(openOt);
-		sb.append(", AgeMix: ");
-		sb.append(ageMix);
-		sb.append(", Skill: ");
-		sb.append(skill);
-		sb.append(", Excess: ");
-		sb.append(excess);
-		sb.append(", Continuity: ");
-		sb.append(continuity);
-		sb.append(", SurgeonTransfer: ");
-		sb.append(surgeonTransfer);
+//		final ModelCostNoPostProcCalculator calc = new ModelCostNoPostProcCalculator();
+//		final int unscheduled = calc.calculateUnscheduledPatientsCost(model);
+//		final int delay = calc.calculateAdmissionDelayCost(model);
+//		final int openOt = calc.calculateOpenOtCost(model);
+//		final int ageMix = calc.calculateAgeMixCost(model);
+//		final int skill = calc.calculateSkillLevelCost(model);
+//		final int excess = calc.calculateExcessCost(model);
+//		final int continuity = calc.calculateContinuityCost(model);
+//		final int surgeonTransfer = calc.calculateSurgeonTransferCost(model);
+//
+//		// total cost is the sum of all individual costs
+//		//
+//		// summing the individual values is faster than re-calculating the complete
+//		// model within the cost calculator
+//		final int costs = unscheduled + delay + openOt + ageMix + skill + excess + continuity + surgeonTransfer;
+//
+//		if (verbose) {
+//			logger.info("Costs: " + costs);
+//			logger.info("Unscheduled: " + unscheduled);
+//			logger.info("Delay: " + delay);
+//			logger.info("OpenOT: " + openOt);
+//			logger.info("AgeMix: " + ageMix);
+//			logger.info("Skill: " + skill);
+//			logger.info("Excess: " + excess);
+//			logger.info("Continuity: " + continuity);
+//			logger.info("SurgeonTransfer: " + surgeonTransfer);
+//		}
+//
+//		// Weirdly, the output costs is a JSON array with only one concatenated String
+//		final StringBuilder sb = new StringBuilder();
+//		sb.append("Cost: ");
+//		sb.append(costs);
+//		sb.append(", Unscheduled: ");
+//		sb.append(unscheduled);
+//		sb.append(", Delay: ");
+//		sb.append(delay);
+//		sb.append(", OpenOT: ");
+//		sb.append(openOt);
+//		sb.append(", AgeMix: ");
+//		sb.append(ageMix);
+//		sb.append(", Skill: ");
+//		sb.append(skill);
+//		sb.append(", Excess: ");
+//		sb.append(excess);
+//		sb.append(", Continuity: ");
+//		sb.append(continuity);
+//		sb.append(", SurgeonTransfer: ");
+//		sb.append(surgeonTransfer);
 
 		final JsonArray costsJson = new JsonArray();
-		costsJson.add(sb.toString());
+//		costsJson.add(sb.toString());
 		return costsJson;
 	}
 

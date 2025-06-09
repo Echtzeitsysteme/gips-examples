@@ -9,6 +9,7 @@ import org.emoflon.gips.ihtc.virtual.runner.utils.XmiSetupUtil;
 import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.importexport.ModelToJsonExporter;
+import ihtcvirtualmetamodel.importexport.ModelToJsonNoPostProcExporter;
 
 public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 
@@ -16,6 +17,13 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	 * If true, the runner will print more detailed information.
 	 */
 	private boolean verbose = true;
+
+	/**
+	 * If true, the post processing will be skipped and the JSON output will be
+	 * directly derived from the GIPS solution model (i.e., it will search for
+	 * `isSelected == true` virtual objects.
+	 */
+	private boolean postProc = false;
 
 	/**
 	 * Create a new instance of this class.
@@ -94,16 +102,21 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		}
 
 		//
-		// Post-processing via a separated GT rule set
+		// Export
 		//
 
-		if (verbose) {
-			logger.info("=> Start post-processing GT.");
+		if (postProc) {
+			if (verbose) {
+				logger.info("=> Start post-processing GT.");
+			}
+			postprocess(gipsOutputPath);
+			exportToJson(gipsOutputPath, outputPath);
+		} else {
+			if (verbose) {
+				logger.info("=> Skipped post-processing GT.");
+			}
+			exportToJsonNoPostProc(gipsOutputPath, outputPath);
 		}
-
-		postprocess(gipsOutputPath);
-
-		exportToJson(gipsOutputPath, outputPath);
 
 		//
 		// The end
@@ -127,6 +140,25 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		final Resource loadedResource = FileUtils.loadModel(xmiOutputPath);
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
+		exporter.modelToJson(jsonOutputPath, verbose);
+	}
+
+	/**
+	 * Takes an XMI output path (of a GIPS-generated solution model) and writes the
+	 * corresponding JSON output to `jsonOutputPath`. This method relies on the
+	 * non-post-processed model.
+	 * 
+	 * @param xmiOutputPath  GIPS-generated solution model to convert.
+	 * @param jsonOutputPath JSON output file location to write the JSON output file
+	 *                       to.
+	 */
+	private void exportToJsonNoPostProc(final String xmiOutputPath, final String jsonOutputPath) {
+		Objects.requireNonNull(xmiOutputPath);
+		Objects.requireNonNull(jsonOutputPath);
+
+		final Resource loadedResource = FileUtils.loadModel(xmiOutputPath);
+		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
+		final ModelToJsonNoPostProcExporter exporter = new ModelToJsonNoPostProcExporter(solvedHospital);
 		exporter.modelToJson(jsonOutputPath, verbose);
 	}
 
