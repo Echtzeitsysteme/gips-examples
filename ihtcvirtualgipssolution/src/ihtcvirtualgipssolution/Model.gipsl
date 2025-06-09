@@ -324,23 +324,58 @@ constraint with patientForRoom {
 // C3: Nurses are not assigned to empty rooms and 
 
 constraint with countPatientsForRoom {	
-	context.variables.patientCount == 0
-	<=> 
 	mappings.selectedShiftToRoster->filter(
 	    element.nodes.vsr.shift.room == context.nodes.r &
 	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-	  )->sum(element.value) == 0
+		)->sum(element.value)
+	<= 
+	context.variables.patientCount * 1000
+	&
+	context.variables.patientCount 
+	<= 
+	mappings.selectedShiftToRoster->filter(
+	  element.nodes.vsr.shift.room == context.nodes.r &
+	  element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+	)->sum(element.value) * 1000
+	
+//	Transformed version of the following boolean equivalence   
+//	context.variables.patientCount == 0
+//	<=> 
+//	mappings.selectedShiftToRoster->filter(
+//	    element.nodes.vsr.shift.room == context.nodes.r &
+//	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+//	  )->sum(element.value) == 0
 }
 
 // C4: Each nonempty room in each shift is assigned to one nurse
 
 constraint with countPatientsForRoom {
-	context.variables.patientCount >= 1
-	<=> 
+	context.variables.patientCount
+	<=
 	mappings.selectedShiftToRoster->filter(
 	    element.nodes.vsr.shift.room == context.nodes.r &
 	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-	  )->sum(element.value) == 1
+	  )->sum(element.value)
+	* 1000
+	&
+	mappings.selectedShiftToRoster->filter(
+	    element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+	  )->sum(element.value) <= 1
+	&
+	mappings.selectedShiftToRoster->filter(
+	    element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+	  )->sum(element.value)
+	  <= 
+	  context.variables.patientCount * 1000 
+//	Transformed version of the following boolean equivalence   
+//	context.variables.patientCount >= 1
+//	<=> 
+//	mappings.selectedShiftToRoster->filter(
+//	    element.nodes.vsr.shift.room == context.nodes.r &
+//	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+//	  )->sum(element.value) == 1
 }
 
 // C5: A patient is assigned to at most one operating time slot
