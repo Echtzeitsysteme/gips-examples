@@ -35,7 +35,7 @@ rule selectShiftToFirstWorkload {
 	
 	vsw : VirtualShiftToWorkload {
 		- shift -> s
-		- requires_virtualWorkloadToCapacity -> vwc
+		- dependent -> vwc
 		.isSelected := true
 	}
 	
@@ -70,7 +70,7 @@ rule selectExtendingShiftToFirstWorkload {
 	prevvsw : VirtualShiftToWorkload {
 		- workload -> prevw
 		- shift -> prevs
-		- enables_virtualShiftToWorkload -> nextvsw
+		- enables -> nextvsw
 	}
 	
 	prevs : Shift {
@@ -88,7 +88,7 @@ rule selectExtendingShiftToFirstWorkload {
 		- workload -> nextw
 		- shift -> nexts
 		.isSelected := true
-		- requires_virtualShiftToWorkload -> prevvsw
+		- dependent -> prevvsw
 	}
 }
 
@@ -114,13 +114,13 @@ rule selectOperationDay {
 	
 	vwc : VirtualWorkloadToCapacity {
 		- capacity -> c
-		- requires_virtualOpTimeToCapacity -> vopc
+		- dependent -> vopc
 		.isSelected := true
 	}
 	
 	vwop : VirtualWorkloadToOpTime {
 		- opTime -> op
-		- requires_virtualOpTimeToCapacity -> vopc
+		- dependent -> vopc
 		.isSelected := true
 	}
 	
@@ -130,8 +130,8 @@ rule selectOperationDay {
 	
 	vopc : VirtualOpTimeToCapacity {
 		- capacity -> c
-		- enables_virtualWorkloadToOpTime -> vwop
-		- enables_virtual_WorkloadToCapacity -> vwc
+		- enables -> vwop
+		- enables -> vwc
 		.isSelected := true
 	}
 	
@@ -266,7 +266,7 @@ pattern checkRequiredShiftToWorkload{
 	}
 	
 	prevvsw : VirtualShiftToWorkload {
-		- enables_virtualShiftToWorkload -> nextvsw
+		- enables -> nextvsw
 	}
 	
 	nextvsw : VirtualShiftToWorkload
@@ -281,7 +281,7 @@ pattern checkRequiredWorkloadToCapacity{
 	vsw : VirtualShiftToWorkload
 	
 	vwc : VirtualWorkloadToCapacity {
-		- enables_virtualShiftToWorkload -> vsw
+		- enables -> vsw
 	}
 }
 
