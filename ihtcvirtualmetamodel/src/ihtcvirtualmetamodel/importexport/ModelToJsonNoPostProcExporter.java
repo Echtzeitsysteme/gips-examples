@@ -15,7 +15,7 @@ import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
-import ihtcvirtualmetamodel.utils.ModelCostCalculator;
+import ihtcvirtualmetamodel.utils.ModelCostNoPostProcCalculator;
 
 /**
  * This model exporter can be used to convert an EMF model to the respective
@@ -126,7 +126,7 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 	protected JsonArray convertModelToCostsJson(final Root model, final boolean verbose) {
 		Objects.requireNonNull(model);
 
-		final ModelCostCalculator calc = new ModelCostCalculator();
+		final ModelCostNoPostProcCalculator calc = new ModelCostNoPostProcCalculator();
 		final int unscheduled = calc.calculateUnscheduledPatientsCost(model);
 		final int delay = calc.calculateAdmissionDelayCost(model);
 		final int openOt = calc.calculateOpenOtCost(model);
