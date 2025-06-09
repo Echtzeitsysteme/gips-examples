@@ -424,6 +424,11 @@ constraint with selectShiftToFirstWorkload {
 	== (context.nodes.p.stayLength * 3) - 1
 }
 
+// C9: A patient can´t be assigned to more than one "first" shift
+constraint with Patient {
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context)->sum(element.value) <= 1
+}
+
 //
 // "Virtual" Constraints
 //
