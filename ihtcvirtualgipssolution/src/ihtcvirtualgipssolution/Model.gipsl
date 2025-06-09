@@ -219,7 +219,6 @@ mapping selectedOperationDay to selectOperationDay;
 // Decides which nurses are assigned to a shift/room on a specific day.
 mapping selectedShiftToRoster to selectShiftToRoster;
 
-
 // Adds all imported Virtual Nodes of Occupants to the model
 mapping selectedOccupantNodes to virtualNodesForOccupant;
 
@@ -322,26 +321,26 @@ constraint with patientForRoom {
 	)->sum(element.value) <= 1
 }
 
-// C3 + C4: Nurses are not assigned to empty rooms and each nonempty room in each shift is assigned to one nurse
+// C3: Nurses are not assigned to empty rooms and 
 
-constraint with countPatientsForRoom {
-	[	
+constraint with countPatientsForRoom {	
 	context.variables.patientCount == 0
 	<=> 
 	mappings.selectedShiftToRoster->filter(
 	    element.nodes.vsr.shift.room == context.nodes.r &
 	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
 	  )->sum(element.value) == 0
-	]
-	&
-	[
+}
+
+// C4: Each nonempty room in each shift is assigned to one nurse
+
+constraint with countPatientsForRoom {
 	context.variables.patientCount >= 1
 	<=> 
 	mappings.selectedShiftToRoster->filter(
 	    element.nodes.vsr.shift.room == context.nodes.r &
 	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
 	  )->sum(element.value) == 1
-	]
 }
 
 // C5: A patient is assigned to at most one operating time slot

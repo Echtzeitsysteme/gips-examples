@@ -464,9 +464,9 @@ public class JsonToModelLoader {
 		int dayCounter = 0;
 		for (final JsonElement a : availability) {
 			dayCounter++;
-			if(a.getAsInt() <= 0){
-				continue;
-			}
+//			if(a.getAsInt() <= 0){
+//				continue;
+//			}
 			final Capacity c = IhtcvirtualmetamodelFactory.eINSTANCE.createCapacity();
 			c.setDay(dayCounter - 1);
 			c.setMaxCapacity(a.getAsInt());
@@ -507,9 +507,9 @@ public class JsonToModelLoader {
 		int dayCounter = 0;
 		for (final JsonElement maxSurgeryTimeElement : maxSurgeryTime) {
 			dayCounter++;
-			if(maxSurgeryTimeElement.getAsInt() <= 0) {
-				continue;
-			}
+//			if(maxSurgeryTimeElement.getAsInt() <= 0) {
+//				continue;
+//			}
 			final OpTime opt = IhtcvirtualmetamodelFactory.eINSTANCE.createOpTime();
 			opt.setDay(dayCounter - 1);
 			opt.setMaxOpTime(maxSurgeryTimeElement.getAsInt());
