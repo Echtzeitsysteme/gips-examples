@@ -365,10 +365,10 @@ constraint with countPatientsForRoom {
 	&
 	mappings.selectedShiftToRoster->filter(
 	    element.nodes.vsr.shift.room == context.nodes.r &
-	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-	  )->sum(element.value)
-	  <= 
-	  context.variables.patientCount * 1000 
+    	element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+  	)->sum(element.value)
+  	<= 
+  	context.variables.patientCount * 1000 
 //	Transformed version of the following boolean equivalence   
 //	context.variables.patientCount >= 1
 //	<=> 
@@ -391,12 +391,28 @@ constraint with Patient {
 // C7: The day the first workload of a patient gets scheduled has to be the same day the patient has surgery
 
 constraint with selectedShiftToFirstWorkload {
-  context.value == 1
-  =>
-  mappings.selectedOperationDay->filter(
-    element.nodes.vwc == context.nodes.vwc &
-    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
-  )->sum(element.value) == 1
+ 	context.value
+    <=
+ 	mappings.selectedOperationDay->filter(
+    	element.nodes.vwc == context.nodes.vwc &
+    	context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
+  	)->sum(element.value)
+
+//  & TODO: ?
+//  mappings.selectedOperationDay->filter(
+//    element.nodes.vwc == context.nodes.vwc &
+//    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
+//  )->sum(element.value)
+//  <=
+//  context.value
+
+//	Transformed version of the following boolean implication 
+//  context.value == 1
+//  =>
+//  mappings.selectedOperationDay->filter(
+//    element.nodes.vwc == context.nodes.vwc &
+//    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
+//  )->sum(element.value) == 1
 }
 
 // C8: If a patient is admitted all his workloads have to be scheduled in a shift
