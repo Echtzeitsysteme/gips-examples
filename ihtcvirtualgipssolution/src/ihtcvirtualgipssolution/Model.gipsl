@@ -177,6 +177,7 @@ pattern otCapacityTupel{
 	}
 	
 	c : Capacity
+//	# c.maxCapacity > 0
 }
 
 pattern surgeonOptimeTupel {
@@ -189,6 +190,7 @@ pattern surgeonOptimeTupel {
 	}
 	
 	op : OpTime
+//	# op.maxOpTime > 0
 }
 
 pattern genderRoomShift {
