@@ -15,6 +15,7 @@ config {
 
 // Rule that selects a VirtualShiftToWorkload-Node to be adopted in the final model. 
 rule selectShiftToFirstWorkload {
+	// `root` is necessary here
 	root : Root {
 		- patients -> p
 	}
@@ -54,10 +55,6 @@ rule selectExtendingShiftToFirstWorkload {
 // I. + II.: between the patient and opTime and between patient and capacity -> Selects a day and OT for the patient
 // III.: between opTime and Capacity to make sure the predefined surgeon of the patient is working in the correct OT on that day
 rule selectOperationDay {
-	root : Root {
-		- patients -> p
-	}
-	
 	p : Patient {
 		- firstWorkload -> w
 		- surgeon -> s
@@ -107,10 +104,6 @@ rule selectShiftToRoster {
 
 // Pattern to find all mandatory patients
 pattern mandatoryPatients {
-	r : Root {
-		- patients -> p
-	}
-	
 	p : Patient
 	
 	# p.mandatory == true
@@ -119,10 +112,6 @@ pattern mandatoryPatients {
 
 // Pattern to find all optional patients
 pattern optionalPatients {
-	r : Root {
-		- patients -> p
-	}
-	
 	p : Patient
 	
 	# p.mandatory == false
@@ -140,10 +129,6 @@ rule virtualNodesForOccupant {
 // Pattern to Count the Patients over a specific room for a specific day -> enforce that the capacity of a room is not exceeded
 // Needs to be checked for each morning shift (s.shiftNo % 3 == 0) -> remaining shifts of each day are automatically covered
 pattern roomForShift{
-	root : Root {
-		- rooms -> r
-	}
-	
 	r : Room {
 		- shifts -> s
 	}
@@ -153,11 +138,6 @@ pattern roomForShift{
 
 // Pattern that finds all patients that are assigned to a room -> first and following workloads
 pattern patientForRoom {
-	root : Root {
-		- patients -> p
-		- rooms -> r
-	}
-	
 	p : Patient
 	
 	s : Shift
@@ -168,10 +148,6 @@ pattern patientForRoom {
 }
 
 pattern otCapacityTupel{
-	root : Root {
-		- ots -> ot
-	}
-	
 	ot : OT {
 		- capacities -> c
 	}
@@ -181,10 +157,6 @@ pattern otCapacityTupel{
 }
 
 pattern surgeonOptimeTupel {
-		root : Root {
-		- surgeons -> s
-	}
-	
 	s : Surgeon {
 		- opTimes -> op
 	}
@@ -194,11 +166,6 @@ pattern surgeonOptimeTupel {
 }
 
 pattern genderRoomShift {
-	root : Root {
-		- genders -> g
-		- rooms -> r
-	}
-	
 	g : Gender 
 	
 	r : Room {
