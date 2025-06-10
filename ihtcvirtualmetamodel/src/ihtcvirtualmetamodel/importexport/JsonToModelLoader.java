@@ -448,16 +448,15 @@ public class JsonToModelLoader {
 		final OT ot = IhtcvirtualmetamodelFactory.eINSTANCE.createOT();
 		ot.setName(name);
 		// Create capacities, i.e., the `Capacity` objects
-		int dayCounter = 0;
-		for (final JsonElement a : availability) {
-			dayCounter++;
-			if(a.getAsInt() <= 0){
+		for (int i = 0; i < availability.size(); i++) {
+			final JsonElement a = availability.get(i);
+			if (a.getAsInt() <= 0) {
 				continue;
 			}
 			final Capacity c = IhtcvirtualmetamodelFactory.eINSTANCE.createCapacity();
-			c.setDay(dayCounter - 1);
+			c.setDay(i);
 			c.setMaxCapacity(a.getAsInt());
-            ot.getCapacities().add(c);
+			ot.getCapacities().add(c);
 		}
 		this.model.getOts().add(ot);
 	}
@@ -491,14 +490,13 @@ public class JsonToModelLoader {
 		final Surgeon s = IhtcvirtualmetamodelFactory.eINSTANCE.createSurgeon();
 		s.setName(name);
 		// Create max surgery times, i.e., the `OpTime` objects
-		int dayCounter = 0;
-		for (final JsonElement maxSurgeryTimeElement : maxSurgeryTime) {
-			dayCounter++;
-			if(maxSurgeryTimeElement.getAsInt() <= 0) {
+		for (int i = 0; i < maxSurgeryTime.size(); i++) {
+			final JsonElement maxSurgeryTimeElement = maxSurgeryTime.get(i);
+			if (maxSurgeryTimeElement.getAsInt() <= 0) {
 				continue;
 			}
 			final OpTime opt = IhtcvirtualmetamodelFactory.eINSTANCE.createOpTime();
-			opt.setDay(dayCounter - 1);
+			opt.setDay(i);
 			opt.setMaxOpTime(maxSurgeryTimeElement.getAsInt());
 			s.getOpTimes().add(opt);
 		}
