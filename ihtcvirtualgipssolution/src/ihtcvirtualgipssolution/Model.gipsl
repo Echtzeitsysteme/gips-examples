@@ -60,7 +60,14 @@ rule selectOperationDay {
 	
 	p : Patient {
 		- firstWorkload -> w
+		- surgeon -> s
 	}
+	
+	s : Surgeon {
+		- opTimes -> opTime
+	}
+	
+	opTime : OpTime
 	
 	w : Workload {
 		- virtualCapacity -> vwc
@@ -75,6 +82,7 @@ rule selectOperationDay {
 	vwop : VirtualWorkloadToOpTime {
 		- requires_virtualOpTimeToCapacity -> vopc
 		.isSelected := true
+		- opTime -> opTime
 	}
 	
 	vopc : VirtualOpTimeToCapacity {
