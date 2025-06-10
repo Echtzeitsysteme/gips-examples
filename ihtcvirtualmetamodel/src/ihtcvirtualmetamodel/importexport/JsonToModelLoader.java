@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import ihtcvirtualmetamodel.Capacity;
+import ihtcvirtualmetamodel.Gender;
 import ihtcvirtualmetamodel.IhtcvirtualmetamodelFactory;
 import ihtcvirtualmetamodel.Nurse;
 import ihtcvirtualmetamodel.OT;
@@ -126,6 +127,7 @@ public class JsonToModelLoader {
 
 		final JsonArray patients = json.getAsJsonArray("patients");
 		convertPatients(patients);
+		createGenders();
 
 		final JsonArray operatingTheaters = json.getAsJsonArray("operating_theaters");
 		convertOperatingTheaters(operatingTheaters);
@@ -380,7 +382,18 @@ public class JsonToModelLoader {
 
 		this.model.getPatients().add(p);
 	}
-
+	
+	/**
+	 * Creates a new gender object for all unique string values found in the patient objects.
+	 */
+	public void createGenders() {
+		for(String gender : foundGenders) {
+			final Gender g = IhtcvirtualmetamodelFactory.eINSTANCE.createGender();
+			g.setName(gender);
+			this.model.getGenders().add(g);
+		}
+	}
+	
 	/**
 	 * Converts the given JSON array of age groups to the model representations.
 	 * 

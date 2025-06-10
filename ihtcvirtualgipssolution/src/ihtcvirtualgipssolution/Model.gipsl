@@ -17,7 +17,6 @@ config {
 rule selectShiftToFirstWorkload {
 	root : Root {
 		- patients -> p
-		- virtualShiftToWorkload -> vsw 
 	}
 	
 	p : Patient {
@@ -29,64 +28,22 @@ rule selectShiftToFirstWorkload {
 		- virtualCapacity -> vwc
 	}
 	
-	vwc : VirtualWorkloadToCapacity {
-		- capacity -> c
-	}
+	vwc : VirtualWorkloadToCapacity
 	
 	vsw : VirtualShiftToWorkload {
-		- shift -> s
 		- requires_virtualWorkloadToCapacity -> vwc
 		.isSelected := true
 	}
-	
-	s : Shift {
-		- room -> r
-	}
-	
-	r : Room
-	
-	c : Capacity
 }
 
 // Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model. 
 rule selectExtendingShiftToFirstWorkload {
-	root : Root {
-		- patients -> p
-		- virtualShiftToWorkload -> prevvsw
-		- virtualShiftToWorkload -> nextvsw
-		- rooms -> r
-	}
-	
-	p : Patient {
-		- workloads -> prevw
-	}
-	
-	prevw : Workload {
-		- next -> nextw
-	}
-	
-	nextw : Workload
-	
+
 	prevvsw : VirtualShiftToWorkload {
-		- workload -> prevw
-		- shift -> prevs
 		- enables_virtualShiftToWorkload -> nextvsw
 	}
 	
-	prevs : Shift {
-		- next -> nexts
-		- room -> r
-	}
-	
-	nexts : Shift {
-		- room -> r
-	}
-	
-	r : Room
-	
 	nextvsw : VirtualShiftToWorkload {
-		- workload -> nextw
-		- shift -> nexts
 		.isSelected := true
 		- requires_virtualShiftToWorkload -> prevvsw
 	}
@@ -99,8 +56,6 @@ rule selectExtendingShiftToFirstWorkload {
 rule selectOperationDay {
 	root : Root {
 		- patients -> p
-//		- surgeons -> s
-		- ots -> ot
 	}
 	
 	p : Patient {
@@ -109,8 +64,10 @@ rule selectOperationDay {
 	}
 	
 	s : Surgeon {
-		- opTimes -> op
+		- opTimes -> opTime
 	}
+	
+	opTime : OpTime
 	
 	w : Workload {
 		- virtualCapacity -> vwc
@@ -118,61 +75,30 @@ rule selectOperationDay {
 	}
 	
 	vwc : VirtualWorkloadToCapacity {
-		- capacity -> c
 		- requires_virtualOpTimeToCapacity -> vopc
 		.isSelected := true
 	}
 	
 	vwop : VirtualWorkloadToOpTime {
-		- opTime -> op
 		- requires_virtualOpTimeToCapacity -> vopc
 		.isSelected := true
-		- opTime -> op
-	}
-	
-	op : OpTime {
-		- virtualCapacity -> vopc
+		- opTime -> opTime
 	}
 	
 	vopc : VirtualOpTimeToCapacity {
-		- capacity -> c
 		- enables_virtualWorkloadToOpTime -> vwop
 		- enables_virtual_WorkloadToCapacity -> vwc
 		.isSelected := true
 	}
 	
-	ot : OT {
-		- capacities -> c
-	}
-	
-	c : Capacity
 }
 
 // Rule that selects an  VirtualShiftToRoster-Node to be adopted in the final model. 
 rule selectShiftToRoster {
-	root : Root {
-		- nurses -> n
-		- rooms -> r
-	}
-	
-	n : Nurse {
-		- rosters -> ro
-	}
-	
-	ro : Roster {
-		- virtualShift -> vsr
-	}
-	
+
 	vsr : VirtualShiftToRoster {
-		- shift -> s 
 		.isSelected := true
 	}
-	
-	s : Shift {
-		- room -> r
-	}
-	
-	r : Room
 }
 
 //
@@ -267,67 +193,19 @@ pattern surgeonOptimeTupel {
 //	# op.maxOpTime > 0
 }
 
-pattern checkRequiredShiftToWorkload{
+pattern genderRoomShift {
 	root : Root {
-		- virtualShiftToWorkload -> prevvsw
-		- virtualShiftToWorkload -> nextvsw
+		- genders -> g
+		- rooms -> r
 	}
 	
-	prevvsw : VirtualShiftToWorkload {
-		- enables_virtualShiftToWorkload -> nextvsw
-	}
+	g : Gender 
 	
-	nextvsw : VirtualShiftToWorkload
-}
-
-pattern checkRequiredWorkloadToCapacity{
-	root : Root {
-		- virtualShiftToWorkload -> vsw
-		- virtualWorkloadToCapacity -> vwc
-	}
-	
-	vsw : VirtualShiftToWorkload
-	
-	vwc : VirtualWorkloadToCapacity {
-		- enables_virtualShiftToWorkload -> vsw
-	}
-}
-
-// Finds pairs of patients that are assigned to the same room on the same morning shift
-pattern patientTupel {
-	root : Root {
-		- patients -> p1
-		- patients -> p2
-	}
-	
-	p1 : Patient {
-		- workloads -> w1
-	}
-	
-	w1 : Workload {
-		- virtualShift -> vsw1
-	}
-	
-	vsw1 : VirtualShiftToWorkload {
-		- shift -> s
-	}
-	
-	p2 : Patient {
-		- workloads -> w2
-	}
-	
-	w2 : Workload {
-		- virtualShift -> vsw2
-	}
-	
-	vsw2 : VirtualShiftToWorkload {
-		- shift -> s
+	r : Room {
+		- shifts -> s
 	}
 	
 	s : Shift
-	
-	# s.shiftNo % 3 == 0
-	# p1.gender != p2.gender
 }
 
 //
@@ -351,7 +229,6 @@ mapping selectedOperationDay to selectOperationDay;
 // Decides which nurses are assigned to a shift/room on a specific day.
 mapping selectedShiftToRoster to selectShiftToRoster;
 
-
 // Adds all imported Virtual Nodes of Occupants to the model
 mapping selectedOccupantNodes to virtualNodesForOccupant;
 
@@ -367,6 +244,9 @@ mapping countPatientsForRoom to roomForShift {
 // Mapping for all assigned patients. (occupants and new patients for each workload (first + following))
 mapping assignedPatientsToRoom to patientForRoom;
  
+// Mapping that holds the information if a specific gender is assigned to a room on a specific day. 
+mapping assignedGenderToRoomOnShift to genderRoomShift;
+
 // mapping that decides which ots are open on a specific day
 //mapping openOTs to otCapacityTupel;
 
@@ -381,9 +261,9 @@ function maxoOptional with optionalPatients {
 
 // H1: No gender mix: Patients of different genders may not share a room on any day. 
 // patient.gender is a string variable and the preallocation is assumably not known. -> There can only be the same value for all patients
-constraint with patientTupel {
-	mappings.assignedPatientsToRoom->filter(
-		[element.nodes.p == context.nodes.p1 | element.nodes.p == context.nodes.p2] &
+constraint with countPatientsForRoom {
+	mappings.assignedGenderToRoomOnShift->filter( 
+		 element.nodes.r == context.nodes.r &
 		element.nodes.s == context.nodes.s
 	)->sum(element.value) <= 1
 }
@@ -394,7 +274,7 @@ constraint with patientTupel {
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded. 
 constraint with surgeonOptimeTupel {
 	mappings.selectedOperationDay->filter(
-		element.nodes.op.day == context.nodes.op.day &
+		element.nodes.vwop.opTime.day == context.nodes.op.day &
 		element.nodes.p.surgeon == context.nodes.s
 	)->sum(element.nodes.p.surgeryDuration * element.value)
 	<=
@@ -406,8 +286,8 @@ constraint with surgeonOptimeTupel {
 
 constraint with otCapacityTupel {
 	mappings.selectedOperationDay->filter(
-		element.nodes.c.day == context.nodes.c.day &
-		element.nodes.ot == context.nodes.ot
+		element.nodes.vopc.capacity.day == context.nodes.c.day &
+		element.nodes.vwc.capacity.ot == context.nodes.ot
 	)->sum(element.nodes.p.surgeryDuration * element.value)
 	<= 
 	context.nodes.c.maxCapacity
@@ -451,26 +331,61 @@ constraint with patientForRoom {
 	)->sum(element.value) <= 1
 }
 
-// C3 + C4: Nurses are not assigned to empty rooms and each nonempty room in each shift is assigned to one nurse
+// C3: Nurses are not assigned to empty rooms and 
+
+constraint with countPatientsForRoom {	
+	mappings.selectedShiftToRoster->filter(
+	    element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+		)->sum(element.value)
+	<= 
+	context.variables.patientCount * 1000
+	&
+	context.variables.patientCount 
+	<= 
+	mappings.selectedShiftToRoster->filter(
+	  element.nodes.vsr.shift.room == context.nodes.r &
+	  element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+	)->sum(element.value) * 1000
+	
+//	Transformed version of the following boolean equivalence   
+//	context.variables.patientCount == 0
+//	<=> 
+//	mappings.selectedShiftToRoster->filter(
+//	    element.nodes.vsr.shift.room == context.nodes.r &
+//	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+//	  )->sum(element.value) == 0
+}
+
+// C4: Each nonempty room in each shift is assigned to one nurse
 
 constraint with countPatientsForRoom {
-	[	
-	context.variables.patientCount == 0
-	<=> 
+	context.variables.patientCount
+	<=
 	mappings.selectedShiftToRoster->filter(
-	    element.nodes.r == context.nodes.r &
-	    element.nodes.s.shiftNo == context.nodes.s.shiftNo
-	  )->sum(element.value) == 0
-	]
+	    element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+	  )->sum(element.value)
+	* 1000
 	&
-	[
-	context.variables.patientCount >= 1
-	<=> 
 	mappings.selectedShiftToRoster->filter(
-	    element.nodes.r == context.nodes.r &
-	    element.nodes.s.shiftNo == context.nodes.s.shiftNo
-	  )->sum(element.value) == 1
-	]
+	    element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+	  )->sum(element.value) <= 1
+	&
+	mappings.selectedShiftToRoster->filter(
+	    element.nodes.vsr.shift.room == context.nodes.r &
+    	element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+  	)->sum(element.value)
+  	<= 
+  	context.variables.patientCount * 1000 
+//	Transformed version of the following boolean equivalence   
+//	context.variables.patientCount >= 1
+//	<=> 
+//	mappings.selectedShiftToRoster->filter(
+//	    element.nodes.vsr.shift.room == context.nodes.r &
+//	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+//	  )->sum(element.value) == 1
 }
 
 // C5: A patient is assigned to at most one operating time slot
@@ -486,12 +401,28 @@ constraint with Patient {
 // C7: The day the first workload of a patient gets scheduled has to be the same day the patient has surgery
 
 constraint with selectedShiftToFirstWorkload {
-  context.value == 1
-  =>
-  mappings.selectedOperationDay->filter(
-    element.nodes.vwc == context.nodes.vwc &
-    context.nodes.s.shiftNo / 3 == element.nodes.c.day
-  )->sum(element.value) == 1
+ 	context.value
+    <=
+ 	mappings.selectedOperationDay->filter(
+    	element.nodes.vwc == context.nodes.vwc &
+    	context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
+  	)->sum(element.value)
+
+//  & TODO: ?
+//  mappings.selectedOperationDay->filter(
+//    element.nodes.vwc == context.nodes.vwc &
+//    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
+//  )->sum(element.value)
+//  <=
+//  context.value
+
+//	Transformed version of the following boolean implication 
+//  context.value == 1
+//  =>
+//  mappings.selectedOperationDay->filter(
+//    element.nodes.vwc == context.nodes.vwc &
+//    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
+//  )->sum(element.value) == 1
 }
 
 // C8: If a patient is admitted all his workloads have to be scheduled in a shift
@@ -503,7 +434,7 @@ constraint with selectShiftToFirstWorkload {
 	(context.nodes.p.stayLength * 3) + context.nodes.vsw.shift.shiftNo > context.nodes.root.days * 3
 	]
 	=>
-	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.prevvsw.workload.patient == context.nodes.p)->sum(element.value)
 	== ((context.nodes.root.days * 3) - context.nodes.vsw.shift.shiftNo) - 1
 
 }
@@ -515,8 +446,13 @@ constraint with selectShiftToFirstWorkload {
 	(context.nodes.p.stayLength * 3) + context.nodes.vsw.shift.shiftNo <= context.nodes.root.days * 3
 	]
 	=>
-	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.prevvsw.workload.patient == context.nodes.p)->sum(element.value)
 	== (context.nodes.p.stayLength * 3) - 1
+}
+
+// C9: A patient can´t be assigned to more than one "first" shift
+constraint with Patient {
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context)->sum(element.value) <= 1
 }
 
 //
@@ -532,71 +468,138 @@ constraint with selectedOccupantNodes {
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
 // This does not enforce that the admission day is the same as the operation day!
 
-constraint with checkRequiredWorkloadToCapacity {
+constraint with selectShiftToFirstWorkload {
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vsw == context.nodes.vsw &
 		element.nodes.vwc == context.nodes.vwc
-	)->sum(element.value) == 1
-	=>
+	)->sum(element.value)
+	<=
 	mappings.selectedOperationDay->filter(
 		element.nodes.vwc == context.nodes.vwc
-	)->sum(element.value) >= 1
+	)->sum(element.value)
+	
+//	Transformed version of the following boolean implication 
+//	mappings.selectedShiftToFirstWorkload->filter(
+//		element.nodes.vsw == context.nodes.vsw &
+//		element.nodes.vwc == context.nodes.vwc
+//	)->sum(element.value) == 1
+//	=>
+//	mappings.selectedOperationDay->filter(
+//		element.nodes.vwc == context.nodes.vwc
+//	)->sum(element.value) >= 1
 }
 
 // V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
 // that is connected to the previous links between the patients workloads to shifts.
 // The following node can only be selected if the previous is already set to true
 
-constraint with checkRequiredShiftToWorkload{
+constraint with selectExtendingShiftToFirstWorkload{
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.prevvsw == context.nodes.prevvsw &
 		element.nodes.nextvsw == context.nodes.nextvsw 
-	)->sum(element.value) == 1
-	=>
+	)->sum(element.value)
+	<=
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.nextvsw == context.nodes.prevvsw 
-	)->sum(element.value) == 1
-	|
+	)->sum(element.value)
+	+
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vsw == context.nodes.prevvsw 
-	)->sum(element.value) == 1
+	)->sum(element.value)
+
+//	Transformed version of the following boolean implication 	
+//	mappings.selectedExtendingShiftToFirstWorkload->filter(
+//		element.nodes.prevvsw == context.nodes.prevvsw &
+//		element.nodes.nextvsw == context.nodes.nextvsw 
+//	)->sum(element.value) == 1
+//	=>
+//	mappings.selectedExtendingShiftToFirstWorkload->filter(
+//		element.nodes.nextvsw == context.nodes.prevvsw 
+//	)->sum(element.value) == 1
+//	|
+//	mappings.selectedShiftToFirstWorkload->filter(
+//		element.nodes.vsw == context.nodes.prevvsw 
+//	)->sum(element.value) == 1
 }
 
 //
 // Utility constraints
 //
 
-// Sets the mapping variable to 1 if a patient is assigned to a specific room for a specific day
+// U1: Sets the mapping variable to 1 if a patient is assigned to a specific room for a specific day
 // This occurs if one of the following criteria is met: They are mutually exclusive
 // 1. The patient is assigned to a room (First workload) -> selectedShiftToFirstWorkload
 // 2. The patients stay is extended. The room does not change -> selectedExtendingShiftToFirstWorkload
 // 3. The patient is an occupant -> All his virtual Nodes are selected -> selectedOccupantNodes
 // The amount of matches can be reduced by only checking for the morning shifts
 constraint with assignedPatientsToRoom {
-	[
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.p == context.nodes.p &
-		element.nodes.r == context.nodes.r &
-		element.nodes.s == context.nodes.s
-	)->sum(element.value) == 1
-	|
+		element.nodes.vsw.shift.room == context.nodes.r &
+		element.nodes.vsw.shift == context.nodes.s
+	)->sum(element.value)
+	+
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.p == context.nodes.p &
-		element.nodes.r == context.nodes.r &
-		element.nodes.nexts == context.nodes.s
-	)->sum(element.value) == 1
-	|
+		element.nodes.prevvsw.workload.patient == context.nodes.p &
+		element.nodes.prevvsw.shift.room == context.nodes.r &
+		element.nodes.nextvsw.shift == context.nodes.s
+	)->sum(element.value)
+	+
 	mappings.selectedOccupantNodes->filter(
 		element.nodes.vsw.workload.patient == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
 		element.nodes.vsw.shift == context.nodes.s
-	)->sum(element.value) == 1
-	]
-	<=>
-	context.value == 1
+	)->sum(element.value)
+	<=
+	context.value * 1000
+	
+	&
+	
+	context.value
+	<=
+		mappings.selectedShiftToFirstWorkload->filter(
+		element.nodes.p == context.nodes.p &
+		element.nodes.vsw.shift.room == context.nodes.r &
+		element.nodes.vsw.shift == context.nodes.s
+	)->sum(element.value)
+	+
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.prevvsw.workload.patient == context.nodes.p &
+		element.nodes.prevvsw.shift.room == context.nodes.r &
+		element.nodes.nextvsw.shift == context.nodes.s
+	)->sum(element.value)
+	+
+	mappings.selectedOccupantNodes->filter(
+		element.nodes.vsw.workload.patient == context.nodes.p &
+		element.nodes.vsw.shift.room == context.nodes.r &
+		element.nodes.vsw.shift == context.nodes.s
+	)->sum(element.value)
+	
+//	Transformed version of the following boolean equivalence 
+//	[
+//	mappings.selectedShiftToFirstWorkload->filter(
+//		element.nodes.p == context.nodes.p &
+//		element.nodes.vsw.shift.room == context.nodes.r &
+//		element.nodes.vsw.shift == context.nodes.s
+//	)->sum(element.value) == 1
+//	|
+//	mappings.selectedExtendingShiftToFirstWorkload->filter(
+//		element.nodes.prevvsw.workload.patient == context.nodes.p &
+//		element.nodes.prevvsw.shift.room == context.nodes.r &
+//		element.nodes.nextvsw.shift == context.nodes.s
+//	)->sum(element.value) == 1
+//	|
+//	mappings.selectedOccupantNodes->filter(
+//		element.nodes.vsw.workload.patient == context.nodes.p &
+//		element.nodes.vsw.shift.room == context.nodes.r &
+//		element.nodes.vsw.shift == context.nodes.s
+//	)->sum(element.value) == 1
+//	]
+//	<=>
+//	context.value == 1
 }
 
-// Utility Constraint that counts how many patients are currently assigned to each room 
+// U2: Utility Constraint that counts how many patients are currently assigned to each room 
 constraint with countPatientsForRoom {
 	context.variables.patientCount 
 	==
@@ -604,6 +607,36 @@ constraint with countPatientsForRoom {
 		element.nodes.r == context.nodes.r &
 		element.nodes.s.shiftNo == context.nodes.s.shiftNo
 	)->sum(element.value)  
+}
+
+// U3: Utility Constraint that saves the information if a gender is assigned to a room on a specific day. 
+constraint with assignedGenderToRoomOnShift {
+	context.value
+	<=
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.p.gender == context.nodes.g.name &
+		element.nodes.s == context.nodes.s &
+		element.nodes.r == context.nodes.r
+	)->sum(element.value)
+	
+	& 
+	
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.p.gender == context.nodes.g.name &
+		element.nodes.s == context.nodes.s &
+		element.nodes.r == context.nodes.r
+	)->sum(element.value)
+	<= 
+	context.value * 1000
+	
+//	Transformed version of the following boolean equivalence 
+//	mappings.assignedPatientsToRoom->filter(
+//		element.nodes.p.gender == context.nodes.g.name &
+//		element.nodes.s == context.nodes.s &
+//		element.nodes.r == context.nodes.r
+//	)->sum(element.value) >= 1
+//	<=>
+//	context.value == 1
 }
 
 // sets the mapping to true if there is at least one surgery assigned to the ot on that day
