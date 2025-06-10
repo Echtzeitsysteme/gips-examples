@@ -149,11 +149,13 @@ public class PostprocessingGtApp extends IhtcvirtualpostprocessingHiPEApp {
 		logger.info(this.getClass().getSimpleName() + ": Initial number of matches of GT rule " + rule.getPatternName()
 				+ " " + rule.countMatches() + ".");
 		int counter = 0;
-		while (rule.isApplicable()) {
+		// doUpdate = false to not run the PM on every pass of the loop
+		while (rule.isApplicable(false)) {
 			if (counter >= limit) {
 				break;
 			}
-			rule.apply();
+			// doUpdate = false to not run the PM on every pass of the loop
+			rule.apply(false);
 			counter++;
 		}
 
