@@ -1,10 +1,10 @@
 package org.emoflon.gips.gipsl.examples.mdvne;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.emoflon.smartemf.runtime.collections.LinkedSmartESet;
 
 import gips.examples.dependencies.GipsExamplesLogger;
 import model.Network;
@@ -24,7 +24,7 @@ public class MdvneGipsIflyeAdapterUtil extends GipsExamplesLogger {
 	 */
 	public static void checkMultipleSubstrateNetworks(final ResourceSet model) {
 		final Root root = (Root) model.getResources().get(0).getContents().get(0);
-		final LinkedSmartESet<Network> networks = root.getNetworks();
+		final Collection<Network> networks = root.getNetworks();
 		final Set<SubstrateNetwork> substrateNetworks = new HashSet<>();
 
 		for (final Network n : networks) {
