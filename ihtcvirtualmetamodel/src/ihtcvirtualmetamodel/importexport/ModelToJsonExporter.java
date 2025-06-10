@@ -124,7 +124,7 @@ public class ModelToJsonExporter {
 	 * @param patient Patient.
 	 * @return JSON object.
 	 */
-	private JsonObject convertPatientToJson(final Patient patient) {
+	protected JsonObject convertPatientToJson(final Patient patient) {
 		Objects.requireNonNull(patient);
 
 		final JsonObject patientJson = new JsonObject();
@@ -153,7 +153,7 @@ public class ModelToJsonExporter {
 	 * @param nurse Nurse.
 	 * @return JSON object.
 	 */
-	private JsonObject convertNurseToJson(final Nurse nurse) {
+	protected JsonObject convertNurseToJson(final Nurse nurse) {
 		Objects.requireNonNull(nurse);
 
 		final JsonObject nurseJson = new JsonObject();
@@ -197,7 +197,7 @@ public class ModelToJsonExporter {
 	 * @param verbose If true, the method will print all costs on the console.
 	 * @return JSON array.
 	 */
-	private JsonArray convertModelToCostsJson(final Root model, final boolean verbose) {
+	protected JsonArray convertModelToCostsJson(final Root model, final boolean verbose) {
 		Objects.requireNonNull(model);
 
 		final ModelCostCalculator calc = new ModelCostCalculator();
@@ -260,7 +260,7 @@ public class ModelToJsonExporter {
 	 * @param shift Shift number.
 	 * @return Day number.
 	 */
-	private int convertShiftToDay(final int shift) {
+	protected int convertShiftToDay(final int shift) {
 		// Division of an integer by 3 to get the floored value.
 		return shift / 3;
 	}
@@ -272,7 +272,7 @@ public class ModelToJsonExporter {
 	 * @param shiftType Shift type represented by an integer.
 	 * @return Shift type represented by a string.
 	 */
-	private String convertShiftType(final int shiftType) {
+	protected String convertShiftType(final int shiftType) {
 		switch (shiftType) {
 		case 0: {
 			return "early";
