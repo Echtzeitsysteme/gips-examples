@@ -318,6 +318,7 @@ rule fixOperationDay {
 	
 	p : Patient {
 		- firstWorkload -> w
+		- surgeon -> s
 	}
 	
 	w : Workload
