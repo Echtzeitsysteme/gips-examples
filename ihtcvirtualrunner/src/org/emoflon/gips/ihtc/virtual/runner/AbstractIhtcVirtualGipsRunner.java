@@ -68,10 +68,22 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	public String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
 
 	/**
+	 * Default pre-processing output XMI path.
+	 */
+	public String preprocessingPath = instancePath.substring(0, instancePath.lastIndexOf(".xmi"))
+			+ "_pre-proc.xmi";
+
+	/**
 	 * Default instance solved XMI path.
 	 */
 	public String gipsOutputPath = instanceFolder + scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json"))
 			+ "_solved.xmi";
+
+	/**
+	 * Default post-processing output XMI path.
+	 */
+	public String postProcOutputPath = gipsOutputPath.substring(0, gipsOutputPath.lastIndexOf(".xmi"))
+			+ "_post-proc.xmi";
 
 	/**
 	 * Default JSON output folder path.
@@ -249,10 +261,23 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	 * 
 	 * @param instancePath Model (XMI) to load and overwrite.
 	 */
+	@Deprecated
 	protected void preprocess(final String instancePath) {
+		preprocess(instancePath, instancePath);
+	}
+
+	/**
+	 * Pre-processing method that runs the separated GT rule set. The given
+	 * `instancePath` will be used to load the XMI model. The produced (altered)
+	 * model file will be written to `outputPath`.
+	 * 
+	 * @param instancePath Model (XMI) to load.
+	 * @param outputPath   Model (XMI) to save the result to.
+	 */
+	protected void preprocess(final String instancePath, final String outputPath) {
 		Objects.requireNonNull(instancePath);
 
-		final PreprocessingGtApp app = new PreprocessingGtApp(instancePath);
+		final PreprocessingGtApp app = new PreprocessingGtApp(instancePath, outputPath);
 		app.run();
 		// The app will terminate itself
 	}
@@ -264,10 +289,24 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	 * 
 	 * @param instancePath Model (XMI) to load and overwrite.
 	 */
+	@Deprecated
 	protected void postprocess(final String instancePath) {
-		Objects.requireNonNull(instancePath);
+		postprocess(instancePath, instancePath);
+	}
 
-		final PostprocessingGtApp app = new PostprocessingGtApp(instancePath);
+	/**
+	 * Post-processing method that runs the separated GT rule set. The given
+	 * `instancePath` will be used to load the XMI model. The produced (altered)
+	 * model file be written to `outputPath`.
+	 * 
+	 * @param instancePath Model (XMI) to load.
+	 * @param outputPath   Model (XMI) output path.
+	 */
+	protected void postprocess(final String instancePath, final String outputPath) {
+		Objects.requireNonNull(instancePath);
+		Objects.requireNonNull(outputPath);
+
+		final PostprocessingGtApp app = new PostprocessingGtApp(instancePath, outputPath);
 		app.run();
 		// The app will terminate itself
 	}
