@@ -105,6 +105,11 @@ rule selectOperationDay {
 	
 	p : Patient {
 		- firstWorkload -> w
+		- surgeon -> s
+	}
+	
+	s : Surgeon {
+		- opTimes -> op
 	}
 	
 	w : Workload {
@@ -122,6 +127,7 @@ rule selectOperationDay {
 		- opTime -> op
 		- requires_virtualOpTimeToCapacity -> vopc
 		.isSelected := true
+		- opTime -> op
 	}
 	
 	op : OpTime {
@@ -245,6 +251,7 @@ pattern otCapacityTupel{
 	}
 	
 	c : Capacity
+//	# c.maxCapacity > 0
 }
 
 pattern surgeonOptimeTupel {
@@ -257,6 +264,7 @@ pattern surgeonOptimeTupel {
 	}
 	
 	op : OpTime
+//	# op.maxOpTime > 0
 }
 
 pattern checkRequiredShiftToWorkload{
