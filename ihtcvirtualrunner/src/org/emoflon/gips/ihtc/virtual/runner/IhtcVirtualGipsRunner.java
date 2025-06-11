@@ -29,7 +29,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	 * If true, the pre-processing will be executed with the Java-only (i.e., no GT)
 	 * implementation.
 	 */
-	private boolean preProcNoGt = false;
+	private boolean preProcNoGt = true;
 
 	/**
 	 * Create a new instance of this class.

@@ -114,7 +114,7 @@ public class PreprocessingNoGtApp {
 
 	private void createVirtualWorkloadToOperationCandidates() {
 		Objects.requireNonNull(model);
-		model.getPatients().forEach(patient -> {
+		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
 			final Workload w = patient.getFirstWorkload();
 			patient.getSurgeon().getOpTimes().forEach(opTime -> {
 				// Check time frame (stay of the patient)
@@ -212,7 +212,7 @@ public class PreprocessingNoGtApp {
 
 	private void createVirtualShiftToWorkloadInitialCandidates() {
 		Objects.requireNonNull(model);
-		model.getPatients().forEach(patient -> {
+		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
 			final int earliestPossibleFirstShift = dayToShift(patient.getEarliestDay());
 			final int latestPossibleFirstShift = dayToShift(patient.getDueDay());
 			model.getRooms().stream().filter(room -> !patient.getIncompatibleRooms().contains(room)).forEach(room -> {
