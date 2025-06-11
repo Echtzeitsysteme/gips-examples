@@ -184,11 +184,17 @@ public class PreprocessingNoGtApp {
 				v.setWasImported(true);
 				v.setShift(shift);
 				v.setWorkload(workload);
+				// Set requires and enables edges
 				if (vPrev != null) {
 					v.getRequires_virtualShiftToWorkload().add(vPrev);
+					vPrev.getEnables_virtualShiftToWorkload().add(v);
 				}
 				shift.getVirtualWorkload().add(v);
 				vPrev = v;
+
+				// Delete derived edges
+				workload.setDerivedShift(null);
+				shift.getDerivedWorkloads().remove(workload);
 			}
 
 		});
@@ -199,12 +205,16 @@ public class PreprocessingNoGtApp {
 		model.getNurses().forEach(nurse -> {
 			nurse.getRosters().forEach(roster -> {
 				model.getRooms().forEach(room -> {
-					final Shift shift = getShift(room, roster.getShiftNo());
-					final VirtualShiftToRoster v = IhtcvirtualmetamodelFactory.eINSTANCE.createVirtualShiftToRoster();
-					v.setIsSelected(false);
-					v.setRoster(roster);
-					v.setShift(shift);
-					roster.getVirtualShift().add(v);
+					try {
+						final Shift shift = getShift(room, roster.getShiftNo());
+						final VirtualShiftToRoster v = IhtcvirtualmetamodelFactory.eINSTANCE
+								.createVirtualShiftToRoster();
+						v.setIsSelected(false);
+						v.setRoster(roster);
+						v.setShift(shift);
+						roster.getVirtualShift().add(v);
+					} catch (final UnsupportedOperationException ex) {
+					}
 				});
 			});
 		});
