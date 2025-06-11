@@ -227,7 +227,7 @@ constraint with findBlockedTa {
 	&
 	
 	// The second TA must be removed from one of their previously
-	// assigned occurrence
+	// assigned occurrences
 	mappings.taOccurrenceRemove->filter( //
 		element.nodes.ta != context.nodes.ta //
 		& element.nodes.occurrence != context.nodes.occurrence //
@@ -238,7 +238,7 @@ constraint with findBlockedTa {
 // must be a corresponding instance of the type `taToOccurrence` in order
 // to repair the module.
 constraint with taOccurrenceRemove {
-	mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value) == 1
+	mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value) == context.value
 }
 
 // TAs must not have conflicting assignments.

@@ -370,6 +370,9 @@ public class TeachingAssistantKclValidator {
 		}
 
 		if (checkForValidSolution && session.getNumTAsPerSession() != so.getTas().size()) {
+			logger.warning(
+					"Session occurrence " + so.getName() + " did not get the right amount of TAs assigned. Requested: "
+							+ session.getNumTAsPerSession() + "; assigned: " + so.getTas().size());
 			return false;
 		}
 
