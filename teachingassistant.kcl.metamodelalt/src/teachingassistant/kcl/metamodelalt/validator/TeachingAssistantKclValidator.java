@@ -180,16 +180,13 @@ public class TeachingAssistantKclValidator {
 
 		// SessionOccurrences
 		{
-			// Collect all session occurrences
-			final Set<SessionOccurrence> allFoundSessionOccurrences = new HashSet<>();
-			model.getModules().forEach(module -> {
-				module.getSessions().forEach(session -> {
-					allFoundSessionOccurrences.addAll(session.getOccurrences());
-				});
-			});
 			boolean sessionOccurrencesValid = true;
-			for (final SessionOccurrence so : allFoundSessionOccurrences) {
-				sessionOccurrencesValid = sessionOccurrencesValid & validate(so, model);
+			for (final Module module : model.getModules()) {
+				for (final TeachingSession session : module.getSessions()) {
+					for (final SessionOccurrence so : session.getOccurrences()) {
+						sessionOccurrencesValid = sessionOccurrencesValid & validate(so, model, session);
+					}
+				}
 			}
 			logger.info("=> All session occurrences are valid: " + sessionOccurrencesValid);
 			valid = valid & sessionOccurrencesValid;
@@ -350,11 +347,12 @@ public class TeachingAssistantKclValidator {
 	 * Validate a given session occurrence `so` in the context of the complete
 	 * model.
 	 * 
-	 * @param so    Session occurrence to validate.
-	 * @param model Complete model.
+	 * @param so      Session occurrence to validate.
+	 * @param model   Complete model.
+	 * @param session Teaching session this occurrence belongs to.
 	 * @return True if the given session occurrence `so` was valid.
 	 */
-	private boolean validate(final SessionOccurrence so, final TAAllocation model) {
+	private boolean validate(final SessionOccurrence so, final TAAllocation model, final TeachingSession session) {
 		if (so == null) {
 			return false;
 		}
@@ -368,6 +366,13 @@ public class TeachingAssistantKclValidator {
 		}
 
 		if (checkForValidSolution && so.getTas().isEmpty()) {
+			return false;
+		}
+
+		if (checkForValidSolution && session.getNumTAsPerSession() != so.getTas().size()) {
+			logger.warning(
+					"Session occurrence " + so.getName() + " did not get the right amount of TAs assigned. Requested: "
+							+ session.getNumTAsPerSession() + "; assigned: " + so.getTas().size());
 			return false;
 		}
 
