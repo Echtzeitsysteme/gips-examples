@@ -23,6 +23,7 @@ import ihtcvirtualmetamodel.importexport.JsonToModelLoader;
 import ihtcvirtualmetamodel.importexport.ModelToJsonExporter;
 import ihtcvirtualpostprocessing.PostprocessingGtApp;
 import ihtcvirtualpreprocessing.PreprocessingGtApp;
+import ihtcvirtualpreprocessing.PreprocessingNoGtApp;
 
 /**
  * This abstract runner contains utility methods to wrap a given GIPS API object
@@ -70,8 +71,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	/**
 	 * Default pre-processing output XMI path.
 	 */
-	public String preprocessingPath = instancePath.substring(0, instancePath.lastIndexOf(".xmi"))
-			+ "_pre-proc.xmi";
+	public String preprocessingPath = instancePath.substring(0, instancePath.lastIndexOf(".xmi")) + "_pre-proc.xmi";
 
 	/**
 	 * Default instance solved XMI path.
@@ -280,6 +280,21 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		final PreprocessingGtApp app = new PreprocessingGtApp(instancePath, outputPath);
 		app.run();
 		// The app will terminate itself
+	}
+
+	/**
+	 * Pre-processing method that runs the separated Java-based pre-processing
+	 * implementation. The given `instancePath` will be used to load the XMI model.
+	 * The produced (altered) model file will be written to `outputPath`.
+	 * 
+	 * @param instancePath Model (XMI) to load.
+	 * @param outputPath   Model (XMI) to save the result to.
+	 */
+	protected void preprocessNoGt(final String instancePath, final String outputPath) {
+		Objects.requireNonNull(instancePath);
+
+		final PreprocessingNoGtApp app = new PreprocessingNoGtApp(instancePath, outputPath);
+		app.run();
 	}
 
 	/**

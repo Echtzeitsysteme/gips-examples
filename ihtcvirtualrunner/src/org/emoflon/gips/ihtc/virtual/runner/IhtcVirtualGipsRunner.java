@@ -26,6 +26,12 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	private boolean postProc = false;
 
 	/**
+	 * If true, the pre-processing will be executed with the Java-only (i.e., no GT)
+	 * implementation.
+	 */
+	private boolean preProcNoGt = false;
+
+	/**
 	 * Create a new instance of this class.
 	 */
 	public IhtcVirtualGipsRunner() {
@@ -71,12 +77,16 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		//
 		// Pre-processing via a separated GT rule set
 		//
-
+		
 		if (verbose) {
-			logger.info("=> Start pre-processing GT.");
+			logger.info("=> Start pre-processing.");
 		}
 
-		preprocess(instancePath, preprocessingPath);
+		if (preProcNoGt) {
+			preprocessNoGt(instancePath, preprocessingPath);
+		} else {
+			preprocess(instancePath, preprocessingPath);
+		}
 
 		//
 		// Initialize GIPS API
