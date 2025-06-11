@@ -1,7 +1,12 @@
-package org.emoflon.gips.ihtc.runner;
+package org.emoflon.gips.ihtc.virtual.runner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -9,22 +14,28 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.gips.core.api.GipsEngineAPI;
 import org.emoflon.gips.core.milp.SolverOutput;
+import org.emoflon.gips.ihtc.virtual.runner.utils.FileUtils;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
-import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
-import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
-import ihtcmetamodel.Hospital;
-import ihtcmetamodel.importexport.JsonToModelLoader;
-import ihtcmetamodel.importexport.ModelToJsonExporter;
-import ihtcmetamodel.utils.FileUtils;
+import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
+import ihtcvirtualmetamodel.Root;
+import ihtcvirtualmetamodel.importexport.JsonToModelLoader;
+import ihtcvirtualmetamodel.importexport.ModelToJsonExporter;
+import ihtcvirtualpostprocessing.PostprocessingGtApp;
+import ihtcvirtualpreprocessing.PreprocessingGtApp;
 
 /**
  * This abstract runner contains utility methods to wrap a given GIPS API object
- * in the context of the IHTC 2024 example.
+ * in the context of the IHTC 2024 example using virtual edges/nodes.
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
-public abstract class AbstractIhtcGipsRunner {
+public abstract class AbstractIhtcVirtualGipsRunner {
+
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final Logger logger = Logger.getLogger(AbstractIhtcVirtualGipsRunner.class.getName());
 
 	/**
 	 * The scenario (JSON) file to load.
@@ -39,7 +50,7 @@ public abstract class AbstractIhtcGipsRunner {
 	/**
 	 * Data set folder location.
 	 */
-	public String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_test_dataset/";
+	public String datasetFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_test_dataset/";
 
 	/**
 	 * Default input path.
@@ -49,12 +60,18 @@ public abstract class AbstractIhtcGipsRunner {
 	/**
 	 * Default instance folder path.
 	 */
-	public String instanceFolder = projectFolder + "/../ihtcmetamodel/instances/";
+	public String instanceFolder = projectFolder + "/../ihtcvirtualmetamodel/instances/";
 
 	/**
 	 * Default instance XMI path.
 	 */
 	public String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
+
+	/**
+	 * Default pre-processing output XMI path.
+	 */
+	public String preprocessingPath = instancePath.substring(0, instancePath.lastIndexOf(".xmi"))
+			+ "_pre-proc.xmi";
 
 	/**
 	 * Default instance solved XMI path.
@@ -63,9 +80,15 @@ public abstract class AbstractIhtcGipsRunner {
 			+ "_solved.xmi";
 
 	/**
+	 * Default post-processing output XMI path.
+	 */
+	public String postProcOutputPath = gipsOutputPath.substring(0, gipsOutputPath.lastIndexOf(".xmi"))
+			+ "_post-proc.xmi";
+
+	/**
 	 * Default JSON output folder path.
 	 */
-	public String datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/";
+	public String datasetSolutionFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/";
 
 	/**
 	 * Default JSON output file path.
@@ -73,51 +96,18 @@ public abstract class AbstractIhtcGipsRunner {
 	public String outputPath = datasetSolutionFolder + "sol_"
 			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
-	/**
-	 * Runtime tick.
-	 */
-	private long tick = 0;
-
-	/**
-	 * Runtime tock.
-	 */
-	private long tock = 0;
-
-	/**
-	 * Sets the current system time as tick value. The tock value gets re-set to 0.
-	 */
-	protected void tick() {
-		this.tick = System.nanoTime();
-		this.tock = 0;
-	}
-
-	/**
-	 * Sets the current system time as tock value.
-	 */
-	protected void tock() {
-		this.tock = System.nanoTime();
-	}
-
-	/**
-	 * Prints the measured wall clock runtime value to System.out if its value is
-	 * smaller than 10 minutes and to System.err otherwise.
-	 */
-	protected void printWallClockRuntime() {
-		final double runtime = 1.0 * (tock - tick) / 1_000_000_000;
-
-		if (runtime < 0) {
-			throw new IllegalArgumentException("Runtime value was negative.");
-		}
-
-		final String runtimeString = String.format("%,4.2f", runtime);
-
-		if (runtime > 600) {
-			System.err.println("=> Time limit of 10 minutes violated.");
-			System.err.println("=> Wall clock run time: " + runtimeString + "s.");
-		} else {
-			System.out.println("=> Time limit of 10 minutes respected.");
-			System.out.println("=> Wall clock run time: " + runtimeString + "s.");
-		}
+	public AbstractIhtcVirtualGipsRunner() {
+		// Configure logging
+		logger.setUseParentHandlers(false);
+		final ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new Formatter() {
+			@Override
+			public String format(final LogRecord record) {
+				Objects.requireNonNull(record, "Given log entry was null.");
+				return record.getMessage() + System.lineSeparator();
+			}
+		});
+		logger.addHandler(handler);
 	}
 
 	/**
@@ -127,6 +117,9 @@ public abstract class AbstractIhtcGipsRunner {
 	 * @param path    (XMI) path to save the results to.
 	 */
 	protected void gipsSave(final GipsEngineAPI<?, ?> gipsApi, final String path) {
+		Objects.requireNonNull(gipsApi);
+		Objects.requireNonNull(path);
+
 		try {
 			gipsApi.saveResult(path);
 		} catch (final IOException e) {
@@ -141,6 +134,9 @@ public abstract class AbstractIhtcGipsRunner {
 	 * @param rs   ResourceSet which should be saved to file.
 	 */
 	protected void writeXmiToFile(final String path, final ResourceSet rs) {
+		Objects.requireNonNull(path);
+		Objects.requireNonNull(rs);
+
 		// Workaround: Always use absolute path
 		final URI absPath = URI.createFileURI(path);
 
@@ -169,15 +165,18 @@ public abstract class AbstractIhtcGipsRunner {
 	 * @return Returns the objective value.
 	 */
 	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi, final boolean verbose) {
-		gipsApi.buildProblem(true);
-		final SolverOutput output = gipsApi.solveProblem();
+		Objects.requireNonNull(gipsApi);
+		Objects.requireNonNull(verbose);
+
+		gipsApi.buildProblemTimed(true);
+		final SolverOutput output = gipsApi.solveProblemTimed();
 		if (output.solutionCount() == 0) {
 			gipsApi.terminate();
+			logger.warning("No solution found. Aborting.");
 			throw new InternalError("No solution found!");
 		}
 		if (verbose) {
-			System.out.println("=> Objective value: " + output.objectiveValue());
-			System.out.println("---");
+			logger.info("=> Objective value: " + output.objectiveValue());
 		}
 		return output.objectiveValue();
 	}
@@ -188,6 +187,8 @@ public abstract class AbstractIhtcGipsRunner {
 	 * @param path Path to check the file existence for.
 	 */
 	protected void checkIfFileExists(final String path) {
+		Objects.requireNonNull(path);
+
 		final File xmiInputFile = new File(path);
 		if (!xmiInputFile.exists() || xmiInputFile.isDirectory()) {
 			throw new IllegalArgumentException("File <" + path + "> could not be found.");
@@ -203,38 +204,22 @@ public abstract class AbstractIhtcGipsRunner {
 	 * @param verbose If true, the method will print some more information about the
 	 *                GT rule application.
 	 */
-	protected void applySolution(final HardonlyGipsAPI gipsApi, final boolean verbose) {
-		// Apply found solution
-		final long tick = System.nanoTime();
-		gipsApi.getAadp().applyNonZeroMappings(false);
-		gipsApi.getAnrs().applyNonZeroMappings(false);
-		gipsApi.getArp().applyNonZeroMappings(false);
-		gipsApi.getAsp().applyNonZeroMappings(false);
-		final long tock = System.nanoTime();
-		if (verbose) {
-			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
-		}
-	}
+	protected void applySolution(final IhtcvirtualgipssolutionGipsAPI gipsApi, final boolean verbose) {
+		Objects.requireNonNull(gipsApi);
 
-	/**
-	 * Applies the best found solution (i.e., all non-zero mappings) with a given
-	 * IHTC 2024 project GIPS API object.
-	 * 
-	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
-	 *                information from.
-	 * @param verbose If true, the method will print some more information about the
-	 *                GT rule application.
-	 */
-	protected void applySolution(final SoftcnstrtuningGipsAPI gipsApi, final boolean verbose) {
 		// Apply found solution
 		final long tick = System.nanoTime();
-		gipsApi.getAadp().applyNonZeroMappings(false);
-		gipsApi.getAnrs().applyNonZeroMappings(false);
-		gipsApi.getArp().applyNonZeroMappings(false);
-		gipsApi.getAsp().applyNonZeroMappings(false);
+		gipsApi.getSelectedOperationDay().applyNonZeroMappings();
+		gipsApi.getSelectedShiftToRoster().applyNonZeroMappings();
+		gipsApi.getSelectedShiftToFirstWorkload().applyNonZeroMappings();
+		gipsApi.getSelectedExtendingShiftToFirstWorkload().applyNonZeroMappings();
+		gipsApi.getSelectedOccupantNodes().applyNonZeroMappings();
+		// Alternative:
+//		gipsApi.applyAllNonZeroMappings();
+
 		final long tock = System.nanoTime();
 		if (verbose) {
-			System.out.println("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+			logger.info("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
 		}
 	}
 
@@ -247,10 +232,10 @@ public abstract class AbstractIhtcGipsRunner {
 	protected void transformJsonToModel(final String inputJsonPath, final String outputXmiPath) {
 		final JsonToModelLoader loader = new JsonToModelLoader();
 		loader.jsonToModel(inputJsonPath);
-		final Hospital model = loader.getModel();
+		final Root model = loader.getModel();
 		try {
 			// Prepare folder if necessary
-			if (inputJsonPath.contains("/")) {
+			if (outputXmiPath.contains("/")) {
 				FileUtils.prepareFolder(outputXmiPath.substring(0, outputXmiPath.lastIndexOf("/")));
 			}
 			FileUtils.save(model, outputXmiPath);
@@ -264,9 +249,66 @@ public abstract class AbstractIhtcGipsRunner {
 	 */
 	protected void transformModelToJson() {
 		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
-		final Hospital solvedHospital = (Hospital) loadedResource.getContents().get(0);
+		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
 		exporter.modelToJson(outputPath);
+	}
+
+	/**
+	 * Pre-processing method that runs the separated GT rule set. The given
+	 * `instancePath` will be used to load the XMI model. The produced (altered)
+	 * model file will also be written to `instancePath`.
+	 * 
+	 * @param instancePath Model (XMI) to load and overwrite.
+	 */
+	@Deprecated
+	protected void preprocess(final String instancePath) {
+		preprocess(instancePath, instancePath);
+	}
+
+	/**
+	 * Pre-processing method that runs the separated GT rule set. The given
+	 * `instancePath` will be used to load the XMI model. The produced (altered)
+	 * model file will be written to `outputPath`.
+	 * 
+	 * @param instancePath Model (XMI) to load.
+	 * @param outputPath   Model (XMI) to save the result to.
+	 */
+	protected void preprocess(final String instancePath, final String outputPath) {
+		Objects.requireNonNull(instancePath);
+
+		final PreprocessingGtApp app = new PreprocessingGtApp(instancePath, outputPath);
+		app.run();
+		// The app will terminate itself
+	}
+
+	/**
+	 * Post-processing method that runs the separated GT rule set. The given
+	 * `instancePath` will be used to load the XMI model. The produced (altered)
+	 * model file will also be written to `instancePath`.
+	 * 
+	 * @param instancePath Model (XMI) to load and overwrite.
+	 */
+	@Deprecated
+	protected void postprocess(final String instancePath) {
+		postprocess(instancePath, instancePath);
+	}
+
+	/**
+	 * Post-processing method that runs the separated GT rule set. The given
+	 * `instancePath` will be used to load the XMI model. The produced (altered)
+	 * model file be written to `outputPath`.
+	 * 
+	 * @param instancePath Model (XMI) to load.
+	 * @param outputPath   Model (XMI) output path.
+	 */
+	protected void postprocess(final String instancePath, final String outputPath) {
+		Objects.requireNonNull(instancePath);
+		Objects.requireNonNull(outputPath);
+
+		final PostprocessingGtApp app = new PostprocessingGtApp(instancePath, outputPath);
+		app.run();
+		// The app will terminate itself
 	}
 
 	/**
