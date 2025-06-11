@@ -41,7 +41,9 @@ rule assignNurseToRoom {
 		-shifts -> shift
 	}
 
-	shift: Shift
+	shift: Shift {
+		++ - virtualRoster -> vnew
+	}
 
 	++ vnew: VirtualShiftToRoster {
 		++ -roster -> roster
@@ -118,6 +120,7 @@ rule assignPatientToRoom {
 	
 	s : Shift {
 		- room -> r
+		++ - virtualWorkload -> vnew
 	}
 	
 	r : Room
@@ -185,6 +188,7 @@ rule extendPatientStay {
 	
 	nexts : Shift {
 		- room -> r
+		++ - virtualWorkload -> vnew
 	}
 	
 	r : Room
@@ -224,6 +228,7 @@ rule preprocessOccupantsWorkload {
 		// Explicitly delete both edges
 		// (Maybe deleting one is sufficient)
 		-- - derivedWorkloads -> w
+		++ - virtualWorkload -> vnew
 	}
 	
 	r : Room
@@ -270,7 +275,9 @@ rule assignSurgeonToOt {
 		- capacities -> c
 	}
 	
-	c : Capacity
+	c : Capacity {
+		++ - virtualOpTime -> vnew
+	}
 	
 	++ vnew : VirtualOpTimeToCapacity {
 		++ - opTime -> op
@@ -327,9 +334,13 @@ rule fixOperationDay {
 		- opTimes -> op
 	}
 	
-	op : OpTime
+	op : OpTime {
+		++ - virtualWorkload -> vnew
+	}
 	
-	c : Capacity
+	c : Capacity {
+		++ - virtualWorkload -> vnew2
+	}
 	
 	vexist : VirtualOpTimeToCapacity {
 		- capacity -> c
