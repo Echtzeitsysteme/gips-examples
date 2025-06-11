@@ -3,11 +3,22 @@ package teachingassistant.kcl.metamodelalt.comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import metamodel.TAAllocation;
+import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.gips.utils.Tuple;
 
 public class SolutionComparator {
+
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final static Logger logger = Logger.getLogger(SolutionComparator.class.getName());
+	
+	static {
+		LoggingUtils.configureLogging(logger);
+	}
 
 	/**
 	 * Compares to given solutions regarding the number of identical mappings
@@ -48,7 +59,7 @@ public class SolutionComparator {
 			}
 		}
 
-		System.out.println(counter + " out of " + firstTuples.size() + " mappings were identical.");
+		logger.info(counter + " out of " + firstTuples.size() + " mappings were identical.");
 	}
 
 }
