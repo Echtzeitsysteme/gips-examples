@@ -1,5 +1,10 @@
 package teachingassistant.kcl.gipssolutioninchardmultiple.runner;
 
+import org.eclipse.emf.ecore.resource.Resource;
+
+import metamodel.TAAllocation;
+import teachingassistant.kcl.metamodelalt.comparator.SolutionComparator;
+import teachingassistant.kcl.metamodelalt.export.FileUtils;
 import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
 import teachingassistant.kcl.metamodelalt.generator.TeachingAssistantKclManipulator;
 import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
@@ -30,6 +35,8 @@ public class TaIncMultiplePipelineRunner {
 		final String projectFolder = System.getProperty("user.dir");
 		final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodelalt/instances/";
 		final String filePath = instanceFolder + TeachingAssistantKclValidator.SCENARIO_FILE_NAME;
+		final Resource firstResource = FileUtils.loadModel(filePath);
+		final TAAllocation firstSolution = (TAAllocation) firstResource.getContents().get(0);
 
 		//
 		// Alter the solution, i.e., violate a constraint by changing the model
@@ -50,6 +57,13 @@ public class TaIncMultiplePipelineRunner {
 
 		// Validate the solution
 		TeachingAssistantKclValidator.main(null);
+
+		// Save second solution
+		final Resource secondResource = FileUtils.loadModel(filePath);
+		final TAAllocation secondSolution = (TAAllocation) secondResource.getContents().get(0);
+
+		// Compare
+		SolutionComparator.compareSolutions(firstSolution, secondSolution);
 
 		System.exit(0);
 	}

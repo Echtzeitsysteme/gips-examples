@@ -1,14 +1,10 @@
 package teachingassistant.kcl.gipssolutionaltinc.runner;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
 import org.eclipse.emf.ecore.resource.Resource;
 
 import metamodel.TAAllocation;
-import teachingassistant.kcl.gips.utils.Tuple;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.PreprocessingGtApp;
+import teachingassistant.kcl.metamodelalt.comparator.SolutionComparator;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
 import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
 import teachingassistant.kcl.metamodelalt.generator.TeachingAssistantKclManipulator;
@@ -73,51 +69,9 @@ public class TaIncPipelineRunner {
 		final TAAllocation secondSolution = (TAAllocation) secondResource.getContents().get(0);
 
 		// Compare
-		compareSolutions(firstSolution, secondSolution);
+		SolutionComparator.compareSolutions(firstSolution, secondSolution);
 
 		System.exit(0);
-	}
-
-	/**
-	 * Compares to given solutions regarding the number of identical mappings
-	 * chosen.
-	 * 
-	 * @param first  First solution.
-	 * @param second Second solution.
-	 */
-	private static void compareSolutions(final TAAllocation first, final TAAllocation second) {
-		Objects.requireNonNull(first);
-		Objects.requireNonNull(second);
-
-		final Set<Tuple<String, String>> firstTuples = new HashSet<>();
-		first.getModules().forEach(module -> module.getSessions()
-				.forEach(session -> session.getOccurrences().forEach(occ -> occ.getTas().forEach(ta -> {
-					firstTuples.add(new Tuple<String, String>(occ.getName(), ta.getName()));
-				}))));
-
-		final Set<Tuple<String, String>> secondTuples = new HashSet<>();
-		second.getModules().forEach(module -> module.getSessions()
-				.forEach(session -> session.getOccurrences().forEach(occ -> occ.getTas().forEach(ta -> {
-					secondTuples.add(new Tuple<String, String>(occ.getName(), ta.getName()));
-				}))));
-
-		// Sanity check: both sets must be equal in size
-		if (firstTuples.size() != secondTuples.size()) {
-			throw new InternalError("Set sizes are different: " + firstTuples.size() + " vs. " + secondTuples.size());
-		}
-
-		// Count identical tuples
-		int counter = 0;
-		for (final Tuple<String, String> t : secondTuples) {
-			for (final Tuple<String, String> tOrig : firstTuples) {
-				if (t.equals(tOrig)) {
-					counter++;
-					break;
-				}
-			}
-		}
-
-		System.out.println(counter + " out of " + firstTuples.size() + " mappings were identical.");
 	}
 
 }
