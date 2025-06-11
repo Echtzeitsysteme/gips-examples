@@ -26,18 +26,9 @@ pattern findTaUnavailableSession {
 condition taAvailableInSession = forbid findTaUnavailableSession
 
 pattern findBlockedTa {
-//	root : TAAllocation {
-//		- tas -> ta
-//		- modules -> module
-//	}
-	
 	ta : TA {
 		- unavailable_because_lessons -> entry
 	}
-	
-//	module : Module {
-//		- sessions -> session
-//	}
 	
 	session : TeachingSession {
 		- occurrences -> occurrence
@@ -55,11 +46,6 @@ pattern findBlockedTa {
 // This rule respects the condition that the TA must not have
 // blocked the respective time table entry of the session occurrence.
 rule assignTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
-	}
-	
 	ta : TA
 	
 	module : Module {
@@ -93,16 +79,7 @@ when taAvailableInSession
 
 // Rule to remove a TA from a specific session occurrence.
 rule removeTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
-	}
-	
 	ta : TA
-	
-	module : Module {
-		- sessions -> session
-	}
 	
 	session : TeachingSession {
 		- occurrences -> occurrence
@@ -127,13 +104,6 @@ rule removeTa {
 // This pattern does respect partly overlapping time
 // table entries.
 pattern findConflictingEntriesWithTa {
-	root : TAAllocation {
-		- timetable -> entryA
-		- timetable -> entryB
-		- weeks -> week
-		- tas -> ta
-	}
-	
 	week : Week
 	
 	entryA : TimeTableEntry {
@@ -151,27 +121,13 @@ pattern findConflictingEntriesWithTa {
 
 // Find all possible combinations of TAs and weeks
 pattern findTaWeekCombination {
-	root : TAAllocation {
-		- weeks -> w
-		- tas -> ta
-	}
-	
 	w : Week
 	ta : TA
 }
 
 // Pattern to find an existing TA assignment.
 pattern taExistingAssignment {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
-	}
-	
 	ta : TA
-	
-	module : Module {
-		- sessions -> session
-	}
 	
 	session : TeachingSession {
 		- occurrences -> occurrence
@@ -193,14 +149,6 @@ pattern taExistingAssignment {
 
 // Find session occurrence
 pattern findSessionOccurrence {
-	root : TAAllocation {
-		- modules -> module
-	}
-	
-	module : Module {
-		- sessions -> session
-	}
-	
 	session : TeachingSession {
 		- occurrences -> occurrence
 	}
@@ -211,11 +159,6 @@ pattern findSessionOccurrence {
 // Find a TA with a green employment approval status
 // for a specific module.
 pattern findGreenTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> mod
-	}
-	
 	ta : TA
 	
 	mod : Module {
@@ -231,11 +174,6 @@ pattern findGreenTa {
 // Find a TA with an amber employment approval status
 // for a specific module.
 pattern findAmberTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> mod
-	}
-	
 	ta : TA
 	
 	mod : Module {
