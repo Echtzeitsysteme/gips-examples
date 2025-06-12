@@ -1,40 +1,34 @@
 package teachingassistant.kcl.gipssolutionaltinc.runner;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-
-import org.eclipse.emf.ecore.resource.Resource;
-
 import metamodel.TAAllocation;
-import teachingassistant.kcl.gips.utils.AbstractGipsTeachingAssistantRunner;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.PreprocessingGtApp;
 import teachingassistant.kcl.metamodelalt.comparator.SolutionComparator;
-import teachingassistant.kcl.metamodelalt.export.FileUtils;
-import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
-import teachingassistant.kcl.metamodelalt.generator.TeachingAssistantKclManipulator;
 import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
 
 /**
  * Runs the teaching assistant incremental pipeline (scenario generator, GIPSL
  * optimization, manipulator, incremental solution, and validator).
  */
-public class TaIncPipelineRunner {
+public class TaIncPipelineRunner extends AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 
-	final String projectFolder = System.getProperty("user.dir");
-	final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodelalt/instances/";
-	final String filePath = instanceFolder + TeachingAssistantKclValidator.SCENARIO_FILE_NAME;
-	final String filePathPlain = instanceFolder + AbstractGipsTeachingAssistantRunner.scenarioFileName;
-	final String filePathReplan = instanceFolder + "/kcl_ta_allocation_total-replan.xmi";
-
+	/**
+	 * No instantiations of this class.
+	 */
 	private TaIncPipelineRunner() {
 	}
 
+	/**
+	 * Entry point for the execution of this runner. All arguments will be ignored.
+	 * 
+	 * @param args All arguments will be ignored.
+	 */
 	public static void main(final String[] args) {
 		new TaIncPipelineRunner().run();
 	}
 
+	/**
+	 * Runs the pipeline.
+	 */
 	private void run() {
 		// Chose whether to generate a scenario or use a scenario that can only be
 		// solved by a complete re-plan procedure.
@@ -54,61 +48,16 @@ public class TaIncPipelineRunner {
 		TaIncRunner.main(null);
 
 		// Validate the solution
-		TeachingAssistantKclValidator.main(null);
+		validate();
 
 		// Save second solution
-		final Resource secondResource = FileUtils.loadModel(filePath);
-		final TAAllocation secondSolution = (TAAllocation) secondResource.getContents().get(0);
+		final TAAllocation secondSolution = loadModelFromFile(filePath);
 
-		// Compare
+		// Compare both solutions
 		SolutionComparator.compareSolutions(firstSolution, secondSolution);
 
+		// End
 		System.exit(0);
-	}
-
-	private TAAllocation prepareScenarioGen() {
-		// Generate the initial model
-		SimpleTaKclGenerator.main(null);
-		return commonPreparation();
-	}
-
-	private TAAllocation prepareScenarioReplan() {
-		// Copy re-planning scenario XMI file
-		try {
-			Files.copy(Path.of(filePathReplan), Path.of(filePathPlain), StandardCopyOption.REPLACE_EXISTING);
-		} catch (final IOException e) {
-			throw new InternalError(e);
-		}
-
-		return commonPreparation();
-	}
-
-	private TAAllocation commonPreparation() {
-		//
-		// Optimize/solve the initial model/problem
-		//
-
-		teachingassistant.kcl.gipssolutionalt.runner.TaBatchRunner.main(null);
-
-		// Validate the solution
-		TeachingAssistantKclValidator.main(null);
-
-		// Save initial solution
-
-		final Resource firstResource = FileUtils.loadModel(filePath);
-		final TAAllocation firstSolution = (TAAllocation) firstResource.getContents().get(0);
-
-		//
-		// Alter the solution, i.e., violate a constraint by changing the model
-		//
-
-		final TeachingAssistantKclManipulator manipulator = new TeachingAssistantKclManipulator(filePath);
-		manipulator.executeBlocking();
-
-		// Model should now be invalid
-		TeachingAssistantKclValidator.main(null);
-
-		return firstSolution;
 	}
 
 }
