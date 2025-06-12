@@ -122,7 +122,9 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 		applyMatches(api.preprocessOccupantsWorkload(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.assignNurseToRoom(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.assignSurgeonToOt(), GT_RULE_APPLICATION_LIMIT);
-		applyMatches(api.fixOperationDay(), GT_RULE_APPLICATION_LIMIT);
+//		applyMatches(api.fixOperationDay(), GT_RULE_APPLICATION_LIMIT);
+		applyMatches(api.fixOperationDayOpTime(), GT_RULE_APPLICATION_LIMIT);
+		applyMatches(api.fixOperationDayCapacity(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.assignPatientToRoom(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.extendPatientStay(), GT_RULE_APPLICATION_LIMIT);
 
@@ -159,6 +161,7 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 		int counter = 0;
 		while (rule.isApplicable()) {
 			if (counter >= limit) {
+				logger.info(this.getClass().getSimpleName() + ": GT rule application limit of " + limit + " reached.");
 				break;
 			}
 			rule.apply();

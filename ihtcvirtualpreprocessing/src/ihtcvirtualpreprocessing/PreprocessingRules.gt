@@ -139,6 +139,10 @@ rule assignPatientToRoom {
 	// a day after the patient's due day so we can already remove these
 	// matches using the PM.
 	# s.shiftNo / 3 <= p.dueDay
+	
+	// Day of the first assigned shift must match the day of the OT's
+	// capacity object.
+	# s.shiftNo /3 == c.day
 }
 when compatibleRoomAndNotAssigned
 
@@ -304,6 +308,7 @@ pattern findVirtualWorkloadToOpTime {
 		- workload -> w
 	}
 }
+condition noVirtualEdgeWorkloadToOpTime = forbid findVirtualWorkloadToOpTime
 
 pattern findVirtualWorkloadToCapacity {
 	w: Workload
@@ -314,15 +319,86 @@ pattern findVirtualWorkloadToCapacity {
 		- workload -> w
 	}
 }
+condition noVirtualEdgeWorkloadToCapacity = forbid findVirtualWorkloadToCapacity
 
-condition noWorkloadAssignment = forbid findVirtualWorkloadToOpTime && forbid findVirtualWorkloadToCapacity
+//condition noWorkloadAssignment = forbid findVirtualWorkloadToOpTime && forbid findVirtualWorkloadToCapacity
 
-rule fixOperationDay {
-	root : Root {
-		- patients -> p
-		- surgeons -> s
-	}
-	
+//pattern integratedWorkloadToOp {
+//	w: Workload
+//	op: OpTime
+//	
+//	va : VirtualWorkloadToOpTime {
+//		- opTime -> op
+//		- workload -> w
+//	}
+//	
+//	c: Capacity
+//	
+//	vb : VirtualWorkloadToCapacity {
+//		- capacity -> c
+//		- workload -> w
+//	}
+//}
+//
+//condition noWorkloadAssignment = forbid integratedWorkloadToOp
+
+//rule fixOperationDay {
+//	root : Root {
+//		- patients -> p
+//		- surgeons -> s
+//	}
+//	
+//	p : Patient {
+//		- firstWorkload -> w
+//		- surgeon -> s
+//	}
+//	
+//	w : Workload
+//	
+//	s : Surgeon {
+//		- opTimes -> op
+//	}
+//	
+//	op : OpTime {
+//		++ - virtualWorkload -> vnew
+//	}
+//	
+//	c : Capacity {
+//		++ - virtualWorkload -> vnew2
+//	}
+//	
+//	vexist : VirtualOpTimeToCapacity {
+//		- capacity -> c
+//		- opTime -> op
+//		// Explicitly set the opposite edge
+//		++ - enables_virtualWorkloadToOpTime -> vnew
+//		++ - enables_virtual_WorkloadToCapacity -> vnew2
+//	}
+//	
+//	++ vnew : VirtualWorkloadToOpTime {
+//		++ - opTime -> op
+//		++ - workload -> w
+//		.isSelected := false
+//		++ - requires_virtualOpTimeToCapacity -> vexist
+//	}
+//	
+//	++ vnew2 : VirtualWorkloadToCapacity {
+//		++ - capacity -> c
+//		++ - workload -> w
+//		.isSelected := false
+//		++ - requires_virtualOpTimeToCapacity -> vexist
+//	}
+//	
+//	# p.earliestDay <= op.day
+//	# op.day <= p.dueDay
+//	# p.surgeryDuration <= op.maxOpTime
+//	# p.surgeryDuration <= c.maxCapacity
+////	# p.isOccupant == false
+//	// Already checked via the edge between `p` and `s`
+//}
+//when noWorkloadAssignment
+
+rule fixOperationDayOpTime {
 	p : Patient {
 		- firstWorkload -> w
 		- surgeon -> s
@@ -338,16 +414,10 @@ rule fixOperationDay {
 		++ - virtualWorkload -> vnew
 	}
 	
-	c : Capacity {
-		++ - virtualWorkload -> vnew2
-	}
-	
 	vexist : VirtualOpTimeToCapacity {
-		- capacity -> c
 		- opTime -> op
 		// Explicitly set the opposite edge
 		++ - enables_virtualWorkloadToOpTime -> vnew
-		++ - enables_virtual_WorkloadToCapacity -> vnew2
 	}
 	
 	++ vnew : VirtualWorkloadToOpTime {
@@ -357,6 +427,31 @@ rule fixOperationDay {
 		++ - requires_virtualOpTimeToCapacity -> vexist
 	}
 	
+	# p.earliestDay <= op.day
+	# op.day <= p.dueDay
+	# p.surgeryDuration <= op.maxOpTime
+//	# p.isOccupant == false
+	// Already checked via the edge between `p` and `s`
+}
+when noVirtualEdgeWorkloadToOpTime
+
+rule fixOperationDayCapacity {
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload
+	
+	c : Capacity {
+		++ - virtualWorkload -> vnew2
+	}
+	
+	vexist : VirtualOpTimeToCapacity {
+		- capacity -> c
+		// Explicitly set the opposite edge
+		++ - enables_virtual_WorkloadToCapacity -> vnew2
+	}
+	
 	++ vnew2 : VirtualWorkloadToCapacity {
 		++ - capacity -> c
 		++ - workload -> w
@@ -364,11 +459,8 @@ rule fixOperationDay {
 		++ - requires_virtualOpTimeToCapacity -> vexist
 	}
 	
-	# p.earliestDay <= op.day
-	# op.day <= p.dueDay
-	# p.surgeryDuration <= op.maxOpTime
 	# p.surgeryDuration <= c.maxCapacity
 //	# p.isOccupant == false
 	// Already checked via the edge between `p` and `s`
 }
-when noWorkloadAssignment
+when noVirtualEdgeWorkloadToCapacity
