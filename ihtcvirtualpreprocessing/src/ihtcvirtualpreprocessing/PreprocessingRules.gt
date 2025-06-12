@@ -368,5 +368,7 @@ rule fixOperationDay {
 	# op.day <= p.dueDay
 	# p.surgeryDuration <= op.maxOpTime
 	# p.surgeryDuration <= c.maxCapacity
+//	# p.isOccupant == false
+	// Already checked via the edge between `p` and `s`
 }
 when noWorkloadAssignment
