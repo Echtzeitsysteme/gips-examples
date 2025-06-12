@@ -1,11 +1,9 @@
 package ihtcvirtualpreprocessing;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
@@ -14,7 +12,6 @@ import java.util.logging.Logger;
 import ihtcvirtualmetamodel.Capacity;
 import ihtcvirtualmetamodel.IhtcvirtualmetamodelFactory;
 import ihtcvirtualmetamodel.OT;
-import ihtcvirtualmetamodel.OpTime;
 import ihtcvirtualmetamodel.Room;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Shift;
@@ -117,56 +114,62 @@ public class PreprocessingNoGtApp {
 
 	private void createVirtualWorkloadToOperationCandidates() {
 		Objects.requireNonNull(model);
-		final Set<Tuple<Workload, OpTime>> createdVirtualWorkloadToOpTime = new HashSet<>();
-		final Set<Tuple<Workload, Capacity>> createdVirtualWorkloadToCapacity = new HashSet<>();
 
 		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
 			final Workload w = patient.getFirstWorkload();
+
+			// Create virtual edges between Workload and OpTime
 			patient.getSurgeon().getOpTimes().forEach(opTime -> {
 				// Check time frame (stay of the patient)
 				if (patient.getEarliestDay() <= opTime.getDay() && opTime.getDay() <= patient.getDueDay()) {
 					// Check time frame (duration of the surgery - surgeon)
 					if (patient.getSurgeryDuration() <= opTime.getMaxOpTime()) {
-						final List<VirtualOpTimeToCapacity> opTimeCapacityCandidates = opTime.getVirtualCapacity();
-						for (final VirtualOpTimeToCapacity vExists : opTimeCapacityCandidates) {
-							final Capacity c = vExists.getCapacity();
+						// Check if respective opTime object has at least one OT capacity available
+						if (!opTime.getVirtualCapacity().isEmpty()) {
 
-							// Check time frame (duration of the surgery - capacity of the OT)
-							if (patient.getSurgeryDuration() <= c.getMaxCapacity()) {
-								// Check if one of the pairs was created before hand
-								if (createdVirtualWorkloadToOpTime.contains(new Tuple<Workload, OpTime>(w, opTime))
-										|| createdVirtualWorkloadToCapacity
-												.contains(new Tuple<Workload, Capacity>(w, c))) {
-									continue;
-								}
+							final VirtualWorkloadToOpTime vnew = IhtcvirtualmetamodelFactory.eINSTANCE
+									.createVirtualWorkloadToOpTime();
+							vnew.setIsSelected(false);
+							vnew.setOpTime(opTime);
+							vnew.setWorkload(w);
+							// TODO: the requires edge is not necessarily correct here
+							vnew.getRequires_virtualOpTimeToCapacity().add(opTime.getVirtualCapacity().get(0));
+							opTime.getVirtualCapacity().get(0).getEnables_virtualWorkloadToOpTime().add(vnew);
 
-								final VirtualWorkloadToOpTime vnew = IhtcvirtualmetamodelFactory.eINSTANCE
-										.createVirtualWorkloadToOpTime();
-								vnew.setIsSelected(false);
-								vnew.setOpTime(opTime);
-								vnew.setWorkload(w);
-								vnew.getRequires_virtualOpTimeToCapacity().add(vExists);
-
-								final VirtualWorkloadToCapacity vnew2 = IhtcvirtualmetamodelFactory.eINSTANCE
-										.createVirtualWorkloadToCapacity();
-								vnew2.setIsSelected(false);
-								vnew2.setCapacity(c);
-								vnew2.setWorkload(w);
-								vnew2.getRequires_virtualOpTimeToCapacity().add(vExists);
-
-								vExists.getEnables_virtualWorkloadToOpTime().add(vnew);
-								vExists.getEnables_virtual_WorkloadToCapacity().add(vnew2);
-
-								opTime.getVirtualWorkload().add(vnew);
-								c.getVirtualWorkload().add(vnew2);
-
-								// Add newly created virtual objects to the look-up data structures
-								createdVirtualWorkloadToOpTime.add(new Tuple<Workload, OpTime>(w, opTime));
-								createdVirtualWorkloadToCapacity.add(new Tuple<Workload, Capacity>(w, c));
-							}
+							opTime.getVirtualWorkload().add(vnew);
 						}
 					}
 				}
+			});
+
+			// Create virtual edges between Workload and Capacity
+			model.getOts().forEach(ot -> {
+				ot.getCapacities().forEach(capacity -> {
+					patient.getSurgeon().getOpTimes();
+
+					VirtualOpTimeToCapacity vexists = null;
+					for (final var v : capacity.getVirtualOpTime()) {
+						if (v.getOpTime().getSurgeon().equals(patient.getSurgeon())) {
+							vexists = v;
+							break;
+						}
+					}
+
+					// If the surgeon can possibly be assigned to the respective Capacity object,
+					// the virtual edge between Workload and Capacity must be created.
+					if (vexists != null) {
+						final VirtualWorkloadToCapacity vnew = IhtcvirtualmetamodelFactory.eINSTANCE
+								.createVirtualWorkloadToCapacity();
+						vnew.setIsSelected(false);
+						vnew.setCapacity(capacity);
+						vnew.setWorkload(w);
+						// TODO: the requires edge is not necessarily correct here
+						vnew.getRequires_virtualOpTimeToCapacity().add(vexists);
+						vexists.getEnables_virtual_WorkloadToCapacity().add(vnew);
+
+						capacity.getVirtualWorkload().add(vnew);
+					}
+				});
 			});
 		});
 	}
@@ -245,20 +248,33 @@ public class PreprocessingNoGtApp {
 	private void createVirtualShiftToWorkloadInitialCandidates() {
 		Objects.requireNonNull(model);
 		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
-			final int earliestPossibleFirstShift = dayToShift(patient.getEarliestDay());
-			final int latestPossibleFirstShift = dayToShift(patient.getDueDay());
 			model.getRooms().stream().filter(room -> !patient.getIncompatibleRooms().contains(room)).forEach(room -> {
 				room.getShifts().forEach(shift -> {
-					// Check if shift is in potential start time frame
-					if (shift.getShiftNo() >= earliestPossibleFirstShift
-							&& shift.getShiftNo() <= latestPossibleFirstShift) {
-						final VirtualShiftToWorkload v = IhtcvirtualmetamodelFactory.eINSTANCE
-								.createVirtualShiftToWorkload();
-						v.setIsSelected(false);
-						v.setWasImported(false);
-						v.setShift(shift);
-						v.setWorkload(patient.getFirstWorkload());
-						shift.getVirtualWorkload().add(v);
+					// Check shift time conditions (i.e., only use the first shift per day)
+					if (shift.getShiftNo() % 3 == 0) {
+						// Check if the shift number / 3 matches any available OT's capacity object
+						final int day = shift.getShiftNo() / 3;
+						boolean firstWorkloadAssignedToAnyCapacity = false;
+						for (final var vexists : patient.getFirstWorkload().getVirtualCapacity()) {
+							if (vexists.getCapacity().getDay() == day) {
+								firstWorkloadAssignedToAnyCapacity = true;
+								break;
+							}
+						}
+						if (firstWorkloadAssignedToAnyCapacity) {
+							// Check if shift is in potential start time frame
+							if (day >= patient.getEarliestDay() && day <= patient.getDueDay()) {
+								final VirtualShiftToWorkload v = IhtcvirtualmetamodelFactory.eINSTANCE
+										.createVirtualShiftToWorkload();
+								v.setIsSelected(false);
+								v.setWasImported(false);
+								v.setShift(shift);
+								v.setWorkload(patient.getFirstWorkload());
+								// TODO: set requires edge
+								shift.getVirtualWorkload().add(v);
+							}
+						}
+
 					}
 				});
 			});
@@ -280,6 +296,10 @@ public class PreprocessingNoGtApp {
 
 		// For every initial virtual assignment, build the extending ladder
 		for (final VirtualShiftToWorkload vinit : initialAssignments) {
+			// Skip occupants
+			if (vinit.getWorkload().getPatient().isIsOccupant()) {
+				continue;
+			}
 			extendLadder(vinit.getShift(), vinit.getWorkload(), vinit);
 		}
 	}
