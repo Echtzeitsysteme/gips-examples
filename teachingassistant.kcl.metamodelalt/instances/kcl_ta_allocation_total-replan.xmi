@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teachingassistant.kcl.metamodelalt:TAAllocation
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:teachingassistant.kcl.metamodelalt="platform:/resource/teachingassistant.kcl.metamodelalt/model/Metamodelalt.ecore">
+  <modules name="Module 1">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.0"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.1"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M1-1"
+        hoursPaidPerOccurrence="2"
+        numTAsPerSession="1"
+        entries="//@timetable.0"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M1-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 2">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.1"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.2"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M2-1"
+        hoursPaidPerOccurrence="2"
+        numTAsPerSession="1"
+        entries="//@timetable.1"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M2-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 3">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.0"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.2"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M3-1"
+        hoursPaidPerOccurrence="2"
+        numTAsPerSession="1"
+        entries="//@timetable.2"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M3-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <tas name="TA1"
+      maxHoursPerWeek="2"/>
+  <tas name="TA2"
+      maxHoursPerWeek="2"/>
+  <tas name="TA3"
+      maxHoursPerWeek="2"/>
+  <timetable
+      room="Room R1"
+      weekDay="Monday"
+      startTime="2025-06-12T00:00:00.000+0200"
+      endTime="2025-06-12T02:00:00.000+0200"
+      session="//@modules.0/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      endEpoch="7200"/>
+  <timetable
+      room="Room R2"
+      weekDay="Monday"
+      startTime="2025-06-12T02:00:00.000+0200"
+      endTime="2025-06-12T04:00:00.000+0200"
+      session="//@modules.1/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="7200"
+      endEpoch="14400"/>
+  <timetable
+      room="Room R3"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.2/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <weeks number="1"/>
+</teachingassistant.kcl.metamodelalt:TAAllocation>

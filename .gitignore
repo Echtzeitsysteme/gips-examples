@@ -71,7 +71,9 @@ teachingassistant.kcl.metamodel/model.json
 
 org.emoflon.gips.gipsl.examples.mdvne/problem.lp
 
-teachingassistant.kcl.metamodelalt/instances/
+teachingassistant.kcl.metamodelalt/instances/*.xmi
+teachingassistant.kcl.metamodelalt/instances/*.json
+!/teachingassistant.kcl.metamodelalt/instances/kcl_ta_allocation_total-replan.xmi
 
 teachingassistant.kcl.gipssolutionalt/problem.lp
 
