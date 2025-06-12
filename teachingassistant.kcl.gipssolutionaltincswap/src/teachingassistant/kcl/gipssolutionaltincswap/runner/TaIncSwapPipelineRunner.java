@@ -1,45 +1,37 @@
 package teachingassistant.kcl.gipssolutionaltincswap.runner;
 
-import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
-import teachingassistant.kcl.metamodelalt.generator.TeachingAssistantKclManipulator;
+import metamodel.TAAllocation;
+import teachingassistant.kcl.gipssolutionaltinc.runner.AbstractGipsTeachingAssistantIncrementalPipelineRunner;
+import teachingassistant.kcl.metamodelalt.comparator.SolutionComparator;
 import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
 
 /**
- * Runs the teaching assistant pipeline (scenario generator, GIPSL optimization,
- * and validator).
+ * Runs the teaching assistant incremental pipeline (scenario generator, GIPSL
+ * optimization, manipulator, incremental solution, and validator).
  */
-public class TaIncSwapPipelineRunner {
+public class TaIncSwapPipelineRunner extends AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 
+	/**
+	 * No instantiations of this class.
+	 */
+	private TaIncSwapPipelineRunner() {
+	}
+
+	/**
+	 * Entry point for the execution of this runner. All arguments will be ignored.
+	 * 
+	 * @param args All arguments will be ignored.
+	 */
 	public static void main(final String[] args) {
-		//
-		// Generate the initial model
-		//
+		new TaIncSwapPipelineRunner().run();
+	}
 
-		SimpleTaKclGenerator.main(null);
-
-		//
-		// Optimize/solve the initial model/problem
-		//
-
-		teachingassistant.kcl.gipssolutionalt.runner.TaBatchRunner.main(null);
-
-		// Validate the solution
-		TeachingAssistantKclValidator.main(null);
-
-		// Save initial solution
-		final String projectFolder = System.getProperty("user.dir");
-		final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodelalt/instances/";
-		final String filePath = instanceFolder + TeachingAssistantKclValidator.SCENARIO_FILE_NAME;
-
-		//
-		// Alter the solution, i.e., violate a constraint by changing the model
-		//
-
-		final TeachingAssistantKclManipulator manipulator = new TeachingAssistantKclManipulator(filePath);
-		manipulator.executeBlocking();
-
-		// Model should now be invalid
-		TeachingAssistantKclValidator.main(null);
+	/**
+	 * Runs the pipeline.
+	 */
+	protected void run() {
+		// Generate conflicting scenario.
+		final TAAllocation firstSolution = prepareScenarioBlockedGen();
 
 		//
 		// Second stage optimization/repair
@@ -49,8 +41,15 @@ public class TaIncSwapPipelineRunner {
 		TaIncSwapRunner.main(null);
 
 		// Validate the solution
-		TeachingAssistantKclValidator.main(null);
+		validate();
 
+		// Save second solution
+		final TAAllocation secondSolution = loadModelFromFile(filePath);
+
+		// Compare
+		SolutionComparator.compareSolutions(firstSolution, secondSolution);
+
+		// End
 		System.exit(0);
 	}
 

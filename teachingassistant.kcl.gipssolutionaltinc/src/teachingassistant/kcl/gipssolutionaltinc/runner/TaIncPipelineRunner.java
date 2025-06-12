@@ -29,10 +29,10 @@ public class TaIncPipelineRunner extends AbstractGipsTeachingAssistantIncrementa
 	/**
 	 * Runs the pipeline.
 	 */
-	private void run() {
+	protected void run() {
 		// Chose whether to generate a scenario or use a scenario that can only be
 		// solved by a complete re-plan procedure.
-		final TAAllocation firstSolution = prepareScenarioGen();
+		final TAAllocation firstSolution = prepareScenarioBlockedGen();
 //		final TAAllocation firstSolution = prepareScenarioReplan();
 
 		//

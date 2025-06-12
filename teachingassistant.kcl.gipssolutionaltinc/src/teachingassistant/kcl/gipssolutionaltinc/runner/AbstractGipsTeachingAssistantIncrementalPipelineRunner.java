@@ -24,14 +24,24 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	public final String filePathReplan = instanceFolder + "/kcl_ta_allocation_total-replan.xmi";
 
 	/**
-	 * Prepares (and returns) the scenario using the generator implementation.
+	 * Runs the pipeline.
+	 */
+	protected abstract void run();
+
+	/**
+	 * Prepares (and returns) the scenario using the generator implementation to
+	 * block a TA's entry.
 	 * 
 	 * @return TAAllocation scenario.
 	 */
-	protected TAAllocation prepareScenarioGen() {
+	protected TAAllocation prepareScenarioBlockedGen() {
 		// Generate the initial model
 		SimpleTaKclGenerator.main(null);
-		return commonPreparation();
+		final TAAllocation firstSolution = solveAndValidateBatch();
+
+		// Alter the solution, i.e., violate a constraint by changing the model
+		manipulateBlocking();
+		return firstSolution;
 	}
 
 	/**
@@ -39,14 +49,59 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	 * 
 	 * @return TAAllocation scenario.
 	 */
-	protected TAAllocation prepareScenarioReplan() {
+	protected TAAllocation prepareScenarioBlockedReplan() {
 		// Copy re-planning scenario XMI file
 		try {
 			Files.copy(Path.of(filePathReplan), Path.of(filePathPlain), StandardCopyOption.REPLACE_EXISTING);
 		} catch (final IOException e) {
 			throw new InternalError(e);
 		}
-		return commonPreparation();
+		final TAAllocation firstSolution = solveAndValidateBatch();
+
+		// Alter the solution, i.e., violate a constraint by changing the model
+		manipulateBlocking();
+		return firstSolution;
+	}
+
+	/**
+	 * Prepares (and returns) the scenario using the generator implementation to
+	 * reduce a TA's weekly time limit.
+	 * 
+	 * @return TAAllocation scenario.
+	 */
+	protected TAAllocation prepareScenarioTimelimitGen() {
+		// Generate the initial model
+		SimpleTaKclGenerator.main(null);
+		final TAAllocation firstSolution = solveAndValidateBatch();
+
+		// Alter the solution, i.e., violate a constraint by changing the model
+		manipulateTimeLimit();
+
+		return firstSolution;
+	}
+
+	/**
+	 * Manipulates the model by blocking an entry of a TA.
+	 */
+	private void manipulateBlocking() {
+		// Alter the solution, i.e., violate a constraint by changing the model
+		final TeachingAssistantKclManipulator manipulator = new TeachingAssistantKclManipulator(filePath);
+		manipulator.executeBlocking();
+
+		// Model should now be invalid
+		validate();
+	}
+
+	/**
+	 * Manipulates the model by reducing the weekly time limit of a TA.
+	 */
+	private void manipulateTimeLimit() {
+		// Alter the solution, i.e., violate a constraint by changing the model
+		final TeachingAssistantKclManipulator manipulator = new TeachingAssistantKclManipulator(filePath);
+		manipulator.executeHourReduction(1);
+
+		// Model should now be invalid
+		validate();
 	}
 
 	/**
@@ -54,7 +109,7 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	 * 
 	 * @return TAAllocation after the batch runner was executed.
 	 */
-	private TAAllocation commonPreparation() {
+	private TAAllocation solveAndValidateBatch() {
 		// Optimize/solve the initial model/problem
 		teachingassistant.kcl.gipssolutionalt.runner.TaBatchRunner.main(null);
 
@@ -63,14 +118,6 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 
 		// Save initial solution
 		final TAAllocation firstSolution = loadModelFromFile(filePath);
-
-		// Alter the solution, i.e., violate a constraint by changing the model
-		final TeachingAssistantKclManipulator manipulator = new TeachingAssistantKclManipulator(filePath);
-		manipulator.executeBlocking();
-
-		// Model should now be invalid
-		validate();
-
 		return firstSolution;
 	}
 
