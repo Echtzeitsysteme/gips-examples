@@ -86,20 +86,11 @@ condition compatibleRoomAndNotAssigned = compatibleRoomForPatient && patientFirs
 
 // Pattern that creates a Virtual Node between Shift and Workload to assign a patient to a room 
 rule assignPatientToRoom {
-	root : Root {
-		- patients -> p
-		- rooms -> r
-	}
-	
 	p : Patient {
 		- firstWorkload -> w
 	}
 	
 	w : Workload
-	
-	ot : OT {
-		- capacities -> c
-	}
 	
 	c : Capacity
 	
@@ -152,7 +143,6 @@ when compatibleRoomAndNotAssigned
 
 pattern nextVirtualShiftToWorkloadExists {
 	nextw : Workload
-	
 	nexts : Shift
 	
 	nextvsw : VirtualShiftToWorkload {
@@ -163,11 +153,6 @@ pattern nextVirtualShiftToWorkloadExists {
 condition nextVirtualShiftToWorkloadDoesNotExist = forbid nextVirtualShiftToWorkloadExists
 
 rule extendPatientStay {
-	root : Root {
-		- patients -> p
-		- rooms -> r
-	}
-	
 	p : Patient {
 		- workloads -> prevw
 	}
@@ -214,11 +199,6 @@ when nextVirtualShiftToWorkloadDoesNotExist
 //
 
 rule preprocessOccupantsWorkload {
-	root : Root {
-		- patients -> p
-		- rooms -> r
-	}
-	
 	p : Patient {
 		- workloads -> w
 	}
@@ -253,7 +233,6 @@ rule preprocessOccupantsWorkload {
 
 pattern findVirtualOpTimeToCapacity {
 	op : OpTime
-	
 	c: Capacity
 	
 	v: VirtualOpTimeToCapacity {
@@ -264,20 +243,7 @@ pattern findVirtualOpTimeToCapacity {
 condition noOpTimeToCapacity = forbid findVirtualOpTimeToCapacity
 
 rule assignSurgeonToOt {
-	root : Root {
-		- surgeons -> s
-		- ots -> o
-	}
-	
-	s : Surgeon {
-		- opTimes -> op
-	}
-	
 	op : OpTime
-	
-	o : OT {
-		- capacities -> c
-	}
 	
 	c : Capacity {
 		++ - virtualOpTime -> vnew
