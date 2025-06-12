@@ -142,7 +142,7 @@ rule assignPatientToRoom {
 	
 	// Day of the first assigned shift must match the day of the OT's
 	// capacity object.
-	# s.shiftNo /3 == c.day
+	# s.shiftNo / 3 == c.day
 }
 when compatibleRoomAndNotAssigned
 
@@ -460,7 +460,6 @@ rule fixOperationDayCapacity {
 	}
 	
 	# p.surgeryDuration <= c.maxCapacity
-//	# p.isOccupant == false
-	// Already checked via the edge between `p` and `s`
+	# p.isOccupant == false
 }
 when noVirtualEdgeWorkloadToCapacity
