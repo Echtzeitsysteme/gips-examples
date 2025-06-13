@@ -32,6 +32,13 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	private boolean preProcNoGt = true;
 
 	/**
+	 * If true, the application of the GT rules of the GIPSL specification will only
+	 * be simulated by manually written Java code instead of actually applying GT
+	 * rule matches with eMoflon::IBeX-GT.
+	 */
+	private boolean applicationNoGt = true;
+
+	/**
 	 * Create a new instance of this class.
 	 */
 	public IhtcVirtualGipsRunner() {
@@ -104,7 +111,13 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		//
 
 		buildAndSolve(gipsApi, verbose);
-		applySolution(gipsApi, verbose);
+
+		if (applicationNoGt) {
+			applySolutionNoGt(gipsApi, verbose);
+		} else {
+			applySolution(gipsApi, verbose);
+		}
+
 		gipsSave(gipsApi, gipsOutputPath);
 
 		if (verbose) {
