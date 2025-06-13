@@ -23,6 +23,12 @@ import ihtcvirtualmetamodel.VirtualWorkloadToOpTime;
 import ihtcvirtualmetamodel.Workload;
 import ihtcvirtualmetamodel.utils.FileUtils;
 
+/**
+ * This app can be used to create the necessary pre-processing edges of the
+ * virtual IHTC scenario without involving GT.
+ * 
+ * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
+ */
 public class PreprocessingNoGtApp {
 
 	/**
@@ -45,15 +51,17 @@ public class PreprocessingNoGtApp {
 	private final String xmiOutputFilePath;
 
 	/**
-	 * TODO
+	 * Model that should be worked on.
 	 */
 	private Root model = null;
 
 	/**
-	 * TODO
+	 * Creates a new instance of the pre-processing (non-GT) app. The given
+	 * `xmiInputFilePath` will be used as input file path. The given
+	 * `xmiOutputFilePath` will be used as output file path.
 	 * 
-	 * @param xmiInputFilePath
-	 * @param xmiOutputFilePath
+	 * @param xmiInputFilePath  Input file path.
+	 * @param xmiOutputFilePath Output file path.
 	 */
 	public PreprocessingNoGtApp(final String xmiInputFilePath, final String xmiOutputFilePath) {
 		Objects.requireNonNull(xmiInputFilePath);
@@ -79,7 +87,7 @@ public class PreprocessingNoGtApp {
 	}
 
 	/**
-	 * TODO
+	 * Executes the GT rules of this app according to the configuration.
 	 */
 	public void run() {
 		// Model was loaded within the constructor.
@@ -112,9 +120,91 @@ public class PreprocessingNoGtApp {
 		}
 	}
 
+	/**
+	 * Creates all necessary virtual shift to workload objects for the occupants.
+	 */
+	private void createVirtualShiftToWorkloadsOccupants() {
+		Objects.requireNonNull(model);
+		model.getPatients().stream().filter(patient -> patient.isIsOccupant()).forEach(occupant -> {
+			VirtualShiftToWorkload vPrev = null;
+			for (final Workload workload : occupant.getWorkloads()) {
+				final Shift shift = workload.getDerivedShift();
+
+				final VirtualShiftToWorkload v = IhtcvirtualmetamodelFactory.eINSTANCE.createVirtualShiftToWorkload();
+				v.setIsSelected(false);
+				v.setWasImported(true);
+				v.setShift(shift);
+				v.setWorkload(workload);
+				// Set requires and enables edges
+				if (vPrev != null) {
+					v.getRequires_virtualShiftToWorkload().add(vPrev);
+					vPrev.getEnables_virtualShiftToWorkload().add(v);
+				}
+				shift.getVirtualWorkload().add(v);
+				vPrev = v;
+
+				// Delete derived edges
+				workload.setDerivedShift(null);
+				shift.getDerivedWorkloads().remove(workload);
+			}
+
+		});
+	}
+
+	/**
+	 * Creates all virtual shift to roster objects for the assignment of nurses to
+	 * room.
+	 */
+	private void createVirtualShiftToRosterCandidates() {
+		Objects.requireNonNull(model);
+		model.getNurses().forEach(nurse -> {
+			nurse.getRosters().forEach(roster -> {
+				model.getRooms().forEach(room -> {
+					try {
+						final Shift shift = getShift(room, roster.getShiftNo());
+						final VirtualShiftToRoster v = IhtcvirtualmetamodelFactory.eINSTANCE
+								.createVirtualShiftToRoster();
+						v.setIsSelected(false);
+						v.setRoster(roster);
+						v.setShift(shift);
+						roster.getVirtualShift().add(v);
+					} catch (final UnsupportedOperationException ex) {
+					}
+				});
+			});
+		});
+	}
+
+	/**
+	 * Creates all virtual OP time to capacity objects.
+	 */
+	private void createVirtualOpTimeToCapacityCandidates() {
+		Objects.requireNonNull(model);
+		model.getSurgeons().forEach(surgeon -> {
+			surgeon.getOpTimes().forEach(opTime -> {
+				if (opTime.getMaxOpTime() > 0) {
+					final List<Capacity> allCapacitiesOnDay = getCapacitiesForDay(opTime.getDay());
+					for (final Capacity capacity : allCapacitiesOnDay) {
+						if (capacity.getMaxCapacity() <= 0) {
+							continue;
+						}
+						final VirtualOpTimeToCapacity v = IhtcvirtualmetamodelFactory.eINSTANCE
+								.createVirtualOpTimeToCapacity();
+						v.setIsSelected(false);
+						v.setOpTime(opTime);
+						v.setCapacity(capacity);
+						capacity.getVirtualOpTime().add(v);
+					}
+				}
+			});
+		});
+	}
+
+	/**
+	 * Creates all virtual workload to OP time and workload to capacity objects.
+	 */
 	private void createVirtualWorkloadToOperationCandidates() {
 		Objects.requireNonNull(model);
-
 		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
 			final Workload w = patient.getFirstWorkload();
 
@@ -180,77 +270,10 @@ public class PreprocessingNoGtApp {
 		});
 	}
 
-	private void createVirtualOpTimeToCapacityCandidates() {
-		Objects.requireNonNull(model);
-		model.getSurgeons().forEach(surgeon -> {
-			surgeon.getOpTimes().forEach(opTime -> {
-				if (opTime.getMaxOpTime() > 0) {
-					final List<Capacity> allCapacitiesOnDay = getCapacitiesForDay(opTime.getDay());
-					for (final Capacity capacity : allCapacitiesOnDay) {
-						if (capacity.getMaxCapacity() <= 0) {
-							continue;
-						}
-						final VirtualOpTimeToCapacity v = IhtcvirtualmetamodelFactory.eINSTANCE
-								.createVirtualOpTimeToCapacity();
-						v.setIsSelected(false);
-						v.setOpTime(opTime);
-						v.setCapacity(capacity);
-						capacity.getVirtualOpTime().add(v);
-					}
-				}
-			});
-		});
-
-	}
-
-	private void createVirtualShiftToWorkloadsOccupants() {
-		Objects.requireNonNull(model);
-		model.getPatients().stream().filter(patient -> patient.isIsOccupant()).forEach(occupant -> {
-			VirtualShiftToWorkload vPrev = null;
-			for (final Workload workload : occupant.getWorkloads()) {
-				final Shift shift = workload.getDerivedShift();
-
-				final VirtualShiftToWorkload v = IhtcvirtualmetamodelFactory.eINSTANCE.createVirtualShiftToWorkload();
-				v.setIsSelected(false);
-				v.setWasImported(true);
-				v.setShift(shift);
-				v.setWorkload(workload);
-				// Set requires and enables edges
-				if (vPrev != null) {
-					v.getRequires_virtualShiftToWorkload().add(vPrev);
-					vPrev.getEnables_virtualShiftToWorkload().add(v);
-				}
-				shift.getVirtualWorkload().add(v);
-				vPrev = v;
-
-				// Delete derived edges
-				workload.setDerivedShift(null);
-				shift.getDerivedWorkloads().remove(workload);
-			}
-
-		});
-	}
-
-	private void createVirtualShiftToRosterCandidates() {
-		Objects.requireNonNull(model);
-		model.getNurses().forEach(nurse -> {
-			nurse.getRosters().forEach(roster -> {
-				model.getRooms().forEach(room -> {
-					try {
-						final Shift shift = getShift(room, roster.getShiftNo());
-						final VirtualShiftToRoster v = IhtcvirtualmetamodelFactory.eINSTANCE
-								.createVirtualShiftToRoster();
-						v.setIsSelected(false);
-						v.setRoster(roster);
-						v.setShift(shift);
-						roster.getVirtualShift().add(v);
-					} catch (final UnsupportedOperationException ex) {
-					}
-				});
-			});
-		});
-	}
-
+	/**
+	 * Creates all virtual shift to workload elements for the initial assignment of
+	 * patients to rooms.
+	 */
 	private void createVirtualShiftToWorkloadInitialCandidates() {
 		Objects.requireNonNull(model);
 		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
@@ -292,6 +315,10 @@ public class PreprocessingNoGtApp {
 		});
 	}
 
+	/**
+	 * Creates all following virtual shift to workload elements that build upon the
+	 * previously created initial assignments of patients to rooms.
+	 */
 	private void createVirtualShiftToWorkloadExtendingCandidates() {
 		Objects.requireNonNull(model);
 
@@ -315,6 +342,16 @@ public class PreprocessingNoGtApp {
 		}
 	}
 
+	/**
+	 * Extends the "ladder" of workloads assigned to a specific room, i.e., to its
+	 * shifts.
+	 * 
+	 * @param initShift    Initially assigned shift object.
+	 * @param initWorkload Initially assigned workload object, i.e., this should be
+	 *                     the first workload of a patient.
+	 * @param initV        Initially created virtual shift to workload object of the
+	 *                     first possible assignment.
+	 */
 	private void extendLadder(final Shift initShift, final Workload initWorkload, final VirtualShiftToWorkload initV) {
 		Objects.requireNonNull(initShift);
 		Objects.requireNonNull(initWorkload);
@@ -343,6 +380,15 @@ public class PreprocessingNoGtApp {
 	// Utility methods.
 	//
 
+	/**
+	 * Searches for and returns a specific shift object of a given room with a given
+	 * shift number. This method assumes that only one object matching the described
+	 * criteria can be present.
+	 * 
+	 * @param room    Room to search for the respective shift.
+	 * @param shiftNo Shift number to search for.
+	 * @return Shift object of the given room that matches the given shift number.
+	 */
 	private Shift getShift(final Room room, final int shiftNo) {
 		Objects.requireNonNull(room);
 		if (shiftNo < 0) {
@@ -358,6 +404,15 @@ public class PreprocessingNoGtApp {
 				"Shift with number " + shiftNo + " not found in room " + room.getName());
 	}
 
+	/**
+	 * Searches for and returns a specific capacity object of a given OT with a
+	 * given day number. This method assumes that only one object matching the
+	 * described criteria can be present.
+	 * 
+	 * @param ot  OT to search for the respective capacity.
+	 * @param day Day to search for.
+	 * @return Capacity object of the given OT that matches the given day number.
+	 */
 	private Capacity getCapacityForRoomOnDay(final OT ot, final int day) {
 		Objects.requireNonNull(ot);
 		if (day < 0) {
@@ -373,6 +428,12 @@ public class PreprocessingNoGtApp {
 		throw new UnsupportedOperationException("Capacity with day number " + day + " not found in OT " + ot.getName());
 	}
 
+	/**
+	 * Returns all capacity objects of all OTs for a specific day.
+	 * 
+	 * @param day Day number to search for.
+	 * @return List of all capacity objects of all OTs for a specific day.
+	 */
 	private List<Capacity> getCapacitiesForDay(final int day) {
 		if (day < 0) {
 			throw new IllegalArgumentException("Given day number was negative.");
