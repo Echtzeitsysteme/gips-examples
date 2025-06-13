@@ -230,6 +230,45 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	}
 
 	/**
+	 * Applies the best found solution (i.e., all non-zero mappings) with a given
+	 * IHTC 2024 project GIPS API object. This method does not utilize the GT engine
+	 * built-in to GIPS but rather manipulates the model directly.
+	 * 
+	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
+	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
+	 */
+	protected void applySolutionNoGt(final IhtcvirtualgipssolutionGipsAPI gipsApi, final boolean verbose) {
+		Objects.requireNonNull(gipsApi);
+
+		// Apply found solution
+		final long tick = System.nanoTime();
+
+		gipsApi.getSelectedOperationDay().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getVopc().setIsSelected(true);
+			m.getMatch().getVwc().setIsSelected(true);
+		});
+		gipsApi.getSelectedShiftToRoster().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getVsr().setIsSelected(true);
+		});
+		gipsApi.getSelectedShiftToFirstWorkload().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getVsw().setIsSelected(true);
+		});
+		gipsApi.getSelectedExtendingShiftToFirstWorkload().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getNextvsw().setIsSelected(true);
+		});
+		gipsApi.getSelectedOccupantNodes().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getVsw().setIsSelected(true);
+		});
+
+		final long tock = System.nanoTime();
+		if (verbose) {
+			logger.info("=> Solution application (no GT) duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
+	}
+
+	/**
 	 * Transforms a given JSON file to an XMI file.
 	 * 
 	 * @param inputJsonPath Input JSON file.
