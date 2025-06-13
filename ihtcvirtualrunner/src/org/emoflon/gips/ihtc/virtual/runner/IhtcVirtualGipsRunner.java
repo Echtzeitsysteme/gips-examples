@@ -3,6 +3,7 @@ package org.emoflon.gips.ihtc.virtual.runner;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.virtual.runner.utils.FileUtils;
 import org.emoflon.gips.ihtc.virtual.runner.utils.XmiSetupUtil;
 
@@ -63,6 +64,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	@Override
 	public void run() {
 		checkIfFileExists(inputPath);
+		final long startTime = System.nanoTime();
 
 		//
 		// Convert JSON input file to XMI file
@@ -73,6 +75,10 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		}
 
 		transformJsonToModel(inputPath, instancePath);
+		final long modelLoadedTime = System.nanoTime();
+		if (verbose) {
+			logger.info("Runtime model load: " + tickTockToElapsedSeconds(startTime, modelLoadedTime) + "s.");
+		}
 
 		//
 		// Pre-processing via a separated GT rule set
@@ -87,6 +93,10 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		} else {
 			preprocess(instancePath, preprocessingPath);
 		}
+		final long preProcDoneTime = System.nanoTime();
+		if (verbose) {
+			logger.info("Runtime pre-processing: " + tickTockToElapsedSeconds(modelLoadedTime, preProcDoneTime) + "s.");
+		}
 
 		//
 		// Initialize GIPS API
@@ -96,16 +106,32 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			logger.info("=> Start GIPS init.");
 		}
 
+		Observer.getInstance().setCurrentSeries("Eval");
 		final IhtcvirtualgipssolutionGipsAPI gipsApi = new IhtcvirtualgipssolutionGipsAPI();
 		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, preprocessingPath);
+		final long gipsInitDoneTime = System.nanoTime();
+		if (verbose) {
+			logger.info("Runtime GIPS init: " + tickTockToElapsedSeconds(preProcDoneTime, gipsInitDoneTime) + "s.");
+		}
 
 		//
 		// Run GIPS solution
 		//
 
 		buildAndSolve(gipsApi, verbose);
+		final long gipsSolvingDoneTime = System.nanoTime();
 		applySolution(gipsApi, verbose);
+		final long solutionApplicationDoneTime = System.nanoTime();
+		if (verbose) {
+			logger.info("Runtime solution application: "
+					+ tickTockToElapsedSeconds(gipsSolvingDoneTime, solutionApplicationDoneTime) + "s.");
+		}
 		gipsSave(gipsApi, gipsOutputPath);
+		final long gipsSaveDoneTime = System.nanoTime();
+		if (verbose) {
+			logger.info("Runtime GIPS save: " + tickTockToElapsedSeconds(solutionApplicationDoneTime, gipsSaveDoneTime)
+					+ "s.");
+		}
 
 		if (verbose) {
 			logger.info("=> Start JSON export.");
@@ -120,12 +146,27 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 				logger.info("=> Start post-processing GT.");
 			}
 			postprocess(gipsOutputPath, postProcOutputPath);
+			final long postProcessingDoneTime = System.nanoTime();
+			if (verbose) {
+				logger.info("Runtime post-processing: "
+						+ tickTockToElapsedSeconds(gipsSaveDoneTime, postProcessingDoneTime) + "s.");
+			}
 			exportToJson(postProcOutputPath, outputPath);
+			final long exportDoneTime = System.nanoTime();
+			if (verbose) {
+				logger.info("Runtime JSON export (with post-processing): "
+						+ tickTockToElapsedSeconds(postProcessingDoneTime, exportDoneTime) + "s.");
+			}
 		} else {
 			if (verbose) {
 				logger.info("=> Skipped post-processing GT.");
 			}
 			exportToJsonNoPostProc(gipsOutputPath, outputPath);
+			final long exportDoneTime = System.nanoTime();
+			if (verbose) {
+				logger.info("Runtime JSON export (no post-processing): "
+						+ tickTockToElapsedSeconds(gipsSaveDoneTime, exportDoneTime) + "s.");
+			}
 		}
 
 		//
@@ -133,6 +174,10 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		//
 
 		gipsApi.terminate();
+
+		if (verbose) {
+			logger.info("Runtime total: " + tickTockToElapsedSeconds(startTime, System.nanoTime()) + "s.");
+		}
 	}
 
 	/**
