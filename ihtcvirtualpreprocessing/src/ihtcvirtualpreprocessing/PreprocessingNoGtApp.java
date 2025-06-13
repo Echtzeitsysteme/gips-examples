@@ -132,7 +132,10 @@ public class PreprocessingNoGtApp {
 							vnew.setIsSelected(false);
 							vnew.setOpTime(opTime);
 							vnew.setWorkload(w);
-							// TODO: the requires edge is not necessarily correct here
+							// TODO: The requires edge and the enable edge are not necessarily correct here.
+							// In this implementation, only the first virtual capacity object will be used,
+							// but it should be all of them. If I am correct, we do not have a common
+							// understanding on what the requires edges actually mean in detail.
 							vnew.getRequires_virtualOpTimeToCapacity().add(opTime.getVirtualCapacity().get(0));
 							opTime.getVirtualCapacity().get(0).getEnables_virtualWorkloadToOpTime().add(vnew);
 
@@ -163,7 +166,10 @@ public class PreprocessingNoGtApp {
 						vnew.setIsSelected(false);
 						vnew.setCapacity(capacity);
 						vnew.setWorkload(w);
-						// TODO: the requires edge is not necessarily correct here
+						// TODO: The requires edge and the enable edge are not necessarily correct here.
+						// In this implementation, only the first virtual capacity object will be used,
+						// but it should be all of them. If I am correct, we do not have a common
+						// understanding on what the requires edges actually mean in detail.
 						vnew.getRequires_virtualOpTimeToCapacity().add(vexists);
 						vexists.getEnables_virtual_WorkloadToCapacity().add(vnew);
 
@@ -254,14 +260,14 @@ public class PreprocessingNoGtApp {
 					if (shift.getShiftNo() % 3 == 0) {
 						// Check if the shift number / 3 matches any available OT's capacity object
 						final int day = shift.getShiftNo() / 3;
-						boolean firstWorkloadAssignedToAnyCapacity = false;
+						VirtualWorkloadToCapacity vfound = null;
 						for (final var vexists : patient.getFirstWorkload().getVirtualCapacity()) {
 							if (vexists.getCapacity().getDay() == day) {
-								firstWorkloadAssignedToAnyCapacity = true;
+								vfound = vexists;
 								break;
 							}
 						}
-						if (firstWorkloadAssignedToAnyCapacity) {
+						if (vfound != null) {
 							// Check if shift is in potential start time frame
 							if (day >= patient.getEarliestDay() && day <= patient.getDueDay()) {
 								final VirtualShiftToWorkload v = IhtcvirtualmetamodelFactory.eINSTANCE
@@ -270,7 +276,12 @@ public class PreprocessingNoGtApp {
 								v.setWasImported(false);
 								v.setShift(shift);
 								v.setWorkload(patient.getFirstWorkload());
-								// TODO: set requires edge
+								// TODO: The requires edge and the enable edge are not necessarily correct here.
+								// In this implementation, only the first virtual capacity object will be used,
+								// but it should be all of them. If I am correct, we do not have a common
+								// understanding on what the requires edges actually mean in detail.
+								v.getRequires_virtualWorkloadToCapacity().add(vfound);
+								vfound.getEnables_virtualShiftToWorkload().add(v);
 								shift.getVirtualWorkload().add(v);
 							}
 						}
@@ -320,6 +331,7 @@ public class PreprocessingNoGtApp {
 			vNew.setShift(s);
 			vNew.setWorkload(w);
 			vNew.getRequires_virtualShiftToWorkload().add(v);
+			v.getEnables_virtualShiftToWorkload().add(vNew);
 			s.getVirtualWorkload().add(vNew);
 			w = (Workload) w.getNext();
 			s = (Shift) s.getNext();
@@ -344,13 +356,6 @@ public class PreprocessingNoGtApp {
 		}
 		throw new UnsupportedOperationException(
 				"Shift with number " + shiftNo + " not found in room " + room.getName());
-	}
-
-	private int dayToShift(final int day) {
-		if (day < 0) {
-			throw new IllegalArgumentException("Given day number was negative.");
-		}
-		return day * 3;
 	}
 
 	private Capacity getCapacityForRoomOnDay(final OT ot, final int day) {
