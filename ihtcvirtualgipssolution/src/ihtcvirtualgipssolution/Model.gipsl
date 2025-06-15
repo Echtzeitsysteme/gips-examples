@@ -290,13 +290,7 @@ constraint with countPatientsForRoom {
 // -> Already enforced by GT-Rule "extendPatientStay" in preprocessing
 
 // C2: A patient is assigned to at most one room in each shift
-
-constraint with patientForRoom {
-	mappings.assignedPatientsToRoom->filter(
-		element.nodes.p == context.nodes.p &
-		element.nodes.s.shiftNo == context.nodes.s.shiftNo
-	)->sum(element.value) <= 1
-}
+// -> Already implemented in Constraint V3 in context with C9
 
 // C3: Nurses are not assigned to empty rooms and 
 
