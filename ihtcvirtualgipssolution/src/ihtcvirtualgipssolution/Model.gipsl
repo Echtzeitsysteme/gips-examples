@@ -138,9 +138,19 @@ pattern roomForShift{
 
 // Pattern that finds all patients that are assigned to a room -> first and following workloads
 pattern patientForRoom {
-	p : Patient
+	p : Patient {
+		- workloads -> w
+	}
 	
-	s : Shift
+	w : Workload {
+		- virtualShift -> vsw
+	}
+	
+	vsw : VirtualShiftToWorkload {
+		- shift -> s
+	}
+	
+	s : Shift 
 	
 	r : Room {
 		- shifts -> s
@@ -218,9 +228,9 @@ mapping assignedGenderToRoomOnShift to genderRoomShift;
 //mapping openOTs to otCapacityTupel;
 
 // temporary function to maximize the number of optional patients that are scheduled
-function maxoOptional with optionalPatients {
-	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-}
+//function maxoOptional with optionalPatients {
+//	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+//}
 
 //
 // Hard Constraints
@@ -468,19 +478,22 @@ constraint with assignedPatientsToRoom {
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.p == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw.shift == context.nodes.s &
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.prevvsw.workload.patient == context.nodes.p &
 		element.nodes.prevvsw.shift.room == context.nodes.r &
-		element.nodes.nextvsw.shift == context.nodes.s
+		element.nodes.nextvsw.shift == context.nodes.s &
+		element.nodes.nextvsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedOccupantNodes->filter(
 		element.nodes.vsw.workload.patient == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw.shift == context.nodes.s &
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	<=
 	context.value * 1000
@@ -492,19 +505,22 @@ constraint with assignedPatientsToRoom {
 		mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.p == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw.shift == context.nodes.s &
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.prevvsw.workload.patient == context.nodes.p &
 		element.nodes.prevvsw.shift.room == context.nodes.r &
-		element.nodes.nextvsw.shift == context.nodes.s
+		element.nodes.nextvsw.shift == context.nodes.s &
+		element.nodes.nextvsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedOccupantNodes->filter(
 		element.nodes.vsw.workload.patient == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw.shift == context.nodes.s &
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	
 //	Transformed version of the following boolean equivalence 
@@ -589,16 +605,16 @@ constraint with assignedGenderToRoomOnShift {
 //
 //// TODO: Implement
 //
-//// S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
-//
-//function calculateUnqualifiedNurses with assignedPatientsToRoom {
-//	mappings.selectedShiftToRoster->filter(
-//		element.nodes.r == context.nodes.r &
-//		element.nodes.s.shiftNo == context.nodes.s.shiftNo &
-//		element.nodes.n.skillLevel < context.nodes.w.minNurseSkill
-//	)->sum(element.value) 
-//}
-//
+// S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
+
+function calculateUnqualifiedNurses with assignedPatientsToRoom {
+	mappings.selectedShiftToRoster->filter(
+		element.nodes.vsr.shift.room == context.nodes.r &
+		element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo &
+		element.nodes.vsr.roster.nurse.skillLevel < context.nodes.w.minNurseSkill //  .workload.minNurseSkill
+	)->sum(element.value) 
+}
+
 //// S3: The number of nurses taking care of a specific patient must be minimized
 //
 //// TODO: Implement 
@@ -633,11 +649,11 @@ constraint with assignedGenderToRoomOnShift {
 //	1 - mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
 //}
 
-objective : max {
+objective : min {
 	0
-	+ functions.maxoOptional
+//	+ functions.maxoOptional
 //	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
-//	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
+	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
 //	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
 //	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 //	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
