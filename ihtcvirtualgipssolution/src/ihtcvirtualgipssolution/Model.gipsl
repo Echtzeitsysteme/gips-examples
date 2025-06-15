@@ -262,7 +262,7 @@ constraint with otCapacityTupel {
 
 // H5: Mandatory versus optional patients: All mandatory patients must be admitted within the 
 // scheduling period, whereas optional patients may be postponed to future scheduling periods.
-
+// The addition only works because other constraints enforce that the individual sums have to be <= 1
 constraint with mandatoryPatients {
 	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
 	+
@@ -361,31 +361,7 @@ constraint with Patient {
 // operation with a patient on that day
 
 // C7: The day the first workload of a patient gets scheduled has to be the same day the patient has surgery
-
-constraint with selectedShiftToFirstWorkload {
- 	context.value
-    <=
- 	mappings.selectedOperationDay->filter(
-    	element.nodes.vwc == context.nodes.vwc &
-    	context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
-  	)->sum(element.value)
-
-//  & TODO: ?
-//  mappings.selectedOperationDay->filter(
-//    element.nodes.vwc == context.nodes.vwc &
-//    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
-//  )->sum(element.value)
-//  <=
-//  context.value
-
-//	Transformed version of the following boolean implication 
-//  context.value == 1
-//  =>
-//  mappings.selectedOperationDay->filter(
-//    element.nodes.vwc == context.nodes.vwc &
-//    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
-//  )->sum(element.value) == 1
-}
+// -> Already enforced by Constraint V2
 
 // C8: If a patient is admitted all his workloads have to be scheduled in a shift
 // -> Already implemented in Constraint V3
@@ -406,7 +382,8 @@ constraint with selectedOccupantNodes {
 
 // V2: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
-// This does not enforce that the admission day is the same as the operation day!
+// This does enforce that the admission day is the same as the operation day because only one operation day
+// per patient can be selected and the preprocessing checks shift / 3 = day !
 
 constraint with selectShiftToFirstWorkload {
 	mappings.selectedShiftToFirstWorkload->filter(

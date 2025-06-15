@@ -37,7 +37,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	 * be simulated by manually written Java code instead of actually applying GT
 	 * rule matches with eMoflon::IBeX-GT.
 	 */
-	private boolean applicationNoGt = true;
+	private boolean applicationNoGt = false;
 
 	/**
 	 * Create a new instance of this class.
