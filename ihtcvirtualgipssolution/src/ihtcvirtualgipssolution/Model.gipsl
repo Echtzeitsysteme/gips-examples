@@ -602,9 +602,9 @@ constraint with openOTs {
 //
 
 //// S1: The maximum difference of age groups in one room for each day should be minimized
-//
+
 //// TODO: Implement
-//
+
 // S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
 
 function calculateUnqualifiedNurses with assignedPatientsToRoom {
@@ -615,13 +615,13 @@ function calculateUnqualifiedNurses with assignedPatientsToRoom {
 	)->sum(element.value) 
 }
 
-//// S3: The number of nurses taking care of a specific patient must be minimized
-//
-//// TODO: Implement 
-//
-//// S4: The workload of a nurse should not exceed the assigned maximum workload
-//
-//// TODO: Implement 
+// S3: The number of nurses taking care of a specific patient must be minimized
+
+// TODO: Implement 
+
+// S4: The workload of a nurse should not exceed the assigned maximum workload
+
+// TODO: Implement 
 
 // S5: The number of OTs opened on each day should be minimized
 
@@ -637,24 +637,26 @@ function calculateOPenOTs with openOTs {
 //		element.nodes.op.day == context.nodes.op.day 
 //	)->sum(element.value)
 //}
-//
-//// S7: The number of days between a patient´s release date and their actual date of admission should be minimized
-//
-//function calculateWaitTime with selectedShiftToFirstWorkload {
-//	((context.nodes.s.shiftNo / 3) - context.nodes.p.earliestDay) * context.value
-//}
-//
-//// S8: The number of not admitted optional patients should be minimized
+
+// S7: The number of days between a patient´s release date and their actual date of admission should be minimized
+
+function calculateWaitTime with selectedShiftToFirstWorkload {
+	((context.nodes.vsw.shift.shiftNo / 3) - context.nodes.p.earliestDay) * context.value
+}
+
+// S8: The number of not admitted optional patients should be minimized
 //function calculateNotAssignedOptionalPatients with optionalPatients {
 //	1 - mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
 //}
 
 objective : min {
 	0
-//	+ functions.maxoOptional
-//	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
+	// S1
 	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
+	// S3
+	// S4
 	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
-//	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 //	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
+	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
+//	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 }
