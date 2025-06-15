@@ -225,7 +225,7 @@ mapping assignedPatientsToRoom to patientForRoom;
 mapping assignedGenderToRoomOnShift to genderRoomShift;
 
 // mapping that decides which ots are open on a specific day
-//mapping openOTs to otCapacityTupel;
+mapping openOTs to otCapacityTupel;
 
 // temporary function to maximize the number of optional patients that are scheduled
 //function maxoOptional with optionalPatients {
@@ -587,15 +587,15 @@ constraint with assignedGenderToRoomOnShift {
 //	context.value == 1
 }
 
-// sets the mapping to true if there is at least one surgery assigned to the ot on that day
-//constraint with openOTs {
-//	mappings.selectedOperationDay->filter(
-//		element.nodes.ot == context.nodes.ot &
-//		element.nodes.c.day == context.nodes.c.day
-//	)->sum(element.value)
-//	>= 
-//	context.value
-//}
+// U4: sets the mapping to true if there is at least one surgery assigned to the ot on that day
+constraint with openOTs {
+	mappings.selectedOperationDay->filter(
+		element.nodes.vwc.capacity.ot == context.nodes.ot &
+		element.nodes.vwc.capacity.day == context.nodes.c.day
+	)->sum(element.value)	
+	<= 
+	context.value * 1000
+}
 
 //
 // Objectives
@@ -622,13 +622,13 @@ function calculateUnqualifiedNurses with assignedPatientsToRoom {
 //// S4: The workload of a nurse should not exceed the assigned maximum workload
 //
 //// TODO: Implement 
-//
-//// S5: The number of OTs opened on each day should be minimized
-//
-//function calculateOPenOTs with openOTs {
-//	context.value
-//}
-//
+
+// S5: The number of OTs opened on each day should be minimized
+
+function calculateOPenOTs with openOTs {
+	context.value
+}
+
 //// S6: The number of different OTs a surgeon is assigned to per working day should be minimized
 //
 //function calculateOtsPerSurgeon with surgeonOptimeTupel {
@@ -654,7 +654,7 @@ objective : min {
 //	+ functions.maxoOptional
 //	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
 	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
-//	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
+	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
 //	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 //	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
 }
