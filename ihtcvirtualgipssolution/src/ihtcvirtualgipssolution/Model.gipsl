@@ -645,9 +645,9 @@ function calculateWaitTime with selectedShiftToFirstWorkload {
 }
 
 // S8: The number of not admitted optional patients should be minimized
-//function calculateNotAssignedOptionalPatients with optionalPatients {
-//	1 - mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-//}
+function calculateNotAssignedOptionalPatients with optionalPatients {
+	1 - mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+}
 
 objective : min {
 	0
@@ -658,5 +658,5 @@ objective : min {
 	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
 //	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
 	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
-//	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
+	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 }
