@@ -264,9 +264,10 @@ constraint with otCapacityTupel {
 // scheduling period, whereas optional patients may be postponed to future scheduling periods.
 
 constraint with mandatoryPatients {
-	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
-	&
-	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	+
+	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	== 2
 }
 
 // H6: Admission day: A patient can be admitted on any day from their release date to their
