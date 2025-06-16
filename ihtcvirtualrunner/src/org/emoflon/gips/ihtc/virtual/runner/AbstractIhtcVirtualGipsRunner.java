@@ -220,13 +220,17 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		Objects.requireNonNull(gipsApi);
 
 		// Apply found solution
-		gipsApi.getSelectedOperationDay().applyNonZeroMappings();
-		gipsApi.getSelectedShiftToRoster().applyNonZeroMappings();
-		gipsApi.getSelectedShiftToFirstWorkload().applyNonZeroMappings();
-		gipsApi.getSelectedExtendingShiftToFirstWorkload().applyNonZeroMappings();
-		gipsApi.getSelectedOccupantNodes().applyNonZeroMappings();
+		// Do not update the pattern matcher on purpose
+		gipsApi.getSelectedOperationDay().applyNonZeroMappings(false);
+		gipsApi.getSelectedShiftToRoster().applyNonZeroMappings(false);
+		gipsApi.getSelectedShiftToFirstWorkload().applyNonZeroMappings(false);
+		gipsApi.getSelectedExtendingShiftToFirstWorkload().applyNonZeroMappings(false);
+		gipsApi.getSelectedOccupantNodes().applyNonZeroMappings(false);
 		// Alternative:
 //		gipsApi.applyAllNonZeroMappings();
+
+		// Update the pattern matcher after all rule applications once
+		gipsApi.update();
 	}
 
 	/**
