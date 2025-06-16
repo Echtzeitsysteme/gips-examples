@@ -222,12 +222,11 @@ public class PreprocessingNoGtApp {
 							vnew.setIsSelected(false);
 							vnew.setOpTime(opTime);
 							vnew.setWorkload(w);
-							// TODO: The requires edge and the enable edge are not necessarily correct here.
-							// In this implementation, only the first virtual capacity object will be used,
-							// but it should be all of them. If I am correct, we do not have a common
-							// understanding on what the requires edges actually mean in detail.
-							vnew.getRequires_virtualOpTimeToCapacity().add(opTime.getVirtualCapacity().get(0));
-							opTime.getVirtualCapacity().get(0).getEnables_virtualWorkloadToOpTime().add(vnew);
+							// Set all enabled and required edges
+							vnew.getRequires_virtualOpTimeToCapacity().addAll(opTime.getVirtualCapacity());
+							opTime.getVirtualCapacity().forEach(vc -> {
+								vc.getEnables_virtualWorkloadToOpTime().add(vnew);
+							});
 
 							opTime.getVirtualWorkload().add(vnew);
 						}
@@ -235,36 +234,27 @@ public class PreprocessingNoGtApp {
 				}
 			});
 
-			// Create virtual edges between Workload and Capacity
-			model.getOts().forEach(ot -> {
-				ot.getCapacities().forEach(capacity -> {
-					patient.getSurgeon().getOpTimes();
+		});
 
-					VirtualOpTimeToCapacity vexists = null;
-					for (final var v : capacity.getVirtualOpTime()) {
-						if (v.getOpTime().getSurgeon().equals(patient.getSurgeon())) {
-							vexists = v;
-							break;
-						}
-					}
-
-					// If the surgeon can possibly be assigned to the respective Capacity object,
-					// the virtual edge between Workload and Capacity must be created.
-					if (vexists != null) {
+		// Create virtual edges between Workload and Capacity
+		model.getOts().forEach(ot -> {
+			ot.getCapacities().forEach(c -> {
+				// This ensures we only look at OpTime, Capacity tuples on the same day.
+				c.getVirtualOpTime().forEach(vop -> {
+					vop.getOpTime().getVirtualWorkload().forEach(vw -> {
+						final Workload w = vw.getWorkload();
 						final VirtualWorkloadToCapacity vnew = IhtcvirtualmetamodelFactory.eINSTANCE
 								.createVirtualWorkloadToCapacity();
-						vnew.setIsSelected(false);
-						vnew.setCapacity(capacity);
 						vnew.setWorkload(w);
-						// TODO: The requires edge and the enable edge are not necessarily correct here.
-						// In this implementation, only the first virtual capacity object will be used,
-						// but it should be all of them. If I am correct, we do not have a common
-						// understanding on what the requires edges actually mean in detail.
-						vnew.getRequires_virtualOpTimeToCapacity().add(vexists);
-						vexists.getEnables_virtual_WorkloadToCapacity().add(vnew);
+						vnew.setCapacity(c);
+						vnew.setIsSelected(false);
+						vnew.getRequires_virtualOpTimeToCapacity().add(vop);
+						// TODO: ^this could also be ensured via adding the requirement to the workload
+						// to OP time edge.
+						vop.getEnables_virtual_WorkloadToCapacity().add(vnew);
 
-						capacity.getVirtualWorkload().add(vnew);
-					}
+						c.getVirtualWorkload().add(vnew);
+					});
 				});
 			});
 		});
@@ -299,16 +289,14 @@ public class PreprocessingNoGtApp {
 								v.setWasImported(false);
 								v.setShift(shift);
 								v.setWorkload(patient.getFirstWorkload());
-								// TODO: The requires edge and the enable edge are not necessarily correct here.
-								// In this implementation, only the first virtual capacity object will be used,
-								// but it should be all of them. If I am correct, we do not have a common
-								// understanding on what the requires edges actually mean in detail.
-								v.getRequires_virtualWorkloadToCapacity().add(vfound);
-								vfound.getEnables_virtualShiftToWorkload().add(v);
+								v.getRequires_virtualWorkloadToCapacity()
+										.addAll(patient.getFirstWorkload().getVirtualCapacity());
+								patient.getFirstWorkload().getVirtualCapacity().forEach(vc -> {
+									vc.getEnables_virtualShiftToWorkload().add(v);
+								});
 								shift.getVirtualWorkload().add(v);
 							}
 						}
-
 					}
 				});
 			});
