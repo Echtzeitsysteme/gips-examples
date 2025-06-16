@@ -335,8 +335,8 @@ rule fixOperationDayCapacity {
 		++ - virtualWorkload -> vnew2
 	}
 	
-	vexist : VirtualOpTimeToCapacity {
-		- capacity -> c
+	vexist : VirtualWorkloadToOpTime {
+		- workload -> w
 		// Explicitly set the opposite edge
 		++ - enables_virtual_WorkloadToCapacity -> vnew2
 	}
@@ -345,7 +345,7 @@ rule fixOperationDayCapacity {
 		++ - capacity -> c
 		++ - workload -> w
 		.isSelected := false
-		++ - requires_virtualOpTimeToCapacity -> vexist
+		++ - requires_virtualWorkloadToOpTime -> vexist
 	}
 	
 	# p.surgeryDuration <= c.maxCapacity

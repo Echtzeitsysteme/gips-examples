@@ -248,10 +248,9 @@ public class PreprocessingNoGtApp {
 						vnew.setWorkload(w);
 						vnew.setCapacity(c);
 						vnew.setIsSelected(false);
-						vnew.getRequires_virtualOpTimeToCapacity().add(vop);
-						// TODO: ^this could also be ensured via adding the requirement to the workload
-						// to OP time edge.
-						vop.getEnables_virtual_WorkloadToCapacity().add(vnew);
+						
+						vnew.getRequires_virtualWorkloadToOpTime().add(vw);
+						vw.getEnables_virtual_WorkloadToCapacity().add(vnew);
 
 						c.getVirtualWorkload().add(vnew);
 					});
