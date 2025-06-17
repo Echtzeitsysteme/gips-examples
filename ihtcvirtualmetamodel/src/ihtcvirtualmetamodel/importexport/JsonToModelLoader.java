@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import ihtcvirtualmetamodel.Capacity;
+import ihtcvirtualmetamodel.Day;
 import ihtcvirtualmetamodel.Gender;
 import ihtcvirtualmetamodel.IhtcvirtualmetamodelFactory;
 import ihtcvirtualmetamodel.Nurse;
@@ -520,8 +521,9 @@ public class JsonToModelLoader {
 
 	/**
 	 * Converts the given JSON primitive of days to actual model information. In
-	 * this case, the method only saves the number of days from the JSON primitive
-	 * to a field of this load class.
+	 * this case, the method saves the number of days from the JSON primitive
+	 * to a field of this load class and saves it in the root of the model. 
+	 * For each day a new Node of type "Day" is created and added to the model. 
 	 * 
 	 * @param days JSON primitive with the day-specific information.
 	 */
@@ -533,9 +535,16 @@ public class JsonToModelLoader {
 		if (numberOfDays <= 0) {
 			throw new IllegalArgumentException("Number of days was <= 0.");
 		}
+		
+		for(int i = 0; i<numberOfDays; i++) {
+			final Day day = IhtcvirtualmetamodelFactory.eINSTANCE.createDay();
+			day.setName("d"+i);
+			day.setNumber(i);
+			this.model.getDays().add(day);
+		}
 
 		this.numberOfFoundDays = numberOfDays;
-		this.model.setDays(numberOfDays);
+		this.model.setPeriod(numberOfDays);
 	}
 
 	/**

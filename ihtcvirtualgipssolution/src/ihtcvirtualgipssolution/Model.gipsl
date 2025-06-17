@@ -3,7 +3,7 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 300.0];
+	timeLimit := true [value := 500.0];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
@@ -399,7 +399,6 @@ constraint with selectedOccupantNodes {
 
 // V2: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
-// This does not enforce that the admission day is the same as the operation day.
 constraint with selectShiftToFirstWorkload {
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vsw == context.nodes.vsw &
@@ -409,32 +408,21 @@ constraint with selectShiftToFirstWorkload {
 	mappings.selectedOperationDay->filter(
 		element.nodes.p == context.nodes.p &
 		element.nodes.vwc == context.nodes.vwc &
-		element.nodes.vopc.capacity.day == context.nodes.vsw.shift.shiftNo / 3
+		element.nodes.vopc.capacity.day == context.nodes.vsw.shift.shiftNo / 3 
 	)->sum(element.value)
-
-//	Transformed version of the following boolean implication 
-//	mappings.selectedShiftToFirstWorkload->filter(
-//		element.nodes.vsw == context.nodes.vsw &
-//		element.nodes.vwc == context.nodes.vwc
-//	)->sum(element.value) == 1
-//	=>
-//	mappings.selectedOperationDay->filter(
-//		element.nodes.vwc == context.nodes.vwc
-//	)->sum(element.value) >= 1
 }
 
 constraint with selectedOperationDay {
 	mappings.selectedOperationDay->filter(
 		element.nodes.vwc == context.nodes.vwc &
-		element.nodes.p == context.nodes.p &
-		element.nodes.opTime == context.nodes.opTime
+		element.nodes.vopc == context.nodes.vopc &
+		element.nodes.vwop == context.nodes.vwop
 	)->sum(element.value)
 	<=
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vwc == context.nodes.vwc &
 		element.nodes.vsw.shift.shiftNo / 3 == context.nodes.vopc.capacity.day
 	)->sum(element.value)
-	// TODO: müsste es nicht reichen über patients abzugleichen?
 }
 	
 // V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
@@ -499,22 +487,19 @@ constraint with assignedPatientsToRoom {
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.p == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s //&
-//		element.nodes.vsw == context.nodes.vsw
+		element.nodes.vsw.shift == context.nodes.s
 	)->sum(element.value)
 	+
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.prevvsw.workload.patient == context.nodes.p &
 		element.nodes.prevvsw.shift.room == context.nodes.r &
-		element.nodes.nextvsw.shift == context.nodes.s //&
-//		element.nodes.nextvsw == context.nodes.vsw
+		element.nodes.nextvsw.shift == context.nodes.s
 	)->sum(element.value)
 	+
 	mappings.selectedOccupantNodes->filter(
 		element.nodes.vsw.workload.patient == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s// &
-//		element.nodes.vsw == context.nodes.vsw
+		element.nodes.vsw.shift == context.nodes.s
 	)->sum(element.value)
 	<=
 	context.value * 1000
@@ -526,22 +511,19 @@ constraint with assignedPatientsToRoom {
 		mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.p == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s //&
-//		element.nodes.vsw == context.nodes.vsw
+		element.nodes.vsw.shift == context.nodes.s
 	)->sum(element.value)
 	+
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.prevvsw.workload.patient == context.nodes.p &
 		element.nodes.prevvsw.shift.room == context.nodes.r &
-		element.nodes.nextvsw.shift == context.nodes.s //&
-//		element.nodes.nextvsw == context.nodes.vsw
+		element.nodes.nextvsw.shift == context.nodes.s
 	)->sum(element.value)
 	+
 	mappings.selectedOccupantNodes->filter(
 		element.nodes.vsw.workload.patient == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s //&
-//		element.nodes.vsw == context.nodes.vsw
+		element.nodes.vsw.shift == context.nodes.s
 	)->sum(element.value)
 	
 //	Transformed version of the following boolean equivalence 
@@ -652,8 +634,8 @@ constraint with openOTs {
 // Irgendwie an Workload dran kommen, evtl. über assignedPatients aufsummieren? 
 
 // S5: The number of OTs opened on each day should be minimized
-function calculateOPenOTs with Capacity {
-	mappings.openOTs->filter(element.nodes.c == context)->sum(element.value)
+function calculateOPenOTs with Day {
+	mappings.openOTs->filter(element.nodes.c.day == context.number)->sum(element.value) 
 }
 
 // S6: The number of different OTs a surgeon is assigned to per working day should be minimized

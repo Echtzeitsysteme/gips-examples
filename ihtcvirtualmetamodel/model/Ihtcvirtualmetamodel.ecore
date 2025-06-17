@@ -18,9 +18,11 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patients" upperBound="-1"
         eType="#//Patient" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="days" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="period" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="genders" upperBound="-1"
         eType="#//Gender" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="days" upperBound="-1" eType="#//Day"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Nurse" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -199,4 +201,7 @@
         upperBound="-1" eType="#//VirtualWorkloadToOpTime" eOpposite="#//VirtualWorkloadToOpTime/enables_virtual_WorkloadToCapacity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Gender" eSuperTypes="#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Day" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
 </ecore:EPackage>
