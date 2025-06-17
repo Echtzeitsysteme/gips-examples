@@ -13,13 +13,16 @@ import com.google.gson.JsonObject;
 
 import ihtcvirtualmetamodel.Nurse;
 import ihtcvirtualmetamodel.OT;
+import ihtcvirtualmetamodel.OpTime;
 import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
+import ihtcvirtualmetamodel.VirtualOpTimeToCapacity;
 import ihtcvirtualmetamodel.VirtualShiftToRoster;
 import ihtcvirtualmetamodel.VirtualShiftToWorkload;
 import ihtcvirtualmetamodel.VirtualWorkloadToCapacity;
+import ihtcvirtualmetamodel.VirtualWorkloadToOpTime;
 
 /**
  * This model exporter can be used to convert an EMF model to the respective
@@ -52,7 +55,7 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 	 * @return JSON object.
 	 */
 	@Override
-	protected JsonObject convertPatientToJson(final Patient patient) {
+	protected JsonObject convertPatientToJson(final Patient patient, final boolean verbose) {
 		Objects.requireNonNull(patient);
 
 		final JsonObject patientJson = new JsonObject();
@@ -62,9 +65,11 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 		final Collection<VirtualShiftToWorkload> possibleShiftAssignments = patient.getFirstWorkload()
 				.getVirtualShift();
 		Shift admissionShift = null;
+		VirtualShiftToWorkload selectedvsw = null;
 		for (final VirtualShiftToWorkload v : possibleShiftAssignments) {
 			if (v.isIsSelected()) {
 				admissionShift = v.getShift();
+				selectedvsw = v;
 				break;
 			}
 		}
@@ -73,13 +78,60 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 		final Collection<VirtualWorkloadToCapacity> possibleOtAssignments = patient.getFirstWorkload()
 				.getVirtualCapacity();
 		OT scheduledOt = null;
+		VirtualWorkloadToCapacity selectedvwc = null;
 		for (final VirtualWorkloadToCapacity v : possibleOtAssignments) {
 			if (v.isIsSelected()) {
 				scheduledOt = v.getCapacity().getOt();
+				selectedvwc = v;
 				break;
 			}
 		}
-
+		// Find the selected OpTime -> Not necessary for export
+		final Collection<VirtualWorkloadToOpTime> possibleOpTimeAssignments = patient.getFirstWorkload()
+				.getVirtualOpTime();
+		OpTime selectedOpTime = null;
+		VirtualWorkloadToOpTime selectedvwop = null;
+		VirtualOpTimeToCapacity selectedvopc = null;
+		for (final VirtualWorkloadToOpTime v : possibleOpTimeAssignments) {
+			if (v.isIsSelected()) {
+				selectedOpTime = v.getOpTime();
+				selectedvwop = v;
+				final Collection<VirtualOpTimeToCapacity> possibleSurgeonOTAssignments = selectedOpTime.getVirtualCapacity();
+				for (final VirtualOpTimeToCapacity vopc : possibleSurgeonOTAssignments) {
+					if (vopc.isIsSelected()) {
+						selectedvopc = vopc;
+						break;
+					}
+				}
+				break;
+			}
+		}
+		
+		// Checks if assignments for a patient are viable
+		if(admissionShift != null) {
+			Objects.requireNonNull(selectedvsw);
+			Objects.requireNonNull(selectedvwc);
+			Objects.requireNonNull(selectedvwop);
+			Objects.requireNonNull(selectedvopc);
+			if(!selectedvwop.getRequires_virtualOpTimeToCapacity().contains(selectedvopc)) {
+				logger.warning("VirtualWorkloadToOpTime is selected but not enabled by a VirtualOpTimeToCapacity-Object!");
+			}
+			if(!selectedvwc.getRequires_virtualWorkloadToOpTime().contains(selectedvwop)) {
+				logger.warning("VirtualWorkloadToCapacity is selected but not enabled by a VirtualWorkloadToOpTime-Object!");
+			}
+			if(!selectedvsw.getRequires_virtualWorkloadToCapacity().contains(selectedvwc)) {
+				logger.warning("VirtualShiftToWorkload is selected but not enabled by a VirtualWorkloadToCapacity-Object!");
+			}
+			if((admissionShift.getShiftNo() / 3 != selectedvwc.getCapacity().getDay()) | 
+					(admissionShift.getShiftNo() / 3 != selectedOpTime.getDay()) |
+					(selectedvwc.getCapacity().getDay() != selectedOpTime.getDay())) {
+				logger.warning("The selected virtual Nodes are not on the same day! shift: " + admissionShift.getShiftNo() + " capacity.day = " + selectedvwc.getCapacity().getDay() + " opTime.day = " + selectedOpTime.getDay());
+			}
+			if(patient.getSurgeon() != selectedvwop.getOpTime().getSurgeon()) {
+				logger.warning("The patient is not assigned to the correct surgeon! Expected: " + patient.getSurgeon() + " Assigned: " + selectedvwop.getOpTime().getSurgeon()); 
+			}
+		}
+		
 		// If patient was scheduled
 		if (admissionShift != null) {
 			patientJson.addProperty("admission_day", convertShiftToDay(admissionShift.getShiftNo()));
@@ -89,10 +141,17 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 
 			Objects.requireNonNull(scheduledOt);
 			patientJson.addProperty("operating_theater", scheduledOt.getName());
+
+			if(verbose) {
+				System.out.println("Patient " + patient.getName() + " was assigned to room " + admissionShift.getRoom().getName() + " on shift " + admissionShift.getShiftNo() + 
+							". The operation by surgeon " + selectedOpTime.getSurgeon().getName() + " is scheduled in OT " + scheduledOt.getName() + " on day " + selectedvwc.getCapacity().getDay() + ".");
+			}
 		} else {
 			patientJson.addProperty("admission_day", "none");
+			if(verbose) {
+				System.out.println("Patient " + patient.getName() + " was not scheduled.");
+			}
 		}
-
 		return patientJson;
 	}
 

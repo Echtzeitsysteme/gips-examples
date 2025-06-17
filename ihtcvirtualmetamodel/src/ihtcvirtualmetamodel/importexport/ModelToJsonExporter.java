@@ -98,7 +98,7 @@ public class ModelToJsonExporter {
 			if (p.isIsOccupant()) {
 				continue;
 			}
-			patientsJson.add(convertPatientToJson(p));
+			patientsJson.add(convertPatientToJson(p, verbose));
 		}
 
 		final JsonArray nursesJson = new JsonArray();
@@ -124,7 +124,7 @@ public class ModelToJsonExporter {
 	 * @param patient Patient.
 	 * @return JSON object.
 	 */
-	protected JsonObject convertPatientToJson(final Patient patient) {
+	protected JsonObject convertPatientToJson(final Patient patient, final boolean verbose) {
 		Objects.requireNonNull(patient);
 
 		final JsonObject patientJson = new JsonObject();
