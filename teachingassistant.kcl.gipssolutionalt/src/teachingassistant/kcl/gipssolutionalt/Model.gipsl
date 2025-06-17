@@ -16,14 +16,6 @@ config {
 
 // Find session occurrence
 pattern findSessionOccurrence {
-	root : TAAllocation {
-		- modules -> module
-	}
-	
-	module : Module {
-		- sessions -> session
-	}
-	
 	session : TeachingSession {
 		- occurrences -> occurrence
 	}
@@ -34,17 +26,8 @@ pattern findSessionOccurrence {
 // Construct a condition for a session that a specific TA
 // is available (i.e., they have not blocked this session)
 pattern findTaUnavailableSession {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
-	}
-	
-	ta : TA {
-		- unavailable_because_lessons -> entry
-	}
-	
-	module : Module {
-		- sessions -> session
+	ta : TeachingAssistant {
+		- unavailableBecauseLessons -> entry
 	}
 	
 	session : TeachingSession {
@@ -59,12 +42,7 @@ condition taAvailableInSession = forbid findTaUnavailableSession
 // This rule respects the condition that the TA must not have
 // blocked the respective time table entry of the session occurrence.
 rule assignTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
-	}
-	
-	ta : TA
+	ta : TeachingAssistant
 	
 	module : Module {
 		- sessions -> session
@@ -98,12 +76,7 @@ when taAvailableInSession
 // Find every possible combination of TAs
 // and time table entries
 pattern findTaEntryCombination {
-	root : TAAllocation {
-		- tas -> ta
-		- timetable -> entry
-	}
-	
-	ta : TA
+	ta : TeachingAssistant
 	entry : TimeTableEntry
 }
 
@@ -112,13 +85,6 @@ pattern findTaEntryCombination {
 // This pattern does respect partly overlapping time
 // table entries.
 pattern findConflictingEntriesWithTa {
-	root : TAAllocation {
-		- timetable -> entryA
-		- timetable -> entryB
-		- weeks -> week
-		- tas -> ta
-	}
-	
 	week : Week
 	
 	entryA : TimeTableEntry {
@@ -128,7 +94,7 @@ pattern findConflictingEntriesWithTa {
 		- timeTableWeeks -> week
 	}
 	
-	ta : TA
+	ta : TeachingAssistant
 	
 	# entryA.startEpoch < entryB.endEpoch
 	# entryA.endEpoch > entryB.startEpoch
@@ -136,24 +102,14 @@ pattern findConflictingEntriesWithTa {
 
 // Find all possible combinations of TAs and weeks
 pattern findTaWeekCombination {
-	root : TAAllocation {
-		- weeks -> w
-		- tas -> ta
-	}
-	
 	w : Week
-	ta : TA
+	ta : TeachingAssistant
 }
 
 // Find a TA with a green employment approval status
 // for a specific module.
 pattern findGreenTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> mod
-	}
-	
-	ta : TA
+	ta : TeachingAssistant
 	
 	mod : Module {
 		- approvals -> approval
@@ -165,15 +121,10 @@ pattern findGreenTa {
 	# approval.ratingNumeric == 2
 }
 
-// Find a TA with a yellow employment approval status
+// Find a TA with an amber employment approval status
 // for a specific module.
-pattern findYellowTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> mod
-	}
-	
-	ta : TA
+pattern findAmberTa {
+	ta : TeachingAssistant
 	
 	mod : Module {
 		- approvals -> approval
@@ -199,7 +150,7 @@ constraint with findSessionOccurrence {
 		element.nodes.occurrence == context.nodes.occurrence //
 	)->sum(element.value)
 	==
-	context.nodes.session.numTAsPerSession
+	context.nodes.session.numTasPerSession
 }
 
 // TAs must not have conflicting assignments.
@@ -215,7 +166,7 @@ constraint with findConflictingEntriesWithTa {
 // Ensure TAs max hours per year
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // must not exceed their yearly hour limit
-constraint with TA {
+constraint with TeachingAssistant {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
@@ -244,9 +195,9 @@ function greenTas with findGreenTa {
 }
 
 // Represents the number of assigned session occurrences to a specific
-// TA for a specific session (and the TA needs to have the yellow
+// TA for a specific session (and the TA needs to have the amber
 // employment rating for the respective module).
-function yellowTas with findYellowTa {
+function amberTas with findAmberTa {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.module == context.nodes.mod
@@ -255,9 +206,9 @@ function yellowTas with findYellowTa {
 
 // Global objective
 // We want to use a higher weight for green TAs compared to the
-// yellow TAs
+// amber TAs
 objective : max {
 	0
 	+ 5 * functions.greenTas
-	+ 1 * functions.yellowTas
+	+ 1 * functions.amberTas
 }

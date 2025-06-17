@@ -16,8 +16,8 @@ import metamodel.EmploymentApproval;
 import metamodel.EmploymentRating;
 import metamodel.Module;
 import metamodel.SessionOccurrence;
-import metamodel.TA;
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
+import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
@@ -26,7 +26,7 @@ import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
 
 /**
- * Generator that creates a TAAllocation model aligned with the updated
+ * Generator that creates a TaAllocation model aligned with the updated
  * metamodel:
  * 
  * <ul>
@@ -39,7 +39,7 @@ import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
  * <li>TimeTableEntry has multi-valued "timeTableWeeks" (EList<Integer>),
  * "room", "weekDay", and Date-based "startTime", "endTime", plus reference
  * "session".</li>
- * <li>TAAllocation has "modules", "tas", and "timetable".</li>
+ * <li>TaAllocation has "modules", "tas", and "timetable".</li>
  * </ul>
  */
 public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
@@ -87,7 +87,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		final String instanceFolderPath = gen.prepareFolder();
 
 		// Build the model
-		final TAAllocation model = gen.constructModel();
+		final TaAllocation model = gen.constructModel();
 
 		// Save as XMI
 		try {
@@ -104,12 +104,12 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 	}
 
 	/**
-	 * Constructs the full TAAllocation model instance. No @Override here because
+	 * Constructs the full TaAllocation model instance. No @Override here because
 	 * parent doesn't declare this as abstract.
 	 */
-	public TAAllocation constructModel() {
-		// 1) Create the root TAAllocation
-		this.root = factory.createTAAllocation();
+	public TaAllocation constructModel() {
+		// 1) Create the root TaAllocation
+		this.root = factory.createTaAllocation();
 
 		// 1.1) Create all weeks
 		for (int i = START_WEEK; i <= END_WEEK; i++) {
@@ -142,7 +142,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 			// of this class.
 			final int maxWeeklyHours = getRandInt(6, TA_MAXIMUM_HOURS_PER_WEEK);
 
-			final TA ta = factory.createTA();
+			final TeachingAssistant ta = factory.createTeachingAssistant();
 			ta.setName(taName);
 			ta.setMaxHoursPerWeek(maxWeeklyHours);
 			ta.setMaxHoursPerYear(TA_MAXIMUM_HOURS_PER_YEAR);
@@ -153,13 +153,13 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		// 4) Assign EmploymentApprovals
 		for (final Module module : modules.values()) {
 			final int numApplicants = getRandInt(3, Math.min(NUMBER_OF_TAS, 7));
-			final List<TA> shuffledTAs = new ArrayList<>(tas.values());
+			final List<TeachingAssistant> shuffledTAs = new ArrayList<>(tas.values());
 			java.util.Collections.shuffle(shuffledTAs, rand);
 
-			final List<TA> applicants = shuffledTAs.subList(0, numApplicants);
+			final List<TeachingAssistant> applicants = shuffledTAs.subList(0, numApplicants);
 			int highestRatingNum = -1;
 
-			for (final TA ta : applicants) {
+			for (final TeachingAssistant ta : applicants) {
 				// ratingVal: 0 => RED, 1 => AMBER, 2 => GREEN
 				final int ratingVal = getRandInt(0, 2);
 				final EmploymentRating rating = convertRating(ratingVal);
@@ -209,7 +209,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 				// TODO: Move constants to the class.
 				// TAs needed
 				final int requiredTAs = (rand.nextDouble() < 0.7) ? 1 : 2;
-				session.setNumTAsPerSession(requiredTAs);
+				session.setNumTasPerSession(requiredTAs);
 
 				// Attach to module
 				module.getSessions().add(session);
@@ -287,7 +287,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 		}
 
 		// 5.3) Add (randomized) blocked time table entries to the TAs
-		for (final TA ta : tas.values()) {
+		for (final TeachingAssistant ta : tas.values()) {
 			final int numberOfBlockedDates = getRandInt(MIN_NUMBER_TA_BLOCKED, MAX_NUMBER_TA_BLOCKED);
 			final List<TimeTableEntry> copiedTtes = new ArrayList<TimeTableEntry>();
 			copiedTtes.addAll(root.getTimetable());
@@ -297,7 +297,7 @@ public class SimpleTaKclGenerator extends TeachingAssistantKclGenerator {
 					break;
 				}
 				final int randomTteIndex = getRandInt(0, copiedTtes.size() - 1);
-				ta.getUnavailable_because_lessons().add(copiedTtes.remove(randomTteIndex));
+				ta.getUnavailableBecauseLessons().add(copiedTtes.remove(randomTteIndex));
 			}
 		}
 

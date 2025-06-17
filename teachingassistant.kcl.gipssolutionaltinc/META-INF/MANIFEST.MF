@@ -16,3 +16,4 @@ Require-Bundle: org.emoflon.ibex.common,
  teachingassistant.kcl.gipssolutionalt;bundle-version="1.0.0",
  teachingassistant.kcl.gips.utils;bundle-version="1.0.0"
 Import-Package: teachingassistant.kcl.gipssolutioninc.preprocessing
+Export-Package: teachingassistant.kcl.gipssolutionaltinc.runner

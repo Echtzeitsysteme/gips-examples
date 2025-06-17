@@ -17,8 +17,8 @@ config {
 // Construct a condition for a session that a specific TA
 // is available (i.e., they have not blocked this session)
 pattern findTaUnavailableSession {
-	ta : TA {
-		- unavailable_because_lessons -> entry
+	ta : TeachingAssistant {
+		- unavailableBecauseLessons -> entry
 	}
 	
 	entry : TimeTableEntry
@@ -29,12 +29,7 @@ condition taAvailableInSession = forbid findTaUnavailableSession
 // This rule respects the condition that the TA must not have
 // blocked the respective time table entry of the session occurrence.
 rule assignTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
-	}
-	
-	ta : TA
+	ta : TeachingAssistant
 	
 	module : Module {
 		- sessions -> session
@@ -67,16 +62,7 @@ when taAvailableInSession
 
 // Rule to remove a blocked TA from a specific session occurrence.
 rule removeTa {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
-	}
-	
-	ta : TA
-	
-	module : Module {
-		- sessions -> session
-	}
+	ta : TeachingAssistant
 	
 	session : TeachingSession {
 		- occurrences -> occurrence
@@ -101,13 +87,6 @@ rule removeTa {
 // This pattern does respect partly overlapping time
 // table entries.
 pattern findConflictingEntriesWithTa {
-	root : TAAllocation {
-		- timetable -> entryA
-		- timetable -> entryB
-		- weeks -> week
-		- tas -> ta
-	}
-	
 	week : Week
 	
 	entryA : TimeTableEntry {
@@ -117,7 +96,7 @@ pattern findConflictingEntriesWithTa {
 		- timeTableWeeks -> week
 	}
 	
-	ta : TA
+	ta : TeachingAssistant
 	
 	# entryA.startEpoch < entryB.endEpoch
 	# entryA.endEpoch > entryB.startEpoch
@@ -125,27 +104,13 @@ pattern findConflictingEntriesWithTa {
 
 // Find all possible combinations of TAs and weeks
 pattern findTaWeekCombination {
-	root : TAAllocation {
-		- weeks -> w
-		- tas -> ta
-	}
-	
 	w : Week
-	ta : TA
+	ta : TeachingAssistant
 }
 
 // Pattern to find an existing TA assignment.
 pattern taExistingAssignment {
-	root : TAAllocation {
-		- tas -> ta
-		- modules -> module
-	}
-	
-	ta : TA
-	
-	module : Module {
-		- sessions -> session
-	}
+	ta : TeachingAssistant
 	
 	session : TeachingSession {
 		- occurrences -> occurrence
@@ -167,19 +132,41 @@ pattern taExistingAssignment {
 
 // Find session occurrence
 pattern findSessionOccurrence {
-	root : TAAllocation {
-		- modules -> module
-	}
-	
-	module : Module {
-		- sessions -> session
-	}
-	
 	session : TeachingSession {
 		- occurrences -> occurrence
 	}
 	
 	occurrence : SessionOccurrence
+}
+
+// Find a TA with a green employment approval status
+// for a specific module.
+pattern findGreenTa {
+	ta : TeachingAssistant
+	
+	mod : Module {
+		- approvals -> approval
+	}
+	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	# approval.ratingNumeric == 2
+}
+
+// Find a TA with an amber employment approval status
+// for a specific module.
+pattern findAmberTa {
+	ta : TeachingAssistant
+	
+	mod : Module {
+		- approvals -> approval
+	}
+	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	# approval.ratingNumeric == 1
 }
 
 //
@@ -229,13 +216,13 @@ constraint with findSessionOccurrence {
 	- mappings.taOccurrenceRemove->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value)
 	+ mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value)
 	==
-	context.nodes.session.numTAsPerSession
+	context.nodes.session.numTasPerSession
 }
 
 // Ensure TAs max hours per year
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // must not exceed their yearly hour limit
-constraint with TA {
+constraint with TeachingAssistant {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context //
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
@@ -269,4 +256,31 @@ constraint with findTaWeekCombination {
 	<= context.nodes.ta.maxHoursPerWeek
 }
 
-// TODO: objective function
+// Represents the number of assigned session occurrences to a specific
+// TA for a specific session (and the TA needs to have the green
+// employment rating for the respective module).
+function greenTas with findGreenTa {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+}
+
+// Represents the number of assigned session occurrences to a specific
+// TA for a specific session (and the TA needs to have the amber
+// employment rating for the respective module).
+function amberTas with findAmberTa {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+}
+
+// Global objective
+// We want to use a higher weight for green TAs compared to the
+// amber TAs
+objective : max {
+	0
+	+ 5 * functions.greenTas
+	+ 1 * functions.amberTas
+}

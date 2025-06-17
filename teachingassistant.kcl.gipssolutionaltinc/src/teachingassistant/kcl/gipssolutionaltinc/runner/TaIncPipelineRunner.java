@@ -1,57 +1,39 @@
 package teachingassistant.kcl.gipssolutionaltinc.runner;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
-import org.eclipse.emf.ecore.resource.Resource;
-
-import metamodel.TAAllocation;
-import teachingassistant.kcl.gips.utils.Tuple;
+import metamodel.TaAllocation;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.PreprocessingGtApp;
-import teachingassistant.kcl.metamodelalt.export.FileUtils;
-import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
-import teachingassistant.kcl.metamodelalt.generator.TeachingAssistantKclManipulator;
+import teachingassistant.kcl.metamodelalt.comparator.SolutionComparator;
 import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
 
 /**
- * Runs the teaching assistant pipeline (scenario generator, GIPSL optimization,
- * and validator).
+ * Runs the teaching assistant incremental pipeline (scenario generator, GIPSL
+ * optimization, manipulator, incremental solution, and validator).
  */
-public class TaIncPipelineRunner {
+public class TaIncPipelineRunner extends AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 
+	/**
+	 * No instantiations of this class.
+	 */
+	private TaIncPipelineRunner() {
+	}
+
+	/**
+	 * Entry point for the execution of this runner. All arguments will be ignored.
+	 * 
+	 * @param args All arguments will be ignored.
+	 */
 	public static void main(final String[] args) {
-		//
-		// Generate the initial model
-		//
+		new TaIncPipelineRunner().run();
+	}
 
-		SimpleTaKclGenerator.main(null);
-
-		//
-		// Optimize/solve the initial model/problem
-		//
-
-		teachingassistant.kcl.gipssolutionalt.runner.TaBatchRunner.main(null);
-
-		// Validate the solution
-		TeachingAssistantKclValidator.main(null);
-
-		// Save initial solution
-		final String projectFolder = System.getProperty("user.dir");
-		final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodelalt/instances/";
-		final String filePath = instanceFolder + TeachingAssistantKclValidator.SCENARIO_FILE_NAME;
-		final Resource firstResource = FileUtils.loadModel(filePath);
-		final TAAllocation firstSolution = (TAAllocation) firstResource.getContents().get(0);
-
-		//
-		// Alter the solution, i.e., violate a constraint by changing the model
-		//
-
-		final TeachingAssistantKclManipulator manipulator = new TeachingAssistantKclManipulator(filePath);
-		manipulator.executeBlocking();
-
-		// Model should now be invalid
-		TeachingAssistantKclValidator.main(null);
+	/**
+	 * Runs the pipeline.
+	 */
+	protected void run() {
+		// Chose whether to generate a scenario or use a scenario that can only be
+		// solved by a complete re-plan procedure.
+		final TaAllocation firstSolution = prepareScenarioBlockedGen();
+//		final TaAllocation firstSolution = prepareScenarioReplan();
 
 		//
 		// Second stage optimization/repair
@@ -66,58 +48,16 @@ public class TaIncPipelineRunner {
 		TaIncRunner.main(null);
 
 		// Validate the solution
-		TeachingAssistantKclValidator.main(null);
+		validate();
 
 		// Save second solution
-		final Resource secondResource = FileUtils.loadModel(filePath);
-		final TAAllocation secondSolution = (TAAllocation) secondResource.getContents().get(0);
+		final TaAllocation secondSolution = loadModelFromFile(filePath);
 
-		// Compare
-		compareSolutions(firstSolution, secondSolution);
+		// Compare both solutions
+		SolutionComparator.compareSolutions(firstSolution, secondSolution);
 
+		// End
 		System.exit(0);
-	}
-
-	/**
-	 * Compares to given solutions regarding the number of identical mappings
-	 * chosen.
-	 * 
-	 * @param first  First solution.
-	 * @param second Second solution.
-	 */
-	private static void compareSolutions(final TAAllocation first, final TAAllocation second) {
-		Objects.requireNonNull(first);
-		Objects.requireNonNull(second);
-
-		final Set<Tuple<String, String>> firstTuples = new HashSet<>();
-		first.getModules().forEach(module -> module.getSessions()
-				.forEach(session -> session.getOccurrences().forEach(occ -> occ.getTas().forEach(ta -> {
-					firstTuples.add(new Tuple<String, String>(occ.getName(), ta.getName()));
-				}))));
-
-		final Set<Tuple<String, String>> secondTuples = new HashSet<>();
-		second.getModules().forEach(module -> module.getSessions()
-				.forEach(session -> session.getOccurrences().forEach(occ -> occ.getTas().forEach(ta -> {
-					secondTuples.add(new Tuple<String, String>(occ.getName(), ta.getName()));
-				}))));
-
-		// Sanity check: both sets must be equal in size
-		if (firstTuples.size() != secondTuples.size()) {
-			throw new InternalError("Set sizes are different: " + firstTuples.size() + " vs. " + secondTuples.size());
-		}
-
-		// Count identical tuples
-		int counter = 0;
-		for (final Tuple<String, String> t : secondTuples) {
-			for (final Tuple<String, String> tOrig : firstTuples) {
-				if (t.equals(tOrig)) {
-					counter++;
-					break;
-				}
-			}
-		}
-
-		System.out.println(counter + " out of " + firstTuples.size() + " mappings were identical.");
 	}
 
 }

@@ -17,8 +17,8 @@ config {
 // Finds a TA with the name `taA` that is unavailable in
 // a TimeTableEntry with name `entryA`.
 pattern findTaAUnavailableEntryA {	
-	taA : TA {
-		- unavailable_because_lessons -> entryA
+	taA : TeachingAssistant {
+		- unavailableBecauseLessons -> entryA
 	}
 	
 	entryA : TimeTableEntry
@@ -27,8 +27,8 @@ pattern findTaAUnavailableEntryA {
 // Finds a TA with the name `taB` that is unavailable in
 // a TimeTableEntry with name `entryB`.
 pattern findTaAUnavailableEntryB {
-	taA : TA {
-		- unavailable_because_lessons -> entryB
+	taA : TeachingAssistant {
+		- unavailableBecauseLessons -> entryB
 	}
 	
 	entryB : TimeTableEntry
@@ -37,8 +37,8 @@ pattern findTaAUnavailableEntryB {
 // Finds a TA with the name `taB` that is unavailable in
 // a TimeTableEntry with name `entryA`.
 pattern findTaBUnavailableEntryA {
-	taB : TA {
-		- unavailable_because_lessons -> entryA
+	taB : TeachingAssistant {
+		- unavailableBecauseLessons -> entryA
 	}
 	
 	entryA : TimeTableEntry
@@ -55,8 +55,8 @@ condition taAandTaBAllCondition = enforce findTaAUnavailableEntryA && forbid fin
 // I.e., this rule should fix a violated assignment of a TA by swapping
 // two assignments.
 rule swapTas {
-	taA : TA
-	taB : TA
+	taA : TeachingAssistant
+	taB : TeachingAssistant
 	
 	sessionA : TeachingSession {
 		- occurrences -> occurrenceA
@@ -99,7 +99,7 @@ when taAandTaBAllCondition
 // This pattern does respect partly overlapping time
 // table entries.
 pattern findConflictingEntriesWithTa {
-	root : TAAllocation {
+	root : TaAllocation {
 		- timetable -> entryA
 		- timetable -> entryB
 		- weeks -> week
@@ -115,7 +115,7 @@ pattern findConflictingEntriesWithTa {
 		- timeTableWeeks -> week
 	}
 	
-	ta : TA
+	ta : TeachingAssistant
 	
 	# entryA.startEpoch < entryB.endEpoch
 	# entryA.endEpoch > entryB.startEpoch
@@ -123,20 +123,20 @@ pattern findConflictingEntriesWithTa {
 
 // Find all possible combinations of TAs and weeks
 pattern findTaWeekCombination {
-	root : TAAllocation {
+	root : TaAllocation {
 		- weeks -> w
 		- tas -> ta
 	}
 	
 	w : Week
-	ta : TA
+	ta : TeachingAssistant
 }
 
 // Construct a condition for a session that a specific TA
 // is available (i.e., they have not blocked this session)
 pattern findTaUnavailableSession {
-	ta : TA {
-		- unavailable_because_lessons -> entry
+	ta : TeachingAssistant {
+		- unavailableBecauseLessons -> entry
 	}
 	
 	entry : TimeTableEntry
@@ -145,12 +145,12 @@ condition taBlockedInSession = enforce findTaUnavailableSession
 
 // Finds a blocked TA with a corresponding session occurrence.
 pattern findBlockedTa {
-	root : TAAllocation {
+	root : TaAllocation {
 		- tas -> ta
 		- modules -> module
 	}
 	
-	ta : TA
+	ta : TeachingAssistant
 	
 	module : Module {
 		- sessions -> session
@@ -177,12 +177,12 @@ when taBlockedInSession
 
 // Pattern to find an existing TA assignment.
 pattern taExistingAssignment {
-	root : TAAllocation {
+	root : TaAllocation {
 		- tas -> ta
 		- modules -> module
 	}
 	
-	ta : TA
+	ta : TeachingAssistant
 	
 	module : Module {
 		- sessions -> session
@@ -262,7 +262,7 @@ constraint with findConflictingEntriesWithTa {
 // Ensure TAs max hours per year
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // must not exceed their yearly hour limit
-constraint with TA {
+constraint with TeachingAssistant {
 	mappings.swap->filter( //
 		element.nodes.taA == context //
 	)->sum( //

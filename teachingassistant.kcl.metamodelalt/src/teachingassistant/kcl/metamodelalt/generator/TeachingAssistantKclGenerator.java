@@ -21,12 +21,12 @@ import com.google.common.base.Preconditions;
 import metamodel.MetamodelFactory;
 import metamodel.MetamodelPackage;
 import metamodel.Module;
-import metamodel.TA;
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
+import metamodel.TeachingAssistant;
 
 /**
  * Parent generator class that sets up basic structures and utilities for
- * generating a TAAllocation model. Updated to remove or rename any fields that
+ * generating a TaAllocation model. Updated to remove or rename any fields that
  * do not exist in the alternative metamodel.
  */
 public class TeachingAssistantKclGenerator {
@@ -34,10 +34,10 @@ public class TeachingAssistantKclGenerator {
 	// Factory for creating model elements
 	protected MetamodelFactory factory = MetamodelFactory.eINSTANCE;
 	// Root model object
-	protected TAAllocation root;
+	protected TaAllocation root;
 
 	// Mappings from code/name => model objects (just for convenience)
-	protected Map<String, TA> tas = new LinkedHashMap<>();
+	protected Map<String, TeachingAssistant> tas = new LinkedHashMap<>();
 	protected Map<String, Module> modules = new LinkedHashMap<>();
 
 	// Random generator for producing synthetic data
@@ -107,7 +107,7 @@ public class TeachingAssistantKclGenerator {
 	 */
 	public void addTA(final String name, final int maxHoursPerWeek, final int maxHoursPerYear) {
 		Objects.requireNonNull(name);
-		final TA ta = factory.createTA();
+		final TeachingAssistant ta = factory.createTeachingAssistant();
 
 		// According to the new metamodel, TA typically has: name, maxHoursPerWeek,
 		// maxHoursPerYear
@@ -119,20 +119,20 @@ public class TeachingAssistantKclGenerator {
 	}
 
 	/**
-	 * Creates and returns the TAAllocation root object, adding all TAs and Modules
+	 * Creates and returns the TaAllocation root object, adding all TAs and Modules
 	 * that we've accumulated into 'tas'/'modules'. If your new Ecore doesn't define
-	 * any extra attributes on TAAllocation, you can keep it simple like this.
+	 * any extra attributes on TaAllocation, you can keep it simple like this.
 	 */
-	public TAAllocation generate(final String allocationName) {
+	public TaAllocation generate(final String allocationName) {
 		Objects.requireNonNull(allocationName);
-		root = factory.createTAAllocation();
-		// If there's a 'name' attribute on TAAllocation, you could set it:
+		root = factory.createTaAllocation();
+		// If there's a 'name' attribute on TaAllocation, you could set it:
 		// root.setName(allocationName);
 
 		// Add the TAs and Modules we've collected
 		root.getTas().addAll(tas.values());
 		root.getModules().addAll(modules.values());
-		// If TAAllocation also has a 'timetable' reference or anything else, populate
+		// If TaAllocation also has a 'timetable' reference or anything else, populate
 		// it here.
 
 		return root;
@@ -141,7 +141,7 @@ public class TeachingAssistantKclGenerator {
 	/**
 	 * Helper to save the model to XMI format on disk.
 	 */
-	public static void save(final TAAllocation model, final String path) throws IOException {
+	public static void save(final TaAllocation model, final String path) throws IOException {
 		Objects.requireNonNull(model);
 		Objects.requireNonNull(path);
 		final Resource r = saveAndReturn(model, path);
@@ -151,7 +151,7 @@ public class TeachingAssistantKclGenerator {
 	/**
 	 * Same as above, but returns the Resource if needed.
 	 */
-	public static Resource saveAndReturn(final TAAllocation model, final String path) throws IOException {
+	public static Resource saveAndReturn(final TaAllocation model, final String path) throws IOException {
 		Objects.requireNonNull(model);
 		Objects.requireNonNull(path);
 

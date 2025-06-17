@@ -14,8 +14,8 @@ import metamodel.EmploymentApproval;
 import metamodel.Module;
 import metamodel.NamedElement;
 import metamodel.SessionOccurrence;
-import metamodel.TA;
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
+import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
@@ -69,7 +69,7 @@ public class TeachingAssistantKclValidator {
 
 		// Load model
 		final Resource r = FileUtils.loadModel(filePath);
-		final TAAllocation model = (TAAllocation) r.getContents().get(0);
+		final TaAllocation model = (TaAllocation) r.getContents().get(0);
 
 		// Validate
 		final boolean valid = new TeachingAssistantKclValidator().validate(model);
@@ -86,12 +86,12 @@ public class TeachingAssistantKclValidator {
 	//
 
 	/**
-	 * Validate the given TAAllocation object.
+	 * Validate the given TaAllocation object.
 	 * 
-	 * @param model TAAllocation object to validate.
+	 * @param model TaAllocation object to validate.
 	 * @return True if complete model is valid.
 	 */
-	public boolean validate(final TAAllocation model) {
+	public boolean validate(final TaAllocation model) {
 		if (model == null) {
 			logger.warning("=> Given model was null.");
 			return false;
@@ -132,7 +132,7 @@ public class TeachingAssistantKclValidator {
 				});
 			});
 			model.getTas().forEach(ta -> {
-				allFoundTimeTableEntries.addAll(ta.getUnavailable_because_lessons());
+				allFoundTimeTableEntries.addAll(ta.getUnavailableBecauseLessons());
 			});
 			boolean timeTableEntriesValid = true;
 			for (final TimeTableEntry entry : allFoundTimeTableEntries) {
@@ -145,7 +145,7 @@ public class TeachingAssistantKclValidator {
 		// TAs
 		{
 			boolean tasValid = true;
-			for (final TA ta : model.getTas()) {
+			for (final TeachingAssistant ta : model.getTas()) {
 				tasValid = tasValid & validate(ta, model);
 			}
 			logger.info("=> All TAs are valid: " + tasValid);
@@ -180,16 +180,13 @@ public class TeachingAssistantKclValidator {
 
 		// SessionOccurrences
 		{
-			// Collect all session occurrences
-			final Set<SessionOccurrence> allFoundSessionOccurrences = new HashSet<>();
-			model.getModules().forEach(module -> {
-				module.getSessions().forEach(session -> {
-					allFoundSessionOccurrences.addAll(session.getOccurrences());
-				});
-			});
 			boolean sessionOccurrencesValid = true;
-			for (final SessionOccurrence so : allFoundSessionOccurrences) {
-				sessionOccurrencesValid = sessionOccurrencesValid & validate(so, model);
+			for (final Module module : model.getModules()) {
+				for (final TeachingSession session : module.getSessions()) {
+					for (final SessionOccurrence so : session.getOccurrences()) {
+						sessionOccurrencesValid = sessionOccurrencesValid & validate(so, model, session);
+					}
+				}
 			}
 			logger.info("=> All session occurrences are valid: " + sessionOccurrencesValid);
 			valid = valid & sessionOccurrencesValid;
@@ -220,7 +217,7 @@ public class TeachingAssistantKclValidator {
 	 * @param model Complete model.
 	 * @return True if the given module `m` was valid.
 	 */
-	private boolean validate(final Module m, final TAAllocation model) {
+	private boolean validate(final Module m, final TaAllocation model) {
 		if (m == null) {
 			return false;
 		}
@@ -249,7 +246,7 @@ public class TeachingAssistantKclValidator {
 	 * @param model Complete model.
 	 * @return True if the given teaching session `ts` was valid.
 	 */
-	private boolean validate(final TeachingSession ts, final TAAllocation model) {
+	private boolean validate(final TeachingSession ts, final TaAllocation model) {
 		if (ts == null) {
 			return false;
 		}
@@ -258,7 +255,7 @@ public class TeachingAssistantKclValidator {
 			return false;
 		}
 
-		if (ts.getNumTAsPerSession() < 1) {
+		if (ts.getNumTasPerSession() < 1) {
 			return false;
 		}
 
@@ -350,11 +347,12 @@ public class TeachingAssistantKclValidator {
 	 * Validate a given session occurrence `so` in the context of the complete
 	 * model.
 	 * 
-	 * @param so    Session occurrence to validate.
-	 * @param model Complete model.
+	 * @param so      Session occurrence to validate.
+	 * @param model   Complete model.
+	 * @param session Teaching session this occurrence belongs to.
 	 * @return True if the given session occurrence `so` was valid.
 	 */
-	private boolean validate(final SessionOccurrence so, final TAAllocation model) {
+	private boolean validate(final SessionOccurrence so, final TaAllocation model, final TeachingSession session) {
 		if (so == null) {
 			return false;
 		}
@@ -371,7 +369,14 @@ public class TeachingAssistantKclValidator {
 			return false;
 		}
 
-		for (final TA ta : so.getTas()) {
+		if (checkForValidSolution && session.getNumTasPerSession() != so.getTas().size()) {
+			logger.warning(
+					"Session occurrence " + so.getName() + " did not get the right amount of TAs assigned. Requested: "
+							+ session.getNumTasPerSession() + "; assigned: " + so.getTas().size());
+			return false;
+		}
+
+		for (final TeachingAssistant ta : so.getTas()) {
 			if (!model.getTas().contains(ta)) {
 				return false;
 			}
@@ -410,7 +415,7 @@ public class TeachingAssistantKclValidator {
 	 * @param model Complete model.
 	 * @return True if the given teaching assistant `ta` was valid.
 	 */
-	private boolean validate(final TA ta, final TAAllocation model) {
+	private boolean validate(final TeachingAssistant ta, final TaAllocation model) {
 		if (ta == null) {
 			return false;
 		}
@@ -429,7 +434,7 @@ public class TeachingAssistantKclValidator {
 
 		// Unavailable sessions
 		final Set<TimeTableEntry> allShifts = findAllShiftsOfTa(ta, model);
-		for (final TimeTableEntry unavailable : ta.getUnavailable_because_lessons()) {
+		for (final TimeTableEntry unavailable : ta.getUnavailableBecauseLessons()) {
 			if (allShifts.contains(unavailable)) {
 				if (verbose) {
 					logger.warning("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable
@@ -497,12 +502,13 @@ public class TeachingAssistantKclValidator {
 	}
 
 	/**
-	 * TODO.
+	 * Finds and returns the module of a given session.
 	 * 
-	 * @param session
-	 * @return
+	 * @param session Teaching session to find the module for.
+	 * @param model   The complete model
+	 * @return Module of a given teaching session.
 	 */
-	private Module findModuleOfSession(final TeachingSession session, final TAAllocation model) {
+	private Module findModuleOfSession(final TeachingSession session, final TaAllocation model) {
 		for (final Module module : model.getModules()) {
 			if (module.getSessions().contains(session)) {
 				return module;
@@ -764,7 +770,7 @@ public class TeachingAssistantKclValidator {
 	 * @return Set of `TimeTableEntry` that represent the assigned shifts of the
 	 *         given TA.
 	 */
-	private Set<TimeTableEntry> findAllShiftsOfTa(final TA ta, final TAAllocation model) {
+	private Set<TimeTableEntry> findAllShiftsOfTa(final TeachingAssistant ta, final TaAllocation model) {
 		final Set<TimeTableEntry> shifts = new HashSet<>();
 		model.getModules().forEach(module -> {
 			// Removed on purpose to also find assigned shifts that are not approved.
@@ -814,7 +820,8 @@ public class TeachingAssistantKclValidator {
 	 * @return Set of `TimeTableEntry` that represent the assigned shifts of the
 	 *         given TA.
 	 */
-	private Set<TimeTableEntry> findAllShiftsOfTaInWeek(final TA ta, final int week, final TAAllocation model) {
+	private Set<TimeTableEntry> findAllShiftsOfTaInWeek(final TeachingAssistant ta, final int week,
+			final TaAllocation model) {
 		final Set<TimeTableEntry> shifts = new HashSet<>();
 		model.getModules().forEach(module -> {
 			// Disabled on purpose to find all shifts of the given TA in the given week

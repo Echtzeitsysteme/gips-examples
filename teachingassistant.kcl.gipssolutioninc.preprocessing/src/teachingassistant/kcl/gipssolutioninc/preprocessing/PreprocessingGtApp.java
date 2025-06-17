@@ -16,7 +16,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationRule;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import metamodel.MetamodelPackage;
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
 import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.api.PreprocessingAPI;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.api.PreprocessingHiPEApp;
@@ -53,7 +53,7 @@ public class PreprocessingGtApp extends PreprocessingHiPEApp {
 		EmoflonGtAppUtils.extractFiles(workspacePath);
 
 		// Load model from given XMI file path
-		TAAllocation model = null;
+		TaAllocation model = null;
 		try {
 			model = loadModel(xmiFilePath);
 		} catch (final IOException e) {
@@ -135,7 +135,7 @@ public class PreprocessingGtApp extends PreprocessingHiPEApp {
 	 * @throws IOException If an IOException occurs during read, this method will
 	 *                     pass it.
 	 */
-	private TAAllocation loadModel(final String path) throws IOException {
+	private TaAllocation loadModel(final String path) throws IOException {
 		Objects.requireNonNull(path);
 
 		final ResourceSet rs = new ResourceSetImpl();
@@ -143,7 +143,7 @@ public class PreprocessingGtApp extends PreprocessingHiPEApp {
 		reg.getExtensionToFactoryMap().put("xmi", new SmartEMFResourceFactoryImpl("../"));
 		rs.getPackageRegistry().put(MetamodelPackage.eNS_URI, MetamodelPackage.eINSTANCE);
 		final Resource model = rs.getResource(URI.createFileURI(path), true);
-		return (TAAllocation) model.getContents().get(0);
+		return (TaAllocation) model.getContents().get(0);
 	}
 
 	/**

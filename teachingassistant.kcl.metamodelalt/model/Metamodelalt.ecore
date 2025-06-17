@@ -5,35 +5,33 @@
   <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TAAllocation">
+  <eClassifiers xsi:type="ecore:EClass" name="TaAllocation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="modules" upperBound="-1"
         eType="#//Module" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tas" upperBound="-1" eType="#//TA"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tas" upperBound="-1" eType="#//TeachingAssistant"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="timetable" upperBound="-1"
         eType="#//TimeTableEntry" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="weeks" upperBound="-1"
         eType="#//Week" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TA" eSuperTypes="#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        defaultValueLiteral="20"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerYear" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        defaultValueLiteral="312"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="unavailable_because_lessons"
+  <eClassifiers xsi:type="ecore:EClass" name="TeachingAssistant" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerYear" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="unavailableBecauseLessons"
         upperBound="-1" eType="#//TimeTableEntry"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EmploymentApproval">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rating" eType="#//EmploymentRating"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ta" lowerBound="1" eType="#//TA"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ta" lowerBound="1" eType="#//TeachingAssistant"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingNumeric" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SessionOccurrence" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeTableWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tas" lowerBound="1" upperBound="-1"
-        eType="#//TA"/>
+        eType="#//TeachingAssistant"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="previousSolutionTas" upperBound="-1"
-        eType="#//TA"/>
+        eType="#//TeachingAssistant"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Module" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="approvals" upperBound="-1"
@@ -44,7 +42,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="TeachingSession" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="hoursPaidPerOccurrence"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numTAsPerSession" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numTasPerSession" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="occurrences" upperBound="-1"
         eType="#//SessionOccurrence" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entries" upperBound="-1"
