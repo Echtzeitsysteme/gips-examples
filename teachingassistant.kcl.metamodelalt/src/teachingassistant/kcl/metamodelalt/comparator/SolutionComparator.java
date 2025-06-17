@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
 import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.gips.utils.Tuple;
 
@@ -27,7 +27,7 @@ public class SolutionComparator {
 	 * @param first  First solution.
 	 * @param second Second solution.
 	 */
-	public static void compareSolutions(final TAAllocation first, final TAAllocation second) {
+	public static void compareSolutions(final TaAllocation first, final TaAllocation second) {
 		Objects.requireNonNull(first);
 		Objects.requireNonNull(second);
 

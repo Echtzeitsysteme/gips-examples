@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
 import teachingassistant.kcl.gips.utils.AbstractGipsTeachingAssistantRunner;
 import teachingassistant.kcl.metamodelalt.export.FileUtils;
 import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
@@ -32,12 +32,12 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	 * Prepares (and returns) the scenario using the generator implementation to
 	 * block a TA's entry.
 	 * 
-	 * @return TAAllocation scenario.
+	 * @return TaAllocation scenario.
 	 */
-	protected TAAllocation prepareScenarioBlockedGen() {
+	protected TaAllocation prepareScenarioBlockedGen() {
 		// Generate the initial model
 		SimpleTaKclGenerator.main(null);
-		final TAAllocation firstSolution = solveAndValidateBatch();
+		final TaAllocation firstSolution = solveAndValidateBatch();
 
 		// Alter the solution, i.e., violate a constraint by changing the model
 		manipulateBlocking();
@@ -47,16 +47,16 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	/**
 	 * Prepares (and returns) the re-plan scenario hard-coded.
 	 * 
-	 * @return TAAllocation scenario.
+	 * @return TaAllocation scenario.
 	 */
-	protected TAAllocation prepareScenarioBlockedReplan() {
+	protected TaAllocation prepareScenarioBlockedReplan() {
 		// Copy re-planning scenario XMI file
 		try {
 			Files.copy(Path.of(filePathReplan), Path.of(filePathPlain), StandardCopyOption.REPLACE_EXISTING);
 		} catch (final IOException e) {
 			throw new InternalError(e);
 		}
-		final TAAllocation firstSolution = solveAndValidateBatch();
+		final TaAllocation firstSolution = solveAndValidateBatch();
 
 		// Alter the solution, i.e., violate a constraint by changing the model
 		manipulateBlocking();
@@ -67,12 +67,12 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	 * Prepares (and returns) the scenario using the generator implementation to
 	 * reduce a TA's weekly time limit.
 	 * 
-	 * @return TAAllocation scenario.
+	 * @return TaAllocation scenario.
 	 */
-	protected TAAllocation prepareScenarioTimelimitGen() {
+	protected TaAllocation prepareScenarioTimelimitGen() {
 		// Generate the initial model
 		SimpleTaKclGenerator.main(null);
-		final TAAllocation firstSolution = solveAndValidateBatch();
+		final TaAllocation firstSolution = solveAndValidateBatch();
 
 		// Alter the solution, i.e., violate a constraint by changing the model
 		manipulateTimeLimit();
@@ -107,9 +107,9 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	/**
 	 * Common preparation steps necessary for all preparation methods.
 	 * 
-	 * @return TAAllocation after the batch runner was executed.
+	 * @return TaAllocation after the batch runner was executed.
 	 */
-	private TAAllocation solveAndValidateBatch() {
+	private TaAllocation solveAndValidateBatch() {
 		// Optimize/solve the initial model/problem
 		teachingassistant.kcl.gipssolutionalt.runner.TaBatchRunner.main(null);
 
@@ -117,7 +117,7 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 		validate();
 
 		// Save initial solution
-		final TAAllocation firstSolution = loadModelFromFile(filePath);
+		final TaAllocation firstSolution = loadModelFromFile(filePath);
 		return firstSolution;
 	}
 
@@ -129,15 +129,15 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	}
 
 	/**
-	 * Loads a TAAllocation model from a given file path.
+	 * Loads a TaAllocation model from a given file path.
 	 * 
 	 * @param filePath File path to load the model from.
-	 * @return TAAllocation model loaded from the given file path.
+	 * @return TaAllocation model loaded from the given file path.
 	 */
-	protected TAAllocation loadModelFromFile(final String filePath) {
+	protected TaAllocation loadModelFromFile(final String filePath) {
 		Objects.requireNonNull(filePath);
 		final Resource resource = FileUtils.loadModel(filePath);
-		final TAAllocation model = (TAAllocation) resource.getContents().get(0);
+		final TaAllocation model = (TaAllocation) resource.getContents().get(0);
 		Objects.requireNonNull(model);
 		return model;
 	}

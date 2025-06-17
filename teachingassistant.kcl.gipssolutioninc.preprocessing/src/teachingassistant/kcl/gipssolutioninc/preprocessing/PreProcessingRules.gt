@@ -1,12 +1,12 @@
 import "platform:/resource/teachingassistant.kcl.metamodelalt/model/Metamodelalt.ecore"
 
 rule makeAssignmentEdgePrevious {
-	root : TAAllocation {
+	root : TaAllocation {
 		- tas -> ta
 		- modules -> module
 	}
 	
-	ta : TA
+	ta : TeachingAssistant
 	
 	module : Module {
 		- sessions -> session
@@ -20,5 +20,4 @@ rule makeAssignmentEdgePrevious {
 		-- - tas -> ta
 		++ - previousSolutionTas -> ta
 	}
-	
 }

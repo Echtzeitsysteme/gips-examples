@@ -11,7 +11,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
 import teachingassistant.kcl.gips.utils.LoggingUtils;
 import teachingassistant.kcl.metamodelalt.export.ModelToJsonExporter;
 
@@ -85,7 +85,7 @@ public class TaKclGeneratorCliRunner extends TeachingAssistantKclGenerator {
 //		gen.NUMBER_OF_TUTORIALS_PER_WEEK = config.numberOfTimeSlotsPerWeek;
 //		gen.NUMBER_OF_WEEKS = config.numberOfWeeks;
 
-		final TAAllocation model = gen.constructModel();
+		final TaAllocation model = gen.constructModel();
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(model);
 		exporter.modelToJson(jsonOutputPath);
 

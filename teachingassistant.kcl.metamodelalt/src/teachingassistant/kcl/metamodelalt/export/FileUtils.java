@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import metamodel.MetamodelPackage;
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
 import teachingassistant.kcl.gips.utils.AbstractFileUtils;
 
 /**
@@ -33,7 +33,7 @@ public class FileUtils extends AbstractFileUtils {
 	 * @param path  Output (XMI) path for the model to be saved at.
 	 * @throws IOException Throws an IOException if the file could not be written.
 	 */
-	public static void save(final TAAllocation model, final String path) throws IOException {
+	public static void save(final TaAllocation model, final String path) throws IOException {
 		Objects.requireNonNull(model);
 		Objects.requireNonNull(path);
 		final Resource r = saveAndReturn(model, path);
@@ -50,7 +50,7 @@ public class FileUtils extends AbstractFileUtils {
 	 * @return Respective resource of the model.
 	 * @throws IOException Throws an IOException if the file could not be written.
 	 */
-	public static Resource saveAndReturn(final TAAllocation model, final String path) throws IOException {
+	public static Resource saveAndReturn(final TaAllocation model, final String path) throws IOException {
 		Objects.requireNonNull(model);
 		Objects.requireNonNull(path);
 
