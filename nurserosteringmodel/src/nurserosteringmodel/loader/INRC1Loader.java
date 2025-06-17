@@ -35,6 +35,7 @@ import nurserosteringmodel.NurserosteringmodelFactory;
 import nurserosteringmodel.NurserosteringmodelPackage;
 import nurserosteringmodel.Root;
 import nurserosteringmodel.Shift;
+import nurserosteringmodel.ShiftType;
 import nurserosteringmodel.Skill;
 
 /**
@@ -50,6 +51,7 @@ public class INRC1Loader {
 	private String startDate;
 	private String endDate;
 	private Set<Shift> shifts = new HashSet<Shift>();
+	private Map<String, ShiftType> shiftTypes = new HashMap<String, ShiftType>();
 	private Set<Skill> skills = new HashSet<Skill>();
 
 	private Map<String, Set<String>> shiftNeedsSkill = new HashMap<>();
@@ -346,6 +348,7 @@ public class INRC1Loader {
 
 	public Root transform() {
 		resolveSkillToShiftMappings();
+		createShiftTypes();
 		createDays(startDate, endDate);
 		resolveSkillToEmployeeMappings();
 		resolveEmployeeToContractMappings();
@@ -360,10 +363,19 @@ public class INRC1Loader {
 
 		root.getDays().addAll(days);
 //		root.getShifts().addAll(shifts);
+		root.getShiftTypes().addAll(shiftTypes.values());
 		root.getEmployees().addAll(employees);
 		root.getContracts().addAll(contracts);
 
 		return root;
+	}
+
+	private void createShiftTypes() {
+		shifts.forEach(shift -> {
+			final ShiftType st = modelFactory.createShiftType();
+			st.setName(shift.getName());
+			this.shiftTypes.put(shift.getName(), st);
+		});
 	}
 
 	private void createDays(final String startDate, final String endDate) {
@@ -373,6 +385,7 @@ public class INRC1Loader {
 			final Day day = modelFactory.createDay();
 			day.setDate(currentDate);
 			day.setDayOfWeek(findDayOfWeek(currentDate));
+			day.setDayOfWeekNumeric(dayNameToNumeric(day.getDayOfWeek()));
 			day.setName(currentDate);
 			currentDate = incrementDate(currentDate);
 
@@ -387,6 +400,9 @@ public class INRC1Loader {
 				final Shift shift = cloneShift(getShift(shiftName));
 				shift.setDay(day);
 				cv.setShift(shift);
+
+				// Set type of the shift
+				shift.setType(shiftTypes.get(shiftName));
 
 				// Save to day
 				day.getRequirements().add(cv);
@@ -446,6 +462,34 @@ public class INRC1Loader {
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + dayOfWeek);
+		}
+	}
+
+	private int dayNameToNumeric(final String dayName) {
+		switch (dayName) {
+		case "Monday": {
+			return 1;
+		}
+		case "Tuesday": {
+			return 2;
+		}
+		case "Wednesday": {
+			return 3;
+		}
+		case "Thursday": {
+			return 4;
+		}
+		case "Friday": {
+			return 5;
+		}
+		case "Saturday": {
+			return 6;
+		}
+		case "Sunday": {
+			return 7;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + dayName);
 		}
 	}
 

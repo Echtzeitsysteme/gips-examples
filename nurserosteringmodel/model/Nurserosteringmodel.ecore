@@ -18,6 +18,8 @@
         eType="#//Shift" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="contracts" upperBound="-1"
         eType="#//Contract" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="shiftTypes" upperBound="-1"
+        eType="#//ShiftType" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Employee" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"/>
@@ -65,6 +67,8 @@
         eType="#//CoverRequirement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dayOfWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dayOfWeekNumeric" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Shift" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedEmployees" upperBound="-1"
@@ -74,6 +78,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="skills" upperBound="-1"
         eType="#//Skill"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="day" eType="#//Day"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//ShiftType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Skill" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="CoverRequirement">
@@ -81,4 +86,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ShiftType" eSuperTypes="#//NamedElement"/>
 </ecore:EPackage>
