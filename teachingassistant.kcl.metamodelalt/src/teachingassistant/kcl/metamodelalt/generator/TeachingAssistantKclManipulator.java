@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import metamodel.SessionOccurrence;
-import metamodel.TA;
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
+import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
@@ -47,7 +47,7 @@ public class TeachingAssistantKclManipulator {
 		Objects.requireNonNull(modelFilePath);
 
 		// Load model
-		final TAAllocation model = loadModel(modelFilePath);
+		final TaAllocation model = loadModel(modelFilePath);
 
 		// Alter model
 		blockOneTa(model);
@@ -64,7 +64,7 @@ public class TeachingAssistantKclManipulator {
 		}
 
 		// Load model
-		final TAAllocation model = loadModel(modelFilePath);
+		final TaAllocation model = loadModel(modelFilePath);
 
 		// Alter model
 		reduceOneTasWeeklyWorkTime(model, newWeeklyHourLimit);
@@ -73,16 +73,16 @@ public class TeachingAssistantKclManipulator {
 		writeModel(modelFilePath, model);
 	}
 
-	private TAAllocation loadModel(final String modelFilePath) {
+	private TaAllocation loadModel(final String modelFilePath) {
 		Objects.requireNonNull(modelFilePath);
 		final Resource r = FileUtils.loadModel(modelFilePath);
 		Objects.requireNonNull(r);
-		final TAAllocation model = (TAAllocation) r.getContents().get(0);
+		final TaAllocation model = (TaAllocation) r.getContents().get(0);
 		Objects.requireNonNull(model);
 		return model;
 	}
 
-	private void writeModel(final String outputFilePath, final TAAllocation model) {
+	private void writeModel(final String outputFilePath, final TaAllocation model) {
 		Objects.requireNonNull(outputFilePath);
 		Objects.requireNonNull(model);
 		try {
@@ -92,7 +92,7 @@ public class TeachingAssistantKclManipulator {
 		}
 	}
 
-	private void blockOneTa(final TAAllocation model) {
+	private void blockOneTa(final TaAllocation model) {
 		Objects.requireNonNull(model);
 		final metamodel.Module module = model.getModules().get(0);
 		Objects.requireNonNull(module);
@@ -100,7 +100,7 @@ public class TeachingAssistantKclManipulator {
 		Objects.requireNonNull(session);
 		final SessionOccurrence occ = session.getOccurrences().get(0);
 		Objects.requireNonNull(occ);
-		final TA ta = occ.getTas().get(0);
+		final TeachingAssistant ta = occ.getTas().get(0);
 		Objects.requireNonNull(ta);
 //		ta.getUnavailable_because_lessons().addAll(session.getEntries());
 		// Use one specific entry that matches the occurrence.
@@ -116,12 +116,12 @@ public class TeachingAssistantKclManipulator {
 		}
 
 		logger.info("Number of matched entries: " + foundEntries.size());
-		ta.getUnavailable_because_lessons().addAll(foundEntries);
+		ta.getUnavailableBecauseLessons().addAll(foundEntries);
 
 		// TODO(Max): Make sure occurrence is not in the past.
 	}
 
-	private void reduceOneTasWeeklyWorkTime(final TAAllocation model, final int newWeeklyHourLimit) {
+	private void reduceOneTasWeeklyWorkTime(final TaAllocation model, final int newWeeklyHourLimit) {
 		Objects.requireNonNull(model);
 
 		if (newWeeklyHourLimit < 0) {
@@ -141,7 +141,7 @@ public class TeachingAssistantKclManipulator {
 					Objects.requireNonNull(occ);
 
 					for (int l = 0; l < occ.getTas().size(); l++) {
-						final TA ta = occ.getTas().get(l);
+						final TeachingAssistant ta = occ.getTas().get(l);
 						Objects.requireNonNull(ta);
 
 						if (session.getHoursPaidPerOccurrence() > newWeeklyHourLimit) {

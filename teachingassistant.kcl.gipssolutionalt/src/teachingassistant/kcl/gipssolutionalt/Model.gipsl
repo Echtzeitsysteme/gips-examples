@@ -26,8 +26,8 @@ pattern findSessionOccurrence {
 // Construct a condition for a session that a specific TA
 // is available (i.e., they have not blocked this session)
 pattern findTaUnavailableSession {
-	ta : TA {
-		- unavailable_because_lessons -> entry
+	ta : TeachingAssistant {
+		- unavailableBecauseLessons -> entry
 	}
 	
 	session : TeachingSession {
@@ -42,7 +42,7 @@ condition taAvailableInSession = forbid findTaUnavailableSession
 // This rule respects the condition that the TA must not have
 // blocked the respective time table entry of the session occurrence.
 rule assignTa {
-	ta : TA
+	ta : TeachingAssistant
 	
 	module : Module {
 		- sessions -> session
@@ -76,7 +76,7 @@ when taAvailableInSession
 // Find every possible combination of TAs
 // and time table entries
 pattern findTaEntryCombination {
-	ta : TA
+	ta : TeachingAssistant
 	entry : TimeTableEntry
 }
 
@@ -94,7 +94,7 @@ pattern findConflictingEntriesWithTa {
 		- timeTableWeeks -> week
 	}
 	
-	ta : TA
+	ta : TeachingAssistant
 	
 	# entryA.startEpoch < entryB.endEpoch
 	# entryA.endEpoch > entryB.startEpoch
@@ -103,13 +103,13 @@ pattern findConflictingEntriesWithTa {
 // Find all possible combinations of TAs and weeks
 pattern findTaWeekCombination {
 	w : Week
-	ta : TA
+	ta : TeachingAssistant
 }
 
 // Find a TA with a green employment approval status
 // for a specific module.
 pattern findGreenTa {
-	ta : TA
+	ta : TeachingAssistant
 	
 	mod : Module {
 		- approvals -> approval
@@ -124,7 +124,7 @@ pattern findGreenTa {
 // Find a TA with an amber employment approval status
 // for a specific module.
 pattern findAmberTa {
-	ta : TA
+	ta : TeachingAssistant
 	
 	mod : Module {
 		- approvals -> approval
@@ -150,7 +150,7 @@ constraint with findSessionOccurrence {
 		element.nodes.occurrence == context.nodes.occurrence //
 	)->sum(element.value)
 	==
-	context.nodes.session.numTAsPerSession
+	context.nodes.session.numTasPerSession
 }
 
 // TAs must not have conflicting assignments.
@@ -166,7 +166,7 @@ constraint with findConflictingEntriesWithTa {
 // Ensure TAs max hours per year
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // must not exceed their yearly hour limit
-constraint with TA {
+constraint with TeachingAssistant {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)

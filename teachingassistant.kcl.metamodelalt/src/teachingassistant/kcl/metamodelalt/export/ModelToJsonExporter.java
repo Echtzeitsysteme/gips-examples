@@ -13,8 +13,8 @@ import metamodel.EmploymentApproval;
 import metamodel.EmploymentRating;
 import metamodel.Module;
 import metamodel.SessionOccurrence;
-import metamodel.TA;
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
+import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
@@ -27,9 +27,9 @@ import metamodel.Week;
  */
 public class ModelToJsonExporter {
 
-	private TAAllocation model;
+	private TaAllocation model;
 
-	public ModelToJsonExporter(final TAAllocation model) {
+	public ModelToJsonExporter(final TaAllocation model) {
 		Objects.requireNonNull(model);
 		this.model = model;
 	}
@@ -39,7 +39,7 @@ public class ModelToJsonExporter {
 
 		// 1) Flatten TAs
 		final JsonArray tasJson = new JsonArray();
-		for (final TA ta : model.getTas()) {
+		for (final TeachingAssistant ta : model.getTas()) {
 			tasJson.add(convertTAtoJson(ta));
 		}
 
@@ -78,7 +78,7 @@ public class ModelToJsonExporter {
 	// TA flattening
 	// --------------------------------------------------------------------------------
 
-	private JsonObject convertTAtoJson(final TA ta) {
+	private JsonObject convertTAtoJson(final TeachingAssistant ta) {
 		Objects.requireNonNull(ta);
 		final JsonObject taJson = new JsonObject();
 		taJson.addProperty("name", ta.getName());
@@ -127,7 +127,7 @@ public class ModelToJsonExporter {
 					final JsonObject sessionObj = new JsonObject();
 					sessionObj.addProperty("name", s.getName());
 					sessionObj.addProperty("hoursPaidPerOccurrence", s.getHoursPaidPerOccurrence());
-					sessionObj.addProperty("numTAsPerSession", s.getNumTAsPerSession());
+					sessionObj.addProperty("numTAsPerSession", s.getNumTasPerSession());
 
 					// Add timeTableWeeks as an array
 					final JsonArray weeksArr = new JsonArray();
@@ -165,7 +165,7 @@ public class ModelToJsonExporter {
 					occJson.addProperty("timeTableWeek", occ.getTimeTableWeek());
 					// Collect the TAs assigned
 					final JsonArray assignedTAs = new JsonArray();
-					for (final TA ta : occ.getTas()) {
+					for (final TeachingAssistant ta : occ.getTas()) {
 						assignedTAs.add(ta.getName());
 					}
 					occJson.add("tas", assignedTAs);

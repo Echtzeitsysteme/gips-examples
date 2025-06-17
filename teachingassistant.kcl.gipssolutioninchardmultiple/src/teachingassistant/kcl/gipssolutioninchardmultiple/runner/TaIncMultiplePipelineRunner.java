@@ -1,6 +1,6 @@
 package teachingassistant.kcl.gipssolutioninchardmultiple.runner;
 
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
 import teachingassistant.kcl.gipssolutionaltinc.runner.AbstractGipsTeachingAssistantIncrementalPipelineRunner;
 import teachingassistant.kcl.metamodelalt.comparator.SolutionComparator;
 import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
@@ -31,7 +31,7 @@ public class TaIncMultiplePipelineRunner extends AbstractGipsTeachingAssistantIn
 	 */
 	protected void run() {
 		// Generate conflicting scenario.
-		final TAAllocation firstSolution = prepareScenarioTimelimitGen();
+		final TaAllocation firstSolution = prepareScenarioTimelimitGen();
 
 		//
 		// Second stage optimization/repair
@@ -44,7 +44,7 @@ public class TaIncMultiplePipelineRunner extends AbstractGipsTeachingAssistantIn
 		validate();
 
 		// Save second solution
-		final TAAllocation secondSolution = loadModelFromFile(filePath);
+		final TaAllocation secondSolution = loadModelFromFile(filePath);
 
 		// Compare
 		SolutionComparator.compareSolutions(firstSolution, secondSolution);

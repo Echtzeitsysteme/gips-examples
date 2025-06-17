@@ -1,6 +1,6 @@
 package teachingassistant.kcl.gipssolutionaltinc.runner;
 
-import metamodel.TAAllocation;
+import metamodel.TaAllocation;
 import teachingassistant.kcl.gipssolutioninc.preprocessing.PreprocessingGtApp;
 import teachingassistant.kcl.metamodelalt.comparator.SolutionComparator;
 import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
@@ -32,8 +32,8 @@ public class TaIncPipelineRunner extends AbstractGipsTeachingAssistantIncrementa
 	protected void run() {
 		// Chose whether to generate a scenario or use a scenario that can only be
 		// solved by a complete re-plan procedure.
-		final TAAllocation firstSolution = prepareScenarioBlockedGen();
-//		final TAAllocation firstSolution = prepareScenarioReplan();
+		final TaAllocation firstSolution = prepareScenarioBlockedGen();
+//		final TaAllocation firstSolution = prepareScenarioReplan();
 
 		//
 		// Second stage optimization/repair
@@ -51,7 +51,7 @@ public class TaIncPipelineRunner extends AbstractGipsTeachingAssistantIncrementa
 		validate();
 
 		// Save second solution
-		final TAAllocation secondSolution = loadModelFromFile(filePath);
+		final TaAllocation secondSolution = loadModelFromFile(filePath);
 
 		// Compare both solutions
 		SolutionComparator.compareSolutions(firstSolution, secondSolution);
