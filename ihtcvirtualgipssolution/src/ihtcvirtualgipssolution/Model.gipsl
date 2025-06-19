@@ -3,7 +3,7 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 2000.0];
+	timeLimit := true [value := 300.0];
 	randomSeed := true [value := 0];
 	presolve := true;
 	debugOutput := true;
@@ -597,7 +597,6 @@ constraint with openOTs {
 	)->sum(element.value)	
 	<= 
 	context.value * 1000
-	// eventuell auch andersrum
 }
 
 // U5: sets the mapping to true if the surgeon operates in the ot on that day

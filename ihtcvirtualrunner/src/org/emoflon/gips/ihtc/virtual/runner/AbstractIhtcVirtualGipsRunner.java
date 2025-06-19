@@ -100,6 +100,16 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	public String outputPath = datasetSolutionFolder + "sol_"
 			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
+	/**
+	 * Default Output FDolder for Debug-files
+	 */
+	public String debugFolder = projectFolder + "/../ihtcvirtualmetamodel/instances/debug/";
+	
+	/**
+	 * Default Output Path for Debug-file of current model instance
+	 */
+	public String debugOutputPath = debugFolder + scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_debug.txt";
+			
 	public AbstractIhtcVirtualGipsRunner() {
 		// Configure logging
 		logger.setUseParentHandlers(false);
@@ -172,7 +182,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		Objects.requireNonNull(gipsApi);
 		Objects.requireNonNull(verbose);
 
-		gipsApi.buildProblemTimed(true);
+		gipsApi.buildProblemTimed(true, true); // Second Parameter: sequential = false/default, parallel = true
 		final SolverOutput output = gipsApi.solveProblemTimed();
 		if (output.solutionCount() == 0) {
 			gipsApi.terminate();

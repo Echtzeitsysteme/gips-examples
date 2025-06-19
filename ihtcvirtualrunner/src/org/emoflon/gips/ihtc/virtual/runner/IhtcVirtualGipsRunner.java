@@ -1,5 +1,7 @@
 package org.emoflon.gips.ihtc.virtual.runner;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
@@ -11,6 +13,7 @@ import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.importexport.ModelToJsonExporter;
 import ihtcvirtualmetamodel.importexport.ModelToJsonNoPostProcExporter;
+import ihtcvirtualmetamodel.importexport.SolvedModelValidator;
 
 public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 
@@ -38,6 +41,11 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	 * rule matches with eMoflon::IBeX-GT.
 	 */
 	private boolean applicationNoGt = false;
+	
+	/**
+	 * If true a timestamp will be added to the filename. 
+	 */
+	private boolean saveAllDebugFiles = true;
 
 	/**
 	 * Create a new instance of this class.
@@ -146,13 +154,27 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 					+ "s.");
 		}
 
+		//
+		// Model Validation
+		//
+		
 		if (verbose) {
-			logger.info("=> Start JSON export.");
+			logger.info("=> Start Model Validation");
 		}
-
+		validateModel(gipsOutputPath);
+		final long validateDoneTime = System.nanoTime();
+		if (verbose) {
+			logger.info("Runtime validate Model: "
+					+ tickTockToElapsedSeconds(gipsSaveDoneTime, validateDoneTime) + "s.");
+		}
+		
 		//
 		// Export
 		//
+		
+		if (verbose) {
+			logger.info("=> Start JSON export.");
+		}
 
 		if (postProc) {
 			if (verbose) {
@@ -162,7 +184,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			final long postProcessingDoneTime = System.nanoTime();
 			if (verbose) {
 				logger.info("Runtime post-processing: "
-						+ tickTockToElapsedSeconds(gipsSaveDoneTime, postProcessingDoneTime) + "s.");
+						+ tickTockToElapsedSeconds(validateDoneTime, postProcessingDoneTime) + "s.");
 			}
 			exportToJson(postProcOutputPath, outputPath);
 			final long exportDoneTime = System.nanoTime();
@@ -178,7 +200,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			final long exportDoneTime = System.nanoTime();
 			if (verbose) {
 				logger.info("Runtime JSON export (no post-processing): "
-						+ tickTockToElapsedSeconds(gipsSaveDoneTime, exportDoneTime) + "s.");
+						+ tickTockToElapsedSeconds(validateDoneTime, exportDoneTime) + "s.");
 			}
 		}
 
@@ -190,6 +212,27 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 
 		if (verbose) {
 			logger.info("Runtime total: " + tickTockToElapsedSeconds(startTime, System.nanoTime()) + "s.");
+		}
+	}
+
+	/**
+	 * Takes a XMI output path (of a GIPS-generated solution model) and validates the model
+	 * 
+	 * @param gipsOutputPath
+	 */
+	private void validateModel(final String gipsOutputPath) {
+		Objects.requireNonNull(gipsOutputPath);
+		Objects.requireNonNull(debugOutputPath);
+		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
+		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
+		final SolvedModelValidator validator = new SolvedModelValidator(solvedHospital, verbose);
+		if(saveAllDebugFiles) {
+			LocalDateTime now = LocalDateTime.now();
+			String formatted = now.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+			String debugOutputPathTimeStamp = debugOutputPath.substring(0, debugOutputPath.lastIndexOf(".txt")) + "_" + formatted + ".txt";
+			validator.validate(debugOutputPathTimeStamp);
+		}else {
+			validator.validate(debugOutputPath);
 		}
 	}
 
