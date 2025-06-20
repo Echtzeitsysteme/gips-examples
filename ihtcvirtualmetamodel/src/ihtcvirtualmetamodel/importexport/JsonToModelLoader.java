@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import ihtcvirtualmetamodel.AgeGroup;
 import ihtcvirtualmetamodel.Capacity;
 import ihtcvirtualmetamodel.Day;
 import ihtcvirtualmetamodel.Gender;
@@ -398,6 +399,7 @@ public class JsonToModelLoader {
 	
 	/**
 	 * Converts the given JSON array of age groups to the model representations.
+	 * Creates a Node for each unique integer representation of the age group. 
 	 * 
 	 * @param ageGroups JSON array of age groups.
 	 */
@@ -408,6 +410,9 @@ public class JsonToModelLoader {
 		for (final JsonElement ag : ageGroups) {
 			final String name = ag.getAsString();
 			this.foundAges.put(name, ageCounter);
+			final AgeGroup agegroup = IhtcvirtualmetamodelFactory.eINSTANCE.createAgeGroup();
+			agegroup.setGroup(ageCounter);
+			this.model.getAgeGroups().add(agegroup);
 			ageCounter++;
 		}
 	}

@@ -12,10 +12,12 @@ import java.util.logging.Logger;
 import com.google.gson.JsonObject;
 
 import ihtcvirtualmetamodel.Capacity;
+import ihtcvirtualmetamodel.Gender;
 import ihtcvirtualmetamodel.Nurse;
 import ihtcvirtualmetamodel.OT;
 import ihtcvirtualmetamodel.OpTime;
 import ihtcvirtualmetamodel.Patient;
+import ihtcvirtualmetamodel.Room;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Shift;
 import ihtcvirtualmetamodel.Surgeon;
@@ -75,6 +77,10 @@ public class SolvedModelValidator {
 			}else {
 				validatePatient(p);
 			}
+		}
+		
+		for(final Room r : this.model.getRooms()) {
+			validateRoom(r);
 		}
 		
 		for (final Surgeon s : this.model.getSurgeons()) {
@@ -141,7 +147,8 @@ public class SolvedModelValidator {
 		if(debug.length() > 0) {
 			debug += "\n";
 		}
-		debug += "Patient " +  patient.getName() + ": \n\t";
+		String mandatory = patient.isMandatory() ? "mandatory" : "optional";
+		debug += "Patient " +  patient.getName() + ": " + mandatory + ", age group = " + patient.getAgeGroup() + ", Gender = " + patient.getGender() +"\n\t";
 		
 		// Checks if assignments for a patient are viable
 		if(admissionShift != null) {
@@ -232,6 +239,58 @@ public class SolvedModelValidator {
 		
 		debug += "First shift is assigned correctly. \n";
 		
+	}
+	
+	private void validateRoom(Room room) {
+		Objects.requireNonNull(room);
+		String roomDebug = "";
+		int day = 0;
+		List<Patient> patients = new ArrayList<>();
+		String firstFoundGender = "";
+		
+		debug += "\nRoom " +  room.getName() + ": capacity = " + room.getBeds() + "\n\t";
+		
+		final Collection<Shift> shifts = room.getShifts();
+		for(Shift shift : shifts) {
+			if(shift.getShiftNo() % 3 != 0) {
+				continue;
+			}	
+			patients.clear();
+			day = shift.getShiftNo() / 3;
+			firstFoundGender = "";
+			
+			final Collection<VirtualShiftToWorkload> possibleWorkloads = shift.getVirtualWorkload();
+			for(VirtualShiftToWorkload v : possibleWorkloads) {
+				if(v.isIsSelected()) {
+					if(firstFoundGender.length() == 0) {
+						firstFoundGender = v.getWorkload().getPatient().getGender();
+						debug += "Day " +  day + ": " + "\n\t\t";
+					}else if(!firstFoundGender.equals(v.getWorkload().getPatient().getGender())) {
+						roomDebug = "Gendermix in room " + room.getName() + "!";
+						logger.warning(roomDebug); 
+						debug += "ERROR: " + roomDebug + "\n\t\t";
+					}
+					patients.add(v.getWorkload().getPatient());
+				}	
+			}
+			
+			if(patients.size() > room.getBeds()) {
+				roomDebug = "The capacity of room " + room.getName() + " on day " + day + " is exceeded!";
+				logger.warning(roomDebug); 
+				debug += "ERROR: " + roomDebug + "\n\t\t";
+			}
+			
+			if(patients.size() > 0) {
+				int index = 1;
+				for(Patient p : patients) {
+					debug += "Patient " + p.getName() + " with age group " + p.getAgeGroup() + " and gender " + p.getGender() + "\n\t";
+					if(index < patients.size()) {
+						debug += "\t";
+					}
+					index++;
+				}
+			}	
+		}
 	}
 
 	private void validateNurse(final Nurse nurse) {

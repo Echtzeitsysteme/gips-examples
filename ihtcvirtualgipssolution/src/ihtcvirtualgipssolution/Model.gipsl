@@ -188,6 +188,29 @@ pattern surgeonOTForDay {
 	ot : OT
 }
 
+pattern ageGroupsRoomDay {
+	r : Room 
+	d : Day
+	ag : AgeGroup
+}
+
+pattern minAgeGroupsRoomDay {
+	r : Room 
+	d : Day
+	ag : AgeGroup
+}
+
+pattern maxAgeGroupsRoomDay {
+	r : Room 
+	d : Day
+	ag : AgeGroup
+}
+
+pattern roomDayTupel {
+	r : Room 
+	d : Day
+}
+
 //
 // GIPSL 
 //
@@ -238,6 +261,15 @@ mapping otsPerSurgeon to surgeonOptimeTupel{
 	var otCount : EInt
 	var penalizedOTs : EInt
 };
+
+// mapping that holds the information if an age group is present in a room on a specific day
+mapping ageGroupsInRoom to ageGroupsRoomDay;
+
+// mapping that is only true if the age group is the smallest in the room on that day
+mapping minAgeGroupsInRoom to minAgeGroupsRoomDay;
+
+// mapping that is only true if the age group is the greatest in the room on that day
+mapping maxAgeGroupsInRoom to maxAgeGroupsRoomDay;
 
 //
 // Hard Constraints
@@ -636,13 +668,81 @@ constraint with otsPerSurgeon {
 	context.variables.penalizedOTs >= 0
 }
 
+// U8: sets the mapping to true if the ageGroup is present in the room on a specific day
+constraint with ageGroupsInRoom {
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
+		element.nodes.p.ageGroup == context.nodes.ag.group
+	)->sum(element.value)
+	<= 
+	context.value * 1000
+	
+	&
+	
+	context.value
+	<=
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
+		element.nodes.p.ageGroup == context.nodes.ag.group
+	)->sum(element.value)
+}
+
+// U9: Sets the mapping to true if the age group is the smallest in the room on that day 
+constraint with minAgeGroupsInRoom {
+	[
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d.number == context.nodes.d.number &
+		element.nodes.ag.group == context.nodes.ag.group
+	)->sum(element.value) == 1
+	&
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d == context.nodes.d &
+		element.nodes.ag.group < context.nodes.ag.group
+	)->sum(element.value) == 0
+	]
+	<=>
+	context.value == 1
+}
+
+// U10: Sets the mapping to true if the age group is the biggest in the room on that day 
+constraint with maxAgeGroupsInRoom {
+	[
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d.number == context.nodes.d.number &
+		element.nodes.ag.group == context.nodes.ag.group
+	)->sum(element.value) == 1
+	&
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d == context.nodes.d &
+		element.nodes.ag.group > context.nodes.ag.group
+	)->sum(element.value) == 0
+	]
+	<=>
+	context.value == 1
+}
+
 //
 // Objectives
 //
 
-//// S1: The maximum difference of age groups in one room for each day should be minimized
-
-//// TODO: Implement
+// S1: The maximum difference of age groups in one room for each day should be minimized
+function calculateAgeDifference with roomDayTupel {
+	mappings.maxAgeGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d == context.nodes.d
+	)->sum(element.value * element.nodes.ag.group)
+	- 
+	mappings.minAgeGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d == context.nodes.d
+	)->sum(element.value * element.nodes.ag.group)
+}
 
 // S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
 //function calculateUnqualifiedNurses with assignedPatientsToRoom {
@@ -691,12 +791,12 @@ function calculateNotAssignedOptionalPatients with optionalPatients {
 
 objective : min {
 	0
-	// S1
-//	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
+	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
+	// S2
 	// S3
 	// S4
-	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
-	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
-	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
-	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
+//	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
+//	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
+//	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
+//	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 }

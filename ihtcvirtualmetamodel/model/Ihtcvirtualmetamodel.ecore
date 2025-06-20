@@ -23,6 +23,8 @@
         eType="#//Gender" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="days" upperBound="-1" eType="#//Day"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ageGroups" upperBound="-1"
+        eType="#//AgeGroup" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Nurse" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -203,5 +205,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Gender" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Day" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AgeGroup">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 </ecore:EPackage>
