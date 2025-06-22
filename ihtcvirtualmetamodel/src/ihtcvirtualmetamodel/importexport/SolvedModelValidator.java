@@ -19,9 +19,11 @@ import ihtcvirtualmetamodel.OpTime;
 import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Room;
 import ihtcvirtualmetamodel.Root;
+import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
 import ihtcvirtualmetamodel.Surgeon;
 import ihtcvirtualmetamodel.VirtualOpTimeToCapacity;
+import ihtcvirtualmetamodel.VirtualShiftToRoster;
 import ihtcvirtualmetamodel.VirtualShiftToWorkload;
 import ihtcvirtualmetamodel.VirtualWorkloadToCapacity;
 import ihtcvirtualmetamodel.VirtualWorkloadToOpTime;
@@ -71,6 +73,7 @@ public class SolvedModelValidator {
 			FileUtils.prepareFolder(debugOutputPath.substring(0, lastSlashIndex));
 		}
 		
+		// TODO: For Patients consecutive care 
 		for (final Patient p : this.model.getPatients()) {
 			if (p.isIsOccupant()) {
 				validateOccupant(p);
@@ -294,7 +297,50 @@ public class SolvedModelValidator {
 	}
 
 	private void validateNurse(final Nurse nurse) {
-		// TODO
+		Objects.requireNonNull(nurse);
+		String nurseDebug = "";
+		String tmpDebug = "";
+		int assignedWorkload = 0;
+		int penalizedSkillDiff = 0;
+		List<Workload> workloads = new ArrayList<>();
+		
+		debug += "\nNurse " +  nurse.getName() + ": Skill level " + nurse.getSkillLevel() + "\n\t";
+		
+		final Collection<Roster> rosters = nurse.getRosters();
+		for(Roster ro : rosters) {
+			assignedWorkload = 0;
+			tmpDebug = "";
+			
+			final Collection<VirtualShiftToRoster> possibleShifts = ro.getVirtualShift();
+			for(VirtualShiftToRoster vsr : possibleShifts) {
+				workloads.clear();
+				
+				if(vsr.isIsSelected()) {
+					final Collection<VirtualShiftToWorkload> possibleWorkloads = vsr.getShift().getVirtualWorkload();
+					for(VirtualShiftToWorkload vsw : possibleWorkloads) {
+						if(vsw.isIsSelected()) {
+							workloads.add(vsw.getWorkload());
+							assignedWorkload += vsw.getWorkload().getWorkloadValue();
+						}
+					}
+					tmpDebug += "\tRoom " + vsr.getShift().getRoom().getName() + ": \n\t\t\t";
+					int count = 1;
+					for(Workload w : workloads) {
+						penalizedSkillDiff += Math.max(0, w.getMinNurseSkill() - nurse.getSkillLevel());
+						tmpDebug += "Patient " + w.getPatient().getName() + ": workload = " + w.getWorkloadValue() + ", min skill = " + w.getMinNurseSkill() + "\n\t";
+						if(count < workloads.size()) {
+							tmpDebug += "\t\t";
+						}
+						count++;	
+					}
+				}
+			}
+			if(assignedWorkload > 0) {
+				debug += "Roster " + ro.getShiftNo() + ": Maximum workload = " +  ro.getMaxWorkload() + " Assigned workload = " + assignedWorkload +  "\n\t";
+				debug += tmpDebug;
+			}
+		}
+		debug += "=> Skill difference = " + penalizedSkillDiff + "\n"; 
 		
 	}
 

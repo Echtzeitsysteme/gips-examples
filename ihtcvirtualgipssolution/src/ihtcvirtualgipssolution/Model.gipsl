@@ -133,9 +133,18 @@ pattern roomForShift{
 
 // Pattern that finds all patients that are assigned to a room -> first and following workloads
 pattern patientForRoom {
-	p : Patient
+	p : Patient {
+		- workloads -> w
+	}
 
 	s : Shift 
+	
+	w : Workload
+	
+	vsw : VirtualShiftToWorkload {
+		- shift -> s
+		- workload -> w
+	}
 	
 	r : Room {
 		- shifts -> s
@@ -245,7 +254,10 @@ mapping countPatientsForRoom to roomForShift {
 };
 
 // Mapping for all assigned patients. (occupants and new patients for each workload (first + following))
-mapping assignedPatientsToRoom to patientForRoom;
+mapping assignedPatientsToRoom to patientForRoom{
+	var skillDiff : EInt
+	var penalizedSkillDiff : EInt
+};
  
 // Mapping that holds the information if a specific gender is assigned to a room on a specific day. 
 mapping assignedGenderToRoomOnShift to genderRoomShift;
@@ -518,19 +530,22 @@ constraint with assignedPatientsToRoom {
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.p == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw.shift == context.nodes.s &
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.prevvsw.workload.patient == context.nodes.p &
 		element.nodes.prevvsw.shift.room == context.nodes.r &
-		element.nodes.nextvsw.shift == context.nodes.s
+		element.nodes.nextvsw.shift == context.nodes.s &
+		element.nodes.nextvsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedOccupantNodes->filter(
 		element.nodes.vsw.workload.patient == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw.shift == context.nodes.s &
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	<=
 	context.value * 1000
@@ -542,19 +557,22 @@ constraint with assignedPatientsToRoom {
 		mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.p == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw.shift == context.nodes.s &
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.prevvsw.workload.patient == context.nodes.p &
 		element.nodes.prevvsw.shift.room == context.nodes.r &
-		element.nodes.nextvsw.shift == context.nodes.s
+		element.nodes.nextvsw.shift == context.nodes.s &
+		element.nodes.nextvsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedOccupantNodes->filter(
 		element.nodes.vsw.workload.patient == context.nodes.p &
 		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw.shift == context.nodes.s &
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	
 //	Transformed version of the following boolean equivalence 
@@ -727,6 +745,26 @@ constraint with maxAgeGroupsInRoom {
 	context.value == 1
 }
 
+// U11: Sets the mapping variable to the difference in skill level
+constraint with assignedPatientsToRoom {
+	context.variables.skillDiff 
+	== 
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.s == context.nodes.s & 
+		element.nodes.p == context.nodes.p  
+	)->sum(element.value * element.nodes.w.minNurseSkill)
+	-
+	mappings.selectedShiftToRoster->filter(
+		element.nodes.vsr.shift == context.nodes.s
+	)->sum(element.value * element.nodes.vsr.roster.nurse.skillLevel)
+}
+
+// U12: calculates the penalized difference between the skill levels. max(0, minLevel - nurseLevel) = max(0, skillDiff)
+constraint with assignedPatientsToRoom{
+	context.variables.penalizedSkillDiff >= context.variables.skillDiff &
+	context.variables.penalizedSkillDiff >= 0
+}
+
 //
 // Objectives
 //
@@ -745,17 +783,12 @@ function calculateAgeDifference with roomDayTupel {
 }
 
 // S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
-//function calculateUnqualifiedNurses with assignedPatientsToRoom {
-//	// TODO: check value = 1
-//	mappings.selectedShiftToRoster->filter(
-//		element.nodes.vsr.shift.room == context.nodes.r &
-//		element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo &
-//		element.nodes.vsr.roster.nurse.skillLevel < context.nodes.w.minNurseSkill //  .workload.minNurseSkill
-//	)->sum(element.value) 
-//
-//}
+function calculateUnqualifiedNurses with assignedPatientsToRoom {
+	context.variables.penalizedSkillDiff
+}
 
 // S3: The number of nurses taking care of a specific patient must be minimized
+// Pattern NursePatient über Roster -> VSR -> VSW -> Workload 
 
 // TODO: Implement 
 
@@ -768,6 +801,9 @@ function calculateAgeDifference with roomDayTupel {
 //	context.nodes.ro.maxWorkload
 //}
 // Irgendwie an Workload dran kommen, evtl. über assignedPatients aufsummieren? 
+// Für jede Nurse + jedes Roster -> VSR -> ausgewählte Shifts -> VSW -> zu ausgewähltem Workload 
+// Für Workload Seite assigendPatientsperRoom sinnvoll
+// Summe über Workload zuweiseungen pro shift 
 
 // S5: The number of OTs opened on each day should be minimized
 function calculateOPenOTs with Day {
@@ -791,12 +827,12 @@ function calculateNotAssignedOptionalPatients with optionalPatients {
 
 objective : min {
 	0
-	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
-	// S2
+//	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
+//	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
 	// S3
 	// S4
 //	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
 //	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
 //	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
-//	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
+	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 }
