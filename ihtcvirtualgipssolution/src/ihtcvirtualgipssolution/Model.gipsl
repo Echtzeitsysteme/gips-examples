@@ -93,6 +93,14 @@ rule selectShiftToRoster {
 	}
 }
 
+rule virtualNodesForOccupant {
+
+	vsw : VirtualShiftToWorkload {
+		.isSelected := true
+	}
+	# vsw.wasImported == true
+}
+
 //
 // Utility Patterns used in Constraints
 //
@@ -113,14 +121,6 @@ pattern optionalPatients {
 	# p.isOccupant == false
 }
 
-rule virtualNodesForOccupant {
-
-	vsw : VirtualShiftToWorkload {
-		.isSelected := true
-	}
-	# vsw.wasImported == true
-}
-
 // Pattern to Count the Patients over a specific room for a specific day -> enforce that the capacity of a room is not exceeded
 // Needs to be checked for each morning shift (s.shiftNo % 3 == 0) -> remaining shifts of each day are automatically covered
 pattern roomForShift{
@@ -138,7 +138,7 @@ pattern patientForRoom {
 	}
 
 	s : Shift 
-	
+
 	w : Workload
 	
 	vsw : VirtualShiftToWorkload {
@@ -220,6 +220,18 @@ pattern roomDayTupel {
 	d : Day
 }
 
+pattern nursetoWorkload {
+	vsr : VirtualShiftToRoster {
+		- shift -> s
+	}
+	
+	s : Shift {
+		- virtualWorkload -> vsw
+	}
+	
+	vsw : VirtualShiftToWorkload
+}
+
 //
 // GIPSL 
 //
@@ -282,6 +294,15 @@ mapping minAgeGroupsInRoom to minAgeGroupsRoomDay;
 
 // mapping that is only true if the age group is the greatest in the room on that day
 mapping maxAgeGroupsInRoom to maxAgeGroupsRoomDay;
+
+// mapping that holds the information what workloads a roster is responsible for / assigned to 
+mapping assignedNursesToWorkload to nursetoWorkload;
+
+// mapping used to calculate the sum of workloads for a Roster
+mapping nurseWorkloadForDay to nurseRosterTupel{
+	var workloadDiff : EInt
+	var excessiveWorkload : EInt
+};
 
 //
 // Hard Constraints
@@ -765,6 +786,53 @@ constraint with assignedPatientsToRoom{
 	context.variables.penalizedSkillDiff >= 0
 }
 
+// U13: Sets the mapping to true if the nurse is assigned to the workload
+constraint with assignedNursesToWorkload {
+	context.value
+	>=
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.vsw == context.nodes.vsw
+	)->sum(element.value)
+	+
+	mappings.selectedShiftToRoster->filter(
+		element.nodes.vsr == context.nodes.vsr
+	)->sum(element.value)
+	- 1
+	
+	&
+	
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.vsw == context.nodes.vsw
+	)->sum(element.value)
+	>= 
+	context.value
+	
+	&
+	
+	mappings.selectedShiftToRoster->filter(
+		element.nodes.vsr == context.nodes.vsr
+	)->sum(element.value) 
+	>= 
+	context.value
+}
+
+// U14: Calculates the sum of workloads for one Roster 
+constraint with nurseWorkloadForDay {
+	context.variables.workloadDiff 
+	==
+	mappings.assignedNursesToWorkload->filter(
+		element.nodes.vsr.roster == context.nodes.ro
+	)->sum(element.value * element.nodes.vsw.workload.workloadValue)
+	- 
+	context.nodes.ro.maxWorkload
+}
+
+// U15: Calculates max(0, sumWorkload - nurseMaxWorkload) = max(0, excessiveWorkload)
+constraint with nurseWorkloadForDay{
+	context.variables.excessiveWorkload >= context.variables.workloadDiff &
+	context.variables.excessiveWorkload >= 0
+}
+
 //
 // Objectives
 //
@@ -794,17 +862,9 @@ function calculateUnqualifiedNurses with assignedPatientsToRoom {
 // TODO: Implement 
 
 // S4: The workload of a nurse should not exceed the assigned maximum workload
-//function calculateNurseWorkload with nurseRosterTupel {
-//	mappings.selectedShiftToRoster->filter(
-//		element.nodes.vsr.roster == context.nodes.ro
-//	)->sum(element.value ) // * element.nodes.vsr.shift.
-//	-
-//	context.nodes.ro.maxWorkload
-//}
-// Irgendwie an Workload dran kommen, evtl. über assignedPatients aufsummieren? 
-// Für jede Nurse + jedes Roster -> VSR -> ausgewählte Shifts -> VSW -> zu ausgewähltem Workload 
-// Für Workload Seite assigendPatientsperRoom sinnvoll
-// Summe über Workload zuweiseungen pro shift 
+function calculateNurseWorkload with nurseWorkloadForDay {
+	context.variables.excessiveWorkload
+}
 
 // S5: The number of OTs opened on each day should be minimized
 function calculateOPenOTs with Day {
@@ -831,7 +891,7 @@ objective : min {
 	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
 	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
 	// S3
-	// S4
+	+ functions.calculateNurseWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
 	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
 	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
 	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
