@@ -232,6 +232,12 @@ pattern nursetoWorkload {
 	vsw : VirtualShiftToWorkload
 }
 
+pattern nursePatientTupel {
+	p : Patient 
+	
+	n : Nurse
+}
+
 //
 // GIPSL 
 //
@@ -303,6 +309,8 @@ mapping nurseWorkloadForDay to nurseRosterTupel{
 	var workloadDiff : EInt
 	var excessiveWorkload : EInt
 };
+
+mapping assignedNurseForPatient to nursePatientTupel;
 
 //
 // Hard Constraints
@@ -833,6 +841,25 @@ constraint with nurseWorkloadForDay{
 	context.variables.excessiveWorkload >= 0
 }
 
+// U16: sets the mapping to true if the nurse is assigned to the patient
+constraint with assignedNurseForPatient {
+	context.value
+	<=
+	mappings.assignedNursesToWorkload->filter(
+		element.nodes.vsr.roster.nurse == context.nodes.n &
+		element.nodes.vsw.workload.patient == context.nodes.p
+	)->sum(element.value)
+	
+	&
+	
+	mappings.assignedNursesToWorkload->filter(
+		element.nodes.vsr.roster.nurse == context.nodes.n &
+		element.nodes.vsw.workload.patient == context.nodes.p
+	)->sum(element.value)
+	<= 
+	context.value * 1000
+}
+
 //
 // Objectives
 //
@@ -857,9 +884,11 @@ function calculateUnqualifiedNurses with assignedPatientsToRoom {
 }
 
 // S3: The number of nurses taking care of a specific patient must be minimized
-// Pattern NursePatient über Roster -> VSR -> VSW -> Workload 
-
-// TODO: Implement 
+function calculateContinuityOfCare with Patient {
+	mappings.assignedNurseForPatient->filter(
+		element.nodes.p == context
+	)->sum(element.value)
+}
 
 // S4: The workload of a nurse should not exceed the assigned maximum workload
 function calculateNurseWorkload with nurseWorkloadForDay {
@@ -874,6 +903,7 @@ function calculateOPenOTs with Day {
 // S6: The number of different OTs a surgeon is assigned to per working day should be minimized
 function calculateOtsPerSurgeon with otsPerSurgeon {
 	context.variables.penalizedOTs
+	// TODO: Fix error
 }
 
 // S7: The number of days between a patient´s release date and their actual date of admission should be minimized
@@ -890,7 +920,7 @@ objective : min {
 	0
 	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
 	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
-	// S3
+	+ functions.calculateContinuityOfCare * types.Weight->sum(element.continuityOfCare)
 	+ functions.calculateNurseWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
 	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
 	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
