@@ -785,6 +785,7 @@ function calculateAgeDifference with roomDayTupel {
 // S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
 function calculateUnqualifiedNurses with assignedPatientsToRoom {
 	context.variables.penalizedSkillDiff
+	// TODO: Produces slightly wrong values but seems to optimize correctly 
 }
 
 // S3: The number of nurses taking care of a specific patient must be minimized
@@ -827,12 +828,12 @@ function calculateNotAssignedOptionalPatients with optionalPatients {
 
 objective : min {
 	0
-//	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
-//	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
+	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
+	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
 	// S3
 	// S4
-//	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
-//	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
-//	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
+	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
+	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
+	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
 	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 }

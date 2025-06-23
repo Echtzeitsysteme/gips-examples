@@ -46,6 +46,22 @@ public class SolvedModelValidator {
 	
 	public String debug;
 	
+	int roomSkillLevel = 0;
+	
+	int roomAgeMix = 0;
+	
+	int continuityOfCare = 0;
+	
+	int excessiveNurseWorkload = 0;
+	
+	int openOperatingTheater = 0;
+	
+	int surgeonTransfer = 0;
+	
+	int patientDelay = 0;
+	
+	int electiveUnscheduledPatients = 0;
+	
 	public SolvedModelValidator(final Root model, boolean verbose) {
 		Objects.requireNonNull(model, "Given model was null.");
 		this.model = model;
@@ -97,6 +113,18 @@ public class SolvedModelValidator {
 		for (final Nurse n : this.model.getNurses()) {
 			validateNurse(n);
 		}
+		
+		debug += "\nCOSTS (weight X cost):";
+		debug += "\nRoomAgeMix........................." + this.model.getWeight().getRoomMixedAge() * roomAgeMix + " (" + this.model.getWeight().getRoomMixedAge() + " X " + roomAgeMix + ")";
+		debug += "\nRoomSkillLevel....................." + this.model.getWeight().getRoomNurseSkill() * roomSkillLevel + " (" + this.model.getWeight().getRoomNurseSkill() + " X " + roomSkillLevel + ")";
+		debug += "\nContinuityOfCare..................." + this.model.getWeight().getContinuityOfCare() * continuityOfCare + " (" + this.model.getWeight().getContinuityOfCare() + " X " + continuityOfCare + ")";
+		debug += "\nExcessiveNurseWorkload............." + this.model.getWeight().getNurseExcessiveWorkload() * excessiveNurseWorkload + " (" + this.model.getWeight().getNurseExcessiveWorkload() + " X " + excessiveNurseWorkload + ")";
+		debug += "\nOpenOperatingTheater..............." + this.model.getWeight().getOpenOperatingTheater() * openOperatingTheater + " (" + this.model.getWeight().getOpenOperatingTheater() + " X " + openOperatingTheater + ")";
+		// TODO: Fix error for SurgeonTransfer
+		debug += "\nSurgeonTransfer...................." + this.model.getWeight().getSurgeonTransfer() * surgeonTransfer + " (" + this.model.getWeight().getSurgeonTransfer() + " X " + surgeonTransfer + ")";
+		debug += "\nPatientDelay......................." + this.model.getWeight().getPatientDelay() * patientDelay + " (" + this.model.getWeight().getPatientDelay() + " X " + patientDelay + ")";
+		debug += "\nElectiveUnscheduledPatients........" + this.model.getWeight().getUnscheduledOptional() * electiveUnscheduledPatients + " (" + this.model.getWeight().getPatientDelay() + " X " + electiveUnscheduledPatients + ")";
+		
 		if(verbose) {
 			logger.info("Write debugfile to " + debugOutputPath);
 			FileUtils.writeFile(debugOutputPath, debug);
@@ -107,6 +135,12 @@ public class SolvedModelValidator {
 		Objects.requireNonNull(patient);
 		String patientDebug = "";
 		Shift admissionShift = null;
+		
+		if(debug.length() > 0) {
+			debug += "\n";
+		}
+		String mandatory = patient.isMandatory() ? "mandatory" : "optional";
+		debug += "Patient " +  patient.getName() + ": " + mandatory + ", age group = " + patient.getAgeGroup() + ", Gender = " + patient.getGender() +"\n\t";
 		
 		// Find the selected admission shift and checks all assigned shifts
 		VirtualShiftToWorkload selectedvsw = checkAllWorkloads(patient);
@@ -146,12 +180,6 @@ public class SolvedModelValidator {
 				break;
 			}
 		}
-		
-		if(debug.length() > 0) {
-			debug += "\n";
-		}
-		String mandatory = patient.isMandatory() ? "mandatory" : "optional";
-		debug += "Patient " +  patient.getName() + ": " + mandatory + ", age group = " + patient.getAgeGroup() + ", Gender = " + patient.getGender() +"\n\t";
 		
 		// Checks if assignments for a patient are viable
 		if(admissionShift != null) {
@@ -207,8 +235,10 @@ public class SolvedModelValidator {
 			debug += "Was assigned to room " + admissionShift.getRoom().getName() + " on shift " + admissionShift.getShiftNo() + ". \n\t"; 
 			debug += "The operation by surgeon " + selectedOpTime.getSurgeon().getName() + " is scheduled in OT " + scheduledOt.getName() + " on day " + selectedvwc.getCapacity().getDay() + ". \n";
 			
+			this.patientDelay += (admissionShift.getShiftNo() / 3) - patient.getEarliestDay();
 		}else {
 			debug += "Was not scheduled. \n";
+			this.electiveUnscheduledPatients++;
 		}
 		
 	}
@@ -216,13 +246,14 @@ public class SolvedModelValidator {
 	private void validateOccupant(final Patient occupant) {
 		Objects.requireNonNull(occupant);
 		String patientDebug = "";
-		VirtualShiftToWorkload selectedvsw = checkAllWorkloads(occupant);
 		Shift admissionShift = null;
 
 		if(debug.length() > 0) {
 			debug += "\n";
 		}
 		debug += "Occupant " +  occupant.getName() + ": \n\t";
+		
+		VirtualShiftToWorkload selectedvsw = checkAllWorkloads(occupant);
 		
 		if(selectedvsw == null) {
 			patientDebug = "First workload is not assigned to a shift!";
@@ -250,6 +281,9 @@ public class SolvedModelValidator {
 		int day = 0;
 		List<Patient> patients = new ArrayList<>();
 		String firstFoundGender = "";
+		int minAge = 0;
+		int maxAge = 0;
+		int ageMix = 0;
 		
 		debug += "\nRoom " +  room.getName() + ": capacity = " + room.getBeds() + "\n\t";
 		
@@ -261,6 +295,8 @@ public class SolvedModelValidator {
 			patients.clear();
 			day = shift.getShiftNo() / 3;
 			firstFoundGender = "";
+			minAge = 1000;
+			maxAge = 0;
 			
 			final Collection<VirtualShiftToWorkload> possibleWorkloads = shift.getVirtualWorkload();
 			for(VirtualShiftToWorkload v : possibleWorkloads) {
@@ -274,6 +310,12 @@ public class SolvedModelValidator {
 						debug += "ERROR: " + roomDebug + "\n\t\t";
 					}
 					patients.add(v.getWorkload().getPatient());
+					if(v.getWorkload().getPatient().getAgeGroup() > maxAge) {
+						maxAge = v.getWorkload().getPatient().getAgeGroup();
+					} 
+					if(v.getWorkload().getPatient().getAgeGroup() < minAge) {
+						minAge = v.getWorkload().getPatient().getAgeGroup();
+					}
 				}	
 			}
 			
@@ -290,10 +332,12 @@ public class SolvedModelValidator {
 					if(index < patients.size()) {
 						debug += "\t";
 					}
-					index++;
+					index++; 
 				}
 			}	
+			ageMix += Math.max(0, maxAge - minAge);
 		}
+		this.roomAgeMix += ageMix;
 	}
 
 	private void validateNurse(final Nurse nurse) {
@@ -338,9 +382,11 @@ public class SolvedModelValidator {
 			if(assignedWorkload > 0) {
 				debug += "Roster " + ro.getShiftNo() + ": Maximum workload = " +  ro.getMaxWorkload() + " Assigned workload = " + assignedWorkload +  "\n\t";
 				debug += tmpDebug;
+				this.excessiveNurseWorkload += Math.max(0, assignedWorkload - ro.getMaxWorkload());
 			}
 		}
 		debug += "=> Skill difference = " + penalizedSkillDiff + "\n"; 
+		this.roomSkillLevel += penalizedSkillDiff;
 		
 	}
 
@@ -369,9 +415,14 @@ public class SolvedModelValidator {
 			final Collection<VirtualOpTimeToCapacity> possibleCapacitys = op.getVirtualCapacity();
 			for(VirtualOpTimeToCapacity v : possibleCapacitys) {
 				if(v.isIsSelected()) {
-					ots.add(v.getCapacity().getOt());
+					if(!ots.contains(v.getCapacity().getOt())) {
+						ots.add(v.getCapacity().getOt());
+					}
 				}
 			}
+
+			this.surgeonTransfer += Math.max(0, ots.size() - 1);
+			
 			for(OT ot : ots) {
 				if(otsAsString.length() > 0) {
 					otsAsString += ", " + ot.getName();
@@ -415,6 +466,7 @@ public class SolvedModelValidator {
 		int day = 0;
 		int surgeryTime = 0;
 		String otDebug = "";
+		boolean otOpen;
 		
 		debug += "\nOT " +  ot.getName() + ": \n\t";
 		
@@ -422,24 +474,28 @@ public class SolvedModelValidator {
 		for(Capacity c : capacity) {
 			day = c.getDay();
 			surgeryTime = 0;
+			otOpen = false;
 			
 			final Collection<VirtualWorkloadToCapacity> vwc = c.getVirtualWorkload();
 			for(VirtualWorkloadToCapacity v : vwc) {
 				if(v.isIsSelected()) {
 					surgeryTime += v.getWorkload().getPatient().getSurgeryDuration();
+					otOpen = true;
 				}
 			}
-			debug += "Day " + day + ": \n\t\t";
-			
-			if(c.getMaxCapacity() < surgeryTime) {
-				otDebug = "Available capacity is exceeded on day " + day + " by " + (surgeryTime - c.getMaxCapacity());
-				logger.warning(otDebug); 
-				debug += "ERROR: " + otDebug + "\n\t\t";
-			}
-			
-			debug += "Available capacity = " + c.getMaxCapacity() + ", Scheduled operations = " + surgeryTime + "\n\t";
+			if(otOpen) {
+				this.openOperatingTheater++;
+				debug += "Day " + day + ": \n\t\t";
+				
+				if(c.getMaxCapacity() < surgeryTime) {
+					otDebug = "Available capacity is exceeded on day " + day + " by " + (surgeryTime - c.getMaxCapacity());
+					logger.warning(otDebug); 
+					debug += "ERROR: " + otDebug + "\n\t\t";
+				}
+				
+				debug += "Available capacity = " + c.getMaxCapacity() + ", Scheduled operations = " + surgeryTime + "\n\t";
+			}		
 		}
-		
 	}
 
 	private VirtualShiftToWorkload checkAllWorkloads(final Patient patientOrOccupant) {
@@ -449,9 +505,11 @@ public class SolvedModelValidator {
 		String patientDebug = "";
 		VirtualShiftToWorkload virtualAdmissionShift = null;
 		Shift currentShift = null;
+		List<Nurse> nurses = new ArrayList<>();
 		
 		for(Workload w : workloads) {
 			assignedShifts = 0;
+			
 			final Collection<VirtualShiftToWorkload> possibleShiftAssignments = w.getVirtualShift();
 			for (final VirtualShiftToWorkload v : possibleShiftAssignments) {
 				if (v.isIsSelected()) {
@@ -488,13 +546,22 @@ public class SolvedModelValidator {
 			}
 			
 			if(assignedShifts > 1) {
-				patientDebug = "For Workload " + workloadNumber + " there are " + assignedShifts + "virtual Shifts assigned!";
+				patientDebug = "For Workload " + workloadNumber + " there are " + assignedShifts + " virtual Shifts assigned!";
 				logger.warning(patientDebug); 
 				debug += "ERROR: " + patientDebug + "\n\t";
 			}
+			
+			final Collection<VirtualShiftToRoster> possibleRosterAssignments = currentShift.getVirtualRoster();
+			for(VirtualShiftToRoster vsr : possibleRosterAssignments) {
+				if(vsr.isIsSelected() && !nurses.contains(vsr.getRoster().getNurse())) {
+					nurses.add(vsr.getRoster().getNurse());
+				}
+			}
+			
 			workloadNumber++;
 			currentShift = null;
 		}
+	this.continuityOfCare += nurses.size();
 	return virtualAdmissionShift;
 	}
 }
