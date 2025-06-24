@@ -68,6 +68,7 @@ rule selectOperationDay {
 	
 	vwc : VirtualWorkloadToCapacity {
 		- requires_virtualWorkloadToOpTime -> vwop
+		- capacity -> c
 		.isSelected := true
 	}
 	
@@ -80,8 +81,11 @@ rule selectOperationDay {
 	
 	vopc : VirtualOpTimeToCapacity {
 		- enables_virtualWorkloadToOpTime -> vwop
+		- capacity -> c
 		.isSelected := true
 	}
+	
+	c : Capacity 
 	
 }
 
@@ -903,7 +907,6 @@ function calculateOPenOTs with Day {
 // S6: The number of different OTs a surgeon is assigned to per working day should be minimized
 function calculateOtsPerSurgeon with otsPerSurgeon {
 	context.variables.penalizedOTs
-	// TODO: Fix error
 }
 
 // S7: The number of days between a patient´s release date and their actual date of admission should be minimized
