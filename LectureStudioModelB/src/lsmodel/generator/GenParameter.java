@@ -17,7 +17,10 @@ import java.util.Random;
  *  	2. mean
  *  	3. deviation
  */
-public record GenParameter(GenDistribution dist, double[] parameters) {
+public class GenParameter {
+	public final GenDistribution dist;
+	public final double[] parameters;
+
 	public GenParameter(GenDistribution dist, double... parameters) {
 		this.dist = dist;
 		this.parameters = parameters;
