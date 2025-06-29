@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<teachingassistant.kcl.metamodelalt:TAAllocation
+<teachingassistant.kcl.metamodelalt:TaAllocation
     xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:teachingassistant.kcl.metamodelalt="platform:/resource/teachingassistant.kcl.metamodelalt/model/Metamodelalt.ecore">
@@ -15,7 +15,7 @@
     <sessions
         name="Session M1-1"
         hoursPaidPerOccurrence="2"
-        numTAsPerSession="1"
+        numTasPerSession="1"
         entries="//@timetable.0"
         timeTableWeeks="//@weeks.0">
       <occurrences
@@ -35,7 +35,7 @@
     <sessions
         name="Session M2-1"
         hoursPaidPerOccurrence="2"
-        numTAsPerSession="1"
+        numTasPerSession="1"
         entries="//@timetable.1"
         timeTableWeeks="//@weeks.0">
       <occurrences
@@ -55,7 +55,7 @@
     <sessions
         name="Session M3-1"
         hoursPaidPerOccurrence="2"
-        numTAsPerSession="1"
+        numTasPerSession="1"
         entries="//@timetable.2"
         timeTableWeeks="//@weeks.0">
       <occurrences
@@ -64,11 +64,14 @@
     </sessions>
   </modules>
   <tas name="TA1"
-      maxHoursPerWeek="2"/>
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
   <tas name="TA2"
-      maxHoursPerWeek="2"/>
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
   <tas name="TA3"
-      maxHoursPerWeek="2"/>
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
   <timetable
       room="Room R1"
       weekDay="Monday"
@@ -96,4 +99,4 @@
       startEpoch="14400"
       endEpoch="21600"/>
   <weeks number="1"/>
-</teachingassistant.kcl.metamodelalt:TAAllocation>
+</teachingassistant.kcl.metamodelalt:TaAllocation>

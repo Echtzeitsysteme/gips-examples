@@ -33,7 +33,7 @@ public class TaIncPipelineRunner extends AbstractGipsTeachingAssistantIncrementa
 		// Chose whether to generate a scenario or use a scenario that can only be
 		// solved by a complete re-plan procedure.
 		final TaAllocation firstSolution = prepareScenarioBlockedGen();
-//		final TaAllocation firstSolution = prepareScenarioReplan();
+//		final TaAllocation firstSolution = prepareScenarioBlockedReplan();
 
 		//
 		// Second stage optimization/repair

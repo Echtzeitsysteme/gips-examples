@@ -32,6 +32,7 @@ public class TaIncMultiplePipelineRunner extends AbstractGipsTeachingAssistantIn
 	protected void run() {
 		// Generate conflicting scenario.
 		final TaAllocation firstSolution = prepareScenarioTimelimitGen();
+//		final TaAllocation firstSolution = prepareScenarioBlockedGen();
 
 		//
 		// Second stage optimization/repair
