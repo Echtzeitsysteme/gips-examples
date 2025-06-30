@@ -207,18 +207,6 @@ pattern ageGroupsRoomDay {
 	ag : AgeGroup
 }
 
-pattern minAgeGroupsRoomDay {
-	r : Room 
-	d : Day
-	ag : AgeGroup
-}
-
-pattern maxAgeGroupsRoomDay {
-	r : Room 
-	d : Day
-	ag : AgeGroup
-}
-
 pattern roomDayTupel {
 	r : Room 
 	d : Day
@@ -300,10 +288,10 @@ mapping otsPerSurgeon to surgeonOptimeTupel{
 mapping ageGroupsInRoom to ageGroupsRoomDay;
 
 // mapping that is only true if the age group is the smallest in the room on that day
-mapping minAgeGroupsInRoom to minAgeGroupsRoomDay;
+mapping minAgeGroupsInRoom to ageGroupsRoomDay;
 
 // mapping that is only true if the age group is the greatest in the room on that day
-mapping maxAgeGroupsInRoom to maxAgeGroupsRoomDay;
+mapping maxAgeGroupsInRoom to ageGroupsRoomDay;
 
 // mapping that holds the information what workloads a roster is responsible for / assigned to 
 mapping assignedNursesToWorkload to nursetoWorkload;
@@ -890,7 +878,6 @@ function calculateAgeDifference with roomDayTupel {
 // S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
 function calculateUnqualifiedNurses with assignedPatientsToRoom {
 	context.variables.penalizedSkillDiff
-	// TODO: Produces slightly wrong values but seems to optimize correctly 
 }
 
 // S3: The number of nurses taking care of a specific patient must be minimized
