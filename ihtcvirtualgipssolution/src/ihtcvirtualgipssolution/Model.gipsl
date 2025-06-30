@@ -784,7 +784,13 @@ constraint with assignedPatientsToRoom {
 	== 
 	mappings.assignedPatientsToRoom->filter(
 		element.nodes.s == context.nodes.s & 
-		element.nodes.p == context.nodes.p  
+		element.nodes.p == context.nodes.p
+		// Workload `w` must also overlap because there are
+		// multiple combinations
+		& element.nodes.w == context.nodes.w
+		// & element.nodes.vsw == context.nodes.vsw //&
+		// ^this overlap (instead of `w`) would also make it
+		// unique, but we do not need both overlaps
 	)->sum(element.value * element.nodes.w.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
