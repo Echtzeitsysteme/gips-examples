@@ -83,6 +83,7 @@ public class SolvedModelValidator {
 	
 	
 	public void validate(final String debugOutputPath) {
+		int sum = 0;
 		// If path contains at least one slash `/`, create the folder if not existent
 		if (debugOutputPath.contains("/")) {
 			final int lastSlashIndex = debugOutputPath.lastIndexOf("/");
@@ -120,10 +121,11 @@ public class SolvedModelValidator {
 		debug += "\nContinuityOfCare..................." + this.model.getWeight().getContinuityOfCare() * continuityOfCare + " (" + this.model.getWeight().getContinuityOfCare() + " X " + continuityOfCare + ")";
 		debug += "\nExcessiveNurseWorkload............." + this.model.getWeight().getNurseExcessiveWorkload() * excessiveNurseWorkload + " (" + this.model.getWeight().getNurseExcessiveWorkload() + " X " + excessiveNurseWorkload + ")";
 		debug += "\nOpenOperatingTheater..............." + this.model.getWeight().getOpenOperatingTheater() * openOperatingTheater + " (" + this.model.getWeight().getOpenOperatingTheater() + " X " + openOperatingTheater + ")";
-		// TODO: Fix error for SurgeonTransfer
 		debug += "\nSurgeonTransfer...................." + this.model.getWeight().getSurgeonTransfer() * surgeonTransfer + " (" + this.model.getWeight().getSurgeonTransfer() + " X " + surgeonTransfer + ")";
 		debug += "\nPatientDelay......................." + this.model.getWeight().getPatientDelay() * patientDelay + " (" + this.model.getWeight().getPatientDelay() + " X " + patientDelay + ")";
 		debug += "\nElectiveUnscheduledPatients........" + this.model.getWeight().getUnscheduledOptional() * electiveUnscheduledPatients + " (" + this.model.getWeight().getPatientDelay() + " X " + electiveUnscheduledPatients + ")";
+		sum = this.model.getWeight().getRoomMixedAge() * roomAgeMix + this.model.getWeight().getRoomNurseSkill() * roomSkillLevel + this.model.getWeight().getContinuityOfCare() * continuityOfCare + this.model.getWeight().getNurseExcessiveWorkload() * excessiveNurseWorkload + this.model.getWeight().getOpenOperatingTheater() * openOperatingTheater + this.model.getWeight().getSurgeonTransfer() * surgeonTransfer + this.model.getWeight().getPatientDelay() * patientDelay + this.model.getWeight().getUnscheduledOptional() * electiveUnscheduledPatients; 
+		debug += "\nCosts: " + sum;
 		
 		if(verbose) {
 			logger.info("Write debugfile to " + debugOutputPath);
