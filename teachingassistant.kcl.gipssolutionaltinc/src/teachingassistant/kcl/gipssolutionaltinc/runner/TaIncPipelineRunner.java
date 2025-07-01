@@ -34,6 +34,7 @@ public class TaIncPipelineRunner extends AbstractGipsTeachingAssistantIncrementa
 		// solved by a complete re-plan procedure.
 		final TaAllocation firstSolution = prepareScenarioBlockedGen();
 //		final TaAllocation firstSolution = prepareScenarioBlockedReplan();
+//		final TaAllocation firstSolution = prepareScenarioTimelimitGen();
 
 		//
 		// Second stage optimization/repair
