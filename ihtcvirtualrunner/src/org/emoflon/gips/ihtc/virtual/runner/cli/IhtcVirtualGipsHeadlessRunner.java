@@ -152,8 +152,8 @@ public class IhtcVirtualGipsHeadlessRunner {
 
 		// Get and return values
 		return new CliConfig( //
-				cmd.getOptionValue("inputJson"), //
-				cmd.hasOption("outputJson") ? cmd.getOptionValue("outputJson") : null, //
+				cmd.getOptionValue("inputjson"), //
+				cmd.hasOption("outputjson") ? cmd.getOptionValue("outputJson") : null, //
 				cmd.hasOption("inputxmi") ? cmd.getOptionValue("inputxmi") : null, //
 				cmd.hasOption("outputxmi") ? cmd.getOptionValue("outputxmi") : null, //
 				cmd.hasOption("verbose"), //
