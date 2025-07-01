@@ -74,3 +74,7 @@ ihtcvirtualmetamodel/resources/runner/sol_test01_gips.json
 ihtcvirtualmetamodel/instances/test01_solved.xmi
 
 ihtcvirtualmetamodel/instances/test01.xmi
+
+ihtcvirtualrunner/scripts/gips-ihtc.jar
+
+ihtcvirtualrunner/scripts/ihtc2024_competition_instances/
