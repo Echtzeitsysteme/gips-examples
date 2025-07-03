@@ -1,17 +1,17 @@
-package teachingassistant.uni.plaster.basic.runner;
+package teachingassistant.uni.plaster.smart.runner;
 
 import org.eclipse.emf.common.util.URI;
 
 import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
-import teachingassistant.uni.plaster.basic.api.gips.BasicGipsAPI;
+import teachingassistant.uni.plaster.smart.api.gips.SmartGipsAPI;
 
-public class TaIncHardRunner extends AbstractGipsTeachingAssistantRunner {
+public class TaPlasterSmartRunner extends AbstractGipsTeachingAssistantRunner {
 
 	public static void main(final String[] args) {
-		new TaIncHardRunner().run();
+		new TaPlasterSmartRunner().run();
 	}
 
-	public TaIncHardRunner() {
+	public TaPlasterSmartRunner() {
 		super();
 	}
 
@@ -30,7 +30,7 @@ public class TaIncHardRunner extends AbstractGipsTeachingAssistantRunner {
 		// Initialize GIPS API
 		//
 
-		final BasicGipsAPI gipsApi = new BasicGipsAPI();
+		final SmartGipsAPI gipsApi = new SmartGipsAPI();
 		gipsApi.init(URI.createFileURI(filePath));
 		enableTracing(gipsApi);
 

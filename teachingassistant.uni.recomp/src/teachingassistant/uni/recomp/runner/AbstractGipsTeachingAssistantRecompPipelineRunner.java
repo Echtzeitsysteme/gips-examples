@@ -15,7 +15,7 @@ import teachingassistant.uni.metamodel.generator.SimpleTaUniGenerator;
 import teachingassistant.uni.metamodel.generator.TeachingAssistantUniManipulator;
 import teachingassistant.uni.metamodel.validator.TeachingAssistantUniValidator;
 
-public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
+public abstract class AbstractGipsTeachingAssistantRecompPipelineRunner {
 
 	public final String projectFolder = System.getProperty("user.dir");
 	public final String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";

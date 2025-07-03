@@ -5,13 +5,13 @@ import org.eclipse.emf.common.util.URI;
 import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
 import teachingassistant.uni.recomp.api.gips.RecompGipsAPI;
 
-public class TaIncRunner extends AbstractGipsTeachingAssistantRunner {
+public class TaRecompRunner extends AbstractGipsTeachingAssistantRunner {
 
 	public static void main(final String[] args) {
-		new TaIncRunner().run();
+		new TaRecompRunner().run();
 	}
 
-	public TaIncRunner() {
+	public TaRecompRunner() {
 		super();
 	}
 

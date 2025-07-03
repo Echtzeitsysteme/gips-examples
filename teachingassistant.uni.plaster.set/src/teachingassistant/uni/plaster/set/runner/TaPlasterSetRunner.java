@@ -5,13 +5,13 @@ import org.eclipse.emf.common.util.URI;
 import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
 import teachingassistant.uni.plaster.set.api.gips.SetGipsAPI;
 
-public class TaIncMultipleRunner extends AbstractGipsTeachingAssistantRunner {
+public class TaPlasterSetRunner extends AbstractGipsTeachingAssistantRunner {
 
 	public static void main(final String[] args) {
-		new TaIncMultipleRunner().run();
+		new TaPlasterSetRunner().run();
 	}
 
-	public TaIncMultipleRunner() {
+	public TaPlasterSetRunner() {
 		super();
 	}
 

@@ -1,7 +1,7 @@
-package teachingassistant.uni.plaster.smart.runner;
+package teachingassistant.uni.plaster.set.runner;
 
 import metamodel.TaAllocation;
-import teachingassistant.uni.recomp.runner.AbstractGipsTeachingAssistantIncrementalPipelineRunner;
+import teachingassistant.uni.recomp.runner.AbstractGipsTeachingAssistantRecompPipelineRunner;
 import teachingassistant.uni.metamodel.comparator.SolutionComparator;
 import teachingassistant.uni.metamodel.validator.TeachingAssistantUniValidator;
 
@@ -9,12 +9,12 @@ import teachingassistant.uni.metamodel.validator.TeachingAssistantUniValidator;
  * Runs the teaching assistant incremental pipeline (scenario generator, GIPSL
  * optimization, manipulator, incremental solution, and validator).
  */
-public class TaIncSwapPipelineRunner extends AbstractGipsTeachingAssistantIncrementalPipelineRunner {
+public class TaPlasterSetPipelineRunner extends AbstractGipsTeachingAssistantRecompPipelineRunner {
 
 	/**
 	 * No instantiations of this class.
 	 */
-	private TaIncSwapPipelineRunner() {
+	private TaPlasterSetPipelineRunner() {
 	}
 
 	/**
@@ -23,7 +23,7 @@ public class TaIncSwapPipelineRunner extends AbstractGipsTeachingAssistantIncrem
 	 * @param args All arguments will be ignored.
 	 */
 	public static void main(final String[] args) {
-		new TaIncSwapPipelineRunner().run();
+		new TaPlasterSetPipelineRunner().run();
 	}
 
 	/**
@@ -31,14 +31,15 @@ public class TaIncSwapPipelineRunner extends AbstractGipsTeachingAssistantIncrem
 	 */
 	protected void run() {
 		// Generate conflicting scenario.
-		final TaAllocation firstSolution = prepareScenarioBlockedGen();
+		final TaAllocation firstSolution = prepareScenarioTimelimitGen();
+//		final TaAllocation firstSolution = prepareScenarioBlockedGen();
 
 		//
 		// Second stage optimization/repair
 		//
 
-		TaIncSwapRunner.scenarioFileName = TeachingAssistantUniValidator.SCENARIO_FILE_NAME;
-		TaIncSwapRunner.main(null);
+		TaPlasterSetRunner.scenarioFileName = TeachingAssistantUniValidator.SCENARIO_FILE_NAME;
+		TaPlasterSetRunner.main(null);
 
 		// Validate the solution
 		validate();
