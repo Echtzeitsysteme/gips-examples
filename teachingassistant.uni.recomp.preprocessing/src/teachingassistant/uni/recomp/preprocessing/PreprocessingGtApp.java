@@ -1,4 +1,4 @@
-package teachingassistant.kcl.gipssolutioninc.preprocessing;
+package teachingassistant.uni.recomp.preprocessing;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -17,10 +17,10 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 import metamodel.MetamodelPackage;
 import metamodel.TaAllocation;
-import teachingassistant.kcl.gips.utils.LoggingUtils;
-import teachingassistant.kcl.gipssolutioninc.preprocessing.api.PreprocessingAPI;
-import teachingassistant.kcl.gipssolutioninc.preprocessing.api.PreprocessingHiPEApp;
-import teachingassistant.kcl.gipssolutioninc.preprocessing.api.matches.MakeAssignmentEdgePreviousMatch;
+import teachingassistant.uni.utils.LoggingUtils;
+import teachingassistant.uni.recomp.preprocessing.api.PreprocessingAPI;
+import teachingassistant.uni.recomp.preprocessing.api.PreprocessingHiPEApp;
+import teachingassistant.uni.recomp.preprocessing.api.matches.MakeAssignmentEdgePreviousMatch;
 
 /**
  * This eMoflon::IBeX-GT app can be used to run all pre-processing rules of the

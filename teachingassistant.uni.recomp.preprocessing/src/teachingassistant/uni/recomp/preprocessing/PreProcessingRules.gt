@@ -1,4 +1,4 @@
-import "platform:/resource/teachingassistant.kcl.metamodelalt/model/Metamodelalt.ecore"
+import "platform:/resource/teachingassistant.uni.metamodel/model/Metamodel.ecore"
 
 rule makeAssignmentEdgePrevious {
 	root : TaAllocation {

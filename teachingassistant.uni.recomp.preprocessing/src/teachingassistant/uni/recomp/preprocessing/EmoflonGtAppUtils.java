@@ -1,4 +1,4 @@
-package teachingassistant.kcl.gipssolutioninc.preprocessing;
+package teachingassistant.uni.recomp.preprocessing;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import teachingassistant.kcl.gipssolutioninc.preprocessing.api.PreprocessingAPI;
+import teachingassistant.uni.recomp.preprocessing.api.PreprocessingAPI;
 
 /**
  * Utility class for the eMoflon GT app.
@@ -54,7 +54,7 @@ public class EmoflonGtAppUtils {
 			return;
 		}
 		try (final InputStream is = PreprocessingAPI.class
-				.getResourceAsStream("/teachingassistant/kcl/gipssolutioninc/preprocessing/api/ibex-patterns.xmi")) {
+				.getResourceAsStream("/teachingassistant/uni/recomp/preprocessing/api/ibex-patterns.xmi")) {
 			target.getParentFile().mkdirs();
 			if (is == null) {
 				throw new IllegalStateException("ibex-patterns are missing from the resources");
