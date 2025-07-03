@@ -55,34 +55,16 @@ nurserosteringmodel/resources/model.xmi
 
 nurserosteringgipsl/resources/model.xmi
 
-teachingassistant.kcl.metamodel/instances/kcl_department.xmi
-
-teachingassistant.kcl.metamodel/instances/solved.xmi
-
 ihtcrunner/model_in.xmi
 
 **/.DS_Store
-
-teachingassistant.kcl.metamodel/instances/kcl_department.json
-
-teachingassistant.kcl.metamodel/model.json
 
 **/trace_cache.bin
 
 org.emoflon.gips.gipsl.examples.mdvne/problem.lp
 
-teachingassistant.kcl.metamodelalt/instances/*.xmi
-teachingassistant.kcl.metamodelalt/instances/*.json
-!/teachingassistant.kcl.metamodelalt/instances/kcl_ta_allocation_total-replan.xmi
+teachingassistant.uni.metamodel/instances/*.xmi
+teachingassistant.uni.metamodel/instances/*.json
+!/teachingassistant.uni.metamodel/instances/uni_ta_allocation_total-replan.xmi
 
-teachingassistant.kcl.gipssolutionalt/problem.lp
-
-teachingassistant.kcl.gipssolutionaltinc/problem.lp
-
-teachingassistant.kcl.gipssolutionaltinchard/problem.lp
-
-teachingassistant.kcl.gipssolutionaltincswap/problem.lp
-
-teachingassistant.kcl.gipssolutioninchardmultiple/problem.lp
-
-teachingassistant.kcl.gipssolutionaltincswap2/problem.lp
+**/problem.lp

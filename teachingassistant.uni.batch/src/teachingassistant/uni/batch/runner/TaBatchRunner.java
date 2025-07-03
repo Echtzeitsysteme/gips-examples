@@ -1,9 +1,9 @@
-package teachingassistant.kcl.gipssolutionalt.runner;
+package teachingassistant.uni.batch.runner;
 
 import org.eclipse.emf.common.util.URI;
 
-import teachingassistant.kcl.gips.utils.AbstractGipsTeachingAssistantRunner;
-import teachingassistant.kcl.gipssolutionalt.api.gips.GipssolutionaltGipsAPI;
+import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
+import teachingassistant.uni.batch.api.gips.BatchGipsAPI;
 
 public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 
@@ -21,7 +21,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		//
 
 		final String projectFolder = System.getProperty("user.dir");
-		final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodelalt/instances/";
+		final String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";
 		final String filePath = instanceFolder + scenarioFileName;
 
 		checkIfFileExists(filePath);
@@ -30,7 +30,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		// Initialize GIPS API
 		//
 
-		final GipssolutionaltGipsAPI gipsApi = new GipssolutionaltGipsAPI();
+		final BatchGipsAPI gipsApi = new BatchGipsAPI();
 		gipsApi.init(URI.createFileURI(filePath));
 		enableTracing(gipsApi);
 
