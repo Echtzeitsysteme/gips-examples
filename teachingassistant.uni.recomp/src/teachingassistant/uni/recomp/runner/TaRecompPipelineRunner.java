@@ -32,8 +32,8 @@ public class TaRecompPipelineRunner extends AbstractGipsTeachingAssistantRecompP
 	protected void run() {
 		// Chose whether to generate a scenario or use a scenario that can only be
 		// solved by a complete re-plan procedure.
-		final TaAllocation firstSolution = prepareScenarioBlockedGen();
-//		final TaAllocation firstSolution = prepareScenarioBlockedReplan();
+//		final TaAllocation firstSolution = prepareScenarioBlockedGen();
+		final TaAllocation firstSolution = prepareScenarioBlockedReplan();
 //		final TaAllocation firstSolution = prepareScenarioTimelimitGen();
 
 		//
