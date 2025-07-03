@@ -1,0 +1,325 @@
+package "teachingassistant.uni.plaster.smart"
+import "platform:/resource/teachingassistant.uni.metamodel/model/Metamodel.ecore"
+
+config {
+	solver := GUROBI;
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	lpOutput := false [path := "problem.lp"];
+}
+
+//
+// GT
+//
+
+// Construct a condition for a session that a specific TA
+// is available (i.e., they have not blocked this session)
+pattern findTaUnavailableSession {
+	ta : TeachingAssistant {
+		- unavailableBecauseLessons -> entry
+	}
+	
+	entry : TimeTableEntry
+}
+condition taAvailableInSession = forbid findTaUnavailableSession
+
+pattern findBlockedTa {
+	ta : TeachingAssistant {
+		- unavailableBecauseLessons -> entry
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+		- entries -> entry
+	}
+	
+	occurrence : SessionOccurrence {
+		- tas -> ta
+	}
+	
+	entry : TimeTableEntry
+}
+
+// Rule to assign a TA to a specific session occurrence.
+// This rule respects the condition that the TA must not have
+// blocked the respective time table entry of the session occurrence.
+rule assignTa {
+	ta : TeachingAssistant
+	
+	module : Module {
+		- sessions -> session
+		- approvals -> approval
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+		- entries -> entry
+	}
+	
+	occurrence : SessionOccurrence {
+		++ - tas -> ta
+	}
+	
+	w : Week
+	
+	entry : TimeTableEntry {
+		- timeTableWeeks -> w
+	}
+	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	
+	# occurrence.timeTableWeek == w.number
+	# approval.ratingNumeric > 0
+}
+when taAvailableInSession
+
+// Rule to remove a TA from a specific session occurrence.
+rule removeTa {
+	ta : TeachingAssistant
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+		- entries -> entry
+	}
+	
+	occurrence : SessionOccurrence {
+		-- - tas -> ta
+	}
+	
+	w : Week
+	
+	entry : TimeTableEntry {
+		- timeTableWeeks -> w
+	}
+	
+	# occurrence.timeTableWeek == w.number
+}
+
+// For a specific TA, find all conflicting time table
+// entries in the model.
+// This pattern does respect partly overlapping time
+// table entries.
+pattern findConflictingEntriesWithTa {
+	week : Week
+	
+	entryA : TimeTableEntry {
+		- timeTableWeeks -> week
+	}
+	entryB : TimeTableEntry {
+		- timeTableWeeks -> week
+	}
+	
+	ta : TeachingAssistant
+	
+	# entryA.startEpoch < entryB.endEpoch
+	# entryA.endEpoch > entryB.startEpoch
+}
+
+// Find all possible combinations of TAs and weeks
+pattern findTaWeekCombination {
+	w : Week
+	ta : TeachingAssistant
+}
+
+// Pattern to find an existing TA assignment.
+pattern taExistingAssignment {
+	ta : TeachingAssistant
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+		- entries -> entry
+	}
+	
+	occurrence : SessionOccurrence {
+		- tas -> ta
+	}
+	
+	w : Week
+	
+	entry : TimeTableEntry {
+		- timeTableWeeks -> w
+	}
+	
+	# occurrence.timeTableWeek == w.number
+}
+
+// Find session occurrence
+pattern findSessionOccurrence {
+	session : TeachingSession {
+		- occurrences -> occurrence
+	}
+	
+	occurrence : SessionOccurrence
+}
+
+// Find a TA with a green employment approval status
+// for a specific module.
+pattern findGreenTa {
+	ta : TeachingAssistant
+	
+	mod : Module {
+		- approvals -> approval
+	}
+	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	# approval.ratingNumeric == 2
+}
+
+// Find a TA with an amber employment approval status
+// for a specific module.
+pattern findAmberTa {
+	ta : TeachingAssistant
+	
+	mod : Module {
+		- approvals -> approval
+	}
+	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	# approval.ratingNumeric == 1
+}
+
+//
+// GIPSL
+//
+
+// If a mapping instance has a value of `1`, the respective TA must
+// be mapped to the respective session occurrence.
+mapping taToOccurrence to assignTa;
+
+// If a mapping instance has a value of `1`, the assignment of the
+// respective TA must be removed from the respective session occurrence.
+mapping taOccurrenceRemove to removeTa;
+
+// Find every blocked TA and remove them from their respective
+// blocked sessions.
+constraint with findBlockedTa {
+	// Remove the blocked TA
+	mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrence //
+	)->sum(element.value) == 1
+	
+	&
+	
+	// Assign something else to the (previously blocked) TA
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence != context.nodes.occurrence //
+	)->sum(element.value) == 1
+	
+	&
+
+	// Someone must be re-issued the session the blocked
+	// TA was removed from
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta != context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrence //
+	)->sum(element.value) == 1
+	
+	&
+	
+	// The second TA must be removed from one of their previously
+	// assigned occurrences
+	mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta != context.nodes.ta //
+		& element.nodes.occurrence != context.nodes.occurrence //
+	)->sum(element.value) == 1
+}
+
+// For every mapping instance of the type `taOccurrenceRemove`, there
+// must be a corresponding instance of the type `taToOccurrence` in order
+// to repair the module.
+constraint with taOccurrenceRemove {
+	mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value) == context.value
+}
+
+// TAs must not have conflicting assignments.
+// GIPSL formulation: For any pair of conflicting session occurrences (in the
+// context of one TA), a maximum of one of these conflicting session can be chosen.
+constraint with findConflictingEntriesWithTa {
+	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
+	+
+	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(element.value)
+	<= 1
+}
+constraint with findConflictingEntriesWithTa {
+	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
+	+
+	patterns.taExistingAssignment->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(1)
+	<= 1
+	// Because of the symmetry of the pattern(s), this constraint should be correct
+}
+
+// Ensure TAs max hours per year
+// GIPSL interpretation: the sum of all assigned working hours per TA
+// must not exceed their yearly hour limit
+constraint with TeachingAssistant {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context //
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	+
+	patterns.taExistingAssignment->filter( //
+		element.nodes.ta == context //
+	)->sum(element.nodes.session.hoursPaidPerOccurrence)
+	- mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta == context //
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	<= context.maxHoursPerYear
+}
+
+// Ensure TAs max hours per week
+// GIPSL interpretation: the sum of all assigned working hours per TA
+// in a specific week must not exceed their weekly hour limit
+constraint with findTaWeekCombination {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.w == context.nodes.w //
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	+
+	patterns.taExistingAssignment->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.w == context.nodes.w //
+	)->sum(element.nodes.session.hoursPaidPerOccurrence)
+	- mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.w == context.nodes.w
+	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	<= context.nodes.ta.maxHoursPerWeek
+}
+
+// Represents the number of assigned session occurrences to a specific
+// TA for a specific session (and the TA needs to have the green
+// employment rating for the respective module).
+function greenTas with findGreenTa {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+}
+
+// Represents the number of assigned session occurrences to a specific
+// TA for a specific session (and the TA needs to have the amber
+// employment rating for the respective module).
+function amberTas with findAmberTa {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+}
+
+// Global objective
+// We want to use a higher weight for green TAs compared to the
+// amber TAs
+objective : max {
+	0
+	+ 5 * functions.greenTas
+	+ 1 * functions.amberTas
+}
