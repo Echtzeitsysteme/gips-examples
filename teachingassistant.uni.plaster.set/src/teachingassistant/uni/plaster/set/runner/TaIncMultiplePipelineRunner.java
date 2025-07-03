@@ -1,9 +1,9 @@
-package teachingassistant.kcl.gipssolutioninchardmultiple.runner;
+package teachingassistant.uni.plaster.set.runner;
 
 import metamodel.TaAllocation;
-import teachingassistant.kcl.gipssolutionaltinc.runner.AbstractGipsTeachingAssistantIncrementalPipelineRunner;
-import teachingassistant.kcl.metamodelalt.comparator.SolutionComparator;
-import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
+import teachingassistant.uni.recomp.runner.AbstractGipsTeachingAssistantIncrementalPipelineRunner;
+import teachingassistant.uni.metamodel.comparator.SolutionComparator;
+import teachingassistant.uni.metamodel.validator.TeachingAssistantUniValidator;
 
 /**
  * Runs the teaching assistant incremental pipeline (scenario generator, GIPSL
@@ -38,7 +38,7 @@ public class TaIncMultiplePipelineRunner extends AbstractGipsTeachingAssistantIn
 		// Second stage optimization/repair
 		//
 
-		TaIncMultipleRunner.scenarioFileName = TeachingAssistantKclValidator.SCENARIO_FILE_NAME;
+		TaIncMultipleRunner.scenarioFileName = TeachingAssistantUniValidator.SCENARIO_FILE_NAME;
 		TaIncMultipleRunner.main(null);
 
 		// Validate the solution
