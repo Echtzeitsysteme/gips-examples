@@ -1,4 +1,4 @@
-package teachingassistant.kcl.gipssolutionaltinc.runner;
+package teachingassistant.uni.recomp.runner;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,19 +9,19 @@ import java.util.Objects;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import metamodel.TaAllocation;
-import teachingassistant.kcl.gips.utils.AbstractGipsTeachingAssistantRunner;
-import teachingassistant.kcl.metamodelalt.export.FileUtils;
-import teachingassistant.kcl.metamodelalt.generator.SimpleTaKclGenerator;
-import teachingassistant.kcl.metamodelalt.generator.TeachingAssistantKclManipulator;
-import teachingassistant.kcl.metamodelalt.validator.TeachingAssistantKclValidator;
+import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
+import teachingassistant.uni.metamodel.export.FileUtils;
+import teachingassistant.uni.metamodel.generator.SimpleTaUniGenerator;
+import teachingassistant.uni.metamodel.generator.TeachingAssistantUniManipulator;
+import teachingassistant.uni.metamodel.validator.TeachingAssistantUniValidator;
 
 public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 
 	public final String projectFolder = System.getProperty("user.dir");
-	public final String instanceFolder = projectFolder + "/../teachingassistant.kcl.metamodelalt/instances/";
+	public final String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";
 	public final String filePath = instanceFolder + "solved.xmi";
 	public final String filePathPlain = instanceFolder + AbstractGipsTeachingAssistantRunner.scenarioFileName;
-	public final String filePathReplan = instanceFolder + "/kcl_ta_allocation_total-replan.xmi";
+	public final String filePathReplan = instanceFolder + "/uni_ta_allocation_total-replan.xmi";
 
 	/**
 	 * Runs the pipeline.
@@ -36,7 +36,7 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	 */
 	protected TaAllocation prepareScenarioBlockedGen() {
 		// Generate the initial model
-		SimpleTaKclGenerator.main(null);
+		SimpleTaUniGenerator.main(null);
 		final TaAllocation firstSolution = solveAndValidateBatch();
 
 		// Alter the solution, i.e., violate a constraint by changing the model
@@ -71,7 +71,7 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	 */
 	protected TaAllocation prepareScenarioTimelimitGen() {
 		// Generate the initial model
-		SimpleTaKclGenerator.main(null);
+		SimpleTaUniGenerator.main(null);
 		final TaAllocation firstSolution = solveAndValidateBatch();
 
 		// Alter the solution, i.e., violate a constraint by changing the model
@@ -85,7 +85,7 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	 */
 	private void manipulateBlocking() {
 		// Alter the solution, i.e., violate a constraint by changing the model
-		final TeachingAssistantKclManipulator manipulator = new TeachingAssistantKclManipulator(filePath);
+		final TeachingAssistantUniManipulator manipulator = new TeachingAssistantUniManipulator(filePath);
 		manipulator.executeBlocking();
 
 		// Model should now be invalid
@@ -97,7 +97,7 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	 */
 	private void manipulateTimeLimit() {
 		// Alter the solution, i.e., violate a constraint by changing the model
-		final TeachingAssistantKclManipulator manipulator = new TeachingAssistantKclManipulator(filePath);
+		final TeachingAssistantUniManipulator manipulator = new TeachingAssistantUniManipulator(filePath);
 		manipulator.executeHourReduction(1);
 
 		// Model should now be invalid
@@ -111,7 +111,7 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	 */
 	private TaAllocation solveAndValidateBatch() {
 		// Optimize/solve the initial model/problem
-		teachingassistant.kcl.gipssolutionalt.runner.TaBatchRunner.main(null);
+		teachingassistant.uni.batch.runner.TaBatchRunner.main(null);
 
 		// Validate the solution
 		validate();
@@ -122,10 +122,10 @@ public abstract class AbstractGipsTeachingAssistantIncrementalPipelineRunner {
 	}
 
 	/**
-	 * Uses the teaching assistant KCL validator to validate the model.
+	 * Uses the teaching assistant university validator to validate the model.
 	 */
 	protected void validate() {
-		TeachingAssistantKclValidator.main(null);
+		TeachingAssistantUniValidator.main(null);
 	}
 
 	/**
