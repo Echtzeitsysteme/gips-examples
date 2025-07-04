@@ -238,22 +238,34 @@ constraint with findBlockedTa {
 // must be a corresponding instance of the type `taToOccurrence` in order
 // to repair the module.
 constraint with taOccurrenceRemove {
-	mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value) == context.value
+	mappings.taToOccurrence->filter( //
+		element.nodes.occurrence == context.nodes.occurrence //
+	)->sum(element.value) == context.value
 }
 
 // TAs must not have conflicting assignments.
 // GIPSL formulation: For any pair of conflicting session occurrences (in the
 // context of one TA), a maximum of one of these conflicting session can be chosen.
 constraint with findConflictingEntriesWithTa {
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
-	+
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(element.value)
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryA //
+	)->sum(element.value)
+	+ mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryB //
+	)->sum(element.value)
 	<= 1
 }
 constraint with findConflictingEntriesWithTa {
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
-	+
-	patterns.taExistingAssignment->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(1)
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryA //
+	)->sum(element.value)
+	+ patterns.taExistingAssignment->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryB //
+	)->sum(1)
 	<= 1
 	// Because of the symmetry of the pattern(s), this constraint should be correct
 }
@@ -265,8 +277,7 @@ constraint with TeachingAssistant {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context //
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
-	+
-	patterns.taExistingAssignment->filter( //
+	+ patterns.taExistingAssignment->filter( //
 		element.nodes.ta == context //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
 	- mappings.taOccurrenceRemove->filter( //
@@ -283,8 +294,7 @@ constraint with findTaWeekCombination {
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.w == context.nodes.w //
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
-	+
-	patterns.taExistingAssignment->filter( //
+	+ patterns.taExistingAssignment->filter( //
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.w == context.nodes.w //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)

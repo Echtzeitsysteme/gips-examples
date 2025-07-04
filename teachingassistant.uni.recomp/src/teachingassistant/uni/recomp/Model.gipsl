@@ -162,9 +162,14 @@ constraint with findSessionOccurrence {
 // GIPSL formulation: For any pair of conflicting session occurrences (in the
 // context of one TA), a maximum of one of these conflicting session can be chosen.
 constraint with findConflictingEntriesWithTa {
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
-	+
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(element.value)
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryA //
+	)->sum(element.value)
+	+ mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryB //
+	)->sum(element.value)
 	<= 1
 }
 

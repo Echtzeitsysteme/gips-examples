@@ -193,7 +193,9 @@ mapping isTaOverloadedInWeek to findTaWeekCombination;
 // must be at least one corresponding instance of the type `taToOccurrence`
 // in order to repair the module.
 constraint with taOccurrenceRemove {
-	mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value)
+	mappings.taToOccurrence->filter( //
+		element.nodes.occurrence == context.nodes.occurrence //
+	)->sum(element.value)
 	>=
 	context.value
 }
@@ -202,15 +204,25 @@ constraint with taOccurrenceRemove {
 // GIPSL formulation: For any pair of conflicting session occurrences (in the
 // context of one TA), a maximum of one of these conflicting session can be chosen.
 constraint with findConflictingEntriesWithTa {
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
-	+
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(element.value)
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryA //
+	)->sum(element.value)
+	+ mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryB //
+	)->sum(element.value)
 	<= 1
 }
 constraint with findConflictingEntriesWithTa {
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryA)->sum(element.value)
-	+
-	patterns.taExistingAssignment->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entryB)->sum(1)
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryA //
+	)->sum(element.value)
+	+ patterns.taExistingAssignment->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryB //
+	)->sum(1)
 	<= 1
 	// Because of the symmetry of the pattern(s), this constraint should be correct
 }
@@ -221,8 +233,12 @@ constraint with findConflictingEntriesWithTa {
 // ... plus the newly assigned occurrences.
 constraint with findSessionOccurrence {
 	context.nodes.occurrence.tas->sum(1)
-	- mappings.taOccurrenceRemove->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value)
-	+ mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value)
+	- mappings.taOccurrenceRemove->filter( //
+		element.nodes.occurrence == context.nodes.occurrence //
+	)->sum(element.value)
+	+ mappings.taToOccurrence->filter( //
+		element.nodes.occurrence == context.nodes.occurrence //
+	)->sum(element.value)
 	==
 	context.nodes.session.numTasPerSession
 }
@@ -234,8 +250,7 @@ constraint with TeachingAssistant {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context //
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
-	+
-	patterns.taExistingAssignment->filter( //
+	+ patterns.taExistingAssignment->filter( //
 		element.nodes.ta == context //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
 	- mappings.taOccurrenceRemove->filter( //
@@ -252,8 +267,7 @@ constraint with findTaWeekCombination {
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.w == context.nodes.w //
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
-	+
-	patterns.taExistingAssignment->filter( //
+	+ patterns.taExistingAssignment->filter( //
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.w == context.nodes.w //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
@@ -270,11 +284,20 @@ constraint with findTaWeekCombination {
 // of assignments in this time table entry must have each assignment of
 // this arrangement removed
 constraint with findTaUnavailableSession {
-	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->sum(element.value) == 0
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entry //
+	)->sum(element.value) == 0
 	&
-	mappings.taOccurrenceRemove->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->sum(element.value)
+	mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entry //
+	)->sum(element.value)
 	==
-	mappings.taOccurrenceRemove->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->count()	
+	mappings.taOccurrenceRemove->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entry //
+	)->count()	
 }
 
 // Set the respective `isTaOverloadedInWeek` mapping to 1, if the respective
@@ -284,10 +307,12 @@ constraint with findTaWeekCombination {
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.w == context.nodes.w //
 	)->sum(element.nodes.session.hoursPaidPerOccurrence)
-	>
-	context.nodes.ta.maxHoursPerWeek
+	> context.nodes.ta.maxHoursPerWeek
 	<=>
-	mappings.isTaOverloadedInWeek->filter(element.nodes.ta == context.nodes.ta & element.nodes.w == context.nodes.w)->sum(element.value) == 1
+	mappings.isTaOverloadedInWeek->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.w == context.nodes.w //
+	)->sum(element.value) == 1
 }
 
 // Only allow the removal of a TA from a session if the TA is:
@@ -296,8 +321,13 @@ constraint with findTaWeekCombination {
 constraint with taOccurrenceRemove {
 	context.value
 	<=
-	patterns.findTaUnavailableSession->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->count()
-	+ mappings.isTaOverloadedInWeek->filter(element.nodes.ta == context.nodes.ta)->sum(element.value)
+	patterns.findTaUnavailableSession->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entry //
+	)->count()
+	+ mappings.isTaOverloadedInWeek->filter( //
+		element.nodes.ta == context.nodes.ta //
+	)->sum(element.value)
 }
 
 // Represents the number of assigned session occurrences to a specific
