@@ -64,6 +64,10 @@ when taAvailableInSession
 rule removeTa {
 	ta : TeachingAssistant
 	
+	module : Module {
+		- sessions -> session
+	}
+	
 	session : TeachingSession {
 		- occurrences -> occurrence
 		- entries -> entry
@@ -187,7 +191,7 @@ mapping taOccurrenceRemove to removeTa;
 constraint with taOccurrenceRemove {
 	mappings.taToOccurrence->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value)
 	>=
-	mappings.taOccurrenceRemove->filter(element.nodes.occurrence == context.nodes.occurrence)->sum(element.value)
+	context.value
 }
 
 // TAs must not have conflicting assignments.
@@ -256,11 +260,28 @@ constraint with findTaWeekCombination {
 	<= context.nodes.ta.maxHoursPerWeek
 }
 
+// Ensure blocked TAs will be re-allocated
+// GIPSL interpretation: 1) there must not be an assignment of a TA to
+// their blocked time table entry; 2) each blocked TA with a specific number
+// of assignments in this time table entry must have each assignment of
+// this arrangement removed
+constraint with findTaUnavailableSession {
+	mappings.taToOccurrence->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->sum(element.value) == 0
+	&
+	mappings.taOccurrenceRemove->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->sum(element.value)
+	==
+	mappings.taOccurrenceRemove->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->count()	
+}
+
 // Represents the number of assigned session occurrences to a specific
 // TA for a specific session (and the TA needs to have the green
 // employment rating for the respective module).
 function greenTas with findGreenTa {
 	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+	- mappings.taOccurrenceRemove->filter( //
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.module == context.nodes.mod
 	)->sum(element.value)
@@ -271,6 +292,10 @@ function greenTas with findGreenTa {
 // employment rating for the respective module).
 function amberTas with findAmberTa {
 	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.module == context.nodes.mod
+	)->sum(element.value)
+	- mappings.taOccurrenceRemove->filter( //
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.module == context.nodes.mod
 	)->sum(element.value)
