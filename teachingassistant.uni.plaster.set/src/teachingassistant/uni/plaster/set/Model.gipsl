@@ -185,6 +185,10 @@ mapping taToOccurrence to assignTa;
 // respective TA must be removed from the respective session occurrence.
 mapping taOccurrenceRemove to removeTa;
 
+// If a TA is overloaded in a specific week, the following mappings
+// is set to 1 for the respective combination of TA and week.
+mapping isTaOverloadedInWeek to findTaWeekCombination;
+
 // For every mapping instance of the type `taOccurrenceRemove`, there
 // must be at least one corresponding instance of the type `taToOccurrence`
 // in order to repair the module.
@@ -271,6 +275,29 @@ constraint with findTaUnavailableSession {
 	mappings.taOccurrenceRemove->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->sum(element.value)
 	==
 	mappings.taOccurrenceRemove->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->count()	
+}
+
+// Set the respective `isTaOverloadedInWeek` mapping to 1, if the respective
+// TA is overloaded in the specific week of the match
+constraint with findTaWeekCombination {
+	patterns.taExistingAssignment->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.w == context.nodes.w //
+	)->sum(element.nodes.session.hoursPaidPerOccurrence)
+	>
+	context.nodes.ta.maxHoursPerWeek
+	<=>
+	mappings.isTaOverloadedInWeek->filter(element.nodes.ta == context.nodes.ta & element.nodes.w == context.nodes.w)->sum(element.value) == 1
+}
+
+// Only allow the removal of a TA from a session if the TA is:
+// 1) unavailable in said session (blocked), or ...
+// 2) the TA is overloaded in the respective week.
+constraint with taOccurrenceRemove {
+	context.value
+	<=
+	patterns.findTaUnavailableSession->filter(element.nodes.ta == context.nodes.ta & element.nodes.entry == context.nodes.entry)->count()
+	+ mappings.isTaOverloadedInWeek->filter(element.nodes.ta == context.nodes.ta)->sum(element.value)
 }
 
 // Represents the number of assigned session occurrences to a specific
