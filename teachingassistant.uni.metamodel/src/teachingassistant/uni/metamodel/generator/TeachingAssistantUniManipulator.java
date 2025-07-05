@@ -118,7 +118,7 @@ public class TeachingAssistantUniManipulator {
 		logger.info("Number of matched entries: " + foundEntries.size());
 		ta.getUnavailableBecauseLessons().addAll(foundEntries);
 
-		// TODO(Max): Make sure occurrence is not in the past.
+		// TODO: Future improvement: make sure occurrence is not in the past.
 	}
 
 	private void reduceOneTasWeeklyWorkTime(final TaAllocation model, final int newWeeklyHourLimit) {
