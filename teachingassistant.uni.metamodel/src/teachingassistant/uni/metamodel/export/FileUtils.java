@@ -15,8 +15,6 @@ import teachingassistant.uni.utils.AbstractFileUtils;
 
 /**
  * File utilities for loading and saving files.
- *
- * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public class FileUtils extends AbstractFileUtils {
 

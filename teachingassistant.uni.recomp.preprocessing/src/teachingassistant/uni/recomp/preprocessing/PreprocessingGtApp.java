@@ -25,8 +25,6 @@ import teachingassistant.uni.recomp.preprocessing.api.matches.MakeAssignmentEdge
 /**
  * This eMoflon::IBeX-GT app can be used to run all pre-processing rules of the
  * defined GT rule set on a given model.
- * 
- * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public class PreprocessingGtApp extends PreprocessingHiPEApp {
 

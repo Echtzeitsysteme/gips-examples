@@ -25,8 +25,6 @@ import teachingassistant.uni.metamodel.export.FileUtils;
 
 /**
  * Model validator for the teaching assistant example.
- * 
- * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public class TeachingAssistantUniValidator {
 

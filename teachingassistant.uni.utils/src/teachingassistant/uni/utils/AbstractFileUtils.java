@@ -12,8 +12,6 @@ import com.google.gson.JsonObject;
 
 /**
  * (Abstract) File utilities for loading and saving files.
- *
- * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
 public abstract class AbstractFileUtils {
 
