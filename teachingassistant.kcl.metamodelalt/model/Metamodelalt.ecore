@@ -16,6 +16,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="TeachingAssistant" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerYear" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="unavailableBecauseLessons"
+        upperBound="-1" eType="#//TeachingSession"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EmploymentApproval">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rating" eType="#//EmploymentRating"/>
