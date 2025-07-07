@@ -5,14 +5,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TaAllocation">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="modules" upperBound="-1"
-        eType="#//Module" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tas" upperBound="-1" eType="#//TeachingAssistant"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="weeks" upperBound="-1"
-        eType="#//Week" containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TeachingAssistant" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerYear" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -20,9 +12,9 @@
         eType="#//TeachingSession"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EmploymentApproval">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rating" eType="#//EmploymentRating"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rating" eType="#//EmploymentRating"
+        defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ta" lowerBound="1" eType="#//TeachingAssistant"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingNumeric" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SessionOccurrence" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeTableWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
