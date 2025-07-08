@@ -9,7 +9,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerYear" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="unavailable" upperBound="-1"
-        eType="#//TeachingSession"/>
+        eType="#//SessionOccurrence"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EmploymentApproval">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rating" eType="#//EmploymentRating"
@@ -33,17 +33,14 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numTasPerSession" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="occurrences" upperBound="-1"
         eType="#//SessionOccurrence" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="timeTableWeeks" upperBound="-1"
-        eType="#//Week"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="startTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeTableWeeks" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="EmploymentRating">
     <eLiterals name="RED"/>
     <eLiterals name="AMBER" value="1"/>
     <eLiterals name="GREEN" value="2"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Week">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 </ecore:EPackage>
