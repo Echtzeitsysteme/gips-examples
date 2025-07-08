@@ -139,16 +139,6 @@ pattern roomForShift{
 	# s.shiftNo % 3 == 0
 }
 
-pattern roomForShiftTest{
-	r : Room {
-		- shifts -> s
-	}
-	
-	s : Shift
-	
-	# s.shiftNo % 3 == 0
-}
-
 // Pattern that finds all patients that are assigned to a room -> first and following workloads
 // Also holds the information which workload of a patient is assigned to which shift
 pattern patientForRoom {
@@ -346,7 +336,7 @@ mapping assignedNurseForPatient to nursePatientTupel;
 
 // H1: No gender mix: Patients of different genders may not share a room on any day. 
 // patient.gender is a string variable and the preallocation is assumably not known. -> There can only be the same value for all patients
-constraint with roomForShiftTest {
+constraint with roomForShift {
 	mappings.assignedGenderToRoomOnShift->filter( 
 		element.nodes.s == context.nodes.s
 	)->sum(element.value) <= 1
@@ -408,57 +398,65 @@ constraint with countPatientsForRoom {
 // C2: A patient is assigned to at most one room in each shift
 // -> Already implemented in Constraint V3 in context with C9
 
-// C3: Nurses are not assigned to empty rooms 
-
-constraint with countPatientsForRoom {	
-	mappings.selectedShiftToRoster->filter(
-	    element.nodes.vsr.shift == context.nodes.s
-		)->sum(element.value)
-	<= 
-	context.variables.patientCount * 1000
-	&
-	context.variables.patientCount 
-	<= 
-	mappings.selectedShiftToRoster->filter(
-	  element.nodes.vsr.shift == context.nodes.s
-	)->sum(element.value) * 1000
-	
-//	Transformed version of the following boolean equivalence   
-//	context.variables.patientCount == 0
-//	<=> 
-//	mappings.selectedShiftToRoster->filter(
-//	    element.nodes.vsr.shift.room == context.nodes.r &
-//	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-//	  )->sum(element.value) == 0
-}
-
-// C4: Each nonempty room in each shift is assigned to one nurse
+// C3 + C4: Nurses are not assigned to empty rooms and each nonempty room in each shift is assigned to one nurse
 
 constraint with countPatientsForRoom {
+	// If the patient count is greater than 0 there has to be at least one nurse assigned for each shift on that day 
 	context.variables.patientCount
 	<=
 	mappings.selectedShiftToRoster->filter(
 	    element.nodes.vsr.shift == context.nodes.s
-	  )->sum(element.value)
-	* 1000
+	)->sum(element.value) * 1000
 	&
+	context.variables.patientCount
+	<=
 	mappings.selectedShiftToRoster->filter(
-	    element.nodes.vsr.shift == context.nodes.s
-	  )->sum(element.value) <= 1
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 1
+	)->sum(element.value) * 1000
 	&
+	context.variables.patientCount
+	<=
+	mappings.selectedShiftToRoster->filter(
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 2
+	)->sum(element.value) * 1000
+	&
+
+	// If there is a nurse assigned in any of the shifts there has to be at least one patient assigned to the room
 	mappings.selectedShiftToRoster->filter(
     	element.nodes.vsr.shift == context.nodes.s
   	)->sum(element.value)
+  	+
+    mappings.selectedShiftToRoster->filter(
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 1
+	)->sum(element.value)
+	+
+	mappings.selectedShiftToRoster->filter(
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 2
+	)->sum(element.value)
   	<= 
-  	context.variables.patientCount * 1000 
+  	context.variables.patientCount * 1000
+  	 
+  	&
   	
-//	Transformed version of the following boolean equivalence   
-//	context.variables.patientCount >= 1
-//	<=> 
-//	mappings.selectedShiftToRoster->filter(
-//	    element.nodes.vsr.shift.room == context.nodes.r &
-//	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-//	  )->sum(element.value) == 1
+  	// A room can only be assigned to 1 or 0 nurses for each shift 
+  	mappings.selectedShiftToRoster->filter(
+	    element.nodes.vsr.shift == context.nodes.s
+	 )->sum(element.value) <= 1
+	&
+	mappings.selectedShiftToRoster->filter(
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 1
+	)->sum(element.value) <= 1
+	&
+	mappings.selectedShiftToRoster->filter(
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 2
+	)->sum(element.value) <= 1
+	
 }
 
 // C5: A patient is assigned to at most one operating time slot
