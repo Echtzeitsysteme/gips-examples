@@ -138,8 +138,8 @@ public class PreprocessingNoGtApp {
 				v.setWorkload(workload);
 				// Set requires and enables edges
 				if (vPrev != null) {
-					v.getRequires_virtualShiftToWorkload().add(vPrev);
-					vPrev.getEnables_virtualShiftToWorkload().add(v);
+					v.setRequires_virtualShiftToWorkload(vPrev);
+					vPrev.setEnables_virtualShiftToWorkload(v);
 				}
 				shift.getVirtualWorkload().add(v);
 				vPrev = v;
@@ -367,8 +367,8 @@ public class PreprocessingNoGtApp {
 			vNew.setWasImported(false);
 			vNew.setShift(s);
 			vNew.setWorkload(w);
-			vNew.getRequires_virtualShiftToWorkload().add(v);
-			v.getEnables_virtualShiftToWorkload().add(vNew);
+			vNew.setRequires_virtualShiftToWorkload(v);
+			v.setEnables_virtualShiftToWorkload(vNew);
 			s.getVirtualWorkload().add(vNew);
 			w = (Workload) w.getNext();
 			s = (Shift) s.getNext();
