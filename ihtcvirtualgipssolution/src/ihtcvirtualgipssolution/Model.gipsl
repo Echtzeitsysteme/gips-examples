@@ -135,6 +135,18 @@ pattern roomForShift{
 	}
 	
 	s : Shift
+	
+	# s.shiftNo % 3 == 0
+}
+
+pattern roomForShiftTest{
+	r : Room {
+		- shifts -> s
+	}
+	
+	s : Shift
+	
+	# s.shiftNo % 3 == 0
 }
 
 // Pattern that finds all patients that are assigned to a room -> first and following workloads
@@ -190,7 +202,8 @@ pattern genderRoomShift {
 	}
 	
 	s : Shift
-
+	
+	# s.shiftNo % 3 == 0
 }
 
 // Used in a mapping to calculate the workload for all nurses for each shift
@@ -333,9 +346,8 @@ mapping assignedNurseForPatient to nursePatientTupel;
 
 // H1: No gender mix: Patients of different genders may not share a room on any day. 
 // patient.gender is a string variable and the preallocation is assumably not known. -> There can only be the same value for all patients
-constraint with roomForShift {
+constraint with roomForShiftTest {
 	mappings.assignedGenderToRoomOnShift->filter( 
-		 element.nodes.r == context.nodes.r &
 		element.nodes.s == context.nodes.s
 	)->sum(element.value) <= 1
 }
@@ -346,8 +358,7 @@ constraint with roomForShift {
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded. 
 constraint with surgeonOptimeTupel {
 	mappings.selectedOperationDay->filter(
-		element.nodes.vwop.opTime == context.nodes.op &
-		element.nodes.p.surgeon == context.nodes.s
+		element.nodes.vwop.opTime == context.nodes.op
 	)->sum(element.nodes.p.surgeryDuration * element.value)
 	<=
 	context.nodes.op.maxOpTime
