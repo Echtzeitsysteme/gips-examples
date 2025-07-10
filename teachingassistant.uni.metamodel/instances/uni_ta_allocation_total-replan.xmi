@@ -1,0 +1,1094 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teachingassistant.uni.metamodel:TaAllocation
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:teachingassistant.uni.metamodel="platform:/resource/teachingassistant.uni.metamodel/model/Metamodel.ecore">
+  <modules name="Module 1">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.0"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.1"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M1-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.0"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M1-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 2">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.1"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.2"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M2-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.1"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M2-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 3">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.2"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.3"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M3-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.2"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M3-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 4">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.3"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.4"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M4-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.3"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M4-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 5">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.4"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.5"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M5-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.4"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M5-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 6">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.5"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.6"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M6-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.5"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M6-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 7">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.6"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.7"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M7-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.6"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M7-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 8">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.7"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.8"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M8-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.7"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M8-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 9">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.8"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.9"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M9-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.8"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M9-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 10">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.9"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.10"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M10-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.9"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M10-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 11">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.10"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.11"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M11-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.10"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M11-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 12">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.11"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.12"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M12-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.11"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M12-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 13">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.12"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.13"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M13-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.12"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M13-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 14">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.13"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.14"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M14-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.13"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M14-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 15">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.14"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.15"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M15-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.14"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M15-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 16">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.15"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.16"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M16-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.15"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M16-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 17">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.16"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.17"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M17-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.16"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M17-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 18">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.17"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.18"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M18-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.17"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M18-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 19">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.18"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.19"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M19-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.18"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M19-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 20">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.19"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.20"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M20-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.19"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M20-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 21">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.20"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.21"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M21-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.20"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M21-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 22">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.21"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.22"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M22-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.21"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M22-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 23">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.22"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.23"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M23-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.22"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M23-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 24">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.23"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.24"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M24-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.23"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M24-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 25">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.24"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.25"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M25-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.24"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M25-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 26">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.25"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.26"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M26-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.25"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M26-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 27">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.26"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.27"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M27-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.26"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M27-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 28">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.27"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.28"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M28-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.27"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M28-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 29">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.28"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.29"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M29-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.28"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M29-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 30">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.29"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.30"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M30-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.29"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M30-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 31">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.30"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.31"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M31-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.30"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M31-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 32">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.31"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.32"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M32-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.31"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M32-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 33">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.32"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.33"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M33-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.32"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M33-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <modules name="Module 34">
+    <approvals
+        rating="GREEN"
+        ta="//@tas.33"
+        ratingNumeric="2"/>
+    <approvals
+        rating="GREEN"
+        ta="//@tas.0"
+        ratingNumeric="2"/>
+    <sessions
+        name="Session M34-1"
+        hoursPaidPerOccurrence="2"
+        numTasPerSession="1"
+        entries="//@timetable.33"
+        timeTableWeeks="//@weeks.0">
+      <occurrences
+          name="Occurrence M34-1-1"
+          timeTableWeek="1"/>
+    </sessions>
+  </modules>
+  <tas name="TA1"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA2"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA3"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA4"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA5"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA6"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA7"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA8"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA9"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA10"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA11"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA12"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA13"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA14"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA15"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA16"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA17"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA18"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA19"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA20"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA21"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA22"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA23"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA24"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA25"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA26"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA27"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA28"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA29"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA30"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA31"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA32"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA33"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <tas name="TA34"
+      maxHoursPerWeek="2"
+      maxHoursPerYear="2"/>
+  <timetable
+      room="Room R1"
+      weekDay="Monday"
+      startTime="2025-06-12T00:00:00.000+0200"
+      endTime="2025-06-12T02:00:00.000+0200"
+      session="//@modules.0/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      endEpoch="7200"/>
+  <timetable
+      room="Room R2"
+      weekDay="Monday"
+      startTime="2025-06-12T02:00:00.000+0200"
+      endTime="2025-06-12T04:00:00.000+0200"
+      session="//@modules.1/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="7200"
+      endEpoch="14400"/>
+  <timetable
+      room="Room R3"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.2/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R4"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.3/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R5"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.4/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R6"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.5/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R7"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.6/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R8"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.7/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R9"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.8/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R10"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.9/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R11"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.10/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R12"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.11/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R13"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.12/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R14"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.13/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R15"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.14/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R16"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.15/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R17"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.16/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R18"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.17/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R19"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.18/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R20"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.19/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R21"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.20/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R22"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.21/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R23"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.22/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R24"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.23/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R25"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.24/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R26"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.25/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R27"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.26/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R28"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.27/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R29"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.28/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R30"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.29/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R31"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.30/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R32"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.31/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R33"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.32/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <timetable
+      room="Room R34"
+      weekDay="Monday"
+      startTime="2025-06-12T04:00:00.000+0200"
+      endTime="2025-06-12T06:00:00.000+0200"
+      session="//@modules.33/@sessions.0"
+      timeTableWeeks="//@weeks.0"
+      startEpoch="14400"
+      endEpoch="21600"/>
+  <weeks number="1"/>
+</teachingassistant.uni.metamodel:TaAllocation>

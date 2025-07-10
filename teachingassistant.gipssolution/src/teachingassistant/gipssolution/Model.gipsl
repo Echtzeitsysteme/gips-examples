@@ -11,11 +11,11 @@ config {
 
 // Paper reference for this example:
 // 
-// C. element. Ngoo, S. L. Goh, S. N. Sze, N. R. Sabar, S. Abdullah, G. Kendall,
-// "A Survey of the Nurse Rostering Solution Methodologies:
-// The State-of-the-Art and Emerging Trends,"
-// in IEEE Access, vol. 10, pp. 56504-56524, 2022,
-// doi: https://doi.org/10.1109/ACCESS.2022.3177280.
+// Qu, Xiaobo, Yi, Wen, Wang, Tingsong, Wang, Shuaian, Xiao, Lin, Liu, Zhiyuan,
+// "Mixed-Integer Linear Programming Models for Teaching Assistant Assignmen
+// and Extensions",
+// Scientific Programming, 2017, 9057947, 7 pages, 2017.
+// doi: https://doi.org/10.1155/2017/9057947
 
 // Extensions/cases:
 //
