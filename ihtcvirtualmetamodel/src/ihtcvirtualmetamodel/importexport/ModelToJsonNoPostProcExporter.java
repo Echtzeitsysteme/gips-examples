@@ -13,13 +13,16 @@ import com.google.gson.JsonObject;
 
 import ihtcvirtualmetamodel.Nurse;
 import ihtcvirtualmetamodel.OT;
+import ihtcvirtualmetamodel.OpTime;
 import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
+import ihtcvirtualmetamodel.VirtualOpTimeToCapacity;
 import ihtcvirtualmetamodel.VirtualShiftToRoster;
 import ihtcvirtualmetamodel.VirtualShiftToWorkload;
 import ihtcvirtualmetamodel.VirtualWorkloadToCapacity;
+import ihtcvirtualmetamodel.VirtualWorkloadToOpTime;
 
 /**
  * This model exporter can be used to convert an EMF model to the respective
@@ -52,7 +55,7 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 	 * @return JSON object.
 	 */
 	@Override
-	protected JsonObject convertPatientToJson(final Patient patient) {
+	protected JsonObject convertPatientToJson(final Patient patient, final boolean verbose) {
 		Objects.requireNonNull(patient);
 
 		final JsonObject patientJson = new JsonObject();
@@ -79,7 +82,7 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 				break;
 			}
 		}
-
+		
 		// If patient was scheduled
 		if (admissionShift != null) {
 			patientJson.addProperty("admission_day", convertShiftToDay(admissionShift.getShiftNo()));
@@ -92,7 +95,6 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 		} else {
 			patientJson.addProperty("admission_day", "none");
 		}
-
 		return patientJson;
 	}
 

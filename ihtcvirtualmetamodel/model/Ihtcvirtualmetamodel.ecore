@@ -18,9 +18,13 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patients" upperBound="-1"
         eType="#//Patient" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="days" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="period" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="genders" upperBound="-1"
         eType="#//Gender" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="days" upperBound="-1" eType="#//Day"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ageGroups" upperBound="-1"
+        eType="#//AgeGroup" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Nurse" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -154,9 +158,9 @@
         eOpposite="#//Workload/virtualShift"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualShiftToWorkload"
-        upperBound="-1" eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/enables_virtualShiftToWorkload"/>
+        eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/enables_virtualShiftToWorkload"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtualShiftToWorkload"
-        upperBound="-1" eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/requires_virtualShiftToWorkload"/>
+        eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/requires_virtualShiftToWorkload"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualWorkloadToCapacity"
         upperBound="-1" eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/enables_virtualShiftToWorkload"/>
   </eClassifiers>
@@ -175,6 +179,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualOpTimeToCapacity"
         upperBound="-1" eType="#//VirtualOpTimeToCapacity" eOpposite="#//VirtualOpTimeToCapacity/enables_virtualWorkloadToOpTime"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtual_WorkloadToCapacity"
+        upperBound="-1" eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/requires_virtualWorkloadToOpTime"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VirtualOpTimeToCapacity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="opTime" eType="#//OpTime"
@@ -184,8 +190,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtualWorkloadToOpTime"
         upperBound="-1" eType="#//VirtualWorkloadToOpTime" eOpposite="#//VirtualWorkloadToOpTime/requires_virtualOpTimeToCapacity"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtual_WorkloadToCapacity"
-        upperBound="-1" eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/requires_virtualOpTimeToCapacity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VirtualWorkloadToCapacity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"
@@ -195,8 +199,14 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtualShiftToWorkload"
         upperBound="-1" eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/requires_virtualWorkloadToCapacity"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualOpTimeToCapacity"
-        upperBound="-1" eType="#//VirtualOpTimeToCapacity" eOpposite="#//VirtualOpTimeToCapacity/enables_virtual_WorkloadToCapacity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualWorkloadToOpTime"
+        upperBound="-1" eType="#//VirtualWorkloadToOpTime" eOpposite="#//VirtualWorkloadToOpTime/enables_virtual_WorkloadToCapacity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Gender" eSuperTypes="#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Day" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AgeGroup">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
 </ecore:EPackage>

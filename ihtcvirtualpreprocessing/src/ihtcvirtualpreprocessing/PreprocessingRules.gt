@@ -41,7 +41,9 @@ rule assignNurseToRoom {
 		-shifts -> shift
 	}
 
-	shift: Shift
+	shift: Shift {
+		++ - virtualRoster -> vnew
+	}
 
 	++ vnew: VirtualShiftToRoster {
 		++ -roster -> roster
@@ -84,20 +86,11 @@ condition compatibleRoomAndNotAssigned = compatibleRoomForPatient && patientFirs
 
 // Pattern that creates a Virtual Node between Shift and Workload to assign a patient to a room 
 rule assignPatientToRoom {
-	root : Root {
-		- patients -> p
-		- rooms -> r
-	}
-	
 	p : Patient {
 		- firstWorkload -> w
 	}
 	
 	w : Workload
-	
-	ot : OT {
-		- capacities -> c
-	}
 	
 	c : Capacity
 	
@@ -118,6 +111,7 @@ rule assignPatientToRoom {
 	
 	s : Shift {
 		- room -> r
+		++ - virtualWorkload -> vnew
 	}
 	
 	r : Room
@@ -136,6 +130,10 @@ rule assignPatientToRoom {
 	// a day after the patient's due day so we can already remove these
 	// matches using the PM.
 	# s.shiftNo / 3 <= p.dueDay
+	
+	// Day of the first assigned shift must match the day of the OT's
+	// capacity object.
+	# s.shiftNo / 3 == c.day
 }
 when compatibleRoomAndNotAssigned
 
@@ -145,7 +143,6 @@ when compatibleRoomAndNotAssigned
 
 pattern nextVirtualShiftToWorkloadExists {
 	nextw : Workload
-	
 	nexts : Shift
 	
 	nextvsw : VirtualShiftToWorkload {
@@ -156,11 +153,6 @@ pattern nextVirtualShiftToWorkloadExists {
 condition nextVirtualShiftToWorkloadDoesNotExist = forbid nextVirtualShiftToWorkloadExists
 
 rule extendPatientStay {
-	root : Root {
-		- patients -> p
-		- rooms -> r
-	}
-	
 	p : Patient {
 		- workloads -> prevw
 	}
@@ -185,6 +177,7 @@ rule extendPatientStay {
 	
 	nexts : Shift {
 		- room -> r
+		++ - virtualWorkload -> vnew
 	}
 	
 	r : Room
@@ -206,11 +199,6 @@ when nextVirtualShiftToWorkloadDoesNotExist
 //
 
 rule preprocessOccupantsWorkload {
-	root : Root {
-		- patients -> p
-		- rooms -> r
-	}
-	
 	p : Patient {
 		- workloads -> w
 	}
@@ -224,6 +212,7 @@ rule preprocessOccupantsWorkload {
 		// Explicitly delete both edges
 		// (Maybe deleting one is sufficient)
 		-- - derivedWorkloads -> w
+		++ - virtualWorkload -> vnew
 	}
 	
 	r : Room
@@ -244,7 +233,6 @@ rule preprocessOccupantsWorkload {
 
 pattern findVirtualOpTimeToCapacity {
 	op : OpTime
-	
 	c: Capacity
 	
 	v: VirtualOpTimeToCapacity {
@@ -255,22 +243,11 @@ pattern findVirtualOpTimeToCapacity {
 condition noOpTimeToCapacity = forbid findVirtualOpTimeToCapacity
 
 rule assignSurgeonToOt {
-	root : Root {
-		- surgeons -> s
-		- ots -> o
-	}
-	
-	s : Surgeon {
-		- opTimes -> op
-	}
-	
 	op : OpTime
 	
-	o : OT {
-		- capacities -> c
+	c : Capacity {
+		++ - virtualOpTime -> vnew
 	}
-	
-	c : Capacity
 	
 	++ vnew : VirtualOpTimeToCapacity {
 		++ - opTime -> op
@@ -297,6 +274,7 @@ pattern findVirtualWorkloadToOpTime {
 		- workload -> w
 	}
 }
+condition noVirtualEdgeWorkloadToOpTime = forbid findVirtualWorkloadToOpTime
 
 pattern findVirtualWorkloadToCapacity {
 	w: Workload
@@ -307,15 +285,9 @@ pattern findVirtualWorkloadToCapacity {
 		- workload -> w
 	}
 }
+condition noVirtualEdgeWorkloadToCapacity = forbid findVirtualWorkloadToCapacity
 
-condition noWorkloadAssignment = forbid findVirtualWorkloadToOpTime && forbid findVirtualWorkloadToCapacity
-
-rule fixOperationDay {
-	root : Root {
-		- patients -> p
-		- surgeons -> s
-	}
-	
+rule fixOperationDayOpTime {
 	p : Patient {
 		- firstWorkload -> w
 		- surgeon -> s
@@ -327,16 +299,14 @@ rule fixOperationDay {
 		- opTimes -> op
 	}
 	
-	op : OpTime
-	
-	c : Capacity
+	op : OpTime {
+		++ - virtualWorkload -> vnew
+	}
 	
 	vexist : VirtualOpTimeToCapacity {
-		- capacity -> c
 		- opTime -> op
 		// Explicitly set the opposite edge
 		++ - enables_virtualWorkloadToOpTime -> vnew
-		++ - enables_virtual_WorkloadToCapacity -> vnew2
 	}
 	
 	++ vnew : VirtualWorkloadToOpTime {
@@ -346,16 +316,39 @@ rule fixOperationDay {
 		++ - requires_virtualOpTimeToCapacity -> vexist
 	}
 	
+	# p.earliestDay <= op.day
+	# op.day <= p.dueDay
+	# p.surgeryDuration <= op.maxOpTime
+//	# p.isOccupant == false
+	// Already checked via the edge between `p` and `s`
+}
+when noVirtualEdgeWorkloadToOpTime
+
+rule fixOperationDayCapacity {
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload
+	
+	c : Capacity {
+		++ - virtualWorkload -> vnew2
+	}
+	
+	vexist : VirtualWorkloadToOpTime {
+		- workload -> w
+		// Explicitly set the opposite edge
+		++ - enables_virtual_WorkloadToCapacity -> vnew2
+	}
+	
 	++ vnew2 : VirtualWorkloadToCapacity {
 		++ - capacity -> c
 		++ - workload -> w
 		.isSelected := false
-		++ - requires_virtualOpTimeToCapacity -> vexist
+		++ - requires_virtualWorkloadToOpTime -> vexist
 	}
 	
-	# p.earliestDay <= op.day
-	# op.day <= p.dueDay
-	# p.surgeryDuration <= op.maxOpTime
 	# p.surgeryDuration <= c.maxCapacity
+	# p.isOccupant == false
 }
-when noWorkloadAssignment
+when noVirtualEdgeWorkloadToCapacity

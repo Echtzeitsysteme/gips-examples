@@ -15,11 +15,6 @@ config {
 
 // Rule that selects a VirtualShiftToWorkload-Node to be adopted in the final model. 
 rule selectShiftToFirstWorkload {
-	// `root` is necessary here
-	root : Root {
-		- patients -> p
-	}
-	
 	p : Patient {
 		- firstWorkload -> w
 	}
@@ -72,21 +67,25 @@ rule selectOperationDay {
 	}
 	
 	vwc : VirtualWorkloadToCapacity {
-		- requires_virtualOpTimeToCapacity -> vopc
+		- requires_virtualWorkloadToOpTime -> vwop
+		- capacity -> c
 		.isSelected := true
 	}
 	
 	vwop : VirtualWorkloadToOpTime {
 		- requires_virtualOpTimeToCapacity -> vopc
+		- enables_virtual_WorkloadToCapacity -> vwc
 		.isSelected := true
 		- opTime -> opTime
 	}
 	
 	vopc : VirtualOpTimeToCapacity {
 		- enables_virtualWorkloadToOpTime -> vwop
-		- enables_virtual_WorkloadToCapacity -> vwc
+		- capacity -> c
 		.isSelected := true
 	}
+	
+	c : Capacity 
 	
 }
 
@@ -96,6 +95,15 @@ rule selectShiftToRoster {
 	vsr : VirtualShiftToRoster {
 		.isSelected := true
 	}
+}
+
+// Rule that selects all VirtualShiftToWorkload-Nodes to be adopted in the final model if they were imported (belong to an occupant) 
+rule virtualNodesForOccupant {
+
+	vsw : VirtualShiftToWorkload {
+		.isSelected := true
+	}
+	# vsw.wasImported == true
 }
 
 //
@@ -118,44 +126,53 @@ pattern optionalPatients {
 	# p.isOccupant == false
 }
 
-rule virtualNodesForOccupant {
-
-	vsw : VirtualShiftToWorkload {
-		.isSelected := true
-	}
-	# vsw.wasImported == true
-}
-
-// Pattern to Count the Patients over a specific room for a specific day -> enforce that the capacity of a room is not exceeded
-// Needs to be checked for each morning shift (s.shiftNo % 3 == 0) -> remaining shifts of each day are automatically covered
+// Pattern used to map which rooms are occupied on a specific shift.
+// Used for a mapping which counts the Patients over a specific room for a specific day -> enforce that the capacity of a room is not exceeded
+// Additionally used to make sure nurses are not assigned to empty rooms and each non-empty room has an assigned nurse
 pattern roomForShift{
 	r : Room {
 		- shifts -> s
 	}
 	
 	s : Shift
+	
+	# s.shiftNo % 3 == 0
 }
 
 // Pattern that finds all patients that are assigned to a room -> first and following workloads
+// Also holds the information which workload of a patient is assigned to which shift
 pattern patientForRoom {
-	p : Patient
+	p : Patient {
+		- workloads -> w
+	}
+
+	s : Shift 
+
+	w : Workload
 	
-	s : Shift
+	vsw : VirtualShiftToWorkload {
+		- shift -> s
+		- workload -> w
+	}
 	
 	r : Room {
 		- shifts -> s
 	}
 }
 
+// Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day
+// c.maxCapacity > 0 is already enforced by the preprocessing because Capacity Objects with maxCapacity <= 0 are not created
 pattern otCapacityTupel{
 	ot : OT {
 		- capacities -> c
 	}
 	
-	c : Capacity
+	c : Capacity 
 //	# c.maxCapacity > 0
 }
 
+// Pattern used in a mapping to save the information if a Surgeon operates on a specific Day and used to make sure the operation time of a surgeon is not exceeded on each day
+// op.maxOpTime > 0 is already enforced by the preprocessing because OpTime Objects with maxOpTime <= 0 are not created
 pattern surgeonOptimeTupel {
 	s : Surgeon {
 		- opTimes -> op
@@ -165,6 +182,8 @@ pattern surgeonOptimeTupel {
 //	# op.maxOpTime > 0
 }
 
+// Pattern used for a mapping to save the information which genders are present in a specific room for each shift
+// This information is only needed for each morning shift
 pattern genderRoomShift {
 	g : Gender 
 	
@@ -173,6 +192,62 @@ pattern genderRoomShift {
 	}
 	
 	s : Shift
+	
+	# s.shiftNo % 3 == 0
+}
+
+// Used in a mapping to calculate the workload for all nurses for each shift
+pattern nurseRosterTupel {
+	n : Nurse {
+		- rosters -> ro
+	}
+	
+	ro : Roster
+}
+
+// Used in a mapping to save the information if a surgeon is operating in a specific OT for each day
+pattern surgeonOTForDay {
+	s : Surgeon {
+		- opTimes -> op
+	}
+	
+	op : OpTime 
+	
+	ot : OT
+}
+
+// Pattern used for a Mapping to calculate what age groups are present in a specific room for all shifts.
+// Additionally the highest and lowest age groups are also saved in variables
+pattern ageGroupsRoomDay {
+	r : Room 
+	d : Day
+	ag : AgeGroup
+}
+
+// Used in Softconstraint S1 to check the assigned age groups for each room on each day
+pattern roomDayTupel {
+	r : Room 
+	d : Day
+}
+
+// Used in a mapping to calculate which nurse is assigned to which workload. 
+pattern nursetoWorkload {
+	vsr : VirtualShiftToRoster {
+		- shift -> s
+	}
+	
+	s : Shift {
+		- virtualWorkload -> vsw
+	}
+	
+	vsw : VirtualShiftToWorkload
+}
+
+// Used to filter for the amount of different nurses assigned to each patient
+pattern nursePatientTupel {
+	p : Patient 
+	
+	n : Nurse
 }
 
 //
@@ -204,23 +279,56 @@ mapping selectedOccupantNodes to virtualNodesForOccupant;
 //
 
 // Mapping that holds the information how many patients are assigned to a room on a specific day
+// patientCount: Amount of patients that are assigned to a room in a specific shift
 mapping countPatientsForRoom to roomForShift {
 	var patientCount : EInt
 };
 
 // Mapping for all assigned patients. (occupants and new patients for each workload (first + following))
-mapping assignedPatientsToRoom to patientForRoom;
+// skillDiff: Calculated difference between the skill level of a nurse and the workload she is assigned to. Can be negative
+// penalizedSkillDiff: maximum of 0 and skillDiff used to ignore negative results for skillDiff
+mapping assignedPatientsToRoom to patientForRoom{
+	var skillDiff : EInt
+	var penalizedSkillDiff : EInt
+};
  
 // Mapping that holds the information if a specific gender is assigned to a room on a specific day. 
 mapping assignedGenderToRoomOnShift to genderRoomShift;
 
-// mapping that decides which ots are open on a specific day
-//mapping openOTs to otCapacityTupel;
+// Mapping that decides which ots are open on a specific day
+mapping openOTs to otCapacityTupel;
 
-// temporary function to maximize the number of optional patients that are scheduled
-function maxoOptional with optionalPatients {
-	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-}
+// Mapping that holds the information if a surgeon operates in a specific ot on a specific day
+mapping otForSurgeon to surgeonOTForDay;
+
+// mapping that counts how many ots a surgeon is assigned to on a specific day.
+// otCount: Amount of OTs a surgeon is operating in on a specific day
+// penalizedOTs: A penalty is applied if a surgeon has more than 1 assigned OT per day. Maximum of 0 and otCount - 1
+mapping otsPerSurgeon to surgeonOptimeTupel{
+	var otCount : EInt
+	var penalizedOTs : EInt
+};
+
+// mapping that holds the information if an age group is present in a room on a specific day
+// maxAgeGroup: True if the patient of the current Match has the highest age group in that room 
+// minAgeGroup: True if the patient of the current Match has the smallest age group in that room 
+mapping ageGroupsInRoom to ageGroupsRoomDay{
+	var maxAgeGroup : EBoolean
+	var minAgeGroup : EBoolean
+};
+
+// mapping that holds the information what workloads a roster is responsible for / assigned to 
+mapping assignedNursesToWorkload to nursetoWorkload;
+
+// mapping used to calculate the sum of workloads for a Roster
+// workloadDiff: Calculated workload of a nurse for a specific shift
+// excessiveWorkload: excessive workload of that nurse in comparison to her maximum workload
+mapping nurseWorkloadForDay to nurseRosterTupel{
+	var workloadDiff : EInt
+	var excessiveWorkload : EInt
+};
+
+mapping assignedNurseForPatient to nursePatientTupel;
 
 //
 // Hard Constraints
@@ -228,9 +336,8 @@ function maxoOptional with optionalPatients {
 
 // H1: No gender mix: Patients of different genders may not share a room on any day. 
 // patient.gender is a string variable and the preallocation is assumably not known. -> There can only be the same value for all patients
-constraint with countPatientsForRoom {
+constraint with roomForShift {
 	mappings.assignedGenderToRoomOnShift->filter( 
-		 element.nodes.r == context.nodes.r &
 		element.nodes.s == context.nodes.s
 	)->sum(element.value) <= 1
 }
@@ -241,8 +348,7 @@ constraint with countPatientsForRoom {
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded. 
 constraint with surgeonOptimeTupel {
 	mappings.selectedOperationDay->filter(
-		element.nodes.vwop.opTime.day == context.nodes.op.day &
-		element.nodes.p.surgeon == context.nodes.s
+		element.nodes.vwop.opTime == context.nodes.op
 	)->sum(element.nodes.p.surgeryDuration * element.value)
 	<=
 	context.nodes.op.maxOpTime
@@ -250,7 +356,6 @@ constraint with surgeonOptimeTupel {
 
 // H4: OT overtime: The duration of all surgeries allocated to an OT on a day must not exceed 
 // its maximum capacity.
-
 constraint with otCapacityTupel {
 	mappings.selectedOperationDay->filter(
 		element.nodes.vopc.capacity.day == context.nodes.c.day &
@@ -262,11 +367,12 @@ constraint with otCapacityTupel {
 
 // H5: Mandatory versus optional patients: All mandatory patients must be admitted within the 
 // scheduling period, whereas optional patients may be postponed to future scheduling periods.
-
+// The addition only works because other constraints enforce that the individual sums have to be <= 1
 constraint with mandatoryPatients {
-	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
-	&
-	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value) == 1
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	+
+	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	== 2
 }
 
 // H6: Admission day: A patient can be admitted on any day from their release date to their
@@ -290,69 +396,67 @@ constraint with countPatientsForRoom {
 // -> Already enforced by GT-Rule "extendPatientStay" in preprocessing
 
 // C2: A patient is assigned to at most one room in each shift
+// -> Already implemented in Constraint V3 in context with C9
 
-constraint with patientForRoom {
-	mappings.assignedPatientsToRoom->filter(
-		element.nodes.p == context.nodes.p &
-		element.nodes.s.shiftNo == context.nodes.s.shiftNo
-	)->sum(element.value) <= 1
-}
-
-// C3: Nurses are not assigned to empty rooms and 
-
-constraint with countPatientsForRoom {	
-	mappings.selectedShiftToRoster->filter(
-	    element.nodes.vsr.shift.room == context.nodes.r &
-	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-		)->sum(element.value)
-	<= 
-	context.variables.patientCount * 1000
-	&
-	context.variables.patientCount 
-	<= 
-	mappings.selectedShiftToRoster->filter(
-	  element.nodes.vsr.shift.room == context.nodes.r &
-	  element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-	)->sum(element.value) * 1000
-	
-//	Transformed version of the following boolean equivalence   
-//	context.variables.patientCount == 0
-//	<=> 
-//	mappings.selectedShiftToRoster->filter(
-//	    element.nodes.vsr.shift.room == context.nodes.r &
-//	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-//	  )->sum(element.value) == 0
-}
-
-// C4: Each nonempty room in each shift is assigned to one nurse
+// C3 + C4: Nurses are not assigned to empty rooms and each nonempty room in each shift is assigned to one nurse
 
 constraint with countPatientsForRoom {
+	// If the patient count is greater than 0 there has to be at least one nurse assigned for each shift on that day 
 	context.variables.patientCount
 	<=
 	mappings.selectedShiftToRoster->filter(
-	    element.nodes.vsr.shift.room == context.nodes.r &
-	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-	  )->sum(element.value)
-	* 1000
+	    element.nodes.vsr.shift == context.nodes.s
+	)->sum(element.value) * 1000
 	&
+	context.variables.patientCount
+	<=
 	mappings.selectedShiftToRoster->filter(
-	    element.nodes.vsr.shift.room == context.nodes.r &
-	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-	  )->sum(element.value) <= 1
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 1
+	)->sum(element.value) * 1000
 	&
+	context.variables.patientCount
+	<=
 	mappings.selectedShiftToRoster->filter(
-	    element.nodes.vsr.shift.room == context.nodes.r &
-    	element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 2
+	)->sum(element.value) * 1000
+	&
+
+	// If there is a nurse assigned in any of the shifts there has to be at least one patient assigned to the room
+	mappings.selectedShiftToRoster->filter(
+    	element.nodes.vsr.shift == context.nodes.s
   	)->sum(element.value)
+  	+
+    mappings.selectedShiftToRoster->filter(
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 1
+	)->sum(element.value)
+	+
+	mappings.selectedShiftToRoster->filter(
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 2
+	)->sum(element.value)
   	<= 
-  	context.variables.patientCount * 1000 
-//	Transformed version of the following boolean equivalence   
-//	context.variables.patientCount >= 1
-//	<=> 
-//	mappings.selectedShiftToRoster->filter(
-//	    element.nodes.vsr.shift.room == context.nodes.r &
-//	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo
-//	  )->sum(element.value) == 1
+  	context.variables.patientCount * 1000
+  	 
+  	&
+  	
+  	// A room can only be assigned to 1 or 0 nurses for each shift 
+  	mappings.selectedShiftToRoster->filter(
+	    element.nodes.vsr.shift == context.nodes.s
+	 )->sum(element.value) <= 1
+	&
+	mappings.selectedShiftToRoster->filter(
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 1
+	)->sum(element.value) <= 1
+	&
+	mappings.selectedShiftToRoster->filter(
+	 	element.nodes.vsr.shift.room == context.nodes.r &
+	    element.nodes.vsr.shift.shiftNo == context.nodes.s.shiftNo + 2
+	)->sum(element.value) <= 1
+	
 }
 
 // C5: A patient is assigned to at most one operating time slot
@@ -366,56 +470,10 @@ constraint with Patient {
 // operation with a patient on that day
 
 // C7: The day the first workload of a patient gets scheduled has to be the same day the patient has surgery
-
-constraint with selectedShiftToFirstWorkload {
- 	context.value
-    <=
- 	mappings.selectedOperationDay->filter(
-    	element.nodes.vwc == context.nodes.vwc &
-    	context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
-  	)->sum(element.value)
-
-//  & TODO: ?
-//  mappings.selectedOperationDay->filter(
-//    element.nodes.vwc == context.nodes.vwc &
-//    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
-//  )->sum(element.value)
-//  <=
-//  context.value
-
-//	Transformed version of the following boolean implication 
-//  context.value == 1
-//  =>
-//  mappings.selectedOperationDay->filter(
-//    element.nodes.vwc == context.nodes.vwc &
-//    context.nodes.vsw.shift.shiftNo / 3 == element.nodes.vopc.capacity.day
-//  )->sum(element.value) == 1
-}
+// -> Already enforced by Constraint V2
 
 // C8: If a patient is admitted all his workloads have to be scheduled in a shift
-
-constraint with selectShiftToFirstWorkload {
-	[
-	mappings.selectedShiftToFirstWorkload->filter(element.nodes.vsw == context.nodes.vsw)->sum(element.value) == 1
-	&
-	(context.nodes.p.stayLength * 3) + context.nodes.vsw.shift.shiftNo > context.nodes.root.days * 3
-	]
-	=>
-	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.prevvsw.workload.patient == context.nodes.p)->sum(element.value)
-	== ((context.nodes.root.days * 3) - context.nodes.vsw.shift.shiftNo) - 1
-
-}
-
-constraint with selectShiftToFirstWorkload {
-	[
-	mappings.selectedShiftToFirstWorkload->filter(element.nodes.vsw == context.nodes.vsw)->sum(element.value) == 1
-	&
-	(context.nodes.p.stayLength * 3) + context.nodes.vsw.shift.shiftNo <= context.nodes.root.days * 3
-	]
-	=>
-	mappings.selectedExtendingShiftToFirstWorkload->filter(element.nodes.prevvsw.workload.patient == context.nodes.p)->sum(element.value)
-	== (context.nodes.p.stayLength * 3) - 1
-}
+// -> Already implemented in Constraint V3
 
 // C9: A patient can´t be assigned to more than one "first" shift
 constraint with Patient {
@@ -433,8 +491,6 @@ constraint with selectedOccupantNodes {
 
 // V2: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
-// This does not enforce that the admission day is the same as the operation day!
-
 constraint with selectShiftToFirstWorkload {
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vsw == context.nodes.vsw &
@@ -442,20 +498,24 @@ constraint with selectShiftToFirstWorkload {
 	)->sum(element.value)
 	<=
 	mappings.selectedOperationDay->filter(
-		element.nodes.vwc == context.nodes.vwc
+		element.nodes.vwc == context.nodes.vwc &
+		element.nodes.vopc.capacity.day == context.nodes.vsw.shift.shiftNo / 3 
 	)->sum(element.value)
-	
-//	Transformed version of the following boolean implication 
-//	mappings.selectedShiftToFirstWorkload->filter(
-//		element.nodes.vsw == context.nodes.vsw &
-//		element.nodes.vwc == context.nodes.vwc
-//	)->sum(element.value) == 1
-//	=>
-//	mappings.selectedOperationDay->filter(
-//		element.nodes.vwc == context.nodes.vwc
-//	)->sum(element.value) >= 1
 }
 
+constraint with selectedOperationDay {
+	mappings.selectedOperationDay->filter(
+		element.nodes.vwc == context.nodes.vwc &
+		element.nodes.vopc == context.nodes.vopc &
+		element.nodes.vwop == context.nodes.vwop
+	)->sum(element.value)
+	<=
+	mappings.selectedShiftToFirstWorkload->filter(
+		element.nodes.vwc == context.nodes.vwc &
+		element.nodes.vsw.shift.shiftNo / 3 == context.nodes.vopc.capacity.day
+	)->sum(element.value)
+}
+	
 // V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
 // that is connected to the previous links between the patients workloads to shifts.
 // The following node can only be selected if the previous is already set to true
@@ -473,7 +533,22 @@ constraint with selectExtendingShiftToFirstWorkload{
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vsw == context.nodes.prevvsw 
 	)->sum(element.value)
-
+	
+	&
+	
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.nextvsw == context.nodes.prevvsw 
+	)->sum(element.value)
+	+
+	mappings.selectedShiftToFirstWorkload->filter(
+		element.nodes.vsw == context.nodes.prevvsw 
+	)->sum(element.value)
+	<= 
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.prevvsw == context.nodes.prevvsw &
+		element.nodes.nextvsw == context.nodes.nextvsw 
+	)->sum(element.value) * 2
+	
 //	Transformed version of the following boolean implication 	
 //	mappings.selectedExtendingShiftToFirstWorkload->filter(
 //		element.nodes.prevvsw == context.nodes.prevvsw &
@@ -501,21 +576,15 @@ constraint with selectExtendingShiftToFirstWorkload{
 // The amount of matches can be reduced by only checking for the morning shifts
 constraint with assignedPatientsToRoom {
 	mappings.selectedShiftToFirstWorkload->filter(
-		element.nodes.p == context.nodes.p &
-		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.prevvsw.workload.patient == context.nodes.p &
-		element.nodes.prevvsw.shift.room == context.nodes.r &
-		element.nodes.nextvsw.shift == context.nodes.s
+		element.nodes.nextvsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedOccupantNodes->filter(
-		element.nodes.vsw.workload.patient == context.nodes.p &
-		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	<=
 	context.value * 1000
@@ -525,45 +594,16 @@ constraint with assignedPatientsToRoom {
 	context.value
 	<=
 		mappings.selectedShiftToFirstWorkload->filter(
-		element.nodes.p == context.nodes.p &
-		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.prevvsw.workload.patient == context.nodes.p &
-		element.nodes.prevvsw.shift.room == context.nodes.r &
-		element.nodes.nextvsw.shift == context.nodes.s
+		element.nodes.nextvsw == context.nodes.vsw
 	)->sum(element.value)
 	+
 	mappings.selectedOccupantNodes->filter(
-		element.nodes.vsw.workload.patient == context.nodes.p &
-		element.nodes.vsw.shift.room == context.nodes.r &
-		element.nodes.vsw.shift == context.nodes.s
+		element.nodes.vsw == context.nodes.vsw
 	)->sum(element.value)
-	
-//	Transformed version of the following boolean equivalence 
-//	[
-//	mappings.selectedShiftToFirstWorkload->filter(
-//		element.nodes.p == context.nodes.p &
-//		element.nodes.vsw.shift.room == context.nodes.r &
-//		element.nodes.vsw.shift == context.nodes.s
-//	)->sum(element.value) == 1
-//	|
-//	mappings.selectedExtendingShiftToFirstWorkload->filter(
-//		element.nodes.prevvsw.workload.patient == context.nodes.p &
-//		element.nodes.prevvsw.shift.room == context.nodes.r &
-//		element.nodes.nextvsw.shift == context.nodes.s
-//	)->sum(element.value) == 1
-//	|
-//	mappings.selectedOccupantNodes->filter(
-//		element.nodes.vsw.workload.patient == context.nodes.p &
-//		element.nodes.vsw.shift.room == context.nodes.r &
-//		element.nodes.vsw.shift == context.nodes.s
-//	)->sum(element.value) == 1
-//	]
-//	<=>
-//	context.value == 1
 }
 
 // U2: Utility Constraint that counts how many patients are currently assigned to each room 
@@ -571,8 +611,7 @@ constraint with countPatientsForRoom {
 	context.variables.patientCount 
 	==
 	mappings.assignedPatientsToRoom->filter(
-		element.nodes.r == context.nodes.r &
-		element.nodes.s.shiftNo == context.nodes.s.shiftNo
+		element.nodes.s == context.nodes.s
 	)->sum(element.value)  
 }
 
@@ -582,16 +621,14 @@ constraint with assignedGenderToRoomOnShift {
 	<=
 	mappings.assignedPatientsToRoom->filter(
 		element.nodes.p.gender == context.nodes.g.name &
-		element.nodes.s == context.nodes.s &
-		element.nodes.r == context.nodes.r
+		element.nodes.s == context.nodes.s 
 	)->sum(element.value)
 	
 	& 
 	
 	mappings.assignedPatientsToRoom->filter(
 		element.nodes.p.gender == context.nodes.g.name &
-		element.nodes.s == context.nodes.s &
-		element.nodes.r == context.nodes.r
+		element.nodes.s == context.nodes.s 
 	)->sum(element.value)
 	<= 
 	context.value * 1000
@@ -606,74 +643,255 @@ constraint with assignedGenderToRoomOnShift {
 //	context.value == 1
 }
 
-// sets the mapping to true if there is at least one surgery assigned to the ot on that day
-//constraint with openOTs {
-//	mappings.selectedOperationDay->filter(
-//		element.nodes.ot == context.nodes.ot &
-//		element.nodes.c.day == context.nodes.c.day
-//	)->sum(element.value)
-//	>= 
-//	context.value
-//}
+// U4: sets the mapping to true if there is at least one surgery assigned to the ot on that day
+constraint with openOTs {
+	mappings.selectedOperationDay->filter(
+		element.nodes.vwc.capacity == context.nodes.c
+	)->sum(element.value)	
+	<= 
+	context.value * 1000
+}
+
+// U5: sets the mapping to true if the surgeon operates in the ot on that day
+constraint with otForSurgeon {
+	mappings.selectedOperationDay->filter(
+		element.nodes.opTime == context.nodes.op &
+		element.nodes.vwc.capacity.ot == context.nodes.ot
+	)->sum(element.value)
+	<=
+	context.value * 1000
+	
+	&
+
+	context.value
+	<=
+	mappings.selectedOperationDay->filter(
+		element.nodes.opTime == context.nodes.op &
+		element.nodes.vwc.capacity.ot == context.nodes.ot
+	)->sum(element.value)
+}
+
+// U6: counts the ots per surgeon for each day
+constraint with otsPerSurgeon {
+	context.variables.otCount
+	==
+	mappings.otForSurgeon->filter(
+		element.nodes.op == context.nodes.op 
+	)->sum(element.value)
+}
+
+// U7: calculates max(0, otCount) for each surgeon on each day
+constraint with otsPerSurgeon {
+	context.variables.penalizedOTs >= (context.variables.otCount - 1) &
+	context.variables.penalizedOTs >= 0
+}
+
+// U8: sets the mapping to true if the ageGroup is present in the room on a specific day
+constraint with ageGroupsInRoom {
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
+		element.nodes.p.ageGroup == context.nodes.ag.group
+	)->sum(element.value)
+	<= 
+	context.value * 1000
+	
+	&
+	
+	context.value
+	<=
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
+		element.nodes.p.ageGroup == context.nodes.ag.group
+	)->sum(element.value)
+}
+
+// U9: Sets the variable to true if the age group is the smallest in the room on that day 
+constraint with ageGroupsInRoom {
+	[
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d.number == context.nodes.d.number &
+		element.nodes.ag.group == context.nodes.ag.group
+	)->sum(element.value) == 1
+	&
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d == context.nodes.d &
+		element.nodes.ag.group < context.nodes.ag.group
+	)->sum(element.value) == 0
+	]
+	<=>
+	context.variables.minAgeGroup == 1
+}
+
+// U10: Sets the variable to true if the age group is the biggest in the room on that day 
+constraint with ageGroupsInRoom {
+	[
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d.number == context.nodes.d.number &
+		element.nodes.ag.group == context.nodes.ag.group
+	)->sum(element.value) == 1
+	&
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d == context.nodes.d &
+		element.nodes.ag.group > context.nodes.ag.group
+	)->sum(element.value) == 0
+	]
+	<=>
+	context.variables.maxAgeGroup == 1
+}
+
+// U11: Sets the mapping variable to the difference in skill level
+constraint with assignedPatientsToRoom {
+	context.variables.skillDiff 
+	== 
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.vsw == context.nodes.vsw
+	)->sum(element.value * element.nodes.w.minNurseSkill)
+	-
+	mappings.selectedShiftToRoster->filter(
+		element.nodes.vsr.shift == context.nodes.s
+	)->sum(element.value * element.nodes.vsr.roster.nurse.skillLevel)
+}
+
+// U12: calculates the penalized difference between the skill levels. max(0, minLevel - nurseLevel) = max(0, skillDiff)
+constraint with assignedPatientsToRoom{
+	context.variables.penalizedSkillDiff >= context.variables.skillDiff &
+	context.variables.penalizedSkillDiff >= 0
+}
+
+// U13: Sets the mapping to true if the nurse is assigned to the workload
+constraint with assignedNursesToWorkload {
+	context.value
+	>=
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.vsw == context.nodes.vsw
+	)->sum(element.value)
+	+
+	mappings.selectedShiftToRoster->filter(
+		element.nodes.vsr == context.nodes.vsr
+	)->sum(element.value)
+	- 1
+	
+	&
+	
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.vsw == context.nodes.vsw
+	)->sum(element.value)
+	>= 
+	context.value
+	
+	&
+	
+	mappings.selectedShiftToRoster->filter(
+		element.nodes.vsr == context.nodes.vsr
+	)->sum(element.value) 
+	>= 
+	context.value
+}
+
+// U14: Calculates the sum of workloads for one Roster 
+constraint with nurseWorkloadForDay {
+	context.variables.workloadDiff 
+	==
+	mappings.assignedNursesToWorkload->filter(
+		element.nodes.vsr.roster == context.nodes.ro
+	)->sum(element.value * element.nodes.vsw.workload.workloadValue)
+	- 
+	context.nodes.ro.maxWorkload
+}
+
+// U15: Calculates max(0, sumWorkload - nurseMaxWorkload) = max(0, excessiveWorkload)
+constraint with nurseWorkloadForDay{
+	context.variables.excessiveWorkload >= context.variables.workloadDiff &
+	context.variables.excessiveWorkload >= 0
+}
+
+// U16: sets the mapping to true if the nurse is assigned to the patient
+constraint with assignedNurseForPatient {
+	context.value
+	<=
+	mappings.assignedNursesToWorkload->filter(
+		element.nodes.vsr.roster.nurse == context.nodes.n &
+		element.nodes.vsw.workload.patient == context.nodes.p
+	)->sum(element.value)
+	
+	&
+	
+	mappings.assignedNursesToWorkload->filter(
+		element.nodes.vsr.roster.nurse == context.nodes.n &
+		element.nodes.vsw.workload.patient == context.nodes.p
+	)->sum(element.value)
+	<= 
+	context.value * 1000
+}
 
 //
 // Objectives
 //
 
-//// S1: The maximum difference of age groups in one room for each day should be minimized
-//
-//// TODO: Implement
-//
-//// S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
-//
-//function calculateUnqualifiedNurses with assignedPatientsToRoom {
-//	mappings.selectedShiftToRoster->filter(
-//		element.nodes.r == context.nodes.r &
-//		element.nodes.s.shiftNo == context.nodes.s.shiftNo &
-//		element.nodes.n.skillLevel < context.nodes.w.minNurseSkill
-//	)->sum(element.value) 
-//}
-//
-//// S3: The number of nurses taking care of a specific patient must be minimized
-//
-//// TODO: Implement 
-//
-//// S4: The workload of a nurse should not exceed the assigned maximum workload
-//
-//// TODO: Implement 
-//
-//// S5: The number of OTs opened on each day should be minimized
-//
-//function calculateOPenOTs with openOTs {
-//	context.value
-//}
-//
-//// S6: The number of different OTs a surgeon is assigned to per working day should be minimized
-//
-//function calculateOtsPerSurgeon with surgeonOptimeTupel {
-//	mappings.selectedOperationDay->filter(
-//		element.nodes.s == context.nodes.s &
-//		element.nodes.op.day == context.nodes.op.day 
-//	)->sum(element.value)
-//}
-//
-//// S7: The number of days between a patient´s release date and their actual date of admission should be minimized
-//
-//function calculateWaitTime with selectedShiftToFirstWorkload {
-//	((context.nodes.s.shiftNo / 3) - context.nodes.p.earliestDay) * context.value
-//}
-//
-//// S8: The number of not admitted optional patients should be minimized
-//function calculateNotAssignedOptionalPatients with optionalPatients {
-//	1 - mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
-//}
+// S1: The maximum difference of age groups in one room for each day should be minimized
+function calculateAgeDifference with roomDayTupel {
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d == context.nodes.d
+	)->sum(element.variables.maxAgeGroup * element.nodes.ag.group)
+	- 
+	mappings.ageGroupsInRoom->filter(
+		element.nodes.r == context.nodes.r &
+		element.nodes.d == context.nodes.d
+	)->sum(element.variables.minAgeGroup * element.nodes.ag.group)
+}
 
-objective : max {
+// S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
+function calculateUnqualifiedNurses with assignedPatientsToRoom {
+	context.variables.penalizedSkillDiff
+}
+
+// S3: The number of nurses taking care of a specific patient must be minimized
+function calculateContinuityOfCare with Patient {
+	mappings.assignedNurseForPatient->filter(
+		element.nodes.p == context
+	)->sum(element.value)
+}
+
+// S4: The workload of a nurse should not exceed the assigned maximum workload
+function calculateNurseWorkload with nurseWorkloadForDay {
+	context.variables.excessiveWorkload
+}
+
+// S5: The number of OTs opened on each day should be minimized
+function calculateOPenOTs with Day {
+	mappings.openOTs->filter(element.nodes.c.day == context.number)->sum(element.value) 
+}
+
+// S6: The number of different OTs a surgeon is assigned to per working day should be minimized
+function calculateOtsPerSurgeon with otsPerSurgeon {
+	context.variables.penalizedOTs
+}
+
+// S7: The number of days between a patient´s release date and their actual date of admission should be minimized
+function calculateWaitTime with selectedShiftToFirstWorkload {
+	((context.nodes.vsw.shift.shiftNo / 3) - context.nodes.p.earliestDay) * context.value
+}
+
+// S8: The number of not admitted optional patients should be minimized
+function calculateNotAssignedOptionalPatients with optionalPatients {
+	1 - mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+}
+
+objective : min {
 	0
-	+ functions.maxoOptional
-//	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
-//	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
-//	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
-//	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
-//	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
+	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
+	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
+	+ functions.calculateContinuityOfCare * types.Weight->sum(element.continuityOfCare)
+	+ functions.calculateNurseWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
+	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
+	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
+	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
+	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 }

@@ -2,6 +2,8 @@ package org.emoflon.gips.ihtc.virtual.runner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
@@ -14,6 +16,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.gips.core.api.GipsEngineAPI;
 import org.emoflon.gips.core.milp.SolverOutput;
+import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.virtual.runner.utils.FileUtils;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
@@ -23,6 +27,7 @@ import ihtcvirtualmetamodel.importexport.JsonToModelLoader;
 import ihtcvirtualmetamodel.importexport.ModelToJsonExporter;
 import ihtcvirtualpostprocessing.PostprocessingGtApp;
 import ihtcvirtualpreprocessing.PreprocessingGtApp;
+import ihtcvirtualpreprocessing.PreprocessingNoGtApp;
 
 /**
  * This abstract runner contains utility methods to wrap a given GIPS API object
@@ -70,8 +75,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	/**
 	 * Default pre-processing output XMI path.
 	 */
-	public String preprocessingPath = instancePath.substring(0, instancePath.lastIndexOf(".xmi"))
-			+ "_pre-proc.xmi";
+	public String preprocessingPath = instancePath.substring(0, instancePath.lastIndexOf(".xmi")) + "_pre-proc.xmi";
 
 	/**
 	 * Default instance solved XMI path.
@@ -96,6 +100,16 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	public String outputPath = datasetSolutionFolder + "sol_"
 			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
 
+	/**
+	 * Default Output FDolder for Debug-files
+	 */
+	public String debugFolder = projectFolder + "/../ihtcvirtualmetamodel/instances/debug/";
+	
+	/**
+	 * Default Output Path for Debug-file of current model instance
+	 */
+	public String debugOutputPath = debugFolder + scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_debug.txt";
+			
 	public AbstractIhtcVirtualGipsRunner() {
 		// Configure logging
 		logger.setUseParentHandlers(false);
@@ -168,7 +182,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		Objects.requireNonNull(gipsApi);
 		Objects.requireNonNull(verbose);
 
-		gipsApi.buildProblemTimed(true);
+		gipsApi.buildProblemTimed(true, true); // Second Parameter: sequential = false/default, parallel = true
 		final SolverOutput output = gipsApi.solveProblemTimed();
 		if (output.solutionCount() == 0) {
 			gipsApi.terminate();
@@ -177,6 +191,14 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		}
 		if (verbose) {
 			logger.info("=> Objective value: " + output.objectiveValue());
+			final Map<String, IMeasurement> measurements = new LinkedHashMap<>(
+					Observer.getInstance().getMeasurements("Eval"));
+			Observer.getInstance().getMeasurements("Eval").clear();
+			logger.info("PM: " + measurements.get("PM").maxDurationSeconds() + "s.");
+			logger.info("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds() + "s.");
+			logger.info("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds() + "s.");
+			logger.info("BUILD: " + measurements.get("BUILD").maxDurationSeconds() + "s.");
+			logger.info("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds() + "s.");
 		}
 		return output.objectiveValue();
 	}
@@ -208,18 +230,55 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		Objects.requireNonNull(gipsApi);
 
 		// Apply found solution
-		final long tick = System.nanoTime();
-		gipsApi.getSelectedOperationDay().applyNonZeroMappings();
-		gipsApi.getSelectedShiftToRoster().applyNonZeroMappings();
-		gipsApi.getSelectedShiftToFirstWorkload().applyNonZeroMappings();
-		gipsApi.getSelectedExtendingShiftToFirstWorkload().applyNonZeroMappings();
-		gipsApi.getSelectedOccupantNodes().applyNonZeroMappings();
+		// Do not update the pattern matcher on purpose
+		gipsApi.getSelectedOperationDay().applyNonZeroMappings(false);
+		gipsApi.getSelectedShiftToRoster().applyNonZeroMappings(false);
+		gipsApi.getSelectedShiftToFirstWorkload().applyNonZeroMappings(false);
+		gipsApi.getSelectedExtendingShiftToFirstWorkload().applyNonZeroMappings(false);
+		gipsApi.getSelectedOccupantNodes().applyNonZeroMappings(false);
 		// Alternative:
 //		gipsApi.applyAllNonZeroMappings();
 
+		// Update the pattern matcher after all rule applications once
+		gipsApi.update();
+	}
+
+	/**
+	 * Applies the best found solution (i.e., all non-zero mappings) with a given
+	 * IHTC 2024 project GIPS API object. This method does not utilize the GT engine
+	 * built-in to GIPS but rather manipulates the model directly.
+	 * 
+	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
+	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
+	 */
+	protected void applySolutionNoGt(final IhtcvirtualgipssolutionGipsAPI gipsApi, final boolean verbose) {
+		Objects.requireNonNull(gipsApi);
+
+		// Apply found solution
+		final long tick = System.nanoTime();
+
+		gipsApi.getSelectedOperationDay().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getVopc().setIsSelected(true);
+			m.getMatch().getVwc().setIsSelected(true);
+		});
+		gipsApi.getSelectedShiftToRoster().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getVsr().setIsSelected(true);
+		});
+		gipsApi.getSelectedShiftToFirstWorkload().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getVsw().setIsSelected(true);
+		});
+		gipsApi.getSelectedExtendingShiftToFirstWorkload().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getNextvsw().setIsSelected(true);
+		});
+		gipsApi.getSelectedOccupantNodes().getNonZeroVariableMappings().forEach(m -> {
+			m.getMatch().getVsw().setIsSelected(true);
+		});
+
 		final long tock = System.nanoTime();
 		if (verbose) {
-			logger.info("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+			logger.info("=> Solution application (no GT) duration: " + (tock - tick) / 1_000_000_000 + "s.");
 		}
 	}
 
@@ -283,6 +342,21 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	}
 
 	/**
+	 * Pre-processing method that runs the separated Java-based pre-processing
+	 * implementation. The given `instancePath` will be used to load the XMI model.
+	 * The produced (altered) model file will be written to `outputPath`.
+	 * 
+	 * @param instancePath Model (XMI) to load.
+	 * @param outputPath   Model (XMI) to save the result to.
+	 */
+	protected void preprocessNoGt(final String instancePath, final String outputPath) {
+		Objects.requireNonNull(instancePath);
+
+		final PreprocessingNoGtApp app = new PreprocessingNoGtApp(instancePath, outputPath);
+		app.run();
+	}
+
+	/**
 	 * Post-processing method that runs the separated GT rule set. The given
 	 * `instancePath` will be used to load the XMI model. The produced (altered)
 	 * model file will also be written to `instancePath`.
@@ -309,6 +383,21 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		final PostprocessingGtApp app = new PostprocessingGtApp(instancePath, outputPath);
 		app.run();
 		// The app will terminate itself
+	}
+
+	/**
+	 * Converts the two given time stamps (tick and tock) from nano seconds to
+	 * elapsed time in seconds.
+	 * 
+	 * @param tick First time stamp.
+	 * @param tock Second time stamp.
+	 * @return Elapsed time between tick and tock in seconds.
+	 */
+	protected double tickTockToElapsedSeconds(final long tick, final long tock) {
+		if (tick < 0 || tock < 0) {
+			throw new IllegalArgumentException("Given tick or tock was below zero.");
+		}
+		return 1.0 * (tock - tick) / 1_000_000_000;
 	}
 
 	/**

@@ -2,17 +2,20 @@ package ihtcvirtualmetamodel.importexport;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import ihtcvirtualmetamodel.AgeGroup;
 import ihtcvirtualmetamodel.Capacity;
+import ihtcvirtualmetamodel.Day;
 import ihtcvirtualmetamodel.Gender;
 import ihtcvirtualmetamodel.IhtcvirtualmetamodelFactory;
 import ihtcvirtualmetamodel.Nurse;
@@ -58,7 +61,7 @@ public class JsonToModelLoader {
 	/**
 	 * Found genders as names.
 	 */
-	private Set<String> foundGenders = new HashSet<String>();
+	private LinkedHashSet<String> foundGenders = new LinkedHashSet<String>();
 
 	/**
 	 * Look up data structure: mapping of name -> surgeon for all surgeons.
@@ -396,6 +399,7 @@ public class JsonToModelLoader {
 	
 	/**
 	 * Converts the given JSON array of age groups to the model representations.
+	 * Creates a Node for each unique integer representation of the age group. 
 	 * 
 	 * @param ageGroups JSON array of age groups.
 	 */
@@ -406,6 +410,9 @@ public class JsonToModelLoader {
 		for (final JsonElement ag : ageGroups) {
 			final String name = ag.getAsString();
 			this.foundAges.put(name, ageCounter);
+			final AgeGroup agegroup = IhtcvirtualmetamodelFactory.eINSTANCE.createAgeGroup();
+			agegroup.setGroup(ageCounter);
+			this.model.getAgeGroups().add(agegroup);
 			ageCounter++;
 		}
 	}
@@ -519,8 +526,9 @@ public class JsonToModelLoader {
 
 	/**
 	 * Converts the given JSON primitive of days to actual model information. In
-	 * this case, the method only saves the number of days from the JSON primitive
-	 * to a field of this load class.
+	 * this case, the method saves the number of days from the JSON primitive
+	 * to a field of this load class and saves it in the root of the model. 
+	 * For each day a new Node of type "Day" is created and added to the model. 
 	 * 
 	 * @param days JSON primitive with the day-specific information.
 	 */
@@ -532,9 +540,16 @@ public class JsonToModelLoader {
 		if (numberOfDays <= 0) {
 			throw new IllegalArgumentException("Number of days was <= 0.");
 		}
+		
+		for(int i = 0; i<numberOfDays; i++) {
+			final Day day = IhtcvirtualmetamodelFactory.eINSTANCE.createDay();
+			day.setName("d"+i);
+			day.setNumber(i);
+			this.model.getDays().add(day);
+		}
 
 		this.numberOfFoundDays = numberOfDays;
-		this.model.setDays(numberOfDays);
+		this.model.setPeriod(numberOfDays);
 	}
 
 	/**
@@ -626,7 +641,7 @@ public class JsonToModelLoader {
 		final Nurse nurse = IhtcvirtualmetamodelFactory.eINSTANCE.createNurse();
 		nurse.setName(name);
 		nurse.setSkillLevel(skillLevel);
-		final Set<Roster> rosters = convertRosters(workingShifts);
+		final List<Roster> rosters = convertRosters(workingShifts);
 		nurse.getRosters().addAll(rosters);
 		this.model.getNurses().add(nurse);
 	}
@@ -635,13 +650,13 @@ public class JsonToModelLoader {
 	 * Converts the given JSON array of working shifts to model objects.
 	 * 
 	 * @param workingShifts JSON array representing the working shifts of a nurse.
-	 * @return Set of roster objects representing the given JSON array of working
+	 * @return List of roster objects representing the given JSON array of working
 	 *         shifts.
 	 */
-	private Set<Roster> convertRosters(final JsonArray workingShifts) {
+	private List<Roster> convertRosters(final JsonArray workingShifts) {
 		Objects.requireNonNull(workingShifts);
 
-		final Set<Roster> rosters = new HashSet<Roster>();
+		final List<Roster> rosters = new LinkedList<Roster>();
 		for (final JsonElement s : workingShifts) {
 			final Roster r = IhtcvirtualmetamodelFactory.eINSTANCE.createRoster();
 			r.setMaxWorkload(((JsonObject) s).get("max_load").getAsInt());
