@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import ihtcvirtualmetamodel.Capacity;
 import ihtcvirtualmetamodel.IhtcvirtualmetamodelFactory;
 import ihtcvirtualmetamodel.OT;
+import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Room;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Shift;
@@ -137,8 +138,8 @@ public class PreprocessingNoGtApp {
 				v.setWorkload(workload);
 				// Set requires and enables edges
 				if (vPrev != null) {
-					v.getRequires_virtualShiftToWorkload().add(vPrev);
-					vPrev.getEnables_virtualShiftToWorkload().add(v);
+					v.setRequires_virtualShiftToWorkload(vPrev);
+					vPrev.setEnables_virtualShiftToWorkload(v);
 				}
 				shift.getVirtualWorkload().add(v);
 				vPrev = v;
@@ -270,30 +271,42 @@ public class PreprocessingNoGtApp {
 				room.getShifts().forEach(shift -> {
 					// Check shift time conditions (i.e., only use the first shift per day)
 					if (shift.getShiftNo() % 3 == 0) {
-						// Check if the shift number / 3 matches any available OT's capacity object
-						final int day = shift.getShiftNo() / 3;
-						VirtualWorkloadToCapacity vfound = null;
-						for (final var vexists : patient.getFirstWorkload().getVirtualCapacity()) {
-							if (vexists.getCapacity().getDay() == day) {
-								vfound = vexists;
-								break;
+						// If an occupant with a different gender is assigned to the room -> Don't create virtual shifts
+						boolean genderMix = model.getPatients().stream().filter(Patient::isIsOccupant).anyMatch(occupant ->
+									!occupant.getGender().equals(patient.getGender())
+									&& occupant.getFirstWorkload().getVirtualShift().stream()
+										.anyMatch(vs -> vs.getShift().getRoom().equals(room))
+								);
+						if (!genderMix) {
+							// Check if the shift number / 3 matches any available OT's capacity object
+							final int day = shift.getShiftNo() / 3;
+							VirtualWorkloadToCapacity vfound = null;
+							for (final var vexists : patient.getFirstWorkload().getVirtualCapacity()) {
+								if (vexists.getCapacity().getDay() == day) {
+									vfound = vexists;
+									break;
+								}
 							}
-						}
-						if (vfound != null) {
-							// Check if shift is in potential start time frame
-							if (day >= patient.getEarliestDay() && day <= patient.getDueDay()) {
-								final VirtualShiftToWorkload v = IhtcvirtualmetamodelFactory.eINSTANCE
-										.createVirtualShiftToWorkload();
-								v.setIsSelected(false);
-								v.setWasImported(false);
-								v.setShift(shift);
-								v.setWorkload(patient.getFirstWorkload());
-								v.getRequires_virtualWorkloadToCapacity()
-										.addAll(patient.getFirstWorkload().getVirtualCapacity());
-								patient.getFirstWorkload().getVirtualCapacity().forEach(vc -> {
-									vc.getEnables_virtualShiftToWorkload().add(v);
-								});
-								shift.getVirtualWorkload().add(v);
+							if (vfound != null) {
+								// Check if shift is in potential start time frame
+								if (day >= patient.getEarliestDay() && day <= patient.getDueDay()) {
+									if ((day - patient.getEarliestDay()) * model.getWeight().getPatientDelay() > model.getWeight().getUnscheduledOptional() ) {
+										// If the cost to delay the patient is higher than the cost to not schedule him at all -> Don't create virtual shifts
+									} else {
+										final VirtualShiftToWorkload v = IhtcvirtualmetamodelFactory.eINSTANCE
+												.createVirtualShiftToWorkload();
+										v.setIsSelected(false);
+										v.setWasImported(false);
+										v.setShift(shift);
+										v.setWorkload(patient.getFirstWorkload());
+										v.getRequires_virtualWorkloadToCapacity()
+												.addAll(patient.getFirstWorkload().getVirtualCapacity());
+										patient.getFirstWorkload().getVirtualCapacity().forEach(vc -> {
+											vc.getEnables_virtualShiftToWorkload().add(v);
+										});
+										shift.getVirtualWorkload().add(v);
+									}
+								}
 							}
 						}
 					}
@@ -354,8 +367,8 @@ public class PreprocessingNoGtApp {
 			vNew.setWasImported(false);
 			vNew.setShift(s);
 			vNew.setWorkload(w);
-			vNew.getRequires_virtualShiftToWorkload().add(v);
-			v.getEnables_virtualShiftToWorkload().add(vNew);
+			vNew.setRequires_virtualShiftToWorkload(v);
+			v.setEnables_virtualShiftToWorkload(vNew);
 			s.getVirtualWorkload().add(vNew);
 			w = (Workload) w.getNext();
 			s = (Shift) s.getNext();
