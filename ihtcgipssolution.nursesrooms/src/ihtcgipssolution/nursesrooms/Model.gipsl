@@ -13,7 +13,7 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 // Configuration
 //
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 570.0, includeInitTime := true];
 	randomSeed := true [value := 0];
@@ -28,69 +28,71 @@ config {
 //
 
 rule assignNurseToRoomShift {
-	h : Hospital {
-		- nurses -> n
-		- shifts -> s
-		- rooms -> r
+	h: Hospital {
+		-nurses -> n
+		-shifts -> s
+		-rooms -> r
 	}
-	
-	n : Nurse {
-		- shiftMaxLoads -> sml
+
+	n: Nurse {
+		-shiftMaxLoads -> sml
 	}
-	
-	s : Shift
-	r : Room
-	
-	++ rsna : RoomShiftNurseAssignment {
-		++ - nurse -> n
-		++ - shift -> s
-		++ - room -> r
+
+	s: Shift
+
+	r: Room
+
+	++ rsna: RoomShiftNurseAssignment {
+		++ -nurse -> n
+		++ -shift -> s
+		++ -room -> r
 	}
-	
-	sml : NurseShiftMaxLoad {
-		- shift -> s
+
+	sml: NurseShiftMaxLoad {
+		-shift -> s
 	}
-	
 	# sml.maxLoad > 0
 }
 
 pattern roomShiftTuple {
-	h : Hospital {
-		- rooms -> r
-		- shifts -> s
+	h: Hospital {
+		-rooms -> r
+		-shifts -> s
 	}
-	
-	r : Room
-	
-	s : Shift
+
+	r: Room
+
+	s: Shift
 }
 
 pattern patientRoomDay {
-	h : Hospital {
-		- rooms -> r
-		- patients -> p
-		- days -> d
+	h: Hospital {
+		-rooms -> r
+		-patients -> p
+		-days -> d
 	}
-	
-	r : Room
-	p : Patient
-	d : Day
-	
+
+	r: Room
+
+	p: Patient
+
+	d: Day
 	# p.surgeryReleaseDay <= d.id
 	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
 }
 
 pattern occupantRoomDay {
-	h : Hospital {
-		- rooms -> r
-		- occupants -> o
-		- days -> d
+	h: Hospital {
+		-rooms -> r
+		-occupants -> o
+		-days -> d
 	}
-	
-	r : Room
-	o : Occupant
-	d : Day
-	
+
+	r: Room
+
+	o: Occupant
+
+	d: Day
 	# r.name == o.roomId
 	# o.lengthOfStay >= d.id
 }

@@ -1,7 +1,7 @@
 package "org.emoflon.gips.gipsl.examples.sdr"
 import "platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore"
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 30.0];
 	randomSeed := true [value := 0];
@@ -15,23 +15,23 @@ rule block2thread {
 		-cpus -> cpu
 		-jobs -> job
 	}
-	
+
 	cpu: CPU {
 		-cores -> core
 	}
-	
+
 	// Also pins the job to a CPU
 	job: Job {
 		-blocks -> block
-		++ -hosts->cpu
+		++ -hosts -> cpu
 	}
-	
+
 	core: Core {
 		-threads -> thread
 	}
-	
+
 	thread: Thread
-	
+
 	block: Block {
 		++ -host -> thread
 	}
@@ -43,19 +43,19 @@ rule flow2intercom {
 		-cpus -> cpu
 		-jobs -> job
 	}
-	
+
 	cpu: CPU {
 		-intercoms -> intercom
 	}
-	
+
 	job: Job {
 		-flows -> flow
 	}
-	
+
 	flow: Flow {
 		++ -host -> intercom
 	}
-	
+
 	intercom: Interthreadcom
 }
 
@@ -65,23 +65,23 @@ rule flow2thread {
 		-cpus -> cpu
 		-jobs -> job
 	}
-	
+
 	cpu: CPU {
 		-cores -> core
 	}
-	
+
 	job: Job {
 		-flows -> flow
 	}
-	
+
 	core: Core {
 		-threads -> thread
 	}
-	
+
 	flow: Flow {
 		++ -host -> thread
 	}
-	
+
 	thread: Thread
 }
 
@@ -94,7 +94,9 @@ pattern thread {
 //
 
 mapping b2t to block2thread;
+
 mapping f2i to flow2intercom;
+
 mapping f2t to flow2thread;
 
 // Utility mapping that must be 1 if the corresponding thread will be used, 0 otherwise

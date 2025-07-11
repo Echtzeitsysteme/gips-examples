@@ -15,7 +15,7 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 // Configuration
 //
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 570.0, includeInitTime := true];
 	randomSeed := true [value := 0];
@@ -30,44 +30,43 @@ config {
 //
 
 rule assignNurseToRoomShift {
-	h : Hospital {
-		- nurses -> n
-		- shifts -> s
-		- rooms -> r
+	h: Hospital {
+		-nurses -> n
+		-shifts -> s
+		-rooms -> r
 	}
-	
-	n : Nurse {
-		- shiftMaxLoads -> sml
+
+	n: Nurse {
+		-shiftMaxLoads -> sml
 	}
-	
-	s : Shift
-	r : Room
-	
-	++ rsna : RoomShiftNurseAssignment {
-		++ - nurse -> n
-		++ - shift -> s
-		++ - room -> r
+
+	s: Shift
+
+	r: Room
+
+	++ rsna: RoomShiftNurseAssignment {
+		++ -nurse -> n
+		++ -shift -> s
+		++ -room -> r
 	}
-	
-	sml : NurseShiftMaxLoad {
-		- shift -> s
+
+	sml: NurseShiftMaxLoad {
+		-shift -> s
 	}
-	
 	# sml.maxLoad > 0
 }
 
 rule assignAdmissionDayToPatient {
-	h : Hospital {
-		- patients -> p
-		- days -> d
+	h: Hospital {
+		-patients -> p
+		-days -> d
 	}
-	
-	p : Patient {
-		++ - admissionDay -> d
+
+	p: Patient {
+		++ -admissionDay -> d
 	}
-	
-	d : Day
-	
+
+	d: Day
 	# p.surgeryReleaseDay <= d.id
 	# p.surgeryDueDate >= d.id
 }
@@ -75,296 +74,302 @@ rule assignAdmissionDayToPatient {
 // H2: Compatible rooms: Patients can only be assigned to one of
 // their compatible rooms
 pattern roomPatientIncompatible {
-	h : Hospital {
-		- patients -> p
-		- rooms -> r
+	h: Hospital {
+		-patients -> p
+		-rooms -> r
 	}
-	
-	p : Patient {
-		- incompatibleRooms -> r
+
+	p: Patient {
+		-incompatibleRooms -> r
 	}
-	r : Room
+
+	r: Room
 }
+
 condition roomNotIncompatible = forbid roomPatientIncompatible
 
 rule assignRoomToPatient {
-	h : Hospital {
-		- patients -> p
-		- rooms -> r
+	h: Hospital {
+		-patients -> p
+		-rooms -> r
 	}
-	
-	p : Patient {
-		++ - assignedRoom -> r
+
+	p: Patient {
+		++ -assignedRoom -> r
 	}
-	
-	r : Room
+
+	r: Room
 }
 when roomNotIncompatible
 
 rule assignSurgeryToPatient {
-	h : Hospital {
-		- patients -> p
-		- surgeons -> s
-		- days -> d
-		- operatingTheaters -> ot
+	h: Hospital {
+		-patients -> p
+		-surgeons -> s
+		-days -> d
+		-operatingTheaters -> ot
 	}
-	
-	p : Patient {
-		++ - surgeryAssignment -> sa
-		- surgeon -> s
+
+	p: Patient {
+		++ -surgeryAssignment -> sa
+		-surgeon -> s
 	}
-	
-	s : Surgeon {
-		- availabilities -> as
+
+	s: Surgeon {
+		-availabilities -> as
 	}
-	
-	d : Day
-	ot : OperatingTheater {
-		- availabilities -> aot
+
+	d: Day
+
+	ot: OperatingTheater {
+		-availabilities -> aot
 	}
-	
-	++ sa : SurgeryAssignment {
-		++ - patient -> p
-		++ - surgeon -> s
-		++ - operationTheater -> ot
-		++ - day -> d
+
+	++ sa: SurgeryAssignment {
+		++ -patient -> p
+		++ -surgeon -> s
+		++ -operationTheater -> ot
+		++ -day -> d
 	}
-	
-	aot : OperatingTheaterAvailability {
-		- day -> d
+
+	aot: OperatingTheaterAvailability {
+		-day -> d
 	}
+
 	# aot.availability > 0
 	
-	as : SurgeonAvailability {
-		- day -> d
+	as: SurgeonAvailability {
+		-day -> d
 	}
 	# as.availability > 0
 }
 
 pattern dayRoomTuple {
-	h : Hospital {
-		- days -> d
-		- rooms -> r
+	h: Hospital {
+		-days -> d
+		-rooms -> r
 	}
-	
-	d : Day
-	r : Room
+
+	d: Day
+
+	r: Room
 }
 
 pattern shiftRoomTuple {
-	h : Hospital {
-		- shifts -> s
-		- rooms -> r
+	h: Hospital {
+		-shifts -> s
+		-rooms -> r
 	}
-	
-	s : Shift
-	r : Room
+
+	s: Shift
+
+	r: Room
 }
 
 pattern daySurgeonTuple {
-	h : Hospital {
-		- days -> d
-		- surgeons -> s	
+	h: Hospital {
+		-days -> d
+		-surgeons -> s
 	}
-	
-	d : Day
-	s : Surgeon
+
+	d: Day
+
+	s: Surgeon
 }
 
 pattern dayOperatingTheaterAvailabilityTriple {
-	h : Hospital {
-		- days -> d
-		- operatingTheaters -> ot
+	h: Hospital {
+		-days -> d
+		-operatingTheaters -> ot
 	}
-	
-	d : Day
-	
-	ot : OperatingTheater {
-		- availabilities -> aot
+
+	d: Day
+
+	ot: OperatingTheater {
+		-availabilities -> aot
 	}
-	
-	aot : OperatingTheaterAvailability
+
+	aot: OperatingTheaterAvailability
 	# aot.availability > 0
 }
 
 pattern dayOperatingTheaterTuple {
-	h : Hospital {
-		- days -> d
-		- operatingTheaters -> ot
+	h: Hospital {
+		-days -> d
+		-operatingTheaters -> ot
 	}
-	
-	d : Day
-	
-	ot : OperatingTheater
+
+	d: Day
+
+	ot: OperatingTheater
 }
 
 pattern findMandatoryPatient {
-	h : Hospital {
-		- patients -> p
+	h: Hospital {
+		-patients -> p
 	}
-	
-	p : Patient
-	
+
+	p: Patient
 	# p.mandatory == true
 }
 
 pattern findOptionalPatient {
-	h : Hospital {
-		- patients -> p
+	h: Hospital {
+		-patients -> p
 	}
-	
-	p : Patient
-	
+
+	p: Patient
 	# p.mandatory == false
 }
 
 pattern dayPatientTuple {
-	h : Hospital {
-		- patients -> p
-		- days -> d
+	h: Hospital {
+		-patients -> p
+		-days -> d
 	}
-	
-	p : Patient
-	d : Day
-	
+
+	p: Patient
+
+	d: Day
 	# p.surgeryReleaseDay <= d.id
 	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
 }
 
 pattern roomShiftTuple {
-	h : Hospital {
-		- rooms -> r
-		- shifts -> s
+	h: Hospital {
+		-rooms -> r
+		-shifts -> s
 	}
-	
-	r : Room
-	
-	s : Shift
+
+	r: Room
+
+	s: Shift
 }
 
 pattern patientRoomDay {
-	h : Hospital {
-		- rooms -> r
-		- patients -> p
-		- days -> d
+	h: Hospital {
+		-rooms -> r
+		-patients -> p
+		-days -> d
 	}
-	
-	r : Room
-	p : Patient
-	d : Day
-	
+
+	r: Room
+
+	p: Patient
+
+	d: Day
 	# p.surgeryReleaseDay <= d.id
 	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
 }
 
 pattern occupantRoomDay {
-	h : Hospital {
-		- rooms -> r
-		- occupants -> o
-		- days -> d
+	h: Hospital {
+		-rooms -> r
+		-occupants -> o
+		-days -> d
 	}
-	
-	r : Room
-	o : Occupant
-	d : Day
-	
+
+	r: Room
+
+	o: Occupant
+
+	d: Day
 	# r.name == o.roomId
 	# o.lengthOfStay >= d.id
 }
 
 pattern dayRoomGender {
-	h : Hospital {
-		- days -> d
-		- rooms -> r
-		- genders -> g
+	h: Hospital {
+		-days -> d
+		-rooms -> r
+		-genders -> g
 	}
-	
-	d : Day
-	r : Room
-	g : Gender
+
+	d: Day
+
+	r: Room
+
+	g: Gender
 }
 
 pattern nurseShiftRoomMaxLoad {
-	h : Hospital {
-		- nurses -> n
-		- shifts -> s
-		- rooms -> r
+	h: Hospital {
+		-nurses -> n
+		-shifts -> s
+		-rooms -> r
 	}
-	
-	n : Nurse {
-		- shiftMaxLoads -> sml
+
+	n: Nurse {
+		-shiftMaxLoads -> sml
 	}
-	
-	s : Shift
-	
-	sml : NurseShiftMaxLoad {
-		- shift -> s
+
+	s: Shift
+
+	sml: NurseShiftMaxLoad {
+		-shift -> s
 	}
-	
+
 	# sml.maxLoad > 0
 	
-	r : Room
+	r: Room
 }
 
 pattern nurseShiftMaxLoad {
-	h : Hospital {
-		- nurses -> n
-		- shifts -> s
+	h: Hospital {
+		-nurses -> n
+		-shifts -> s
 	}
-	
-	n : Nurse {
-		- shiftMaxLoads -> sml
+
+	n: Nurse {
+		-shiftMaxLoads -> sml
 	}
-	
-	s : Shift
-	
-	sml : NurseShiftMaxLoad {
-		- shift -> s
+
+	s: Shift
+
+	sml: NurseShiftMaxLoad {
+		-shift -> s
 	}
-	
 	# sml.maxLoad > 0
 }
 
 pattern patientRoomShiftLoad {
-	h : Hospital {
-		- rooms -> r
-		- patients -> p
-		- days -> d
-		- shifts -> s
+	h: Hospital {
+		-rooms -> r
+		-patients -> p
+		-days -> d
+		-shifts -> s
 	}
-	
-	r : Room
-	
-	p : Patient {
-		- workloadsProduced -> pwp
+
+	r: Room
+
+	p: Patient {
+		-workloadsProduced -> pwp
 	}
-	
-	d : Day {
-		- shifts -> s
+
+	d: Day {
+		-shifts -> s
 	}
-	
-	s : Shift
-	
-	pwp : PatientWorkloadProduced
-	
+
+	s: Shift
+
+	pwp: PatientWorkloadProduced
 	# p.surgeryReleaseDay <= d.id
 	# p.surgeryDueDate + p.lengthOfStay - 1 >= d.id
 }
 
 pattern occupantRoomShiftLoad {
-	h : Hospital {
-		- occupants -> o
-		- rooms -> r
+	h: Hospital {
+		-occupants -> o
+		-rooms -> r
 	}
-	
-	o : Occupant {
-		- workloadsProduced -> owp
+
+	o: Occupant {
+		-workloadsProduced -> owp
 	}
-	
-	r : Room
-	
+
+	r: Room
+
 	owp: OccupantWorkloadProduced
-	
 	# r.name == o.roomId
 }
 
@@ -455,11 +460,10 @@ constraint with roomShiftProducedLoad {
 		element.nodes.r == context.nodes.r
 		& element.nodes.s == context.nodes.s
 	)->sum(element.variables.producedLoad)
-	
 	+
 	// occupants
 	patterns.occupantRoomShiftLoad->filter(element.nodes.r == context.nodes.r //
-		& element.nodes.owp.shift == context.nodes.s //
+	& element.nodes.owp.shift == context.nodes.s //
 	)->sum(element.nodes.owp.workloadProduced)
 }
 
@@ -480,9 +484,7 @@ constraint with nurseShiftRoomLoad {
 		element.nodes.r == context.nodes.r //
 		& element.nodes.s == context.nodes.s //
 	)->sum(element.variables.producedLoad)
-	
 	&
-	
 	mappings.anrs->filter( //
 		element.nodes.n == context.nodes.n //
 		& element.nodes.r == context.nodes.r //
@@ -509,9 +511,7 @@ constraint with nurseShiftOverload {
 		& element.nodes.s == context.nodes.s //
 	)->sum(element.variables.load)
 	- context.nodes.sml.maxLoad
-	
-	& 
-	
+	&
 	mappings.nurseShiftRoomLoad->filter( //
 		element.nodes.n == context.nodes.n //
 		& element.nodes.s == context.nodes.s //
@@ -558,7 +558,6 @@ constraint with roomDayLoad {
 		element.nodes.r == context.nodes.r //
 		& element.nodes.d == context.nodes.d //
 	)->sum(element.value)
-	
 	+
 	// occupants
 	patterns.occupantRoomDay->filter(element.nodes.r == context.nodes.r & element.nodes.d == context.nodes.d)->sum(1)
@@ -604,10 +603,10 @@ constraint with daySurgeonTuple {
 		element.nodes.d == context.nodes.d //
 		& element.nodes.s == context.nodes.s
 	)->sum(element.nodes.p.surgeryDuration * element.value)
-	
+
 	// must be smaller or equal to the surgeon's availability
 	<=
-	
+
 	// get the surgeon's availability for the same specific day
 	context.nodes.s.availabilities->filter(element.day == context.nodes.d)->sum(element.availability)
 }
@@ -620,10 +619,10 @@ constraint with dayOperatingTheaterAvailabilityTriple {
 		element.nodes.d == context.nodes.d //
 		& element.nodes.ot == context.nodes.ot //
 	)->sum(element.nodes.p.surgeryDuration * element.value)
-	
+
 	// must be smaller of equal to the operating theater's maximum capacity
 	<=
-	
+
 	// get the operating theater's capacity for the same specific day
 	context.nodes.ot.availabilities->filter(element.day == context.nodes.d)->sum(element.availability)
 }
@@ -658,7 +657,7 @@ constraint with findOptionalPatient {
 	&
 	// Optional patients can have an assigned room
 	mappings.arp->filter(element.nodes.p == context.nodes.p)->sum(element.value) <= 1
-	
+
 	// If an optional patient has an admission day (assigned room) they must
 	// also have an assigned room (admission day)
 	&
@@ -676,8 +675,8 @@ constraint with findMandatoryPatient {
 	mappings.aadp->filter( //
 		element.nodes.p == context.nodes.p //
 		// the following two constraints will be checked via the LHS of the GT rule
-//		& element.nodes.d.id >= context.nodes.p.surgeryReleaseDay //
-//		& element.nodes.d.id <= context.nodes.p.surgeryDueDate //
+		// & element.nodes.d.id >= context.nodes.p.surgeryReleaseDay //
+		// & element.nodes.d.id <= context.nodes.p.surgeryDueDate //
 	)->sum(element.value)
 	== 1
 }
