@@ -522,7 +522,6 @@ constraint with selectedOperationDay {
 
 constraint with selectExtendingShiftToFirstWorkload{
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.prevvsw == context.nodes.prevvsw &
 		element.nodes.nextvsw == context.nodes.nextvsw 
 	)->sum(element.value)
 	<=
@@ -545,7 +544,6 @@ constraint with selectExtendingShiftToFirstWorkload{
 	)->sum(element.value)
 	<= 
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.prevvsw == context.nodes.prevvsw &
 		element.nodes.nextvsw == context.nodes.nextvsw 
 	)->sum(element.value) * 2
 	
