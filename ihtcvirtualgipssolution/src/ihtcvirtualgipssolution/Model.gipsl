@@ -146,30 +146,12 @@ pattern patientForRoom {
 
 	s : Shift 
 	
-	r : Room {
-		- shifts -> s
-	}
-	
 	# s.shiftNo % 3 == 0
 }
 
 pattern patientForRoomWithWorkload {
-	p : Patient {
-		- workloads -> w
-	}
 
-	s : Shift 
-
-	w : Workload
-	
-	vsw : VirtualShiftToWorkload {
-		- shift -> s
-		- workload -> w
-	}
-	
-	r : Room {
-		- shifts -> s
-	}
+	vsw : VirtualShiftToWorkload
 }
 
 // Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day
@@ -622,8 +604,8 @@ constraint with assignedPatientsToRoom {
 	context.value 
 	==
 	mappings.assignedPatientsToRoomWithWorkload->filter(
-		element.nodes.s == context.nodes.s &
-		element.nodes.p == context.nodes.p
+		element.nodes.vsw.shift == context.nodes.s &
+		element.nodes.vsw.workload.patient == context.nodes.p
 	)->sum(element.value)
 }
 
@@ -710,7 +692,7 @@ constraint with otsPerSurgeon {
 // U8: sets the mapping to true if the ageGroup is present in the room on a specific day
 constraint with ageGroupsInRoom {
 	mappings.assignedPatientsToRoom->filter(
-		element.nodes.r == context.nodes.r &
+		element.nodes.s.room == context.nodes.r &
 		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
 		element.nodes.p.ageGroup == context.nodes.ag.group
 	)->sum(element.value)
@@ -722,7 +704,7 @@ constraint with ageGroupsInRoom {
 	context.value
 	<=
 	mappings.assignedPatientsToRoom->filter(
-		element.nodes.r == context.nodes.r &
+		element.nodes.s.room == context.nodes.r &
 		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
 		element.nodes.p.ageGroup == context.nodes.ag.group
 	)->sum(element.value)
@@ -772,10 +754,10 @@ constraint with assignedPatientsToRoomWithWorkload {
 	== 
 	mappings.assignedPatientsToRoomWithWorkload->filter(
 		element.nodes.vsw == context.nodes.vsw
-	)->sum(element.value * element.nodes.w.minNurseSkill)
+	)->sum(element.value * element.nodes.vsw.workload.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
-		element.nodes.vsr.shift == context.nodes.s
+		element.nodes.vsr.shift == context.nodes.vsw.shift
 	)->sum(element.value * element.nodes.vsr.roster.nurse.skillLevel)
 }
 
