@@ -251,7 +251,7 @@ public abstract class AbstractIhtcGipsRunner {
 		try {
 			// Prepare folder if necessary
 			if (inputJsonPath.contains("/")) {
-				FileUtils.prepareFolder(inputJsonPath.substring(0, inputJsonPath.lastIndexOf("/")));
+				FileUtils.prepareFolder(outputXmiPath.substring(0, outputXmiPath.lastIndexOf("/")));
 			}
 			FileUtils.save(model, outputXmiPath);
 		} catch (final IOException e) {
