@@ -104,7 +104,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		}
 
 		if (preProcNoGt) {
-			preprocessNoGt(instancePath, preprocessingPath);
+			preprocessNoGt(instancePath, preprocessingPath, 0.8);
 		} else {
 			preprocess(instancePath, preprocessingPath);
 		}

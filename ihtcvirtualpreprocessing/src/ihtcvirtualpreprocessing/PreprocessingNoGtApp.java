@@ -1,8 +1,12 @@
 package ihtcvirtualpreprocessing;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
@@ -30,6 +34,7 @@ import ihtcvirtualmetamodel.utils.FileUtils;
  * 
  * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
  */
+
 public class PreprocessingNoGtApp {
 
 	/**
@@ -55,6 +60,19 @@ public class PreprocessingNoGtApp {
 	 * Model that should be worked on.
 	 */
 	private Root model = null;
+	
+	private enum PatientGroups{
+		YOUNGFEMALE,
+		ADULTFEMALE,
+		OLDFEMALE,
+		YOUNGMALE,
+		ADULTMALE,
+		OLDMALE
+	}
+	
+	private Map<PatientGroups, Double> patientGroups = new EnumMap<>(PatientGroups.class);
+	private Map<PatientGroups, List<Room>> roomAssignments = new EnumMap<>(PatientGroups.class);
+	private List<Room> unclassifiedRooms = new ArrayList<>();
 
 	/**
 	 * Creates a new instance of the pre-processing (non-GT) app. The given
@@ -73,6 +91,12 @@ public class PreprocessingNoGtApp {
 
 		// Load model from given XMI file path
 		model = (Root) FileUtils.loadModel(xmiInputFilePath).getContents().get(0);
+		
+		// Initialize Map with probabilities for different patient groups 
+	    for (PatientGroups group : PatientGroups.values()) {
+	        patientGroups.put(group, 0.0);
+	        roomAssignments.put(group, new ArrayList<>());
+	    }
 
 		// Configure logging
 		logger.setUseParentHandlers(false);
@@ -90,7 +114,7 @@ public class PreprocessingNoGtApp {
 	/**
 	 * Executes the GT rules of this app according to the configuration.
 	 */
-	public void run() {
+	public void run(final Double pc) {
 		// Model was loaded within the constructor.
 		logger.info("Started pre-processing without GT.");
 
@@ -106,8 +130,15 @@ public class PreprocessingNoGtApp {
 		// fixOperationDay
 		createVirtualWorkloadToOperationCandidates();
 
+		boolean viable = false;
+		if(pc != null) {
+			// split rooms into different categories
+			calculateProbabilityForRooms();
+			viable = assignRoomsToPatientGroup(pc);
+		}
+		
 		// assignPatientToRoom (initial)
-		createVirtualShiftToWorkloadInitialCandidates();
+		createVirtualShiftToWorkloadInitialCandidates(viable);
 
 		// assignPatientToRoom (extending)
 		createVirtualShiftToWorkloadExtendingCandidates();
@@ -119,6 +150,93 @@ public class PreprocessingNoGtApp {
 			logger.warning("IOException occurred while writing the output XMI file." + e.getMessage());
 			System.exit(1);
 		}
+	}
+	
+	public void calculateProbabilityForRooms() {
+		Objects.requireNonNull(model);
+		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
+			boolean female = patient.getGender().equals("A");
+	        PatientGroups group = null;
+			switch (patient.getAgeGroup()) {
+            	case 0 -> group = female ? PatientGroups.YOUNGFEMALE : PatientGroups.YOUNGMALE;
+            	case 1 -> group = female ? PatientGroups.ADULTFEMALE : PatientGroups.ADULTMALE;
+            	case 2 -> group = female ? PatientGroups.OLDFEMALE : PatientGroups.OLDMALE;
+			}
+			patientGroups.merge(group, 1.0, Double::sum);
+		});
+		int totalPatients = model.getPatients().size();
+		double probability = 0.0;
+		for (PatientGroups group : PatientGroups.values()) {
+			probability = patientGroups.get(group) / totalPatients;
+			patientGroups.put(group, probability);  
+		}
+	}
+	
+	public boolean assignRoomsToPatientGroup(final Double pc) {
+		Objects.requireNonNull(model);
+		int totalRooms = model.getRooms().size();
+		int numberOfAssignedRooms;
+		int roomCheck;
+		 
+		List<Room> allocatedRooms = new ArrayList<>();
+		List<Room> unsuitableRooms = new ArrayList<>();
+		
+		model.getRooms().stream().forEach(room -> {
+			unclassifiedRooms.add(room);
+		});
+		 
+		for (PatientGroups group : PatientGroups.values()) {
+			numberOfAssignedRooms = (int) Math.round(patientGroups.getOrDefault(group, 0.0) * pc * totalRooms);
+			if(numberOfAssignedRooms == 0 && patientGroups.get(group) > 0) {
+				numberOfAssignedRooms++;
+			}
+			if(numberOfAssignedRooms == 0) {
+				continue; 
+			}
+			roomCheck = numberOfAssignedRooms;
+			for (Patient occupant : model.getPatients()) {
+				if (!occupant.isIsOccupant() || numberOfAssignedRooms == 0) {
+					continue;
+				}
+				PatientGroups occupantGroup = null;
+				boolean female = occupant.getGender().equals("A");
+				switch (occupant.getAgeGroup()) {
+					case 0 -> occupantGroup = female ? PatientGroups.YOUNGFEMALE : PatientGroups.YOUNGMALE;
+				    case 1 -> occupantGroup = female ? PatientGroups.ADULTFEMALE : PatientGroups.ADULTMALE;
+				    case 2 -> occupantGroup = female ? PatientGroups.OLDFEMALE : PatientGroups.OLDMALE;
+				}
+				Room room = occupant.getFirstWorkload().getVirtualShift().getFirst().getShift().getRoom();
+
+				if (occupantGroup.equals(group) && !allocatedRooms.contains(room) && unclassifiedRooms.contains(room)) {
+					allocatedRooms.add(room);
+					unclassifiedRooms.remove(room);
+				    numberOfAssignedRooms--;
+				} else if(!occupantGroup.equals(group) && !unsuitableRooms.contains(room)) {
+				    unsuitableRooms.add(room);
+				}
+			}
+			
+			for (Room room : model.getRooms()) {
+			    if(numberOfAssignedRooms == 0) {
+			    	break;
+			    }
+			    if (!allocatedRooms.contains(room) && !unsuitableRooms.contains(room) && unclassifiedRooms.contains(room)) {
+			        allocatedRooms.add(room);
+			        unclassifiedRooms.remove(room);
+			        numberOfAssignedRooms--;
+			    }
+			}
+			 // Viability check
+			if(allocatedRooms.size() != roomCheck) {
+				return false;
+			}
+			roomAssignments.put(group, allocatedRooms);
+			 
+			unsuitableRooms.clear();
+			allocatedRooms.clear();
+		}
+		
+		return true;
 	}
 
 	/**
@@ -264,10 +382,19 @@ public class PreprocessingNoGtApp {
 	 * Creates all virtual shift to workload elements for the initial assignment of
 	 * patients to rooms.
 	 */
-	private void createVirtualShiftToWorkloadInitialCandidates() {
+	private void createVirtualShiftToWorkloadInitialCandidates(final boolean roomAllocation) {
 		Objects.requireNonNull(model);
 		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
-			model.getRooms().stream().filter(room -> !patient.getIncompatibleRooms().contains(room)).forEach(room -> {
+            PatientGroups group = switch (patient.getAgeGroup()) {
+            	case 0 -> patient.getGender().equals("A") ? PatientGroups.YOUNGFEMALE : PatientGroups.YOUNGMALE;
+            	case 1 -> patient.getGender().equals("A") ? PatientGroups.ADULTFEMALE : PatientGroups.ADULTMALE;
+            	case 2 -> patient.getGender().equals("A") ? PatientGroups.OLDFEMALE : PatientGroups.OLDMALE;
+            	default -> null;
+            };
+			model.getRooms().stream().filter(room -> !patient.getIncompatibleRooms().contains(room)).filter(room -> {
+				if (!roomAllocation) return true;
+				return unclassifiedRooms.contains(room) || (roomAssignments.getOrDefault(group, List.of()).contains(room));
+			}).forEach(room -> {
 				room.getShifts().forEach(shift -> {
 					// Check shift time conditions (i.e., only use the first shift per day)
 					if (shift.getShiftNo() % 3 == 0) {

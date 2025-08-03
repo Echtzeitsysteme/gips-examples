@@ -45,7 +45,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	/**
 	 * The scenario (JSON) file to load.
 	 */
-	public String scenarioFileName = "i01.json";
+	public String scenarioFileName = "i04.json";
 
 	/**
 	 * Project folder location.
@@ -349,11 +349,11 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	 * @param instancePath Model (XMI) to load.
 	 * @param outputPath   Model (XMI) to save the result to.
 	 */
-	protected void preprocessNoGt(final String instancePath, final String outputPath) {
+	protected void preprocessNoGt(final String instancePath, final String outputPath, final Double pc) {
 		Objects.requireNonNull(instancePath);
 
 		final PreprocessingNoGtApp app = new PreprocessingNoGtApp(instancePath, outputPath);
-		app.run();
+		app.run(pc);
 	}
 
 	/**
