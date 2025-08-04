@@ -1,7 +1,7 @@
 package "classdiagramtgg3violations"
 import "platform:/resource/ClassDiagram/model/classDiagram.ecore"
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
@@ -15,36 +15,44 @@ config {
 //
 
 pattern findViolationA {
-	c1 : Clazz {
-		- features -> a1
+	c1: Clazz {
+		-features -> a1
 	}
-	c2 : Clazz {
-		- features -> m1
+
+	c2: Clazz {
+		-features -> m1
 	}
-	a1 : Attribute
-	m1 : Method {
-		- dependencies -> a1
+
+	a1: Attribute
+
+	m1: Method {
+		-dependencies -> a1
 	}
 }
 
 pattern findViolationB {
-	c1 : Clazz {
-		- features -> m1
-		- features -> m2
+	c1: Clazz {
+		-features -> m1
+		-features -> m2
 	}
-	m1 : Method
-	m2 : Method
+
+	m1: Method
+
+	m2: Method
 }
 when twoMethodsWithNoSharingAttribute
 
 condition twoMethodsWithNoSharingAttribute = forbid findAMMTriple
+
 pattern findAMMTriple {
-	a1 : Attribute
-	m1 : Method {
-		- dependencies -> a1
+	a1: Attribute
+
+	m1: Method {
+		-dependencies -> a1
 	}
-	m2 : Method {
-		- dependencies -> a1
+
+	m2: Method {
+		-dependencies -> a1
 	}
 }
 

@@ -2,7 +2,7 @@ package "org.emoflon.gips.gipsl.examples.helloworld"
 import "http://www.eclipse.org/emf/2002/Ecore"
 // ^import a metamodel here
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 42.0];
 	randomSeed := true [value := 73];
@@ -13,11 +13,11 @@ config {
 
 // specify an example rule
 rule exampleRule {
-	clazz : EClass {
+	clazz: EClass {
 		++ -eAllOperations -> op
 	}
-	
-	op : EOperation
+
+	op: EOperation
 }
 
 // create a mapping on the rule

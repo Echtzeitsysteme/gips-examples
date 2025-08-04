@@ -1,7 +1,7 @@
 package "architecture.cra.gipssolution"
 import "platform:/resource/ArchitectureCRA/model/architectureCRA.ecore"
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 1209600.0]; // 14*24h time limit
 	randomSeed := true [value := 0];
@@ -16,16 +16,18 @@ config {
 //
 
 rule embedACTuple {
-	a : Attribute
-	c : Clazz {
-		++ - encapsulates -> a
+	a: Attribute
+
+	c: Clazz {
+		++ -encapsulates -> a
 	}
 }
 
 rule embedMCTuple {
-	m : Method
-	c : Clazz {
-		++ - encapsulates -> m
+	m: Method
+
+	c: Clazz {
+		++ -encapsulates -> m
 	}
 }
 
@@ -49,11 +51,14 @@ constraint with Method {
 //
 
 pattern findViolationA {
-	c1 : Clazz
-	c2 : Clazz
-	a1 : Attribute
-	m1 : Method {
-		- dataDependency -> a1
+	c1: Clazz
+
+	c2: Clazz
+
+	a1: Attribute
+
+	m1: Method {
+		-dataDependency -> a1
 	}
 }
 
@@ -84,12 +89,15 @@ function objViolationA with violationA {
 //
 
 pattern findViolationC {
-	c1 : Clazz
-	c2 : Clazz
-	m1 : Method {
-		- functionalDependency -> m2
+	c1: Clazz
+
+	c2: Clazz
+
+	m1: Method {
+		-functionalDependency -> m2
 	}
-	m2 : Method
+
+	m2: Method
 }
 
 mapping violationC to findViolationC;
@@ -119,17 +127,21 @@ function objViolationC with violationC {
 //
 
 condition mmNoDep = forbid findHelperD1
+
 pattern findHelperD1 {
 	m1: Method {
-		- functionalDependency -> m2
+		-functionalDependency -> m2
 	}
+
 	m2: Method
 }
 
 pattern findViolationD1 {
-	c1 : Clazz
-	m1 : Method
-	m2 : Method
+	c1: Clazz
+
+	m1: Method
+
+	m2: Method
 }
 when mmNoDep
 
@@ -159,17 +171,21 @@ function objViolationD1 with violationD1 {
 //
 
 condition maNoDep = forbid findHelperD2
+
 pattern findHelperD2 {
 	m1: Method {
-		- dataDependency -> a1
+		-dataDependency -> a1
 	}
+
 	a1: Attribute
 }
 
 pattern findViolationD2 {
-	c1 : Clazz
-	m1 : Method
-	a1 : Attribute
+	c1: Clazz
+
+	m1: Method
+
+	a1: Attribute
 }
 when maNoDep
 

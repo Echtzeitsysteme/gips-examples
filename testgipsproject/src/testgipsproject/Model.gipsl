@@ -11,30 +11,30 @@ import "platform:/resource/testmetamodel/model/testmetamodel.ecore"
 config {
 	// solver: GLPK (open-source)
 	solver := GLPK;
-	
+
 	// set a time limit of 42s
 	timeLimit := true [value := 42.0];
-	
+
 	// set a random seed of 73 for the solver
-	//randomSeed := true [value := 73];
-	
+	// randomSeed := true [value := 73];
+
 	// enable pre-solving
 	// this should be used almost in every case
 	presolve := true;
-	
+
 	// enable the ILP solver's output to the console
 	debugOutput := true;
-	
-	// configure a tolerance setting for the solver
-	//tolerance := true [value := 0.00001];
-	
-	// enable LP output file for, e.g., debugging
-	//lpOutput := true [path := "problem.lp"];
-	
-	// configure number of used threads for ILP solving
-	// this is only available on the commercial solvers
-	// like GUROBI
-	//threadCount := true [value := 16];
+
+// configure a tolerance setting for the solver
+// tolerance := true [value := 0.00001];
+
+// enable LP output file for, e.g., debugging
+// lpOutput := true [path := "problem.lp"];
+
+// configure number of used threads for ILP solving
+// this is only available on the commercial solvers
+// like GUROBI
+// threadCount := true [value := 16];
 }
 
 //
@@ -43,15 +43,16 @@ config {
 
 // find a single Root node
 pattern findRoot {
-	r : Root
+	r: Root
 }
 
 // find an item and set its ID to 0
 rule itemToZero {
-	r : Root {
-		- items -> i
+	r: Root {
+		-items -> i
 	}
-	i : Item {
+
+	i: Item {
 		.id := 0
 	}
 }
@@ -77,12 +78,11 @@ constraint with itemToZero {
 	mappings.setItemToZero
 		// overlap it with the context of the constraint, i.e., the
 		// matches of the left-hand side of the GT rule "itemToZero"
-		->filter(element.nodes.i == context.nodes.i & element.nodes.r == context.nodes.r
-		)
-		// sum their values
-		->sum(element.value)
-		// ensure that this sum is at least 1
-		>= 1
+		->filter(element.nodes.i == context.nodes.i & element.nodes.r == context.nodes.r)
+	// sum their values
+	->sum(element.value)
+	// ensure that this sum is at least 1
+	>= 1
 }
 
 //

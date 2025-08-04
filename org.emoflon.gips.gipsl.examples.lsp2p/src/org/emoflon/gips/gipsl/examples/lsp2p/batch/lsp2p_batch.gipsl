@@ -1,5 +1,4 @@
 package "org.emoflon.gips.gipsl.examples.lsp2p.batch"
-
 import "platform:/resource/LectureStudioModelB/model/LectureStudioModelB.ecore"
 import "http://www.eclipse.org/emf/2002/Ecore"
 
@@ -10,56 +9,59 @@ config {
 	presolve := true;
 	debugOutput := true;
 	tolerance := true [value := 0.000001];
-} 
+}
 
 condition clientIsWaiting = enforce ls2client
+
 pattern ls2client {
-	ls : LectureStudioServer {
-		-waitingClients->client
+	ls: LectureStudioServer {
+		-waitingClients -> client
 	}
-	client : Client
-} 
+
+	client: Client
+}
 
 rule addClient(hasRoot: EInt, bw: EDouble, tt: EDouble) {
-	relay : Node {
-		++ -clientConnection->connection
-		++ -activeClients->client
+	relay: Node {
+		++ -clientConnection -> connection
+		++ -activeClients -> client
 		.isRelayClient := 1
 		.clients := cfg.clients
 	}
-	
-	cfg : Configuration
-	
-	client : Client {
+
+	cfg: Configuration
+
+	client: Client {
 		.transferTime := param::tt
 		.depth := param::hasRoot
 		.isHasRoot := param::hasRoot
 	}
-	
-	++ connection : Connection { 
-		++ -server-> relay
-		++ -client-> client
+
+	++ connection: Connection {
+		++ -server -> relay
+		++ -client -> client
 		.transferRate := param::bw
 	}
-	
 	# relay.txBW >= client.txBW
 //	# client.id > relay.id
 	# cfg.bwSplit * relay.txBW >= relay.minTxBW 
-} when clientIsWaiting
+}
+when clientIsWaiting
 
 rule node {
-	node : Node {
-		++ -configuration->cfg
+	node: Node {
+		++ -configuration -> cfg
 	}
-	cfg : Configuration
+
+	cfg: Configuration
 	# node.txBW * cfg.bwSplit >= node.minTxBW
 }
 
 mapping relay2Client to addClient {
-	var hasRoot:EInt bind hasRoot					// Zeigt an, ob es eine Verbindung zum LS Server gibt.
-	var connectionBW:EDouble bind bw	// Gibt an wie viel BW für Client reserviert wird.
-	var invertedBW:EDouble				// invertedBW = 1/connectionBW
-	var transferTime:EDouble bind tt	// Gibt die Zeit an, die es braucht um das File bis zum Client zu transportieren.
+	var hasRoot : EInt bind hasRoot // Zeigt an, ob es eine Verbindung zum LS Server gibt.
+	var connectionBW : EDouble bind bw // Gibt an wie viel BW für Client reserviert wird.
+	var invertedBW : EDouble // invertedBW = 1/connectionBW
+	var transferTime : EDouble bind tt // Gibt die Zeit an, die es braucht um das File bis zum Client zu transportieren.
 };
 
 mapping node2Cfg to node;
@@ -78,23 +80,19 @@ constraint with relay2Client {
 }
 
 constraint with addClient {
-	[context.nodes.relay.isRelayClient >= 1 & 
-		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value)  >= 1
-	] => 
+	[context.nodes.relay.isRelayClient >= 1 &
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1] =>
 	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.hasRoot) >= 1 &
 		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.hasRoot) <= 1]
-	
 }
 
 constraint with addClient {
-	[context.nodes.relay.isRelayClient <= 0  & 
-		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1
-	] => 
-	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.hasRoot) >= 
+	[context.nodes.relay.isRelayClient <= 0 &
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1] =>
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.hasRoot) >=
 		mappings.relay2Client->filter(element.nodes.client == context.nodes.relay)->sum(element.variables.hasRoot) + 1 &
-	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.hasRoot) <= 
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.hasRoot) <=
 		mappings.relay2Client->filter(element.nodes.client == context.nodes.relay)->sum(element.variables.hasRoot) + 1]
-	
 }
 
 constraint with Node {
@@ -115,11 +113,10 @@ constraint with node {
 
 constraint with node {
 	mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 =>
-	[mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.nodes.cfg.clients) <= 
+	[mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.nodes.cfg.clients) <=
 		mappings.relay2Client->filter(element.nodes.relay == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) &
-	mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.nodes.cfg.clients) >= 
-		mappings.relay2Client->filter(element.nodes.relay == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value)
-	]
+		mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.nodes.cfg.clients) >=
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value)]
 }
 
 constraint with node {
@@ -141,58 +138,53 @@ constraint with relay2Client {
 
 constraint with addClient {
 	[mappings.node2Cfg->filter(element.nodes.node == context.nodes.relay & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
-		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
-		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
-	] =>
-	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.connectionBW) <= 
-		context.nodes.relay.txBW * context.nodes.cfg.bwSplit  &
-	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.connectionBW) >= 
-		context.nodes.relay.txBW * context.nodes.cfg.bwSplit
-	]
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.cfg.bwSplit] =>
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.connectionBW) <=
+		context.nodes.relay.txBW * context.nodes.cfg.bwSplit &
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.connectionBW) >=
+		context.nodes.relay.txBW * context.nodes.cfg.bwSplit]
 }
 
 constraint with addClient {
 	[mappings.node2Cfg->filter(element.nodes.node == context.nodes.relay & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
-		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
-		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
-	] =>
-	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.connectionBW) <= 
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.cfg.bwSplit] =>
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.connectionBW) <=
 		context.nodes.client.rxBW &
-	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.connectionBW) >= 
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.connectionBW) >=
 		context.nodes.client.rxBW]
 }
 
 constraint with addClient {
 	[mappings.node2Cfg->filter(element.nodes.node == context.nodes.relay & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
-		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
-		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
-	] =>
-	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.invertedBW) <= 
-		context.nodes.relay.invTxBW * context.nodes.cfg.slowDown  &
-	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.invertedBW) >= 
-		context.nodes.relay.invTxBW * context.nodes.cfg.slowDown
-	]
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.cfg.bwSplit] =>
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.invertedBW) <=
+		context.nodes.relay.invTxBW * context.nodes.cfg.slowDown &
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.invertedBW) >=
+		context.nodes.relay.invTxBW * context.nodes.cfg.slowDown]
 }
 
 constraint with addClient {
 	[mappings.node2Cfg->filter(element.nodes.node == context.nodes.relay & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
-		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
-		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
-	] =>
-	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.invertedBW) <= 
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.cfg.bwSplit] =>
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.invertedBW) <=
 		context.nodes.client.invRxBW &
-	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.invertedBW) >= 
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client & element.nodes.cfg == context.nodes.cfg)->sum(element.variables.invertedBW) >=
 		context.nodes.client.invRxBW]
 }
 
 constraint with addClient {
 	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) >= 1 => [
-	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) >= 
-	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.client.data)  
-	+ mappings.relay2Client->filter(element.nodes.client == context.nodes.relay)->sum(element.variables.transferTime) &
-	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) <= 
-	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.client.data)  
-	+ mappings.relay2Client->filter(element.nodes.client == context.nodes.relay)->sum(element.variables.transferTime)]
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) >=
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.client.data)
+		+ mappings.relay2Client->filter(element.nodes.client == context.nodes.relay)->sum(element.variables.transferTime) &
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) <=
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.client.data)
+		+ mappings.relay2Client->filter(element.nodes.client == context.nodes.relay)->sum(element.variables.transferTime)
+	]
 }
 
 // Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
