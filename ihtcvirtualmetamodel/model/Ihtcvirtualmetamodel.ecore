@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ihtcvirtualmetamodel" nsURI="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore"
+    nsPrefix="ihtcvirtualmetamodel">
+  <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+    <details key="documentation" value="TODO: Add documentation for ihtcvirtualmetamodel. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ..."/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="Root">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nurses" upperBound="-1"
+        eType="#//Nurse" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rooms" upperBound="-1"
+        eType="#//Room" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="surgeons" upperBound="-1"
+        eType="#//Surgeon" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ots" upperBound="-1" eType="#//OT"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weight" eType="#//Weight"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patients" upperBound="-1"
+        eType="#//Patient" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="period" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="genders" upperBound="-1"
+        eType="#//Gender" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="days" upperBound="-1" eType="#//Day"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ageGroups" upperBound="-1"
+        eType="#//AgeGroup" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Nurse" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rosters" upperBound="-1"
+        eType="#//Roster" containment="true" eOpposite="#//Roster/nurse"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Roster">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shiftNo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxWorkload" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nurse" eType="#//Nurse"
+        eOpposite="#//Nurse/rosters"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedShifts" upperBound="-1"
+        eType="#//Shift" eOpposite="#//Shift/derivedRoster"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShift" upperBound="-1"
+        eType="#//VirtualShiftToRoster" containment="true" eOpposite="#//VirtualShiftToRoster/roster"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Room" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="beds" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="shifts" upperBound="-1"
+        eType="#//Shift" containment="true" eOpposite="#//Shift/room"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="incompatiblePatients" upperBound="-1"
+        eType="#//Patient" eOpposite="#//Patient/incompatibleRooms"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Shift" eSuperTypes="#//Ordered">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shiftNo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="room" eType="#//Room" eOpposite="#//Room/shifts"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedRoster" eType="#//Roster"
+        eOpposite="#//Roster/derivedShifts"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedWorkloads" upperBound="-1"
+        eType="#//Workload" eOpposite="#//Workload/derivedShift"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualRoster" upperBound="-1"
+        eType="#//VirtualShiftToRoster" eOpposite="#//VirtualShiftToRoster/shift"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkload" upperBound="-1"
+        eType="#//VirtualShiftToWorkload" containment="true" eOpposite="#//VirtualShiftToWorkload/shift"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Ordered" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prev" eType="#//Ordered"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//Ordered"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Patient" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="earliestDay" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dueDay" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mandatory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ageGroup" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gender" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stayLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="surgeryDuration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="workloads" upperBound="-1"
+        eType="#//Workload" containment="true" eOpposite="#//Workload/patient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="firstWorkload" eType="#//Workload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="surgeon" eType="#//Surgeon"
+        eOpposite="#//Surgeon/patients"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="incompatibleRooms" upperBound="-1"
+        eType="#//Room" eOpposite="#//Room/incompatiblePatients"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOccupant" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Workload" eSuperTypes="#//Ordered">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="workloadValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minNurseSkill" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//Patient"
+        eOpposite="#//Patient/workloads"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedShift" eType="#//Shift"
+        eOpposite="#//Shift/derivedWorkloads"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedCapacity" eType="#//Capacity"
+        eOpposite="#//Capacity/derivedWorkloads"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualShift" upperBound="-1"
+        eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/workload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedOpTimes" eType="#//OpTime"
+        eOpposite="#//OpTime/derivedWorkloads"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualOpTime" upperBound="-1"
+        eType="#//VirtualWorkloadToOpTime" eOpposite="#//VirtualWorkloadToOpTime/workload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualCapacity" upperBound="-1"
+        eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/workload"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Surgeon" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patients" upperBound="-1"
+        eType="#//Patient" eOpposite="#//Patient/surgeon"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="opTimes" upperBound="-1"
+        eType="#//OpTime" containment="true" eOpposite="#//OpTime/surgeon"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OpTime">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxOpTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="surgeon" eType="#//Surgeon"
+        eOpposite="#//Surgeon/opTimes"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedCapacities" upperBound="-1"
+        eType="#//Capacity" eOpposite="#//Capacity/derivedOpTimes"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedWorkloads" upperBound="-1"
+        eType="#//Workload" eOpposite="#//Workload/derivedOpTimes"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkload" upperBound="-1"
+        eType="#//VirtualWorkloadToOpTime" containment="true" eOpposite="#//VirtualWorkloadToOpTime/opTime"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualCapacity" upperBound="-1"
+        eType="#//VirtualOpTimeToCapacity" eOpposite="#//VirtualOpTimeToCapacity/opTime"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OT" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="capacities" upperBound="-1"
+        eType="#//Capacity" containment="true" eOpposite="#//Capacity/ot"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Capacity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxCapacity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ot" eType="#//OT" eOpposite="#//OT/capacities"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedWorkloads" upperBound="-1"
+        eType="#//Workload" eOpposite="#//Workload/derivedCapacity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derivedOpTimes" upperBound="-1"
+        eType="#//OpTime" eOpposite="#//OpTime/derivedCapacities"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualOpTime" upperBound="-1"
+        eType="#//VirtualOpTimeToCapacity" containment="true" eOpposite="#//VirtualOpTimeToCapacity/capacity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="virtualWorkload" upperBound="-1"
+        eType="#//VirtualWorkloadToCapacity" containment="true" eOpposite="#//VirtualWorkloadToCapacity/capacity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Weight">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomMixedAge" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roomNurseSkill" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="continuityOfCare" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nurseExcessiveWorkload"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="openOperatingTheater" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="surgeonTransfer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="patientDelay" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unscheduledOptional" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualShiftToWorkload">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="wasImported" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"
+        eOpposite="#//Shift/virtualWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"
+        eOpposite="#//Workload/virtualShift"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualShiftToWorkload"
+        eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/enables_virtualShiftToWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtualShiftToWorkload"
+        eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/requires_virtualShiftToWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualWorkloadToCapacity"
+        upperBound="-1" eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/enables_virtualShiftToWorkload"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualShiftToRoster">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"
+        eOpposite="#//Shift/virtualRoster"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roster" eType="#//Roster"
+        eOpposite="#//Roster/virtualShift"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualWorkloadToOpTime">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"
+        eOpposite="#//Workload/virtualOpTime"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="opTime" eType="#//OpTime"
+        eOpposite="#//OpTime/virtualWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualOpTimeToCapacity"
+        upperBound="-1" eType="#//VirtualOpTimeToCapacity" eOpposite="#//VirtualOpTimeToCapacity/enables_virtualWorkloadToOpTime"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtual_WorkloadToCapacity"
+        upperBound="-1" eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/requires_virtualWorkloadToOpTime"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualOpTimeToCapacity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="opTime" eType="#//OpTime"
+        eOpposite="#//OpTime/virtualCapacity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="capacity" eType="#//Capacity"
+        eOpposite="#//Capacity/virtualOpTime"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtualWorkloadToOpTime"
+        upperBound="-1" eType="#//VirtualWorkloadToOpTime" eOpposite="#//VirtualWorkloadToOpTime/requires_virtualOpTimeToCapacity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VirtualWorkloadToCapacity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="workload" eType="#//Workload"
+        eOpposite="#//Workload/virtualCapacity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="capacity" eType="#//Capacity"
+        eOpposite="#//Capacity/virtualWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enables_virtualShiftToWorkload"
+        upperBound="-1" eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/requires_virtualWorkloadToCapacity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualWorkloadToOpTime"
+        upperBound="-1" eType="#//VirtualWorkloadToOpTime" eOpposite="#//VirtualWorkloadToOpTime/enables_virtual_WorkloadToCapacity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Gender" eSuperTypes="#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Day" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AgeGroup">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+</ecore:EPackage>
