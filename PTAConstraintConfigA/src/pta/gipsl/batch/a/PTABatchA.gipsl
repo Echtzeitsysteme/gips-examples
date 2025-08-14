@@ -7,7 +7,7 @@ config {
 	launchConfig := true [main := "pta.extended.example.house.HouseConstructionExample"];
 	timeLimit := true [value := 6000.0];
 	randomSeed := true [value := 0];
-	presolve := true;
+	presolve := auto;
 	debugOutput := false;
 	tolerance := true [value := 0.000001];
 }

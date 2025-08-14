@@ -20,7 +20,7 @@ config {
 
 	// enable pre-solving
 	// this should be used almost in every case
-	presolve := true;
+	presolve := auto;
 
 	// enable the ILP solver's output to the console
 	debugOutput := true;
