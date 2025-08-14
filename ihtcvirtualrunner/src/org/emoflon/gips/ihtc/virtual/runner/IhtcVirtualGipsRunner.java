@@ -41,9 +41,9 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	 * rule matches with eMoflon::IBeX-GT.
 	 */
 	private boolean applicationNoGt = false;
-	
+
 	/**
-	 * If true a timestamp will be added to the filename. 
+	 * If true a timestamp will be added to the filename.
 	 */
 	private boolean saveAllDebugFiles = true;
 
@@ -78,6 +78,13 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 
 	@Override
 	public void run() {
+		// Some wait time to catch up with the profiler application setup
+		try {
+			Thread.sleep(20_000);
+		} catch (final InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		checkIfFileExists(inputPath);
 		final long startTime = System.nanoTime();
 
@@ -157,21 +164,21 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		//
 		// Model Validation
 		//
-		
+
 		if (verbose) {
 			logger.info("=> Start Model Validation");
 		}
 		validateModel(gipsOutputPath);
 		final long validateDoneTime = System.nanoTime();
 		if (verbose) {
-			logger.info("Runtime validate Model: "
-					+ tickTockToElapsedSeconds(gipsSaveDoneTime, validateDoneTime) + "s.");
+			logger.info(
+					"Runtime validate Model: " + tickTockToElapsedSeconds(gipsSaveDoneTime, validateDoneTime) + "s.");
 		}
-		
+
 		//
 		// Export
 		//
-		
+
 		if (verbose) {
 			logger.info("=> Start JSON export.");
 		}
@@ -216,7 +223,8 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	}
 
 	/**
-	 * Takes a XMI output path (of a GIPS-generated solution model) and validates the model
+	 * Takes a XMI output path (of a GIPS-generated solution model) and validates
+	 * the model
 	 * 
 	 * @param gipsOutputPath
 	 */
@@ -226,12 +234,13 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final SolvedModelValidator validator = new SolvedModelValidator(solvedHospital, verbose);
-		if(saveAllDebugFiles) {
+		if (saveAllDebugFiles) {
 			LocalDateTime now = LocalDateTime.now();
 			String formatted = now.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-			String debugOutputPathTimeStamp = debugOutputPath.substring(0, debugOutputPath.lastIndexOf(".txt")) + "_" + formatted + ".txt";
+			String debugOutputPathTimeStamp = debugOutputPath.substring(0, debugOutputPath.lastIndexOf(".txt")) + "_"
+					+ formatted + ".txt";
 			validator.validate(debugOutputPathTimeStamp);
-		}else {
+		} else {
 			validator.validate(debugOutputPath);
 		}
 	}
