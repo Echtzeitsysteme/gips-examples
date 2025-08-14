@@ -31,25 +31,24 @@ rule embedServer {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substrateServer: SubstrateServer {
 		.residualCpu := substrateServer.residualCpu - virtualNode.cpu
 		.residualMemory := substrateServer.residualMemory - virtualNode.memory
 		.residualStorage := substrateServer.residualStorage - virtualNode.storage
 	}
-	
+
 	virtualNode: VirtualServer {
 		++ -host -> substrateServer
 	}
-	
+
 	substrateNetwork: SubstrateNetwork {
 		-nodess -> substrateServer
 	}
-	
+
 	virtualNetwork: VirtualNetwork {
 		-nodess -> virtualNode
 	}
-	
 	# virtualNode.cpu <= substrateServer.cpu
 	# virtualNode.memory <= substrateServer.memory
 	# virtualNode.storage <= substrateServer.storage
@@ -60,17 +59,17 @@ rule embedSwitch {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substrateNode: SubstrateNode
-	
-	virtualSwitch : VirtualSwitch {
+
+	virtualSwitch: VirtualSwitch {
 		++ -host -> substrateNode
 	}
-	
+
 	substrateNetwork: SubstrateNetwork {
 		-nodess -> substrateNode
 	}
-	
+
 	virtualNetwork: VirtualNetwork {
 		-nodess -> virtualSwitch
 	}
@@ -81,28 +80,27 @@ rule embedLinkPath {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substratePath: SubstratePath {
 		.residualBandwidth := substratePath.residualBandwidth - virtualLink.bandwidth
-		
+
 		// Update all substrate links
 		forEach links->l {
 			iterator::l.residualBandwidth := iterator::l.residualBandwidth - virtualLink.bandwidth
 		}
 	}
-	
+
 	virtualLink: VirtualLink {
 		++ -host -> substratePath
 	}
-	
+
 	substrateNetwork: SubstrateNetwork {
 		-paths -> substratePath
 	}
-	
+
 	virtualNetwork: VirtualNetwork {
 		-links -> virtualLink
 	}
-	
 	# virtualLink.bandwidth <= substratePath.bandwidth
 }
 
@@ -111,17 +109,17 @@ rule embedLinkServer {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substrateServer: SubstrateServer
-	
+
 	virtualLink: VirtualLink {
 		++ -host -> substrateServer
 	}
-	
+
 	substrateNetwork: SubstrateNetwork {
 		-nodess -> substrateServer
 	}
-	
+
 	virtualNetwork: VirtualNetwork {
 		-links -> virtualLink
 	}
@@ -132,9 +130,9 @@ rule networkRule {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substrateNetwork: SubstrateNetwork
-	
+
 	virtualNetwork: VirtualNetwork {
 		++ -host -> substrateNetwork
 	}
@@ -164,42 +162,46 @@ constraint with networkRule {
 constraint with networkRule {
 	mappings.net2net->filter(element.nodes.virtualNetwork == context.nodes.virtualNetwork)->sum(element.value) == 1
 }
- 
+
 // Server 2 Server
 mapping srv2srv to embedServer;
+
 constraint with findVsrv {
 	mappings.srv2srv->filter(element.nodes.virtualNode == context.nodes.virtualServer)->sum(element.value) == 1
 }
 
 function srvObj with srv2srv {
-//    context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
-//    context.nodes.substrateServer.residualMemory / context.nodes.substrateServer.memory +
-//    context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage
+	// context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
+	// context.nodes.substrateServer.residualMemory / context.nodes.substrateServer.memory +
+	// context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage
 	1
-	// ^The total communication cost c (metric) does not make any sense since all embeddings will be removed before running the algorithm again.
+// ^The total communication cost c (metric) does not make any sense since all embeddings will be removed before running the algorithm again.
 }
 
 constraint with SubstrateServer {
 	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.cpu * element.value) <= context.cpu &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.memory * element.value) <= context.memory &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.storage * element.value) <= context.storage
+	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.memory * element.value) <= context.memory &
+	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualNode.storage * element.value) <= context.storage
 }
 
 // Switch 2 Node
 mapping sw2node to embedSwitch;
+
 constraint with findVsw {
 	mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualSwitch)->sum(element.value) == 1
 }
 
 // Link 2 Path
 mapping l2p to embedLinkPath;
+
 constraint with embedLinkPath {
 	(mappings.srv2srv->filter(element.nodes.virtualNode == context.nodes.virtualLink.source & element.nodes.substrateServer == context.nodes.substratePath.source)->sum(element.value) +
 		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & element.nodes.substrateNode == context.nodes.substratePath.source)->sum(element.value)) +
-	(mappings.srv2srv->filter(element.nodes.virtualNode == context.nodes.virtualLink.target & element.nodes.substrateServer == context.nodes.substratePath.target)->sum(element.value)+
+	(mappings.srv2srv->filter(element.nodes.virtualNode == context.nodes.virtualLink.target & element.nodes.substrateServer == context.nodes.substratePath.target)->sum(element.value) +
 		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.target & element.nodes.substrateNode == context.nodes.substratePath.target)->sum(element.value))
 	>= 2 * mappings.l2p->filter(element.nodes.substratePath == context.nodes.substratePath & element.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value)
 }
+
 function lpObj with l2p {
 	context.nodes.virtualLink.bandwidth * context.nodes.substratePath.hops * context.value
 }
@@ -210,6 +212,7 @@ constraint with SubstratePath {
 
 // Link 2 Server
 mapping l2s to embedLinkServer;
+
 constraint with embedLinkServer {
 	(mappings.srv2srv->filter(element.nodes.virtualNode == context.nodes.virtualLink.source & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.value) +
 		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & element.nodes.substrateNode == context.nodes.substrateServer)->sum(element.value)) +

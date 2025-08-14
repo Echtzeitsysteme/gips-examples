@@ -1,7 +1,7 @@
 package "org.emoflon.gips.gipsl.examples.mdvne.seq"
 import "platform:/resource/network.model/model/Model.ecore"
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 600.0];
 	randomSeed := true [value := 0];
@@ -12,43 +12,48 @@ config {
 
 // NACS
 condition serverNotMapped = forbid serverIsMapped
+
 pattern serverIsMapped {
 	host: SubstrateServer
-	
+
 	virtualServer: VirtualServer {
 		-host -> host
 	}
 }
 
 condition switchNotMapped = forbid switchIsMapped
+
 pattern switchIsMapped {
 	host: SubstrateNode
-	
+
 	virtualSwitch: VirtualSwitch {
 		-host -> host
 	}
 }
 
 condition linkNotMapped = forbid linkIsMapped
+
 pattern linkIsMapped {
 	host: SubstrateHostLink
-	
+
 	virtualLink: VirtualLink {
 		-host -> host
 	}
 }
 
 condition networkNotMapped = forbid networkIsMapped && forbid networkIsMappedSrv
+
 pattern networkIsMapped {
 	host: SubstrateNetwork
-	
+
 	virtualNetwork: VirtualNetwork {
 		-host -> host
 	}
 }
+
 pattern networkIsMappedSrv {
 	host: SubstrateServer
-	
+
 	virtualNetwork: VirtualNetwork {
 		-hostServer -> host
 	}
@@ -76,25 +81,24 @@ rule server2ServerRule {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substrateServer: SubstrateServer {
 		.residualCpu := substrateServer.residualCpu - virtualServer.cpu
 		.residualMemory := substrateServer.residualMemory - virtualServer.memory
 		.residualStorage := substrateServer.residualStorage - virtualServer.storage
 	}
-	
+
 	virtualServer: VirtualServer {
 		++ -host -> substrateServer
 	}
-	
+
 	substrateNetwork: SubstrateNetwork {
 		-nodess -> substrateServer
 	}
-	
+
 	virtualNetwork: VirtualNetwork {
 		-nodess -> virtualServer
 	}
-	
 	# virtualServer.cpu <= substrateServer.residualCpu
 	# virtualServer.memory <= substrateServer.residualMemory
 	# virtualServer.storage <= substrateServer.residualStorage
@@ -106,17 +110,17 @@ rule switch2NodeRule {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substrateNode: SubstrateNode
-	
-	virtualSwitch : VirtualSwitch {
+
+	virtualSwitch: VirtualSwitch {
 		++ -host -> substrateNode
 	}
-	
+
 	substrateNetwork: SubstrateNetwork {
 		-nodess -> substrateNode
 	}
-	
+
 	virtualNetwork: VirtualNetwork {
 		-nodess -> virtualSwitch
 	}
@@ -128,28 +132,27 @@ rule link2PathRule {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substratePath: SubstratePath {
 		.residualBandwidth := substratePath.residualBandwidth - virtualLink.bandwidth
-		
+
 		// Update all substrate links
 		forEach links->l {
 			iterator::l.residualBandwidth := iterator::l.residualBandwidth - virtualLink.bandwidth
 		}
 	}
-	
+
 	virtualLink: VirtualLink {
 		++ -host -> substratePath
 	}
-	
+
 	substrateNetwork: SubstrateNetwork {
 		-paths -> substratePath
 	}
-	
+
 	virtualNetwork: VirtualNetwork {
 		-links -> virtualLink
 	}
-	
 	# virtualLink.bandwidth <= substratePath.residualBandwidth
 	
 	// Explicitly exclude substrate paths with a residual bandwidth equals to 0
@@ -162,17 +165,17 @@ rule link2ServerRule {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substrateServer: SubstrateServer
-	
+
 	virtualLink: VirtualLink {
 		++ -host -> substrateServer
 	}
-	
+
 	substrateNetwork: SubstrateNetwork {
 		-nodess -> substrateServer
 	}
-	
+
 	virtualNetwork: VirtualNetwork {
 		-links -> virtualLink
 	}
@@ -184,9 +187,9 @@ rule network2NetworkRule {
 		-networks -> substrateNetwork
 		-networks -> virtualNetwork
 	}
-	
+
 	substrateNetwork: SubstrateNetwork
-	
+
 	virtualNetwork: VirtualNetwork {
 		++ -host -> substrateNetwork
 	}
@@ -216,8 +219,8 @@ constraint with srv2srv {
 
 constraint with SubstrateServer {
 	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.cpu * element.value) <= context.residualCpu &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.memory * element.value) <= context.residualMemory &
-    mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.storage * element.value) <= context.residualStorage
+	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.memory * element.value) <= context.residualMemory &
+	mappings.srv2srv->filter(element.nodes.substrateServer == context)->sum(element.nodes.virtualServer.storage * element.value) <= context.residualStorage
 }
 
 // Switch 2 Node
@@ -270,7 +273,7 @@ constraint with SubstratePath {
 // Every link must be mapped exactly once
 constraint with vlNotMapped {
 	mappings.l2s->filter(element.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value)
-	+ 
+	+
 	mappings.l2p->filter(element.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value)
 	== 1
 }
@@ -279,16 +282,14 @@ constraint with vlNotMapped {
 // Link 2 Server
 constraint with link2ServerRule {
 	[mappings.l2s->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.value) >= 1]
-	=> 
+	=>
 	[
 		mappings.l2s->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.variables.index)
 		>=
 		mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.source & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.variables.index)
 		+ mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & element.nodes.substrateNode == context.nodes.substrateServer)->sum(element.variables.index)
 		+ 1
-		
 		&
-		
 		mappings.l2s->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.variables.index)
 		>=
 		mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.target & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.variables.index)
@@ -296,6 +297,7 @@ constraint with link2ServerRule {
 		+ 1
 	]
 }
+
 constraint with link2ServerRule {
 	(mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.source & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.value) +
 		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & element.nodes.substrateNode == context.nodes.substrateServer)->sum(element.value)) +
@@ -303,35 +305,33 @@ constraint with link2ServerRule {
 		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.target & element.nodes.substrateNode == context.nodes.substrateServer)->sum(element.value))
 	>= 2 * mappings.l2s->filter(element.nodes.substrateServer == context.nodes.substrateServer & element.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value)
 }
-//constraint -> pattern::link2ServerRule {
-//	mappings.l2s->filter(element.nodes.substrateServer == context.nodes.substrateServer & m.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value) >= 1
-//	<=>
-//	[
-//		(mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.source & m.nodes.substrateServer == context.nodes.substrateServer)->sum(element.value) +
-//		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & m.nodes.substrateNode == context.nodes.substrateServer)->sum(element.value))
-//		>= 1
-//		
-//		&
-//		
-//		(mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.target & m.nodes.substrateServer == context.nodes.substrateServer)->sum(element.value) +
-//		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.target & m.nodes.substrateNode == context.nodes.substrateServer)->sum(element.value))
-//		>= 1
-//	]
-//}
+// constraint -> pattern::link2ServerRule {
+// mappings.l2s->filter(element.nodes.substrateServer == context.nodes.substrateServer & m.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value) >= 1
+// <=>
+// [
+// (mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.source & m.nodes.substrateServer == context.nodes.substrateServer)->sum(element.value) +
+// mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & m.nodes.substrateNode == context.nodes.substrateServer)->sum(element.value))
+// >= 1
+//
+// &
+//
+// (mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.target & m.nodes.substrateServer == context.nodes.substrateServer)->sum(element.value) +
+// mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.target & m.nodes.substrateNode == context.nodes.substrateServer)->sum(element.value))
+// >= 1
+// ]
+// }
 
 // Link 2 Path
 constraint with link2PathRule {
 	[mappings.l2p->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substratePath == context.nodes.substratePath)->sum(element.value) >= 1]
-	=> 
+	=>
 	[
 		mappings.l2p->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substratePath == context.nodes.substratePath)->sum(element.variables.index)
 		>=
 		mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.source & element.nodes.substrateServer == context.nodes.substratePath.source)->sum(element.variables.index)
 		+ mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & element.nodes.substrateNode == context.nodes.substratePath.source)->sum(element.variables.index)
 		+ 1
-		
 		&
-		
 		mappings.l2p->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substratePath == context.nodes.substratePath)->sum(element.variables.index)
 		>=
 		mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.target & element.nodes.substrateServer == context.nodes.substratePath.target)->sum(element.variables.index)
@@ -339,28 +339,29 @@ constraint with link2PathRule {
 		+ 1
 	]
 }
+
 constraint with link2PathRule {
 	(mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.source & element.nodes.substrateServer == context.nodes.substratePath.source)->sum(element.value) +
 		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & element.nodes.substrateNode == context.nodes.substratePath.source)->sum(element.value)) +
-	(mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.target & element.nodes.substrateServer == context.nodes.substratePath.target)->sum(element.value)+
+	(mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.target & element.nodes.substrateServer == context.nodes.substratePath.target)->sum(element.value) +
 		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.target & element.nodes.substrateNode == context.nodes.substratePath.target)->sum(element.value))
 	>= 2 * mappings.l2p->filter(element.nodes.substratePath == context.nodes.substratePath & element.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value)
 }
-//constraint -> pattern::link2PathRule {
-//	mappings.l2p->filter(element.nodes.substratePath == context.nodes.substratePath & m.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value) >= 1
-//	=>
-//	[
-//		(mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.source & m.nodes.substrateServer == context.nodes.substratePath.source)->sum(element.value) +
-//		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & m.nodes.substrateNode == context.nodes.substratePath.source)->sum(element.value))
-//		>= 1
-//		
-//		&
-//		
-//		(mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.target & m.nodes.substrateServer == context.nodes.substratePath.target)->sum(element.value)+
-//		mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.target & m.nodes.substrateNode == context.nodes.substratePath.target)->sum(element.value))
-//		>= 1
-//	]
-//}
+// constraint -> pattern::link2PathRule {
+// mappings.l2p->filter(element.nodes.substratePath == context.nodes.substratePath & m.nodes.virtualLink == context.nodes.virtualLink)->sum(element.value) >= 1
+// =>
+// [
+// (mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.source & m.nodes.substrateServer == context.nodes.substratePath.source)->sum(element.value) +
+// mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.source & m.nodes.substrateNode == context.nodes.substratePath.source)->sum(element.value))
+// >= 1
+//
+// &
+//
+// (mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualLink.target & m.nodes.substrateServer == context.nodes.substratePath.target)->sum(element.value)+
+// mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualLink.target & m.nodes.substrateNode == context.nodes.substratePath.target)->sum(element.value))
+// >= 1
+// ]
+// }
 
 // Embed the virtual network
 mapping net2net to network2NetworkRule {
@@ -387,6 +388,7 @@ constraint with link2ServerRule {
 	mappings.l2s->filter(element.nodes.virtualLink == context.nodes.virtualLink & element.nodes.substrateServer == context.nodes.substrateServer)->sum(element.variables.index)
 	+ 1
 }
+
 constraint with link2PathRule {
 	mappings.net2net->filter(element.nodes.virtualNetwork == context.nodes.virtualLink.network)->sum(element.variables.index)
 	>=
@@ -407,21 +409,21 @@ constraint with link2PathRule {
 // index_node < index_link < index_network => index_node < index_network
 //
 
-//// The virtual network's index must be higher than the indexes of all of its virtual servers
-//constraint -> pattern::vsrvNotMapped {
-//	mappings.net2net->filter(element.nodes.virtualNetwork == context.nodes.virtualServer.network)->sum(element.variables.index)
-//	>= 
-//	mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualServer)->sum(element.variables.index)
-//	+ 1
-//}
+// // The virtual network's index must be higher than the indexes of all of its virtual servers
+// constraint -> pattern::vsrvNotMapped {
+// mappings.net2net->filter(element.nodes.virtualNetwork == context.nodes.virtualServer.network)->sum(element.variables.index)
+// >= 
+// mappings.srv2srv->filter(element.nodes.virtualServer == context.nodes.virtualServer)->sum(element.variables.index)
+// + 1
+// }
 //
-//// the virtual network's index must be higher than the indexes of all of its virtual switches
-//constraint -> pattern::vswNotMapped {
-//	mappings.net2net->filter(element.nodes.virtualNetwork == context.nodes.virtualSwitch.network)->sum(element.variables.index)
-//	>=
-//	mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualSwitch)->sum(element.variables.index)
-//	+ 1
-//}
+// // the virtual network's index must be higher than the indexes of all of its virtual switches
+// constraint -> pattern::vswNotMapped {
+// mappings.net2net->filter(element.nodes.virtualNetwork == context.nodes.virtualSwitch.network)->sum(element.variables.index)
+// >=
+// mappings.sw2node->filter(element.nodes.virtualSwitch == context.nodes.virtualSwitch)->sum(element.variables.index)
+// + 1
+// }
 
 //
 // Additions to support multiple substrate networks
@@ -468,10 +470,10 @@ function lpObj with l2p {
 }
 
 function srvObj with srv2srv {
-    (context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
-    context.nodes.substrateServer.residualMemory / context.nodes.substrateServer.memory +
-    context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage)
-    * context.value
+	(context.nodes.substrateServer.residualCpu / context.nodes.substrateServer.cpu +
+		context.nodes.substrateServer.residualMemory / context.nodes.substrateServer.memory +
+		context.nodes.substrateServer.residualStorage / context.nodes.substrateServer.storage)
+	* context.value
 }
 
 objective : min {
