@@ -5,7 +5,7 @@ config {
 	solver := GUROBI;
 	timeLimit := true [value := 10.0];
 	randomSeed := true [value := 0];
-	presolve := true;
+	presolve := auto;
 	debugOutput := true;
 	lpOutput := true [path := "./gurobi.lp"];
 }

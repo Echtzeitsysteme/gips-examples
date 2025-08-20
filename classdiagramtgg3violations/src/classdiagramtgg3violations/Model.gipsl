@@ -5,7 +5,7 @@ config {
 	solver := GUROBI;
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
-	presolve := true;
+	presolve := auto;
 	debugOutput := true;
 	tolerance := true [value := 0.00001];
 }
