@@ -15,7 +15,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@104ff502 (name: c), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@6aab63c0 (name: ot)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@60f3322f (name: c), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@3110a6d0 (name: ot)] which does the following:
  * Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each dayc.maxCapacity > 0 is already enforced by the preprocessing because Capacity Objects with maxCapacity <= 0 are not created
  */
 @SuppressWarnings("unused")

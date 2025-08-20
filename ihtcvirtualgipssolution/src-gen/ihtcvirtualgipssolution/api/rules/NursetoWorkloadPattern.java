@@ -16,7 +16,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@5acf9d5a (name: s), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@122e8254 (name: vsr), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@31eebb11 (name: vsw)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@748e02f (name: s), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@fd9eec6 (name: vsr), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@2176526b (name: vsw)] which does the following:
  * Used in a mapping to calculate which nurse is assigned to which workload.
  */
 @SuppressWarnings("unused")

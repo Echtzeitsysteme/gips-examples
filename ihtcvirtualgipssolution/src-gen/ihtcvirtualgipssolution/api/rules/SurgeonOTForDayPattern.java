@@ -16,7 +16,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@70b71883 (name: op), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@11f78ed (name: ot), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@d68e18 (name: s)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@11af1917 (name: op), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@1c1669eb (name: ot), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@28235a46 (name: s)] which does the following:
  * Used in a mapping to save the information if a surgeon is operating in a specific OT for each day
  */
 @SuppressWarnings("unused")

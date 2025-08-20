@@ -14,7 +14,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@49a40b4d (name: p)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@7598acdf (name: p)] which does the following:
  * Utility Patterns used in ConstraintsPattern to find all mandatory patients
  */
 @SuppressWarnings("unused")

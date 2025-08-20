@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <hipe.network:HiPENetwork xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:HiPEPattern="platform:/resource/hipe.pattern/model/HiPEPattern" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:hipe.network="platform:/resource/hipe.network/model/hiPENetwork" xsi:schemaLocation="platform:/resource/hipe.pattern/model/HiPEPattern java://hipe.pattern.HiPEPatternPackage http://www.eclipse.org/emf/2002/Ecore java://org.eclipse.emf.ecore.EcorePackage platform:/resource/hipe.network/model/hiPENetwork java://hipe.network.NetworkPackage">
-  <networknode xmi:type="hipe.network:DispatchNode" name="DispatchNode" objectNodes="//@networknode.2 //@networknode.3 //@networknode.4 //@networknode.8 //@networknode.14 //@networknode.15 //@networknode.18 //@networknode.24 //@networknode.25 //@networknode.44 //@networknode.52 //@networknode.54 //@networknode.78 //@networknode.79 //@networknode.80 //@networknode.81 //@networknode.82 //@networknode.83 //@networknode.84 //@networknode.85 //@networknode.86 //@networknode.87 //@networknode.88 //@networknode.89 //@networknode.90" notificationNode="//@networknode.1">
+  <networknode xmi:type="hipe.network:DispatchNode" name="DispatchNode" objectNodes="//@networknode.2 //@networknode.3 //@networknode.4 //@networknode.8 //@networknode.13 //@networknode.17 //@networknode.20 //@networknode.26 //@networknode.27 //@networknode.46 //@networknode.54 //@networknode.56 //@networknode.80 //@networknode.81 //@networknode.82 //@networknode.83 //@networknode.84 //@networknode.85 //@networknode.86 //@networknode.87 //@networknode.88 //@networknode.89 //@networknode.90 //@networknode.91 //@networknode.92" notificationNode="//@networknode.1">
     <metamodels xmi:type="ecore:EPackage" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#/"/>
   </networknode>
   <networknode xmi:type="hipe.network:NotificationNode" name="NotificationNode" dispatchNode="//@networknode.0"/>
-  <networknode xmi:type="hipe.network:ObjectNode" name="Room_object" patternName="ageGroupsRoomDay_2" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="AgeGroup_object" patternName="ageGroupsRoomDay_2" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
       <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.6" patternName="ageGroupsRoomDay_2" matchingNode="//@networknode.2"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.9" patternName="ageGroupsRoomDay_2" matchingNode="//@networknode.2"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.28" patternName="ageGroupsRoomDay_2" matchingNode="//@networknode.2"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.35" patternName="ageGroupsRoomDay_2" matchingNode="//@networknode.2"/>
-    </ports>
-    <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
-  </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="AgeGroup_object" patternName="ageGroupsRoomDay_4" dispatchnode="//@networknode.0">
-    <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.5" patternName="ageGroupsRoomDay_4" matchingNode="//@networknode.3"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//AgeGroup"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="Day_object" patternName="ageGroupsRoomDay_5" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="Day_object" patternName="ageGroupsRoomDay_4" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.5" patternName="ageGroupsRoomDay_5" matchingNode="//@networknode.4"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.35" patternName="ageGroupsRoomDay_5" matchingNode="//@networknode.4"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.5" patternName="ageGroupsRoomDay_4" matchingNode="//@networknode.3"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.37" patternName="ageGroupsRoomDay_4" matchingNode="//@networknode.3"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Day"/>
+  </networknode>
+  <networknode xmi:type="hipe.network:ObjectNode" name="Room_object" patternName="ageGroupsRoomDay_5" dispatchnode="//@networknode.0">
+    <ports xmi:type="hipe.network:Ports">
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.5" patternName="ageGroupsRoomDay_5" matchingNode="//@networknode.4"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.9" patternName="ageGroupsRoomDay_5" matchingNode="//@networknode.4"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.30" patternName="ageGroupsRoomDay_5" matchingNode="//@networknode.4"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.37" patternName="ageGroupsRoomDay_5" matchingNode="//@networknode.4"/>
+    </ports>
+    <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
   </networknode>
   <networknode xmi:type="hipe.network:JunctionNode" name="ageGroupsRoomDay_3_junction" inputPort="//@networknode.3/@ports/@port.0 //@networknode.4/@ports/@port.0" patternName="ageGroupsRoomDay_3" overlaps="//@networknode.5/@allOverlaps.0" mappings="//@networknode.5/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
@@ -48,9 +48,9 @@
     </allMappings>
   </networknode>
   <networknode xmi:type="hipe.network:ProductionNode" name="ageGroupsRoomDay_production" inputPort="//@networknode.6/@ports/@port.0" patternName="ageGroupsRoomDay">
-    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="ag" value="1"/>
-    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="d" value="2"/>
-    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="r" value="0"/>
+    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="ag" value="0"/>
+    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="d" value="1"/>
+    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="r" value="2"/>
   </networknode>
   <networknode xmi:type="hipe.network:ObjectNode" name="Gender_object" patternName="genderRoomShift_7" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
@@ -58,10 +58,10 @@
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Gender"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Room_shifts_0_reference" inputPort="//@networknode.2/@ports/@port.1 //@networknode.78/@ports/@port.0" patternName="genderRoomShift_8">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Room_shifts_0_reference" inputPort="//@networknode.4/@ports/@port.1 //@networknode.80/@ports/@port.0" patternName="genderRoomShift_8">
     <ports xmi:type="hipe.network:Ports">
       <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.10" patternName="genderRoomShift_8" matchingNode="//@networknode.9"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.37" patternName="genderRoomShift_8" matchingNode="//@networknode.9"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.39" patternName="genderRoomShift_8" matchingNode="//@networknode.9"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room/shifts"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
@@ -83,59 +83,74 @@
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="r" value="1"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="s" value="2"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="mandatoryPatients_production" inputPort="//@networknode.80/@ports/@port.0" patternName="mandatoryPatients">
+  <networknode xmi:type="hipe.network:ProductionNode" name="mandatoryPatients_production" inputPort="//@networknode.82/@ports/@port.0" patternName="mandatoryPatients">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="p" value="0"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Nurse_rosters_0_reference" inputPort="//@networknode.14/@ports/@port.0 //@networknode.15/@ports/@port.0" patternName="nurseRosterTupel_12">
+  <networknode xmi:type="hipe.network:ObjectNode" name="Nurse_object" patternName="nursePatientTupel_14" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.16" patternName="nurseRosterTupel_12" matchingNode="//@networknode.13"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.14" patternName="nursePatientTupel_14" matchingNode="//@networknode.13"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.16" patternName="nursePatientTupel_14" matchingNode="//@networknode.13"/>
+    </ports>
+    <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Nurse"/>
+  </networknode>
+  <networknode xmi:type="hipe.network:JunctionNode" name="nursePatientTupel_12_junction" inputPort="//@networknode.83/@ports/@port.0 //@networknode.13/@ports/@port.0" patternName="nursePatientTupel_12" overlaps="//@networknode.14/@allOverlaps.0" mappings="//@networknode.14/@allMappings.0">
+    <ports xmi:type="hipe.network:Ports">
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.15" patternName="nursePatientTupel_12" matchingNode="//@networknode.14"/>
+    </ports>
+    <allOverlaps xmi:type="hipe.network:Overlaps"/>
+    <allMappings xmi:type="hipe.network:Mappings">
+      <mapping xmi:type="hipe.network:Mapping"/>
+      <mapping xmi:type="hipe.network:Mapping" origin="RIGHT"/>
+    </allMappings>
+  </networknode>
+  <networknode xmi:type="hipe.network:ProductionNode" name="nursePatientTupel_production" inputPort="//@networknode.14/@ports/@port.0" patternName="nursePatientTupel">
+    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="n" value="1"/>
+    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="p" value="0"/>
+  </networknode>
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Nurse_rosters_0_reference" inputPort="//@networknode.13/@ports/@port.1 //@networknode.17/@ports/@port.0" patternName="nurseRosterTupel_15">
+    <ports xmi:type="hipe.network:Ports">
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.18" patternName="nurseRosterTupel_15" matchingNode="//@networknode.16"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Nurse/rosters"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Nurse"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Roster"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="Nurse_object" patternName="nurseRosterTupel_13" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="Roster_object" patternName="nurseRosterTupel_17" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.13" patternName="nurseRosterTupel_13" matchingNode="//@networknode.14"/>
-    </ports>
-    <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Nurse"/>
-  </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="Roster_object" patternName="nurseRosterTupel_14" dispatchnode="//@networknode.0">
-    <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.13" patternName="nurseRosterTupel_14" matchingNode="//@networknode.15"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.16" patternName="nurseRosterTupel_17" matchingNode="//@networknode.17"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Roster"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="nurseRosterTupel_production" inputPort="//@networknode.13/@ports/@port.0" patternName="nurseRosterTupel">
+  <networknode xmi:type="hipe.network:ProductionNode" name="nurseRosterTupel_production" inputPort="//@networknode.16/@ports/@port.0" patternName="nurseRosterTupel">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="n" value="0"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="ro" value="1"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToRoster_shift_0_reference" inputPort="//@networknode.18/@ports/@port.0 //@networknode.79/@ports/@port.0" patternName="nursetoWorkload_16">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToRoster_shift_0_reference" inputPort="//@networknode.20/@ports/@port.0 //@networknode.81/@ports/@port.0" patternName="nursetoWorkload_19">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.20" patternName="nursetoWorkload_16" matchingNode="//@networknode.17"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.22" patternName="nursetoWorkload_19" matchingNode="//@networknode.19"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualShiftToRoster_object" patternName="nursetoWorkload_18" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualShiftToRoster_object" patternName="nursetoWorkload_21" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.17" patternName="nursetoWorkload_18" matchingNode="//@networknode.18"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.73" patternName="nursetoWorkload_18" matchingNode="//@networknode.18"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.19" patternName="nursetoWorkload_21" matchingNode="//@networknode.20"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.75" patternName="nursetoWorkload_21" matchingNode="//@networknode.20"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Shift_virtualWorkload_0_reference" inputPort="//@networknode.78/@ports/@port.1 //@networknode.82/@ports/@port.0" patternName="nursetoWorkload_17">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Shift_virtualWorkload_0_reference" inputPort="//@networknode.80/@ports/@port.1 //@networknode.84/@ports/@port.0" patternName="nursetoWorkload_20">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.20" patternName="nursetoWorkload_17" matchingNode="//@networknode.19"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.22" patternName="nursetoWorkload_20" matchingNode="//@networknode.21"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/virtualWorkload"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="nursetoWorkload_15_junction" inputPort="//@networknode.17/@ports/@port.0 //@networknode.19/@ports/@port.0" patternName="nursetoWorkload_15" overlaps="//@networknode.20/@allOverlaps.0" mappings="//@networknode.20/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="nursetoWorkload_18_junction" inputPort="//@networknode.19/@ports/@port.0 //@networknode.21/@ports/@port.0" patternName="nursetoWorkload_18" overlaps="//@networknode.22/@allOverlaps.0" mappings="//@networknode.22/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.21" patternName="nursetoWorkload_15" matchingNode="//@networknode.20"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.23" patternName="nursetoWorkload_18" matchingNode="//@networknode.22"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="1"/>
@@ -146,60 +161,60 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="1"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="nursetoWorkload_production" inputPort="//@networknode.20/@ports/@port.0" patternName="nursetoWorkload">
+  <networknode xmi:type="hipe.network:ProductionNode" name="nursetoWorkload_production" inputPort="//@networknode.22/@ports/@port.0" patternName="nursetoWorkload">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="s" value="1"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="vsr" value="0"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="vsw" value="2"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="optionalPatients_production" inputPort="//@networknode.81/@ports/@port.0" patternName="optionalPatients">
+  <networknode xmi:type="hipe.network:ProductionNode" name="optionalPatients_production" inputPort="//@networknode.82/@ports/@port.1" patternName="optionalPatients">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="p" value="0"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="OT_capacities_0_reference" inputPort="//@networknode.24/@ports/@port.0 //@networknode.25/@ports/@port.0" patternName="otCapacityTupel_22">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="OT_capacities_0_reference" inputPort="//@networknode.26/@ports/@port.0 //@networknode.27/@ports/@port.0" patternName="otCapacityTupel_25">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.26" patternName="otCapacityTupel_22" matchingNode="//@networknode.23"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.28" patternName="otCapacityTupel_25" matchingNode="//@networknode.25"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OT/capacities"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OT"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="OT_object" patternName="otCapacityTupel_23" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="OT_object" patternName="otCapacityTupel_26" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.23" patternName="otCapacityTupel_23" matchingNode="//@networknode.24"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.74" patternName="otCapacityTupel_23" matchingNode="//@networknode.24"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.25" patternName="otCapacityTupel_26" matchingNode="//@networknode.26"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.76" patternName="otCapacityTupel_26" matchingNode="//@networknode.26"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OT"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="Capacity_object" patternName="otCapacityTupel_24" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="Capacity_object" patternName="otCapacityTupel_27" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.23" patternName="otCapacityTupel_24" matchingNode="//@networknode.25"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.58" patternName="otCapacityTupel_24" matchingNode="//@networknode.25"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.59" patternName="otCapacityTupel_24" matchingNode="//@networknode.25"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.25" patternName="otCapacityTupel_27" matchingNode="//@networknode.27"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.60" patternName="otCapacityTupel_27" matchingNode="//@networknode.27"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.61" patternName="otCapacityTupel_27" matchingNode="//@networknode.27"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="otCapacityTupel_production" inputPort="//@networknode.23/@ports/@port.0" patternName="otCapacityTupel">
+  <networknode xmi:type="hipe.network:ProductionNode" name="otCapacityTupel_production" inputPort="//@networknode.25/@ports/@port.0" patternName="otCapacityTupel">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="c" value="1"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="ot" value="0"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_shift_0_reference" inputPort="//@networknode.83/@ports/@port.0 //@networknode.79/@ports/@port.1" patternName="patientForRoom_28">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_shift_0_reference" inputPort="//@networknode.85/@ports/@port.0 //@networknode.81/@ports/@port.1" patternName="patientForRoom_31">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.29" patternName="patientForRoom_28" matchingNode="//@networknode.27"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.31" patternName="patientForRoom_31" matchingNode="//@networknode.29"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/shift"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Room_shifts_1_reference" inputPort="//@networknode.2/@ports/@port.2 //@networknode.78/@ports/@port.2" patternName="patientForRoom_29">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Room_shifts_1_reference" inputPort="//@networknode.4/@ports/@port.2 //@networknode.80/@ports/@port.2" patternName="patientForRoom_32">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.29" patternName="patientForRoom_29" matchingNode="//@networknode.28"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.31" patternName="patientForRoom_32" matchingNode="//@networknode.30"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room/shifts"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="patientForRoom_26_junction" inputPort="//@networknode.27/@ports/@port.0 //@networknode.28/@ports/@port.0" patternName="patientForRoom_26" overlaps="//@networknode.29/@allOverlaps.0" mappings="//@networknode.29/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="patientForRoom_29_junction" inputPort="//@networknode.29/@ports/@port.0 //@networknode.30/@ports/@port.0" patternName="patientForRoom_29" overlaps="//@networknode.31/@allOverlaps.0" mappings="//@networknode.31/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.33" patternName="patientForRoom_26" matchingNode="//@networknode.29"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.35" patternName="patientForRoom_29" matchingNode="//@networknode.31"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="1" rightIndex="1"/>
@@ -210,25 +225,25 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_workload_0_reference" inputPort="//@networknode.84/@ports/@port.0 //@networknode.85/@ports/@port.0" patternName="patientForRoom_30">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_workload_0_reference" inputPort="//@networknode.86/@ports/@port.0 //@networknode.87/@ports/@port.0" patternName="patientForRoom_33">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.32" patternName="patientForRoom_30" matchingNode="//@networknode.30"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.34" patternName="patientForRoom_33" matchingNode="//@networknode.32"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/workload"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Patient_workloads_0_reference" inputPort="//@networknode.80/@ports/@port.1 //@networknode.86/@ports/@port.0" patternName="patientForRoom_31">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Patient_workloads_0_reference" inputPort="//@networknode.83/@ports/@port.1 //@networknode.88/@ports/@port.0" patternName="patientForRoom_34">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.32" patternName="patientForRoom_31" matchingNode="//@networknode.31"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.34" patternName="patientForRoom_34" matchingNode="//@networknode.33"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/workloads"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="patientForRoom_27_junction" inputPort="//@networknode.30/@ports/@port.0 //@networknode.31/@ports/@port.0" patternName="patientForRoom_27" overlaps="//@networknode.32/@allOverlaps.0" mappings="//@networknode.32/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="patientForRoom_30_junction" inputPort="//@networknode.32/@ports/@port.0 //@networknode.33/@ports/@port.0" patternName="patientForRoom_30" overlaps="//@networknode.34/@allOverlaps.0" mappings="//@networknode.34/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.33" patternName="patientForRoom_27" matchingNode="//@networknode.32"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.35" patternName="patientForRoom_30" matchingNode="//@networknode.34"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="1" rightIndex="1"/>
@@ -239,9 +254,9 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="patientForRoom_25_junction" inputPort="//@networknode.29/@ports/@port.0 //@networknode.32/@ports/@port.0" patternName="patientForRoom_25" overlaps="//@networknode.33/@allOverlaps.0" mappings="//@networknode.33/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="patientForRoom_28_junction" inputPort="//@networknode.31/@ports/@port.0 //@networknode.34/@ports/@port.0" patternName="patientForRoom_28" overlaps="//@networknode.35/@allOverlaps.0" mappings="//@networknode.35/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.34" patternName="patientForRoom_25" matchingNode="//@networknode.33"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.36" patternName="patientForRoom_28" matchingNode="//@networknode.35"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap"/>
@@ -254,16 +269,16 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="2"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="patientForRoom_production" inputPort="//@networknode.33/@ports/@port.0" patternName="patientForRoom">
+  <networknode xmi:type="hipe.network:ProductionNode" name="patientForRoom_production" inputPort="//@networknode.35/@ports/@port.0" patternName="patientForRoom">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="p" value="4"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="r" value="2"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="s" value="1"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="vsw" value="0"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="w" value="3"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="roomDayTupel_37_junction" inputPort="//@networknode.4/@ports/@port.1 //@networknode.2/@ports/@port.3" patternName="roomDayTupel_37" overlaps="//@networknode.35/@allOverlaps.0" mappings="//@networknode.35/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="roomDayTupel_40_junction" inputPort="//@networknode.4/@ports/@port.3 //@networknode.3/@ports/@port.1" patternName="roomDayTupel_40" overlaps="//@networknode.37/@allOverlaps.0" mappings="//@networknode.37/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.36" patternName="roomDayTupel_37" matchingNode="//@networknode.35"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.38" patternName="roomDayTupel_40" matchingNode="//@networknode.37"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps"/>
     <allMappings xmi:type="hipe.network:Mappings">
@@ -271,49 +286,49 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="roomDayTupel_production" inputPort="//@networknode.35/@ports/@port.0" patternName="roomDayTupel">
-    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="d" value="0"/>
-    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="r" value="1"/>
+  <networknode xmi:type="hipe.network:ProductionNode" name="roomDayTupel_production" inputPort="//@networknode.37/@ports/@port.0" patternName="roomDayTupel">
+    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="d" value="1"/>
+    <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="r" value="0"/>
   </networknode>
   <networknode xmi:type="hipe.network:ProductionNode" name="roomForShift_production" inputPort="//@networknode.9/@ports/@port.1" patternName="roomForShift">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="r" value="0"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="s" value="1"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_enables_virtualShiftToWorkload_0_reference" inputPort="//@networknode.82/@ports/@port.1 //@networknode.83/@ports/@port.1" patternName="selectExtendingShiftToFirstWorkload_44">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_enables_virtualShiftToWorkload_0_reference" inputPort="//@networknode.84/@ports/@port.1 //@networknode.85/@ports/@port.1" patternName="selectExtendingShiftToFirstWorkload_47">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:ConstraintPort" portTarget="//@networknode.40" patternName="selectExtendingShiftToFirstWorkload_44" matchingNode="//@networknode.38" initializationCode="" constraintName="check_constraint_4" predicateCode="!nextvsw.equals(prevvsw)">
-        <indices>0</indices>
+      <port xmi:type="hipe.network:ConstraintPort" portTarget="//@networknode.42" patternName="selectExtendingShiftToFirstWorkload_47" matchingNode="//@networknode.40" initializationCode="" constraintName="check_constraint_4" predicateCode="!nextvsw.equals(prevvsw)">
         <indices>1</indices>
+        <indices>0</indices>
         <types xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
         <types xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
-        <nodeNames>prevvsw</nodeNames>
         <nodeNames>nextvsw</nodeNames>
-        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.60"/>
+        <nodeNames>prevvsw</nodeNames>
+        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.64"/>
       </port>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/enables_virtualShiftToWorkload"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_requires_virtualShiftToWorkload_0_reference" inputPort="//@networknode.84/@ports/@port.1 //@networknode.82/@ports/@port.2" patternName="selectExtendingShiftToFirstWorkload_45">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_requires_virtualShiftToWorkload_0_reference" inputPort="//@networknode.86/@ports/@port.1 //@networknode.84/@ports/@port.2" patternName="selectExtendingShiftToFirstWorkload_48">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:ConstraintPort" portSlot="RIGHT" portTarget="//@networknode.40" patternName="selectExtendingShiftToFirstWorkload_45" matchingNode="//@networknode.39" initializationCode="" constraintName="check_constraint_5" predicateCode="!nextvsw.equals(prevvsw)">
-        <indices>1</indices>
+      <port xmi:type="hipe.network:ConstraintPort" portSlot="RIGHT" portTarget="//@networknode.42" patternName="selectExtendingShiftToFirstWorkload_48" matchingNode="//@networknode.41" initializationCode="" constraintName="check_constraint_5" predicateCode="!nextvsw.equals(prevvsw)">
         <indices>0</indices>
+        <indices>1</indices>
         <types xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
         <types xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
-        <nodeNames>prevvsw</nodeNames>
         <nodeNames>nextvsw</nodeNames>
-        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.61"/>
+        <nodeNames>prevvsw</nodeNames>
+        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.65"/>
       </port>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/requires_virtualShiftToWorkload"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectExtendingShiftToFirstWorkload_43_junction" inputPort="//@networknode.38/@ports/@port.0 //@networknode.39/@ports/@port.0" patternName="selectExtendingShiftToFirstWorkload_43" overlaps="//@networknode.40/@allOverlaps.0" mappings="//@networknode.40/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectExtendingShiftToFirstWorkload_46_junction" inputPort="//@networknode.40/@ports/@port.0 //@networknode.41/@ports/@port.0" patternName="selectExtendingShiftToFirstWorkload_46" overlaps="//@networknode.42/@allOverlaps.0" mappings="//@networknode.42/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.41" patternName="selectExtendingShiftToFirstWorkload_43" matchingNode="//@networknode.40"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.43" patternName="selectExtendingShiftToFirstWorkload_46" matchingNode="//@networknode.42"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" rightIndex="1"/>
@@ -324,37 +339,37 @@
       <mapping xmi:type="hipe.network:Mapping" index="1"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="selectExtendingShiftToFirstWorkload_production" inputPort="//@networknode.40/@ports/@port.0" patternName="selectExtendingShiftToFirstWorkload">
+  <networknode xmi:type="hipe.network:ProductionNode" name="selectExtendingShiftToFirstWorkload_production" inputPort="//@networknode.42/@ports/@port.0" patternName="selectExtendingShiftToFirstWorkload">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="nextvsw" value="1"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="prevvsw" value="0"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Patient_firstWorkload_0_reference" inputPort="//@networknode.81/@ports/@port.1 //@networknode.85/@ports/@port.1" patternName="selectOperationDay_55">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Patient_firstWorkload_0_reference" inputPort="//@networknode.82/@ports/@port.2 //@networknode.87/@ports/@port.1" patternName="selectOperationDay_58">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.45" patternName="selectOperationDay_55" matchingNode="//@networknode.42"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.71" patternName="selectOperationDay_55" matchingNode="//@networknode.42"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.47" patternName="selectOperationDay_58" matchingNode="//@networknode.44"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.73" patternName="selectOperationDay_58" matchingNode="//@networknode.44"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/firstWorkload"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Patient_surgeon_0_reference" inputPort="//@networknode.80/@ports/@port.2 //@networknode.44/@ports/@port.0" patternName="selectOperationDay_56">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Patient_surgeon_0_reference" inputPort="//@networknode.83/@ports/@port.2 //@networknode.46/@ports/@port.0" patternName="selectOperationDay_59">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.45" patternName="selectOperationDay_56" matchingNode="//@networknode.43"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.47" patternName="selectOperationDay_59" matchingNode="//@networknode.45"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/surgeon"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="Surgeon_object" patternName="selectOperationDay_66" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="Surgeon_object" patternName="selectOperationDay_69" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.43" patternName="selectOperationDay_66" matchingNode="//@networknode.44"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.51" patternName="selectOperationDay_66" matchingNode="//@networknode.44"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.45" patternName="selectOperationDay_69" matchingNode="//@networknode.46"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.53" patternName="selectOperationDay_69" matchingNode="//@networknode.46"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_51_junction" inputPort="//@networknode.42/@ports/@port.0 //@networknode.43/@ports/@port.0" patternName="selectOperationDay_51" overlaps="//@networknode.45/@allOverlaps.0" mappings="//@networknode.45/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_54_junction" inputPort="//@networknode.44/@ports/@port.0 //@networknode.45/@ports/@port.0" patternName="selectOperationDay_54" overlaps="//@networknode.47/@allOverlaps.0" mappings="//@networknode.47/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.50" patternName="selectOperationDay_51" matchingNode="//@networknode.45"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.52" patternName="selectOperationDay_54" matchingNode="//@networknode.47"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap"/>
@@ -365,34 +380,34 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="1"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToOpTime_enables_virtual_WorkloadToCapacity_0_reference" inputPort="//@networknode.87/@ports/@port.0 //@networknode.89/@ports/@port.0" patternName="selectOperationDay_triangle_57">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToOpTime_enables_virtual_WorkloadToCapacity_0_reference" inputPort="//@networknode.89/@ports/@port.0 //@networknode.91/@ports/@port.0" patternName="selectOperationDay_triangle_60">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.49" patternName="selectOperationDay_triangle_57" matchingNode="//@networknode.46"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.51" patternName="selectOperationDay_triangle_60" matchingNode="//@networknode.48"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/enables_virtual_WorkloadToCapacity"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Workload_virtualCapacity_0_reference" inputPort="//@networknode.86/@ports/@port.1 //@networknode.90/@ports/@port.0" patternName="selectOperationDay_triangle_58">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Workload_virtualCapacity_0_reference" inputPort="//@networknode.88/@ports/@port.1 //@networknode.92/@ports/@port.0" patternName="selectOperationDay_triangle_61">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.49" patternName="selectOperationDay_triangle_58" matchingNode="//@networknode.47"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.70" patternName="selectOperationDay_triangle_58" matchingNode="//@networknode.47"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.51" patternName="selectOperationDay_triangle_61" matchingNode="//@networknode.49"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.72" patternName="selectOperationDay_triangle_61" matchingNode="//@networknode.49"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualCapacity"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Workload_virtualOpTime_0_reference" inputPort="//@networknode.85/@ports/@port.2 //@networknode.88/@ports/@port.0" patternName="selectOperationDay_triangle_59">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Workload_virtualOpTime_0_reference" inputPort="//@networknode.87/@ports/@port.2 //@networknode.90/@ports/@port.0" patternName="selectOperationDay_triangle_62">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.49" patternName="selectOperationDay_triangle_59" matchingNode="//@networknode.48"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.51" patternName="selectOperationDay_triangle_62" matchingNode="//@networknode.50"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualOpTime"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
   </networknode>
-  <networknode xmi:type="hipe.network:TriangleJunctionNode" name="selectOperationDay_triangle_0_triangleJunction" inputPort="//@networknode.46/@ports/@port.0 //@networknode.47/@ports/@port.0 //@networknode.48/@ports/@port.0" patternName="selectOperationDay_triangle_0" overlaps="//@networknode.49/@allOverlaps.0" mappings="//@networknode.49/@allMappings.0" centerLeftOverlaps="//@networknode.49/@allOverlaps.1" centerLeftMappings="//@networknode.49/@allMappings.1" rightCenterOverlaps="//@networknode.49/@allOverlaps.2" rightCenterMappings="//@networknode.49/@allMappings.2" leftHalfMatchOverlaps="//@networknode.49/@allOverlaps.3" leftHalfMatchMappings="//@networknode.49/@allMappings.3" centerHalfMatchOverlaps="//@networknode.49/@allOverlaps.4" centerHalfMatchMappings="//@networknode.49/@allMappings.4" rightHalfMatchOverlaps="//@networknode.49/@allOverlaps.5" rightHalfMatchMappings="//@networknode.49/@allMappings.5" fullOverlaps="//@networknode.49/@allOverlaps.6">
+  <networknode xmi:type="hipe.network:TriangleJunctionNode" name="selectOperationDay_triangle_0_triangleJunction" inputPort="//@networknode.48/@ports/@port.0 //@networknode.49/@ports/@port.0 //@networknode.50/@ports/@port.0" patternName="selectOperationDay_triangle_0" overlaps="//@networknode.51/@allOverlaps.0" mappings="//@networknode.51/@allMappings.0" centerLeftOverlaps="//@networknode.51/@allOverlaps.1" centerLeftMappings="//@networknode.51/@allMappings.1" rightCenterOverlaps="//@networknode.51/@allOverlaps.2" rightCenterMappings="//@networknode.51/@allMappings.2" leftHalfMatchOverlaps="//@networknode.51/@allOverlaps.3" leftHalfMatchMappings="//@networknode.51/@allMappings.3" centerHalfMatchOverlaps="//@networknode.51/@allOverlaps.4" centerHalfMatchMappings="//@networknode.51/@allMappings.4" rightHalfMatchOverlaps="//@networknode.51/@allOverlaps.5" rightHalfMatchMappings="//@networknode.51/@allMappings.5" fullOverlaps="//@networknode.51/@allOverlaps.6">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.50" patternName="selectOperationDay_triangle_0" matchingNode="//@networknode.49"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.52" patternName="selectOperationDay_triangle_0" matchingNode="//@networknode.51"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps" name="left2right">
       <overlap xmi:type="hipe.network:Overlap" rightIndex="1"/>
@@ -451,9 +466,9 @@
       <mapping xmi:type="hipe.network:Mapping"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_49_junction" inputPort="//@networknode.45/@ports/@port.0 //@networknode.49/@ports/@port.0" patternName="selectOperationDay_49" overlaps="//@networknode.50/@allOverlaps.0" mappings="//@networknode.50/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_52_junction" inputPort="//@networknode.47/@ports/@port.0 //@networknode.51/@ports/@port.0" patternName="selectOperationDay_52" overlaps="//@networknode.52/@allOverlaps.0" mappings="//@networknode.52/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.66" patternName="selectOperationDay_49" matchingNode="//@networknode.50"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.68" patternName="selectOperationDay_52" matchingNode="//@networknode.52"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="1" rightIndex="2"/>
@@ -466,50 +481,50 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="1"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Surgeon_opTimes_0_reference" inputPort="//@networknode.44/@ports/@port.1 //@networknode.52/@ports/@port.0" patternName="selectOperationDay_60">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Surgeon_opTimes_0_reference" inputPort="//@networknode.46/@ports/@port.1 //@networknode.54/@ports/@port.0" patternName="selectOperationDay_63">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.57" patternName="selectOperationDay_60" matchingNode="//@networknode.51"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.74" patternName="selectOperationDay_60" matchingNode="//@networknode.51"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.76" patternName="selectOperationDay_60" matchingNode="//@networknode.51"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.59" patternName="selectOperationDay_63" matchingNode="//@networknode.53"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.76" patternName="selectOperationDay_63" matchingNode="//@networknode.53"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.78" patternName="selectOperationDay_63" matchingNode="//@networknode.53"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon/opTimes"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="OpTime_object" patternName="selectOperationDay_69" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="OpTime_object" patternName="selectOperationDay_72" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.51" patternName="selectOperationDay_69" matchingNode="//@networknode.52"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.55" patternName="selectOperationDay_69" matchingNode="//@networknode.52"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.53" patternName="selectOperationDay_72" matchingNode="//@networknode.54"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.57" patternName="selectOperationDay_72" matchingNode="//@networknode.54"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualOpTimeToCapacity_enables_virtualWorkloadToOpTime_0_reference" inputPort="//@networknode.54/@ports/@port.0 //@networknode.87/@ports/@port.1" patternName="selectOperationDay_70">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualOpTimeToCapacity_enables_virtualWorkloadToOpTime_0_reference" inputPort="//@networknode.56/@ports/@port.0 //@networknode.89/@ports/@port.1" patternName="selectOperationDay_73">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.56" patternName="selectOperationDay_70" matchingNode="//@networknode.53"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.58" patternName="selectOperationDay_73" matchingNode="//@networknode.55"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/enables_virtualWorkloadToOpTime"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualOpTimeToCapacity_object" patternName="selectOperationDay_76" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualOpTimeToCapacity_object" patternName="selectOperationDay_79" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.53" patternName="selectOperationDay_76" matchingNode="//@networknode.54"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.59" patternName="selectOperationDay_76" matchingNode="//@networknode.54"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.61" patternName="selectOperationDay_76" matchingNode="//@networknode.54"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.55" patternName="selectOperationDay_79" matchingNode="//@networknode.56"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.61" patternName="selectOperationDay_79" matchingNode="//@networknode.56"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.63" patternName="selectOperationDay_79" matchingNode="//@networknode.56"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToOpTime_opTime_0_reference" inputPort="//@networknode.88/@ports/@port.1 //@networknode.52/@ports/@port.1" patternName="selectOperationDay_71">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToOpTime_opTime_0_reference" inputPort="//@networknode.90/@ports/@port.1 //@networknode.54/@ports/@port.1" patternName="selectOperationDay_74">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.56" patternName="selectOperationDay_71" matchingNode="//@networknode.55"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.58" patternName="selectOperationDay_74" matchingNode="//@networknode.57"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/opTime"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_61_junction" inputPort="//@networknode.53/@ports/@port.0 //@networknode.55/@ports/@port.0" patternName="selectOperationDay_61" overlaps="//@networknode.56/@allOverlaps.0" mappings="//@networknode.56/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_64_junction" inputPort="//@networknode.55/@ports/@port.0 //@networknode.57/@ports/@port.0" patternName="selectOperationDay_64" overlaps="//@networknode.58/@allOverlaps.0" mappings="//@networknode.58/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.57" patternName="selectOperationDay_61" matchingNode="//@networknode.56"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.59" patternName="selectOperationDay_64" matchingNode="//@networknode.58"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="1"/>
@@ -520,9 +535,9 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="1"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_53_junction" inputPort="//@networknode.51/@ports/@port.0 //@networknode.56/@ports/@port.0" patternName="selectOperationDay_53" overlaps="//@networknode.57/@allOverlaps.0" mappings="//@networknode.57/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_56_junction" inputPort="//@networknode.53/@ports/@port.0 //@networknode.58/@ports/@port.0" patternName="selectOperationDay_56" overlaps="//@networknode.59/@allOverlaps.0" mappings="//@networknode.59/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.65" patternName="selectOperationDay_53" matchingNode="//@networknode.57"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.67" patternName="selectOperationDay_56" matchingNode="//@networknode.59"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="1" rightIndex="2"/>
@@ -534,25 +549,25 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="1"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToCapacity_capacity_0_reference" inputPort="//@networknode.89/@ports/@port.1 //@networknode.25/@ports/@port.1" patternName="selectOperationDay_72">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToCapacity_capacity_0_reference" inputPort="//@networknode.91/@ports/@port.1 //@networknode.27/@ports/@port.1" patternName="selectOperationDay_75">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.60" patternName="selectOperationDay_72" matchingNode="//@networknode.58"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.62" patternName="selectOperationDay_75" matchingNode="//@networknode.60"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity/capacity"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualOpTimeToCapacity_capacity_0_reference" inputPort="//@networknode.54/@ports/@port.1 //@networknode.25/@ports/@port.2" patternName="selectOperationDay_73">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualOpTimeToCapacity_capacity_0_reference" inputPort="//@networknode.56/@ports/@port.1 //@networknode.27/@ports/@port.2" patternName="selectOperationDay_76">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.60" patternName="selectOperationDay_73" matchingNode="//@networknode.59"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.62" patternName="selectOperationDay_76" matchingNode="//@networknode.61"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/capacity"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_62_junction" inputPort="//@networknode.58/@ports/@port.0 //@networknode.59/@ports/@port.0" patternName="selectOperationDay_62" overlaps="//@networknode.60/@allOverlaps.0" mappings="//@networknode.60/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_65_junction" inputPort="//@networknode.60/@ports/@port.0 //@networknode.61/@ports/@port.0" patternName="selectOperationDay_65" overlaps="//@networknode.62/@allOverlaps.0" mappings="//@networknode.62/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.64" patternName="selectOperationDay_62" matchingNode="//@networknode.60"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.66" patternName="selectOperationDay_65" matchingNode="//@networknode.62"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="1" rightIndex="1"/>
@@ -563,25 +578,25 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToOpTime_requires_virtualOpTimeToCapacity_0_reference" inputPort="//@networknode.87/@ports/@port.2 //@networknode.54/@ports/@port.2" patternName="selectOperationDay_74">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToOpTime_requires_virtualOpTimeToCapacity_0_reference" inputPort="//@networknode.89/@ports/@port.2 //@networknode.56/@ports/@port.2" patternName="selectOperationDay_77">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.63" patternName="selectOperationDay_74" matchingNode="//@networknode.61"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.65" patternName="selectOperationDay_77" matchingNode="//@networknode.63"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/requires_virtualOpTimeToCapacity"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToCapacity_requires_virtualWorkloadToOpTime_0_reference" inputPort="//@networknode.90/@ports/@port.1 //@networknode.88/@ports/@port.2" patternName="selectOperationDay_75">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualWorkloadToCapacity_requires_virtualWorkloadToOpTime_0_reference" inputPort="//@networknode.92/@ports/@port.1 //@networknode.90/@ports/@port.2" patternName="selectOperationDay_78">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.63" patternName="selectOperationDay_75" matchingNode="//@networknode.62"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.65" patternName="selectOperationDay_78" matchingNode="//@networknode.64"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity/requires_virtualWorkloadToOpTime"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_63_junction" inputPort="//@networknode.61/@ports/@port.0 //@networknode.62/@ports/@port.0" patternName="selectOperationDay_63" overlaps="//@networknode.63/@allOverlaps.0" mappings="//@networknode.63/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_66_junction" inputPort="//@networknode.63/@ports/@port.0 //@networknode.64/@ports/@port.0" patternName="selectOperationDay_66" overlaps="//@networknode.65/@allOverlaps.0" mappings="//@networknode.65/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.64" patternName="selectOperationDay_63" matchingNode="//@networknode.63"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.66" patternName="selectOperationDay_66" matchingNode="//@networknode.65"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" rightIndex="1"/>
@@ -592,9 +607,9 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_54_junction" inputPort="//@networknode.60/@ports/@port.0 //@networknode.63/@ports/@port.0" patternName="selectOperationDay_54" overlaps="//@networknode.64/@allOverlaps.0" mappings="//@networknode.64/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_57_junction" inputPort="//@networknode.62/@ports/@port.0 //@networknode.65/@ports/@port.0" patternName="selectOperationDay_57" overlaps="//@networknode.66/@allOverlaps.0" mappings="//@networknode.66/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.65" patternName="selectOperationDay_54" matchingNode="//@networknode.64"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.67" patternName="selectOperationDay_57" matchingNode="//@networknode.66"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" rightIndex="2"/>
@@ -607,9 +622,9 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_50_junction" inputPort="//@networknode.57/@ports/@port.0 //@networknode.64/@ports/@port.0" patternName="selectOperationDay_50" overlaps="//@networknode.65/@allOverlaps.0" mappings="//@networknode.65/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_53_junction" inputPort="//@networknode.59/@ports/@port.0 //@networknode.66/@ports/@port.0" patternName="selectOperationDay_53" overlaps="//@networknode.67/@allOverlaps.0" mappings="//@networknode.67/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.66" patternName="selectOperationDay_50" matchingNode="//@networknode.65"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.68" patternName="selectOperationDay_53" matchingNode="//@networknode.67"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="2" rightIndex="2"/>
@@ -624,9 +639,9 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="1"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_48_junction" inputPort="//@networknode.50/@ports/@port.0 //@networknode.65/@ports/@port.0" patternName="selectOperationDay_48" overlaps="//@networknode.66/@allOverlaps.0" mappings="//@networknode.66/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectOperationDay_51_junction" inputPort="//@networknode.52/@ports/@port.0 //@networknode.67/@ports/@port.0" patternName="selectOperationDay_51" overlaps="//@networknode.68/@allOverlaps.0" mappings="//@networknode.68/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.67" patternName="selectOperationDay_48" matchingNode="//@networknode.66"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.69" patternName="selectOperationDay_51" matchingNode="//@networknode.68"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="2"/>
@@ -644,7 +659,7 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="5"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="selectOperationDay_production" inputPort="//@networknode.66/@ports/@port.0" patternName="selectOperationDay">
+  <networknode xmi:type="hipe.network:ProductionNode" name="selectOperationDay_production" inputPort="//@networknode.68/@ports/@port.0" patternName="selectOperationDay">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="c" value="7"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="opTime" value="5"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="p" value="0"/>
@@ -654,25 +669,25 @@
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="vwop" value="3"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="w" value="1"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_requires_virtualWorkloadToCapacity_0_reference" inputPort="//@networknode.83/@ports/@port.2 //@networknode.89/@ports/@port.2" patternName="selectShiftToFirstWorkload_triangle_83">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="VirtualShiftToWorkload_requires_virtualWorkloadToCapacity_0_reference" inputPort="//@networknode.85/@ports/@port.2 //@networknode.91/@ports/@port.2" patternName="selectShiftToFirstWorkload_triangle_86">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.70" patternName="selectShiftToFirstWorkload_triangle_83" matchingNode="//@networknode.68"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.72" patternName="selectShiftToFirstWorkload_triangle_86" matchingNode="//@networknode.70"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/requires_virtualWorkloadToCapacity"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ReferenceNode" name="Workload_virtualShift_0_reference" inputPort="//@networknode.86/@ports/@port.2 //@networknode.84/@ports/@port.2" patternName="selectShiftToFirstWorkload_triangle_85">
+  <networknode xmi:type="hipe.network:ReferenceNode" name="Workload_virtualShift_0_reference" inputPort="//@networknode.88/@ports/@port.2 //@networknode.86/@ports/@port.2" patternName="selectShiftToFirstWorkload_triangle_88">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.70" patternName="selectShiftToFirstWorkload_triangle_85" matchingNode="//@networknode.69"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.72" patternName="selectShiftToFirstWorkload_triangle_88" matchingNode="//@networknode.71"/>
     </ports>
     <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualShift"/>
     <srcType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
     <trgType xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:TriangleJunctionNode" name="selectShiftToFirstWorkload_triangle_0_triangleJunction" inputPort="//@networknode.68/@ports/@port.0 //@networknode.47/@ports/@port.1 //@networknode.69/@ports/@port.0" patternName="selectShiftToFirstWorkload_triangle_0" overlaps="//@networknode.70/@allOverlaps.0" mappings="//@networknode.70/@allMappings.0" centerLeftOverlaps="//@networknode.70/@allOverlaps.1" centerLeftMappings="//@networknode.70/@allMappings.1" rightCenterOverlaps="//@networknode.70/@allOverlaps.2" rightCenterMappings="//@networknode.70/@allMappings.2" leftHalfMatchOverlaps="//@networknode.70/@allOverlaps.3" leftHalfMatchMappings="//@networknode.70/@allMappings.3" centerHalfMatchOverlaps="//@networknode.70/@allOverlaps.4" centerHalfMatchMappings="//@networknode.70/@allMappings.4" rightHalfMatchOverlaps="//@networknode.70/@allOverlaps.5" rightHalfMatchMappings="//@networknode.70/@allMappings.5" fullOverlaps="//@networknode.70/@allOverlaps.6">
+  <networknode xmi:type="hipe.network:TriangleJunctionNode" name="selectShiftToFirstWorkload_triangle_0_triangleJunction" inputPort="//@networknode.70/@ports/@port.0 //@networknode.49/@ports/@port.1 //@networknode.71/@ports/@port.0" patternName="selectShiftToFirstWorkload_triangle_0" overlaps="//@networknode.72/@allOverlaps.0" mappings="//@networknode.72/@allMappings.0" centerLeftOverlaps="//@networknode.72/@allOverlaps.1" centerLeftMappings="//@networknode.72/@allMappings.1" rightCenterOverlaps="//@networknode.72/@allOverlaps.2" rightCenterMappings="//@networknode.72/@allMappings.2" leftHalfMatchOverlaps="//@networknode.72/@allOverlaps.3" leftHalfMatchMappings="//@networknode.72/@allMappings.3" centerHalfMatchOverlaps="//@networknode.72/@allOverlaps.4" centerHalfMatchMappings="//@networknode.72/@allMappings.4" rightHalfMatchOverlaps="//@networknode.72/@allOverlaps.5" rightHalfMatchMappings="//@networknode.72/@allMappings.5" fullOverlaps="//@networknode.72/@allOverlaps.6">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.71" patternName="selectShiftToFirstWorkload_triangle_0" matchingNode="//@networknode.70"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.73" patternName="selectShiftToFirstWorkload_triangle_0" matchingNode="//@networknode.72"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps" name="left2right">
       <overlap xmi:type="hipe.network:Overlap" rightIndex="1"/>
@@ -731,9 +746,9 @@
       <mapping xmi:type="hipe.network:Mapping"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="selectShiftToFirstWorkload_78_junction" inputPort="//@networknode.42/@ports/@port.1 //@networknode.70/@ports/@port.0" patternName="selectShiftToFirstWorkload_78" overlaps="//@networknode.71/@allOverlaps.0" mappings="//@networknode.71/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="selectShiftToFirstWorkload_81_junction" inputPort="//@networknode.44/@ports/@port.1 //@networknode.72/@ports/@port.0" patternName="selectShiftToFirstWorkload_81" overlaps="//@networknode.73/@allOverlaps.0" mappings="//@networknode.73/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.72" patternName="selectShiftToFirstWorkload_78" matchingNode="//@networknode.71"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.74" patternName="selectShiftToFirstWorkload_81" matchingNode="//@networknode.73"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps">
       <overlap xmi:type="hipe.network:Overlap" leftIndex="1" rightIndex="2"/>
@@ -745,18 +760,18 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="1"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="selectShiftToFirstWorkload_production" inputPort="//@networknode.71/@ports/@port.0" patternName="selectShiftToFirstWorkload">
+  <networknode xmi:type="hipe.network:ProductionNode" name="selectShiftToFirstWorkload_production" inputPort="//@networknode.73/@ports/@port.0" patternName="selectShiftToFirstWorkload">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="p" value="0"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="vsw" value="2"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="vwc" value="3"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="w" value="1"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="selectShiftToRoster_production" inputPort="//@networknode.18/@ports/@port.1" patternName="selectShiftToRoster">
+  <networknode xmi:type="hipe.network:ProductionNode" name="selectShiftToRoster_production" inputPort="//@networknode.20/@ports/@port.1" patternName="selectShiftToRoster">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="vsr" value="0"/>
   </networknode>
-  <networknode xmi:type="hipe.network:JunctionNode" name="surgeonOTForDay_89_junction" inputPort="//@networknode.24/@ports/@port.1 //@networknode.51/@ports/@port.1" patternName="surgeonOTForDay_89" overlaps="//@networknode.74/@allOverlaps.0" mappings="//@networknode.74/@allMappings.0">
+  <networknode xmi:type="hipe.network:JunctionNode" name="surgeonOTForDay_92_junction" inputPort="//@networknode.26/@ports/@port.1 //@networknode.53/@ports/@port.1" patternName="surgeonOTForDay_92" overlaps="//@networknode.76/@allOverlaps.0" mappings="//@networknode.76/@allMappings.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.75" patternName="surgeonOTForDay_89" matchingNode="//@networknode.74"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="CENTER" portTarget="//@networknode.77" patternName="surgeonOTForDay_92" matchingNode="//@networknode.76"/>
     </ports>
     <allOverlaps xmi:type="hipe.network:Overlaps"/>
     <allMappings xmi:type="hipe.network:Mappings">
@@ -765,143 +780,144 @@
       <mapping xmi:type="hipe.network:Mapping" origin="RIGHT" index="1"/>
     </allMappings>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="surgeonOTForDay_production" inputPort="//@networknode.74/@ports/@port.0" patternName="surgeonOTForDay">
+  <networknode xmi:type="hipe.network:ProductionNode" name="surgeonOTForDay_production" inputPort="//@networknode.76/@ports/@port.0" patternName="surgeonOTForDay">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="op" value="2"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="ot" value="0"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="s" value="1"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="surgeonOptimeTupel_production" inputPort="//@networknode.51/@ports/@port.2" patternName="surgeonOptimeTupel">
+  <networknode xmi:type="hipe.network:ProductionNode" name="surgeonOptimeTupel_production" inputPort="//@networknode.53/@ports/@port.2" patternName="surgeonOptimeTupel">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="op" value="1"/>
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="s" value="0"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ProductionNode" name="virtualNodesForOccupant_production" inputPort="//@networknode.82/@ports/@port.3" patternName="virtualNodesForOccupant">
+  <networknode xmi:type="hipe.network:ProductionNode" name="virtualNodesForOccupant_production" inputPort="//@networknode.84/@ports/@port.3" patternName="virtualNodesForOccupant">
     <labelToIndex xmi:type="hipe.network:StringToIntegerMapEntry" key="vsw" value="0"/>
   </networknode>
   <networknode xmi:type="hipe.network:ObjectNode" name="Shift_object_SP0" patternName="genderRoomShift_10" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:ConstraintPort" portSlot="RIGHT" portTarget="//@networknode.9" patternName="genderRoomShift_10" matchingNode="//@networknode.78" initializationCode="" constraintName="check_constraint_1" predicateCode="s.getShiftNo() % 3.0 == 0.0">
+      <port xmi:type="hipe.network:ConstraintPort" portSlot="RIGHT" portTarget="//@networknode.9" patternName="genderRoomShift_10" matchingNode="//@networknode.80" initializationCode="" constraintName="check_constraint_1" predicateCode="s.getShiftNo() % 3.0 == 0.0">
         <indices>0</indices>
         <types xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
         <nodeNames>s</nodeNames>
         <attributes xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
-        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.26"/>
+        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.27"/>
       </port>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.19" patternName="genderRoomShift_10" matchingNode="//@networknode.78"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.28" patternName="genderRoomShift_10" matchingNode="//@networknode.78"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.21" patternName="genderRoomShift_10" matchingNode="//@networknode.80"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.30" patternName="genderRoomShift_10" matchingNode="//@networknode.80"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
   </networknode>
   <networknode xmi:type="hipe.network:ObjectNode" name="Shift_object_SP1" patternName="genderRoomShift_10" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.17" patternName="genderRoomShift_10" matchingNode="//@networknode.79"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.27" patternName="genderRoomShift_10" matchingNode="//@networknode.79"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.19" patternName="genderRoomShift_10" matchingNode="//@networknode.81"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.29" patternName="genderRoomShift_10" matchingNode="//@networknode.81"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
   </networknode>
   <networknode xmi:type="hipe.network:ObjectNode" name="Patient_object_SP0" patternName="mandatoryPatients_11" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:ConstraintPort" portSlot="CENTER" portTarget="//@networknode.12" patternName="mandatoryPatients_11" matchingNode="//@networknode.80" initializationCode="" constraintName="check_constraint_2" predicateCode="p.isMandatory()==true &amp;&amp; p.isIsOccupant()==false">
+      <port xmi:type="hipe.network:ConstraintPort" portSlot="CENTER" portTarget="//@networknode.12" patternName="mandatoryPatients_11" matchingNode="//@networknode.82" initializationCode="" constraintName="check_constraint_2" predicateCode="p.isMandatory()==true &amp;&amp; p.isIsOccupant()==false">
         <indices>0</indices>
         <types xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
         <nodeNames>p</nodeNames>
         <attributes xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/mandatory"/>
         <attributes xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/isOccupant"/>
-        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.27"/>
+        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.28"/>
       </port>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.31" patternName="mandatoryPatients_11" matchingNode="//@networknode.80"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.43" patternName="mandatoryPatients_11" matchingNode="//@networknode.80"/>
+      <port xmi:type="hipe.network:ConstraintPort" portSlot="CENTER" portTarget="//@networknode.24" patternName="mandatoryPatients_11" matchingNode="//@networknode.82" initializationCode="" constraintName="check_constraint_3" predicateCode="p.isMandatory()==false &amp;&amp; p.isIsOccupant()==false">
+        <indices>0</indices>
+        <types xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+        <nodeNames>p</nodeNames>
+        <attributes xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/mandatory"/>
+        <attributes xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/isOccupant"/>
+        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.41"/>
+      </port>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.44" patternName="mandatoryPatients_11" matchingNode="//@networknode.82"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
   </networknode>
   <networknode xmi:type="hipe.network:ObjectNode" name="Patient_object_SP1" patternName="mandatoryPatients_11" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:ConstraintPort" portSlot="CENTER" portTarget="//@networknode.22" patternName="mandatoryPatients_11" matchingNode="//@networknode.81" initializationCode="" constraintName="check_constraint_3" predicateCode="p.isMandatory()==false &amp;&amp; p.isIsOccupant()==false">
-        <indices>0</indices>
-        <types xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
-        <nodeNames>p</nodeNames>
-        <attributes xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/mandatory"/>
-        <attributes xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/isOccupant"/>
-        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.37"/>
-      </port>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.42" patternName="mandatoryPatients_11" matchingNode="//@networknode.81"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.14" patternName="mandatoryPatients_11" matchingNode="//@networknode.83"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.33" patternName="mandatoryPatients_11" matchingNode="//@networknode.83"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.45" patternName="mandatoryPatients_11" matchingNode="//@networknode.83"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualShiftToWorkload_object_SP0" patternName="nursetoWorkload_20" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualShiftToWorkload_object_SP0" patternName="nursetoWorkload_23" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.19" patternName="nursetoWorkload_20" matchingNode="//@networknode.82"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.38" patternName="nursetoWorkload_20" matchingNode="//@networknode.82"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.39" patternName="nursetoWorkload_20" matchingNode="//@networknode.82"/>
-      <port xmi:type="hipe.network:ConstraintPort" portSlot="CENTER" portTarget="//@networknode.77" patternName="nursetoWorkload_20" matchingNode="//@networknode.82" initializationCode="" constraintName="check_constraint_6" predicateCode="vsw.isWasImported()==true">
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.21" patternName="nursetoWorkload_23" matchingNode="//@networknode.84"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.40" patternName="nursetoWorkload_23" matchingNode="//@networknode.84"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.41" patternName="nursetoWorkload_23" matchingNode="//@networknode.84"/>
+      <port xmi:type="hipe.network:ConstraintPort" portSlot="CENTER" portTarget="//@networknode.79" patternName="nursetoWorkload_23" matchingNode="//@networknode.84" initializationCode="" constraintName="check_constraint_6" predicateCode="vsw.isWasImported()==true">
         <indices>0</indices>
         <types xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
         <nodeNames>vsw</nodeNames>
         <attributes xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/wasImported"/>
-        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.113"/>
+        <pattern xmi:type="HiPEPattern:HiPEPartialPattern" href="hipe-patterns.xmi#//@patterns.117"/>
       </port>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualShiftToWorkload_object_SP1" patternName="nursetoWorkload_20" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualShiftToWorkload_object_SP1" patternName="nursetoWorkload_23" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.27" patternName="nursetoWorkload_20" matchingNode="//@networknode.83"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.38" patternName="nursetoWorkload_20" matchingNode="//@networknode.83"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.68" patternName="nursetoWorkload_20" matchingNode="//@networknode.83"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.29" patternName="nursetoWorkload_23" matchingNode="//@networknode.85"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.40" patternName="nursetoWorkload_23" matchingNode="//@networknode.85"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.70" patternName="nursetoWorkload_23" matchingNode="//@networknode.85"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualShiftToWorkload_object_SP2" patternName="nursetoWorkload_20" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualShiftToWorkload_object_SP2" patternName="nursetoWorkload_23" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.30" patternName="nursetoWorkload_20" matchingNode="//@networknode.84"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.39" patternName="nursetoWorkload_20" matchingNode="//@networknode.84"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.69" patternName="nursetoWorkload_20" matchingNode="//@networknode.84"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.32" patternName="nursetoWorkload_23" matchingNode="//@networknode.86"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.41" patternName="nursetoWorkload_23" matchingNode="//@networknode.86"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.71" patternName="nursetoWorkload_23" matchingNode="//@networknode.86"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="Workload_object_SP0" patternName="patientForRoom_35" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="Workload_object_SP0" patternName="patientForRoom_38" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.30" patternName="patientForRoom_35" matchingNode="//@networknode.85"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.42" patternName="patientForRoom_35" matchingNode="//@networknode.85"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.48" patternName="patientForRoom_35" matchingNode="//@networknode.85"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.32" patternName="patientForRoom_38" matchingNode="//@networknode.87"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.44" patternName="patientForRoom_38" matchingNode="//@networknode.87"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.50" patternName="patientForRoom_38" matchingNode="//@networknode.87"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="Workload_object_SP1" patternName="patientForRoom_35" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="Workload_object_SP1" patternName="patientForRoom_38" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.31" patternName="patientForRoom_35" matchingNode="//@networknode.86"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.47" patternName="patientForRoom_35" matchingNode="//@networknode.86"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.69" patternName="patientForRoom_35" matchingNode="//@networknode.86"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.33" patternName="patientForRoom_38" matchingNode="//@networknode.88"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.49" patternName="patientForRoom_38" matchingNode="//@networknode.88"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.71" patternName="patientForRoom_38" matchingNode="//@networknode.88"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualWorkloadToOpTime_object_SP0" patternName="selectOperationDay_triangle_67" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualWorkloadToOpTime_object_SP0" patternName="selectOperationDay_triangle_70" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.46" patternName="selectOperationDay_triangle_67" matchingNode="//@networknode.87"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.53" patternName="selectOperationDay_triangle_67" matchingNode="//@networknode.87"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.61" patternName="selectOperationDay_triangle_67" matchingNode="//@networknode.87"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.48" patternName="selectOperationDay_triangle_70" matchingNode="//@networknode.89"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.55" patternName="selectOperationDay_triangle_70" matchingNode="//@networknode.89"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.63" patternName="selectOperationDay_triangle_70" matchingNode="//@networknode.89"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualWorkloadToOpTime_object_SP1" patternName="selectOperationDay_triangle_67" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualWorkloadToOpTime_object_SP1" patternName="selectOperationDay_triangle_70" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.48" patternName="selectOperationDay_triangle_67" matchingNode="//@networknode.88"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.55" patternName="selectOperationDay_triangle_67" matchingNode="//@networknode.88"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.62" patternName="selectOperationDay_triangle_67" matchingNode="//@networknode.88"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.50" patternName="selectOperationDay_triangle_70" matchingNode="//@networknode.90"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.57" patternName="selectOperationDay_triangle_70" matchingNode="//@networknode.90"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.64" patternName="selectOperationDay_triangle_70" matchingNode="//@networknode.90"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualWorkloadToCapacity_object_SP0" patternName="selectOperationDay_triangle_68" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualWorkloadToCapacity_object_SP0" patternName="selectOperationDay_triangle_71" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.46" patternName="selectOperationDay_triangle_68" matchingNode="//@networknode.89"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.58" patternName="selectOperationDay_triangle_68" matchingNode="//@networknode.89"/>
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.68" patternName="selectOperationDay_triangle_68" matchingNode="//@networknode.89"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.48" patternName="selectOperationDay_triangle_71" matchingNode="//@networknode.91"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.60" patternName="selectOperationDay_triangle_71" matchingNode="//@networknode.91"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.70" patternName="selectOperationDay_triangle_71" matchingNode="//@networknode.91"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
   </networknode>
-  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualWorkloadToCapacity_object_SP1" patternName="selectOperationDay_triangle_68" dispatchnode="//@networknode.0">
+  <networknode xmi:type="hipe.network:ObjectNode" name="VirtualWorkloadToCapacity_object_SP1" patternName="selectOperationDay_triangle_71" dispatchnode="//@networknode.0">
     <ports xmi:type="hipe.network:Ports">
-      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.47" patternName="selectOperationDay_triangle_68" matchingNode="//@networknode.90"/>
-      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.62" patternName="selectOperationDay_triangle_68" matchingNode="//@networknode.90"/>
+      <port xmi:type="hipe.network:SimplePort" portSlot="RIGHT" portTarget="//@networknode.49" patternName="selectOperationDay_triangle_71" matchingNode="//@networknode.92"/>
+      <port xmi:type="hipe.network:SimplePort" portTarget="//@networknode.64" patternName="selectOperationDay_triangle_71" matchingNode="//@networknode.92"/>
     </ports>
     <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
   </networknode>

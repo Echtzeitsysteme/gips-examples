@@ -16,7 +16,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@36de451d (name: g), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@1b0e2c84 (name: r), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@7fc6edea (name: s)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@47a802d4 (name: g), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@226b1bac (name: r), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@21e52f97 (name: s)] which does the following:
  * Pattern used for a mapping to save the information which genders are present in a specific room for each shiftThis information is only needed for each morning shift
  */
 @SuppressWarnings("unused")

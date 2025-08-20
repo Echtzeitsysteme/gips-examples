@@ -2,13 +2,9 @@ package ihtcvirtualgipssolution.api.gips.constraint;
 
 import java.util.List;
 import org.emoflon.gips.core.GipsEngine;
-import org.emoflon.gips.core.GipsMapper;
 import org.emoflon.gips.core.milp.model.Constraint;
 import ihtcvirtualgipssolution.api.gips.mapping.SelectedShiftToRosterMapping;
 import org.emoflon.gips.core.GipsMappingConstraint;
-import org.emoflon.gips.core.GlobalMappingIndexer;
-import org.emoflon.gips.core.MappingIndexer;
-
 import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
 import org.emoflon.gips.intermediate.GipsIntermediate.MappingConstraint;
 import java.util.LinkedList;
@@ -17,8 +13,8 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 import ihtcvirtualgipssolution.api.gips.mapping.AssignedNursesToWorkloadMapping;
 
-public class MappingConstraint26OnassignedNursesToWorkload extends GipsMappingConstraint<IhtcvirtualgipssolutionGipsAPI, AssignedNursesToWorkloadMapping>{
-	public MappingConstraint26OnassignedNursesToWorkload(final IhtcvirtualgipssolutionGipsAPI engine, final MappingConstraint constraint) {
+public class MappingConstraint57OnassignedNursesToWorkload extends GipsMappingConstraint<IhtcvirtualgipssolutionGipsAPI, AssignedNursesToWorkloadMapping>{
+	public MappingConstraint57OnassignedNursesToWorkload(final IhtcvirtualgipssolutionGipsAPI engine, final MappingConstraint constraint) {
 		super(engine, constraint);
 	}
 	
@@ -49,34 +45,15 @@ public class MappingConstraint26OnassignedNursesToWorkload extends GipsMappingCo
 	protected List<Constraint> buildAdditionalConstraints(final AssignedNursesToWorkloadMapping context) {
 		throw new UnsupportedOperationException("Constraint has no depending or substitute constraints.");
 	}
+	protected void builder_0(final List<Term> terms, final AssignedNursesToWorkloadMapping context) {
+		engine.getMapper("selectedShiftToRoster").getMappings().values().parallelStream()
+					.map(mapping -> (SelectedShiftToRosterMapping) mapping)
+		.filter(elt -> elt.getVsr().equals(context.getVsr()))
+		.forEach(elt -> {
+			terms.add(new Term(elt, (double)1.0));
+		});
+	}
 	protected double builder_1(final AssignedNursesToWorkloadMapping context) {
 		return (-1.0) * (1.0);
-	}
-	protected void builder_0(final List<Term> terms, final AssignedNursesToWorkloadMapping context) {
-		final GipsMapper<?> mapper = engine.getMapper("selectedShiftToRoster");
-		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
-		globalIndexer.createIndexer(mapper);
-		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
-		if (!indexer.isInitialized()) {
-			mapper.getMappings().values().parallelStream()
-					.map(mapping -> (SelectedShiftToRosterMapping) mapping).forEach(elt -> {
-						indexer.putMapping(elt.getVsr(), elt);
-					});
-		}
-		
-		indexer.getMappingsOfNode(context.getVsr()).parallelStream()
-				.map(mapping -> (SelectedShiftToRosterMapping) mapping)
-				.filter(elt -> elt.getVsr().equals(context.getVsr()))
-				.forEach(elt -> {
-					terms.add(new Term(elt, (double)1.0));
-				});
-		
-		// Old generated code
-//		engine.getMapper("selectedShiftToRoster").getMappings().values().parallelStream()
-//					.map(mapping -> (SelectedShiftToRosterMapping) mapping)
-//		.filter(elt -> elt.getVsr().equals(context.getVsr()))
-//		.forEach(elt -> {
-//			terms.add(new Term(elt, (double)1.0));
-//		});
 	}
 }

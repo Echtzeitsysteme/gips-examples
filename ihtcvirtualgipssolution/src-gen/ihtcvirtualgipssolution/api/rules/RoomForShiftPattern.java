@@ -15,7 +15,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@6591db01 (name: r), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@6a56e88a (name: s)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@78b864b4 (name: r), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@526f9295 (name: s)] which does the following:
  * Pattern used to map which rooms are occupied on a specific shift.Used for a mapping which counts the Patients over a specific room for a specific day -> enforce that the capacity of a room is not exceededAdditionally used to make sure nurses are not assigned to empty rooms and each non-empty room has an assigned nurse
  */
 @SuppressWarnings("unused")

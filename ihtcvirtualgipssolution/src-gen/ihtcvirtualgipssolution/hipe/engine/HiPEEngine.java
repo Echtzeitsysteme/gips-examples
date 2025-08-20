@@ -9,7 +9,6 @@ import ihtcvirtualgipssolution.hipe.engine.actor.edge.VirtualShiftToWorkload_ena
 import ihtcvirtualgipssolution.hipe.engine.actor.edge.VirtualShiftToWorkload_requires_virtualShiftToWorkload_0_reference;
 import ihtcvirtualgipssolution.hipe.engine.actor.node.Shift_object_SP0;
 import ihtcvirtualgipssolution.hipe.engine.actor.node.Patient_object_SP0;
-import ihtcvirtualgipssolution.hipe.engine.actor.node.Patient_object_SP1;
 import ihtcvirtualgipssolution.hipe.engine.actor.node.VirtualShiftToWorkload_object_SP0;
 
 import hipe.engine.IHiPEEngine;
@@ -64,6 +63,8 @@ public class HiPEEngine extends IHiPEEngine{
 		productionNodes2pattern.put("genderRoomShift_production", "genderRoomShift");
 		classes.put("mandatoryPatients_production", GenericProductionActor.class);
 		productionNodes2pattern.put("mandatoryPatients_production", "mandatoryPatients");
+		classes.put("nursePatientTupel_production", GenericProductionActor.class);
+		productionNodes2pattern.put("nursePatientTupel_production", "nursePatientTupel");
 		classes.put("nurseRosterTupel_production", GenericProductionActor.class);
 		productionNodes2pattern.put("nurseRosterTupel_production", "nurseRosterTupel");
 		classes.put("nursetoWorkload_production", GenericProductionActor.class);
@@ -100,25 +101,26 @@ public class HiPEEngine extends IHiPEEngine{
 		classes.put("ageGroupsRoomDay_3_junction", GenericJunctionActor.class);
 		classes.put("ageGroupsRoomDay_1_junction", GenericJunctionActor.class);
 		classes.put("genderRoomShift_6_junction", GenericJunctionActor.class);
-		classes.put("nursetoWorkload_15_junction", GenericJunctionActor.class);
-		classes.put("patientForRoom_26_junction", GenericJunctionActor.class);
-		classes.put("patientForRoom_27_junction", GenericJunctionActor.class);
-		classes.put("patientForRoom_25_junction", GenericJunctionActor.class);
-		classes.put("roomDayTupel_37_junction", GenericJunctionActor.class);
-		classes.put("selectExtendingShiftToFirstWorkload_43_junction", GenericJunctionActor.class);
-		classes.put("selectOperationDay_51_junction", GenericJunctionActor.class);
-		classes.put("selectOperationDay_triangle_0_triangleJunction", GenericTriangleJunctionActor.class);
-		classes.put("selectOperationDay_49_junction", GenericJunctionActor.class);
-		classes.put("selectOperationDay_61_junction", GenericJunctionActor.class);
-		classes.put("selectOperationDay_53_junction", GenericJunctionActor.class);
-		classes.put("selectOperationDay_62_junction", GenericJunctionActor.class);
-		classes.put("selectOperationDay_63_junction", GenericJunctionActor.class);
+		classes.put("nursePatientTupel_12_junction", GenericJunctionActor.class);
+		classes.put("nursetoWorkload_18_junction", GenericJunctionActor.class);
+		classes.put("patientForRoom_29_junction", GenericJunctionActor.class);
+		classes.put("patientForRoom_30_junction", GenericJunctionActor.class);
+		classes.put("patientForRoom_28_junction", GenericJunctionActor.class);
+		classes.put("roomDayTupel_40_junction", GenericJunctionActor.class);
+		classes.put("selectExtendingShiftToFirstWorkload_46_junction", GenericJunctionActor.class);
 		classes.put("selectOperationDay_54_junction", GenericJunctionActor.class);
-		classes.put("selectOperationDay_50_junction", GenericJunctionActor.class);
-		classes.put("selectOperationDay_48_junction", GenericJunctionActor.class);
+		classes.put("selectOperationDay_triangle_0_triangleJunction", GenericTriangleJunctionActor.class);
+		classes.put("selectOperationDay_52_junction", GenericJunctionActor.class);
+		classes.put("selectOperationDay_64_junction", GenericJunctionActor.class);
+		classes.put("selectOperationDay_56_junction", GenericJunctionActor.class);
+		classes.put("selectOperationDay_65_junction", GenericJunctionActor.class);
+		classes.put("selectOperationDay_66_junction", GenericJunctionActor.class);
+		classes.put("selectOperationDay_57_junction", GenericJunctionActor.class);
+		classes.put("selectOperationDay_53_junction", GenericJunctionActor.class);
+		classes.put("selectOperationDay_51_junction", GenericJunctionActor.class);
 		classes.put("selectShiftToFirstWorkload_triangle_0_triangleJunction", GenericTriangleJunctionActor.class);
-		classes.put("selectShiftToFirstWorkload_78_junction", GenericJunctionActor.class);
-		classes.put("surgeonOTForDay_89_junction", GenericJunctionActor.class);
+		classes.put("selectShiftToFirstWorkload_81_junction", GenericJunctionActor.class);
+		classes.put("surgeonOTForDay_92_junction", GenericJunctionActor.class);
 	}
 	
 	@Override
@@ -153,9 +155,9 @@ public class HiPEEngine extends IHiPEEngine{
 	
 	@Override
 	public void createObjectNodes() {
-		classes.put("Room_object",Room_object.class);
 		classes.put("AgeGroup_object",AgeGroup_object.class);
 		classes.put("Day_object",Day_object.class);
+		classes.put("Room_object",Room_object.class);
 		classes.put("Gender_object",Gender_object.class);
 		classes.put("Nurse_object",Nurse_object.class);
 		classes.put("Roster_object",Roster_object.class);
@@ -211,9 +213,9 @@ public class HiPEEngine extends IHiPEEngine{
 	}
 }
 
-class Room_object extends GenericObjectActor<ihtcvirtualmetamodel.Room> { }
 class AgeGroup_object extends GenericObjectActor<ihtcvirtualmetamodel.AgeGroup> { }
 class Day_object extends GenericObjectActor<ihtcvirtualmetamodel.Day> { }
+class Room_object extends GenericObjectActor<ihtcvirtualmetamodel.Room> { }
 class Gender_object extends GenericObjectActor<ihtcvirtualmetamodel.Gender> { }
 class Nurse_object extends GenericObjectActor<ihtcvirtualmetamodel.Nurse> { }
 class Roster_object extends GenericObjectActor<ihtcvirtualmetamodel.Roster> { }
@@ -224,6 +226,7 @@ class Surgeon_object extends GenericObjectActor<ihtcvirtualmetamodel.Surgeon> { 
 class OpTime_object extends GenericObjectActor<ihtcvirtualmetamodel.OpTime> { }
 class VirtualOpTimeToCapacity_object extends GenericObjectActor<ihtcvirtualmetamodel.VirtualOpTimeToCapacity> { }
 class Shift_object_SP1 extends GenericObjectActor<ihtcvirtualmetamodel.Shift> { }
+class Patient_object_SP1 extends GenericObjectActor<ihtcvirtualmetamodel.Patient> { }
 class VirtualShiftToWorkload_object_SP1 extends GenericObjectActor<ihtcvirtualmetamodel.VirtualShiftToWorkload> { }
 class VirtualShiftToWorkload_object_SP2 extends GenericObjectActor<ihtcvirtualmetamodel.VirtualShiftToWorkload> { }
 class Workload_object_SP0 extends GenericObjectActor<ihtcvirtualmetamodel.Workload> { }

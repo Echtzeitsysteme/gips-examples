@@ -16,7 +16,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@dd78a6f (name: ag), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@4d9c9a92 (name: d), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@c865a9d (name: r)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@6d42ff89 (name: ag), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@2d6bfacb (name: d), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@3ea0f4fd (name: r)] which does the following:
  * Pattern used for a Mapping to calculate what age groups are present in a specific room for all shifts.Additionally the highest and lowest age groups are also saved in variables
  */
 @SuppressWarnings("unused")

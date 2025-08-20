@@ -1,10 +1,8 @@
 package ihtcvirtualgipssolution.api.gips;
 		
 import ihtcvirtualgipssolution.api.gips.mapper.AssignedPatientsToRoomMapper;
-import ihtcvirtualgipssolution.api.gips.mapper.AssignedNursesToWorkloadMapper;
 import org.eclipse.emf.common.util.URI;
 import ihtcvirtualgipssolution.api.IhtcvirtualgipssolutionHiPEApp;
-import ihtcvirtualgipssolution.api.gips.mapper.SelectedShiftToFirstWorkloadMapper;
 import org.emoflon.gips.core.api.GipsEngineAPI;
 import org.emoflon.gips.core.milp.SolverConfig;
 import org.emoflon.gips.core.milp.Solver;
@@ -13,12 +11,21 @@ import ihtcvirtualgipssolution.api.IhtcvirtualgipssolutionAPI;
 import org.emoflon.gips.core.milp.GurobiSolver;
 import org.emoflon.gips.core.milp.CplexSolver;
 import ihtcvirtualgipssolution.api.gips.mapper.CountPatientsForRoomMapper;
+import ihtcvirtualgipssolution.api.gips.mapper.NurseWorkloadForDayMapper;
 import ihtcvirtualgipssolution.api.gips.mapper.SelectedOperationDayMapper;
 import org.emoflon.gips.core.milp.GlpkSolver;
-import ihtcvirtualgipssolution.api.gips.mapper.SelectedOccupantNodesMapper;
-import ihtcvirtualgipssolution.api.gips.mapper.SelectedExtendingShiftToFirstWorkloadMapper;
+import ihtcvirtualgipssolution.api.gips.mapper.AgeGroupsInRoomMapper;
 import ihtcvirtualgipssolution.api.gips.mapper.SelectedShiftToRosterMapper;
 import ihtcvirtualgipssolution.api.gips.mapper.AssignedGenderToRoomOnShiftMapper;
+import ihtcvirtualgipssolution.api.gips.mapper.AssignedNursesToWorkloadMapper;
+import ihtcvirtualgipssolution.api.gips.mapper.AssignedNurseForPatientMapper;
+import ihtcvirtualgipssolution.api.gips.objective.IhtcvirtualgipssolutionGipsObjective;
+import ihtcvirtualgipssolution.api.gips.mapper.SelectedShiftToFirstWorkloadMapper;
+import ihtcvirtualgipssolution.api.gips.mapper.OtForSurgeonMapper;
+import ihtcvirtualgipssolution.api.gips.mapper.SelectedOccupantNodesMapper;
+import ihtcvirtualgipssolution.api.gips.mapper.OpenOTsMapper;
+import ihtcvirtualgipssolution.api.gips.mapper.OtsPerSurgeonMapper;
+import ihtcvirtualgipssolution.api.gips.mapper.SelectedExtendingShiftToFirstWorkloadMapper;
 import org.emoflon.gips.core.GipsObjective;
 		
 public class IhtcvirtualgipssolutionGipsAPI extends GipsEngineAPI <IhtcvirtualgipssolutionHiPEApp, IhtcvirtualgipssolutionAPI>{
@@ -32,7 +39,13 @@ public class IhtcvirtualgipssolutionGipsAPI extends GipsEngineAPI <Ihtcvirtualgi
 	protected CountPatientsForRoomMapper countPatientsForRoom;
 	protected AssignedPatientsToRoomMapper assignedPatientsToRoom;
 	protected AssignedGenderToRoomOnShiftMapper assignedGenderToRoomOnShift;
+	protected OpenOTsMapper openOTs;
+	protected OtForSurgeonMapper otForSurgeon;
+	protected OtsPerSurgeonMapper otsPerSurgeon;
+	protected AgeGroupsInRoomMapper ageGroupsInRoom;
 	protected AssignedNursesToWorkloadMapper assignedNursesToWorkload;
+	protected NurseWorkloadForDayMapper nurseWorkloadForDay;
+	protected AssignedNurseForPatientMapper assignedNurseForPatient;
 	
 	public IhtcvirtualgipssolutionGipsAPI() {
 		super(new IhtcvirtualgipssolutionHiPEApp());
@@ -134,8 +147,26 @@ public class IhtcvirtualgipssolutionGipsAPI extends GipsEngineAPI <Ihtcvirtualgi
 	public AssignedGenderToRoomOnShiftMapper getAssignedGenderToRoomOnShift() {
 		return assignedGenderToRoomOnShift;
 	}
+	public OpenOTsMapper getOpenOTs() {
+		return openOTs;
+	}
+	public OtForSurgeonMapper getOtForSurgeon() {
+		return otForSurgeon;
+	}
+	public OtsPerSurgeonMapper getOtsPerSurgeon() {
+		return otsPerSurgeon;
+	}
+	public AgeGroupsInRoomMapper getAgeGroupsInRoom() {
+		return ageGroupsInRoom;
+	}
 	public AssignedNursesToWorkloadMapper getAssignedNursesToWorkload() {
 		return assignedNursesToWorkload;
+	}
+	public NurseWorkloadForDayMapper getNurseWorkloadForDay() {
+		return nurseWorkloadForDay;
+	}
+	public AssignedNurseForPatientMapper getAssignedNurseForPatient() {
+		return assignedNurseForPatient;
 	}
 	
 	@Override
@@ -156,8 +187,20 @@ public class IhtcvirtualgipssolutionGipsAPI extends GipsEngineAPI <Ihtcvirtualgi
 		addMapper(assignedPatientsToRoom);
 		assignedGenderToRoomOnShift = (AssignedGenderToRoomOnShiftMapper) mapperFactory.createMapper(name2Mapping.get("assignedGenderToRoomOnShift"));
 		addMapper(assignedGenderToRoomOnShift);
+		openOTs = (OpenOTsMapper) mapperFactory.createMapper(name2Mapping.get("openOTs"));
+		addMapper(openOTs);
+		otForSurgeon = (OtForSurgeonMapper) mapperFactory.createMapper(name2Mapping.get("otForSurgeon"));
+		addMapper(otForSurgeon);
+		otsPerSurgeon = (OtsPerSurgeonMapper) mapperFactory.createMapper(name2Mapping.get("otsPerSurgeon"));
+		addMapper(otsPerSurgeon);
+		ageGroupsInRoom = (AgeGroupsInRoomMapper) mapperFactory.createMapper(name2Mapping.get("ageGroupsInRoom"));
+		addMapper(ageGroupsInRoom);
 		assignedNursesToWorkload = (AssignedNursesToWorkloadMapper) mapperFactory.createMapper(name2Mapping.get("assignedNursesToWorkload"));
 		addMapper(assignedNursesToWorkload);
+		nurseWorkloadForDay = (NurseWorkloadForDayMapper) mapperFactory.createMapper(name2Mapping.get("nurseWorkloadForDay"));
+		addMapper(nurseWorkloadForDay);
+		assignedNurseForPatient = (AssignedNurseForPatientMapper) mapperFactory.createMapper(name2Mapping.get("assignedNurseForPatient"));
+		addMapper(assignedNurseForPatient);
 	}
 	
 	@Override
@@ -177,8 +220,7 @@ public class IhtcvirtualgipssolutionGipsAPI extends GipsEngineAPI <Ihtcvirtualgi
 	
 	@Override
 	protected GipsObjective createObjective() {
-		// No objective was defined!
-		return null;
+		return new IhtcvirtualgipssolutionGipsObjective(this, gipsModel.getObjective());
 	}
 	
 	@Override

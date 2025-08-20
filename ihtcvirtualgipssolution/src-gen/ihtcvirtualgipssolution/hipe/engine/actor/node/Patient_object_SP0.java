@@ -28,13 +28,17 @@ public class Patient_object_SP0 extends GenericObjectActor<ihtcvirtualmetamodel.
 	@Override
 	protected void initializePorts(Map<String, ActorRef> name2actor, ObjectNode node) {
 		ports = new LinkedList<>();
-		ports.add(new PortNodeLeft<ihtcvirtualmetamodel.Patient>(node.getPorts().getPort().get(2), getSelf(), name2actor.get("Patient_surgeon_0_reference"), this::returnTrue   ));
-		ports.add(new PortNodeLeft<ihtcvirtualmetamodel.Patient>(node.getPorts().getPort().get(1), getSelf(), name2actor.get("Patient_workloads_0_reference"), this::returnTrue   ));
+		ports.add(new PortNodeLeft<ihtcvirtualmetamodel.Patient>(node.getPorts().getPort().get(2), getSelf(), name2actor.get("Patient_firstWorkload_0_reference"), this::returnTrue   ));
 		ports.add(new PortNodeMatch<ihtcvirtualmetamodel.Patient>(node.getPorts().getPort().get(0), getSelf(), name2actor.get("mandatoryPatients_production"), this::check_constraint_2 , 0   , node.getName() ));
+		ports.add(new PortNodeMatch<ihtcvirtualmetamodel.Patient>(node.getPorts().getPort().get(1), getSelf(), name2actor.get("optionalPatients_production"), this::check_constraint_3 , 1   , node.getName() ));
 	}
 	
 	public boolean check_constraint_2(ihtcvirtualmetamodel.Patient p, int index) {
 		return p.isMandatory()==true && p.isIsOccupant()==false;
+	}
+	
+	public boolean check_constraint_3(ihtcvirtualmetamodel.Patient p, int index) {
+		return p.isMandatory()==false && p.isIsOccupant()==false;
 	}
 	
 }

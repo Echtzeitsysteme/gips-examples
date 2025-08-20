@@ -15,7 +15,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@76b236d (name: d), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@1cba5c59 (name: r)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@3d6c0c47 (name: d), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@5cda9059 (name: r)] which does the following:
  * Used in Softconstraint S1 to check the assigned age groups for each room on each day
  */
 @SuppressWarnings("unused")

@@ -15,7 +15,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@2e192db3 (name: op), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@3392c9bc (name: s)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@16161754 (name: op), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@1bdebcf4 (name: s)] which does the following:
  * Pattern used in a mapping to save the information if a Surgeon operates on a specific Day and used to make sure the operation time of a surgeon is not exceeded on each dayop.maxOpTime > 0 is already enforced by the preprocessing because OpTime Objects with maxOpTime <= 0 are not created
  */
 @SuppressWarnings("unused")

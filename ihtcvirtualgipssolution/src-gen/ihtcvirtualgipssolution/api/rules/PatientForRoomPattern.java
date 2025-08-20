@@ -18,7 +18,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.engine.GraphTransformationInterpreter;
 
 /**
- * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@2eb7d37f (name: p), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@702ca537 (name: r), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@7803798 (name: s), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@37d47684 (name: vsw), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@17edd53b (name: w)] which does the following:
+ * The pattern [org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@6780b31b (name: p), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@19cd5691 (name: r), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@291d34a3 (name: s), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@618ecad5 (name: vsw), org.emoflon.ibex.patternmodel.IBeXPatternModel.impl.IBeXNodeImpl@617f87f2 (name: w)] which does the following:
  * Pattern that finds all patients that are assigned to a room -> first and following workloadsAlso holds the information which workload of a patient is assigned to which shift
  */
 @SuppressWarnings("unused")

@@ -3,6 +3,7 @@ package ihtcvirtualgipssolution.api;
 import ihtcvirtualgipssolution.api.rules.AgeGroupsRoomDayPattern;
 import ihtcvirtualgipssolution.api.rules.GenderRoomShiftPattern;
 import ihtcvirtualgipssolution.api.rules.MandatoryPatientsPattern;
+import ihtcvirtualgipssolution.api.rules.NursePatientTupelPattern;
 import ihtcvirtualgipssolution.api.rules.NurseRosterTupelPattern;
 import ihtcvirtualgipssolution.api.rules.NursetoWorkloadPattern;
 import ihtcvirtualgipssolution.api.rules.OptionalPatientsPattern;
@@ -29,7 +30,7 @@ import org.emoflon.ibex.gt.api.GraphTransformationPattern;
 import org.emoflon.ibex.gt.api.GraphTransformationRule;
 
 /**
- * The IhtcvirtualgipssolutionAPI with 5 rules and 17 patterns.
+ * The IhtcvirtualgipssolutionAPI with 5 rules and 18 patterns.
  */
 public class IhtcvirtualgipssolutionAPI extends GraphTransformationAPI {
 	
@@ -104,6 +105,7 @@ public class IhtcvirtualgipssolutionAPI extends GraphTransformationAPI {
 		map.put("ageGroupsRoomDay", () -> ageGroupsRoomDay());
 		map.put("genderRoomShift", () -> genderRoomShift());
 		map.put("mandatoryPatients", () -> mandatoryPatients());
+		map.put("nursePatientTupel", () -> nursePatientTupel());
 		map.put("nurseRosterTupel", () -> nurseRosterTupel());
 		map.put("nursetoWorkload", () -> nursetoWorkload());
 		map.put("optionalPatients", () -> optionalPatients());
@@ -233,6 +235,20 @@ public class IhtcvirtualgipssolutionAPI extends GraphTransformationAPI {
 			return pattern;
 		} catch(Exception e) {
 			return new MandatoryPatientsPattern(this, interpreter);
+		}
+	}
+	/**
+	* Creates a new instance of the pattern <code>nursePatientTupel()</code> which does the following:
+	* Used to filter for the amount of different nurses assigned to each patient
+	*
+	* @return the new instance of the pattern»
+	*/
+	public NursePatientTupelPattern nursePatientTupel() {
+		try{
+			NursePatientTupelPattern pattern = (NursePatientTupelPattern) interpreter.getRegisteredGraphTransformationPattern("nursePatientTupel");
+			return pattern;
+		} catch(Exception e) {
+			return new NursePatientTupelPattern(this, interpreter);
 		}
 	}
 	/**

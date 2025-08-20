@@ -29,7 +29,7 @@ public class VirtualShiftToWorkload_requires_virtualShiftToWorkload_0_reference 
 	@Override
 	protected void initializePorts(Map<String, ActorRef> name2actor, ReferenceNode node) {
 		ports = new LinkedList<>();
-		ports.add(new PortEdgeRight(node.getPorts().getPort().get(0), getSelf(), name2actor.get("selectExtendingShiftToFirstWorkload_43_junction"), this::check_constraint_5 , 0   ));
+		ports.add(new PortEdgeRight(node.getPorts().getPort().get(0), getSelf(), name2actor.get("selectExtendingShiftToFirstWorkload_46_junction"), this::check_constraint_5 , 0   ));
 	}	
 
 	public boolean check_constraint_5(EdgeMatch edge, int index) {
