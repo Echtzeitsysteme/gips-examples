@@ -18,7 +18,7 @@ config {
 	solver := GUROBI;
 	timeLimit := true [value := 590.0, includeInitTime := true];
 	randomSeed := true [value := 7];
-	presolve := true;
+	presolve := auto;
 	debugOutput := false;
 	// lpOutput := true [path := "gurobi.lp"];
 	threadCount := true [value := 4];
