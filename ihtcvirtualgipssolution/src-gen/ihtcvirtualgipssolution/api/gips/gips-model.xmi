@@ -1,0 +1,1515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GipsIntermediate:GipsIntermediateModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:GipsIntermediate="platform:/resource/org.emoflon.gips.intermediate/model/GipsIntermediate.ecore" xmlns:IBeXPatternModel="platform:/resource/org.emoflon.ibex.patternmodel/model/IBeXPatternModel.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xsi:schemaLocation="platform:/resource/org.emoflon.gips.intermediate/model/GipsIntermediate.ecore java://org.emoflon.gips.intermediate.GipsIntermediate.GipsIntermediatePackage platform:/resource/org.emoflon.ibex.patternmodel/model/IBeXPatternModel.ecore java://org.emoflon.ibex.patternmodel.IBeXPatternModel.IBeXPatternModelPackage http://www.eclipse.org/emf/2002/Ecore java://org.eclipse.emf.ecore.EcorePackage" name="Model" requiredPatterns="//@ibexModel/@patternSet/@contextPatterns.12 //@ibexModel/@patternSet/@contextPatterns.6 //@ibexModel/@patternSet/@contextPatterns.14 //@ibexModel/@patternSet/@contextPatterns.16 //@ibexModel/@patternSet/@contextPatterns.9 //@ibexModel/@patternSet/@contextPatterns.2 //@ibexModel/@patternSet/@contextPatterns.0 //@ibexModel/@patternSet/@contextPatterns.8 //@ibexModel/@patternSet/@contextPatterns.1 //@ibexModel/@patternSet/@contextPatterns.15 //@ibexModel/@patternSet/@contextPatterns.11 //@ibexModel/@patternSet/@contextPatterns.3 //@ibexModel/@patternSet/@contextPatterns.7 //@ibexModel/@patternSet/@contextPatterns.5 //@ibexModel/@patternSet/@contextPatterns.10 //@ibexModel/@patternSet/@contextPatterns.13 //@ibexModel/@patternSet/@contextPatterns.4" requiredRules="//@ibexModel/@ruleSet/@rules.2 //@ibexModel/@ruleSet/@rules.4 //@ibexModel/@ruleSet/@rules.0 //@ibexModel/@ruleSet/@rules.3 //@ibexModel/@ruleSet/@rules.1">
+  <ibexModel xmi:type="IBeXPatternModel:IBeXModel">
+    <patternSet xmi:type="IBeXPatternModel:IBeXPatternSet">
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="ageGroupsRoomDay" documentation="Pattern used for a Mapping to calculate what age groups are present in a specific room for all shifts.Additionally the highest and lowest age groups are also saved in variables" signatureNodes="//@ibexModel/@nodeSet/@nodes.0 //@ibexModel/@nodeSet/@nodes.3 //@ibexModel/@nodeSet/@nodes.20"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="genderRoomShift" documentation="Pattern used for a mapping to save the information which genders are present in a specific room for each shiftThis information is only needed for each morning shift" localEdges="//@ibexModel/@edgeSet/@edges.9" signatureNodes="//@ibexModel/@nodeSet/@nodes.5 //@ibexModel/@nodeSet/@nodes.22 //@ibexModel/@nodeSet/@nodes.27">
+        <arithmeticConstraints xmi:type="IBeXPatternModel:IBeXArithmeticConstraint" relation="EQUAL">
+          <lhs xmi:type="IBeXPatternModel:IBeXBinaryExpression" operator="MODULUS">
+            <left xmi:type="IBeXPatternModel:IBeXArithmeticAttribute" name="s">
+              <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+              <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+            </left>
+            <right xmi:type="IBeXPatternModel:IBeXArithmeticValueLiteral" value="3.0"/>
+          </lhs>
+          <rhs xmi:type="IBeXPatternModel:IBeXArithmeticValueLiteral"/>
+        </arithmeticConstraints>
+      </contextPatterns>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="mandatoryPatients" documentation="Utility Patterns used in ConstraintsPattern to find all mandatory patients" signatureNodes="//@ibexModel/@nodeSet/@nodes.14">
+        <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+          <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@ibexModel/@nodeSet/@nodes.14">
+            <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/mandatory"/>
+          </lhs>
+          <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+        </attributeConstraint>
+        <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+          <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@ibexModel/@nodeSet/@nodes.14">
+            <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/isOccupant"/>
+          </lhs>
+          <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787000" stringValue="false"/>
+        </attributeConstraint>
+      </contextPatterns>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="nurseRosterTupel" documentation="Used in a mapping to calculate the workload for all nurses for each shift" localEdges="//@ibexModel/@edgeSet/@edges.0" signatureNodes="//@ibexModel/@nodeSet/@nodes.6 //@ibexModel/@nodeSet/@nodes.24"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="nursetoWorkload" documentation="Used in a mapping to calculate which nurse is assigned to which workload." localEdges="//@ibexModel/@edgeSet/@edges.17 //@ibexModel/@edgeSet/@edges.14" signatureNodes="//@ibexModel/@nodeSet/@nodes.31 //@ibexModel/@nodeSet/@nodes.34 //@ibexModel/@nodeSet/@nodes.38"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="optionalPatients" documentation="Pattern to find all optional patients" signatureNodes="//@ibexModel/@nodeSet/@nodes.17">
+        <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+          <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@ibexModel/@nodeSet/@nodes.17">
+            <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/mandatory"/>
+          </lhs>
+          <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787000" stringValue="false"/>
+        </attributeConstraint>
+        <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+          <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@ibexModel/@nodeSet/@nodes.17">
+            <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/isOccupant"/>
+          </lhs>
+          <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787000" stringValue="false"/>
+        </attributeConstraint>
+      </contextPatterns>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="otCapacityTupel" documentation="Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each dayc.maxCapacity > 0 is already enforced by the preprocessing because Capacity Objects with maxCapacity &lt;= 0 are not created" localEdges="//@ibexModel/@edgeSet/@edges.2" signatureNodes="//@ibexModel/@nodeSet/@nodes.1 //@ibexModel/@nodeSet/@nodes.11"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="patientForRoom" documentation="Pattern that finds all patients that are assigned to a room -> first and following workloadsAlso holds the information which workload of a patient is assigned to which shift" localEdges="//@ibexModel/@edgeSet/@edges.18 //@ibexModel/@edgeSet/@edges.10 //@ibexModel/@edgeSet/@edges.20 //@ibexModel/@edgeSet/@edges.6" signatureNodes="//@ibexModel/@nodeSet/@nodes.16 //@ibexModel/@nodeSet/@nodes.23 //@ibexModel/@nodeSet/@nodes.30 //@ibexModel/@nodeSet/@nodes.37 //@ibexModel/@nodeSet/@nodes.44"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="roomDayTupel" documentation="Used in Softconstraint S1 to check the assigned age groups for each room on each day" signatureNodes="//@ibexModel/@nodeSet/@nodes.4 //@ibexModel/@nodeSet/@nodes.21"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="roomForShift" documentation="Pattern used to map which rooms are occupied on a specific shift.Used for a mapping which counts the Patients over a specific room for a specific day -> enforce that the capacity of a room is not exceededAdditionally used to make sure nurses are not assigned to empty rooms and each non-empty room has an assigned nurse" localEdges="//@ibexModel/@edgeSet/@edges.8" signatureNodes="//@ibexModel/@nodeSet/@nodes.19 //@ibexModel/@nodeSet/@nodes.26">
+        <arithmeticConstraints xmi:type="IBeXPatternModel:IBeXArithmeticConstraint" relation="EQUAL">
+          <lhs xmi:type="IBeXPatternModel:IBeXBinaryExpression" operator="MODULUS">
+            <left xmi:type="IBeXPatternModel:IBeXArithmeticAttribute" name="s">
+              <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+              <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+            </left>
+            <right xmi:type="IBeXPatternModel:IBeXArithmeticValueLiteral" value="3.0"/>
+          </lhs>
+          <rhs xmi:type="IBeXPatternModel:IBeXArithmeticValueLiteral"/>
+        </arithmeticConstraints>
+      </contextPatterns>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectExtendingShiftToFirstWorkload" documentation="Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model." localEdges="//@ibexModel/@edgeSet/@edges.7 //@ibexModel/@edgeSet/@edges.1" signatureNodes="//@ibexModel/@nodeSet/@nodes.7 //@ibexModel/@nodeSet/@nodes.18">
+        <injectivityConstraints xmi:type="IBeXPatternModel:IBeXInjectivityConstraint" values="//@ibexModel/@nodeSet/@nodes.7 //@ibexModel/@nodeSet/@nodes.18"/>
+      </contextPatterns>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectOperationDay" documentation="Rule that selects an operation day for a patient.That includes three edges to be adopted in the final model.I. + II.: between the patient and opTime and between patient and capacity -> Selects a day and OT for the patientIII.: between opTime and Capacity to make sure the predefined surgeon of the patient is working in the correct OT on that day" localEdges="//@ibexModel/@edgeSet/@edges.21 //@ibexModel/@edgeSet/@edges.15 //@ibexModel/@edgeSet/@edges.16 //@ibexModel/@edgeSet/@edges.25 //@ibexModel/@edgeSet/@edges.5 //@ibexModel/@edgeSet/@edges.23 //@ibexModel/@edgeSet/@edges.13 //@ibexModel/@edgeSet/@edges.24 //@ibexModel/@edgeSet/@edges.22 //@ibexModel/@edgeSet/@edges.3 //@ibexModel/@edgeSet/@edges.28 //@ibexModel/@edgeSet/@edges.29" signatureNodes="//@ibexModel/@nodeSet/@nodes.2 //@ibexModel/@nodeSet/@nodes.10 //@ibexModel/@nodeSet/@nodes.15 //@ibexModel/@nodeSet/@nodes.29 //@ibexModel/@nodeSet/@nodes.32 //@ibexModel/@nodeSet/@nodes.40 //@ibexModel/@nodeSet/@nodes.41 //@ibexModel/@nodeSet/@nodes.43"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectShiftToFirstWorkload" documentation="GTRule that selects a VirtualShiftToWorkload-Node to be adopted in the final model." localEdges="//@ibexModel/@edgeSet/@edges.4 //@ibexModel/@edgeSet/@edges.19 //@ibexModel/@edgeSet/@edges.27 //@ibexModel/@edgeSet/@edges.26" signatureNodes="//@ibexModel/@nodeSet/@nodes.13 //@ibexModel/@nodeSet/@nodes.35 //@ibexModel/@nodeSet/@nodes.39 //@ibexModel/@nodeSet/@nodes.42"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectShiftToRoster" documentation="Rule that selects an VirtualShiftToRoster-Node to be adopted in the final model." signatureNodes="//@ibexModel/@nodeSet/@nodes.33"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="surgeonOTForDay" documentation="Used in a mapping to save the information if a surgeon is operating in a specific OT for each day" localEdges="//@ibexModel/@edgeSet/@edges.11" signatureNodes="//@ibexModel/@nodeSet/@nodes.8 //@ibexModel/@nodeSet/@nodes.12 //@ibexModel/@nodeSet/@nodes.25"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="surgeonOptimeTupel" documentation="Pattern used in a mapping to save the information if a Surgeon operates on a specific Day and used to make sure the operation time of a surgeon is not exceeded on each dayop.maxOpTime > 0 is already enforced by the preprocessing because OpTime Objects with maxOpTime &lt;= 0 are not created" localEdges="//@ibexModel/@edgeSet/@edges.12" signatureNodes="//@ibexModel/@nodeSet/@nodes.9 //@ibexModel/@nodeSet/@nodes.28"/>
+      <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="virtualNodesForOccupant" documentation="Rule that selects all VirtualShiftToWorkload-Nodes to be adopted in the final model if they were imported (belong to an occupant)" signatureNodes="//@ibexModel/@nodeSet/@nodes.36">
+        <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+          <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@ibexModel/@nodeSet/@nodes.36">
+            <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/wasImported"/>
+          </lhs>
+          <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+        </attributeConstraint>
+      </contextPatterns>
+    </patternSet>
+    <ruleSet xmi:type="IBeXPatternModel:IBeXRuleSet">
+      <rules xmi:type="IBeXPatternModel:IBeXRule" name="selectExtendingShiftToFirstWorkload" documentation="Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model." lhs="//@ibexModel/@patternSet/@contextPatterns.10">
+        <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectExtendingShiftToFirstWorkload_rhs" localEdges="//@ibexModel/@edgeSet/@edges.7 //@ibexModel/@edgeSet/@edges.1" signatureNodes="//@ibexModel/@nodeSet/@nodes.7 //@ibexModel/@nodeSet/@nodes.18"/>
+        <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="selectExtendingShiftToFirstWorkload">
+          <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@ibexModel/@nodeSet/@nodes.7">
+            <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+            <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/isSelected"/>
+          </attributeAssignments>
+        </create>
+        <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="selectExtendingShiftToFirstWorkload"/>
+      </rules>
+      <rules xmi:type="IBeXPatternModel:IBeXRule" name="selectOperationDay" documentation="Rule that selects an operation day for a patient.That includes three edges to be adopted in the final model.I. + II.: between the patient and opTime and between patient and capacity -> Selects a day and OT for the patientIII.: between opTime and Capacity to make sure the predefined surgeon of the patient is working in the correct OT on that day" lhs="//@ibexModel/@patternSet/@contextPatterns.11">
+        <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectOperationDay_rhs" localEdges="//@ibexModel/@edgeSet/@edges.21 //@ibexModel/@edgeSet/@edges.15 //@ibexModel/@edgeSet/@edges.16 //@ibexModel/@edgeSet/@edges.25 //@ibexModel/@edgeSet/@edges.5 //@ibexModel/@edgeSet/@edges.23 //@ibexModel/@edgeSet/@edges.13 //@ibexModel/@edgeSet/@edges.24 //@ibexModel/@edgeSet/@edges.22 //@ibexModel/@edgeSet/@edges.3 //@ibexModel/@edgeSet/@edges.28 //@ibexModel/@edgeSet/@edges.29" signatureNodes="//@ibexModel/@nodeSet/@nodes.2 //@ibexModel/@nodeSet/@nodes.10 //@ibexModel/@nodeSet/@nodes.15 //@ibexModel/@nodeSet/@nodes.29 //@ibexModel/@nodeSet/@nodes.32 //@ibexModel/@nodeSet/@nodes.40 //@ibexModel/@nodeSet/@nodes.41 //@ibexModel/@nodeSet/@nodes.43"/>
+        <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="selectOperationDay">
+          <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@ibexModel/@nodeSet/@nodes.32">
+            <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+            <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/isSelected"/>
+          </attributeAssignments>
+          <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@ibexModel/@nodeSet/@nodes.40">
+            <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+            <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity/isSelected"/>
+          </attributeAssignments>
+          <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@ibexModel/@nodeSet/@nodes.41">
+            <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+            <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/isSelected"/>
+          </attributeAssignments>
+        </create>
+        <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="selectOperationDay"/>
+      </rules>
+      <rules xmi:type="IBeXPatternModel:IBeXRule" name="selectShiftToFirstWorkload" documentation="GTRule that selects a VirtualShiftToWorkload-Node to be adopted in the final model." lhs="//@ibexModel/@patternSet/@contextPatterns.12">
+        <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectShiftToFirstWorkload_rhs" localEdges="//@ibexModel/@edgeSet/@edges.4 //@ibexModel/@edgeSet/@edges.19 //@ibexModel/@edgeSet/@edges.27 //@ibexModel/@edgeSet/@edges.26" signatureNodes="//@ibexModel/@nodeSet/@nodes.13 //@ibexModel/@nodeSet/@nodes.35 //@ibexModel/@nodeSet/@nodes.39 //@ibexModel/@nodeSet/@nodes.42"/>
+        <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="selectShiftToFirstWorkload">
+          <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@ibexModel/@nodeSet/@nodes.35">
+            <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+            <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/isSelected"/>
+          </attributeAssignments>
+        </create>
+        <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="selectShiftToFirstWorkload"/>
+      </rules>
+      <rules xmi:type="IBeXPatternModel:IBeXRule" name="selectShiftToRoster" documentation="Rule that selects an VirtualShiftToRoster-Node to be adopted in the final model." lhs="//@ibexModel/@patternSet/@contextPatterns.13">
+        <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectShiftToRoster_rhs" signatureNodes="//@ibexModel/@nodeSet/@nodes.33"/>
+        <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="selectShiftToRoster">
+          <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@ibexModel/@nodeSet/@nodes.33">
+            <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+            <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/isSelected"/>
+          </attributeAssignments>
+        </create>
+        <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="selectShiftToRoster"/>
+      </rules>
+      <rules xmi:type="IBeXPatternModel:IBeXRule" name="virtualNodesForOccupant" documentation="Rule that selects all VirtualShiftToWorkload-Nodes to be adopted in the final model if they were imported (belong to an occupant)" lhs="//@ibexModel/@patternSet/@contextPatterns.16">
+        <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="virtualNodesForOccupant_rhs" signatureNodes="//@ibexModel/@nodeSet/@nodes.36"/>
+        <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="virtualNodesForOccupant">
+          <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@ibexModel/@nodeSet/@nodes.36">
+            <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+            <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/isSelected"/>
+          </attributeAssignments>
+        </create>
+        <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="virtualNodesForOccupant"/>
+      </rules>
+    </ruleSet>
+    <nodeSet xmi:type="IBeXPatternModel:IBeXNodeSet">
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="ag">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//AgeGroup"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="c" incomingEdges="//@ibexModel/@edgeSet/@edges.2">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="c" incomingEdges="//@ibexModel/@edgeSet/@edges.21 //@ibexModel/@edgeSet/@edges.15">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="d">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Day"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="d">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Day"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="g">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Gender"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="n" outgoingEdges="//@ibexModel/@edgeSet/@edges.0">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Nurse"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="nextvsw" incomingEdges="//@ibexModel/@edgeSet/@edges.7" outgoingEdges="//@ibexModel/@edgeSet/@edges.1">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="op" incomingEdges="//@ibexModel/@edgeSet/@edges.11">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="op" incomingEdges="//@ibexModel/@edgeSet/@edges.12">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="opTime" incomingEdges="//@ibexModel/@edgeSet/@edges.23 //@ibexModel/@edgeSet/@edges.13">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="ot" outgoingEdges="//@ibexModel/@edgeSet/@edges.2">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OT"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="ot">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OT"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p" outgoingEdges="//@ibexModel/@edgeSet/@edges.4">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p" outgoingEdges="//@ibexModel/@edgeSet/@edges.5 //@ibexModel/@edgeSet/@edges.3">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p" outgoingEdges="//@ibexModel/@edgeSet/@edges.6">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="prevvsw" incomingEdges="//@ibexModel/@edgeSet/@edges.1" outgoingEdges="//@ibexModel/@edgeSet/@edges.7">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r" outgoingEdges="//@ibexModel/@edgeSet/@edges.8">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r" outgoingEdges="//@ibexModel/@edgeSet/@edges.9">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r" outgoingEdges="//@ibexModel/@edgeSet/@edges.10">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="ro" incomingEdges="//@ibexModel/@edgeSet/@edges.0">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Roster"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" outgoingEdges="//@ibexModel/@edgeSet/@edges.11">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@ibexModel/@edgeSet/@edges.8">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@ibexModel/@edgeSet/@edges.9">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" outgoingEdges="//@ibexModel/@edgeSet/@edges.12">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@ibexModel/@edgeSet/@edges.3" outgoingEdges="//@ibexModel/@edgeSet/@edges.13">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@ibexModel/@edgeSet/@edges.18 //@ibexModel/@edgeSet/@edges.10">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@ibexModel/@edgeSet/@edges.17" outgoingEdges="//@ibexModel/@edgeSet/@edges.14">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vopc" incomingEdges="//@ibexModel/@edgeSet/@edges.24" outgoingEdges="//@ibexModel/@edgeSet/@edges.15 //@ibexModel/@edgeSet/@edges.16">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsr">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsr" outgoingEdges="//@ibexModel/@edgeSet/@edges.17">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsw" incomingEdges="//@ibexModel/@edgeSet/@edges.26" outgoingEdges="//@ibexModel/@edgeSet/@edges.19">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsw">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsw" outgoingEdges="//@ibexModel/@edgeSet/@edges.18 //@ibexModel/@edgeSet/@edges.20">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsw" incomingEdges="//@ibexModel/@edgeSet/@edges.14">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vwc" incomingEdges="//@ibexModel/@edgeSet/@edges.19 //@ibexModel/@edgeSet/@edges.27">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vwc" incomingEdges="//@ibexModel/@edgeSet/@edges.25 //@ibexModel/@edgeSet/@edges.28" outgoingEdges="//@ibexModel/@edgeSet/@edges.21 //@ibexModel/@edgeSet/@edges.22">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vwop" incomingEdges="//@ibexModel/@edgeSet/@edges.16 //@ibexModel/@edgeSet/@edges.22 //@ibexModel/@edgeSet/@edges.29" outgoingEdges="//@ibexModel/@edgeSet/@edges.25 //@ibexModel/@edgeSet/@edges.23 //@ibexModel/@edgeSet/@edges.24">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="w" incomingEdges="//@ibexModel/@edgeSet/@edges.4" outgoingEdges="//@ibexModel/@edgeSet/@edges.27 //@ibexModel/@edgeSet/@edges.26">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="w" incomingEdges="//@ibexModel/@edgeSet/@edges.5" outgoingEdges="//@ibexModel/@edgeSet/@edges.28 //@ibexModel/@edgeSet/@edges.29">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
+      </nodes>
+      <nodes xmi:type="IBeXPatternModel:IBeXNode" name="w" incomingEdges="//@ibexModel/@edgeSet/@edges.20 //@ibexModel/@edgeSet/@edges.6">
+        <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
+      </nodes>
+    </nodeSet>
+    <edgeSet xmi:type="IBeXPatternModel:IBeXEdgeSet">
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="n->ro" sourceNode="//@ibexModel/@nodeSet/@nodes.6" targetNode="//@ibexModel/@nodeSet/@nodes.24">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Nurse/rosters"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="nextvsw->prevvsw" sourceNode="//@ibexModel/@nodeSet/@nodes.7" targetNode="//@ibexModel/@nodeSet/@nodes.18">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/requires_virtualShiftToWorkload"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="ot->c" sourceNode="//@ibexModel/@nodeSet/@nodes.11" targetNode="//@ibexModel/@nodeSet/@nodes.1">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OT/capacities"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="p->s" sourceNode="//@ibexModel/@nodeSet/@nodes.15" targetNode="//@ibexModel/@nodeSet/@nodes.29">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/surgeon"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="p->w" sourceNode="//@ibexModel/@nodeSet/@nodes.13" targetNode="//@ibexModel/@nodeSet/@nodes.42">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/firstWorkload"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="p->w" sourceNode="//@ibexModel/@nodeSet/@nodes.15" targetNode="//@ibexModel/@nodeSet/@nodes.43">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/firstWorkload"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="p->w" sourceNode="//@ibexModel/@nodeSet/@nodes.16" targetNode="//@ibexModel/@nodeSet/@nodes.44">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/workloads"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="prevvsw->nextvsw" sourceNode="//@ibexModel/@nodeSet/@nodes.18" targetNode="//@ibexModel/@nodeSet/@nodes.7">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/enables_virtualShiftToWorkload"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="r->s" sourceNode="//@ibexModel/@nodeSet/@nodes.19" targetNode="//@ibexModel/@nodeSet/@nodes.26">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room/shifts"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="r->s" sourceNode="//@ibexModel/@nodeSet/@nodes.22" targetNode="//@ibexModel/@nodeSet/@nodes.27">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room/shifts"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="r->s" sourceNode="//@ibexModel/@nodeSet/@nodes.23" targetNode="//@ibexModel/@nodeSet/@nodes.30">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room/shifts"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="s->op" sourceNode="//@ibexModel/@nodeSet/@nodes.25" targetNode="//@ibexModel/@nodeSet/@nodes.8">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon/opTimes"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="s->op" sourceNode="//@ibexModel/@nodeSet/@nodes.28" targetNode="//@ibexModel/@nodeSet/@nodes.9">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon/opTimes"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="s->opTime" sourceNode="//@ibexModel/@nodeSet/@nodes.29" targetNode="//@ibexModel/@nodeSet/@nodes.10">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon/opTimes"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="s->vsw" sourceNode="//@ibexModel/@nodeSet/@nodes.31" targetNode="//@ibexModel/@nodeSet/@nodes.38">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/virtualWorkload"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vopc->c" sourceNode="//@ibexModel/@nodeSet/@nodes.32" targetNode="//@ibexModel/@nodeSet/@nodes.2">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/capacity"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vopc->vwop" sourceNode="//@ibexModel/@nodeSet/@nodes.32" targetNode="//@ibexModel/@nodeSet/@nodes.41">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/enables_virtualWorkloadToOpTime"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vsr->s" sourceNode="//@ibexModel/@nodeSet/@nodes.34" targetNode="//@ibexModel/@nodeSet/@nodes.31">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vsw->s" sourceNode="//@ibexModel/@nodeSet/@nodes.37" targetNode="//@ibexModel/@nodeSet/@nodes.30">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/shift"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vsw->vwc" sourceNode="//@ibexModel/@nodeSet/@nodes.35" targetNode="//@ibexModel/@nodeSet/@nodes.39">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/requires_virtualWorkloadToCapacity"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vsw->w" sourceNode="//@ibexModel/@nodeSet/@nodes.37" targetNode="//@ibexModel/@nodeSet/@nodes.44">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/workload"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwc->c" sourceNode="//@ibexModel/@nodeSet/@nodes.40" targetNode="//@ibexModel/@nodeSet/@nodes.2">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity/capacity"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwc->vwop" sourceNode="//@ibexModel/@nodeSet/@nodes.40" targetNode="//@ibexModel/@nodeSet/@nodes.41">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity/requires_virtualWorkloadToOpTime"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwop->opTime" sourceNode="//@ibexModel/@nodeSet/@nodes.41" targetNode="//@ibexModel/@nodeSet/@nodes.10">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/opTime"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwop->vopc" sourceNode="//@ibexModel/@nodeSet/@nodes.41" targetNode="//@ibexModel/@nodeSet/@nodes.32">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/requires_virtualOpTimeToCapacity"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwop->vwc" sourceNode="//@ibexModel/@nodeSet/@nodes.41" targetNode="//@ibexModel/@nodeSet/@nodes.40">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/enables_virtual_WorkloadToCapacity"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="w->vsw" sourceNode="//@ibexModel/@nodeSet/@nodes.42" targetNode="//@ibexModel/@nodeSet/@nodes.35">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualShift"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="w->vwc" sourceNode="//@ibexModel/@nodeSet/@nodes.42" targetNode="//@ibexModel/@nodeSet/@nodes.39">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualCapacity"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="w->vwc" sourceNode="//@ibexModel/@nodeSet/@nodes.43" targetNode="//@ibexModel/@nodeSet/@nodes.40">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualCapacity"/>
+      </edges>
+      <edges xmi:type="IBeXPatternModel:IBeXEdge" name="w->vwop" sourceNode="//@ibexModel/@nodeSet/@nodes.43" targetNode="//@ibexModel/@nodeSet/@nodes.41">
+        <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualOpTime"/>
+      </edges>
+    </edgeSet>
+  </ibexModel>
+  <config xmi:type="GipsIntermediate:SolverConfig" enableTimeLimit="true" timeLimit="300.0" enableRndSeed="true" presolve="AUTO" enableDebugOutput="true" enableLpOutput="true" lpPath="./gurobi.lp"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="selectedShiftToFirstWorkload" upperBound="1.0"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="selectedExtendingShiftToFirstWorkload" upperBound="1.0"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="selectedOperationDay" upperBound="1.0"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="selectedShiftToRoster" upperBound="1.0"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="selectedOccupantNodes" upperBound="1.0"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="patientCount" type="INTEGER" lowerBound="-2.147483648E9" upperBound="2.147483647E9"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="countPatientsForRoom" upperBound="1.0"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="skillDiff" type="INTEGER" lowerBound="-2.147483648E9" upperBound="2.147483647E9"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="penalizedSkillDiff" type="INTEGER" lowerBound="-2.147483648E9" upperBound="2.147483647E9"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="assignedPatientsToRoom" upperBound="1.0"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="assignedGenderToRoomOnShift" upperBound="1.0"/>
+  <variables xmi:type="GipsIntermediate:Variable" name="assignedNursesToWorkload" upperBound="1.0"/>
+  <mappings xmi:type="GipsIntermediate:RuleMapping" name="selectedShiftToFirstWorkload" contextPattern="//@ibexModel/@patternSet/@contextPatterns.12" mappingVariable="//@variables.0" rule="//@ibexModel/@ruleSet/@rules.2"/>
+  <mappings xmi:type="GipsIntermediate:RuleMapping" name="selectedExtendingShiftToFirstWorkload" contextPattern="//@ibexModel/@patternSet/@contextPatterns.10" mappingVariable="//@variables.1" rule="//@ibexModel/@ruleSet/@rules.0"/>
+  <mappings xmi:type="GipsIntermediate:RuleMapping" name="selectedOperationDay" contextPattern="//@ibexModel/@patternSet/@contextPatterns.11" mappingVariable="//@variables.2" rule="//@ibexModel/@ruleSet/@rules.1"/>
+  <mappings xmi:type="GipsIntermediate:RuleMapping" name="selectedShiftToRoster" contextPattern="//@ibexModel/@patternSet/@contextPatterns.13" mappingVariable="//@variables.3" rule="//@ibexModel/@ruleSet/@rules.3"/>
+  <mappings xmi:type="GipsIntermediate:RuleMapping" name="selectedOccupantNodes" contextPattern="//@ibexModel/@patternSet/@contextPatterns.16" mappingVariable="//@variables.4" rule="//@ibexModel/@ruleSet/@rules.4"/>
+  <mappings xmi:type="GipsIntermediate:PatternMapping" name="countPatientsForRoom" contextPattern="//@ibexModel/@patternSet/@contextPatterns.9" mappingVariable="//@variables.6" freeVariables="//@variables.5" pattern="//@ibexModel/@patternSet/@contextPatterns.9"/>
+  <mappings xmi:type="GipsIntermediate:PatternMapping" name="assignedPatientsToRoom" contextPattern="//@ibexModel/@patternSet/@contextPatterns.7" mappingVariable="//@variables.9" freeVariables="//@variables.7 //@variables.8" pattern="//@ibexModel/@patternSet/@contextPatterns.7"/>
+  <mappings xmi:type="GipsIntermediate:PatternMapping" name="assignedGenderToRoomOnShift" contextPattern="//@ibexModel/@patternSet/@contextPatterns.1" mappingVariable="//@variables.10" pattern="//@ibexModel/@patternSet/@contextPatterns.1"/>
+  <mappings xmi:type="GipsIntermediate:PatternMapping" name="assignedNursesToWorkload" contextPattern="//@ibexModel/@patternSet/@contextPatterns.4" mappingVariable="//@variables.11" pattern="//@ibexModel/@patternSet/@contextPatterns.4"/>
+  <constraints xmi:type="GipsIntermediate:PatternConstraint" name="PatternConstraint0OnroomForShift" pattern="//@ibexModel/@patternSet/@contextPatterns.9" contextPattern="//@ibexModel/@patternSet/@contextPatterns.9">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.7">
+        <setExpression xmi:type="GipsIntermediate:SetExpression">
+          <setOperation xmi:type="GipsIntermediate:SetFilter">
+            <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+              <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.27"/>
+              <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26"/>
+            </expression>
+          </setOperation>
+          <setReduce xmi:type="GipsIntermediate:SetSummation">
+            <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.10"/>
+          </setReduce>
+        </setExpression>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:PatternConstraint" name="PatternConstraint1OnsurgeonOptimeTupel" pattern="//@ibexModel/@patternSet/@contextPatterns.15" contextPattern="//@ibexModel/@patternSet/@contextPatterns.15">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.2">
+        <setExpression xmi:type="GipsIntermediate:SetExpression">
+          <setOperation xmi:type="GipsIntermediate:SetFilter">
+            <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+              <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.41">
+                <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                  <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/opTime"/>
+                </attribute>
+              </lhs>
+              <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.9"/>
+            </expression>
+          </setOperation>
+          <setReduce xmi:type="GipsIntermediate:SetSummation">
+            <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+              <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.15">
+                <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                  <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/surgeryDuration"/>
+                </attribute>
+              </lhs>
+              <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.2"/>
+            </expression>
+          </setReduce>
+        </setExpression>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.9">
+        <attribute xmi:type="GipsIntermediate:AttributeExpression">
+          <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime/maxOpTime"/>
+        </attribute>
+      </rhs>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:PatternConstraint" name="PatternConstraint2OnotCapacityTupel" pattern="//@ibexModel/@patternSet/@contextPatterns.6" contextPattern="//@ibexModel/@patternSet/@contextPatterns.6">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.2">
+        <setExpression xmi:type="GipsIntermediate:SetExpression">
+          <setOperation xmi:type="GipsIntermediate:SetFilter">
+            <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+              <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.32">
+                  <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                    <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/capacity"/>
+                    <next xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity/day"/>
+                    </next>
+                  </attribute>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.1">
+                  <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                    <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity/day"/>
+                  </attribute>
+                </rhs>
+              </lhs>
+              <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.40">
+                  <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                    <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity/capacity"/>
+                    <next xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity/ot"/>
+                    </next>
+                  </attribute>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.11"/>
+              </rhs>
+            </expression>
+          </setOperation>
+          <setReduce xmi:type="GipsIntermediate:SetSummation">
+            <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+              <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.15">
+                <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                  <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/surgeryDuration"/>
+                </attribute>
+              </lhs>
+              <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.2"/>
+            </expression>
+          </setReduce>
+        </setExpression>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.1">
+        <attribute xmi:type="GipsIntermediate:AttributeExpression">
+          <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity/maxCapacity"/>
+        </attribute>
+      </rhs>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:PatternConstraint" name="PatternConstraint3OnmandatoryPatients" pattern="//@ibexModel/@patternSet/@contextPatterns.2" contextPattern="//@ibexModel/@patternSet/@contextPatterns.2">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.0">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.13"/>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.14"/>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.0"/>
+            </setReduce>
+          </setExpression>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.2">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.15"/>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.14"/>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.2"/>
+            </setReduce>
+          </setExpression>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="2"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint4OncountPatientsForRoom" mapping="//@mappings.5">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.5"/>
+      <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.19">
+        <attribute xmi:type="GipsIntermediate:AttributeExpression">
+          <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room/beds"/>
+        </attribute>
+      </rhs>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint5OncountPatientsForRoom" mapping="//@mappings.5">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.5"/>
+        <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                  <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                    <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                  </attribute>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26"/>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                  <lhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1000"/>
+                  <rhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+              </expression>
+            </setReduce>
+          </setExpression>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint6OncountPatientsForRoom" mapping="//@mappings.5">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.5"/>
+        <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                      <next xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/room"/>
+                      </next>
+                    </attribute>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.19"/>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                      <next xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                      </next>
+                    </attribute>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26">
+                      <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                      </attribute>
+                    </lhs>
+                    <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+                  </rhs>
+                </rhs>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                  <lhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1000"/>
+                  <rhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+              </expression>
+            </setReduce>
+          </setExpression>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint7OncountPatientsForRoom" mapping="//@mappings.5">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.5"/>
+        <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                      <next xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/room"/>
+                      </next>
+                    </attribute>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.19"/>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                      <next xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                      </next>
+                    </attribute>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26">
+                      <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                      </attribute>
+                    </lhs>
+                    <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="2"/>
+                  </rhs>
+                </rhs>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                  <lhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1000"/>
+                  <rhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+              </expression>
+            </setReduce>
+          </setExpression>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint8OncountPatientsForRoom" mapping="//@mappings.5">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+          <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+            <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+              <setExpression xmi:type="GipsIntermediate:SetExpression">
+                <setOperation xmi:type="GipsIntermediate:SetFilter">
+                  <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                      <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                      </attribute>
+                    </lhs>
+                    <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26"/>
+                  </expression>
+                </setOperation>
+                <setReduce xmi:type="GipsIntermediate:SetSummation">
+                  <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+                </setReduce>
+              </setExpression>
+            </lhs>
+            <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+              <setExpression xmi:type="GipsIntermediate:SetExpression">
+                <setOperation xmi:type="GipsIntermediate:SetFilter">
+                  <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                    <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                      <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                        <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                          <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                          <next xmi:type="GipsIntermediate:AttributeExpression">
+                            <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/room"/>
+                          </next>
+                        </attribute>
+                      </lhs>
+                      <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.19"/>
+                    </lhs>
+                    <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+                      <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                        <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                          <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                          <next xmi:type="GipsIntermediate:AttributeExpression">
+                            <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                          </next>
+                        </attribute>
+                      </lhs>
+                      <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+                        <lhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26">
+                          <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                            <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                          </attribute>
+                        </lhs>
+                        <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+                      </rhs>
+                    </rhs>
+                  </expression>
+                </setOperation>
+                <setReduce xmi:type="GipsIntermediate:SetSummation">
+                  <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+                </setReduce>
+              </setExpression>
+            </rhs>
+          </lhs>
+          <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+            <setExpression xmi:type="GipsIntermediate:SetExpression">
+              <setOperation xmi:type="GipsIntermediate:SetFilter">
+                <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                  <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                      <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                        <next xmi:type="GipsIntermediate:AttributeExpression">
+                          <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/room"/>
+                        </next>
+                      </attribute>
+                    </lhs>
+                    <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.19"/>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                      <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                        <next xmi:type="GipsIntermediate:AttributeExpression">
+                          <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                        </next>
+                      </attribute>
+                    </lhs>
+                    <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+                      <lhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26">
+                        <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                          <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                        </attribute>
+                      </lhs>
+                      <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="2"/>
+                    </rhs>
+                  </rhs>
+                </expression>
+              </setOperation>
+              <setReduce xmi:type="GipsIntermediate:SetSummation">
+                <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+              </setReduce>
+            </setExpression>
+          </rhs>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+          <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+          <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+            <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.5"/>
+            <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1000"/>
+          </rhs>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint9OncountPatientsForRoom" mapping="//@mappings.5">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+        <setExpression xmi:type="GipsIntermediate:SetExpression">
+          <setOperation xmi:type="GipsIntermediate:SetFilter">
+            <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+              <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                  <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                </attribute>
+              </lhs>
+              <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26"/>
+            </expression>
+          </setOperation>
+          <setReduce xmi:type="GipsIntermediate:SetSummation">
+            <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+          </setReduce>
+        </setExpression>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint10OncountPatientsForRoom" mapping="//@mappings.5">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+        <setExpression xmi:type="GipsIntermediate:SetExpression">
+          <setOperation xmi:type="GipsIntermediate:SetFilter">
+            <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+              <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                  <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                    <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                    <next xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/room"/>
+                    </next>
+                  </attribute>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.19"/>
+              </lhs>
+              <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                  <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                    <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                    <next xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                    </next>
+                  </attribute>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                    </attribute>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+                </rhs>
+              </rhs>
+            </expression>
+          </setOperation>
+          <setReduce xmi:type="GipsIntermediate:SetSummation">
+            <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+          </setReduce>
+        </setExpression>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint11OncountPatientsForRoom" mapping="//@mappings.5">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+        <setExpression xmi:type="GipsIntermediate:SetExpression">
+          <setOperation xmi:type="GipsIntermediate:SetFilter">
+            <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+              <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                  <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                    <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                    <next xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/room"/>
+                    </next>
+                  </attribute>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.19"/>
+              </lhs>
+              <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33">
+                  <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                    <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+                    <next xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                    </next>
+                  </attribute>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                    </attribute>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="2"/>
+                </rhs>
+              </rhs>
+            </expression>
+          </setOperation>
+          <setReduce xmi:type="GipsIntermediate:SetSummation">
+            <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+          </setReduce>
+        </setExpression>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:TypeConstraint" name="TypeConstraint12OnPatient">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.2">
+        <setExpression xmi:type="GipsIntermediate:SetExpression">
+          <setOperation xmi:type="GipsIntermediate:SetFilter">
+            <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+              <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.15"/>
+              <rhs xmi:type="GipsIntermediate:ContextReference" local="true"/>
+            </expression>
+          </setOperation>
+          <setReduce xmi:type="GipsIntermediate:SetSummation">
+            <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.2"/>
+          </setReduce>
+        </setExpression>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+    </expression>
+    <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:TypeConstraint" name="TypeConstraint13OnPatient">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.0">
+        <setExpression xmi:type="GipsIntermediate:SetExpression">
+          <setOperation xmi:type="GipsIntermediate:SetFilter">
+            <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+              <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.13"/>
+              <rhs xmi:type="GipsIntermediate:ContextReference" local="true"/>
+            </expression>
+          </setOperation>
+          <setReduce xmi:type="GipsIntermediate:SetSummation">
+            <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.0"/>
+          </setReduce>
+        </setExpression>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+    </expression>
+    <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint14OnselectedOccupantNodes" mapping="//@mappings.4">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+      <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.4"/>
+      <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:RuleConstraint" name="RuleConstraint15OnselectShiftToFirstWorkload" rule="//@ibexModel/@ruleSet/@rules.2" contextPattern="//@ibexModel/@patternSet/@contextPatterns.12">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.0">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.35"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.35"/>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.39"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.39"/>
+                </rhs>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.0"/>
+            </setReduce>
+          </setExpression>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.2">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.40"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.39"/>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.32">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/capacity"/>
+                      <next xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity/day"/>
+                      </next>
+                    </attribute>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="DIVIDE">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.35">
+                      <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/shift"/>
+                        <next xmi:type="GipsIntermediate:AttributeExpression">
+                          <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                        </next>
+                      </attribute>
+                    </lhs>
+                    <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="3"/>
+                  </rhs>
+                </rhs>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.2"/>
+              </expression>
+            </setReduce>
+          </setExpression>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint16OnselectedOperationDay" mapping="//@mappings.2">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.2">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                <lhs xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                  <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.40"/>
+                    <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.40"/>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.32"/>
+                    <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.32"/>
+                  </rhs>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.41"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.41"/>
+                </rhs>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.2"/>
+            </setReduce>
+          </setExpression>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.0">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.39"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.40"/>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+                  <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="DIVIDE">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.35">
+                      <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/shift"/>
+                        <next xmi:type="GipsIntermediate:AttributeExpression">
+                          <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+                        </next>
+                      </attribute>
+                    </lhs>
+                    <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="3"/>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.32">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/capacity"/>
+                      <next xmi:type="GipsIntermediate:AttributeExpression">
+                        <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity/day"/>
+                      </next>
+                    </attribute>
+                  </rhs>
+                </rhs>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.0"/>
+              </expression>
+            </setReduce>
+          </setExpression>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:RuleConstraint" name="RuleConstraint17OnselectExtendingShiftToFirstWorkload" rule="//@ibexModel/@ruleSet/@rules.0" contextPattern="//@ibexModel/@patternSet/@contextPatterns.10">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.1">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.7"/>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.7"/>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.1"/>
+            </setReduce>
+          </setExpression>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+          <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.1">
+            <setExpression xmi:type="GipsIntermediate:SetExpression">
+              <setOperation xmi:type="GipsIntermediate:SetFilter">
+                <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.7"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.18"/>
+                </expression>
+              </setOperation>
+              <setReduce xmi:type="GipsIntermediate:SetSummation">
+                <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                  <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                  <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.1"/>
+                </expression>
+              </setReduce>
+            </setExpression>
+          </lhs>
+          <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.0">
+            <setExpression xmi:type="GipsIntermediate:SetExpression">
+              <setOperation xmi:type="GipsIntermediate:SetFilter">
+                <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.35"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.18"/>
+                </expression>
+              </setOperation>
+              <setReduce xmi:type="GipsIntermediate:SetSummation">
+                <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                  <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                  <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.0"/>
+                </expression>
+              </setReduce>
+            </setExpression>
+          </rhs>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:RuleConstraint" name="RuleConstraint18OnselectExtendingShiftToFirstWorkload" rule="//@ibexModel/@ruleSet/@rules.0" contextPattern="//@ibexModel/@patternSet/@contextPatterns.10">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+          <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.1">
+            <setExpression xmi:type="GipsIntermediate:SetExpression">
+              <setOperation xmi:type="GipsIntermediate:SetFilter">
+                <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.7"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.18"/>
+                </expression>
+              </setOperation>
+              <setReduce xmi:type="GipsIntermediate:SetSummation">
+                <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.1"/>
+              </setReduce>
+            </setExpression>
+          </lhs>
+          <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.0">
+            <setExpression xmi:type="GipsIntermediate:SetExpression">
+              <setOperation xmi:type="GipsIntermediate:SetFilter">
+                <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.35"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.18"/>
+                </expression>
+              </setOperation>
+              <setReduce xmi:type="GipsIntermediate:SetSummation">
+                <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.0"/>
+              </setReduce>
+            </setExpression>
+          </rhs>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.1">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.7"/>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.7"/>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                  <lhs xmi:type="GipsIntermediate:IntegerLiteral" literal="2"/>
+                  <rhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.1"/>
+              </expression>
+            </setReduce>
+          </setExpression>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint19OnassignedPatientsToRoom" mapping="//@mappings.6">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+          <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+            <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.0">
+              <setExpression xmi:type="GipsIntermediate:SetExpression">
+                <setOperation xmi:type="GipsIntermediate:SetFilter">
+                  <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.35"/>
+                    <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.37"/>
+                  </expression>
+                </setOperation>
+                <setReduce xmi:type="GipsIntermediate:SetSummation">
+                  <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.0"/>
+                </setReduce>
+              </setExpression>
+            </lhs>
+            <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.1">
+              <setExpression xmi:type="GipsIntermediate:SetExpression">
+                <setOperation xmi:type="GipsIntermediate:SetFilter">
+                  <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.7"/>
+                    <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.37"/>
+                  </expression>
+                </setOperation>
+                <setReduce xmi:type="GipsIntermediate:SetSummation">
+                  <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.1"/>
+                </setReduce>
+              </setExpression>
+            </rhs>
+          </lhs>
+          <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.4">
+            <setExpression xmi:type="GipsIntermediate:SetExpression">
+              <setOperation xmi:type="GipsIntermediate:SetFilter">
+                <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.36"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.37"/>
+                </expression>
+              </setOperation>
+              <setReduce xmi:type="GipsIntermediate:SetSummation">
+                <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.4"/>
+              </setReduce>
+            </setExpression>
+          </rhs>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+          <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+          <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+            <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.9"/>
+            <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1000"/>
+          </rhs>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint20OnassignedPatientsToRoom" mapping="//@mappings.6">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.9"/>
+        <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+          <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+            <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.0">
+              <setExpression xmi:type="GipsIntermediate:SetExpression">
+                <setOperation xmi:type="GipsIntermediate:SetFilter">
+                  <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.35"/>
+                    <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.37"/>
+                  </expression>
+                </setOperation>
+                <setReduce xmi:type="GipsIntermediate:SetSummation">
+                  <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                    <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                    <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.0"/>
+                  </expression>
+                </setReduce>
+              </setExpression>
+            </lhs>
+            <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.1">
+              <setExpression xmi:type="GipsIntermediate:SetExpression">
+                <setOperation xmi:type="GipsIntermediate:SetFilter">
+                  <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                    <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.7"/>
+                    <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.37"/>
+                  </expression>
+                </setOperation>
+                <setReduce xmi:type="GipsIntermediate:SetSummation">
+                  <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                    <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                    <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.1"/>
+                  </expression>
+                </setReduce>
+              </setExpression>
+            </rhs>
+          </lhs>
+          <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.4">
+            <setExpression xmi:type="GipsIntermediate:SetExpression">
+              <setOperation xmi:type="GipsIntermediate:SetFilter">
+                <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.36"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.37"/>
+                </expression>
+              </setOperation>
+              <setReduce xmi:type="GipsIntermediate:SetSummation">
+                <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                  <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                  <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.4"/>
+                </expression>
+              </setReduce>
+            </setExpression>
+          </rhs>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint21OncountPatientsForRoom" mapping="//@mappings.5">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.5"/>
+        <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.6">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.30"/>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.26"/>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.9"/>
+              </expression>
+            </setReduce>
+          </setExpression>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint22OnassignedGenderToRoomOnShift" mapping="//@mappings.7">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.10"/>
+        <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.6">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.16">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/gender"/>
+                    </attribute>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.5">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//NamedElement/name"/>
+                    </attribute>
+                  </rhs>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.30"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.27"/>
+                </rhs>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.9"/>
+              </expression>
+            </setReduce>
+          </setExpression>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint23OnassignedGenderToRoomOnShift" mapping="//@mappings.7">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="LessOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.6">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:BooleanBinaryExpression">
+                <lhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.16">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/gender"/>
+                    </attribute>
+                  </lhs>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.5">
+                    <attribute xmi:type="GipsIntermediate:AttributeExpression">
+                      <feature xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//NamedElement/name"/>
+                    </attribute>
+                  </rhs>
+                </lhs>
+                <rhs xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.30"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.27"/>
+                </rhs>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.9"/>
+            </setReduce>
+          </setExpression>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+          <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+          <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+            <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.10"/>
+            <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1000"/>
+          </rhs>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint24OnassignedNursesToWorkload" mapping="//@mappings.8">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="GreaterOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.11"/>
+        <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+          <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.6">
+            <setExpression xmi:type="GipsIntermediate:SetExpression">
+              <setOperation xmi:type="GipsIntermediate:SetFilter">
+                <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.37"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.38"/>
+                </expression>
+              </setOperation>
+              <setReduce xmi:type="GipsIntermediate:SetSummation">
+                <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                  <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                  <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.9"/>
+                </expression>
+              </setReduce>
+            </setExpression>
+          </lhs>
+          <rhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+            <setExpression xmi:type="GipsIntermediate:SetExpression">
+              <setOperation xmi:type="GipsIntermediate:SetFilter">
+                <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                  <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33"/>
+                  <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.34"/>
+                </expression>
+              </setOperation>
+              <setReduce xmi:type="GipsIntermediate:SetSummation">
+                <expression xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+                  <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+                  <rhs xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+                </expression>
+              </setReduce>
+            </setExpression>
+          </rhs>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="SUBTRACT">
+        <lhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+        <rhs xmi:type="GipsIntermediate:ArithmeticUnaryExpression">
+          <operand xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+            <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+            <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+              <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+              <rhs xmi:type="GipsIntermediate:IntegerLiteral" literal="1"/>
+            </rhs>
+          </operand>
+        </rhs>
+      </rhs>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint25OnassignedNursesToWorkload" mapping="//@mappings.8">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="GreaterOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.6">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.37"/>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.38"/>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.9"/>
+            </setReduce>
+          </setExpression>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+          <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+          <rhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.11"/>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <constraints xmi:type="GipsIntermediate:MappingConstraint" name="MappingConstraint26OnassignedNursesToWorkload" mapping="//@mappings.8">
+    <expression xmi:type="GipsIntermediate:RelationalExpression" operator="GreaterOrEqual">
+      <lhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression">
+        <lhs xmi:type="GipsIntermediate:MappingReference" mapping="//@mappings.3">
+          <setExpression xmi:type="GipsIntermediate:SetExpression">
+            <setOperation xmi:type="GipsIntermediate:SetFilter">
+              <expression xmi:type="GipsIntermediate:RelationalExpression" operator="Equal" requiresComparables="true">
+                <lhs xmi:type="GipsIntermediate:NodeReference" node="//@ibexModel/@nodeSet/@nodes.33"/>
+                <rhs xmi:type="GipsIntermediate:NodeReference" local="true" node="//@ibexModel/@nodeSet/@nodes.34"/>
+              </expression>
+            </setOperation>
+            <setReduce xmi:type="GipsIntermediate:SetSummation">
+              <expression xmi:type="GipsIntermediate:VariableReference" variable="//@variables.3"/>
+            </setReduce>
+          </setExpression>
+        </lhs>
+        <rhs xmi:type="GipsIntermediate:ArithmeticBinaryExpression" operator="MULTIPLY">
+          <lhs xmi:type="GipsIntermediate:DoubleLiteral" literal="-1.0"/>
+          <rhs xmi:type="GipsIntermediate:VariableReference" local="true" variable="//@variables.11"/>
+        </rhs>
+      </lhs>
+      <rhs xmi:type="GipsIntermediate:DoubleLiteral"/>
+    </expression>
+  </constraints>
+  <requiredTypes xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+</GipsIntermediate:GipsIntermediateModel>

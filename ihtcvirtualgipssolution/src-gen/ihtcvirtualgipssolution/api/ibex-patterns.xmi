@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IBeXPatternModel:IBeXModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:IBeXPatternModel="platform:/resource/org.emoflon.ibex.patternmodel/model/IBeXPatternModel.ecore" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xsi:schemaLocation="platform:/resource/org.emoflon.ibex.patternmodel/model/IBeXPatternModel.ecore java://org.emoflon.ibex.patternmodel.IBeXPatternModel.IBeXPatternModelPackage http://www.eclipse.org/emf/2002/Ecore java://org.eclipse.emf.ecore.EcorePackage">
+  <patternSet xmi:type="IBeXPatternModel:IBeXPatternSet">
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="ageGroupsRoomDay" documentation="Pattern used for a Mapping to calculate what age groups are present in a specific room for all shifts.Additionally the highest and lowest age groups are also saved in variables" signatureNodes="//@nodeSet/@nodes.0 //@nodeSet/@nodes.3 //@nodeSet/@nodes.20"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="genderRoomShift" documentation="Pattern used for a mapping to save the information which genders are present in a specific room for each shiftThis information is only needed for each morning shift" localEdges="//@edgeSet/@edges.9" signatureNodes="//@nodeSet/@nodes.5 //@nodeSet/@nodes.22 //@nodeSet/@nodes.27">
+      <arithmeticConstraints xmi:type="IBeXPatternModel:IBeXArithmeticConstraint" relation="EQUAL">
+        <lhs xmi:type="IBeXPatternModel:IBeXBinaryExpression" operator="MODULUS">
+          <left xmi:type="IBeXPatternModel:IBeXArithmeticAttribute" name="s">
+            <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+            <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+          </left>
+          <right xmi:type="IBeXPatternModel:IBeXArithmeticValueLiteral" value="3.0"/>
+        </lhs>
+        <rhs xmi:type="IBeXPatternModel:IBeXArithmeticValueLiteral"/>
+      </arithmeticConstraints>
+    </contextPatterns>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="mandatoryPatients" documentation="Utility Patterns used in ConstraintsPattern to find all mandatory patients" signatureNodes="//@nodeSet/@nodes.14">
+      <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+        <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@nodeSet/@nodes.14">
+          <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/mandatory"/>
+        </lhs>
+        <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+      </attributeConstraint>
+      <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+        <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@nodeSet/@nodes.14">
+          <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/isOccupant"/>
+        </lhs>
+        <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787000" stringValue="false"/>
+      </attributeConstraint>
+    </contextPatterns>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="nurseRosterTupel" documentation="Used in a mapping to calculate the workload for all nurses for each shift" localEdges="//@edgeSet/@edges.0" signatureNodes="//@nodeSet/@nodes.6 //@nodeSet/@nodes.24"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="nursetoWorkload" documentation="Used in a mapping to calculate which nurse is assigned to which workload." localEdges="//@edgeSet/@edges.17 //@edgeSet/@edges.14" signatureNodes="//@nodeSet/@nodes.31 //@nodeSet/@nodes.34 //@nodeSet/@nodes.38"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="optionalPatients" documentation="Pattern to find all optional patients" signatureNodes="//@nodeSet/@nodes.17">
+      <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+        <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@nodeSet/@nodes.17">
+          <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/mandatory"/>
+        </lhs>
+        <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787000" stringValue="false"/>
+      </attributeConstraint>
+      <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+        <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@nodeSet/@nodes.17">
+          <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/isOccupant"/>
+        </lhs>
+        <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787000" stringValue="false"/>
+      </attributeConstraint>
+    </contextPatterns>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="otCapacityTupel" documentation="Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each dayc.maxCapacity > 0 is already enforced by the preprocessing because Capacity Objects with maxCapacity &lt;= 0 are not created" localEdges="//@edgeSet/@edges.2" signatureNodes="//@nodeSet/@nodes.1 //@nodeSet/@nodes.11"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="patientForRoom" documentation="Pattern that finds all patients that are assigned to a room -> first and following workloadsAlso holds the information which workload of a patient is assigned to which shift" localEdges="//@edgeSet/@edges.18 //@edgeSet/@edges.10 //@edgeSet/@edges.20 //@edgeSet/@edges.6" signatureNodes="//@nodeSet/@nodes.16 //@nodeSet/@nodes.23 //@nodeSet/@nodes.30 //@nodeSet/@nodes.37 //@nodeSet/@nodes.44"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="roomDayTupel" documentation="Used in Softconstraint S1 to check the assigned age groups for each room on each day" signatureNodes="//@nodeSet/@nodes.4 //@nodeSet/@nodes.21"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="roomForShift" documentation="Pattern used to map which rooms are occupied on a specific shift.Used for a mapping which counts the Patients over a specific room for a specific day -> enforce that the capacity of a room is not exceededAdditionally used to make sure nurses are not assigned to empty rooms and each non-empty room has an assigned nurse" localEdges="//@edgeSet/@edges.8" signatureNodes="//@nodeSet/@nodes.19 //@nodeSet/@nodes.26">
+      <arithmeticConstraints xmi:type="IBeXPatternModel:IBeXArithmeticConstraint" relation="EQUAL">
+        <lhs xmi:type="IBeXPatternModel:IBeXBinaryExpression" operator="MODULUS">
+          <left xmi:type="IBeXPatternModel:IBeXArithmeticAttribute" name="s">
+            <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+            <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/shiftNo"/>
+          </left>
+          <right xmi:type="IBeXPatternModel:IBeXArithmeticValueLiteral" value="3.0"/>
+        </lhs>
+        <rhs xmi:type="IBeXPatternModel:IBeXArithmeticValueLiteral"/>
+      </arithmeticConstraints>
+    </contextPatterns>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectExtendingShiftToFirstWorkload" documentation="Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model." localEdges="//@edgeSet/@edges.7 //@edgeSet/@edges.1" signatureNodes="//@nodeSet/@nodes.7 //@nodeSet/@nodes.18">
+      <injectivityConstraints xmi:type="IBeXPatternModel:IBeXInjectivityConstraint" values="//@nodeSet/@nodes.7 //@nodeSet/@nodes.18"/>
+    </contextPatterns>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectOperationDay" documentation="Rule that selects an operation day for a patient.That includes three edges to be adopted in the final model.I. + II.: between the patient and opTime and between patient and capacity -> Selects a day and OT for the patientIII.: between opTime and Capacity to make sure the predefined surgeon of the patient is working in the correct OT on that day" localEdges="//@edgeSet/@edges.21 //@edgeSet/@edges.15 //@edgeSet/@edges.16 //@edgeSet/@edges.25 //@edgeSet/@edges.5 //@edgeSet/@edges.23 //@edgeSet/@edges.13 //@edgeSet/@edges.24 //@edgeSet/@edges.22 //@edgeSet/@edges.3 //@edgeSet/@edges.28 //@edgeSet/@edges.29" signatureNodes="//@nodeSet/@nodes.2 //@nodeSet/@nodes.10 //@nodeSet/@nodes.15 //@nodeSet/@nodes.29 //@nodeSet/@nodes.32 //@nodeSet/@nodes.40 //@nodeSet/@nodes.41 //@nodeSet/@nodes.43"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectShiftToFirstWorkload" documentation="GTRule that selects a VirtualShiftToWorkload-Node to be adopted in the final model." localEdges="//@edgeSet/@edges.4 //@edgeSet/@edges.19 //@edgeSet/@edges.27 //@edgeSet/@edges.26" signatureNodes="//@nodeSet/@nodes.13 //@nodeSet/@nodes.35 //@nodeSet/@nodes.39 //@nodeSet/@nodes.42"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectShiftToRoster" documentation="Rule that selects an VirtualShiftToRoster-Node to be adopted in the final model." signatureNodes="//@nodeSet/@nodes.33"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="surgeonOTForDay" documentation="Used in a mapping to save the information if a surgeon is operating in a specific OT for each day" localEdges="//@edgeSet/@edges.11" signatureNodes="//@nodeSet/@nodes.8 //@nodeSet/@nodes.12 //@nodeSet/@nodes.25"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="surgeonOptimeTupel" documentation="Pattern used in a mapping to save the information if a Surgeon operates on a specific Day and used to make sure the operation time of a surgeon is not exceeded on each dayop.maxOpTime > 0 is already enforced by the preprocessing because OpTime Objects with maxOpTime &lt;= 0 are not created" localEdges="//@edgeSet/@edges.12" signatureNodes="//@nodeSet/@nodes.9 //@nodeSet/@nodes.28"/>
+    <contextPatterns xmi:type="IBeXPatternModel:IBeXContextPattern" name="virtualNodesForOccupant" documentation="Rule that selects all VirtualShiftToWorkload-Nodes to be adopted in the final model if they were imported (belong to an occupant)" signatureNodes="//@nodeSet/@nodes.36">
+      <attributeConstraint xmi:type="IBeXPatternModel:IBeXAttributeConstraint" relation="EQUAL">
+        <lhs xmi:type="IBeXPatternModel:IBeXAttributeExpression" node="//@nodeSet/@nodes.36">
+          <attribute xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/wasImported"/>
+        </lhs>
+        <rhs xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+      </attributeConstraint>
+    </contextPatterns>
+  </patternSet>
+  <ruleSet xmi:type="IBeXPatternModel:IBeXRuleSet">
+    <rules xmi:type="IBeXPatternModel:IBeXRule" name="selectExtendingShiftToFirstWorkload" documentation="Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model." lhs="//@patternSet/@contextPatterns.10">
+      <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectExtendingShiftToFirstWorkload_rhs" localEdges="//@edgeSet/@edges.7 //@edgeSet/@edges.1" signatureNodes="//@nodeSet/@nodes.7 //@nodeSet/@nodes.18"/>
+      <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="selectExtendingShiftToFirstWorkload">
+        <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@nodeSet/@nodes.7">
+          <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+          <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/isSelected"/>
+        </attributeAssignments>
+      </create>
+      <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="selectExtendingShiftToFirstWorkload"/>
+    </rules>
+    <rules xmi:type="IBeXPatternModel:IBeXRule" name="selectOperationDay" documentation="Rule that selects an operation day for a patient.That includes three edges to be adopted in the final model.I. + II.: between the patient and opTime and between patient and capacity -> Selects a day and OT for the patientIII.: between opTime and Capacity to make sure the predefined surgeon of the patient is working in the correct OT on that day" lhs="//@patternSet/@contextPatterns.11">
+      <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectOperationDay_rhs" localEdges="//@edgeSet/@edges.21 //@edgeSet/@edges.15 //@edgeSet/@edges.16 //@edgeSet/@edges.25 //@edgeSet/@edges.5 //@edgeSet/@edges.23 //@edgeSet/@edges.13 //@edgeSet/@edges.24 //@edgeSet/@edges.22 //@edgeSet/@edges.3 //@edgeSet/@edges.28 //@edgeSet/@edges.29" signatureNodes="//@nodeSet/@nodes.2 //@nodeSet/@nodes.10 //@nodeSet/@nodes.15 //@nodeSet/@nodes.29 //@nodeSet/@nodes.32 //@nodeSet/@nodes.40 //@nodeSet/@nodes.41 //@nodeSet/@nodes.43"/>
+      <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="selectOperationDay">
+        <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@nodeSet/@nodes.32">
+          <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+          <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/isSelected"/>
+        </attributeAssignments>
+        <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@nodeSet/@nodes.40">
+          <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+          <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity/isSelected"/>
+        </attributeAssignments>
+        <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@nodeSet/@nodes.41">
+          <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+          <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/isSelected"/>
+        </attributeAssignments>
+      </create>
+      <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="selectOperationDay"/>
+    </rules>
+    <rules xmi:type="IBeXPatternModel:IBeXRule" name="selectShiftToFirstWorkload" documentation="GTRule that selects a VirtualShiftToWorkload-Node to be adopted in the final model." lhs="//@patternSet/@contextPatterns.12">
+      <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectShiftToFirstWorkload_rhs" localEdges="//@edgeSet/@edges.4 //@edgeSet/@edges.19 //@edgeSet/@edges.27 //@edgeSet/@edges.26" signatureNodes="//@nodeSet/@nodes.13 //@nodeSet/@nodes.35 //@nodeSet/@nodes.39 //@nodeSet/@nodes.42"/>
+      <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="selectShiftToFirstWorkload">
+        <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@nodeSet/@nodes.35">
+          <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+          <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/isSelected"/>
+        </attributeAssignments>
+      </create>
+      <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="selectShiftToFirstWorkload"/>
+    </rules>
+    <rules xmi:type="IBeXPatternModel:IBeXRule" name="selectShiftToRoster" documentation="Rule that selects an VirtualShiftToRoster-Node to be adopted in the final model." lhs="//@patternSet/@contextPatterns.13">
+      <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="selectShiftToRoster_rhs" signatureNodes="//@nodeSet/@nodes.33"/>
+      <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="selectShiftToRoster">
+        <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@nodeSet/@nodes.33">
+          <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+          <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/isSelected"/>
+        </attributeAssignments>
+      </create>
+      <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="selectShiftToRoster"/>
+    </rules>
+    <rules xmi:type="IBeXPatternModel:IBeXRule" name="virtualNodesForOccupant" documentation="Rule that selects all VirtualShiftToWorkload-Nodes to be adopted in the final model if they were imported (belong to an occupant)" lhs="//@patternSet/@contextPatterns.16">
+      <rhs xmi:type="IBeXPatternModel:IBeXContextPattern" name="virtualNodesForOccupant_rhs" signatureNodes="//@nodeSet/@nodes.36"/>
+      <create xmi:type="IBeXPatternModel:IBeXCreatePattern" name="virtualNodesForOccupant">
+        <attributeAssignments xmi:type="IBeXPatternModel:IBeXAttributeAssignment" node="//@nodeSet/@nodes.36">
+          <value xmi:type="IBeXPatternModel:IBeXConstant" value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001" stringValue="true"/>
+          <type xmi:type="ecore:EAttribute" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/isSelected"/>
+        </attributeAssignments>
+      </create>
+      <delete xmi:type="IBeXPatternModel:IBeXDeletePattern" name="virtualNodesForOccupant"/>
+    </rules>
+  </ruleSet>
+  <nodeSet xmi:type="IBeXPatternModel:IBeXNodeSet">
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="ag">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//AgeGroup"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="c" incomingEdges="//@edgeSet/@edges.2">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="c" incomingEdges="//@edgeSet/@edges.21 //@edgeSet/@edges.15">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Capacity"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="d">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Day"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="d">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Day"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="g">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Gender"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="n" outgoingEdges="//@edgeSet/@edges.0">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Nurse"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="nextvsw" incomingEdges="//@edgeSet/@edges.7" outgoingEdges="//@edgeSet/@edges.1">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="op" incomingEdges="//@edgeSet/@edges.11">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="op" incomingEdges="//@edgeSet/@edges.12">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="opTime" incomingEdges="//@edgeSet/@edges.23 //@edgeSet/@edges.13">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OpTime"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="ot" outgoingEdges="//@edgeSet/@edges.2">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OT"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="ot">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OT"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p" outgoingEdges="//@edgeSet/@edges.4">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p" outgoingEdges="//@edgeSet/@edges.5 //@edgeSet/@edges.3">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p" outgoingEdges="//@edgeSet/@edges.6">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="p">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="prevvsw" incomingEdges="//@edgeSet/@edges.1" outgoingEdges="//@edgeSet/@edges.7">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r" outgoingEdges="//@edgeSet/@edges.8">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r" outgoingEdges="//@edgeSet/@edges.9">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="r" outgoingEdges="//@edgeSet/@edges.10">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="ro" incomingEdges="//@edgeSet/@edges.0">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Roster"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" outgoingEdges="//@edgeSet/@edges.11">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@edgeSet/@edges.8">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@edgeSet/@edges.9">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" outgoingEdges="//@edgeSet/@edges.12">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@edgeSet/@edges.3" outgoingEdges="//@edgeSet/@edges.13">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@edgeSet/@edges.18 //@edgeSet/@edges.10">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="s" incomingEdges="//@edgeSet/@edges.17" outgoingEdges="//@edgeSet/@edges.14">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vopc" incomingEdges="//@edgeSet/@edges.24" outgoingEdges="//@edgeSet/@edges.15 //@edgeSet/@edges.16">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsr">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsr" outgoingEdges="//@edgeSet/@edges.17">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsw" incomingEdges="//@edgeSet/@edges.26" outgoingEdges="//@edgeSet/@edges.19">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsw">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsw" outgoingEdges="//@edgeSet/@edges.18 //@edgeSet/@edges.20">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vsw" incomingEdges="//@edgeSet/@edges.14">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vwc" incomingEdges="//@edgeSet/@edges.19 //@edgeSet/@edges.27">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vwc" incomingEdges="//@edgeSet/@edges.25 //@edgeSet/@edges.28" outgoingEdges="//@edgeSet/@edges.21 //@edgeSet/@edges.22">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="vwop" incomingEdges="//@edgeSet/@edges.16 //@edgeSet/@edges.22 //@edgeSet/@edges.29" outgoingEdges="//@edgeSet/@edges.25 //@edgeSet/@edges.23 //@edgeSet/@edges.24">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="w" incomingEdges="//@edgeSet/@edges.4" outgoingEdges="//@edgeSet/@edges.27 //@edgeSet/@edges.26">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="w" incomingEdges="//@edgeSet/@edges.5" outgoingEdges="//@edgeSet/@edges.28 //@edgeSet/@edges.29">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
+    </nodes>
+    <nodes xmi:type="IBeXPatternModel:IBeXNode" name="w" incomingEdges="//@edgeSet/@edges.20 //@edgeSet/@edges.6">
+      <type xmi:type="ecore:EClass" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload"/>
+    </nodes>
+  </nodeSet>
+  <edgeSet xmi:type="IBeXPatternModel:IBeXEdgeSet">
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="n->ro" sourceNode="//@nodeSet/@nodes.6" targetNode="//@nodeSet/@nodes.24">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Nurse/rosters"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="nextvsw->prevvsw" sourceNode="//@nodeSet/@nodes.7" targetNode="//@nodeSet/@nodes.18">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/requires_virtualShiftToWorkload"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="ot->c" sourceNode="//@nodeSet/@nodes.11" targetNode="//@nodeSet/@nodes.1">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//OT/capacities"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="p->s" sourceNode="//@nodeSet/@nodes.15" targetNode="//@nodeSet/@nodes.29">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/surgeon"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="p->w" sourceNode="//@nodeSet/@nodes.13" targetNode="//@nodeSet/@nodes.42">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/firstWorkload"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="p->w" sourceNode="//@nodeSet/@nodes.15" targetNode="//@nodeSet/@nodes.43">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/firstWorkload"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="p->w" sourceNode="//@nodeSet/@nodes.16" targetNode="//@nodeSet/@nodes.44">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Patient/workloads"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="prevvsw->nextvsw" sourceNode="//@nodeSet/@nodes.18" targetNode="//@nodeSet/@nodes.7">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/enables_virtualShiftToWorkload"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="r->s" sourceNode="//@nodeSet/@nodes.19" targetNode="//@nodeSet/@nodes.26">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room/shifts"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="r->s" sourceNode="//@nodeSet/@nodes.22" targetNode="//@nodeSet/@nodes.27">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room/shifts"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="r->s" sourceNode="//@nodeSet/@nodes.23" targetNode="//@nodeSet/@nodes.30">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Room/shifts"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="s->op" sourceNode="//@nodeSet/@nodes.25" targetNode="//@nodeSet/@nodes.8">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon/opTimes"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="s->op" sourceNode="//@nodeSet/@nodes.28" targetNode="//@nodeSet/@nodes.9">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon/opTimes"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="s->opTime" sourceNode="//@nodeSet/@nodes.29" targetNode="//@nodeSet/@nodes.10">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Surgeon/opTimes"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="s->vsw" sourceNode="//@nodeSet/@nodes.31" targetNode="//@nodeSet/@nodes.38">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Shift/virtualWorkload"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vopc->c" sourceNode="//@nodeSet/@nodes.32" targetNode="//@nodeSet/@nodes.2">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/capacity"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vopc->vwop" sourceNode="//@nodeSet/@nodes.32" targetNode="//@nodeSet/@nodes.41">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualOpTimeToCapacity/enables_virtualWorkloadToOpTime"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vsr->s" sourceNode="//@nodeSet/@nodes.34" targetNode="//@nodeSet/@nodes.31">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToRoster/shift"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vsw->s" sourceNode="//@nodeSet/@nodes.37" targetNode="//@nodeSet/@nodes.30">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/shift"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vsw->vwc" sourceNode="//@nodeSet/@nodes.35" targetNode="//@nodeSet/@nodes.39">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/requires_virtualWorkloadToCapacity"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vsw->w" sourceNode="//@nodeSet/@nodes.37" targetNode="//@nodeSet/@nodes.44">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualShiftToWorkload/workload"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwc->c" sourceNode="//@nodeSet/@nodes.40" targetNode="//@nodeSet/@nodes.2">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity/capacity"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwc->vwop" sourceNode="//@nodeSet/@nodes.40" targetNode="//@nodeSet/@nodes.41">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToCapacity/requires_virtualWorkloadToOpTime"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwop->opTime" sourceNode="//@nodeSet/@nodes.41" targetNode="//@nodeSet/@nodes.10">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/opTime"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwop->vopc" sourceNode="//@nodeSet/@nodes.41" targetNode="//@nodeSet/@nodes.32">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/requires_virtualOpTimeToCapacity"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="vwop->vwc" sourceNode="//@nodeSet/@nodes.41" targetNode="//@nodeSet/@nodes.40">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//VirtualWorkloadToOpTime/enables_virtual_WorkloadToCapacity"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="w->vsw" sourceNode="//@nodeSet/@nodes.42" targetNode="//@nodeSet/@nodes.35">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualShift"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="w->vwc" sourceNode="//@nodeSet/@nodes.42" targetNode="//@nodeSet/@nodes.39">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualCapacity"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="w->vwc" sourceNode="//@nodeSet/@nodes.43" targetNode="//@nodeSet/@nodes.40">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualCapacity"/>
+    </edges>
+    <edges xmi:type="IBeXPatternModel:IBeXEdge" name="w->vwop" sourceNode="//@nodeSet/@nodes.43" targetNode="//@nodeSet/@nodes.41">
+      <type xmi:type="ecore:EReference" href="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore#//Workload/virtualOpTime"/>
+    </edges>
+  </edgeSet>
+</IBeXPatternModel:IBeXModel>
