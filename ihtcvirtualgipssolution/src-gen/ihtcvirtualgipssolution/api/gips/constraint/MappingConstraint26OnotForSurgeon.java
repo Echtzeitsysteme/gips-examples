@@ -1,17 +1,20 @@
 package ihtcvirtualgipssolution.api.gips.constraint;		
 
-import ihtcvirtualgipssolution.api.gips.mapping.OtForSurgeonMapping;
-import java.util.List;
-import org.emoflon.gips.core.GipsEngine;
-import org.emoflon.gips.core.milp.model.Constraint;
-import ihtcvirtualgipssolution.api.gips.mapping.SelectedOperationDayMapping;
-import org.emoflon.gips.core.GipsMappingConstraint;
-import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
-import org.emoflon.gips.intermediate.GipsIntermediate.MappingConstraint;
-import java.util.LinkedList;
-import org.emoflon.gips.core.milp.model.Term;
 import java.util.Collections;
-import java.util.stream.Collectors;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.emoflon.gips.core.GipsMapper;
+import org.emoflon.gips.core.GipsMappingConstraint;
+import org.emoflon.gips.core.GlobalMappingIndexer;
+import org.emoflon.gips.core.MappingIndexer;
+import org.emoflon.gips.core.milp.model.Constraint;
+import org.emoflon.gips.core.milp.model.Term;
+import org.emoflon.gips.intermediate.GipsIntermediate.MappingConstraint;
+
+import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
+import ihtcvirtualgipssolution.api.gips.mapping.OtForSurgeonMapping;
+import ihtcvirtualgipssolution.api.gips.mapping.SelectedOperationDayMapping;
 
 public class MappingConstraint26OnotForSurgeon extends GipsMappingConstraint<IhtcvirtualgipssolutionGipsAPI, OtForSurgeonMapping>{
 	public MappingConstraint26OnotForSurgeon(final IhtcvirtualgipssolutionGipsAPI engine, final MappingConstraint constraint) {
@@ -46,11 +49,37 @@ public class MappingConstraint26OnotForSurgeon extends GipsMappingConstraint<Iht
 		throw new UnsupportedOperationException("Constraint has no depending or substitute constraints.");
 	}
 	protected void builder_0(final List<Term> terms, final OtForSurgeonMapping context) {
-		engine.getMapper("selectedOperationDay").getMappings().values().parallelStream()
-					.map(mapping -> (SelectedOperationDayMapping) mapping)
-		.filter(elt -> elt.getOpTime().equals(context.getOp()) && elt.getVwc().getCapacity().getOt().equals(context.getOt()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)(-1.0) * (1.0)));
-		});
+        final GipsMapper<?> mapper = engine.getMapper("selectedOperationDay");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getC(), elt);
+						indexer.putMapping(elt.getOpTime(), elt);
+						indexer.putMapping(elt.getP(), elt);
+						indexer.putMapping(elt.getS(), elt);
+						indexer.putMapping(elt.getVopc(), elt);
+						indexer.putMapping(elt.getVwc(), elt);
+						indexer.putMapping(elt.getVwop(), elt);
+						indexer.putMapping(elt.getW(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getOp()).parallelStream()
+				.map(mapping -> (SelectedOperationDayMapping) mapping)
+				.filter(elt -> elt.getOpTime().equals(context.getOp()) && elt.getVwc().getCapacity().getOt().equals(context.getOt()))
+				.forEach(elt -> {
+					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
+				});
+		
+		// Old generated code
+//		engine.getMapper("selectedOperationDay").getMappings().values().parallelStream()
+//					.map(mapping -> (SelectedOperationDayMapping) mapping)
+//		.filter(elt -> elt.getOpTime().equals(context.getOp()) && elt.getVwc().getCapacity().getOt().equals(context.getOt()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)(-1.0) * (1.0)));
+//		});
 	}
 }

@@ -1,9 +1,15 @@
 package ihtcvirtualgipssolution.api.gips.constraint;		
 
 import java.util.List;
+import java.util.Set;
+
 import org.emoflon.gips.core.GipsEngine;
+import org.emoflon.gips.core.GipsMapper;
 import org.emoflon.gips.core.milp.model.Constraint;
 import org.emoflon.gips.core.GipsMappingConstraint;
+import org.emoflon.gips.core.GlobalMappingIndexer;
+import org.emoflon.gips.core.MappingIndexer;
+
 import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
 import org.emoflon.gips.intermediate.GipsIntermediate.MappingConstraint;
 import java.util.LinkedList;
@@ -48,11 +54,32 @@ public class MappingConstraint51OnageGroupsInRoom_EQ0 extends GipsMappingConstra
 		return (10000.0) * (1.0);
 	}
 	protected void builder_0(final List<Term> terms, final AgeGroupsInRoomMapping context) {
-		engine.getMapper("ageGroupsInRoom").getMappings().values().parallelStream()
-					.map(mapping -> (AgeGroupsInRoomMapping) mapping)
-		.filter(elt -> elt.getR().equals(context.getR()) && elt.getD().equals(context.getD()) && elt.getAg().getGroup() > context.getAg().getGroup())
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)1.0));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("ageGroupsInRoom");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (AgeGroupsInRoomMapping) mapping).forEach(elt -> {
+							indexer.putMapping(elt.getAg(), elt);
+							indexer.putMapping(elt.getD(), elt);
+							indexer.putMapping(elt.getR(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNodes(Set.of(context.getR(), context.getD())).parallelStream()
+				.map(mapping -> (AgeGroupsInRoomMapping) mapping)
+				.filter(elt -> elt.getR().equals(context.getR()) && elt.getD().equals(context.getD()) && elt.getAg().getGroup() > context.getAg().getGroup())
+				.forEach(elt -> {
+					terms.add(new Term(elt, (double)1.0));
+				});
+		
+		// Old generated code
+//		engine.getMapper("ageGroupsInRoom").getMappings().values().parallelStream()
+//					.map(mapping -> (AgeGroupsInRoomMapping) mapping)
+//		.filter(elt -> elt.getR().equals(context.getR()) && elt.getD().equals(context.getD()) && elt.getAg().getGroup() > context.getAg().getGroup())
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)1.0));
+//		});
 	}
 }

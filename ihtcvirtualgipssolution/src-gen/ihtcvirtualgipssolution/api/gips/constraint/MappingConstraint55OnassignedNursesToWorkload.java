@@ -1,14 +1,20 @@
 package ihtcvirtualgipssolution.api.gips.constraint;		
 
 import org.emoflon.gips.core.GipsEngine;
+import org.emoflon.gips.core.GipsMapper;
 import org.emoflon.gips.core.milp.model.Constraint;
 import org.emoflon.gips.core.GipsMappingConstraint;
+import org.emoflon.gips.core.GlobalMappingIndexer;
+import org.emoflon.gips.core.MappingIndexer;
+
 import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
 import org.emoflon.gips.intermediate.GipsIntermediate.MappingConstraint;
 import org.emoflon.gips.core.milp.model.Term;
 import java.util.stream.Collectors;
 import ihtcvirtualgipssolution.api.gips.mapping.AssignedNursesToWorkloadMapping;
 import java.util.List;
+import java.util.Set;
+
 import ihtcvirtualgipssolution.api.gips.mapping.AssignedPatientsToRoomMapping;
 import ihtcvirtualgipssolution.api.gips.mapping.SelectedShiftToRosterMapping;
 import java.util.LinkedList;
@@ -48,19 +54,61 @@ public class MappingConstraint55OnassignedNursesToWorkload extends GipsMappingCo
 		throw new UnsupportedOperationException("Constraint has no depending or substitute constraints.");
 	}
 	protected void builder_1(final List<Term> terms, final AssignedNursesToWorkloadMapping context) {
-		engine.getMapper("selectedShiftToRoster").getMappings().values().parallelStream()
-					.map(mapping -> (SelectedShiftToRosterMapping) mapping)
-		.filter(elt -> elt.getVsr().equals(context.getVsr()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)(-1.0) * (1.0)));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("selectedShiftToRoster");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (SelectedShiftToRosterMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getVsr(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getVsr()).parallelStream()
+				.map(mapping -> (SelectedShiftToRosterMapping) mapping)
+				.filter(elt -> elt.getVsr().equals(context.getVsr()))
+				.forEach(elt -> {
+					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
+				});
+		
+		// Old generated code
+//		engine.getMapper("selectedShiftToRoster").getMappings().values().parallelStream()
+//					.map(mapping -> (SelectedShiftToRosterMapping) mapping)
+//		.filter(elt -> elt.getVsr().equals(context.getVsr()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)(-1.0) * (1.0)));
+//		});
 	}
 	protected void builder_0(final List<Term> terms, final AssignedNursesToWorkloadMapping context) {
-		engine.getMapper("assignedPatientsToRoom").getMappings().values().parallelStream()
-					.map(mapping -> (AssignedPatientsToRoomMapping) mapping)
-		.filter(elt -> elt.getVsw().equals(context.getVsw()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)(-1.0) * (1.0)));
-		});
+        final GipsMapper<?> mapper = engine.getMapper("assignedPatientsToRoom");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (AssignedPatientsToRoomMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getP(), elt);
+						indexer.putMapping(elt.getR(), elt);
+						indexer.putMapping(elt.getS(), elt);
+						indexer.putMapping(elt.getVsw(), elt);
+						indexer.putMapping(elt.getW(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getVsw()).parallelStream()
+				.map(mapping -> (AssignedPatientsToRoomMapping) mapping)
+				.filter(elt -> elt.getVsw().equals(context.getVsw()))
+				.forEach(elt -> {
+					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
+				});
+		
+		// Old generated code
+//		engine.getMapper("assignedPatientsToRoom").getMappings().values().parallelStream()
+//					.map(mapping -> (AssignedPatientsToRoomMapping) mapping)
+//		.filter(elt -> elt.getVsw().equals(context.getVsw()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)(-1.0) * (1.0)));
+//		});
 	}
 }
