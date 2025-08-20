@@ -18,6 +18,14 @@ import org.emoflon.gips.core.milp.model.Term;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import ihtcvirtualgipssolution.api.gips.mapping.SelectedShiftToFirstWorkloadMapping;
+import ihtcvirtualmetamodel.Capacity;
+import ihtcvirtualmetamodel.OpTime;
+import ihtcvirtualmetamodel.Patient;
+import ihtcvirtualmetamodel.Surgeon;
+import ihtcvirtualmetamodel.VirtualOpTimeToCapacity;
+import ihtcvirtualmetamodel.VirtualWorkloadToCapacity;
+import ihtcvirtualmetamodel.VirtualWorkloadToOpTime;
+import ihtcvirtualmetamodel.Workload;
 
 public class MappingConstraint16OnselectedOperationDay extends GipsMappingConstraint<IhtcvirtualgipssolutionGipsAPI, SelectedOperationDayMapping>{
 	public MappingConstraint16OnselectedOperationDay(final IhtcvirtualgipssolutionGipsAPI engine, final MappingConstraint constraint) {
@@ -62,6 +70,12 @@ public class MappingConstraint16OnselectedOperationDay extends GipsMappingConstr
 						indexer.putMapping(elt.getVwc(), elt);
 						indexer.putMapping(elt.getVopc(), elt);
 						indexer.putMapping(elt.getVwop(), elt);
+						//
+						indexer.putMapping(elt.getOpTime(), elt);
+						indexer.putMapping(elt.getC(), elt);
+						indexer.putMapping(elt.getP(), elt);
+						indexer.putMapping(elt.getS(), elt);
+						indexer.putMapping(elt.getW(), elt);
 					});
 		}
 		
