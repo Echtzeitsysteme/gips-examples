@@ -62,6 +62,9 @@ public class RuleConstraint15OnselectShiftToFirstWorkload extends GipsRuleConstr
 					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getVsw(), elt);
 						indexer.putMapping(elt.getVwc(), elt);
+						//
+						indexer.putMapping(elt.getP(), elt);
+						indexer.putMapping(elt.getW(), elt);
 					});
 		}
 
@@ -88,6 +91,14 @@ public class RuleConstraint15OnselectShiftToFirstWorkload extends GipsRuleConstr
 			mapper.getMappings().values().parallelStream()
 					.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getVwc(), elt);
+						//
+						indexer.putMapping(elt.getP(), elt);
+						indexer.putMapping(elt.getC(), elt);
+						indexer.putMapping(elt.getOpTime(), elt);
+						indexer.putMapping(elt.getS(), elt);
+						indexer.putMapping(elt.getVopc(), elt);
+						indexer.putMapping(elt.getVwop(), elt);
+						indexer.putMapping(elt.getW(), elt);
 					});
 		}
 

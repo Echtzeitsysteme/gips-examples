@@ -59,6 +59,14 @@ public class TypeConstraint12OnPatient extends GipsTypeConstraint<Ihtcvirtualgip
 			mapper.getMappings().values().parallelStream()
 					.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getP(), elt);
+						//
+						indexer.putMapping(elt.getVwc(), elt);
+						indexer.putMapping(elt.getC(), elt);
+						indexer.putMapping(elt.getOpTime(), elt);
+						indexer.putMapping(elt.getS(), elt);
+						indexer.putMapping(elt.getVopc(), elt);
+						indexer.putMapping(elt.getVwop(), elt);
+						indexer.putMapping(elt.getW(), elt);
 					});
 		}
 		

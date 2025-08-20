@@ -57,6 +57,9 @@ public class PatternConstraint0OnroomForShift extends GipsPatternConstraint<Ihtc
 			mapper.getMappings().values().parallelStream()
 					.map(mapping -> (AssignedGenderToRoomOnShiftMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getS(), elt);
+						//
+						indexer.putMapping(elt.getG(), elt);
+						indexer.putMapping(elt.getR(), elt);
 					});
 		}
 		

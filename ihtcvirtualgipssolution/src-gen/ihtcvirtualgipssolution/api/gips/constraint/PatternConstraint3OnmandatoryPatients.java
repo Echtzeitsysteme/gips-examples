@@ -13,6 +13,15 @@ import org.emoflon.gips.core.milp.model.Term;
 import java.util.stream.Collectors;
 import java.util.List;
 import ihtcvirtualgipssolution.api.rules.MandatoryPatientsPattern;
+import ihtcvirtualmetamodel.Capacity;
+import ihtcvirtualmetamodel.OpTime;
+import ihtcvirtualmetamodel.Patient;
+import ihtcvirtualmetamodel.Surgeon;
+import ihtcvirtualmetamodel.VirtualOpTimeToCapacity;
+import ihtcvirtualmetamodel.VirtualWorkloadToCapacity;
+import ihtcvirtualmetamodel.VirtualWorkloadToOpTime;
+import ihtcvirtualmetamodel.Workload;
+
 import java.util.LinkedList;
 import ihtcvirtualgipssolution.api.matches.MandatoryPatientsMatch;
 import java.util.Collections;
@@ -59,6 +68,14 @@ public class PatternConstraint3OnmandatoryPatients extends GipsPatternConstraint
 			mapper.getMappings().values().parallelStream()
 					.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getP(), elt);
+						//
+						indexer.putMapping(elt.getC(), elt);
+						indexer.putMapping(elt.getOpTime(), elt);
+						indexer.putMapping(elt.getS(), elt);
+						indexer.putMapping(elt.getVopc(), elt);
+						indexer.putMapping(elt.getVwc(), elt);
+						indexer.putMapping(elt.getVwop(), elt);
+						indexer.putMapping(elt.getW(), elt);
 					});
 		}
 		
@@ -85,6 +102,10 @@ public class PatternConstraint3OnmandatoryPatients extends GipsPatternConstraint
 			mapper.getMappings().values().parallelStream()
 					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getP(), elt);
+						//
+						indexer.putMapping(elt.getVsw(), elt);
+						indexer.putMapping(elt.getVwc(), elt);
+						indexer.putMapping(elt.getW(), elt);
 					});
 		}
 		

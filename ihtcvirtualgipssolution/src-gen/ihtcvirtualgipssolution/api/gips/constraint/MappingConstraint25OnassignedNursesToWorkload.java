@@ -61,6 +61,11 @@ public class MappingConstraint25OnassignedNursesToWorkload extends GipsMappingCo
 			mapper.getMappings().values().parallelStream()
 					.map(mapping -> (AssignedPatientsToRoomMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getVsw(), elt);
+						//
+						indexer.putMapping(elt.getP(), elt);
+						indexer.putMapping(elt.getR(), elt);
+						indexer.putMapping(elt.getS(), elt);
+						indexer.putMapping(elt.getW(), elt);
 					});
 		}
 		

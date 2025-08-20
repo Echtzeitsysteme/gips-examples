@@ -88,6 +88,8 @@ public class MappingConstraint16OnselectedOperationDay extends GipsMappingConstr
 			mapper.getMappings().values().parallelStream()
 					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getVwc(), elt);
+						//
+						indexer.putMapping(elt.getVsw(), elt);
 					});
 		}
 		
