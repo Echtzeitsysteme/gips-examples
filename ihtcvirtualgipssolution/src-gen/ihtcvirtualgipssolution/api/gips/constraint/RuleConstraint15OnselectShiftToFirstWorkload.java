@@ -69,7 +69,9 @@ public class RuleConstraint15OnselectShiftToFirstWorkload extends GipsRuleConstr
 		}
 
 		indexer.getMappingsOfNodes(Set.of(context.getVsw(), context.getVwc())).parallelStream()
-				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
+				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
+				.filter(elt -> elt.getVsw().equals(context.getVsw()) && elt.getVwc().equals(context.getVwc()))
+				.forEach(elt -> {
 					terms.add(new Term(elt, (double) 1.0));
 				});
 
@@ -104,7 +106,8 @@ public class RuleConstraint15OnselectShiftToFirstWorkload extends GipsRuleConstr
 
 		indexer.getMappingsOfNode(context.getVwc()).parallelStream()
 				.map(mapping -> (SelectedOperationDayMapping) mapping)
-				.filter(elt -> elt.getVopc().getCapacity().getDay() == (context.getVsw().getShift().getShiftNo()) / (3))
+				.filter(elt -> elt.getVwc().equals(context.getVwc())
+						&& elt.getVopc().getCapacity().getDay() == (context.getVsw().getShift().getShiftNo()) / (3))
 				.forEach(elt -> {
 					terms.add(new Term(elt, (double) (-1.0) * (1.0)));
 				});

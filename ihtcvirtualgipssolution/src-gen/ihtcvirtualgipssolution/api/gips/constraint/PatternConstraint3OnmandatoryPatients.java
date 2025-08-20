@@ -80,7 +80,9 @@ public class PatternConstraint3OnmandatoryPatients extends GipsPatternConstraint
 		}
 		
 		indexer.getMappingsOfNode(context.getP()).parallelStream()
-				.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
+				.map(mapping -> (SelectedOperationDayMapping) mapping)
+				.filter(elt -> elt.getP().equals(context.getP()))
+				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});
 		
@@ -110,7 +112,9 @@ public class PatternConstraint3OnmandatoryPatients extends GipsPatternConstraint
 		}
 		
 		indexer.getMappingsOfNode(context.getP()).parallelStream()
-				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
+				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
+				.filter(elt -> elt.getP().equals(context.getP()))
+				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});
 		

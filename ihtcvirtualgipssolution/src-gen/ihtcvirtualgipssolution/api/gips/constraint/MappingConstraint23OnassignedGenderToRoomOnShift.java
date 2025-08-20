@@ -70,8 +70,8 @@ public class MappingConstraint23OnassignedGenderToRoomOnShift extends GipsMappin
 		}
 		
 		indexer.getMappingsOfNode(context.getS()).parallelStream()
-		.map(mapping -> (AssignedPatientsToRoomMapping) mapping)
-				.filter(elt -> elt.getP().getGender().equals(context.getG().getName()))
+				.map(mapping -> (AssignedPatientsToRoomMapping) mapping)
+				.filter(elt -> elt.getP().getGender().equals(context.getG().getName()) && elt.getS().equals(context.getS()))
 				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});

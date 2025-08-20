@@ -64,7 +64,9 @@ public class MappingConstraint24OnassignedNursesToWorkload extends GipsMappingCo
 		}
 		
 		indexer.getMappingsOfNode(context.getVsr()).parallelStream()
-				.map(mapping -> (SelectedShiftToRosterMapping) mapping).forEach(elt -> {
+				.map(mapping -> (SelectedShiftToRosterMapping) mapping)
+				.filter(elt -> elt.getVsr().equals(context.getVsr()))
+				.forEach(elt -> {
 					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
 				});
 		
@@ -95,6 +97,7 @@ public class MappingConstraint24OnassignedNursesToWorkload extends GipsMappingCo
 		
 		indexer.getMappingsOfNode(context.getVsw()).parallelStream()
 				.map(mapping -> (AssignedPatientsToRoomMapping) mapping)
+				.filter(elt -> elt.getVsw().equals(context.getVsw()))
 				.forEach(elt -> {
 					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
 				});

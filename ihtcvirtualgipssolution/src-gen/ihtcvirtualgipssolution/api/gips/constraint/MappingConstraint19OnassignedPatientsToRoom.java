@@ -66,7 +66,9 @@ public class MappingConstraint19OnassignedPatientsToRoom extends GipsMappingCons
 		}
 		
 		indexer.getMappingsOfNode(context.getVsw()).parallelStream()
-				.map(mapping -> (SelectedOccupantNodesMapping) mapping).forEach(elt -> {
+				.map(mapping -> (SelectedOccupantNodesMapping) mapping)
+				.filter(elt -> elt.getVsw().equals(context.getVsw()))
+				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});
 		
@@ -95,7 +97,9 @@ public class MappingConstraint19OnassignedPatientsToRoom extends GipsMappingCons
 		}
 		
 		indexer.getMappingsOfNode(context.getVsw()).parallelStream()
-				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
+				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
+				.filter(elt -> elt.getVsw().equals(context.getVsw()))
+				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});
 		
@@ -123,6 +127,7 @@ public class MappingConstraint19OnassignedPatientsToRoom extends GipsMappingCons
 		
 		indexer.getMappingsOfNode(context.getVsw()).parallelStream()
 				.map(mapping -> (SelectedExtendingShiftToFirstWorkloadMapping) mapping)
+				.filter(elt -> elt.getNextvsw().equals(context.getVsw()))
 				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});

@@ -81,6 +81,7 @@ public class MappingConstraint16OnselectedOperationDay extends GipsMappingConstr
 		
 		indexer.getMappingsOfNodes(Set.of(context.getVwc(), context.getVopc(), context.getVwop())).parallelStream()
 				.map(mapping -> (SelectedOperationDayMapping) mapping)
+				.filter(elt -> elt.getVwc().equals(context.getVwc()) && elt.getVopc().equals(context.getVopc()) && elt.getVwop().equals(context.getVwop()))
 				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});
@@ -109,7 +110,7 @@ public class MappingConstraint16OnselectedOperationDay extends GipsMappingConstr
 		
 		indexer.getMappingsOfNode(context.getVwc()).parallelStream()
 				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
-				.filter(elt -> (elt.getVsw().getShift().getShiftNo()) / (3) == context.getVopc().getCapacity().getDay())
+				.filter(elt -> elt.getVwc().equals(context.getVwc()) && (elt.getVsw().getShift().getShiftNo()) / (3) == context.getVopc().getCapacity().getDay())
 				.forEach(elt -> {
 					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
 				});

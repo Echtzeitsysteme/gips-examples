@@ -67,7 +67,9 @@ public class MappingConstraint21OncountPatientsForRoom extends GipsMappingConstr
 		}
 		
 		indexer.getMappingsOfNode(context.getS()).parallelStream()
-				.map(mapping -> (AssignedPatientsToRoomMapping) mapping).forEach(elt -> {
+				.map(mapping -> (AssignedPatientsToRoomMapping) mapping)
+				.filter(elt -> elt.getS().equals(context.getS()))
+				.forEach(elt -> {
 					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
 				});
 		

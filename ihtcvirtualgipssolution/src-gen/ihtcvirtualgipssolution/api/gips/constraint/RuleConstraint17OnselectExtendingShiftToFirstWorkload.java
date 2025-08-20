@@ -69,6 +69,7 @@ public class RuleConstraint17OnselectExtendingShiftToFirstWorkload extends GipsR
 		
 		indexer.getMappingsOfNode(context.getPrevvsw()).parallelStream()
 				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
+				.filter(elt -> elt.getVsw().equals(context.getPrevvsw()))
 				.forEach(elt -> {
 					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
 				});
@@ -97,6 +98,7 @@ public class RuleConstraint17OnselectExtendingShiftToFirstWorkload extends GipsR
 		
 		indexer.getMappingsOfNode(context.getPrevvsw()).parallelStream()
 				.map(mapping -> (SelectedExtendingShiftToFirstWorkloadMapping) mapping)
+				.filter(elt -> elt.getNextvsw().equals(context.getPrevvsw()))
 				.forEach(elt -> {
 					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
 				});
@@ -125,6 +127,7 @@ public class RuleConstraint17OnselectExtendingShiftToFirstWorkload extends GipsR
 		
 		indexer.getMappingsOfNode(context.getNextvsw()).parallelStream()
 				.map(mapping -> (SelectedExtendingShiftToFirstWorkloadMapping) mapping)
+				.filter(elt -> elt.getNextvsw().equals(context.getNextvsw()))
 				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});

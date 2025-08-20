@@ -70,7 +70,9 @@ public class MappingConstraint25OnassignedNursesToWorkload extends GipsMappingCo
 		}
 		
 		indexer.getMappingsOfNode(context.getVsw()).parallelStream()
-				.map(mapping -> (AssignedPatientsToRoomMapping) mapping).forEach(elt -> {
+				.map(mapping -> (AssignedPatientsToRoomMapping) mapping)
+				.filter(elt -> elt.getVsw().equals(context.getVsw()))
+				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});
 		

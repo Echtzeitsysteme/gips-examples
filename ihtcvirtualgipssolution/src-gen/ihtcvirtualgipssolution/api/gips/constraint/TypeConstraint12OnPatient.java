@@ -71,7 +71,9 @@ public class TypeConstraint12OnPatient extends GipsTypeConstraint<Ihtcvirtualgip
 		}
 		
 		indexer.getMappingsOfNode(context).parallelStream()
-				.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
+				.map(mapping -> (SelectedOperationDayMapping) mapping)
+				.filter(elt -> elt.getP().equals(context))
+				.forEach(elt -> {
 					terms.add(new Term(elt, (double)1.0));
 				});
 		
