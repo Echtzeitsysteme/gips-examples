@@ -1,11 +1,11 @@
 package "nurserosteringgipsl"
 import "platform:/resource/nurserosteringmodel/model/Nurserosteringmodel.ecore"
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
-	presolve := true;
+	presolve := auto;
 	debugOutput := true;
 	tolerance := true [value := 0.00001];
 	lpOutput := true [path := "gurobi.lp"];
@@ -20,54 +20,63 @@ config {
 // This rule assigns an employee to a shift on a specific
 // day.
 rule assignEmployeeToShift {
-	root : Root {
-		- employees -> employee
-		- days -> day
+	root: Root {
+		-employees -> employee
+		-days -> day
 	}
-	employee : Employee
-	day : Day {
-		- requirements -> cr
+
+	employee: Employee
+
+	day: Day {
+		-requirements -> cr
 	}
-	cr : CoverRequirement {
-		- shift -> shift
+
+	cr: CoverRequirement {
+		-shift -> shift
 	}
-	shift : Shift {
-		++ - assignedEmployees -> employee
+
+	shift: Shift {
+		++ -assignedEmployees -> employee
 	}
-	
-	// check if employee.skills.contains(shift.skills)
-	// is missing because of IBeX-GT language limitations
+
+// check if employee.skills.contains(shift.skills)
+// is missing because of IBeX-GT language limitations
 }
 
 // Finds all possible combinations of employee and days.
 pattern findEmployeeDayCombination {
-	root : Root {
-		- days -> day
-		- employees -> employee
+	root: Root {
+		-days -> day
+		-employees -> employee
 	}
-	employee : Employee
-	day : Day
+
+	employee: Employee
+
+	day: Day
 }
 
 // Finds all possible combinations of a required skill,
 // a shift, and an employee having this skill.
 pattern findShiftSkillEmployeeCombination {
-	shift : Shift {
-		- skills -> skill
+	shift: Shift {
+		-skills -> skill
 	}
-	skill : Skill
-	employee : Employee {
-		- skills -> skill
+
+	skill: Skill
+
+	employee: Employee {
+		-skills -> skill
 	}
 }
 
 // Finds all possible combinations of shifts and required
 // skills.
 pattern findNeededShiftSkill {
-	shift : Shift {
-		- skills -> skill
+	shift: Shift {
+		-skills -> skill
 	}
-	skill : Skill
+
+	skill: Skill
 }
 
 // Mapping for every employee and shift.
@@ -113,18 +122,18 @@ constraint with findShiftSkillEmployeeCombination {
 		& element.nodes.skill == context.nodes.skill
 		& element.nodes.employee == context.nodes.employee
 	)->sum(element.value) == 1
-	// ^notice: the Boolean equivalence operator `<=>` is very expensive
-	// in terms of required compute power.
+// ^notice: the Boolean equivalence operator `<=>` is very expensive
+// in terms of required compute power.
 }
 
 // TODO: This constraint is currently disabled. Otherwise, the solver
 // does not find a valid solution for `sprint01.xml` -> should be investigated.
-//// Minimum/maximum number of shifts that can be assigned to an employee
-//constraint with Employee {
-//	mappings.e2s->filter(element.nodes.employee == context)->sum(element.value) >= context.contract.minimumNoOfAssignments
-//	&
-//	mappings.e2s->filter(element.nodes.employee == context)->sum(element.value) <= context.contract.maximumNoOfAssignments
-//}
+// // Minimum/maximum number of shifts that can be assigned to an employee
+// constraint with Employee {
+// mappings.e2s->filter(element.nodes.employee == context)->sum(element.value) >= context.contract.minimumNoOfAssignments
+// &
+// mappings.e2s->filter(element.nodes.employee == context)->sum(element.value) <= context.contract.maximumNoOfAssignments
+// }
 
 // Required skills of a shift must be matched.
 // GIPSL interpretation: every skill required by a shift must be present

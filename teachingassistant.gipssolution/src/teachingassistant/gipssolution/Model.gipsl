@@ -1,16 +1,16 @@
 package "teachingassistant.gipssolution"
 import "platform:/resource/teachingassistant.metamodel/model/Metamodel.ecore"
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 120.0];
 	randomSeed := true [value := 0];
-	presolve := true;
+	presolve := auto;
 	debugOutput := true;
 }
 
 // Paper reference for this example:
-// 
+//
 // Qu, Xiaobo, Yi, Wen, Wang, Tingsong, Wang, Shuaian, Xiao, Lin, Liu, Zhiyuan,
 // "Mixed-Integer Linear Programming Models for Teaching Assistant Assignmen
 // and Extensions",
@@ -36,21 +36,21 @@ config {
 // SkillType must match and the tutor's preference
 // for this topic must at least be 1.
 rule assignAssistantToTutorial {
-	a : Assistant {
-		- skills -> s
+	a: Assistant {
+		-skills -> s
 	}
-	
-	t : Tutorial {
+
+	t: Tutorial {
 		++ -givenBy -> a
 	}
-	
-	d : Department {
-		- assistants -> a
-		- tutorials -> t
+
+	d: Department {
+		-assistants -> a
+		-tutorials -> t
 	}
-	
-	s : Skill
-	
+
+	s: Skill
+
 	// SkillType must match
 	# t.type == s.type
 	
@@ -62,18 +62,20 @@ rule assignAssistantToTutorial {
 // assistants and times slots. This is used for the
 // extension M1.
 pattern findAssistantTimeslotTuple {
-	a : Assistant
-	ts : Timeslot
+	a: Assistant
+
+	ts: Timeslot
 }
 
 // Pattern to find possible tutorial content overlaps
 // for an assistant `a`. This is used for the
 // extension M2.
 pattern findAssistantContentOverlap {
-	a : Assistant
-	t1 : Tutorial
-	t2 : Tutorial
-	
+	a: Assistant
+
+	t1: Tutorial
+
+	t2: Tutorial
 	# t1.type == t2.type
 }
 
@@ -81,12 +83,13 @@ pattern findAssistantContentOverlap {
 // preference (2) for the tutorial `t`.
 // This is used for M0.
 pattern findSkilledAssistant {
-	a : Assistant {
-		- skills -> s
+	a: Assistant {
+		-skills -> s
 	}
-	s : Skill
-	t : Tutorial
-	
+
+	s: Skill
+
+	t: Tutorial
 	# s.preference == 2
 	# s.type == t.type
 }
@@ -95,16 +98,18 @@ pattern findSkilledAssistant {
 // and assistant `a`.
 // This is used for the extension M3.
 pattern findLecturerAssistantTuple {
-	l : Lecturer
-	a : Assistant
+	l: Lecturer
+
+	a: Assistant
 }
 
 // Finds all possible combinations of assistant `a`
 // and day `d`.
 // This is used for the extension M4.
 pattern findAssistantDayTuple {
-	a : Assistant
-	d : Day
+	a: Assistant
+
+	d: Day
 }
 
 // ------------------------------
@@ -208,7 +213,7 @@ function contentOverlapObj with findAssistantContentOverlap {
 objective : max {
 	// M0: If possible, use assistants with highest skill
 	1 * functions.assistantSkillsObj
-	+ 
+	+
 	// M2: Maximize topic overlap for each assistant
 	0.5 * functions.contentOverlapObj
 }

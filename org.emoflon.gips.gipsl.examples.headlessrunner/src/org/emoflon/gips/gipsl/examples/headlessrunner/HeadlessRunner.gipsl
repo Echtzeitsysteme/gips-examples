@@ -1,23 +1,22 @@
 package "org.emoflon.gips.gipsl.examples.headlessrunner"
 import "platform:/resource/org.emoflon.gips.gipsl.examples.headlessrunnermodel/model/Headlessrunnermodel.ecore"
 
-config {  
+config {
 	solver := GUROBI;
 	timeLimit := true [value := 10.0];
 	randomSeed := true [value := 0];
-	presolve := true;
+	presolve := auto;
 	debugOutput := true;
 }
 
 rule setNodeZero {
-	root : Root {
+	root: Root {
 		++ -nodess -> node
 	}
-	
-	node : Node {
+
+	node: Node {
 		.cost := 0
 	}
-	
 	# node.cost > 0
 }
 
