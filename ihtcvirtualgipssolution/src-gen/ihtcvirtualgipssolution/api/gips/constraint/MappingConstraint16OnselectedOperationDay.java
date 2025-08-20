@@ -1,10 +1,16 @@
 package ihtcvirtualgipssolution.api.gips.constraint;		
 
 import java.util.List;
+import java.util.Set;
+
 import org.emoflon.gips.core.GipsEngine;
+import org.emoflon.gips.core.GipsMapper;
 import org.emoflon.gips.core.milp.model.Constraint;
 import ihtcvirtualgipssolution.api.gips.mapping.SelectedOperationDayMapping;
 import org.emoflon.gips.core.GipsMappingConstraint;
+import org.emoflon.gips.core.GlobalMappingIndexer;
+import org.emoflon.gips.core.MappingIndexer;
+
 import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
 import org.emoflon.gips.intermediate.GipsIntermediate.MappingConstraint;
 import java.util.LinkedList;
@@ -46,19 +52,58 @@ public class MappingConstraint16OnselectedOperationDay extends GipsMappingConstr
 		throw new UnsupportedOperationException("Constraint has no depending or substitute constraints.");
 	}
 	protected void builder_0(final List<Term> terms, final SelectedOperationDayMapping context) {
-		engine.getMapper("selectedOperationDay").getMappings().values().parallelStream()
-					.map(mapping -> (SelectedOperationDayMapping) mapping)
-		.filter(elt -> elt.getVwc().equals(context.getVwc()) && elt.getVopc().equals(context.getVopc()) && elt.getVwop().equals(context.getVwop()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)1.0));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("selectedOperationDay");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getVwc(), elt);
+						indexer.putMapping(elt.getVopc(), elt);
+						indexer.putMapping(elt.getVwop(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNodes(Set.of(context.getVwc(), context.getVopc(), context.getVwop())).parallelStream()
+				.map(mapping -> (SelectedOperationDayMapping) mapping)
+				.forEach(elt -> {
+					terms.add(new Term(elt, (double)1.0));
+				});
+		
+		// Old generated code
+//		engine.getMapper("selectedOperationDay").getMappings().values().parallelStream()
+//					.map(mapping -> (SelectedOperationDayMapping) mapping)
+//		.filter(elt -> elt.getVwc().equals(context.getVwc()) && elt.getVopc().equals(context.getVopc()) && elt.getVwop().equals(context.getVwop()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)1.0));
+//		});
 	}
 	protected void builder_1(final List<Term> terms, final SelectedOperationDayMapping context) {
-		engine.getMapper("selectedShiftToFirstWorkload").getMappings().values().parallelStream()
-					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
-		.filter(elt -> elt.getVwc().equals(context.getVwc()) && (elt.getVsw().getShift().getShiftNo()) / (3) == context.getVopc().getCapacity().getDay())
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)(-1.0) * (1.0)));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("selectedShiftToFirstWorkload");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getVwc(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getVwc()).parallelStream()
+				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
+				.filter(elt -> (elt.getVsw().getShift().getShiftNo()) / (3) == context.getVopc().getCapacity().getDay())
+				.forEach(elt -> {
+					terms.add(new Term(elt, (double)(-1.0) * (1.0)));
+				});
+		
+		// Old generated code
+//		engine.getMapper("selectedShiftToFirstWorkload").getMappings().values().parallelStream()
+//					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
+//		.filter(elt -> elt.getVwc().equals(context.getVwc()) && (elt.getVsw().getShift().getShiftNo()) / (3) == context.getVopc().getCapacity().getDay())
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)(-1.0) * (1.0)));
+//		});
 	}
 }

@@ -58,7 +58,7 @@ public class RuleConstraint15OnselectShiftToFirstWorkload extends GipsRuleConstr
 		globalIndexer.createIndexer(mapper);
 		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
 		if (!indexer.isInitialized()) {
-			engine.getMapper("selectedShiftToFirstWorkload").getMappings().values().parallelStream()
+			mapper.getMappings().values().parallelStream()
 					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getVsw(), elt);
 						indexer.putMapping(elt.getVwc(), elt);
@@ -80,12 +80,12 @@ public class RuleConstraint15OnselectShiftToFirstWorkload extends GipsRuleConstr
 	}
 
 	protected void builder_1(final List<Term> terms, final SelectShiftToFirstWorkloadMatch context) {
-		final GipsMapper<?> mapper = engine.getMapper("selectOperationDay");
+		final GipsMapper<?> mapper = engine.getMapper("selectedOperationDay");
 		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
 		globalIndexer.createIndexer(mapper);
 		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
 		if (!indexer.isInitialized()) {
-			engine.getMapper("selectedOperationDay").getMappings().values().parallelStream()
+			mapper.getMappings().values().parallelStream()
 					.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
 						indexer.putMapping(elt.getVwc(), elt);
 					});

@@ -2,8 +2,12 @@ package ihtcvirtualgipssolution.api.gips.constraint;
 
 import ihtcvirtualgipssolution.api.gips.mapping.SelectedExtendingShiftToFirstWorkloadMapping;
 import org.emoflon.gips.core.GipsEngine;
+import org.emoflon.gips.core.GipsMapper;
 import org.emoflon.gips.core.milp.model.Constraint;
 import org.emoflon.gips.core.GipsMappingConstraint;
+import org.emoflon.gips.core.GlobalMappingIndexer;
+import org.emoflon.gips.core.MappingIndexer;
+
 import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
 import org.emoflon.gips.intermediate.GipsIntermediate.MappingConstraint;
 import org.emoflon.gips.core.milp.model.Term;
@@ -50,28 +54,80 @@ public class MappingConstraint19OnassignedPatientsToRoom extends GipsMappingCons
 		throw new UnsupportedOperationException("Constraint has no depending or substitute constraints.");
 	}
 	protected void builder_2(final List<Term> terms, final AssignedPatientsToRoomMapping context) {
-		engine.getMapper("selectedOccupantNodes").getMappings().values().parallelStream()
-					.map(mapping -> (SelectedOccupantNodesMapping) mapping)
-		.filter(elt -> elt.getVsw().equals(context.getVsw()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)1.0));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("selectedOccupantNodes");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (SelectedOccupantNodesMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getVsw(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getVsw()).parallelStream()
+				.map(mapping -> (SelectedOccupantNodesMapping) mapping).forEach(elt -> {
+					terms.add(new Term(elt, (double)1.0));
+				});
+		
+		// Old generated code
+//		engine.getMapper("selectedOccupantNodes").getMappings().values().parallelStream()
+//					.map(mapping -> (SelectedOccupantNodesMapping) mapping)
+//		.filter(elt -> elt.getVsw().equals(context.getVsw()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)1.0));
+//		});
 	}
 	protected void builder_0(final List<Term> terms, final AssignedPatientsToRoomMapping context) {
-		engine.getMapper("selectedShiftToFirstWorkload").getMappings().values().parallelStream()
-					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
-		.filter(elt -> elt.getVsw().equals(context.getVsw()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)1.0));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("selectedShiftToFirstWorkload");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getVsw(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getVsw()).parallelStream()
+				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
+					terms.add(new Term(elt, (double)1.0));
+				});
+		
+		// Old generated code
+//		engine.getMapper("selectedShiftToFirstWorkload").getMappings().values().parallelStream()
+//					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
+//		.filter(elt -> elt.getVsw().equals(context.getVsw()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)1.0));
+//		});
 	}
 	protected void builder_1(final List<Term> terms, final AssignedPatientsToRoomMapping context) {
-		engine.getMapper("selectedExtendingShiftToFirstWorkload").getMappings().values().parallelStream()
-					.map(mapping -> (SelectedExtendingShiftToFirstWorkloadMapping) mapping)
-		.filter(elt -> elt.getNextvsw().equals(context.getVsw()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)1.0));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("selectedExtendingShiftToFirstWorkload");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (SelectedExtendingShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getNextvsw(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getVsw()).parallelStream()
+				.map(mapping -> (SelectedExtendingShiftToFirstWorkloadMapping) mapping)
+				.forEach(elt -> {
+					terms.add(new Term(elt, (double)1.0));
+				});
+		
+		// Old generated code
+//		engine.getMapper("selectedExtendingShiftToFirstWorkload").getMappings().values().parallelStream()
+//					.map(mapping -> (SelectedExtendingShiftToFirstWorkloadMapping) mapping)
+//		.filter(elt -> elt.getNextvsw().equals(context.getVsw()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)1.0));
+//		});
 	}
 	protected double builder_3(final AssignedPatientsToRoomMapping context) {
 		return (-1.0) * ((1.0) * (1000));

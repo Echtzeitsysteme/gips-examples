@@ -2,6 +2,9 @@ package ihtcvirtualgipssolution.api.gips.constraint;
 
 import org.emoflon.gips.intermediate.GipsIntermediate.PatternConstraint;
 import org.emoflon.gips.core.GipsEngine;
+import org.emoflon.gips.core.GipsMapper;
+import org.emoflon.gips.core.GlobalMappingIndexer;
+import org.emoflon.gips.core.MappingIndexer;
 import org.emoflon.gips.core.milp.model.Constraint;
 import org.emoflon.gips.core.gt.GipsPatternConstraint;
 import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
@@ -46,11 +49,28 @@ public class PatternConstraint0OnroomForShift extends GipsPatternConstraint<Ihtc
 		throw new UnsupportedOperationException("Constraint has no depending or substitute constraints.");
 	}
 	protected void builder_0(final List<Term> terms, final RoomForShiftMatch context) {
-		engine.getMapper("assignedGenderToRoomOnShift").getMappings().values().parallelStream()
-					.map(mapping -> (AssignedGenderToRoomOnShiftMapping) mapping)
-		.filter(elt -> elt.getS().equals(context.getS()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)1.0));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("assignedGenderToRoomOnShift");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (AssignedGenderToRoomOnShiftMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getS(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getS()).parallelStream()
+				.map(mapping -> (AssignedGenderToRoomOnShiftMapping) mapping).forEach(elt -> {
+					terms.add(new Term(elt, (double)1.0));
+				});
+		
+		// Old generated code
+//		engine.getMapper("assignedGenderToRoomOnShift").getMappings().values().parallelStream()
+//					.map(mapping -> (AssignedGenderToRoomOnShiftMapping) mapping)
+//		.filter(elt -> elt.getS().equals(context.getS()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)1.0));
+//		});
 	}
 }

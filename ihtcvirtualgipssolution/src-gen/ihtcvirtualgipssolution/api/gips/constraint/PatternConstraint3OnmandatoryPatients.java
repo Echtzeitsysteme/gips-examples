@@ -2,6 +2,9 @@ package ihtcvirtualgipssolution.api.gips.constraint;
 
 import org.emoflon.gips.intermediate.GipsIntermediate.PatternConstraint;
 import org.emoflon.gips.core.GipsEngine;
+import org.emoflon.gips.core.GipsMapper;
+import org.emoflon.gips.core.GlobalMappingIndexer;
+import org.emoflon.gips.core.MappingIndexer;
 import org.emoflon.gips.core.milp.model.Constraint;
 import ihtcvirtualgipssolution.api.gips.mapping.SelectedOperationDayMapping;
 import org.emoflon.gips.core.gt.GipsPatternConstraint;
@@ -48,19 +51,54 @@ public class PatternConstraint3OnmandatoryPatients extends GipsPatternConstraint
 		throw new UnsupportedOperationException("Constraint has no depending or substitute constraints.");
 	}
 	protected void builder_1(final List<Term> terms, final MandatoryPatientsMatch context) {
-		engine.getMapper("selectedOperationDay").getMappings().values().parallelStream()
-					.map(mapping -> (SelectedOperationDayMapping) mapping)
-		.filter(elt -> elt.getP().equals(context.getP()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)1.0));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("selectedOperationDay");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getP(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getP()).parallelStream()
+				.map(mapping -> (SelectedOperationDayMapping) mapping).forEach(elt -> {
+					terms.add(new Term(elt, (double)1.0));
+				});
+		
+		
+		// Old generated code
+//		engine.getMapper("selectedOperationDay").getMappings().values().parallelStream()
+//					.map(mapping -> (SelectedOperationDayMapping) mapping)
+//		.filter(elt -> elt.getP().equals(context.getP()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)1.0));
+//		});
 	}
 	protected void builder_0(final List<Term> terms, final MandatoryPatientsMatch context) {
-		engine.getMapper("selectedShiftToFirstWorkload").getMappings().values().parallelStream()
-					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
-		.filter(elt -> elt.getP().equals(context.getP()))
-		.forEach(elt -> {
-			terms.add(new Term(elt, (double)1.0));
-		});
+		final GipsMapper<?> mapper = engine.getMapper("selectedShiftToFirstWorkload");
+		final GlobalMappingIndexer globalIndexer = GlobalMappingIndexer.getInstance();
+		globalIndexer.createIndexer(mapper);
+		final MappingIndexer indexer = globalIndexer.getIndexer(mapper);
+		if (!indexer.isInitialized()) {
+			mapper.getMappings().values().parallelStream()
+					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
+						indexer.putMapping(elt.getP(), elt);
+					});
+		}
+		
+		indexer.getMappingsOfNode(context.getP()).parallelStream()
+				.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping).forEach(elt -> {
+					terms.add(new Term(elt, (double)1.0));
+				});
+		
+		// Old generated code
+//		engine.getMapper("selectedShiftToFirstWorkload").getMappings().values().parallelStream()
+//					.map(mapping -> (SelectedShiftToFirstWorkloadMapping) mapping)
+//		.filter(elt -> elt.getP().equals(context.getP()))
+//		.forEach(elt -> {
+//			terms.add(new Term(elt, (double)1.0));
+//		});
 	}
 }
