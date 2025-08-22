@@ -45,7 +45,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	/**
 	 * The scenario (JSON) file to load.
 	 */
-	public String scenarioFileName = "test01.json";
+	public String scenarioFileName = "i01.json";
 
 	/**
 	 * Project folder location.
@@ -55,7 +55,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	/**
 	 * Data set folder location.
 	 */
-	public String datasetFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_test_dataset/";
+	public String datasetFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_competition_instances/";
 
 	/**
 	 * Default input path.
