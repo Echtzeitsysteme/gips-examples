@@ -23,10 +23,10 @@ echo "#"
 for ((i=1;i<=10;i++));
 do
     if [ $i -lt 10 ]; then
-        echo "./ihtc2024_test_dataset/test0$i$.json"
+        echo "./ihtc2024_test_dataset/test0$i.json"
         ./start-args-gips.sh "./ihtc2024_test_dataset/test0$i.json"
     else
-        echo "./ihtc2024_test_dataset/test$i$.json"
+        echo "./ihtc2024_test_dataset/test$i.json"
         ./start-args-gips.sh "./ihtc2024_test_dataset/test$i.json"
     fi
 done

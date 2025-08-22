@@ -33,10 +33,10 @@ rsync -a ./ihtc2024_competition_instances/* $folder
 for ((i=1;i<=30;i++));
 do
     if [ $i -lt 10 ]; then
-        echo "$folder/i0$i$.json"
+        echo "$folder/i0$i.json"
         ./start-args-gips.sh "$folder/i0$i.json" $randomSeed
     else
-        echo "$folder/i$i$.json"
+        echo "$folder/i$i.json"
         ./start-args-gips.sh "$folder/i$i.json" $randomSeed
     fi
 done

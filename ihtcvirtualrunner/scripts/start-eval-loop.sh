@@ -23,10 +23,10 @@ echo "#"
 for ((i=1;i<=30;i++));
 do
     if [ $i -lt 10 ]; then
-        echo "./ihtc2024_competition_instances/i0$i$.json"
+        echo "./ihtc2024_competition_instances/i0$i.json"
         ./start-args-gips.sh "./ihtc2024_competition_instances/i0$i.json"
     else
-        echo "./ihtc2024_competition_instances/i$i$.json"
+        echo "./ihtc2024_competition_instances/i$i.json"
         ./start-args-gips.sh "./ihtc2024_competition_instances/i$i.json"
     fi
 done
