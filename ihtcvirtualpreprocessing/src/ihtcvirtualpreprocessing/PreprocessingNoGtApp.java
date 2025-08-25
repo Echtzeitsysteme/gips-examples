@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
@@ -95,22 +96,30 @@ public class PreprocessingNoGtApp {
 		logger.info("Started pre-processing without GT.");
 
 		// preprocessOccupantsWorkload
-		createVirtualShiftToWorkloadsOccupants();
+		final int virtualShiftToWorkloadsOccupant = createVirtualShiftToWorkloadsOccupants();
 
 		// assignNurseToRoom
-		createVirtualShiftToRosterCandidates();
+		final int virtualShiftToRoster = createVirtualShiftToRosterCandidates();
 
 		// assignSurgeonToOt
-		createVirtualOpTimeToCapacityCandidates();
+		final int virtualOpTimeToCapacity = createVirtualOpTimeToCapacityCandidates();
 
 		// fixOperationDay
-		createVirtualWorkloadToOperationCandidates();
+		final int virtualWorkloadToOperation = createVirtualWorkloadToOperationCandidates();
 
 		// assignPatientToRoom (initial)
-		createVirtualShiftToWorkloadInitialCandidates();
+		final int virtualShiftToWorkloadInit = createVirtualShiftToWorkloadInitialCandidates();
 
 		// assignPatientToRoom (extending)
-		createVirtualShiftToWorkloadExtendingCandidates();
+		final int virtualShiftToWorkloadExtend = createVirtualShiftToWorkloadExtendingCandidates();
+
+		logger.info("#VirtualShiftToRoster: " + virtualShiftToRoster);
+		logger.info("#VirtualOpTimeToCapacity: " + virtualOpTimeToCapacity);
+		logger.info("#VirtualWorkloadToOperation: " + virtualWorkloadToOperation);
+		logger.info("#VirtualShiftToWorkloadInit: " + virtualShiftToWorkloadInit);
+		logger.info("#VirtualShiftToWorkloadExtend: " + virtualShiftToWorkloadExtend);
+		logger.info("#TotalVirtualNodes: " + (virtualShiftToRoster + virtualOpTimeToCapacity
+				+ virtualShiftToWorkloadsOccupant + virtualShiftToWorkloadInit + virtualShiftToWorkloadExtend));
 
 		// Save the altered model.
 		try {
@@ -124,8 +133,9 @@ public class PreprocessingNoGtApp {
 	/**
 	 * Creates all necessary virtual shift to workload objects for the occupants.
 	 */
-	private void createVirtualShiftToWorkloadsOccupants() {
+	private int createVirtualShiftToWorkloadsOccupants() {
 		Objects.requireNonNull(model);
+		final AtomicInteger counter = new AtomicInteger(0);
 		model.getPatients().stream().filter(patient -> patient.isIsOccupant()).forEach(occupant -> {
 			VirtualShiftToWorkload vPrev = null;
 			for (final Workload workload : occupant.getWorkloads()) {
@@ -147,17 +157,20 @@ public class PreprocessingNoGtApp {
 				// Delete derived edges
 				workload.setDerivedShift(null);
 				shift.getDerivedWorkloads().remove(workload);
+				counter.getAndIncrement();
 			}
 
 		});
+		return counter.get();
 	}
 
 	/**
 	 * Creates all virtual shift to roster objects for the assignment of nurses to
 	 * room.
 	 */
-	private void createVirtualShiftToRosterCandidates() {
+	private int createVirtualShiftToRosterCandidates() {
 		Objects.requireNonNull(model);
+		final AtomicInteger counter = new AtomicInteger(0);
 		model.getNurses().forEach(nurse -> {
 			nurse.getRosters().forEach(roster -> {
 				model.getRooms().forEach(room -> {
@@ -169,18 +182,21 @@ public class PreprocessingNoGtApp {
 						v.setRoster(roster);
 						v.setShift(shift);
 						roster.getVirtualShift().add(v);
+						counter.getAndIncrement();
 					} catch (final UnsupportedOperationException ex) {
 					}
 				});
 			});
 		});
+		return counter.get();
 	}
 
 	/**
 	 * Creates all virtual OP time to capacity objects.
 	 */
-	private void createVirtualOpTimeToCapacityCandidates() {
+	private int createVirtualOpTimeToCapacityCandidates() {
 		Objects.requireNonNull(model);
+		final AtomicInteger counter = new AtomicInteger(0);
 		model.getSurgeons().forEach(surgeon -> {
 			surgeon.getOpTimes().forEach(opTime -> {
 				if (opTime.getMaxOpTime() > 0) {
@@ -195,17 +211,20 @@ public class PreprocessingNoGtApp {
 						v.setOpTime(opTime);
 						v.setCapacity(capacity);
 						capacity.getVirtualOpTime().add(v);
+						counter.getAndIncrement();
 					}
 				}
 			});
 		});
+		return counter.get();
 	}
 
 	/**
 	 * Creates all virtual workload to OP time and workload to capacity objects.
 	 */
-	private void createVirtualWorkloadToOperationCandidates() {
+	private int createVirtualWorkloadToOperationCandidates() {
 		Objects.requireNonNull(model);
+		final AtomicInteger counter = new AtomicInteger(0);
 		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
 			final Workload w = patient.getFirstWorkload();
 
@@ -230,6 +249,7 @@ public class PreprocessingNoGtApp {
 							});
 
 							opTime.getVirtualWorkload().add(vnew);
+							counter.getAndIncrement();
 						}
 					}
 				}
@@ -249,34 +269,38 @@ public class PreprocessingNoGtApp {
 						vnew.setWorkload(w);
 						vnew.setCapacity(c);
 						vnew.setIsSelected(false);
-						
+
 						vnew.getRequires_virtualWorkloadToOpTime().add(vw);
 						vw.getEnables_virtual_WorkloadToCapacity().add(vnew);
 
 						c.getVirtualWorkload().add(vnew);
+						counter.getAndIncrement();
 					});
 				});
 			});
 		});
+
+		return counter.get();
 	}
 
 	/**
 	 * Creates all virtual shift to workload elements for the initial assignment of
 	 * patients to rooms.
 	 */
-	private void createVirtualShiftToWorkloadInitialCandidates() {
+	private int createVirtualShiftToWorkloadInitialCandidates() {
 		Objects.requireNonNull(model);
+		final AtomicInteger counter = new AtomicInteger(0);
 		model.getPatients().stream().filter(patient -> !patient.isIsOccupant()).forEach(patient -> {
 			model.getRooms().stream().filter(room -> !patient.getIncompatibleRooms().contains(room)).forEach(room -> {
 				room.getShifts().forEach(shift -> {
 					// Check shift time conditions (i.e., only use the first shift per day)
 					if (shift.getShiftNo() % 3 == 0) {
-						// If an occupant with a different gender is assigned to the room -> Don't create virtual shifts
-						boolean genderMix = model.getPatients().stream().filter(Patient::isIsOccupant).anyMatch(occupant ->
-									!occupant.getGender().equals(patient.getGender())
-									&& occupant.getFirstWorkload().getVirtualShift().stream()
-										.anyMatch(vs -> vs.getShift().getRoom().equals(room))
-								);
+						// If an occupant with a different gender is assigned to the room -> Don't
+						// create virtual shifts
+						boolean genderMix = model.getPatients().stream().filter(Patient::isIsOccupant)
+								.anyMatch(occupant -> !occupant.getGender().equals(patient.getGender())
+										&& occupant.getFirstWorkload().getVirtualShift().stream()
+												.anyMatch(vs -> vs.getShift().getRoom().equals(room)));
 						if (!genderMix) {
 							// Check if the shift number / 3 matches any available OT's capacity object
 							final int day = shift.getShiftNo() / 3;
@@ -290,8 +314,10 @@ public class PreprocessingNoGtApp {
 							if (vfound != null) {
 								// Check if shift is in potential start time frame
 								if (day >= patient.getEarliestDay() && day <= patient.getDueDay()) {
-									if ((day - patient.getEarliestDay()) * model.getWeight().getPatientDelay() > model.getWeight().getUnscheduledOptional() ) {
-										// If the cost to delay the patient is higher than the cost to not schedule him at all -> Don't create virtual shifts
+									if ((day - patient.getEarliestDay()) * model.getWeight().getPatientDelay() > model
+											.getWeight().getUnscheduledOptional()) {
+										// If the cost to delay the patient is higher than the cost to not schedule him
+										// at all -> Don't create virtual shifts
 									} else {
 										final VirtualShiftToWorkload v = IhtcvirtualmetamodelFactory.eINSTANCE
 												.createVirtualShiftToWorkload();
@@ -305,6 +331,7 @@ public class PreprocessingNoGtApp {
 											vc.getEnables_virtualShiftToWorkload().add(v);
 										});
 										shift.getVirtualWorkload().add(v);
+										counter.getAndIncrement();
 									}
 								}
 							}
@@ -313,14 +340,17 @@ public class PreprocessingNoGtApp {
 				});
 			});
 		});
+
+		return counter.get();
 	}
 
 	/**
 	 * Creates all following virtual shift to workload elements that build upon the
 	 * previously created initial assignments of patients to rooms.
 	 */
-	private void createVirtualShiftToWorkloadExtendingCandidates() {
+	private int createVirtualShiftToWorkloadExtendingCandidates() {
 		Objects.requireNonNull(model);
+		final AtomicInteger counter = new AtomicInteger(0);
 
 		// Collect all initial assignments (to be iterated over later on)
 		final List<VirtualShiftToWorkload> initialAssignments = new LinkedList<VirtualShiftToWorkload>();
@@ -328,6 +358,7 @@ public class PreprocessingNoGtApp {
 			room.getShifts().forEach(shift -> {
 				shift.getVirtualWorkload().forEach(vinit -> {
 					initialAssignments.add(vinit);
+					counter.getAndIncrement();
 				});
 			});
 		});
@@ -338,8 +369,11 @@ public class PreprocessingNoGtApp {
 			if (vinit.getWorkload().getPatient().isIsOccupant()) {
 				continue;
 			}
-			extendLadder(vinit.getShift(), vinit.getWorkload(), vinit);
+			final int extensions = extendLadder(vinit.getShift(), vinit.getWorkload(), vinit);
+			counter.addAndGet(extensions);
 		}
+
+		return counter.get();
 	}
 
 	/**
@@ -352,10 +386,11 @@ public class PreprocessingNoGtApp {
 	 * @param initV        Initially created virtual shift to workload object of the
 	 *                     first possible assignment.
 	 */
-	private void extendLadder(final Shift initShift, final Workload initWorkload, final VirtualShiftToWorkload initV) {
+	private int extendLadder(final Shift initShift, final Workload initWorkload, final VirtualShiftToWorkload initV) {
 		Objects.requireNonNull(initShift);
 		Objects.requireNonNull(initWorkload);
 		Objects.requireNonNull(initV);
+		final AtomicInteger counter = new AtomicInteger(0);
 
 		Workload w = (Workload) initWorkload.getNext();
 		Shift s = (Shift) initShift.getNext();
@@ -373,7 +408,10 @@ public class PreprocessingNoGtApp {
 			w = (Workload) w.getNext();
 			s = (Shift) s.getNext();
 			v = vNew;
+			counter.getAndIncrement();
 		}
+
+		return counter.get();
 	}
 
 	//

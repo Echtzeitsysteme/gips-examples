@@ -113,6 +113,8 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			logger.info("Runtime pre-processing: " + tickTockToElapsedSeconds(modelLoadedTime, preProcDoneTime) + "s.");
 		}
 
+		System.exit(0);
+		
 		//
 		// Initialize GIPS API
 		//
