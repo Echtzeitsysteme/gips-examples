@@ -182,7 +182,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		Objects.requireNonNull(gipsApi);
 		Objects.requireNonNull(verbose);
 
-		gipsApi.buildProblemTimed(true, true); // Second Parameter: sequential = false/default, parallel = true
+		gipsApi.buildProblemTimed(true); // Second Parameter: sequential = false/default, parallel = true
 		final SolverOutput output = gipsApi.solveProblemTimed();
 		if (output.solutionCount() == 0) {
 			gipsApi.terminate();
