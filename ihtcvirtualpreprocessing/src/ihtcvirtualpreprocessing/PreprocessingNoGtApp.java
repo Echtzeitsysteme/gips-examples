@@ -295,12 +295,12 @@ public class PreprocessingNoGtApp {
 				room.getShifts().forEach(shift -> {
 					// Check shift time conditions (i.e., only use the first shift per day)
 					if (shift.getShiftNo() % 3 == 0) {
-						// If an occupant with a different gender is assigned to the room -> Don't
-						// create virtual shifts
-						boolean genderMix = model.getPatients().stream().filter(Patient::isIsOccupant)
-								.anyMatch(occupant -> !occupant.getGender().equals(patient.getGender())
-										&& occupant.getFirstWorkload().getVirtualShift().stream()
-												.anyMatch(vs -> vs.getShift().getRoom().equals(room)));
+						// If an occupant with a different gender is assigned to the room -> Don't create virtual shifts
+						boolean genderMix = model.getPatients().stream().filter(occupant -> patient.isIsOccupant()).anyMatch(occupant ->
+									!occupant.getGender().equals(patient.getGender())
+									&& occupant.getFirstWorkload().getVirtualShift().stream()
+										.anyMatch(vs -> vs.getShift().getRoom() == room)
+								);
 						if (!genderMix) {
 							// Check if the shift number / 3 matches any available OT's capacity object
 							final int day = shift.getShiftNo() / 3;
