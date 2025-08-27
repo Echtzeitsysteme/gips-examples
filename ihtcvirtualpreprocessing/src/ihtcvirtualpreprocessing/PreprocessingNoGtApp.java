@@ -249,7 +249,7 @@ public class PreprocessingNoGtApp {
 						vnew.setWorkload(w);
 						vnew.setCapacity(c);
 						vnew.setIsSelected(false);
-						
+
 						vnew.getRequires_virtualWorkloadToOpTime().add(vw);
 						vw.getEnables_virtual_WorkloadToCapacity().add(vnew);
 
@@ -271,12 +271,27 @@ public class PreprocessingNoGtApp {
 				room.getShifts().forEach(shift -> {
 					// Check shift time conditions (i.e., only use the first shift per day)
 					if (shift.getShiftNo() % 3 == 0) {
-						// If an occupant with a different gender is assigned to the room -> Don't create virtual shifts
-						boolean genderMix = model.getPatients().stream().filter(Patient::isIsOccupant).anyMatch(occupant ->
-									!occupant.getGender().equals(patient.getGender())
-									&& occupant.getFirstWorkload().getVirtualShift().stream()
-										.anyMatch(vs -> vs.getShift().getRoom().equals(room))
-								);
+						// If an occupant with a different gender is assigned to the same room during the potential stay time -> Don't create virtual shifts
+						final List<Patient> occupantsInRoom = model.getPatients().stream() // Get all patients from the model
+								.filter(occupant -> occupant.isIsOccupant() // Only take occupants into account
+								 && occupant.getFirstWorkload().getVirtualShift().get(0).getShift().getRoom().equals(room)) // The occupant's room must match the patient's room
+								.toList();
+						// Find latest day of stay of all occupants in the room
+						int lastDay = 0;
+						// Genders of all occupants in the same room are equal
+						String allOccupantGenderInRoom = patient.getGender(); // To be overwritten if the Gender of occupants in the same room and time do not match
+						for(final Patient p : occupantsInRoom) {
+							if(lastDay < p.getStayLength() - 1) {
+								lastDay = p.getStayLength() - 1;
+								allOccupantGenderInRoom = p.getGender();
+							}
+						}
+						
+						// Check if gender of the occupants does *not* match the gender of the patient
+						// ... latest occupant's stay is within the time frame
+						final boolean genderMix = !patient.getGender().equals(allOccupantGenderInRoom) && shift.getShiftNo() / 3 <= lastDay;
+						
+						// ... do/do not create virtual shift objects
 						if (!genderMix) {
 							// Check if the shift number / 3 matches any available OT's capacity object
 							final int day = shift.getShiftNo() / 3;
