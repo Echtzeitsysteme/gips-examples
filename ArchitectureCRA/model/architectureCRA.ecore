@@ -13,11 +13,11 @@
         upperBound="-1" eType="#//Feature" eOpposite="#//Feature/isEncapsulatedBy"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="#//Feature"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Method" eSuperTypes="#//Feature">
+  <eClassifiers xsi:type="ecore:EClass" name="Methodd" eSuperTypes="#//Feature">
     <eStructuralFeatures xsi:type="ecore:EReference" name="dataDependency" upperBound="-1"
         eType="#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="functionalDependency" upperBound="-1"
-        eType="#//Method"/>
+        eType="#//Methodd"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Feature" abstract="true" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="isEncapsulatedBy" eType="#//Clazz"
