@@ -9,7 +9,7 @@ import org.emoflon.smartemf.runtime.util.SmartEMFUtil;
 import architectureCRA.ArchitectureCRAFactory;
 import architectureCRA.Attribute;
 import architectureCRA.ClassModel;
-import architectureCRA.Method;
+import architectureCRA.Methodd;
 
 /**
  * 
@@ -96,12 +96,12 @@ public class ArchitectureUtil {
 		var violations = 0;
 
 		for (var clazz : model.getClasses()) {
-			var numOfMethods = clazz.getEncapsulates().stream().filter(f -> f instanceof Method).count();
+			var numOfMethods = clazz.getEncapsulates().stream().filter(f -> f instanceof Methodd).count();
 			var numOfAttribtutes = clazz.getEncapsulates().size() - numOfMethods;
 			var cohesionViolations = numOfMethods * (numOfMethods - 1) + numOfMethods * numOfAttribtutes;
 			for (var feature : clazz.getEncapsulates()) {
 
-				if (feature instanceof Method method) {
+				if (feature instanceof Methodd method) {
 					var methodCohesionMatches = 0;
 					// first we count coupling violations
 					for (Attribute dataDependency : method.getDataDependency()) {
