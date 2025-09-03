@@ -14,9 +14,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference architectureCRA.ecore#//Clazz/encapsulates"/>
     </genClasses>
     <genClasses ecoreClass="architectureCRA.ecore#//Attribute"/>
-    <genClasses ecoreClass="architectureCRA.ecore#//Method">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference architectureCRA.ecore#//Method/dataDependency"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference architectureCRA.ecore#//Method/functionalDependency"/>
+    <genClasses ecoreClass="architectureCRA.ecore#//Methodd">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference architectureCRA.ecore#//Methodd/dataDependency"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference architectureCRA.ecore#//Methodd/functionalDependency"/>
     </genClasses>
     <genClasses image="false" ecoreClass="architectureCRA.ecore#//Feature">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference architectureCRA.ecore#//Feature/isEncapsulatedBy"/>
