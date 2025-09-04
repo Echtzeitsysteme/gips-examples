@@ -1,7 +1,9 @@
 package ihtcvirtualmetamodel.utils;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,6 +17,9 @@ import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
 import ihtcvirtualmetamodel.Surgeon;
+import ihtcvirtualmetamodel.VirtualOpTimeToCapacity;
+import ihtcvirtualmetamodel.VirtualShiftToRoster;
+import ihtcvirtualmetamodel.VirtualShiftToWorkload;
 import ihtcvirtualmetamodel.Workload;
 
 /**
@@ -26,7 +31,6 @@ import ihtcvirtualmetamodel.Workload;
  */
 public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
-	// TODO: Adapt
 	/**
 	 * This method calculates the maximum age difference for a given room `r` on day
 	 * `d` for all new patients and all previously assigned occupants which are
@@ -44,13 +48,17 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		int minAge = Integer.MAX_VALUE;
 		int maxAge = Integer.MIN_VALUE;
 
-		for (final Workload w : s.getDerivedWorkloads()) {
-			final int age = w.getPatient().getAgeGroup();
-			if (age < minAge) {
-				minAge = age;
-			}
-			if (age > maxAge) {
-				maxAge = age;
+		for (final VirtualShiftToWorkload vsw : s.getVirtualWorkload()) {
+			// Find the virtual object that was selected
+			if (vsw.isIsSelected()) {
+				final int age = vsw.getWorkload().getPatient().getAgeGroup();
+				if (age < minAge) {
+					minAge = age;
+				}
+				if (age > maxAge) {
+					maxAge = age;
+				}
+				// There can be multiple selected virtual objects
 			}
 		}
 
@@ -62,7 +70,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return cost;
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Nurse-to-Room Assignment, S2.
 	 * 
@@ -76,11 +83,16 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		int skillLevelCost = 0;
 		for (final Nurse n : model.getNurses()) {
 			for (final Roster r : n.getRosters()) {
-				for (final Shift s : r.getDerivedShifts()) {
-					// all patients in this room
-					final List<Patient> patientsInRoom = getPatientsInRoomOnDay(model, s.getRoom(), shiftToDay(s));
-					for (final Patient p : patientsInRoom) {
-						skillLevelCost += calculateSkillLevelCostPerNursePatientShift(n, p, s.getShiftNo());
+				for (final VirtualShiftToRoster vsr : r.getVirtualShift()) {
+					// Only look at selected virtual objects
+					if (vsr.isIsSelected()) {
+						// all patients in this room
+						final List<Patient> patientsInRoom = getPatientsInRoomOnDay(model, vsr.getShift().getRoom(),
+								shiftToDay(vsr.getShift()));
+						for (final Patient p : patientsInRoom) {
+							skillLevelCost += calculateSkillLevelCostPerNursePatientShift(n, p,
+									vsr.getShift().getShiftNo());
+						}
 					}
 				}
 			}
@@ -88,7 +100,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return skillLevelCost * model.getWeight().getRoomNurseSkill();
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Nurse-to-Room Assignment, S4.
 	 * 
@@ -104,19 +115,36 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		for (final Nurse n : model.getNurses()) {
 			// find all shifts a nurse works on
 			final Set<Shift> allWorkingShiftsOfNurse = new HashSet<Shift>();
-			n.getRosters().forEach(r -> r.getDerivedShifts().forEach(s -> allWorkingShiftsOfNurse.add(s)));
+			n.getRosters().forEach(roster -> {
+				roster.getVirtualShift().forEach(vsr -> {
+					if (vsr.isIsSelected()) {
+						allWorkingShiftsOfNurse.add(vsr.getShift());
+					}
+				});
+			});
 
+			// Aggregate all workloads of all rooms per specific shift number
+			final Map<Integer, Integer> shiftNumberToActualWorkload = new HashMap<>();
 			for (final Shift s : allWorkingShiftsOfNurse) {
-				final int nurseMaximumWorkload = findNurseMaxLoadInShift(n, s.getShiftNo());
-
-				// accumulate all workloads in this shift across all rooms
 				int nurseSpecificAssignedWorkload = 0;
-
 				final List<Patient> patients = getPatientsInRoomOnDay(model, s.getRoom(), shiftToDay(s));
 				// calculate actual work load in this room and shift
 				for (final Patient p : patients) {
 					nurseSpecificAssignedWorkload += getWorkloadOfPatientByShift(p, s.getShiftNo());
 				}
+
+				if (!shiftNumberToActualWorkload.containsKey(s.getShiftNo())) {
+					shiftNumberToActualWorkload.put(s.getShiftNo(), 0);
+				}
+
+				final int oldVal = shiftNumberToActualWorkload.remove(s.getShiftNo());
+				shiftNumberToActualWorkload.put(s.getShiftNo(), oldVal + nurseSpecificAssignedWorkload);
+			}
+
+			// For every shift *number* (not object) check the excessive load constraint
+			for (final Integer shiftNo : shiftNumberToActualWorkload.keySet()) {
+				final int nurseMaximumWorkload = findNurseMaxLoadInShift(n, shiftNo);
+				final int nurseSpecificAssignedWorkload = shiftNumberToActualWorkload.get(shiftNo);
 
 				// check if workload of nurse `n` was exceeded for this shift
 				if (nurseMaximumWorkload < nurseSpecificAssignedWorkload) {
@@ -128,7 +156,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return excessCost * model.getWeight().getNurseExcessiveWorkload();
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Surgical Case Planning, S5.
 	 * 
@@ -144,7 +171,14 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		for (final OT ot : model.getOts()) {
 			// This assumes that there is at most one `Capacity` object per day per OT
 			for (final Capacity c : ot.getCapacities()) {
-				if (c.getDerivedOpTimes().size() > 0 || c.getDerivedWorkloads().size() > 0) {
+				boolean open = false;
+				for (final VirtualOpTimeToCapacity vopc : c.getVirtualOpTime()) {
+					if (vopc.isIsSelected()) {
+						open = open || true;
+					}
+				}
+
+				if (open) {
 					openOtCost++;
 				}
 			}
@@ -153,7 +187,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return openOtCost * model.getWeight().getOpenOperatingTheater();
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Surgical Case Planning, S6.
 	 * 
@@ -168,8 +201,15 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
 		for (final Surgeon s : model.getSurgeons()) {
 			for (final OpTime opTime : s.getOpTimes()) {
-				if (opTime.getDerivedCapacities().size() > 1) {
-					surgeonTransferCost += opTime.getDerivedCapacities().size() - 1;
+				int selectedVirtualCapacities = 0;
+				for (final VirtualOpTimeToCapacity vopc : opTime.getVirtualCapacity()) {
+					if (vopc.isIsSelected()) {
+						selectedVirtualCapacities++;
+					}
+				}
+
+				if (selectedVirtualCapacities > 1) {
+					surgeonTransferCost += selectedVirtualCapacities - 1;
 				}
 			}
 		}
@@ -177,7 +217,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return surgeonTransferCost * model.getWeight().getSurgeonTransfer();
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Global constraints, S7.
 	 * 
@@ -192,17 +231,24 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
 		for (final Patient p : model.getPatients()) {
 			// check if patient was scheduled at all
-			if (p.getFirstWorkload().getDerivedShift() != null) {
-				if (shiftToDay(p.getFirstWorkload().getDerivedShift()) > p.getEarliestDay()) {
-					admissionDelayCost += (shiftToDay(p.getFirstWorkload().getDerivedShift()) - p.getEarliestDay());
+			boolean admitted = false;
+			int firstShiftNumber = -1;
+			for (final var v : p.getFirstWorkload().getVirtualShift()) {
+				if (v.isIsSelected()) {
+					admitted = true;
+					firstShiftNumber = v.getShift().getShiftNo();
+					break;
 				}
+			}
+
+			if (admitted) {
+				admissionDelayCost += ((firstShiftNumber / 3) - p.getEarliestDay());
 			}
 		}
 
 		return admissionDelayCost * model.getWeight().getPatientDelay();
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Global constraints, S8.
 	 * 
@@ -216,8 +262,17 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		int unscheduledPatientsCost = 0;
 
 		for (final Patient p : model.getPatients()) {
-			if (!p.isMandatory() && p.getFirstWorkload().getDerivedShift() == null) {
-				unscheduledPatientsCost++;
+			if (!p.isMandatory() || p.isIsOccupant()) {
+				boolean admitted = false;
+				for (final VirtualShiftToWorkload vsw : p.getFirstWorkload().getVirtualShift()) {
+					if (vsw.isIsSelected()) {
+						admitted = true;
+					}
+				}
+
+				if (!admitted) {
+					unscheduledPatientsCost++;
+				}
 			}
 		}
 
@@ -228,7 +283,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 	 * Internal utility methods.
 	 */
 
-	// TODO: Adapt
 	/**
 	 * Returns true if the patient `p` was assigned to stay in room `r` on day `d`.
 	 * 
@@ -242,16 +296,18 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		Objects.requireNonNull(p, "Given patient was null.");
 		Objects.requireNonNull(r, "Given room was null.");
 
-		// patient must have an assigned room
-		if (p.getFirstWorkload().getDerivedShift() != null) {
-			// room must match
-			if (p.getFirstWorkload().getDerivedShift().getRoom().equals(r)) {
-				// day must lay within the time frame of the patient's stay
-				final int firstDayNo = shiftToDay(p.getFirstWorkload().getDerivedShift());
-				final int stayLength = p.getStayLength();
-
-				if (d >= firstDayNo && d <= firstDayNo + stayLength) {
-					return true;
+		// Iterate over all workloads of the patient
+		for (final Workload w : p.getWorkloads()) {
+			// For each workload, find the assigned room
+			for (final VirtualShiftToWorkload vsw : w.getVirtualShift()) {
+				if (vsw.isIsSelected()) {
+					// If shift number matches the day
+					if ((vsw.getShift().getShiftNo() / 3) == d) {
+						// Room must also match
+						if (vsw.getShift().getRoom().equals(r)) {
+							return true;
+						}
+					}
 				}
 			}
 		}
@@ -259,7 +315,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return false;
 	}
 
-	// TODO: Adapt
 	/**
 	 * Calculates the (possible) cost of one nurse `nurse` for patient `patient` on
 	 * shift `shift`.
@@ -281,9 +336,13 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
 		int patientLevel = 0;
 		for (final Workload w : patient.getWorkloads()) {
-			if (w.getDerivedShift() != null && w.getDerivedShift().getShiftNo() == shift) {
-				patientLevel = w.getMinNurseSkill();
-				break;
+			for (final VirtualShiftToWorkload vsw : w.getVirtualShift()) {
+				if (vsw.isIsSelected()) {
+					if (vsw.getShift().getShiftNo() == shift) {
+						patientLevel = w.getMinNurseSkill();
+						break;
+					}
+				}
 			}
 		}
 
@@ -300,7 +359,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return cost;
 	}
 
-	// TODO: Adapt
 	/**
 	 * Returns the specific workload of the given patient `p` on shift `shiftNo`.
 	 * 
@@ -311,29 +369,20 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 	@Override
 	protected int getWorkloadOfPatientByShift(final Patient p, final int shiftNo) {
 		Objects.requireNonNull(p, "Given patient was null.");
-		Objects.requireNonNull(p.getFirstWorkload(), "Patient's first workload was null.");
 
-		if (p.getFirstWorkload().getDerivedShift() == null) {
-			return 0;
-		}
-
-		Workload w = p.getFirstWorkload();
-		while (w.getNext() != null) {
-			// If the derived shift is `null`, the model is either not valid or the
-			// respective workload of the patient is outside of the current time frame
-			// (which is okay).
-			if (w.getDerivedShift() != null) {
-				if (w.getDerivedShift().getShiftNo() == shiftNo) {
-					return w.getWorkloadValue();
+		for (final Workload w : p.getWorkloads()) {
+			for (final VirtualShiftToWorkload vsw : w.getVirtualShift()) {
+				if (vsw.isIsSelected()) {
+					if (vsw.getShift().getShiftNo() == shiftNo) {
+						return w.getWorkloadValue();
+					}
 				}
 			}
-			w = (Workload) w.getNext();
 		}
 
 		return 0;
 	}
 
-	// TODO: Adapt
 	/**
 	 * Returns the distinct number of nurses a given patient has.
 	 * 
@@ -347,12 +396,15 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		Objects.requireNonNull(patient, "Given patient was null.");
 
 		final Set<Nurse> foundNurses = new HashSet<Nurse>();
-
 		for (final Workload w : patient.getWorkloads()) {
-			if (w.getDerivedShift() != null //
-					&& w.getDerivedShift().getDerivedRoster() != null //
-					&& w.getDerivedShift().getDerivedRoster().getNurse() != null) {
-				foundNurses.add(w.getDerivedShift().getDerivedRoster().getNurse());
+			for (final VirtualShiftToWorkload vsw : w.getVirtualShift()) {
+				if (vsw.isIsSelected()) {
+					for (final VirtualShiftToRoster vsr : vsw.getShift().getVirtualRoster()) {
+						if (vsr.isIsSelected()) {
+							foundNurses.add(vsr.getRoster().getNurse());
+						}
+					}
+				}
 			}
 		}
 
