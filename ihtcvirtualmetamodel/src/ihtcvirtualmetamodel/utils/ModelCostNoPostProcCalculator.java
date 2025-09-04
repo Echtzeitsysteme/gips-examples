@@ -187,7 +187,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return openOtCost * model.getWeight().getOpenOperatingTheater();
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Surgical Case Planning, S6.
 	 * 
@@ -202,8 +201,15 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
 		for (final Surgeon s : model.getSurgeons()) {
 			for (final OpTime opTime : s.getOpTimes()) {
-				if (opTime.getDerivedCapacities().size() > 1) {
-					surgeonTransferCost += opTime.getDerivedCapacities().size() - 1;
+				int selectedVirtualCapacities = 0;
+				for (final VirtualOpTimeToCapacity vopc : opTime.getVirtualCapacity()) {
+					if (vopc.isIsSelected()) {
+						selectedVirtualCapacities++;
+					}
+				}
+
+				if (selectedVirtualCapacities > 1) {
+					surgeonTransferCost += selectedVirtualCapacities - 1;
 				}
 			}
 		}
