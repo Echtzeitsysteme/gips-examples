@@ -217,7 +217,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return surgeonTransferCost * model.getWeight().getSurgeonTransfer();
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Global constraints, S7.
 	 * 
@@ -232,10 +231,18 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
 		for (final Patient p : model.getPatients()) {
 			// check if patient was scheduled at all
-			if (p.getFirstWorkload().getDerivedShift() != null) {
-				if (shiftToDay(p.getFirstWorkload().getDerivedShift()) > p.getEarliestDay()) {
-					admissionDelayCost += (shiftToDay(p.getFirstWorkload().getDerivedShift()) - p.getEarliestDay());
+			boolean admitted = false;
+			int firstShiftNumber = -1;
+			for (final var v : p.getFirstWorkload().getVirtualShift()) {
+				if (v.isIsSelected()) {
+					admitted = true;
+					firstShiftNumber = v.getShift().getShiftNo();
+					break;
 				}
+			}
+
+			if (admitted) {
+				admissionDelayCost += ((firstShiftNumber / 3) - p.getEarliestDay());
 			}
 		}
 
