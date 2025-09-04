@@ -383,7 +383,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return 0;
 	}
 
-	// TODO: Adapt
 	/**
 	 * Returns the distinct number of nurses a given patient has.
 	 * 
@@ -397,12 +396,15 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		Objects.requireNonNull(patient, "Given patient was null.");
 
 		final Set<Nurse> foundNurses = new HashSet<Nurse>();
-
 		for (final Workload w : patient.getWorkloads()) {
-			if (w.getDerivedShift() != null //
-					&& w.getDerivedShift().getDerivedRoster() != null //
-					&& w.getDerivedShift().getDerivedRoster().getNurse() != null) {
-				foundNurses.add(w.getDerivedShift().getDerivedRoster().getNurse());
+			for (final VirtualShiftToWorkload vsw : w.getVirtualShift()) {
+				if (vsw.isIsSelected()) {
+					for (final VirtualShiftToRoster vsr : vsw.getShift().getVirtualRoster()) {
+						if (vsr.isIsSelected()) {
+							foundNurses.add(vsr.getRoster().getNurse());
+						}
+					}
+				}
 			}
 		}
 
