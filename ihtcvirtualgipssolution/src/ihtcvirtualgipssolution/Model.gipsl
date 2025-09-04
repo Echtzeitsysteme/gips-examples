@@ -3,7 +3,7 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 10.0];
+	timeLimit := true [value := 300.0];
 	randomSeed := true [value := 0];
 	presolve := auto;
 	debugOutput := true;
