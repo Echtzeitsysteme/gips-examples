@@ -15,6 +15,8 @@ import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
 import ihtcvirtualmetamodel.Surgeon;
+import ihtcvirtualmetamodel.VirtualShiftToRoster;
+import ihtcvirtualmetamodel.VirtualShiftToWorkload;
 import ihtcvirtualmetamodel.Workload;
 
 /**
@@ -26,7 +28,6 @@ import ihtcvirtualmetamodel.Workload;
  */
 public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
-	// TODO: Adapt
 	/**
 	 * This method calculates the maximum age difference for a given room `r` on day
 	 * `d` for all new patients and all previously assigned occupants which are
@@ -44,13 +45,19 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		int minAge = Integer.MAX_VALUE;
 		int maxAge = Integer.MIN_VALUE;
 
-		for (final Workload w : s.getDerivedWorkloads()) {
-			final int age = w.getPatient().getAgeGroup();
-			if (age < minAge) {
-				minAge = age;
-			}
-			if (age > maxAge) {
-				maxAge = age;
+		for (final VirtualShiftToWorkload vsw : s.getVirtualWorkload()) {
+			// Find the virtual object that was selected
+			if (vsw.isIsSelected()) {
+				final int age = vsw.getWorkload().getPatient().getAgeGroup();
+				if (age < minAge) {
+					minAge = age;
+				}
+				if (age > maxAge) {
+					maxAge = age;
+				}
+
+				// There can only be one selected object, hence, break
+				break;
 			}
 		}
 
@@ -62,7 +69,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return cost;
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Nurse-to-Room Assignment, S2.
 	 * 
@@ -76,11 +82,16 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		int skillLevelCost = 0;
 		for (final Nurse n : model.getNurses()) {
 			for (final Roster r : n.getRosters()) {
-				for (final Shift s : r.getDerivedShifts()) {
-					// all patients in this room
-					final List<Patient> patientsInRoom = getPatientsInRoomOnDay(model, s.getRoom(), shiftToDay(s));
-					for (final Patient p : patientsInRoom) {
-						skillLevelCost += calculateSkillLevelCostPerNursePatientShift(n, p, s.getShiftNo());
+				for (final VirtualShiftToRoster vsr : r.getVirtualShift()) {
+					// Only look at selected virtual objects
+					if (vsr.isIsSelected()) {
+						// all patients in this room
+						final List<Patient> patientsInRoom = getPatientsInRoomOnDay(model, vsr.getShift().getRoom(),
+								shiftToDay(vsr.getShift()));
+						for (final Patient p : patientsInRoom) {
+							skillLevelCost += calculateSkillLevelCostPerNursePatientShift(n, p,
+									vsr.getShift().getShiftNo());
+						}
 					}
 				}
 			}
@@ -259,7 +270,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return false;
 	}
 
-	// TODO: Adapt
 	/**
 	 * Calculates the (possible) cost of one nurse `nurse` for patient `patient` on
 	 * shift `shift`.
@@ -281,9 +291,13 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
 		int patientLevel = 0;
 		for (final Workload w : patient.getWorkloads()) {
-			if (w.getDerivedShift() != null && w.getDerivedShift().getShiftNo() == shift) {
-				patientLevel = w.getMinNurseSkill();
-				break;
+			for (final VirtualShiftToWorkload vsw : w.getVirtualShift()) {
+				if (vsw.isIsSelected()) {
+					if (vsw.getShift().getShiftNo() == shift) {
+						patientLevel = w.getMinNurseSkill();
+						break;
+					}
+				}
 			}
 		}
 

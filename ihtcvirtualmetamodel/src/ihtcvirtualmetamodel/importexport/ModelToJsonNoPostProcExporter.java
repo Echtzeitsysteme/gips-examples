@@ -13,16 +13,14 @@ import com.google.gson.JsonObject;
 
 import ihtcvirtualmetamodel.Nurse;
 import ihtcvirtualmetamodel.OT;
-import ihtcvirtualmetamodel.OpTime;
 import ihtcvirtualmetamodel.Patient;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
-import ihtcvirtualmetamodel.VirtualOpTimeToCapacity;
 import ihtcvirtualmetamodel.VirtualShiftToRoster;
 import ihtcvirtualmetamodel.VirtualShiftToWorkload;
 import ihtcvirtualmetamodel.VirtualWorkloadToCapacity;
-import ihtcvirtualmetamodel.VirtualWorkloadToOpTime;
+import ihtcvirtualmetamodel.utils.ModelCostNoPostProcCalculator;
 
 /**
  * This model exporter can be used to convert an EMF model to the respective
@@ -82,7 +80,7 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 				break;
 			}
 		}
-		
+
 		// If patient was scheduled
 		if (admissionShift != null) {
 			patientJson.addProperty("admission_day", convertShiftToDay(admissionShift.getShiftNo()));
@@ -156,57 +154,57 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 	protected JsonArray convertModelToCostsJson(final Root model, final boolean verbose) {
 		Objects.requireNonNull(model);
 
-//		final ModelCostNoPostProcCalculator calc = new ModelCostNoPostProcCalculator();
-//		final int unscheduled = calc.calculateUnscheduledPatientsCost(model);
-//		final int delay = calc.calculateAdmissionDelayCost(model);
-//		final int openOt = calc.calculateOpenOtCost(model);
-//		final int ageMix = calc.calculateAgeMixCost(model);
-//		final int skill = calc.calculateSkillLevelCost(model);
-//		final int excess = calc.calculateExcessCost(model);
-//		final int continuity = calc.calculateContinuityCost(model);
-//		final int surgeonTransfer = calc.calculateSurgeonTransferCost(model);
-//
-//		// total cost is the sum of all individual costs
-//		//
-//		// summing the individual values is faster than re-calculating the complete
-//		// model within the cost calculator
-//		final int costs = unscheduled + delay + openOt + ageMix + skill + excess + continuity + surgeonTransfer;
-//
-//		if (verbose) {
-//			logger.info("Costs: " + costs);
-//			logger.info("Unscheduled: " + unscheduled);
-//			logger.info("Delay: " + delay);
-//			logger.info("OpenOT: " + openOt);
-//			logger.info("AgeMix: " + ageMix);
-//			logger.info("Skill: " + skill);
-//			logger.info("Excess: " + excess);
-//			logger.info("Continuity: " + continuity);
-//			logger.info("SurgeonTransfer: " + surgeonTransfer);
-//		}
-//
-//		// Weirdly, the output costs is a JSON array with only one concatenated String
-//		final StringBuilder sb = new StringBuilder();
-//		sb.append("Cost: ");
-//		sb.append(costs);
-//		sb.append(", Unscheduled: ");
-//		sb.append(unscheduled);
-//		sb.append(", Delay: ");
-//		sb.append(delay);
-//		sb.append(", OpenOT: ");
-//		sb.append(openOt);
-//		sb.append(", AgeMix: ");
-//		sb.append(ageMix);
-//		sb.append(", Skill: ");
-//		sb.append(skill);
-//		sb.append(", Excess: ");
-//		sb.append(excess);
-//		sb.append(", Continuity: ");
-//		sb.append(continuity);
-//		sb.append(", SurgeonTransfer: ");
-//		sb.append(surgeonTransfer);
+		final ModelCostNoPostProcCalculator calc = new ModelCostNoPostProcCalculator();
+		final int unscheduled = calc.calculateUnscheduledPatientsCost(model);
+		final int delay = calc.calculateAdmissionDelayCost(model);
+		final int openOt = calc.calculateOpenOtCost(model);
+		final int ageMix = calc.calculateAgeMixCost(model);
+		final int skill = calc.calculateSkillLevelCost(model);
+		final int excess = calc.calculateExcessCost(model);
+		final int continuity = calc.calculateContinuityCost(model);
+		final int surgeonTransfer = calc.calculateSurgeonTransferCost(model);
+
+		// total cost is the sum of all individual costs
+		//
+		// summing the individual values is faster than re-calculating the complete
+		// model within the cost calculator
+		final int costs = unscheduled + delay + openOt + ageMix + skill + excess + continuity + surgeonTransfer;
+
+		if (verbose) {
+			logger.info("Costs: " + costs);
+			logger.info("Unscheduled: " + unscheduled);
+			logger.info("Delay: " + delay);
+			logger.info("OpenOT: " + openOt);
+			logger.info("AgeMix: " + ageMix);
+			logger.info("Skill: " + skill);
+			logger.info("Excess: " + excess);
+			logger.info("Continuity: " + continuity);
+			logger.info("SurgeonTransfer: " + surgeonTransfer);
+		}
+
+		// Weirdly, the output costs is a JSON array with only one concatenated String
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Cost: ");
+		sb.append(costs);
+		sb.append(", Unscheduled: ");
+		sb.append(unscheduled);
+		sb.append(", Delay: ");
+		sb.append(delay);
+		sb.append(", OpenOT: ");
+		sb.append(openOt);
+		sb.append(", AgeMix: ");
+		sb.append(ageMix);
+		sb.append(", Skill: ");
+		sb.append(skill);
+		sb.append(", Excess: ");
+		sb.append(excess);
+		sb.append(", Continuity: ");
+		sb.append(continuity);
+		sb.append(", SurgeonTransfer: ");
+		sb.append(surgeonTransfer);
 
 		final JsonArray costsJson = new JsonArray();
-//		costsJson.add(sb.toString());
+		costsJson.add(sb.toString());
 		return costsJson;
 	}
 
