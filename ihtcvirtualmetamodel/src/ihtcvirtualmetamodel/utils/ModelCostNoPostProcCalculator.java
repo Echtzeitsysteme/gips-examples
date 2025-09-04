@@ -17,6 +17,7 @@ import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.Roster;
 import ihtcvirtualmetamodel.Shift;
 import ihtcvirtualmetamodel.Surgeon;
+import ihtcvirtualmetamodel.VirtualOpTimeToCapacity;
 import ihtcvirtualmetamodel.VirtualShiftToRoster;
 import ihtcvirtualmetamodel.VirtualShiftToWorkload;
 import ihtcvirtualmetamodel.Workload;
@@ -155,7 +156,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return excessCost * model.getWeight().getNurseExcessiveWorkload();
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Surgical Case Planning, S5.
 	 * 
@@ -171,7 +171,14 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		for (final OT ot : model.getOts()) {
 			// This assumes that there is at most one `Capacity` object per day per OT
 			for (final Capacity c : ot.getCapacities()) {
-				if (c.getDerivedOpTimes().size() > 0 || c.getDerivedWorkloads().size() > 0) {
+				boolean open = false;
+				for (final VirtualOpTimeToCapacity vopc : c.getVirtualOpTime()) {
+					if (vopc.isIsSelected()) {
+						open = open || true;
+					}
+				}
+
+				if (open) {
 					openOtCost++;
 				}
 			}
