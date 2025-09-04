@@ -249,7 +249,6 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return admissionDelayCost * model.getWeight().getPatientDelay();
 	}
 
-	// TODO: Adapt
 	/**
 	 * Soft constraint Global constraints, S8.
 	 * 
@@ -263,8 +262,17 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		int unscheduledPatientsCost = 0;
 
 		for (final Patient p : model.getPatients()) {
-			if (!p.isMandatory() && p.getFirstWorkload().getDerivedShift() == null) {
-				unscheduledPatientsCost++;
+			if (!p.isMandatory() || p.isIsOccupant()) {
+				boolean admitted = false;
+				for (final VirtualShiftToWorkload vsw : p.getFirstWorkload().getVirtualShift()) {
+					if (vsw.isIsSelected()) {
+						admitted = true;
+					}
+				}
+
+				if (!admitted) {
+					unscheduledPatientsCost++;
+				}
 			}
 		}
 
