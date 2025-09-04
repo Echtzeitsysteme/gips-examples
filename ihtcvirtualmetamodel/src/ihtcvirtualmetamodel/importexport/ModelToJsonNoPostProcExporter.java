@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import com.google.gson.JsonArray;
@@ -39,6 +42,18 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 	 */
 	public ModelToJsonNoPostProcExporter(final Root model) {
 		super(model);
+
+		// Configure logging
+		logger.setUseParentHandlers(false);
+		final ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new Formatter() {
+			@Override
+			public String format(final LogRecord record) {
+				Objects.requireNonNull(record, "Given log entry was null.");
+				return record.getMessage() + System.lineSeparator();
+			}
+		});
+		logger.addHandler(handler);
 	}
 
 	/**

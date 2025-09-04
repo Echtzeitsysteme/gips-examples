@@ -55,9 +55,7 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 				if (age > maxAge) {
 					maxAge = age;
 				}
-
-				// There can only be one selected object, hence, break
-				break;
+				// There can be multiple selected virtual objects
 			}
 		}
 
