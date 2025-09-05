@@ -65,12 +65,12 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	/**
 	 * Gurobi callback path.
 	 */
-	private String callbackPath = null;
+	private String callbackPath = projectFolder + "/../ihtcvirtualrunner/scripts/callback.json";
 
 	/**
 	 * Gurobi parameter path.
 	 */
-	private String parameterPath = null;
+	private String parameterPath = projectFolder + "/../ihtcvirtualrunner/scripts/parameter.json";
 
 	/**
 	 * Create a new instance of this class.
