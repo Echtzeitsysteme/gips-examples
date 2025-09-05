@@ -104,12 +104,13 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	 * Default Output FDolder for Debug-files
 	 */
 	public String debugFolder = projectFolder + "/../ihtcvirtualmetamodel/instances/debug/";
-	
+
 	/**
 	 * Default Output Path for Debug-file of current model instance
 	 */
-	public String debugOutputPath = debugFolder + scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_debug.txt";
-			
+	public String debugOutputPath = debugFolder + scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json"))
+			+ "_debug.txt";
+
 	public AbstractIhtcVirtualGipsRunner() {
 		// Configure logging
 		logger.setUseParentHandlers(false);

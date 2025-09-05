@@ -24,7 +24,8 @@ import ihtcvirtualmetamodel.utils.FileUtils;
  * /home/mkratz/git/gips-examples/ihtcvirtualmetamodel/instances/test01.xmi
  * --outputxmi
  * /home/mkratz/git/gips-examples/ihtcvirtualmetamodel/instances/test01_solved.xmi
- * -v
+ * --verbose --randomseed 0 --timelimit 300 --threads 4 --callback
+ * /tmp/gurobi-callback.json --parameter /tmp/gurobi-parameter.json
  * 
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
@@ -65,6 +66,17 @@ public class IhtcVirtualGipsHeadlessRunner {
 			runner.gipsOutputPath = config.outputXmiPath;
 		}
 		runner.setVerbose(config.verbose);
+		runner.setRandomSeed(config.randomSeed);
+		if (config.timeLimit > 0) {
+			runner.setTimeLimit(config.timeLimit);
+		}
+		runner.setThreads(config.threads);
+		if (config.callbackPath != null) {
+			runner.setCallbackPath(config.callbackPath);
+		}
+		if (config.parameterPath != null) {
+			runner.setParameterPath(config.parameterPath);
+		}
 
 		// Execute the runner
 		runner.run();
@@ -95,6 +107,10 @@ public class IhtcVirtualGipsHeadlessRunner {
 	 * <li>"r": model output XMI file to store (optional)</li>
 	 * <li>"v": verbose output flag (optional)</li>
 	 * <li>"n": random seed for the (M)ILP solver (optional)</li>
+	 * <li>"t": time limit for the (M)ILP solver (optional)</li>
+	 * <li>"p": number of threads to use for the (M)ILP solver (optional)</li>
+	 * <li>"c": callback configuration path for Gurobi (optional)</li>
+	 * <li>"d": parameter path for Gurobi (optional)</li>
 	 * </ol>
 	 * 
 	 * @param args Arguments to parse.
@@ -133,6 +149,26 @@ public class IhtcVirtualGipsHeadlessRunner {
 		xmiModelOutputFile.setRequired(false);
 		options.addOption(randomSeed);
 
+		// Time limit for the (M)ILP solver
+		final Option timeLimit = new Option("t", "timelimit", true, "time limit for the (M)ILP solver");
+		timeLimit.setRequired(false);
+		options.addOption(timeLimit);
+
+		// Number of threads to use for the (M)ILP solver
+		final Option threads = new Option("p", "threads", true, "number of threads to use for the (M)ILP solver");
+		threads.setRequired(false);
+		options.addOption(threads);
+
+		// Gurobi callback path
+		final Option callbackPath = new Option("c", "callback", true, "callback configuration path for Gurobi");
+		callbackPath.setRequired(false);
+		options.addOption(callbackPath);
+
+		// Gurobi parameter path
+		final Option parameterPath = new Option("d", "parameter", true, "parameter path for Gurobi");
+		parameterPath.setRequired(false);
+		options.addOption(parameterPath);
+
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -152,12 +188,16 @@ public class IhtcVirtualGipsHeadlessRunner {
 
 		// Get and return values
 		return new CliConfig( //
-				cmd.getOptionValue("inputJson"), //
-				cmd.hasOption("outputJson") ? cmd.getOptionValue("outputJson") : null, //
+				cmd.getOptionValue("inputjson"), //
+				cmd.hasOption("outputjson") ? cmd.getOptionValue("outputJson") : null, //
 				cmd.hasOption("inputxmi") ? cmd.getOptionValue("inputxmi") : null, //
 				cmd.hasOption("outputxmi") ? cmd.getOptionValue("outputxmi") : null, //
 				cmd.hasOption("verbose"), //
-				cmd.hasOption("randomseed") ? Integer.valueOf(cmd.getOptionValue("randomseed")) : 0 //
+				cmd.hasOption("randomseed") ? Integer.valueOf(cmd.getOptionValue("randomseed")) : 0, //
+				cmd.hasOption("timelimit") ? Integer.valueOf(cmd.getOptionValue("timelimit")) : -1, //
+				cmd.hasOption("threads") ? Integer.valueOf(cmd.getOptionValue("threads")) : 0, //
+				cmd.hasOption("callback") ? cmd.getOptionValue("callback") : null, //
+				cmd.hasOption("parameter") ? cmd.getOptionValue("parameter") : null //
 		);
 	}
 
@@ -165,7 +205,7 @@ public class IhtcVirtualGipsHeadlessRunner {
 	 * Record to hold the parsed CLI configuration parameters.
 	 */
 	private record CliConfig(String inputJsonPath, String outputJsonPath, String inputXmiPath, String outputXmiPath,
-			boolean verbose, int randomSeed) {
+			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath) {
 	}
 
 }
