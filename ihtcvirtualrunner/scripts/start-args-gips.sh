@@ -5,7 +5,8 @@
 # the IHTC 2024 with only one argument, i.e., the input model to
 # load.
 #
-# Example: `./start-args-gips.sh ./i01.json`
+# Example:
+# `./start-args-gips.sh ./i01.json 0 /tmp/callback.json /tmp/parameter.json`
 #
 # If you have any questions, feel free to write us an email.
 #
@@ -38,6 +39,8 @@ setup
 
 export inputXmi=$1
 export randomSeed=$2
+export callback=$3
+export parameter=$4
 
 # Extract needed XMI files
 echo "=> Applying GIPS XMI workarounds."
@@ -50,7 +53,11 @@ unzip -qq -o $JAR "ihtcvirtualgipssolution/api/ibex-patterns.xmi"
 # Actual run
 export RUN_NAME=$(date +%Y-%m-%d"_"%H-%M-%S)
 if [ ! -z "$randomSeed" ]; then
-	export ARGS="-i $inputXmi --verbose --randomseed $randomSeed"
+    if [ ! -z "$parameter" ]; then
+        export ARGS="-i $inputXmi --verbose --randomseed $randomSeed --callback $callback --parameter $parameter"
+    else
+        export ARGS="-i $inputXmi --verbose --randomseed $randomSeed"
+    fi
 else
     export ARGS="-i $inputXmi --verbose"
 fi

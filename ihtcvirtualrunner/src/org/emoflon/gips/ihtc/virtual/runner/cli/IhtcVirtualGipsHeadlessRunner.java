@@ -66,6 +66,17 @@ public class IhtcVirtualGipsHeadlessRunner {
 			runner.gipsOutputPath = config.outputXmiPath;
 		}
 		runner.setVerbose(config.verbose);
+		runner.setRandomSeed(config.randomSeed);
+		if (config.timeLimit > 0) {
+			runner.setTimeLimit(config.timeLimit);
+		}
+		runner.setThreads(config.threads);
+		if (config.callbackPath != null) {
+			runner.setCallbackPath(config.callbackPath);
+		}
+		if (config.parameterPath != null) {
+			runner.setParameterPath(config.parameterPath);
+		}
 
 		// Execute the runner
 		runner.run();
