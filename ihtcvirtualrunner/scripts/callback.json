@@ -1,8 +1,8 @@
 {
     "abort": false,
-	//"bestBoundGeq": true,
-	//"bestBound" : 3700,
-	//"bestObjectiveLeq" : true,
-	//"bestObjective" : 4500,
-	//"gap" : 0.05
+	"bestBoundGeq": true,
+	"bestBound" : 100000,
+	"bestObjectiveLeq" : true,
+	"bestObjective" : -1,
+	"gap" : 0.001
 }
