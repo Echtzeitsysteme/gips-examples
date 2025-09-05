@@ -1,0 +1,203 @@
+package "architecture.cra.gipssolution"
+import "platform:/resource/ArchitectureCRA/model/architectureCRA.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 1209600.0]; // 14*24h time limit
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.00001];
+	lpOutput := true [path := "gurobi.lp"];
+}
+
+//
+// Utilities for embedding a single attribute or a single method
+//
+
+rule embedACTuple {
+	a : Attribute
+	c : Clazz {
+		++ - encapsulates -> a
+	}
+}
+
+rule embedMCTuple {
+	m : Method
+	c : Clazz {
+		++ - encapsulates -> m
+	}
+}
+
+mapping embedAttribute to embedACTuple;
+
+// every attribute must be embedded
+constraint with Attribute {
+	mappings.embedAttribute->filter(element.nodes.a == context)->sum(element.value) == 1
+}
+
+mapping embedMethod to embedMCTuple;
+
+// every method must be embedded
+constraint with Method {
+	mappings.embedMethod->filter(element.nodes.m == context)->sum(element.value) == 1
+}
+
+//
+// Violation of type A:
+// a method `m1` has a dependency to an attribute `a1` which should be mapped to a different class (`c1`) than the method `m1` (`c2`)
+//
+
+pattern findViolationA {
+	c1 : Clazz
+	c2 : Clazz
+	a1 : Attribute
+	m1 : Method {
+		- dataDependency -> a1
+	}
+}
+
+mapping violationA to findViolationA;
+
+constraint with findViolationA {
+	mappings.violationA->filter(
+		element.nodes.a1 == context.nodes.a1
+		& element.nodes.m1 == context.nodes.m1
+		& element.nodes.c1 == context.nodes.c1
+		& element.nodes.c2 == context.nodes.c2
+	)->sum(element.value) == 1
+	<=>
+	[
+		mappings.embedAttribute->filter(element.nodes.a == context.nodes.a1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
+		&
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c2)->sum(element.value) == 1
+	]
+}
+
+function objViolationA with violationA {
+	1
+}
+
+//
+// Violation of type C:
+// a method `m1` has a dependency to a method `m2` which should be mapped to a different class (`c2`) than the method `m1` (`c1`)
+//
+
+pattern findViolationC {
+	c1 : Clazz
+	c2 : Clazz
+	m1 : Method {
+		- functionalDependency -> m2
+	}
+	m2 : Method
+}
+
+mapping violationC to findViolationC;
+
+constraint with findViolationC {
+	mappings.violationC->filter(
+		element.nodes.m1 == context.nodes.m1
+		& element.nodes.m2 == context.nodes.m2
+		& element.nodes.c1 == context.nodes.c1
+		& element.nodes.c2 == context.nodes.c2
+	)->sum(element.value) == 1
+	<=>
+	[
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
+		&
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m2 & element.nodes.c == context.nodes.c2)->sum(element.value) == 1
+	]
+}
+
+function objViolationC with violationC {
+	1
+}
+
+//
+// Violation of type D1:
+// a method 'm1' has no dependency to a method 'm2' which both should be mapped to the same class (`c1`)
+//
+
+condition mmNoDep = forbid findHelperD1
+pattern findHelperD1 {
+	m1: Method {
+		- functionalDependency -> m2
+	}
+	m2: Method
+}
+
+pattern findViolationD1 {
+	c1 : Clazz
+	m1 : Method
+	m2 : Method
+}
+when mmNoDep
+
+mapping violationD1 to findViolationD1;
+
+constraint with findViolationD1 {
+	mappings.violationD1->filter(
+		element.nodes.m1 == context.nodes.m1
+		& element.nodes.m2 == context.nodes.m2
+		& element.nodes.c1 == context.nodes.c1
+	)->sum(element.value) == 1
+	<=>
+	[
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
+		&
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m2 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
+	]
+}
+
+function objViolationD1 with violationD1 {
+	1
+}
+
+//
+// Violation of type D2:
+// a method 'm1' has no dependency to an attribute 'a1' which both should be mapped to the same class (`c1`)
+//
+
+condition maNoDep = forbid findHelperD2
+pattern findHelperD2 {
+	m1: Method {
+		- dataDependency -> a1
+	}
+	a1: Attribute
+}
+
+pattern findViolationD2 {
+	c1 : Clazz
+	m1 : Method
+	a1 : Attribute
+}
+when maNoDep
+
+mapping violationD2 to findViolationD2;
+
+constraint with findViolationD2 {
+	mappings.violationD2->filter(
+		element.nodes.m1 == context.nodes.m1
+		& element.nodes.a1 == context.nodes.a1
+		& element.nodes.c1 == context.nodes.c1
+	)->sum(element.value) == 1
+	<=>
+	[
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
+		&
+		mappings.embedAttribute->filter(element.nodes.a == context.nodes.a1 & element.nodes.c == context.nodes.c1)->sum(element.value) == 1
+	]
+}
+
+function objViolationD2 with violationD2 {
+	1
+}
+
+// maximize the number of positive mappings - violations
+objective : max {
+	0
+	- functions.objViolationA
+	- functions.objViolationC
+	- functions.objViolationD1
+	- functions.objViolationD2
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:LectureStudioModel="platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
+  <LectureStudioModel:Root clock="0.0" networks="/1">
+    <time current="0.0" />
+  </LectureStudioModel:Root>
+  <LectureStudioModel:Network>
+    <lectureStudioServer lsNode="/2">
+      <waitingClients />
+      <clientContainer />
+      <data size="100.0" />
+    </lectureStudioServer>
+  </LectureStudioModel:Network>
+  <LectureStudioModel:Node sendBandwidth="150000.0" receiveBandwidth="297.1569165340957" id="lectureStudio Server" isRelayClient="false" clock="0.0" transferredData="0.0" />
+</xmi:XMI>

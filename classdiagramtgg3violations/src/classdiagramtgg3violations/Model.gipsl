@@ -1,0 +1,66 @@
+package "classdiagramtgg3violations"
+import "platform:/resource/ClassDiagram/model/classDiagram.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 120.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.00001];
+}
+
+//
+// Patterns to find violations
+//
+
+pattern findViolationA {
+	c1 : Clazz {
+		- features -> a1
+	}
+	c2 : Clazz {
+		- features -> m1
+	}
+	a1 : Attribute
+	m1 : Method {
+		- dependencies -> a1
+	}
+}
+
+pattern findViolationB {
+	c1 : Clazz {
+		- features -> m1
+		- features -> m2
+	}
+	m1 : Method
+	m2 : Method
+}
+when twoMethodsWithNoSharingAttribute
+
+condition twoMethodsWithNoSharingAttribute = forbid findAMMTriple
+pattern findAMMTriple {
+	a1 : Attribute
+	m1 : Method {
+		- dependencies -> a1
+	}
+	m2 : Method {
+		- dependencies -> a1
+	}
+}
+
+//
+// Objectives to count all found violations
+//
+
+function objViolationA with findViolationA {
+	1
+}
+
+function objViolationB with findViolationB {
+	1
+}
+
+objective : min {
+	functions.objViolationA
+	+ functions.objViolationB
+}

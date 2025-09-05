@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LectureStudioModel:Network xmlns:LectureStudioModel="platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" time="0.0" xmi:version="2.0">
+  <lectureStudioServer id="LS0" depth="0" data="500.0" isLsServer="true" transferTime="0.0" txBW="100.0" rxBW="100.0" residualTxBW="100.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0">
+    <waitingClients id="CL1" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+    <waitingClients id="CL2" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+    <waitingClients id="CL3" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+    <waitingClients id="CL4" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+    <waitingClients id="CL5" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+    <waitingClients id="CL6" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+    <waitingClients id="CL7" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+    <waitingClients id="CL8" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+    <waitingClients id="CL9" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+    <waitingClients id="CL10" depth="-1" data="0.0" isLsServer="false" transferTime="0.0" txBW="20.0" rxBW="100.0" residualTxBW="20.0" residualRxBW="100.0" allocatedTxBW="0.0" allocatedRxBW="0.0" isRelayClient="false" />
+  </lectureStudioServer>
+</LectureStudioModel:Network>

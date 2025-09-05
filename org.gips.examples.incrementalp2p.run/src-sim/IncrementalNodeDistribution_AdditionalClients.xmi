@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:LectureStudioModel="platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
+  <LectureStudioModel:Root clock="0.0" networks="/1">
+    <time current="0.0" />
+  </LectureStudioModel:Root>
+  <LectureStudioModel:Network>
+    <lectureStudioServer lsNode="/2">
+      <waitingClients />
+      <clientContainer>
+        <connections transferRate="28568.87936062774" transferredData="0.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.2" server="/2" />
+        <connections transferRate="20514.433928632585" transferredData="0.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.1" server="/2" />
+        <connections transferRate="10106.27439012572" transferredData="0.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.0" server="/2" />
+        <connections transferRate="25740.61464494565" transferredData="0.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.4" server="/2" />
+        <connections transferRate="37909.4287392803" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.5" />
+        <connections transferRate="28538.071445731606" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.3" />
+        <connections transferRate="27305.939399727868" transferredData="0.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.6" server="/2" />
+        <connections transferRate="36838.13787559519" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.8" />
+        <connections transferRate="28514.796402731004" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.7" />
+        <connections transferRate="28350.93111990518" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.6" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.10" />
+        <connections transferRate="29437.132521874388" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.6" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.9" />
+        <connections transferRate="29163.06849657649" transferredData="0.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.11" server="/2" />
+        <connections transferRate="33340.97632091709" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.6" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.12" />
+        <connections transferRate="27218.056047079735" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.6" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.13" />
+        <connections transferRate="30239.531228564934" transferredData="0.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.15" server="/2" />
+        <connections transferRate="37653.60441714223" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.1" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.14" />
+        <connections transferRate="35097.099226010876" transferredData="0.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.16" server="/2" />
+        <connections transferRate="31294.042551440118" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.0" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.17" />
+        <connections transferRate="27834.160522028473" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.1" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.19" />
+        <connections transferRate="28147.35716533517" transferredData="0.0" server="/1/@lectureStudioServer.0/@clientContainer/@nodes.6" client="/1/@lectureStudioServer.0/@clientContainer/@nodes.18" />
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.2" clientConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.4 /1/@lectureStudioServer.0/@clientContainer/@connections.5 /1/@lectureStudioServer.0/@clientContainer/@connections.7 /1/@lectureStudioServer.0/@clientContainer/@connections.8 /1/@lectureStudioServer.0/@clientContainer/@connections.17" sendBandwidth="164862.79551710485" receiveBandwidth="27523.60907747195" id="Client1" isRelayClient="true" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.1" clientConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.15 /1/@lectureStudioServer.0/@clientContainer/@connections.18" sendBandwidth="158799.3031626227" receiveBandwidth="24595.253202127773" id="Client10" isRelayClient="true" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.0" sendBandwidth="120017.23624819121" receiveBandwidth="28568.87936062774" id="Client11" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.5" sendBandwidth="132733.78337790753" receiveBandwidth="28538.071445731606" id="Client12" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.3" sendBandwidth="174975.7552298054" receiveBandwidth="31607.26286698789" id="Client13" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.4" sendBandwidth="88721.5654752859" receiveBandwidth="37909.4287392803" id="Client14" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.6" clientConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.9 /1/@lectureStudioServer.0/@clientContainer/@connections.10 /1/@lectureStudioServer.0/@clientContainer/@connections.12 /1/@lectureStudioServer.0/@clientContainer/@connections.13 /1/@lectureStudioServer.0/@clientContainer/@connections.19" sendBandwidth="186551.70908404008" receiveBandwidth="37871.281608126985" id="Client15" isRelayClient="true" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.8" sendBandwidth="137200.8838862242" receiveBandwidth="28514.796402731004" id="Client2" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.7" sendBandwidth="129016.4646356765" receiveBandwidth="36838.13787559519" id="Client3" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.10" sendBandwidth="125516.73516890973" receiveBandwidth="34017.91420646574" id="Client5" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.9" sendBandwidth="163934.67562052686" receiveBandwidth="43879.54369612218" id="Client6" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.11" sendBandwidth="155697.4120947634" receiveBandwidth="29163.06849657649" id="Client7" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.12" sendBandwidth="136217.27827160122" receiveBandwidth="33340.97632091709" id="Client8" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.13" sendBandwidth="158137.56728408652" receiveBandwidth="28591.591957290948" id="Client9" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.15" sendBandwidth="157704.62201088993" receiveBandwidth="40154.709793632064" id="New Client1" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.14" sendBandwidth="139982.37719657403" receiveBandwidth="30239.531228564934" id="New Client2" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.16" sendBandwidth="135023.32924914328" receiveBandwidth="35097.099226010876" id="New Client3" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.17" sendBandwidth="161580.72629669038" receiveBandwidth="40574.97143738278" id="New Client4" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.19" sendBandwidth="159881.41336565808" receiveBandwidth="28147.35716533517" id="New Client5" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <nodes serverConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.18" sendBandwidth="121192.20981490683" receiveBandwidth="27834.160522028473" id="New Client6" isRelayClient="false" clock="0.0" transferredData="0.0">
+          <data size="0.0" />
+        </nodes>
+        <connectionData serverId="lectureStudio Server" clientId="Client1" bandwidth="10106.27439012572" />
+        <connectionData serverId="lectureStudio Server" clientId="Client10" bandwidth="20514.433928632585" />
+        <connectionData serverId="lectureStudio Server" clientId="Client11" bandwidth="30119.111726061994" />
+        <connectionData serverId="Client1" clientId="Client10" bandwidth="41359.083830207164" />
+        <connectionData serverId="Client1" clientId="Client11" bandwidth="20959.982785500484" />
+        <connectionData serverId="Client10" clientId="Client1" bandwidth="41078.0118535433" />
+        <connectionData serverId="Client10" clientId="Client11" bandwidth="27902.40391278442" />
+        <connectionData serverId="Client11" clientId="Client1" bandwidth="42053.46503405366" />
+        <connectionData serverId="Client11" clientId="Client10" bandwidth="35934.31048839945" />
+        <connectionData serverId="lectureStudio Server" clientId="Client12" bandwidth="29305.21488897473" />
+        <connectionData serverId="lectureStudio Server" clientId="Client13" bandwidth="25740.61464494565" />
+        <connectionData serverId="lectureStudio Server" clientId="Client14" bandwidth="37345.291652245854" />
+        <connectionData serverId="Client12" clientId="Client13" bandwidth="35684.45619544432" />
+        <connectionData serverId="Client12" clientId="Client14" bandwidth="38833.88757852856" />
+        <connectionData serverId="Client13" clientId="Client12" bandwidth="27587.87271920662" />
+        <connectionData serverId="Client13" clientId="Client14" bandwidth="48695.61326988014" />
+        <connectionData serverId="Client14" clientId="Client12" bandwidth="22983.780723831434" />
+        <connectionData serverId="Client14" clientId="Client13" bandwidth="32038.532847141225" />
+        <connectionData serverId="Client1" clientId="Client12" bandwidth="36864.16948450521" />
+        <connectionData serverId="Client1" clientId="Client13" bandwidth="30567.784107227395" />
+        <connectionData serverId="Client1" clientId="Client14" bandwidth="41579.148205146455" />
+        <connectionData serverId="Client10" clientId="Client12" bandwidth="27454.051466783378" />
+        <connectionData serverId="Client10" clientId="Client13" bandwidth="39134.04198105171" />
+        <connectionData serverId="Client10" clientId="Client14" bandwidth="35340.40937664556" />
+        <connectionData serverId="Client11" clientId="Client12" bandwidth="30375.4600996487" />
+        <connectionData serverId="Client11" clientId="Client13" bandwidth="30827.65923847987" />
+        <connectionData serverId="Client11" clientId="Client14" bandwidth="45062.736726542265" />
+        <connectionData serverId="lectureStudio Server" clientId="Client15" bandwidth="27305.939399727868" />
+        <connectionData serverId="lectureStudio Server" clientId="Client2" bandwidth="31011.693150498748" />
+        <connectionData serverId="lectureStudio Server" clientId="Client3" bandwidth="35086.80274006385" />
+        <connectionData serverId="Client15" clientId="Client2" bandwidth="32379.113380341936" />
+        <connectionData serverId="Client15" clientId="Client3" bandwidth="24038.21090281742" />
+        <connectionData serverId="Client2" clientId="Client15" bandwidth="45821.26855275534" />
+        <connectionData serverId="Client2" clientId="Client3" bandwidth="30964.544013873423" />
+        <connectionData serverId="Client3" clientId="Client15" bandwidth="29389.861586920404" />
+        <connectionData serverId="Client3" clientId="Client2" bandwidth="30984.046962096454" />
+        <connectionData serverId="Client13" clientId="Client15" bandwidth="43146.25023123768" />
+        <connectionData serverId="Client13" clientId="Client2" bandwidth="33706.51044904796" />
+        <connectionData serverId="Client13" clientId="Client3" bandwidth="24278.98814854672" />
+        <connectionData serverId="Client14" clientId="Client15" bandwidth="35632.20333930764" />
+        <connectionData serverId="Client14" clientId="Client2" bandwidth="35022.801851763" />
+        <connectionData serverId="Client14" clientId="Client3" bandwidth="36457.52701114074" />
+        <connectionData serverId="Client12" clientId="Client15" bandwidth="32379.14618079116" />
+        <connectionData serverId="Client12" clientId="Client2" bandwidth="49968.584317773595" />
+        <connectionData serverId="Client12" clientId="Client3" bandwidth="38091.189273044176" />
+        <connectionData serverId="Client1" clientId="Client15" bandwidth="31138.936750774934" />
+        <connectionData serverId="Client1" clientId="Client2" bandwidth="28994.612363348995" />
+        <connectionData serverId="Client1" clientId="Client3" bandwidth="37931.43024943533" />
+        <connectionData serverId="Client10" clientId="Client15" bandwidth="46002.487841766604" />
+        <connectionData serverId="Client10" clientId="Client2" bandwidth="28073.582016861757" />
+        <connectionData serverId="Client10" clientId="Client3" bandwidth="29175.322060753162" />
+        <connectionData serverId="Client11" clientId="Client15" bandwidth="28476.136263335582" />
+        <connectionData serverId="Client11" clientId="Client2" bandwidth="34639.838498430356" />
+        <connectionData serverId="Client11" clientId="Client3" bandwidth="33415.17400243443" />
+        <connectionData serverId="lectureStudio Server" clientId="Client4" bandwidth="46204.25768843968" />
+        <connectionData serverId="lectureStudio Server" clientId="Client5" bandwidth="12359.568263080477" />
+        <connectionData serverId="lectureStudio Server" clientId="Client6" bandwidth="38307.1568563278" />
+        <connectionData serverId="Client4" clientId="Client5" bandwidth="36579.49095016311" />
+        <connectionData serverId="Client4" clientId="Client6" bandwidth="46003.54507043614" />
+        <connectionData serverId="Client5" clientId="Client4" bandwidth="32932.829339415286" />
+        <connectionData serverId="Client5" clientId="Client6" bandwidth="27603.1961451678" />
+        <connectionData serverId="Client6" clientId="Client4" bandwidth="33304.63219975336" />
+        <connectionData serverId="Client6" clientId="Client5" bandwidth="38371.76868444002" />
+        <connectionData serverId="Client15" clientId="Client4" bandwidth="28021.51620094443" />
+        <connectionData serverId="Client15" clientId="Client5" bandwidth="29437.132521874388" />
+        <connectionData serverId="Client15" clientId="Client6" bandwidth="28350.93111990518" />
+        <connectionData serverId="Client13" clientId="Client4" bandwidth="32442.85740614896" />
+        <connectionData serverId="Client13" clientId="Client5" bandwidth="50999.167318151216" />
+        <connectionData serverId="Client13" clientId="Client6" bandwidth="26621.604257614665" />
+        <connectionData serverId="Client14" clientId="Client4" bandwidth="32030.351522372606" />
+        <connectionData serverId="Client14" clientId="Client5" bandwidth="37906.77878308463" />
+        <connectionData serverId="Client14" clientId="Client6" bandwidth="47122.51289039811" />
+        <connectionData serverId="Client2" clientId="Client4" bandwidth="42914.66275568469" />
+        <connectionData serverId="Client2" clientId="Client5" bandwidth="29078.054278732914" />
+        <connectionData serverId="Client2" clientId="Client6" bandwidth="39085.5855617919" />
+        <connectionData serverId="Client12" clientId="Client4" bandwidth="45125.18048264345" />
+        <connectionData serverId="Client12" clientId="Client5" bandwidth="33419.257479524545" />
+        <connectionData serverId="Client12" clientId="Client6" bandwidth="44110.18329823445" />
+        <connectionData serverId="Client1" clientId="Client4" bandwidth="36637.84510892791" />
+        <connectionData serverId="Client1" clientId="Client5" bandwidth="31699.874582167537" />
+        <connectionData serverId="Client1" clientId="Client6" bandwidth="26649.386394503097" />
+        <connectionData serverId="Client10" clientId="Client4" bandwidth="42424.86057203385" />
+        <connectionData serverId="Client10" clientId="Client5" bandwidth="24225.650950132826" />
+        <connectionData serverId="Client10" clientId="Client6" bandwidth="38893.68764557879" />
+        <connectionData serverId="Client11" clientId="Client4" bandwidth="31074.206980638308" />
+        <connectionData serverId="Client11" clientId="Client5" bandwidth="32220.410426661787" />
+        <connectionData serverId="Client11" clientId="Client6" bandwidth="23729.424390519805" />
+        <connectionData serverId="Client3" clientId="Client4" bandwidth="28418.45284031869" />
+        <connectionData serverId="Client3" clientId="Client5" bandwidth="32867.24046428038" />
+        <connectionData serverId="Client3" clientId="Client6" bandwidth="34791.82746726835" />
+        <connectionData serverId="lectureStudio Server" clientId="Client7" bandwidth="45100.770856860734" />
+        <connectionData serverId="lectureStudio Server" clientId="Client8" bandwidth="29126.277715270317" />
+        <connectionData serverId="lectureStudio Server" clientId="Client9" bandwidth="34988.59176271292" />
+        <connectionData serverId="Client7" clientId="Client8" bandwidth="37088.96108674816" />
+        <connectionData serverId="Client7" clientId="Client9" bandwidth="34989.22048850154" />
+        <connectionData serverId="Client8" clientId="Client7" bandwidth="41278.86967422448" />
+        <connectionData serverId="Client8" clientId="Client9" bandwidth="27304.85775963915" />
+        <connectionData serverId="Client9" clientId="Client7" bandwidth="46230.2814364647" />
+        <connectionData serverId="Client9" clientId="Client8" bandwidth="22997.252776087902" />
+        <connectionData serverId="Client13" clientId="Client7" bandwidth="33234.979994627734" />
+        <connectionData serverId="Client13" clientId="Client8" bandwidth="19146.676456111145" />
+        <connectionData serverId="Client13" clientId="Client9" bandwidth="33572.848266759145" />
+        <connectionData serverId="Client12" clientId="Client7" bandwidth="28570.156931507634" />
+        <connectionData serverId="Client12" clientId="Client8" bandwidth="37528.60491854398" />
+        <connectionData serverId="Client12" clientId="Client9" bandwidth="18588.154545223122" />
+        <connectionData serverId="Client4" clientId="Client7" bandwidth="32663.274665377176" />
+        <connectionData serverId="Client4" clientId="Client8" bandwidth="31936.63723228399" />
+        <connectionData serverId="Client4" clientId="Client9" bandwidth="23870.22900440957" />
+        <connectionData serverId="Client6" clientId="Client7" bandwidth="41335.71949849607" />
+        <connectionData serverId="Client6" clientId="Client8" bandwidth="38294.22164070901" />
+        <connectionData serverId="Client6" clientId="Client9" bandwidth="32619.1231853368" />
+        <connectionData serverId="Client15" clientId="Client7" bandwidth="26079.565726232897" />
+        <connectionData serverId="Client15" clientId="Client8" bandwidth="45094.87420135034" />
+        <connectionData serverId="Client15" clientId="Client9" bandwidth="27218.056047079735" />
+        <connectionData serverId="Client14" clientId="Client7" bandwidth="33062.99986433198" />
+        <connectionData serverId="Client14" clientId="Client8" bandwidth="34675.37256939116" />
+        <connectionData serverId="Client14" clientId="Client9" bandwidth="31065.912500329498" />
+        <connectionData serverId="Client2" clientId="Client7" bandwidth="35431.807661813036" />
+        <connectionData serverId="Client2" clientId="Client8" bandwidth="35479.583100871525" />
+        <connectionData serverId="Client2" clientId="Client9" bandwidth="31954.7244328889" />
+        <connectionData serverId="Client1" clientId="Client7" bandwidth="28806.848080713546" />
+        <connectionData serverId="Client1" clientId="Client8" bandwidth="31513.14592920166" />
+        <connectionData serverId="Client1" clientId="Client9" bandwidth="30034.618135006134" />
+        <connectionData serverId="Client10" clientId="Client7" bandwidth="37074.10097104742" />
+        <connectionData serverId="Client10" clientId="Client8" bandwidth="24431.83802209863" />
+        <connectionData serverId="Client10" clientId="Client9" bandwidth="36791.902849361686" />
+        <connectionData serverId="Client11" clientId="Client7" bandwidth="22827.425928364435" />
+        <connectionData serverId="Client11" clientId="Client8" bandwidth="28679.46994101719" />
+        <connectionData serverId="Client11" clientId="Client9" bandwidth="36555.685081138356" />
+        <connectionData serverId="Client5" clientId="Client7" bandwidth="34926.541946381476" />
+        <connectionData serverId="Client5" clientId="Client8" bandwidth="29628.356635805423" />
+        <connectionData serverId="Client5" clientId="Client9" bandwidth="43891.34546423894" />
+        <connectionData serverId="Client3" clientId="Client7" bandwidth="33411.79323930502" />
+        <connectionData serverId="Client3" clientId="Client8" bandwidth="30645.857218143596" />
+        <connectionData serverId="Client3" clientId="Client9" bandwidth="36426.02913307837" />
+        <connectionData serverId="lectureStudio Server" clientId="New Client1" bandwidth="32007.553645411557" />
+        <connectionData serverId="lectureStudio Server" clientId="New Client2" bandwidth="33647.22878364515" />
+        <connectionData serverId="New Client1" clientId="New Client2" bandwidth="33130.50491772969" />
+        <connectionData serverId="New Client2" clientId="New Client1" bandwidth="36610.343543462295" />
+        <connectionData serverId="Client8" clientId="New Client1" bandwidth="44229.24965394752" />
+        <connectionData serverId="Client8" clientId="New Client2" bandwidth="55794.1225503811" />
+        <connectionData serverId="Client13" clientId="New Client1" bandwidth="24529.87148861723" />
+        <connectionData serverId="Client13" clientId="New Client2" bandwidth="24796.724377334045" />
+        <connectionData serverId="Client7" clientId="New Client1" bandwidth="44719.26117847586" />
+        <connectionData serverId="Client7" clientId="New Client2" bandwidth="26095.462304822016" />
+        <connectionData serverId="Client12" clientId="New Client1" bandwidth="31531.6004293335" />
+        <connectionData serverId="Client12" clientId="New Client2" bandwidth="39942.726993832686" />
+        <connectionData serverId="Client9" clientId="New Client1" bandwidth="31340.297378299205" />
+        <connectionData serverId="Client9" clientId="New Client2" bandwidth="32269.63680175521" />
+        <connectionData serverId="Client6" clientId="New Client1" bandwidth="32155.955716721484" />
+        <connectionData serverId="Client6" clientId="New Client2" bandwidth="42893.302394269434" />
+        <connectionData serverId="Client15" clientId="New Client1" bandwidth="43020.07690165656" />
+        <connectionData serverId="Client15" clientId="New Client2" bandwidth="31118.135905577692" />
+        <connectionData serverId="Client14" clientId="New Client1" bandwidth="22899.07527484841" />
+        <connectionData serverId="Client14" clientId="New Client2" bandwidth="35430.632962713724" />
+        <connectionData serverId="Client2" clientId="New Client1" bandwidth="34012.94507919683" />
+        <connectionData serverId="Client2" clientId="New Client2" bandwidth="36790.53259196992" />
+        <connectionData serverId="Client1" clientId="New Client1" bandwidth="52267.1809877311" />
+        <connectionData serverId="Client1" clientId="New Client2" bandwidth="42645.84136088536" />
+        <connectionData serverId="Client10" clientId="New Client1" bandwidth="37653.60441714223" />
+        <connectionData serverId="Client10" clientId="New Client2" bandwidth="36802.54104011376" />
+        <connectionData serverId="Client11" clientId="New Client1" bandwidth="29446.64597283266" />
+        <connectionData serverId="Client11" clientId="New Client2" bandwidth="26199.049291644504" />
+        <connectionData serverId="Client5" clientId="New Client1" bandwidth="38826.62121552562" />
+        <connectionData serverId="Client5" clientId="New Client2" bandwidth="27677.61419215802" />
+        <connectionData serverId="Client3" clientId="New Client1" bandwidth="25019.033799858207" />
+        <connectionData serverId="Client3" clientId="New Client2" bandwidth="35152.80626015784" />
+        <connectionData serverId="lectureStudio Server" clientId="New Client3" bandwidth="49943.22401843339" />
+        <connectionData serverId="lectureStudio Server" clientId="New Client4" bandwidth="31161.10102725203" />
+        <connectionData serverId="New Client3" clientId="New Client4" bandwidth="37988.201998337325" />
+        <connectionData serverId="New Client4" clientId="New Client3" bandwidth="34778.06124210718" />
+        <connectionData serverId="New Client1" clientId="New Client3" bandwidth="28816.774994356037" />
+        <connectionData serverId="New Client1" clientId="New Client4" bandwidth="32777.44956359149" />
+        <connectionData serverId="Client8" clientId="New Client3" bandwidth="27010.775200852946" />
+        <connectionData serverId="Client8" clientId="New Client4" bandwidth="45499.85570375051" />
+        <connectionData serverId="Client13" clientId="New Client3" bandwidth="31921.4064183773" />
+        <connectionData serverId="Client13" clientId="New Client4" bandwidth="40502.2008944088" />
+        <connectionData serverId="Client7" clientId="New Client3" bandwidth="40866.030644207414" />
+        <connectionData serverId="Client7" clientId="New Client4" bandwidth="19910.90770999517" />
+        <connectionData serverId="Client12" clientId="New Client3" bandwidth="31495.267260383327" />
+        <connectionData serverId="Client12" clientId="New Client4" bandwidth="29403.55230753177" />
+        <connectionData serverId="Client9" clientId="New Client3" bandwidth="30833.17695333159" />
+        <connectionData serverId="Client9" clientId="New Client4" bandwidth="34945.27740999436" />
+        <connectionData serverId="Client6" clientId="New Client3" bandwidth="42675.83407867448" />
+        <connectionData serverId="Client6" clientId="New Client4" bandwidth="49872.95501582336" />
+        <connectionData serverId="Client15" clientId="New Client3" bandwidth="43518.087473951164" />
+        <connectionData serverId="Client15" clientId="New Client4" bandwidth="31363.25105006304" />
+        <connectionData serverId="Client14" clientId="New Client3" bandwidth="29313.36922231887" />
+        <connectionData serverId="Client14" clientId="New Client4" bandwidth="37906.03928393712" />
+        <connectionData serverId="Client2" clientId="New Client3" bandwidth="58820.81611615841" />
+        <connectionData serverId="Client2" clientId="New Client4" bandwidth="41311.635276174406" />
+        <connectionData serverId="Client1" clientId="New Client3" bandwidth="44000.71040649852" />
+        <connectionData serverId="Client1" clientId="New Client4" bandwidth="31294.042551440118" />
+        <connectionData serverId="Client10" clientId="New Client3" bandwidth="46053.4373030256" />
+        <connectionData serverId="Client10" clientId="New Client4" bandwidth="24777.58343762724" />
+        <connectionData serverId="Client11" clientId="New Client3" bandwidth="24864.245813655805" />
+        <connectionData serverId="Client11" clientId="New Client4" bandwidth="26524.103118142204" />
+        <connectionData serverId="Client5" clientId="New Client3" bandwidth="36389.39220487324" />
+        <connectionData serverId="Client5" clientId="New Client4" bandwidth="47232.92670556427" />
+        <connectionData serverId="New Client2" clientId="New Client3" bandwidth="38828.25917700096" />
+        <connectionData serverId="New Client2" clientId="New Client4" bandwidth="37852.137641761066" />
+        <connectionData serverId="Client3" clientId="New Client3" bandwidth="32865.42946061918" />
+        <connectionData serverId="Client3" clientId="New Client4" bandwidth="36951.63976900875" />
+        <connectionData serverId="lectureStudio Server" clientId="New Client5" bandwidth="46332.55398047167" />
+        <connectionData serverId="lectureStudio Server" clientId="New Client6" bandwidth="31900.540386518085" />
+        <connectionData serverId="New Client5" clientId="New Client6" bandwidth="20016.339279068372" />
+        <connectionData serverId="New Client6" clientId="New Client5" bandwidth="26457.93484712213" />
+        <connectionData serverId="New Client1" clientId="New Client5" bandwidth="37022.76125110369" />
+        <connectionData serverId="New Client1" clientId="New Client6" bandwidth="47074.65285876591" />
+        <connectionData serverId="Client8" clientId="New Client5" bandwidth="43737.57077765822" />
+        <connectionData serverId="Client8" clientId="New Client6" bandwidth="37554.04701134571" />
+        <connectionData serverId="Client13" clientId="New Client5" bandwidth="53188.664014338196" />
+        <connectionData serverId="Client13" clientId="New Client6" bandwidth="26811.41030287701" />
+        <connectionData serverId="Client7" clientId="New Client5" bandwidth="34622.41521075166" />
+        <connectionData serverId="Client7" clientId="New Client6" bandwidth="35366.92967106129" />
+        <connectionData serverId="Client12" clientId="New Client5" bandwidth="35383.293990718405" />
+        <connectionData serverId="Client12" clientId="New Client6" bandwidth="26112.576311410197" />
+        <connectionData serverId="New Client3" clientId="New Client5" bandwidth="32191.545168607136" />
+        <connectionData serverId="New Client3" clientId="New Client6" bandwidth="33734.21253317504" />
+        <connectionData serverId="Client9" clientId="New Client5" bandwidth="32134.341237048593" />
+        <connectionData serverId="Client9" clientId="New Client6" bandwidth="31322.30045449859" />
+        <connectionData serverId="Client6" clientId="New Client5" bandwidth="35952.69785306842" />
+        <connectionData serverId="Client6" clientId="New Client6" bandwidth="31457.559250338476" />
+        <connectionData serverId="Client15" clientId="New Client5" bandwidth="40043.32225036961" />
+        <connectionData serverId="Client15" clientId="New Client6" bandwidth="32678.102231195597" />
+        <connectionData serverId="Client14" clientId="New Client5" bandwidth="31299.886484569004" />
+        <connectionData serverId="Client14" clientId="New Client6" bandwidth="44945.75377914008" />
+        <connectionData serverId="Client2" clientId="New Client5" bandwidth="34807.440675999474" />
+        <connectionData serverId="Client2" clientId="New Client6" bandwidth="26863.12505228329" />
+        <connectionData serverId="Client1" clientId="New Client5" bandwidth="43880.13172932306" />
+        <connectionData serverId="Client1" clientId="New Client6" bandwidth="16203.858676479653" />
+        <connectionData serverId="Client10" clientId="New Client5" bandwidth="22131.31417786902" />
+        <connectionData serverId="Client10" clientId="New Client6" bandwidth="43298.23313477835" />
+        <connectionData serverId="Client11" clientId="New Client5" bandwidth="20696.165656096975" />
+        <connectionData serverId="Client11" clientId="New Client6" bandwidth="46746.79430964706" />
+        <connectionData serverId="New Client4" clientId="New Client5" bandwidth="36468.47577331515" />
+        <connectionData serverId="New Client4" clientId="New Client6" bandwidth="45523.12456399597" />
+        <connectionData serverId="Client5" clientId="New Client5" bandwidth="42324.07036440161" />
+        <connectionData serverId="Client5" clientId="New Client6" bandwidth="38340.79999308474" />
+        <connectionData serverId="New Client2" clientId="New Client5" bandwidth="40981.42083791202" />
+        <connectionData serverId="New Client2" clientId="New Client6" bandwidth="37637.5945448053" />
+        <connectionData serverId="Client3" clientId="New Client5" bandwidth="32866.38499854072" />
+        <connectionData serverId="Client3" clientId="New Client6" bandwidth="40895.658230929934" />
+      </clientContainer>
+      <data size="100.0" />
+    </lectureStudioServer>
+  </LectureStudioModel:Network>
+  <LectureStudioModel:Node clientConnection="/1/@lectureStudioServer.0/@clientContainer/@connections.0 /1/@lectureStudioServer.0/@clientContainer/@connections.1 /1/@lectureStudioServer.0/@clientContainer/@connections.2 /1/@lectureStudioServer.0/@clientContainer/@connections.3 /1/@lectureStudioServer.0/@clientContainer/@connections.6 /1/@lectureStudioServer.0/@clientContainer/@connections.11 /1/@lectureStudioServer.0/@clientContainer/@connections.14 /1/@lectureStudioServer.0/@clientContainer/@connections.16" sendBandwidth="150000.0" receiveBandwidth="297.1569165340957" id="lectureStudio Server" isRelayClient="true" clock="0.0" transferredData="0.0" />
+</xmi:XMI>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<architectureCRA:ClassModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:architectureCRA="platform:/resource/ArchitectureCRA/model/architectureCRA.ecore">
+  <features
+      xsi:type="architectureCRA:Method"
+      name="m1"/>
+  <features
+      xsi:type="architectureCRA:Method"
+      name="m2"/>
+</architectureCRA:ClassModel>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LectureStudioModelB:Network xmlns:LectureStudioModelB="platform:/resource/LectureStudioModelB/model/LectureStudioModelB.ecore" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" time="0.0" xmi:version="2.0">
+  <lectureStudioServer id="0" depth="0" clients="10" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="0.0" txBW="500.0" rxBW="500.0" minTxBW="25.0" invTxBW="0.002" invRxBW="0.002" configuration="//@configurations.9">
+    <activeClients id="16" depth="1" clients="2" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="1.0" txBW="80.05047692637805" rxBW="150.0" minTxBW="40.02523846318903" invTxBW="0.012492117953521927" invRxBW="0.006666666666666667" configuration="//@configurations.1">
+      <activeClients id="17" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.2492117953115667" txBW="-1.286425862787386" rxBW="150.0" minTxBW="-0.643212931393693" invTxBW="-0.7773475556789821" invRxBW="0.006666666666666667" />
+      <activeClients id="18" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.2492117953521924" txBW="-9.686056156233604" rxBW="150.0" minTxBW="-4.843028078116802" invTxBW="-0.1032411937191212" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.0" client="//@lectureStudioServer.0/@activeClients.0/@activeClients.0" transferRate="40.02523846318945" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.0" client="//@lectureStudioServer.0/@activeClients.0/@activeClients.1" transferRate="40.02523846318945" />
+    </activeClients>
+    <activeClients id="19" depth="1" clients="1" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="1.0" txBW="51.33004930563495" rxBW="150.0" minTxBW="25.665024652817475" invTxBW="0.019481765818023893" invRxBW="0.006666666666666667" configuration="//@configurations.0">
+      <activeClients id="20" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="1.974088290866332" txBW="15.816982791784977" rxBW="150.0" minTxBW="7.908491395892488" invTxBW="0.06322318315471519" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.1" client="//@lectureStudioServer.0/@activeClients.1/@activeClients.0" transferRate="51.33004930563584" />
+    </activeClients>
+    <activeClients id="3" depth="1" clients="2" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="1.0" txBW="83.10117040896222" rxBW="150.0" minTxBW="41.55058520448111" invTxBW="0.012033524859863502" invRxBW="0.006666666666666667" configuration="//@configurations.1">
+      <activeClients id="4" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.203352486027107" txBW="17.833241118889486" rxBW="150.0" minTxBW="8.916620559444743" invTxBW="0.05607505631383916" invRxBW="0.006666666666666667" />
+      <activeClients id="7" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.2033524860271427" txBW="-29.34285404632606" rxBW="150.0" minTxBW="-14.67142702316303" invTxBW="-0.03407984780284886" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.2" client="//@lectureStudioServer.0/@activeClients.2/@activeClients.0" transferRate="41.55058520448074" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.2" client="//@lectureStudioServer.0/@activeClients.2/@activeClients.1" transferRate="41.55058520448074" />
+    </activeClients>
+    <activeClients id="24" depth="1" clients="1" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="1.0" txBW="58.131005854271244" rxBW="150.0" minTxBW="29.065502927135622" invTxBW="0.017202523598282515" invRxBW="0.006666666666666667" configuration="//@configurations.0">
+      <activeClients id="9" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="1.8601261799357873" txBW="30.709455608592606" rxBW="150.0" minTxBW="15.354727804296303" invTxBW="0.03256326040896006" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.3" client="//@lectureStudioServer.0/@activeClients.3/@activeClients.0" transferRate="58.13100585427128" />
+    </activeClients>
+    <activeClients id="21" depth="1" clients="2" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="1.0" txBW="66.0276388305058" rxBW="150.0" minTxBW="33.0138194152529" invTxBW="0.015145172805088775" invRxBW="0.006666666666666667" configuration="//@configurations.1">
+      <activeClients id="25" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.514517280496875" txBW="31.2855901606016" rxBW="150.0" minTxBW="15.6427950803008" invTxBW="0.031963597134226814" invRxBW="0.006666666666666667" />
+      <activeClients id="6" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.514517280520522" txBW="25.051555973084938" rxBW="150.0" minTxBW="12.525777986542469" invTxBW="0.03991768020614715" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.4" client="//@lectureStudioServer.0/@activeClients.4/@activeClients.0" transferRate="33.01381941525324" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.4" client="//@lectureStudioServer.0/@activeClients.4/@activeClients.1" transferRate="33.01381941525324" />
+    </activeClients>
+    <activeClients id="14" depth="1" clients="1" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="1.0" txBW="47.83149653128304" rxBW="150.0" minTxBW="23.91574826564152" invTxBW="0.02090672616412857" invRxBW="0.006666666666666667" configuration="//@configurations.0">
+      <activeClients id="2" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.0453363081869647" txBW="23.90596195957353" rxBW="150.0" minTxBW="11.952980979786766" invTxBW="0.041830569365544135" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.5" client="//@lectureStudioServer.0/@activeClients.5/@activeClients.0" transferRate="47.83149653128385" />
+    </activeClients>
+    <activeClients id="5" depth="1" clients="1" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="1.0" txBW="52.893437238020326" rxBW="150.0" minTxBW="26.446718619010163" invTxBW="0.01890593714868638" invRxBW="0.006666666666666667" configuration="//@configurations.0">
+      <activeClients id="8" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="1.9452968573895326" txBW="7.0389281964408665" rxBW="150.0" minTxBW="3.5194640982204333" invTxBW="0.1420670835235449" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.6" client="//@lectureStudioServer.0/@activeClients.6/@activeClients.0" transferRate="52.89343723802085" />
+    </activeClients>
+    <activeClients id="22" depth="1" clients="1" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="1.0" txBW="40.87136594006621" rxBW="150.0" minTxBW="20.435682970033106" invTxBW="0.024467007084284887" invRxBW="0.006666666666666667" configuration="//@configurations.0">
+      <activeClients id="23" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.2233503542119895" txBW="-39.236739891890856" rxBW="150.0" minTxBW="-19.618369945945428" invTxBW="-0.025486317231128375" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.7" client="//@lectureStudioServer.0/@activeClients.7/@activeClients.0" transferRate="40.871365940065516" />
+    </activeClients>
+    <activeClients id="10" depth="1" clients="2" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="0.9999999999966604" txBW="150.8751285937437" rxBW="150.0" minTxBW="75.43756429687186" invTxBW="0.006627997664828282" invRxBW="0.006666666666666667" configuration="//@configurations.1">
+      <activeClients id="13" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="1.662799766447577" txBW="-97.76292187529582" rxBW="150.0" minTxBW="-48.88146093764791" invTxBW="-0.010228826847826597" invRxBW="0.006666666666666667" />
+      <activeClients id="15" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="1.662799766447577" txBW="12.602522406365214" rxBW="150.0" minTxBW="6.301261203182607" invTxBW="0.07934919437198742" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.8" client="//@lectureStudioServer.0/@activeClients.8/@activeClients.0" transferRate="75.43756429687164" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.8" client="//@lectureStudioServer.0/@activeClients.8/@activeClients.1" transferRate="75.43756429687187" />
+    </activeClients>
+    <activeClients id="1" depth="1" clients="2" data="50.0" isRelayClient="1" isHasRoot="1" transferTime="1.0" txBW="76.8932413885851" rxBW="150.0" minTxBW="38.44662069429255" invTxBW="0.01300504416176753" invRxBW="0.006666666666666667" configuration="//@configurations.1">
+      <activeClients id="11" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.3005044160388195" txBW="15.4375067455614" rxBW="150.0" minTxBW="7.7187533727807" invTxBW="0.06477729963016991" invRxBW="0.006666666666666667" />
+      <activeClients id="12" depth="2" clients="0" data="50.0" isRelayClient="0" isHasRoot="2" transferTime="2.300504416198237" txBW="-68.66383422589003" rxBW="150.0" minTxBW="-34.331917112945014" invTxBW="-0.014563707536491536" invRxBW="0.006666666666666667" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.9" client="//@lectureStudioServer.0/@activeClients.9/@activeClients.0" transferRate="38.44662069429255" />
+      <clientConnection server="//@lectureStudioServer.0/@activeClients.9" client="//@lectureStudioServer.0/@activeClients.9/@activeClients.1" transferRate="38.44662069429255" />
+    </activeClients>
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.0" transferRate="50.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.1" transferRate="50.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.2" transferRate="50.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.3" transferRate="50.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.4" transferRate="50.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.5" transferRate="50.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.6" transferRate="50.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.7" transferRate="50.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.8" transferRate="50.0" />
+    <clientConnection server="//@lectureStudioServer.0" client="//@lectureStudioServer.0/@activeClients.9" transferRate="50.0" />
+  </lectureStudioServer>
+  <configurations clients="1" slowDown="1.0" bwSplit="1.0" />
+  <configurations clients="2" slowDown="2.0" bwSplit="0.5" />
+  <configurations clients="3" slowDown="3.0" bwSplit="0.3333333333333333" />
+  <configurations clients="4" slowDown="4.0" bwSplit="0.25" />
+  <configurations clients="5" slowDown="5.0" bwSplit="0.2" />
+  <configurations clients="6" slowDown="6.0" bwSplit="0.16666666666666666" />
+  <configurations clients="7" slowDown="7.0" bwSplit="0.14285714285714285" />
+  <configurations clients="8" slowDown="8.0" bwSplit="0.125" />
+  <configurations clients="9" slowDown="9.0" bwSplit="0.1111111111111111" />
+  <configurations clients="10" slowDown="10.0" bwSplit="0.1" />
+  <configurations clients="11" slowDown="11.0" bwSplit="0.09090909090909091" />
+  <configurations clients="12" slowDown="12.0" bwSplit="0.08333333333333333" />
+  <configurations clients="13" slowDown="13.0" bwSplit="0.07692307692307693" />
+  <configurations clients="14" slowDown="14.0" bwSplit="0.07142857142857142" />
+  <configurations clients="15" slowDown="15.0" bwSplit="0.06666666666666667" />
+  <configurations clients="16" slowDown="16.0" bwSplit="0.0625" />
+  <configurations clients="17" slowDown="17.0" bwSplit="0.058823529411764705" />
+  <configurations clients="18" slowDown="18.0" bwSplit="0.05555555555555555" />
+  <configurations clients="19" slowDown="19.0" bwSplit="0.05263157894736842" />
+  <configurations clients="20" slowDown="20.0" bwSplit="0.05" />
+  <configurations clients="21" slowDown="21.0" bwSplit="0.047619047619047616" />
+  <configurations clients="22" slowDown="22.0" bwSplit="0.045454545454545456" />
+  <configurations clients="23" slowDown="23.0" bwSplit="0.043478260869565216" />
+  <configurations clients="24" slowDown="24.0" bwSplit="0.041666666666666664" />
+  <configurations clients="25" slowDown="25.0" bwSplit="0.04" />
+</LectureStudioModelB:Network>

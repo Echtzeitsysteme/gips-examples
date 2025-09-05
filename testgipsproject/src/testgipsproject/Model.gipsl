@@ -1,0 +1,107 @@
+// every GIPSL file must contain a declaration of a "package"
+// the package must be equal to the folder structure this
+// file is present in
+package "testgipsproject"
+
+// import a metamodel (ecore file) from the workspace
+import "platform:/resource/testmetamodel/model/testmetamodel.ecore"
+
+// configuration block that configures GIPS,
+// e.g., the ILP solving timeout
+config {
+	// solver: GLPK (open-source)
+	solver := GLPK;
+	
+	// set a time limit of 42s
+	timeLimit := true [value := 42.0];
+	
+	// set a random seed of 73 for the solver
+	//randomSeed := true [value := 73];
+	
+	// enable pre-solving
+	// this should be used almost in every case
+	presolve := true;
+	
+	// enable the ILP solver's output to the console
+	debugOutput := true;
+	
+	// configure a tolerance setting for the solver
+	//tolerance := true [value := 0.00001];
+	
+	// enable LP output file for, e.g., debugging
+	//lpOutput := true [path := "problem.lp"];
+	
+	// configure number of used threads for ILP solving
+	// this is only available on the commercial solvers
+	// like GUROBI
+	//threadCount := true [value := 16];
+}
+
+//
+// eMoflon IBeX GT patterns/rules
+//
+
+// find a single Root node
+pattern findRoot {
+	r : Root
+}
+
+// find an item and set its ID to 0
+rule itemToZero {
+	r : Root {
+		- items -> i
+	}
+	i : Item {
+		.id := 0
+	}
+}
+
+//
+// mappings -> rule
+//
+
+// mapping that creates a binary ILP variable for
+// every match found of its rule
+// in this case, the mapping with the name "setItemToZero"
+// will create a binary ILP variable for every match of
+// the left-hand side of the GT rule "itemToZero"
+mapping setItemToZero to itemToZero;
+
+//
+// constraints
+//
+
+// constraint which ensures the application of GT rule "itemToZero" at least once
+constraint with itemToZero {
+	// get all instances of the mapping "setItemToZero"
+	mappings.setItemToZero
+		// overlap it with the context of the constraint, i.e., the
+		// matches of the left-hand side of the GT rule "itemToZero"
+		->filter(element.nodes.i == context.nodes.i & element.nodes.r == context.nodes.r
+		)
+		// sum their values
+		->sum(element.value)
+		// ensure that this sum is at least 1
+		>= 1
+}
+
+//
+// objectives -> mappings/patterns/classes
+//
+
+// objective with name "a" and context mapping with name "setItemToZero"
+function a with setItemToZero {
+	// use the ID of the item of the GT rule's match
+	context.nodes.i.id
+}
+
+// global objective
+// the global objective can be minimized or maximized
+// it is a linear combination of all local objectives
+// (in this case "a") and constants
+objective : min {
+	// use all values of the local objective "a"
+	functions.a
+	// add a constant offset
+	+ 1
+}

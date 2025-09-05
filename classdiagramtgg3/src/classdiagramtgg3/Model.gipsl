@@ -1,0 +1,169 @@
+package "classdiagramtgg3"
+import "platform:/resource/ClassDiagram/model/classDiagram.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 3600.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.00001];
+}
+
+//
+// Utilities for embedding a single attribute or a single method
+//
+
+pattern findSingleAttribute {
+	a : Attribute
+}
+
+rule embedACTuple {
+	a : Attribute
+	c : Clazz {
+		++ - features -> a
+	}
+}
+
+pattern findSingleMethod {
+	m : Method
+}
+
+rule embedMCTuple {
+	m : Method
+	c : Clazz {
+		++ - features -> m
+	}
+}
+
+mapping embedMethod to embedMCTuple;
+
+// every method must be embedded
+constraint with findSingleMethod {
+	mappings.embedMethod->filter(element.nodes.m == context.nodes.m)->sum(element.value) == 1
+}
+
+mapping embedAttribute to embedACTuple;
+
+// every attribute must be embedded
+constraint with findSingleAttribute {
+	mappings.embedAttribute->filter(element.nodes.a == context.nodes.a)->sum(element.value) == 1
+}
+
+//
+// Violation of type A:
+// a method has a dependency to an attribute which should be mapped to a different class than the method
+//
+
+pattern findViolationA {
+	c1 : Clazz
+	c2 : Clazz
+	a1 : Attribute
+	m1 : Method {
+		- dependencies -> a1
+	}
+}
+
+mapping violationA to findViolationA;
+
+constraint with findViolationA {
+	// workaround for == in <=> constraints
+	mappings.violationA->filter(
+		element.nodes.a1 == context.nodes.a1
+		& element.nodes.m1 == context.nodes.m1
+		& element.nodes.c1 == context.nodes.c1
+		& element.nodes.c2 == context.nodes.c2
+	)->sum(element.value) >= 1
+	<=>
+	[
+		mappings.embedAttribute->filter(element.nodes.a == context.nodes.a1 & element.nodes.c == context.nodes.c1)->sum(element.value) >= 1
+		&
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c2)->sum(element.value) >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+function objViolationA with violationA {
+	1
+}
+
+//
+// Violation of type B:
+// two methods with no common attribute dependency should not be placed in the same class
+//
+
+pattern findViolationB {
+	c1 : Clazz
+	m1 : Method
+	m2 : Method
+}
+when twoMethodsWithNoSharingAttribute
+
+condition twoMethodsWithNoSharingAttribute = forbid findAMMCQuadruple
+pattern findAMMCQuadruple {
+	c1 : Clazz
+	a1 : Attribute
+	m1 : Method {
+		- dependencies -> a1
+	}
+	m2 : Method {
+		- dependencies -> a1
+	}
+}
+
+mapping violationB to findViolationB;
+
+constraint with findViolationB {
+	// workaround for == in <=> constraints
+	mappings.violationB->filter(
+		element.nodes.m1 == context.nodes.m1
+		& element.nodes.m2 == context.nodes.m2
+	)->sum(element.value) >= 1
+	<=>
+	[
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m1 & element.nodes.c == context.nodes.c1)->sum(element.value) >= 1
+		&
+		mappings.embedMethod->filter(element.nodes.m == context.nodes.m2 & element.nodes.c == context.nodes.c1)->sum(element.value) >= 1
+	]
+	// TODO: reformulate this with a more efficient constraint
+}
+
+function objViolationB with violationB {
+	1
+}
+
+//
+// Honor pre-existing mappings
+//
+
+pattern findPrevEmbTupleAttr {
+	c : Clazz {
+		- features -> a
+	}
+	a : Attribute
+}
+
+pattern findPrevEmbTupleMeth {
+	c : Clazz {
+		- features -> m
+	}
+	m : Method
+}
+
+// motivate the solver to chose the same embedding as before (attributes)
+function objExistAttrMap with findPrevEmbTupleAttr {
+	mappings.embedAttribute->filter(element.nodes.a == context.nodes.a & element.nodes.c == context.nodes.c)->sum(element.value)
+}
+
+// motivate the solver to chose the same embedding as before (methods)
+function objExistMethMap with findPrevEmbTupleMeth {
+	mappings.embedMethod->filter(element.nodes.m == context.nodes.m & element.nodes.c == context.nodes.c)->sum(element.value)
+}
+
+// minimize the number of violations
+objective : min {
+	functions.objViolationA
+	+ functions.objViolationB
+	- 0.001 * functions.objExistAttrMap
+	- 0.001 * functions.objExistMethMap
+}

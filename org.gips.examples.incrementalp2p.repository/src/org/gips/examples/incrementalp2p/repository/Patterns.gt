@@ -1,0 +1,30 @@
+import "http://www.eclipse.org/emf/2002/Ecore"
+import "platform:/resource/LectureStudioModel/model/LectureStudioModel.ecore"
+
+pattern findLectureStudioServer { 
+	lectureStudioServer: LectureStudioServer {
+		-lsNode->lsNode
+		-waitingClients->waitingClientQueue
+		-clientContainer->clientContainer
+	}
+	
+	lsNode: Node
+	waitingClientQueue: WaitingClientQueue
+	clientContainer: ClientContainer	
+}
+
+pattern findAnyNode{
+	node: Node
+}
+
+pattern findAnyClient {
+	lsNode: Node
+	node: Node
+	lectureStudioServer: LectureStudioServer {
+		-lsNode->lsNode
+	}
+}
+
+pattern findAnyCurrentConnection {
+	connection: Connection
+}

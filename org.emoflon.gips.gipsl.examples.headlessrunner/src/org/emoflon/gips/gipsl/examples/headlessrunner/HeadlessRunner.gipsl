@@ -1,0 +1,37 @@
+package "org.emoflon.gips.gipsl.examples.headlessrunner"
+import "platform:/resource/org.emoflon.gips.gipsl.examples.headlessrunnermodel/model/Headlessrunnermodel.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 10.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+}
+
+rule setNodeZero {
+	root : Root {
+		++ -nodess -> node
+	}
+	
+	node : Node {
+		.cost := 0
+	}
+	
+	# node.cost > 0
+}
+
+// create a mapping on the rule
+mapping zeroNode to setNodeZero;
+
+constraint with Node {
+	mappings.zeroNode->filter(element.nodes.node == context)->sum(element.value) == 1
+}
+
+function nodeObj with zeroNode {
+	1
+}
+
+objective : max {
+	functions.nodeObj
+}

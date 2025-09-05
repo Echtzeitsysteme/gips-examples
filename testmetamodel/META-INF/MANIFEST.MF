@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: testmetamodel
+Bundle-SymbolicName: testmetamodel;singleton:=true
+Automatic-Module-Name: testmetamodel
+Bundle-Version: 0.1.0.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: Real-Time Systems Lab - TU Darmstadt
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: testmetamodel,
+ testmetamodel.impl
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.junit,
+ org.moflon.core.utilities,
+ org.emoflon.smartemf
+Bundle-ActivationPolicy: lazy
+

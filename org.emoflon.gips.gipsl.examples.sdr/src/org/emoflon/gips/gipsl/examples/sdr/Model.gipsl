@@ -1,0 +1,180 @@
+package "org.emoflon.gips.gipsl.examples.sdr"
+import "platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 30.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+}
+
+// Rule to map a block to a thread
+rule block2thread {
+	root: Root {
+		-cpus -> cpu
+		-jobs -> job
+	}
+	
+	cpu: CPU {
+		-cores -> core
+	}
+	
+	// Also pins the job to a CPU
+	job: Job {
+		-blocks -> block
+		++ -hosts->cpu
+	}
+	
+	core: Core {
+		-threads -> thread
+	}
+	
+	thread: Thread
+	
+	block: Block {
+		++ -host -> thread
+	}
+}
+
+// Rule to map a flow to an inter-thread communication
+rule flow2intercom {
+	root: Root {
+		-cpus -> cpu
+		-jobs -> job
+	}
+	
+	cpu: CPU {
+		-intercoms -> intercom
+	}
+	
+	job: Job {
+		-flows -> flow
+	}
+	
+	flow: Flow {
+		++ -host -> intercom
+	}
+	
+	intercom: Interthreadcom
+}
+
+// Rule to map a flow to a thread
+rule flow2thread {
+	root: Root {
+		-cpus -> cpu
+		-jobs -> job
+	}
+	
+	cpu: CPU {
+		-cores -> core
+	}
+	
+	job: Job {
+		-flows -> flow
+	}
+	
+	core: Core {
+		-threads -> thread
+	}
+	
+	flow: Flow {
+		++ -host -> thread
+	}
+	
+	thread: Thread
+}
+
+pattern thread {
+	thread: Thread
+}
+
+//
+// GIPSL starts here!
+//
+
+mapping b2t to block2thread;
+mapping f2i to flow2intercom;
+mapping f2t to flow2thread;
+
+// Utility mapping that must be 1 if the corresponding thread will be used, 0 otherwise
+mapping usedThread to thread;
+
+//
+// General remarks for the two following constraints:
+// The mapping 'usedThread' can only be 0 or 1 because there is at most one match per thread.
+// Therefore, it is sufficient to only limit one side of the arithmetic expression.
+//
+
+// Implication table
+// 1 => 1 = 1
+// 1 => 0 = 0
+// 0 => 1 = 1
+// 0 => 0 = 1
+
+// Ensures that the implication for the 'usedThread' mapping holds
+constraint with Thread {
+	mappings.b2t->filter(element.nodes.thread == context)->sum(element.value) >= 1
+	=> mappings.usedThread->filter(element.nodes.thread == context)->sum(element.value) >= 1
+}
+
+// Our modified table
+// 1 => 1 = 1
+// 1 => 0 = 0
+// 0 => 1 = 0
+// 0 => 0 = 1
+
+// This constraints forbids the case in line 3 of the normal implication table
+// -> It changes it to line 3 of our modified table
+constraint with Thread {
+	mappings.b2t->filter(element.nodes.thread == context)->sum(element.value)
+	>= mappings.usedThread->filter(element.nodes.thread == context)->sum(element.value)
+}
+
+// Every block must be mapped to exactly one thread
+constraint with Block {
+	mappings.b2t->filter(element.nodes.block == context)->sum(element.value) == 1
+}
+
+// Every flow must be mapped to an intercom or a thread
+constraint with Flow {
+	mappings.f2i->filter(element.nodes.flow == context)->sum(element.value) +
+	mappings.f2t->filter(element.nodes.flow == context)->sum(element.value)
+	== 1
+}
+
+// Start and target of a flow must be embedded on its host counter parts (1, intercom)
+constraint with flow2intercom {
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.source & element.nodes.thread == context.nodes.intercom.source)->sum(element.value) +
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.target & element.nodes.thread == context.nodes.intercom.target)->sum(element.value)
+	>= 2 * mappings.f2i->filter(element.nodes.intercom == context.nodes.intercom & element.nodes.flow == context.nodes.flow)->sum(element.value)
+}
+
+// Start and target of a flow must be embedded on its host counter parts (2, thread)
+constraint with flow2thread {
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.source & element.nodes.thread == context.nodes.thread)->sum(element.value) +
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.target & element.nodes.thread == context.nodes.thread)->sum(element.value)
+	>= 2 * mappings.f2t->filter(element.nodes.thread == context.nodes.thread & element.nodes.flow == context.nodes.flow)->sum(element.value)
+}
+
+// Objective = inter-thread communication
+function intercomcost with Interthreadcom {
+	mappings.f2i->filter(element.nodes.intercom.source.core == element.nodes.intercom.target.core & element.nodes.intercom == context)->sum(element.nodes.flow.rate) * 2 +
+	mappings.f2i->filter(element.nodes.intercom.source.core != element.nodes.intercom.target.core & element.nodes.intercom == context)->sum(element.nodes.flow.rate) * 6
+}
+
+// Objective = flow to thread mapping (constant)
+function f2tcost with f2t {
+	context.value
+}
+
+// Objective for used threads:
+// In  general, we want to maximize the number of used threads.
+function glob with Root {
+	-(mappings.usedThread->sum(element.value))
+}
+
+// Combine the local objectives and give the maximization of used threads a large head start.
+objective : min {
+	functions.intercomcost + functions.f2tcost + functions.glob * 100
+}

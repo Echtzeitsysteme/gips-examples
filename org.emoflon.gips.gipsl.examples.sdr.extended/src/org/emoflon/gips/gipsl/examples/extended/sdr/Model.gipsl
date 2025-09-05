@@ -1,0 +1,233 @@
+package "org.emoflon.gips.gipsl.examples.extended.sdr"
+import "platform:/resource/org.emoflon.gips.gipsl.examples.sdrmodel/model/Sdrmodel.ecore"
+import "http://www.eclipse.org/emf/2002/Ecore"
+
+config {  
+	solver := GUROBI;
+	timeLimit := true [value := 300.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	lpOutput := false [path := "./Gurobi.log"];
+}
+
+// Rule to map a block to a thread
+rule block2thread {
+	root: Root {
+		-cpus -> cpu
+		-jobs -> job
+	}
+	
+	cpu: CPU {
+		-cores -> core
+	}
+	
+	// Also pins the job to a CPU
+	job: Job {
+		-blocks -> block
+		++ -hosts->cpu
+	}
+	
+	core: Core {
+		-threads -> thread
+	}
+	
+	thread: Thread
+	
+	block: Block {
+		++ -host -> thread
+	}
+}
+
+// Rule to map a flow to an inter-thread communication
+rule flow2intercom {
+	root: Root {
+		-cpus -> cpu
+		-jobs -> job
+	}
+	
+	cpu: CPU {
+		-intercoms -> intercom
+	}
+	
+	job: Job {
+		-flows -> flow
+	}
+	
+	flow: Flow {
+		++ -host -> intercom
+	}
+	
+	intercom: Interthreadcom
+}
+
+// Rule to map a flow to a thread
+rule flow2thread {
+	root: Root {
+		-cpus -> cpu
+		-jobs -> job
+	}
+	
+	cpu: CPU {
+		-cores -> core
+	}
+	
+	job: Job {
+		-flows -> flow
+	}
+	
+	core: Core {
+		-threads -> thread
+	}
+	
+	flow: Flow {
+		++ -host -> thread
+	}
+	
+	thread: Thread
+}
+
+rule thread (complexity : EDouble, diff : EDouble, absDiff : EDouble){
+	cpu: CPU {
+		- cores -> core
+	}
+	
+	core: Core {
+		- threads -> thread
+	}
+	
+	thread: Thread {
+		.allocatedComplexity := param::complexity
+		.diff := param::diff
+		.absDiff := param::absDiff
+	}
+}
+
+//
+// GIPSL starts here!
+//
+
+mapping b2t to block2thread;
+mapping f2i to flow2intercom;
+mapping f2t to flow2thread;
+
+mapping usedThread to thread {
+	var complexity : EDouble bind complexity
+	var diff : EDouble bind diff
+	var absDiff : EDouble bind absDiff
+};
+
+constraint with usedThread {
+	[context.variables.complexity >= 0.0001 => context.value >= 1] &
+	[context.value >= 1 => context.variables.complexity >= 0.0001 ] &
+	context.variables.complexity >= 0 &
+	context.variables.absDiff >= 0
+}
+
+// This constraints forbids the case in line 3 of the normal implication table
+// -> It changes it to line 3 of our modified table
+constraint with Thread {
+	mappings.b2t->filter(element.nodes.thread == context)->sum(element.nodes.block.relativeComplexity * element.nodes.block.inputRate * element.value) == 
+	mappings.usedThread->filter(element.nodes.thread == context)->sum(element.variables.complexity)
+}
+
+constraint with Thread {
+	mappings.usedThread->filter(element.nodes.thread == context)->sum(element.variables.diff) == 
+	mappings.usedThread->filter(element.nodes.thread == context)->sum(element.variables.complexity) - 
+	mappings.usedThread->sum(element.variables.complexity * element.nodes.cpu.inverseThreadCount)
+}
+
+constraint with usedThread {
+	// A: Precondition -> diff >= 0
+	// B: Then -> abs_diff == diff
+	// A => B
+	// 1 => 1 = 1 : diff >= 0 & abs_diff == diff -> true
+	// 1 => 0 = 0 : diff >= 0 & abs_diff != diff -> false
+	// 0 => 1 = 1 : diff < 0 & abs_diff == diff -> true
+	// 0 => 0 = 1 : diff < 0 & abs_diff != diff -> true
+	[context.variables.diff >= 0 =>
+	[context.variables.absDiff >= context.variables.diff & context.variables.absDiff <= context.variables.diff]] &
+	// A: Precondition -> diff <= 0
+	// B: Then -> abs_diff == -diff
+	// A => B
+	// 1 => 1 = 1 : diff < 0 & abs_diff == -diff -> true
+	// 1 => 0 = 0 : diff < 0 & abs_diff != -diff -> false
+	// 0 => 1 = 1 : diff >= 0 & abs_diff == diff -> true
+	// 0 => 0 = 1 : diff >= 0 & abs_diff != diff -> true
+	[context.variables.diff <= -0.0001 =>
+	[context.variables.absDiff >= (context.variables.diff * -1.0) & context.variables.absDiff <= (context.variables.diff * -1.0)]]
+	// A => B & C => D
+	// 0 => 0 & 0 => 0 : IMPOSSIBLE -> diff < 0 & diff >= 0 is logical contradiction
+	// 0 => 0 & 0 => 1 : IMPOSSIBLE -> diff < 0 & diff >= 0 is logical contradiction
+	// 0 => 0 & 1 => 0 : FALSE -> diff < 0 & abs_diff != diff & abs_diff != -diff		// Forbid random abs_diff values
+	// 0 => 0 & 1 => 1 : TRUE -> diff < 0 & abs_diff != diff & abs_diff == -diff		// abs_diff == |diff| -> desired outcome!
+	// 0 => 1 & 0 => 0 : IMPOSSIBLE -> diff < 0 & diff >= 0 is logical contradiction
+	// 0 => 1 & 0 => 1 : IMPOSSIBLE -> diff < 0 & diff >= 0 is logical contradiction
+	// 0 => 1 & 1 => 0 : FALSE -> diff < 0 & abs_diff == diff & abs_diff != -diff		// Forbids abs_diff == diff & abs_diff == -diff contradictions
+	// 0 => 1 & 1 => 1 : TRUE -> diff < 0 & abs_diff == diff & abs_diff == -diff		// This line is a contradiction but gets fixed through absDiff >= 0
+	// 1 => 0 & 0 => 0 : FALSE -> diff >= 0 & abs_diff != diff & abs_diff != -diff  	// Forbids abs_diff != diff & abs_diff != -diff definition gaps
+	// 1 => 0 & 0 => 1 : FALSE -> diff >= 0 & abs_diff != diff & abs_diff == -diff		// Forbids abs_diff == -diff when diff >= 0
+	// 1 => 0 & 1 => 0 : IMPOSSIBLE -> diff >= 0 & diff < 0 is logical contradiction
+	// 1 => 0 & 1 => 1 : IMPOSSIBLE -> diff >= 0 & diff < 0 is logical contradiction
+	// 1 => 1 & 0 => 0 : TRUE -> diff >= 0 & abs_diff == diff & abs_diff != -diff       // abs_diff == |diff| -> desired outcome!
+	// 1 => 1 & 0 => 1 : TRUE -> diff >= 0 & abs_diff == diff & abs_diff == -diff		// This line is a contradiction but gets fixed through absDiff >= 0
+	// 1 => 1 & 1 => 0 : IMPOSSIBLE -> diff >= 0 & diff < 0 is logical contradiction
+	// 1 => 1 & 1 => 1 : IMPOSSIBLE -> diff >= 0 & diff < 0 is logical contradiction
+}
+
+// Every block must be mapped to exactly one thread
+constraint with Block {
+	mappings.b2t->filter(element.nodes.block == context)->sum(element.value) == 1
+}
+
+// Every flow must be mapped to an intercom or a thread
+constraint with Flow {
+	mappings.f2i->filter(element.nodes.flow == context)->sum(element.value) +
+	mappings.f2t->filter(element.nodes.flow == context)->sum(element.value)
+	== 1
+}
+
+// Start and target of a flow must be embedded on its host counter parts (1, intercom)
+constraint with flow2intercom {
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.source & element.nodes.thread == context.nodes.intercom.source)->sum(element.value) +
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.target & element.nodes.thread == context.nodes.intercom.target)->sum(element.value)
+	>= 2 * mappings.f2i->filter(element.nodes.intercom == context.nodes.intercom & element.nodes.flow == context.nodes.flow)->sum(element.value)
+}
+
+// Start and target of a flow must be embedded on its host counter parts (2, thread)
+constraint with flow2thread {
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.source & element.nodes.thread == context.nodes.thread)->sum(element.value) +
+	mappings.b2t->filter(element.nodes.block == context.nodes.flow.target & element.nodes.thread == context.nodes.thread)->sum(element.value)
+	>= 2 * mappings.f2t->filter(element.nodes.thread == context.nodes.thread & element.nodes.flow == context.nodes.flow)->sum(element.value)
+}
+
+// Objective = inter-thread communication
+function intercomcost with Interthreadcom {
+//	mappings.f2i->filter(element.nodes.intercom.source.core == element.nodes.intercom.target.core & element.nodes.intercom == context)->sum(element.nodes.flow.rate) * 2 +
+	mappings.f2i->filter(element.nodes.intercom.source.core != element.nodes.intercom.target.core & element.nodes.intercom == context)->sum(element.nodes.flow.rate * element.value)
+}
+
+//objective computecost with Block {
+//	mappings.b2t->filter(element.nodes.block == context)->sum(element.nodes.block.relativeComplexity) * context.inputs->sum(in | in.rate)
+//}
+
+//// Objective = flow to thread mapping (constant)
+//objective f2tcost -> mapping::f2t {
+//	1
+//}
+ 
+// Objective for used threads:
+// In  general, we want to maximize the number of used threads.
+//objective glob with Root {
+//	-(mappings.usedThread->count())
+//}
+
+function glob with Thread {
+	mappings.usedThread->filter(element.nodes.thread == context)->sum(element.variables.absDiff) * context.root.interThreadCommunicationFactor
+}
+
+// Combine the local objectives and give the maximization of used threads a large head start.
+objective : min {
+	functions.intercomcost + functions.glob
+	// ^weight is included in `glob`
+}

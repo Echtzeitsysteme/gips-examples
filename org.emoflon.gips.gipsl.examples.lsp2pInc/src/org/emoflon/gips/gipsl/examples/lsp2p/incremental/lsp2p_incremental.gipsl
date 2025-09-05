@@ -1,0 +1,575 @@
+package "org.emoflon.gips.gipsl.examples.lsp2p.incremental"
+
+import "platform:/resource/LectureStudioModelB/model/LectureStudioModelB.ecore"
+import "http://www.eclipse.org/emf/2002/Ecore"
+
+config {
+	solver := GUROBI;
+	timeLimit := true [value := 6000.0];
+	randomSeed := true [value := 0];
+	presolve := true;
+	debugOutput := true;
+	tolerance := true [value := 0.000001];
+}
+
+pattern ls2Waiting {
+	ls : LectureStudioServer {
+		- waitingClients -> waiting
+	} 
+	waiting : Client
+}
+
+condition hasNoConfig = forbid node2config
+pattern node2config {
+	relay : Node {
+		-configuration->other 
+	}
+	other : Configuration
+}
+
+rule addClientRootInit(bw: EDouble, tt: EDouble) {
+	relay : LectureStudioServer {
+		-- -waitingClients->client
+		++ -clientConnection->connection
+		++ -activeClients->client
+		++ -configuration->cfg
+	}
+	
+	cfg : Configuration
+	
+	# cfg.clients == 1
+	
+	client : Client {
+		.transferTime := param::tt
+		.isHasRoot := 1
+		.isRelayClient := 0
+	}
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+	
+} when hasNoConfig
+
+rule addClientRoot(bw: EDouble, tt: EDouble) {
+	relay : LectureStudioServer {
+		-- -waitingClients->client
+		++ -clientConnection->connection
+		++ -activeClients->client
+		-- -configuration->oldCfg
+		++ -configuration->newCfg
+	}
+	
+	oldCfg : Configuration
+	newCfg : Configuration
+	
+	#oldCfg.clients + 1 == newCfg.clients
+	
+	client : Client {
+		.transferTime := param::tt
+		.isHasRoot := 1
+		.isRelayClient := 0
+	}
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+}
+
+
+
+rule addClientInit(bw: EDouble, tt: EDouble) {
+	ls : LectureStudioServer {
+		-- -waitingClients->client
+	}
+	
+	relay : Node {
+		++ -clientConnection->connection
+		++ -activeClients->client
+		++ -configuration->cfg
+		.isHasRoot := 1
+		.isRelayClient := 1
+	}
+	
+	cfg : Configuration 
+	
+	#cfg.clients == 1
+	#relay.isHasRoot >= 1
+	
+	// Heuristics
+	#relay.isHasRoot <= 3
+	#relay.txBW >= client.txBW
+	
+	client : Client {
+		.transferTime := param::tt
+		.isHasRoot := relay.isHasRoot + 1
+	}
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+	 
+} when hasNoConfig
+
+rule addClient(bw: EDouble, tt: EDouble) {
+	ls : LectureStudioServer {
+		-- -waitingClients->client
+	}
+	
+	relay : Node {
+		++ -clientConnection->connection
+		++ -activeClients->client
+		-- -configuration->oldCfg
+		++ -configuration->newCfg
+	}
+	
+	oldCfg : Configuration
+	newCfg : Configuration
+	
+	#oldCfg.clients + 1 == newCfg.clients
+	#relay.isHasRoot >= 1
+	
+	// Heuristics
+	#relay.isHasRoot <= 3
+	#relay.txBW >= client.txBW
+	#newCfg.clients <= 2
+	
+	client : Client {
+		.transferTime := param::tt
+		.isHasRoot := 1
+		.isRelayClient := 0
+	}
+	
+	++ connection : Connection { 
+		++ -server-> relay
+		++ -client-> client
+		.transferRate := param::bw
+	}
+}
+
+rule updateTransferTime(ttu: EDouble) {
+	relay : Node {
+		- activeClients -> client
+		- configuration -> oldCfg
+	}
+	client : Client {
+		.transferTime := param::ttu
+	}
+	oldCfg : Configuration
+	newCfg : Configuration
+	#oldCfg.clients + 1 == newCfg.clients
+}
+
+mapping initRoot2Client to addClientRootInit {
+	var connectionBW:EDouble bind bw	// Gibt an wie viel BW für Client reserviert wird.
+	var invertedBW:EDouble				// invertedBW = 1/connectionBW
+	var transferTime:EDouble bind tt	// Gibt die Zeit an, die es braucht um das File bis zum Client zu transportieren.
+};
+
+mapping root2Client to addClientRoot {
+	var connectionBW:EDouble bind bw
+	var invertedBW:EDouble
+	var transferTime:EDouble bind tt
+};
+
+mapping initRelay2Client to addClientInit {
+	var connectionBW:EDouble bind bw
+	var invertedBW:EDouble
+	var transferTime:EDouble bind tt
+};
+
+mapping relay2Client to addClient {
+	var connectionBW:EDouble bind bw
+	var invertedBW:EDouble
+	var transferTime:EDouble bind tt
+};
+
+mapping updateTT to updateTransferTime {
+	var transferTime:EDouble bind ttu
+};
+
+// Set this to n = #waiting_clients in the future
+constraint {
+	mappings.initRoot2Client->sum(element.value) +
+	mappings.root2Client->sum(element.value) + 
+	mappings.initRelay2Client->sum(element.value) +
+	mappings.relay2Client->sum(element.value) == 1
+}
+
+// Prevent multiple embeddings
+constraint with ls2Waiting {
+	mappings.initRoot2Client->filter(element.nodes.client == context.nodes.waiting)->sum(element.value) +
+	mappings.root2Client->filter(element.nodes.client == context.nodes.waiting)->sum(element.value) + 
+	mappings.initRelay2Client->filter(element.nodes.client == context.nodes.waiting)->sum(element.value) +
+	mappings.relay2Client->filter(element.nodes.client == context.nodes.waiting)->sum(element.value) <= 1
+}
+
+constraint with updateTransferTime {
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay)->sum(element.value) +
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay)->sum(element.value) >= 1 
+		| mappings.updateTT->filter(element.nodes.client == context.nodes.relay)->sum(element.value) >= 1 
+	] =>
+	mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) >= 1 
+}
+
+constraint with updateTransferTime {
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay)->sum(element.value) + 
+		mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay)->sum(element.value) <= 0 
+		& mappings.updateTT->filter(element.nodes.client == context.nodes.relay)->sum(element.value) <= 0 
+	] =>
+	mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) <= 0 
+}
+ 
+constraint with updateTT {
+	[context.value >= 1 => context.variables.transferTime >= context.nodes.client.transferTime] &
+	[context.value <= 0 => context.variables.transferTime <= context.nodes.client.transferTime] &
+	[context.value <= 0 => context.variables.transferTime >= context.nodes.client.transferTime]
+}
+
+constraint with updateTransferTime {
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client != context.nodes.client)->sum(element.value) >= 1 &
+		mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) >= 1
+	] =>
+	[mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)
+		->sum(element.variables.transferTime) <= 
+		context.nodes.client.transferTime * context.nodes.newCfg.slowDown / context.nodes.oldCfg.slowDown &
+	 mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)
+		->sum(element.variables.transferTime) >= 
+		context.nodes.client.transferTime * context.nodes.newCfg.slowDown / context.nodes.oldCfg.slowDown
+	]
+}
+
+constraint with updateTransferTime {
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client != context.nodes.client)->sum(element.value) >= 1 &
+		mappings.updateTT->filter(element.nodes.client == context.nodes.relay)->sum(element.value) >= 0 &
+		mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) >= 1
+	] =>
+	[mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)
+		->sum(element.variables.transferTime) <=
+		context.nodes.relay.transferTime + 
+		(context.nodes.client.transferTime - context.nodes.relay.transferTime) * (context.nodes.newCfg.slowDown/context.nodes.oldCfg.slowDown) &
+	 mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)
+		->sum(element.variables.transferTime) >=
+		context.nodes.relay.transferTime + 
+		(context.nodes.client.transferTime - context.nodes.relay.transferTime) * (context.nodes.newCfg.slowDown/context.nodes.oldCfg.slowDown)
+	]
+}
+
+constraint with updateTransferTime {
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client != context.nodes.client)->sum(element.value) >= 1 &
+		mappings.updateTT->filter(element.nodes.client == context.nodes.relay)->sum(element.value) >= 1 &
+		mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) >= 1
+	] =>
+	[mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)
+		->sum(element.variables.transferTime) <=
+		mappings.updateTT->filter(element.nodes.client == context.nodes.relay)->sum(element.variables.transferTime) + 
+		(context.nodes.client.transferTime - context.nodes.relay.transferTime) * (context.nodes.newCfg.slowDown/context.nodes.oldCfg.slowDown) &
+	 mappings.updateTT->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)
+		->sum(element.variables.transferTime) >=
+		mappings.updateTT->filter(element.nodes.client == context.nodes.relay)->sum(element.variables.transferTime) + 
+		(context.nodes.client.transferTime - context.nodes.relay.transferTime) * (context.nodes.newCfg.slowDown/context.nodes.oldCfg.slowDown)
+	]
+}
+
+constraint with initRoot2Client {
+	[context.value >= 1 => context.variables.connectionBW <= context.nodes.client.rxBW] &
+	[context.value <= 0 => context.variables.connectionBW <= 0] &
+	context.variables.connectionBW >= 0 &
+	[context.value >= 1 => context.variables.invertedBW >= context.nodes.client.invRxBW] &
+	[context.value <= 0 => context.variables.invertedBW <= 1] &
+	context.variables.invertedBW >= 0 &
+	[context.value >= 1 => context.variables.transferTime >= 0.0001] &
+	[context.value <= 0 => context.variables.transferTime <= 0] &
+	context.variables.transferTime >= 0
+}
+
+constraint with root2Client {
+	[context.value >= 1 => context.variables.connectionBW <= context.nodes.client.rxBW] &
+	[context.value <= 0 => context.variables.connectionBW <= 0] &
+	context.variables.connectionBW >= 0 &
+	[context.value >= 1 => context.variables.invertedBW >= context.nodes.client.invRxBW] &
+	[context.value <= 0 => context.variables.invertedBW <= 1] &
+	context.variables.invertedBW >= 0 &
+	[context.value >= 1 => context.variables.transferTime >= 0.0001] &
+	[context.value <= 0 => context.variables.transferTime <= 0] &
+	context.variables.transferTime >= 0
+}
+
+constraint with initRelay2Client {
+	[context.value >= 1 => context.variables.connectionBW <= context.nodes.client.rxBW] &
+	[context.value <= 0 => context.variables.connectionBW <= 0] &
+	context.variables.connectionBW >= 0 &
+	[context.value >= 1 => context.variables.invertedBW >= context.nodes.client.invRxBW] &
+	[context.value <= 0 => context.variables.invertedBW <= 1] &
+	context.variables.invertedBW >= 0 &
+	[context.value >= 1 => context.variables.transferTime >= 0.0001] &
+	[context.value <= 0 => context.variables.transferTime <= 0] &
+	context.variables.transferTime >= 0
+}
+
+constraint with relay2Client {
+	[context.value >= 1 => context.variables.connectionBW <= context.nodes.client.rxBW] &
+	[context.value <= 0 => context.variables.connectionBW <= 0] &
+	context.variables.connectionBW >= 0 &
+	[context.value >= 1 => context.variables.invertedBW >= context.nodes.client.invRxBW] &
+	[context.value <= 0 => context.variables.invertedBW <= 1] &
+	context.variables.invertedBW >= 0 &
+	[context.value >= 1 => context.variables.transferTime >= 0.0001] &
+	[context.value <= 0 => context.variables.transferTime <= 0] &
+	context.variables.transferTime >= 0
+}
+
+// Nail down bandwidth and inverted bandwidth for initRoot2client mappings
+constraint with addClientRootInit {
+	[mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	] =>
+	[mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) <= 
+		context.nodes.relay.txBW * context.nodes.cfg.bwSplit  &
+	mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) >= 
+		context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	]
+}
+
+constraint with addClientRootInit {
+	[mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	] =>
+	[mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) <= 
+		context.nodes.client.rxBW &
+	mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) >= 
+		context.nodes.client.rxBW]
+}
+
+constraint with addClientRootInit {
+	[mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	] =>
+	[mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) <= 
+		context.nodes.relay.invTxBW * context.nodes.cfg.slowDown  &
+	mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) >= 
+		context.nodes.relay.invTxBW * context.nodes.cfg.slowDown
+	]
+}
+
+constraint with addClientRootInit {
+	[mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	] =>
+	[mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) <= 
+		context.nodes.client.invRxBW &
+	mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) >= 
+		context.nodes.client.invRxBW]
+}
+
+// Nail down bandwidth and inverted bandwidth for root2client mappings
+constraint with addClientRoot {
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	] =>
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) <= 
+		context.nodes.relay.txBW * context.nodes.newCfg.bwSplit  &
+	mappings.root2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) >= 
+		context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	]
+}
+
+constraint with addClientRoot {
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	] =>
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) <= 
+		context.nodes.client.rxBW &
+	mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) >= 
+		context.nodes.client.rxBW]
+}
+
+constraint with addClientRoot {
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	] =>
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) <= 
+		context.nodes.relay.invTxBW * context.nodes.newCfg.slowDown  &
+	mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) >= 
+		context.nodes.relay.invTxBW * context.nodes.newCfg.slowDown
+	]
+}
+
+constraint with addClientRoot {
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	] =>
+	[mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) <= 
+		context.nodes.client.invRxBW &
+	mappings.root2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) >= 
+		context.nodes.client.invRxBW]
+}
+
+// Nail down bandwidth and inverted bandwidth for initRelay2client mappings
+constraint with addClientInit {
+	[mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	] =>
+	[mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) <= 
+		context.nodes.relay.txBW * context.nodes.cfg.bwSplit  &
+	mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) >= 
+		context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	]
+}
+
+constraint with addClientInit {
+	[mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	] =>
+	[mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) <= 
+		context.nodes.client.rxBW &
+	mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) >= 
+		context.nodes.client.rxBW]
+}
+
+constraint with addClientInit {
+	[mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	] =>
+	[mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) <= 
+		context.nodes.relay.invTxBW * context.nodes.cfg.slowDown  &
+	mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) >= 
+		context.nodes.relay.invTxBW * context.nodes.cfg.slowDown
+	]
+}
+
+constraint with addClientInit {
+	[mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.cfg.bwSplit
+	] =>
+	[mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) <= 
+		context.nodes.client.invRxBW &
+	mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) >= 
+		context.nodes.client.invRxBW]
+}
+
+// Nail down bandwidth and inverted bandwidth for relay2client mappings
+constraint with addClient {
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) <= 
+		context.nodes.relay.txBW * context.nodes.newCfg.bwSplit  &
+	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) >= 
+		context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	]
+}
+
+constraint with addClient {
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) <= 
+		context.nodes.client.rxBW &
+	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.connectionBW) >= 
+		context.nodes.client.rxBW]
+}
+
+constraint with addClient {
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW - 0.0001 >= context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) <= 
+		context.nodes.relay.invTxBW * context.nodes.newCfg.slowDown  &
+	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) >= 
+		context.nodes.relay.invTxBW * context.nodes.newCfg.slowDown
+	]
+}
+
+constraint with addClient {
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.value) >= 1 &
+		context.nodes.client.rxBW <= context.nodes.relay.txBW * context.nodes.newCfg.bwSplit
+	] =>
+	[mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) <= 
+		context.nodes.client.invRxBW &
+	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay &  element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW) >= 
+		context.nodes.client.invRxBW]
+}
+
+// Calculate transfertime for initRoot2client mappings
+constraint with addClientRootInit {
+	mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) >= 1 
+	=> [
+	mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) >= 
+	mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.relay.data) &
+	mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) <= 
+	mappings.initRoot2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.relay.data)
+	]
+}
+
+// Calculate transfertime for root2client mappings
+constraint with addClientRoot {
+	mappings.root2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) >= 1 
+	=> [
+	mappings.root2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) >= 
+	mappings.root2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.relay.data) &
+	mappings.root2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) <= 
+	mappings.root2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.relay.data)
+	]
+}
+
+// Calculate transfertime for initRelay2client mappings
+constraint with addClientInit {
+	mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) >= 1 
+	=> [
+	mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) >= 
+	mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.ls.data)
+	+ context.nodes.relay.transferTime &
+	mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) <= 
+	mappings.initRelay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.ls.data)
+	+ context.nodes.relay.transferTime
+	]
+}
+
+// Calculate transfertime for initRelay2client mappings
+constraint with addClient {
+	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.value) >= 1 
+	=> [
+	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) >= 
+	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.ls.data)
+	+ context.nodes.relay.transferTime &
+	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.transferTime) <= 
+	mappings.relay2Client->filter(element.nodes.relay == context.nodes.relay & element.nodes.client == context.nodes.client)->sum(element.variables.invertedBW * element.nodes.ls.data)
+	+ context.nodes.relay.transferTime
+	]
+}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+function transfertime1 with root2Client {
+	context.variables.transferTime
+}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+function transfertime2 with initRoot2Client {
+	context.variables.transferTime
+}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+function transfertime3 with relay2Client {
+	context.variables.transferTime
+}
+
+// Besser wäre es, das eigentlich auch über Jain's Fairness index zu machen. So können manche Clients zum Wohle aller extrem benachteiligt werden.
+function transfertime4 with initRelay2Client {
+	context.variables.transferTime
+}
+
+function transfertime5 with updateTT {
+	context.variables.transferTime
+}
+
+objective : min {
+	functions.transfertime1 + functions.transfertime2 + functions.transfertime3 + functions.transfertime4 + functions.transfertime5
+}
+
