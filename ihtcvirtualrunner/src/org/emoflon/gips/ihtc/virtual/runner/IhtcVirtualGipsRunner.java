@@ -374,6 +374,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		}
 		gipsApi.getSolverConfig().setThreadCount(threads);
 		if (callbackPath != null) {
+			gipsApi.getSolverConfig().setEnableCallbackPath(true);
 			gipsApi.getSolverConfig().setCallbackPath(callbackPath);
 		}
 		if (parameterPath != null) {
