@@ -160,6 +160,8 @@ pattern patientForRoom {
 	r : Room {
 		- shifts -> s
 	}
+	
+	# s.shiftNo % 3 == 0
 }
 
 // Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day
