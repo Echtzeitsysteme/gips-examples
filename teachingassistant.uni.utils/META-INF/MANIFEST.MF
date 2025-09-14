@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Utils
+Bundle-SymbolicName: teachingassistant.uni.utils
+Bundle-Version: 1.0.0.qualifier
+Export-Package: teachingassistant.uni.utils
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Automatic-Module-Name: teachingassistant.uni.utils
+Import-Package: org.emoflon.gips.core.api
+Require-Bundle: org.emoflon.gips.core;bundle-version="1.5.0",
+ gips.examples.dependencies;bundle-version="1.0.0"

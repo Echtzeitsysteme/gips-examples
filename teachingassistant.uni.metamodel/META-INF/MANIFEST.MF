@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: teachingassistant.uni.metamodel
+Bundle-SymbolicName: teachingassistant.uni.metamodel;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: 
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Automatic-Module-Name: teachingassistant.uni.metamodel
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.emoflon.smartemf,
+ gips.examples.dependencies;bundle-version="1.0.0",
+ teachingassistant.uni.utils;bundle-version="1.0.0"
+Export-Package: metamodel,
+ metamodel.impl,
+ teachingassistant.uni.metamodel.comparator,
+ teachingassistant.uni.metamodel.export,
+ teachingassistant.uni.metamodel.generator,
+ teachingassistant.uni.metamodel.validator
+

@@ -1,0 +1,23 @@
+import "platform:/resource/teachingassistant.uni.metamodel/model/Metamodel.ecore"
+
+rule makeAssignmentEdgePrevious {
+	root : TaAllocation {
+		- tas -> ta
+		- modules -> module
+	}
+	
+	ta : TeachingAssistant
+	
+	module : Module {
+		- sessions -> session
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrence
+	}
+	
+	occurrence : SessionOccurrence {
+		-- - tas -> ta
+		++ - previousSolutionTas -> ta
+	}
+}

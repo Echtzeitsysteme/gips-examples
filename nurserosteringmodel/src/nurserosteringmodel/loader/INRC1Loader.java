@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -79,7 +80,7 @@ public class INRC1Loader {
 		final String projectFolder = System.getProperty("user.dir");
 		try {
 			// TODO: The loader should not load a file from a hard-coded path.
-			loader.loadFromXmlFile(projectFolder + "/../nurserosteringmodel/resources/sprint/sprint06.xml");
+			loader.loadFromXmlFile(projectFolder + "/../nurserosteringmodel/resources/sprint/sprint_hidden04.xml");
 		} catch (final ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -94,7 +95,8 @@ public class INRC1Loader {
 
 	public void loadFromXmlFile(final String filepath) throws ParserConfigurationException, SAXException, IOException {
 		if (filepath == null || filepath.isBlank()) {
-			throw new IllegalArgumentException("Given file path was null or empty.");
+			throw new IllegalArgumentException("Given"
+					+ " file path was null or empty.");
 		}
 
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -137,7 +139,6 @@ public class INRC1Loader {
 					
 				}
 			} else if (name.equals("ShiftOffRequests")) {
-				System.out.println(n.getChildNodes().getLength());
 				for(int shiftOffNo = 0; shiftOffNo < n.getChildNodes().getLength(); shiftOffNo++) {
 					addShiftOffRequest(n.getChildNodes().item(shiftOffNo));
 				}
@@ -150,6 +151,13 @@ public class INRC1Loader {
 					addCoverRequirement(n.getChildNodes().item(crNo));
 				}
 			}
+		}
+		for (Employee employee : employees) {
+			for (Skill skill : employee.getSkills()) {
+				System.out.println("employee " + employee.getEmployeeId() + "hat skill " +  skill);
+			}
+			
+			
 		}
 	}
 
@@ -186,17 +194,25 @@ public class INRC1Loader {
 	// TODO: This method should use non-hard-coded values read from the XMI file
 	private String translateShiftIdToName(final String shiftId) {
 		switch (shiftId) {
-		case "E", "Early": {
-			return "Early";
+		case "E", "Early", "Early shift type": {
+			//return "Early";
+			return "E";
 		}
-		case "L", "Late": {
-			return "Late";
+		case "L", "Late", "Late shift type": {
+			//return "Late";
+			return "L";
 		}
-		case "D", "Day", "Day shift": {
-			return "Day shift";
+		case "D", "Day", "Day shift", "Day shift type": {
+			//return "Day shift";
+			return "D";
 		}
-		case "N", "Night": {
-			return "Night";
+		case "N", "Night", "Night shift": {
+			//return "Night";
+			return "N";
+		}
+		case "DH", "Head nurse", "Head nurse day shift type", "Head Nurse Day Shift": {
+			//return "Head Nurse Day";
+			return "DH";
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + shiftId);
@@ -205,17 +221,20 @@ public class INRC1Loader {
 	
 	private int translateShiftNameToShiftTypeId(final String shiftName) {
 		switch (shiftName) {
-		case "Early": {
+		case "Early", "Early shift type", "E": {
 			return 1;
 		}
-		case "Late": {
+		case "Late", "Late shift type", "L": {
 			return 3;
 		}
-		case "Day shift": {
+		case "Day shift", "Day", "Day shift type", "D": {
 			return 2;
 		}
-		case "Night": {
+		case "Night", "Night shift", "Night shift type", "N": {
 			return 0;
+		}
+		case "Head nurse", "Head nurse day shift type", "Head Nurse Day Shift", "DH": {
+			return 4;
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + shiftName);
@@ -251,6 +270,7 @@ public class INRC1Loader {
 
 		// parse attributes of the shift
 		final NodeList children = employee.getChildNodes();
+		Set<String> tmpSkills = new LinkedHashSet<>();
 		for (int i = 0; i < children.getLength(); i++) {
 			final Node c = children.item(i);
 			final String name = c.getNodeName();
@@ -260,20 +280,25 @@ public class INRC1Loader {
 			} else if (name.equals("Name")) {
 				e.setName(c.getChildNodes().item(0).getNodeValue());
 			} else if (name.equals("Skills")) {
-				final NodeList skills = c.getChildNodes().item(1).getChildNodes();
-				for (int s = 0; s < skills.getLength(); s++) {
-					final Node c2 = skills.item(s);
-					final String skill = c2.getNodeValue();
-					if (!this.employeeHasSkill.containsKey(e.getName())) {
-						this.employeeHasSkill.put(e.getName(), new HashSet<String>());
-					}
-					this.employeeHasSkill.get(e.getName()).add(skill);
+				NodeList kids = c.getChildNodes();
+			    for (int s = 0; s < kids.getLength(); s++) {
+			        Node k = kids.item(s);
+			        if (k.getNodeType() == Node.ELEMENT_NODE && "Skill".equals(k.getNodeName())) {
+			            String skill = k.getTextContent().trim();  // NICHT getNodeValue()
+			            if (!skill.isEmpty()) {
+			                tmpSkills.add(skill);
+			            }
 				}
 			}
+			    
 		}
 
 		this.employees.add(e);
-		this.employee2Contract.put(e.getName(), contract);
+		this.employee2Contract.put(e.getName(), contract);}
+		if (e.getName() != null && !e.getName().isEmpty() && !tmpSkills.isEmpty()) {
+		    employeeHasSkill
+		        .computeIfAbsent(e.getName(), k -> new HashSet<>())
+		        .addAll(tmpSkills);}
 	}
 	
 	private void addDayOffRequest(final Node dayOffRequest) {
@@ -282,6 +307,12 @@ public class INRC1Loader {
 		
 		if(dayOffRequest.getNodeName().equals("#text"))
 			return;
+		
+		 final Node weightAttr = dayOffRequest.getAttributes().getNamedItem("weight");
+		    if (weightAttr != null) {
+		        final String weightValue = weightAttr.getNodeValue();
+		        dor.setWeight(Integer.valueOf(weightValue));
+		    }
 		
 		final NodeList children = dayOffRequest.getChildNodes();
 		
@@ -313,6 +344,11 @@ private void addShiftOffRequest(final Node shiftOffRequest) {
 			return;
 		}
 			
+		 final Node weightAttr = shiftOffRequest.getAttributes().getNamedItem("weight");
+		    if (weightAttr != null) {
+		        final String weightValue = weightAttr.getNodeValue();
+		        sor.setWeight(Integer.valueOf(weightValue));
+		    }
 		
 		final NodeList children = shiftOffRequest.getChildNodes();
 		
@@ -334,7 +370,9 @@ private void addShiftOffRequest(final Node shiftOffRequest) {
 			}
 			
 			else if (name.equals("Date")) {
+				
 				final String value = s.getChildNodes().item(0).getNodeValue();
+				sor.setDate(value);
 				sor.setDateNumber(translateDateToNumber(value));
 			}
 		}
@@ -366,9 +404,21 @@ private void addShiftOffRequest(final Node shiftOffRequest) {
 			} else if (name.equals("MaxNumAssignments")) {
 				final String value = c.getChildNodes().item(0).getNodeValue();
 				con.setMaximumNoOfAssignments(Integer.valueOf(value));
+				
+				final Node weightAttr = c.getAttributes().getNamedItem("weight");
+			    if (weightAttr != null) {
+			        final String weightValue = weightAttr.getNodeValue();
+			        con.setMaxNoOfAssignmentsWeight(Integer.valueOf(weightValue));
+			    }
 			} else if (name.equals("MinNumAssignments")) {
 				final String value = c.getChildNodes().item(0).getNodeValue();
 				con.setMinimumNoOfAssignments(Integer.valueOf(value));
+				
+				final Node weightAttr = c.getAttributes().getNamedItem("weight");
+			    if (weightAttr != null) {
+			        final String weightValue = weightAttr.getNodeValue();
+			        con.setMinNoOfAssignmentsWeight(Integer.valueOf(weightValue));
+			    }
 			} else if (name.equals("MaxConsecutiveWorkingDays")) {
 				final String value = c.getChildNodes().item(0).getNodeValue();
 				con.setMaximumNoOfConsWorkDays(Integer.valueOf(value));
@@ -389,17 +439,41 @@ private void addShiftOffRequest(final Node shiftOffRequest) {
 			} else if (name.equals("MaxWorkingWeekendsInFourWeeks")) {
 				final String value = c.getChildNodes().item(0).getNodeValue();
 				con.setMaximumNoOfWorkWeekendsInFourWeeks(Integer.valueOf(value));
+				
+				final Node weightAttr = c.getAttributes().getNamedItem("weight");
+			    if (weightAttr != null) {
+			        final String weightValue = weightAttr.getNodeValue();
+			        con.setMaxNoOfWorkWeekendsInFourWeeksWeight(Integer.valueOf(weightValue));
+			    }
 			} else if (name.equals("WeekendDefinition")) {
 				// skipped for now
 			} else if (name.equals("CompleteWeekends")) {
 				final String value = c.getChildNodes().item(0).getNodeValue();
 				con.setCompleteWeekends(value.equals("true"));
+				
+				final Node weightAttr = c.getAttributes().getNamedItem("weight");
+			    if (weightAttr != null) {
+			        final String weightValue = weightAttr.getNodeValue();
+			        con.setCompleteWeekendsWeight(Integer.valueOf(weightValue));
+			    }
 			} else if (name.equals("IdenticalShiftTypesDuringWeekend")) {
 				final String value = c.getChildNodes().item(0).getNodeValue();
 				con.setIdenticalShiftTypesDuringTheWeekend(value.equals("true"));
+				
+				final Node weightAttr = c.getAttributes().getNamedItem("weight");
+			    if (weightAttr != null) {
+			        final String weightValue = weightAttr.getNodeValue();
+			        con.setIdenticalShiftTypesDuringWeekendWeight(Integer.valueOf(weightValue));
+			    }
 			} else if (name.equals("NoNightShiftBeforeFreeWeekend")) {
 				final String value = c.getChildNodes().item(0).getNodeValue();
 				con.setNoNightShiftBeforeFreeWeekend(value.equals("true"));
+				
+				final Node weightAttr = c.getAttributes().getNamedItem("weight");
+			    if (weightAttr != null) {
+			        final String weightValue = weightAttr.getNodeValue();
+			        con.setNoNightShiftBeforeFreeWeekendWeight(Integer.valueOf(weightValue));
+			    }
 			} else if (name.equals("AlternativeSkillCategory")) {
 				// skipped for now
 			} else if (name.equals("UnwantedPatterns")) {
@@ -416,8 +490,8 @@ private void addShiftOffRequest(final Node shiftOffRequest) {
 		// if shift is not a shift type, skip it
 		if (shift.getNodeName().equals("#text")) {
 			return;
-		}
-
+	}
+		s.setName(shift.getAttributes().getNamedItem("ID").getNodeValue());
 		// parse attributes of the shift
 		final NodeList children = shift.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
@@ -431,7 +505,7 @@ private void addShiftOffRequest(final Node shiftOffRequest) {
 				final String end = c.getChildNodes().item(0).getNodeValue();
 				s.setEndTime(Integer.valueOf(end.replaceAll(":", "")));
 			} else if (name.equals("Description")) {
-				s.setName(c.getChildNodes().item(0).getNodeValue());
+				//s.setName(c.getChildNodes().item(0).getNodeValue());
 			} else if (name.equals("Skills")) {
 				for (int skillNo = 0; skillNo < c.getChildNodes().getLength(); skillNo++) {
 					if (c.getChildNodes().item(skillNo).getNodeName().equals("#text")) {

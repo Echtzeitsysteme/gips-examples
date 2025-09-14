@@ -33,16 +33,16 @@ public abstract class AbstractNurseRosteringRunner {
 		gipsApi.getE2s().getMappings().forEach((s,m) -> {
 			if(m.getValue() != 0) {
 				System.out.println(m.getEmployee().getName() + " -> " + m.getShift().getName());
-				//System.out.println("date = " + m.getDay().getDate() + "number = " + String.valueOf(m.getDay().getNumber()));
-	   
+				
 		}});
 		
 		System.out.println(gipsApi.getViolatedDaysOff().getMappings().size());
 		
 		gipsApi.getViolatedDaysOff().getMappings().forEach((s, m) ->  {
 			
-				System.out.println(m.getDay().getDate() + m.getDayOffRequest().getDate());
-				System.out.println("date = " + m.getDay().getDate() + "number = " + String.valueOf(m.getDay().getNumber()));
+				//System.out.println(m.getDay().getDate() + m.getDayOffRequest().getDate());
+				//System.out.println("date = " + m.getDay().getDate() + "number = " + String.valueOf(m.getDay().getNumber()));
+			
 	   
 		});
 		
