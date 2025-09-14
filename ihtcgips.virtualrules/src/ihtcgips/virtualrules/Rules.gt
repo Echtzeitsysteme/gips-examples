@@ -1,0 +1,121 @@
+import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
+
+//
+// This file contains all rules that I used in the
+// GIPSL specification to solve the IHTC 2024.
+//
+// Its purpose is to measure the time it would take to create
+// "virtual" edges within the model.
+//
+
+rule assignNurseToRoomShift {
+	h : Hospital {
+		- nurses -> n
+		- shifts -> s
+		- rooms -> r
+	}
+	
+	n : Nurse {
+		- shiftMaxLoads -> sml
+	}
+	
+	s : Shift
+	r : Room
+	
+	++ rsna : RoomShiftNurseAssignment {
+		++ - nurse_virtual -> n
+		++ - shift_virtual -> s
+		++ - room_virtual -> r
+	}
+	
+	sml : NurseShiftMaxLoad {
+		- shift -> s
+	}
+	
+	# sml.maxLoad > 0
+}
+
+rule assignAdmissionDayToPatient {
+	h : Hospital {
+		- patients -> p
+		- days -> d
+	}
+	
+	p : Patient {
+		++ - admissionDays_virtual -> d
+	}
+	
+	d : Day
+	
+	# p.surgeryReleaseDay <= d.id
+	# p.surgeryDueDate >= d.id
+}
+
+// H2: Compatible rooms: Patients can only be assigned to one of
+// their compatible rooms
+pattern roomPatientIncompatible {
+	h : Hospital {
+		- patients -> p
+		- rooms -> r
+	}
+	
+	p : Patient {
+		- incompatibleRooms -> r
+	}
+	r : Room
+}
+condition roomNotIncompatible = forbid roomPatientIncompatible
+
+rule assignRoomToPatient {
+	h : Hospital {
+		- patients -> p
+		- rooms -> r
+	}
+	
+	p : Patient {
+		++ - assignedRooms_virtual -> r
+	}
+	
+	r : Room
+}
+when roomNotIncompatible
+
+rule assignSurgeryToPatient {
+	h : Hospital {
+		- patients -> p
+		- surgeons -> s
+		- days -> d
+		- operatingTheaters -> ot
+	}
+	
+	p : Patient {
+		++ - surgeryAssignment -> sa
+		- surgeon -> s
+	}
+	
+	s : Surgeon {
+		- availabilities -> as
+	}
+	
+	d : Day
+	ot : OperatingTheater {
+		- availabilities -> aot
+	}
+	
+	++ sa : SurgeryAssignment {
+		++ - patient_virtual -> p
+		++ - surgeon_virtual -> s
+		++ - operationTheater_virtual -> ot
+		++ - day_virtual -> d
+	}
+	
+	aot : OperatingTheaterAvailability {
+		- day -> d
+	}
+	# aot.availability > 0
+	
+	as : SurgeonAvailability {
+		- day -> d
+	}
+	# as.availability > 0
+}
