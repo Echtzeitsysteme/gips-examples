@@ -30,10 +30,10 @@ for ((i=1;i<=30;i++));
 do
     if [ $i -lt 10 ]; then
         echo "./ihtc2024_competition_instances/i0$i.json"
-        ./start-args-gips.sh "./ihtc2024_competition_instances/i0$i.json" 0 $callback $parameter
+        ./start-args-gips.sh "./ihtc2024_competition_instances/i0$i.json" "./ihtc2024_competition_instances/i0${i}_solution.json" 0 $callback $parameter
     else
         echo "./ihtc2024_competition_instances/i$i.json"
-        ./start-args-gips.sh "./ihtc2024_competition_instances/i$i.json" 0 $callback $parameter
+        ./start-args-gips.sh "./ihtc2024_competition_instances/i$i.json" "./ihtc2024_competition_instances/i${i}_solution.json" 0 $callback $parameter
     fi
 done
 
