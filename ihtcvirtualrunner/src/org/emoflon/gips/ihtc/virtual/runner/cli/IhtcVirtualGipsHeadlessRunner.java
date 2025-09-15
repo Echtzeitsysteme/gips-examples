@@ -1,6 +1,10 @@
 package org.emoflon.gips.ihtc.virtual.runner.cli;
 
 import java.util.Objects;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -32,6 +36,11 @@ import ihtcvirtualmetamodel.utils.FileUtils;
 public class IhtcVirtualGipsHeadlessRunner {
 
 	/**
+	 * Logger for system outputs.
+	 */
+	protected final static Logger logger = Logger.getLogger(IhtcVirtualGipsHeadlessRunner.class.getName());
+
+	/**
 	 * Main method to start the headless runner. String array of arguments will be
 	 * parsed.
 	 * 
@@ -39,6 +48,7 @@ public class IhtcVirtualGipsHeadlessRunner {
 	 */
 	public static void main(final String[] args) {
 		Objects.requireNonNull(args);
+		configureLogging();
 		final CliConfig config = parseArgs(args);
 		new IhtcVirtualGipsHeadlessRunner().execute(config);
 	}
@@ -50,6 +60,7 @@ public class IhtcVirtualGipsHeadlessRunner {
 	private void execute(final CliConfig config) {
 		Objects.requireNonNull(config);
 
+		logger.info("Using CLI config: " + config.toString());
 		final IhtcVirtualGipsRunner runner = new IhtcVirtualGipsRunner();
 
 		// Set parameters
@@ -189,7 +200,7 @@ public class IhtcVirtualGipsHeadlessRunner {
 		// Get and return values
 		return new CliConfig( //
 				cmd.getOptionValue("inputjson"), //
-				cmd.hasOption("outputjson") ? cmd.getOptionValue("outputJson") : null, //
+				cmd.hasOption("outputjson") ? cmd.getOptionValue("outputjson") : null, //
 				cmd.hasOption("inputxmi") ? cmd.getOptionValue("inputxmi") : null, //
 				cmd.hasOption("outputxmi") ? cmd.getOptionValue("outputxmi") : null, //
 				cmd.hasOption("verbose"), //
@@ -206,6 +217,23 @@ public class IhtcVirtualGipsHeadlessRunner {
 	 */
 	private record CliConfig(String inputJsonPath, String outputJsonPath, String inputXmiPath, String outputXmiPath,
 			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath) {
+	}
+
+	/**
+	 * Configures the logging of this class.
+	 */
+	public static void configureLogging() {
+		// Configure logging
+		logger.setUseParentHandlers(false);
+		final ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new Formatter() {
+			@Override
+			public String format(final LogRecord record) {
+				Objects.requireNonNull(record, "Given log entry was null.");
+				return record.getMessage() + System.lineSeparator();
+			}
+		});
+		logger.addHandler(handler);
 	}
 
 }
