@@ -47,7 +47,7 @@ rule selectExtendingShiftToFirstWorkload {
 }
 
 // PRA.3: Rule that selects all VirtualShiftToWorkload-Nodes to be adopted in the final model if they were imported (belong to an occupant) 
-rule virtualNodesForOccupant {
+rule selectVirtualNodesForOccupant {
 
 	vsw : VirtualShiftToWorkload {
 		.isSelected := true
@@ -268,7 +268,7 @@ mapping selectedShiftToFirstWorkload to selectShiftToFirstWorkload;
 mapping selectedExtendingShiftToFirstWorkload to selectExtendingShiftToFirstWorkload;
 
 // PRA.3: Adds all imported Virtual Nodes of Occupants to the model
-mapping selectedOccupantNodes to virtualNodesForOccupant;
+mapping selectedOccupantNodes to selectVirtualNodesForOccupant;
 
 // NPA: Decides on what day and in which OT a patient is operated on.
 mapping selectedOperationDay to selectOperationDay;
