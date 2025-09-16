@@ -7,6 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -73,11 +77,31 @@ public class JsonToModelLoader {
 	 */
 	private Map<String, Room> name2Room = new HashMap<String, Room>();
 
+	private int nodes;
+	
+	/**
+	 * Logger for system outputs.
+	 */
+	protected final Logger logger = Logger.getLogger(JsonToModelLoader.class.getName());
+	
 	/**
 	 * Creates a new instance of this class with an empty hospital model.
 	 */
 	public JsonToModelLoader() {
 		model = IhtcvirtualmetamodelFactory.eINSTANCE.createRoot();
+		nodes = 1;
+		
+		// Configure logging
+		logger.setUseParentHandlers(false);
+		final ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new Formatter() {
+			@Override
+			public String format(final LogRecord record) {
+				Objects.requireNonNull(record, "Given log entry was null.");
+				return record.getMessage() + System.lineSeparator();
+			}
+		});
+		logger.addHandler(handler);
 	}
 
 	/**
@@ -88,6 +112,7 @@ public class JsonToModelLoader {
 	public Root getModel() {
 		return model;
 	}
+
 
 	/**
 	 * Loads a JSON input file from the given path and converts it to an EMF model
@@ -141,6 +166,8 @@ public class JsonToModelLoader {
 		// global weights
 		final JsonObject weights = json.getAsJsonObject("weights");
 		convertWeights(weights);
+		
+		logger.info("#Model size after loading: " + nodes);
 	}
 
 	/*
@@ -190,6 +217,7 @@ public class JsonToModelLoader {
 		Objects.requireNonNull(roomId);
 
 		final Patient p = IhtcvirtualmetamodelFactory.eINSTANCE.createPatient();
+		this.nodes++;
 		p.setName(name);
 		p.setGender(gender);
 		p.setAgeGroup(foundAges.get(ageGroup));
@@ -207,6 +235,7 @@ public class JsonToModelLoader {
 			final JsonElement skillLevel = skillLevelRequired.get(i);
 
 			final Workload w = IhtcvirtualmetamodelFactory.eINSTANCE.createWorkload();
+			this.nodes++;
 			w.setWorkloadValue(workload.getAsInt());
 			w.setMinNurseSkill(skillLevel.getAsInt());
 
@@ -345,6 +374,7 @@ public class JsonToModelLoader {
 		Objects.requireNonNull(skillLevelRequired);
 
 		final Patient p = IhtcvirtualmetamodelFactory.eINSTANCE.createPatient();
+		this.nodes++;
 		p.setName(name);
 		p.setMandatory(mandatory);
 		p.setGender(gender);
@@ -371,6 +401,7 @@ public class JsonToModelLoader {
 			final JsonElement skillLevel = skillLevelRequired.get(i);
 
 			final Workload w = IhtcvirtualmetamodelFactory.eINSTANCE.createWorkload();
+			this.nodes++;
 			w.setWorkloadValue(workload.getAsInt());
 			w.setMinNurseSkill(skillLevel.getAsInt());
 			p.getWorkloads().add(w);
@@ -392,6 +423,7 @@ public class JsonToModelLoader {
 	public void createGenders() {
 		for(String gender : foundGenders) {
 			final Gender g = IhtcvirtualmetamodelFactory.eINSTANCE.createGender();
+			this.nodes++;
 			g.setName(gender);
 			this.model.getGenders().add(g);
 		}
@@ -411,6 +443,7 @@ public class JsonToModelLoader {
 			final String name = ag.getAsString();
 			this.foundAges.put(name, ageCounter);
 			final AgeGroup agegroup = IhtcvirtualmetamodelFactory.eINSTANCE.createAgeGroup();
+			this.nodes++;
 			agegroup.setGroup(ageCounter);
 			this.model.getAgeGroups().add(agegroup);
 			ageCounter++;
@@ -427,6 +460,7 @@ public class JsonToModelLoader {
 		Objects.requireNonNull(weights);
 
 		final Weight w = IhtcvirtualmetamodelFactory.eINSTANCE.createWeight();
+		this.nodes++;
 		w.setRoomMixedAge(weights.get("room_mixed_age").getAsInt());
 		w.setRoomNurseSkill(weights.get("room_nurse_skill").getAsInt());
 		w.setContinuityOfCare(weights.get("continuity_of_care").getAsInt());
@@ -466,6 +500,7 @@ public class JsonToModelLoader {
 		Objects.requireNonNull(availability);
 
 		final OT ot = IhtcvirtualmetamodelFactory.eINSTANCE.createOT();
+		this.nodes++;
 		ot.setName(name);
 		// Create capacities, i.e., the `Capacity` objects
 		for (int i = 0; i < availability.size(); i++) {
@@ -474,6 +509,7 @@ public class JsonToModelLoader {
 				continue;
 			}
 			final Capacity c = IhtcvirtualmetamodelFactory.eINSTANCE.createCapacity();
+			this.nodes++;
 			c.setDay(i);
 			c.setMaxCapacity(a.getAsInt());
 			ot.getCapacities().add(c);
@@ -508,6 +544,7 @@ public class JsonToModelLoader {
 		Objects.requireNonNull(maxSurgeryTime);
 
 		final Surgeon s = IhtcvirtualmetamodelFactory.eINSTANCE.createSurgeon();
+		this.nodes++;
 		s.setName(name);
 		// Create max surgery times, i.e., the `OpTime` objects
 		for (int i = 0; i < maxSurgeryTime.size(); i++) {
@@ -516,6 +553,7 @@ public class JsonToModelLoader {
 				continue;
 			}
 			final OpTime opt = IhtcvirtualmetamodelFactory.eINSTANCE.createOpTime();
+			this.nodes++;
 			opt.setDay(i);
 			opt.setMaxOpTime(maxSurgeryTimeElement.getAsInt());
 			s.getOpTimes().add(opt);
@@ -543,6 +581,7 @@ public class JsonToModelLoader {
 		
 		for(int i = 0; i<numberOfDays; i++) {
 			final Day day = IhtcvirtualmetamodelFactory.eINSTANCE.createDay();
+			this.nodes++;
 			day.setName("d"+i);
 			day.setNumber(i);
 			this.model.getDays().add(day);
@@ -577,12 +616,14 @@ public class JsonToModelLoader {
 		Objects.requireNonNull(name);
 
 		final Room r = IhtcvirtualmetamodelFactory.eINSTANCE.createRoom();
+		this.nodes++;
 		r.setName(name);
 		r.setBeds(capacity);
 
 		// Create all shifts for this specific room
 		for (int i = 0; i < numberOfFoundDays * numberOfShiftsPerDay; i++) {
 			final Shift s = IhtcvirtualmetamodelFactory.eINSTANCE.createShift();
+			this.nodes++;
 			s.setShiftNo(i);
 			// `next` und `prev` will be set afterwards
 			r.getShifts().add(s);
@@ -639,6 +680,7 @@ public class JsonToModelLoader {
 		Objects.requireNonNull(workingShifts);
 
 		final Nurse nurse = IhtcvirtualmetamodelFactory.eINSTANCE.createNurse();
+		this.nodes++;
 		nurse.setName(name);
 		nurse.setSkillLevel(skillLevel);
 		final List<Roster> rosters = convertRosters(workingShifts);
@@ -659,6 +701,7 @@ public class JsonToModelLoader {
 		final List<Roster> rosters = new LinkedList<Roster>();
 		for (final JsonElement s : workingShifts) {
 			final Roster r = IhtcvirtualmetamodelFactory.eINSTANCE.createRoster();
+			this.nodes++;
 			r.setMaxWorkload(((JsonObject) s).get("max_load").getAsInt());
 			final int shiftNumber = convertDayType(((JsonObject) s).get("day").getAsInt())
 					+ convertShiftType(((JsonObject) s).get("shift").getAsString());
