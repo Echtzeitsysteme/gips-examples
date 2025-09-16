@@ -167,7 +167,7 @@ public class JsonToModelLoader {
 		final JsonObject weights = json.getAsJsonObject("weights");
 		convertWeights(weights);
 		
-		logger.info("#Model size after loading: " + nodes);
+		logger.info("#Modelsize: " + nodes);
 	}
 
 	/*

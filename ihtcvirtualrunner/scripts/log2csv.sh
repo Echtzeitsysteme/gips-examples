@@ -10,6 +10,7 @@ if [[ -z "$INPUT_FILE" ]]; then
 fi
 
 searches=(
+	"#Modelsize"
 	"#VirtualShiftToRoster"
 	"#VirtualOpTimeToCapacity"
 	"#VirtualWorkloadToOperation"
