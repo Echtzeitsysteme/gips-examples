@@ -33,10 +33,10 @@ do
     do
         if [ $i -lt 10 ]; then
             echo "$folder/i0$i.json"
-            ./start-args-gips.sh "$folder/i0$i.json" $randomSeed
+            ./start-args-gips.sh "$folder/i0$i.json" "$folder/i0${i}_solution.json" $randomSeed
         else
             echo "$folder/i$i.json"
-            ./start-args-gips.sh "$folder/i$i.json" $randomSeed
+            ./start-args-gips.sh "$folder/i$i.json" "$folder/i${i}_solution.json" $randomSeed
         fi
     done
 

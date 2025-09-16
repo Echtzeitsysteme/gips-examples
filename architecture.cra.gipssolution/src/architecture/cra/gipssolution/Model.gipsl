@@ -24,7 +24,7 @@ rule embedACTuple {
 }
 
 rule embedMCTuple {
-	m: Method
+	m: Methodd
 
 	c: Clazz {
 		++ -encapsulates -> m
@@ -41,7 +41,7 @@ constraint with Attribute {
 mapping embedMethod to embedMCTuple;
 
 // every method must be embedded
-constraint with Method {
+constraint with Methodd {
 	mappings.embedMethod->filter(element.nodes.m == context)->sum(element.value) == 1
 }
 
@@ -57,7 +57,7 @@ pattern findViolationA {
 
 	a1: Attribute
 
-	m1: Method {
+	m1: Methodd {
 		-dataDependency -> a1
 	}
 }
@@ -93,11 +93,11 @@ pattern findViolationC {
 
 	c2: Clazz
 
-	m1: Method {
+	m1: Methodd {
 		-functionalDependency -> m2
 	}
 
-	m2: Method
+	m2: Methodd
 }
 
 mapping violationC to findViolationC;
@@ -129,19 +129,19 @@ function objViolationC with violationC {
 condition mmNoDep = forbid findHelperD1
 
 pattern findHelperD1 {
-	m1: Method {
+	m1: Methodd {
 		-functionalDependency -> m2
 	}
 
-	m2: Method
+	m2: Methodd
 }
 
 pattern findViolationD1 {
 	c1: Clazz
 
-	m1: Method
+	m1: Methodd
 
-	m2: Method
+	m2: Methodd
 }
 when mmNoDep
 
@@ -173,7 +173,7 @@ function objViolationD1 with violationD1 {
 condition maNoDep = forbid findHelperD2
 
 pattern findHelperD2 {
-	m1: Method {
+	m1: Methodd {
 		-dataDependency -> a1
 	}
 
@@ -183,7 +183,7 @@ pattern findHelperD2 {
 pattern findViolationD2 {
 	c1: Clazz
 
-	m1: Method
+	m1: Methodd
 
 	a1: Attribute
 }
