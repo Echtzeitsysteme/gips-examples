@@ -531,24 +531,10 @@ constraint with selectShiftToFirstWorkload {
 	)->sum(element.value)
 	<=
 	mappings.selectedOperationDay->filter(
-		element.nodes.vwc == context.nodes.vwc &
-		element.nodes.vopc.capacity.day == context.nodes.vsw.shift.shiftNo / 3 
+		element.nodes.vwc == context.nodes.vwc
 	)->sum(element.value)
 }
 
-constraint with selectedOperationDay {
-	mappings.selectedOperationDay->filter(
-		element.nodes.vwc == context.nodes.vwc &
-		element.nodes.vopc == context.nodes.vopc &
-		element.nodes.vwop == context.nodes.vwop
-	)->sum(element.value)
-	<=
-	mappings.selectedShiftToFirstWorkload->filter(
-		element.nodes.vwc == context.nodes.vwc &
-		element.nodes.vsw.shift.shiftNo / 3 == context.nodes.vopc.capacity.day
-	)->sum(element.value)
-}
-	
 // V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
 // that is connected to the previous links between the patients workloads to shifts.
 // The following node can only be selected if the previous is already set to true
