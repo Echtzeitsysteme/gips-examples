@@ -528,11 +528,11 @@ constraint with selectShiftToFirstWorkload {
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vsw == context.nodes.vsw &
 		element.nodes.vwc == context.nodes.vwc
-	)->sum(element.value)
-	<=
+	)->sum(element.value) == 1
+	=> 
 	mappings.selectedOperationDay->filter(
 		element.nodes.vwc == context.nodes.vwc
-	)->sum(element.value)
+	)->sum(element.value) == 1
 }
 
 // V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
@@ -540,44 +540,16 @@ constraint with selectShiftToFirstWorkload {
 // The following node can only be selected if the previous is already set to true
 constraint with selectExtendingShiftToFirstWorkload{
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.nextvsw == context.nodes.nextvsw 
-	)->sum(element.value)
-	<=
+		element.nodes.nextvsw == context.nodes.nextvsw
+	)->sum(element.value) == 1
+	<=>
 	mappings.selectedExtendingShiftToFirstWorkload->filter(
 		element.nodes.nextvsw == context.nodes.prevvsw 
-	)->sum(element.value)
-	+
+	)->sum(element.value) == 1
+	|
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vsw == context.nodes.prevvsw 
-	)->sum(element.value)
-	
-	&
-	
-	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.nextvsw == context.nodes.prevvsw 
-	)->sum(element.value)
-	+
-	mappings.selectedShiftToFirstWorkload->filter(
-		element.nodes.vsw == context.nodes.prevvsw 
-	)->sum(element.value)
-	<= 
-	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.nextvsw == context.nodes.nextvsw 
-	)->sum(element.value) * 2
-	
-//	Transformed version of the following boolean implication 	
-//	mappings.selectedExtendingShiftToFirstWorkload->filter(
-//		element.nodes.prevvsw == context.nodes.prevvsw &
-//		element.nodes.nextvsw == context.nodes.nextvsw 
-//	)->sum(element.value) == 1
-//	=>
-//	mappings.selectedExtendingShiftToFirstWorkload->filter(
-//		element.nodes.nextvsw == context.nodes.prevvsw 
-//	)->sum(element.value) == 1
-//	|
-//	mappings.selectedShiftToFirstWorkload->filter(
-//		element.nodes.vsw == context.nodes.prevvsw 
-//	)->sum(element.value) == 1
+	)->sum(element.value) == 1
 }
 
 //
