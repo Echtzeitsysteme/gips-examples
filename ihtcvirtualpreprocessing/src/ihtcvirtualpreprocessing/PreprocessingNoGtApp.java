@@ -315,9 +315,12 @@ public class PreprocessingNoGtApp {
 										v.setShift(shift);
 										v.setWorkload(patient.getFirstWorkload());
 										v.getRequires_virtualWorkloadToCapacity()
-												.addAll(patient.getFirstWorkload().getVirtualCapacity());
-										patient.getFirstWorkload().getVirtualCapacity().forEach(vc -> {
-											vc.getEnables_virtualShiftToWorkload().add(v);
+												.addAll(patient.getFirstWorkload().getVirtualCapacity().stream().filter(
+														vwc -> vwc.getCapacity().getDay() == v.getShift().getShiftNo() / 3).toList());
+										patient.getFirstWorkload().getVirtualCapacity().stream().filter(
+												vwc -> vwc.getCapacity().getDay() == v.getShift().getShiftNo() / 3).toList()
+												.forEach(vc -> {
+													vc.getEnables_virtualShiftToWorkload().add(v);
 										});
 										shift.getVirtualWorkload().add(v);
 									}

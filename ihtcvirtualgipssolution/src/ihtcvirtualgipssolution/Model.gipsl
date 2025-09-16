@@ -5,7 +5,7 @@ config {
 	solver := GUROBI;
 	timeLimit := true [value := 300.0]; // 5 min
 	randomSeed := true [value := 0];
-	presolve := auto;
+	presolve := aggressive;
 	debugOutput := true;
 	threadCount := true [value := 0]; // 0 threads = Gurobi auto
 }
@@ -549,8 +549,7 @@ constraint with selectShiftToFirstWorkload {
 	)->sum(element.value)
 	<=
 	mappings.selectedOperationDay->filter(
-		element.nodes.vwc == context.nodes.vwc &
-		element.nodes.vopc.capacity.day == context.nodes.vsw.shift.shiftNo / 3 
+		element.nodes.vwc == context.nodes.vwc
 	)->sum(element.value)
 }
 
@@ -562,8 +561,7 @@ constraint with selectedOperationDay {
 	)->sum(element.value)
 	<=
 	mappings.selectedShiftToFirstWorkload->filter(
-		element.nodes.vwc == context.nodes.vwc &
-		element.nodes.vsw.shift.shiftNo / 3 == context.nodes.vopc.capacity.day
+		element.nodes.vwc == context.nodes.vwc
 	)->sum(element.value)
 }
 	
