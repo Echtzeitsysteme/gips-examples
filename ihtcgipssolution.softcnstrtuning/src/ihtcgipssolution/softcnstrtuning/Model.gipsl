@@ -19,7 +19,7 @@ config {
 	timeLimit := true [value := 590.0, includeInitTime := true];
 	randomSeed := true [value := 7];
 	presolve := auto;
-	debugOutput := false;
+	debugOutput := true;
 	// lpOutput := true [path := "gurobi.lp"];
 	threadCount := true [value := 4];
 }
