@@ -16,12 +16,12 @@ import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
 
 config {
 	solver := GUROBI;
-	timeLimit := true [value := 590.0, includeInitTime := true];
-	randomSeed := true [value := 7];
+	timeLimit := true [value := 300.0];
+	randomSeed := true [value := 0];
 	presolve := auto;
 	debugOutput := true;
 	// lpOutput := true [path := "gurobi.lp"];
-	threadCount := true [value := 4];
+//	threadCount := true [value := 4];
 }
 
 //
