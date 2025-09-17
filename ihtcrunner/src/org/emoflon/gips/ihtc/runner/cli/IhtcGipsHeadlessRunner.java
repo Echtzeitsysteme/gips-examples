@@ -13,6 +13,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.runner.IhtcSoftCnstrTuningGipsRunner;
 
 import ihtcmetamodel.utils.FileUtils;
@@ -59,7 +60,8 @@ public class IhtcGipsHeadlessRunner {
 
 		logger.info("Using CLI config: " + config.toString());
 
-		// Create a new IHTC GIPS strategy runner
+		// Create a new IHTC GIPS runner
+		Observer.getInstance().setCurrentSeries("Eval");
 		final IhtcSoftCnstrTuningGipsRunner runner = new IhtcSoftCnstrTuningGipsRunner();
 
 		// Set parameters

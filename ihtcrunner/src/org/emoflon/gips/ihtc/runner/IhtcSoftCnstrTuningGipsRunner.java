@@ -141,8 +141,7 @@ public class IhtcSoftCnstrTuningGipsRunner extends AbstractIhtcGipsRunner {
 		exportToJson(gipsOutputPath, outputPath);
 		final long exportDoneTime = System.nanoTime();
 		if (verbose) {
-			logger.info("Runtime JSON export (no post-processing): "
-					+ tickTockToElapsedSeconds(gipsSaveDoneTime, exportDoneTime) + "s.");
+			logger.info("Runtime JSON export: " + tickTockToElapsedSeconds(gipsSaveDoneTime, exportDoneTime) + "s.");
 		}
 
 		//

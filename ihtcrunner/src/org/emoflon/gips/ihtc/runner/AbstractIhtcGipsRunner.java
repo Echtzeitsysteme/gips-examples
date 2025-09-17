@@ -160,8 +160,8 @@ public abstract class AbstractIhtcGipsRunner {
 	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi, final boolean verbose) {
 		Objects.requireNonNull(gipsApi);
 
-		gipsApi.buildProblem(true, true); // Second Parameter: sequential = false/default, parallel = true
-		final SolverOutput output = gipsApi.solveProblem();
+		gipsApi.buildProblemTimed(true, true); // Second Parameter: sequential = false/default, parallel = true
+		final SolverOutput output = gipsApi.solveProblemTimed();
 		if (output.solutionCount() == 0) {
 			gipsApi.terminate();
 			logger.warning("No solution found. Aborting.");
