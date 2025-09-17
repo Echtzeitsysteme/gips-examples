@@ -1,5 +1,11 @@
 package org.emoflon.gips.ihtc.runner.cli;
 
+import java.util.Objects;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -7,8 +13,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.emoflon.gips.ihtc.runner.strategy.IhtcGipsStrategyRunner;
-import org.emoflon.gips.ihtc.runner.utils.StringUtils;
+import org.emoflon.gips.ihtc.runner.IhtcSoftCnstrTuningGipsRunner;
 
 import ihtcmetamodel.utils.FileUtils;
 
@@ -17,54 +22,12 @@ import ihtcmetamodel.utils.FileUtils;
  * 
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
-public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
+public class IhtcGipsHeadlessRunner {
 
 	/**
-	 * JSON input file path to load an instance from.
+	 * Logger for system outputs.
 	 */
-	private static String jsonInputPath = null;
-
-	/**
-	 * JSON output file path to save the solution to.
-	 */
-	private static String jsonOutputPath = null;
-
-	/**
-	 * XMI input model file path to save the transformed input model to.
-	 */
-	private static String xmiInputModelPath = "./model_in.xmi";
-
-	/**
-	 * If true, the necessary XMI input model file will be deleted after the
-	 * execution.
-	 */
-	private static boolean setXmiInputModelPathDelete = true;
-
-	/**
-	 * XMI output model file path to save the transformed output model to.
-	 */
-	private static String xmiOutputModelPath = "./model_out.xmi";
-
-	/**
-	 * If true, the necessary XMI output model file will be deleted after the
-	 * execution.
-	 */
-	private static boolean setXmiOutputModelPathDelete = true;
-
-	/**
-	 * Boolean flag to enable the debug output.
-	 */
-	private static boolean debugOutputEnabled = false;
-
-	/**
-	 * Boolean flag to enable output JSON file splitting.
-	 */
-	private static boolean splitOutputJsonEnabled = false;
-
-	/**
-	 * Random seed for the (M(ILP solver.
-	 */
-	private static int randomSeed = -1;
+	protected final static Logger logger = Logger.getLogger(IhtcGipsHeadlessRunner.class.getName());
 
 	/**
 	 * No public instances of this class allowed.
@@ -79,42 +42,68 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 	 * @param args See {@link #parseArgs(String[])}.
 	 */
 	public static void main(final String[] args) {
-		parseArgs(args);
-		new IhtcGipsHeadlessRunner().execute();
+		Objects.requireNonNull(args);
+		configureLogging();
+		final CliConfig config = parseArgs(args);
+		new IhtcGipsHeadlessRunner().execute(config);
 	}
 
 	/**
 	 * Runs the execution of the configured scenario. This method relies on the
 	 * previous parsing of arguments.
+	 * 
+	 * @param config CLI configuration to work with.
 	 */
-	private void execute() {
-		// Create a new IHTC GIPS strategy runner
-		final IhtcGipsStrategyRunner strategyRunner = new IhtcGipsStrategyRunner();
+	private void execute(final CliConfig config) {
+		Objects.requireNonNull(config);
 
-		// Set values configured by the given arguments
-		strategyRunner.setVerbose(debugOutputEnabled);
-		strategyRunner.setSplitOutputJsonEnabled(splitOutputJsonEnabled);
-		strategyRunner.setJsonInputPath(jsonInputPath);
-		strategyRunner.setJsonOutputPath(jsonOutputPath);
-		strategyRunner.setXmiInputModelPath(xmiInputModelPath);
-		strategyRunner.setXmiOutputModelPath(xmiOutputModelPath);
-		if (randomSeed != -1) {
-			strategyRunner.setRandomSeed(randomSeed);
+		logger.info("Using CLI config: " + config.toString());
+
+		// Create a new IHTC GIPS strategy runner
+		final IhtcSoftCnstrTuningGipsRunner runner = new IhtcSoftCnstrTuningGipsRunner();
+
+		// Set parameters
+		if (config.inputJsonPath != null) {
+			runner.inputPath = config.inputJsonPath;
+		}
+		if (config.outputJsonPath != null) {
+			runner.outputPath = config.outputJsonPath;
+		}
+		if (config.inputXmiPath != null) {
+			runner.instancePath = config.inputXmiPath;
+		}
+		if (config.outputXmiPath != null) {
+			runner.gipsOutputPath = config.outputXmiPath;
+		}
+		runner.setVerbose(config.verbose);
+		runner.setRandomSeed(config.randomSeed);
+		if (config.timeLimit > 0) {
+			runner.setTimeLimit(config.timeLimit);
+		}
+		runner.setThreads(config.threads);
+		if (config.callbackPath != null) {
+			runner.setCallbackPath(config.callbackPath);
+		}
+		if (config.parameterPath != null) {
+			runner.setParameterPath(config.parameterPath);
 		}
 
 		// Execute the runner
-		strategyRunner.run();
+		runner.run();
 
-		// Delete XMI files if configured
-		if (setXmiInputModelPathDelete) {
-			FileUtils.deleteFile(xmiInputModelPath);
+		// Delete XMI/JSON files if configured
+		if (config.inputXmiPath == null) {
+			FileUtils.deleteFile(runner.instancePath);
 		}
-		if (setXmiOutputModelPathDelete) {
-			FileUtils.deleteFile(xmiOutputModelPath);
+		if (config.outputXmiPath == null) {
+			FileUtils.deleteFile(runner.gipsOutputPath);
+		}
+		if (config.outputJsonPath == null) {
+			FileUtils.deleteFile(runner.outputPath);
 		}
 
-		// Delete `Gurobi_ILP.log` if no `--debug` configured
-		if (!debugOutputEnabled) {
+		// Delete `Gurobi_ILP.log` if no `--verbose` configured
+		if (!config.verbose) {
 			FileUtils.deleteFile("./Gurobi_ILP.log");
 		}
 	}
@@ -133,7 +122,8 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 	 * 
 	 * @param args Arguments to parse.
 	 */
-	private static void parseArgs(final String[] args) {
+	private static CliConfig parseArgs(final String[] args) {
+		Objects.requireNonNull(args);
 		final Options options = new Options();
 
 		// JSON input file to load
@@ -157,19 +147,34 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 		options.addOption(xmiModelOutputFile);
 
 		// Debug output enabled flag
-		final Option debugOutputEnabled = new Option("d", "debug", false, "debug output flag");
+		final Option debugOutputEnabled = new Option("v", "verbose", false, "verbose output flag");
 		debugOutputEnabled.setRequired(false);
 		options.addOption(debugOutputEnabled);
 
-		// Split output JSON file flag
-		final Option splitOutputEnabled = new Option("s", "split", false, "split output JSON file flag");
-		splitOutputEnabled.setRequired(false);
-		options.addOption(splitOutputEnabled);
-
-		// XMI model file path to save the output model to
+		// Random seed
 		final Option randomSeed = new Option("n", "randomseed", true, "random seed for the (M)ILP solver");
 		xmiModelOutputFile.setRequired(false);
 		options.addOption(randomSeed);
+
+		// Time limit for the (M)ILP solver
+		final Option timeLimit = new Option("t", "timelimit", true, "time limit for the (M)ILP solver");
+		timeLimit.setRequired(false);
+		options.addOption(timeLimit);
+
+		// Number of threads to use for the (M)ILP solver
+		final Option threads = new Option("p", "threads", true, "number of threads to use for the (M)ILP solver");
+		threads.setRequired(false);
+		options.addOption(threads);
+
+		// Gurobi callback path
+		final Option callbackPath = new Option("c", "callback", true, "callback configuration path for Gurobi");
+		callbackPath.setRequired(false);
+		options.addOption(callbackPath);
+
+		// Gurobi parameter path
+		final Option parameterPath = new Option("d", "parameter", true, "parameter path for Gurobi");
+		parameterPath.setRequired(false);
+		options.addOption(parameterPath);
 
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
@@ -183,37 +188,48 @@ public class IhtcGipsHeadlessRunner extends IhtcGipsStrategyRunner {
 			System.exit(1);
 		}
 
-		// Get and save values
-		jsonInputPath = cmd.getOptionValue("inputjson");
-		if (cmd.hasOption("outputjson")) {
-			jsonOutputPath = cmd.getOptionValue("outputjson");
-		} else {
-			// If no value is provided, set the default output path to the same location
-			// as the input path but precede the JSON file name with `sol_` according to
-			// the competition description.
-			jsonOutputPath = StringUtils.replaceLast(jsonInputPath, "/", "/sol_");
+		// Check pre-conditions
+		if (cmd.hasOption("randomseed") && Integer.valueOf(cmd.getOptionValue("randomseed")) < 0) {
+			throw new IllegalArgumentException("Given random seed was negative, which is not supported.");
 		}
-		if (cmd.hasOption("modelinputxmi")) {
-			xmiInputModelPath = cmd.getOptionValue("modelinputxmi");
-			setXmiInputModelPathDelete = false;
-		}
-		if (cmd.hasOption("modeloutputxmi")) {
-			xmiOutputModelPath = cmd.getOptionValue("modeloutputxmi");
-			setXmiOutputModelPathDelete = false;
-		}
-		IhtcGipsHeadlessRunner.debugOutputEnabled = cmd.hasOption("debug");
-		IhtcGipsHeadlessRunner.splitOutputJsonEnabled = cmd.hasOption("split");
-		if (cmd.hasOption("randomseed")) {
-			final String randomSeedParameter = cmd.getOptionValue("randomseed");
-			try {
-				IhtcGipsHeadlessRunner.randomSeed = Integer.valueOf(randomSeedParameter);
-				if (IhtcGipsHeadlessRunner.randomSeed < 0) {
-					throw new IllegalArgumentException("Given random seed was negative, which is not supported.");
-				}
-			} catch (final Exception e) {
-				throw new IllegalArgumentException("Given random seed was not an integer.");
+
+		// Get and return values
+		return new CliConfig( //
+				cmd.getOptionValue("inputjson"), //
+				cmd.hasOption("outputjson") ? cmd.getOptionValue("outputjson") : null, //
+				cmd.hasOption("inputxmi") ? cmd.getOptionValue("inputxmi") : null, //
+				cmd.hasOption("outputxmi") ? cmd.getOptionValue("outputxmi") : null, //
+				cmd.hasOption("verbose"), //
+				cmd.hasOption("randomseed") ? Integer.valueOf(cmd.getOptionValue("randomseed")) : 0, //
+				cmd.hasOption("timelimit") ? Integer.valueOf(cmd.getOptionValue("timelimit")) : -1, //
+				cmd.hasOption("threads") ? Integer.valueOf(cmd.getOptionValue("threads")) : 0, //
+				cmd.hasOption("callback") ? cmd.getOptionValue("callback") : null, //
+				cmd.hasOption("parameter") ? cmd.getOptionValue("parameter") : null //
+		);
+	}
+
+	/**
+	 * Record to hold the parsed CLI configuration parameters.
+	 */
+	private record CliConfig(String inputJsonPath, String outputJsonPath, String inputXmiPath, String outputXmiPath,
+			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath) {
+	}
+
+	/**
+	 * Configures the logging of this class.
+	 */
+	public static void configureLogging() {
+		// Configure logging
+		logger.setUseParentHandlers(false);
+		final ConsoleHandler handler = new ConsoleHandler();
+		handler.setFormatter(new Formatter() {
+			@Override
+			public String format(final LogRecord record) {
+				Objects.requireNonNull(record, "Given log entry was null.");
+				return record.getMessage() + System.lineSeparator();
 			}
-		}
+		});
+		logger.addHandler(handler);
 	}
 
 }
