@@ -53,7 +53,7 @@ public abstract class AbstractIhtcGipsRunner {
 	/**
 	 * Data set folder location.
 	 */
-	public String datasetFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_competition_instances/";
+	public String datasetFolder = projectFolder + "/../ihtcmetamodel/resources/ihtc2024_competition_instances/";
 
 	/**
 	 * Default input path.

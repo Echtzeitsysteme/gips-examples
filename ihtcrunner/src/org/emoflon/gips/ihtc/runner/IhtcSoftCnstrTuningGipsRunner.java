@@ -36,12 +36,12 @@ public class IhtcSoftCnstrTuningGipsRunner extends AbstractIhtcGipsRunner {
 	/**
 	 * Gurobi callback path.
 	 */
-	private String callbackPath = projectFolder + "/../ihtcvirtualrunner/scripts/callback.json";
+	private String callbackPath = projectFolder + "/../ihtcrunner/scripts/callback.json";
 
 	/**
 	 * Gurobi parameter path.
 	 */
-	private String parameterPath = projectFolder + "/../ihtcvirtualrunner/scripts/parameter.json";
+	private String parameterPath = projectFolder + "/../ihtcrunner/scripts/parameter.json";
 
 	/**
 	 * Create a new instance of this class.
