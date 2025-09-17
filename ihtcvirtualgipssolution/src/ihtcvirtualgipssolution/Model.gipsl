@@ -489,8 +489,13 @@ constraint with countPatientsForRoom {
 // C1: A patient is assigned to the same room during all shifts
 // -> Already enforced by GT-Rule "extendPatientStay" in preprocessing
 
-// C2: A patient is assigned to at most one room in each shift
-// -> Already implemented in Constraint V3 in context with C9
+// C2.1: A patient is assigned to at most one room in each shift
+// -> Already implemented in Constraint V3 in context with C8
+
+// C2.2: A patient can't be assigned to more than one "first" shift
+constraint with Patient {
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context)->sum(element.value) <= 1
+}
 
 // C3: A patient is assigned to at most one operating time slot
 
@@ -502,27 +507,26 @@ constraint with Patient {
 // -> Already given, because the rule selectOperationDay only assigns a surgeon to an OT if he has a scheduled
 // operation with a patient on that day
 
-// C5: The day the first workload of a patient gets scheduled has to be the same day the patient has surgery
+// (C5**): One OT per patient
+// ->  Already enforced by C3 and rule selectOperationDay
+
+// C6: The day the first workload of a patient gets scheduled has to be the same day the patient has surgery
 // -> Already enforced by Constraint V2
 
-// C6: If a patient is admitted all his workloads have to be scheduled in a shift
+// C7: If a patient is admitted all his workloads have to be scheduled in a shift
 // -> Already implemented in Constraint V3
 
-// C7: A patient can't be assigned to more than one "first" shift
-constraint with Patient {
-	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context)->sum(element.value) <= 1
+// C8: All virtual nodes of occupants are selected
+constraint with selectedOccupantNodes {
+	context.value == 1
 }
 
 //
 // Virtual Constraints
 //
 
-// V1: All virtual nodes of occupants are selected
-constraint with selectedOccupantNodes {
-	context.value == 1
-}
 
-// V2: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
+// V1: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
 constraint with selectShiftToFirstWorkload {
 	mappings.selectedShiftToFirstWorkload->filter(
@@ -535,7 +539,7 @@ constraint with selectShiftToFirstWorkload {
 	)->sum(element.value) == 1
 }
 
-// V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
+// V2: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
 // that is connected to the previous links between the patients workloads to shifts.
 // The following node can only be selected if the previous is already set to true
 constraint with selectExtendingShiftToFirstWorkload{
@@ -543,12 +547,12 @@ constraint with selectExtendingShiftToFirstWorkload{
 		element.nodes.nextvsw == context.nodes.nextvsw
 	)->sum(element.value) == 1
 	<=>
-	mappings.selectedExtendingShiftToFirstWorkload->filter(
-		element.nodes.nextvsw == context.nodes.prevvsw 
-	)->sum(element.value) == 1
-	|
 	mappings.selectedShiftToFirstWorkload->filter(
 		element.nodes.vsw == context.nodes.prevvsw 
+	)->sum(element.value) == 1
+	|
+	mappings.selectedExtendingShiftToFirstWorkload->filter(
+		element.nodes.nextvsw == context.nodes.prevvsw 
 	)->sum(element.value) == 1
 }
 
