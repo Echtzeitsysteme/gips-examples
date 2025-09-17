@@ -14,6 +14,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.emoflon.gips.core.util.Observer;
+import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
+import org.emoflon.gips.ihtc.runner.IhtcHardOnlyGipsRunner;
 import org.emoflon.gips.ihtc.runner.IhtcSoftCnstrTuningGipsRunner;
 
 import ihtcmetamodel.utils.FileUtils;
@@ -62,7 +64,14 @@ public class IhtcGipsHeadlessRunner {
 
 		// Create a new IHTC GIPS runner
 		Observer.getInstance().setCurrentSeries("Eval");
-		final IhtcSoftCnstrTuningGipsRunner runner = new IhtcSoftCnstrTuningGipsRunner();
+		AbstractIhtcGipsRunner runner = null;
+		if (config.hardOnly) {
+			logger.info("=> Using the HARD-ONLY implementation.");
+			runner = new IhtcHardOnlyGipsRunner();
+		} else {
+			logger.info("=> Using the SOFT-CNSTR-TUNING implementation.");
+			runner = new IhtcSoftCnstrTuningGipsRunner();
+		}
 
 		// Set parameters
 		if (config.inputJsonPath != null) {
@@ -178,6 +187,11 @@ public class IhtcGipsHeadlessRunner {
 		parameterPath.setRequired(false);
 		options.addOption(parameterPath);
 
+		// Hard-only option
+		final Option hardOnly = new Option("h", "hardonly", false, "sets the solving mode to \"hard-only\"");
+		hardOnly.setRequired(false);
+		options.addOption(hardOnly);
+
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -206,7 +220,8 @@ public class IhtcGipsHeadlessRunner {
 				cmd.hasOption("timelimit") ? Integer.valueOf(cmd.getOptionValue("timelimit")) : -1, //
 				cmd.hasOption("threads") ? Integer.valueOf(cmd.getOptionValue("threads")) : 0, //
 				cmd.hasOption("callback") ? cmd.getOptionValue("callback") : null, //
-				cmd.hasOption("parameter") ? cmd.getOptionValue("parameter") : null //
+				cmd.hasOption("parameter") ? cmd.getOptionValue("parameter") : null, //
+				cmd.hasOption("hardonly") //
 		);
 	}
 
@@ -214,7 +229,8 @@ public class IhtcGipsHeadlessRunner {
 	 * Record to hold the parsed CLI configuration parameters.
 	 */
 	private record CliConfig(String inputJsonPath, String outputJsonPath, String inputXmiPath, String outputXmiPath,
-			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath) {
+			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath,
+			boolean hardOnly) {
 	}
 
 	/**

@@ -5,14 +5,14 @@ import java.util.Objects;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
-import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
+import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 
-public class IhtcSoftCnstrTuningGipsRunner extends AbstractIhtcGipsRunner {
+public class IhtcHardOnlyGipsRunner extends AbstractIhtcGipsRunner {
 
 	/**
 	 * Create a new instance of this class.
 	 */
-	public IhtcSoftCnstrTuningGipsRunner() {
+	public IhtcHardOnlyGipsRunner() {
 	}
 
 	/**
@@ -23,7 +23,7 @@ public class IhtcSoftCnstrTuningGipsRunner extends AbstractIhtcGipsRunner {
 	public static void main(final String[] args) {
 		Objects.requireNonNull(args);
 
-		final IhtcSoftCnstrTuningGipsRunner runner = new IhtcSoftCnstrTuningGipsRunner();
+		final IhtcHardOnlyGipsRunner runner = new IhtcHardOnlyGipsRunner();
 		runner.setupDefaultPaths();
 		runner.run();
 	}
@@ -56,7 +56,7 @@ public class IhtcSoftCnstrTuningGipsRunner extends AbstractIhtcGipsRunner {
 		}
 
 		Observer.getInstance().setCurrentSeries("Eval");
-		final SoftcnstrtuningGipsAPI gipsApi = new SoftcnstrtuningGipsAPI();
+		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
 		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
 		final long gipsInitDoneTime = System.nanoTime();
 		if (verbose) {

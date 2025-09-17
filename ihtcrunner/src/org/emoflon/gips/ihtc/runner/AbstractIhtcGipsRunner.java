@@ -19,6 +19,7 @@ import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
+
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 //import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
@@ -86,6 +87,36 @@ public abstract class AbstractIhtcGipsRunner {
 	 */
 	public String outputPath = datasetSolutionFolder + "sol_"
 			+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
+
+	/**
+	 * If true, the runner will print more detailed information.
+	 */
+	protected boolean verbose = true;
+
+	/**
+	 * Random seed for the (M)ILP solver.
+	 */
+	protected int randomSeed = 0;
+
+	/**
+	 * Time limit for the (M)ILP solver.
+	 */
+	protected int timeLimit = -1;
+
+	/**
+	 * Number of threads for the (M)ILP solver.
+	 */
+	protected int threads = 0;
+
+	/**
+	 * Gurobi callback path.
+	 */
+	protected String callbackPath = projectFolder + "/../ihtcrunner/scripts/callback.json";
+
+	/**
+	 * Gurobi parameter path.
+	 */
+	protected String parameterPath = projectFolder + "/../ihtcrunner/scripts/parameter.json";
 
 	public AbstractIhtcGipsRunner() {
 		// Configure logging
@@ -293,8 +324,116 @@ public abstract class AbstractIhtcGipsRunner {
 	}
 
 	/**
+	 * Sets the default paths up.
+	 */
+	void setupDefaultPaths() {
+		// Update output JSON file path
+		this.datasetSolutionFolder = projectFolder + "/../ihtcmetamodel/resources/runner/";
+		this.outputPath = datasetSolutionFolder + "sol_"
+				+ scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json")) + "_gips.json";
+	}
+
+	/**
 	 * Runs the execution of the configured scenario.
 	 */
-	protected abstract void run();
+	public abstract void run();
+
+	/**
+	 * Takes an XMI output path (of a GIPS-generated solution model) and writes the
+	 * corresponding JSON output to `jsonOutputPath`.
+	 * 
+	 * @param xmiOutputPath  GIPS-generated solution model to convert.
+	 * @param jsonOutputPath JSON output file location to write the JSON output file
+	 *                       to.
+	 */
+	protected void exportToJson(final String xmiOutputPath, final String jsonOutputPath) {
+		Objects.requireNonNull(xmiOutputPath);
+		Objects.requireNonNull(jsonOutputPath);
+
+		final Resource loadedResource = FileUtils.loadModel(xmiOutputPath);
+		final Hospital solvedHospital = (Hospital) loadedResource.getContents().get(0);
+		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
+		logger.info("Writing output JSON file to: " + outputPath);
+		exporter.modelToJson(jsonOutputPath, verbose);
+	}
+
+	/**
+	 * Sets the verbose flag to the given value.
+	 * 
+	 * @param verbose Verbose flag value.
+	 */
+	public void setVerbose(final boolean verbose) {
+		this.verbose = verbose;
+	}
+
+	/**
+	 * Sets the random seed to the given value.
+	 * 
+	 * @param seed Random seed to set.
+	 */
+	public void setRandomSeed(final int seed) {
+		this.randomSeed = seed;
+	}
+
+	/**
+	 * Sets the (M)ILP solver time limit to the given value.
+	 * 
+	 * @param timeLimit Time limit to set.
+	 */
+	public void setTimeLimit(final int timeLimit) {
+		this.timeLimit = timeLimit;
+	}
+
+	/**
+	 * Sets the number of threads to be used by the (M)ILP solver.
+	 * 
+	 * @param threads Number of threads to set.
+	 */
+	public void setThreads(final int threads) {
+		this.threads = threads;
+	}
+
+	/**
+	 * Sets the Gurobi callback path to the given value.
+	 * 
+	 * @param callbackPath Gurobi callback path to set.
+	 */
+	public void setCallbackPath(final String callbackPath) {
+		Objects.requireNonNull(callbackPath);
+		this.callbackPath = callbackPath;
+	}
+
+	/**
+	 * Sets the Gurobi parameter path to the given value.
+	 * 
+	 * @param parameterPath Gurobi parameter path to set.
+	 */
+	public void setParameterPath(final String parameterPath) {
+		Objects.requireNonNull(parameterPath);
+		this.parameterPath = parameterPath;
+	}
+
+	/**
+	 * Sets the private GIPS API configuration parameters from this object to the
+	 * actual GIPS API.
+	 * 
+	 * @param gipsApi GIPS API to set the configuration parameters for.
+	 */
+	protected void setGipsConfig(final GipsEngineAPI<?, ?> gipsApi) {
+		Objects.requireNonNull(gipsApi);
+
+		gipsApi.getSolverConfig().setRandomSeed(randomSeed);
+		if (timeLimit != -1) {
+			gipsApi.getSolverConfig().setTimeLimit(timeLimit);
+		}
+		gipsApi.getSolverConfig().setThreadCount(threads);
+		if (callbackPath != null) {
+			gipsApi.getSolverConfig().setEnableCallbackPath(true);
+			gipsApi.getSolverConfig().setCallbackPath(callbackPath);
+		}
+		if (parameterPath != null) {
+			gipsApi.getSolverConfig().setParameterPath(parameterPath);
+		}
+	}
 
 }
