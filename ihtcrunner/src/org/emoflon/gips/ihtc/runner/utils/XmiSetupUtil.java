@@ -4,6 +4,7 @@ import org.eclipse.emf.common.util.URI;
 import org.emoflon.gips.core.api.GipsEngineAPI;
 
 import hipe.engine.config.HiPEPathOptions;
+import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 //import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 import ihtcmetamodel.utils.FileUtils;
@@ -36,19 +37,18 @@ public class XmiSetupUtil {
 			throw new IllegalArgumentException("Given model path was null or blank.");
 		}
 
-//		// If the GIPS API is a HardonlyGipsAPI ...
-//		if (gipsApi instanceof HardonlyGipsAPI) {
-//			setup( //
-//					gipsApi, //
-//					"./ihtcgipssolution/hardonly/hipe/engine/hipe-network.xmi", //
-//					"ihtcgipssolution.hardonly.hipe.engine.HiPEEngine", //
-//					"./ihtcgipssolution/hardonly/api/gips/gips-model.xmi", //
-//					modelPath, //
-//					"./ihtcgipssolution/hardonly/api/ibex-patterns.xmi" //
-//			);
-//			// If the GIPS API is a SoftcnstrtuninGipsAPI ...
-//		} else
-		if (gipsApi instanceof SoftcnstrtuningGipsAPI) {
+		// If the GIPS API is a HardonlyGipsAPI ...
+		if (gipsApi instanceof HardonlyGipsAPI) {
+			setup( //
+					gipsApi, //
+					"./ihtcgipssolution/hardonly/hipe/engine/hipe-network.xmi", //
+					"ihtcgipssolution.hardonly.hipe.engine.HiPEEngine", //
+					"./ihtcgipssolution/hardonly/api/gips/gips-model.xmi", //
+					modelPath, //
+					"./ihtcgipssolution/hardonly/api/ibex-patterns.xmi" //
+			);
+			// If the GIPS API is a SoftcnstrtuninGipsAPI ...
+		} else if (gipsApi instanceof SoftcnstrtuningGipsAPI) {
 			setup( //
 					gipsApi, //
 					"./ihtcgipssolution/softcnstrtuning/hipe/engine/hipe-network.xmi", //

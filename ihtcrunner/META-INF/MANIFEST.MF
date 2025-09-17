@@ -10,7 +10,8 @@ Require-Bundle: ihtcmetamodel;bundle-version="0.0.1",
  org.emoflon.ibex.gt.democles,
  org.emoflon.ibex.gt.hipe,
  ihtcgipssolution.softcnstrtuning;bundle-version="1.0.0",
- org.apache.commons.cli;bundle-version="1.9.0"
+ org.apache.commons.cli;bundle-version="1.9.0",
+ ihtcgipssolution.hardonly
 Automatic-Module-Name: ihtcrunner
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: ihtcgipssolution.softcnstrtuning.api.gips,

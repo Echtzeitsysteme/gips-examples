@@ -19,7 +19,7 @@ import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
-
+import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 //import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 import ihtcmetamodel.Hospital;
@@ -195,29 +195,29 @@ public abstract class AbstractIhtcGipsRunner {
 		}
 	}
 
-//	/**
-//	 * Applies the best found solution (i.e., all non-zero mappings) with a given
-//	 * IHTC 2024 project GIPS API object.
-//	 * 
-//	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
-//	 *                information from.
-//	 * @param verbose If true, the method will print some more information about the
-//	 *                GT rule application.
-//	 */
-//	protected void applySolution(final HardonlyGipsAPI gipsApi, final boolean verbose) {
-//		Objects.requireNonNull(gipsApi);
-//
-//		// Apply found solution
-//		final long tick = System.nanoTime();
-//		gipsApi.getAadp().applyNonZeroMappings(false);
-//		gipsApi.getAnrs().applyNonZeroMappings(false);
-//		gipsApi.getArp().applyNonZeroMappings(false);
-//		gipsApi.getAsp().applyNonZeroMappings(false);
-//		final long tock = System.nanoTime();
-//		if (verbose) {
-//			logger.info("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
-//		}
-//	}
+	/**
+	 * Applies the best found solution (i.e., all non-zero mappings) with a given
+	 * IHTC 2024 project GIPS API object.
+	 * 
+	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
+	 *                information from.
+	 * @param verbose If true, the method will print some more information about the
+	 *                GT rule application.
+	 */
+	protected void applySolution(final HardonlyGipsAPI gipsApi, final boolean verbose) {
+		Objects.requireNonNull(gipsApi);
+
+		// Apply found solution
+		final long tick = System.nanoTime();
+		gipsApi.getAadp().applyNonZeroMappings(false);
+		gipsApi.getAnrs().applyNonZeroMappings(false);
+		gipsApi.getArp().applyNonZeroMappings(false);
+		gipsApi.getAsp().applyNonZeroMappings(false);
+		final long tock = System.nanoTime();
+		if (verbose) {
+			logger.info("=> GT rule application duration: " + (tock - tick) / 1_000_000_000 + "s.");
+		}
+	}
 
 	/**
 	 * Applies the best found solution (i.e., all non-zero mappings) with a given
