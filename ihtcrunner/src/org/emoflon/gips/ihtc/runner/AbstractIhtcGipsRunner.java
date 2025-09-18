@@ -434,6 +434,7 @@ public abstract class AbstractIhtcGipsRunner {
 		if (parameterPath != null) {
 			gipsApi.getSolverConfig().setParameterPath(parameterPath);
 		}
+		gipsApi.getSolverConfig().setEnableOutput(verbose);
 	}
 
 }
