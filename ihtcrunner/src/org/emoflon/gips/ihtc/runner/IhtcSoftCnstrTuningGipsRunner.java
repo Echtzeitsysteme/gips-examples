@@ -6,6 +6,8 @@ import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
+import ihtcmetamodel.Hospital;
+import ihtcmetamodel.metrics.ModelCostCalculator;
 
 public class IhtcSoftCnstrTuningGipsRunner extends AbstractIhtcGipsRunner {
 
@@ -47,44 +49,63 @@ public class IhtcSoftCnstrTuningGipsRunner extends AbstractIhtcGipsRunner {
 			logger.info("Runtime model load: " + tickTockToElapsedSeconds(startTime, modelLoadedTime) + "s.");
 		}
 
-		//
-		// Initialize GIPS API
-		//
+		SoftcnstrtuningGipsAPI gipsApi = null;
+		long gipsSaveDoneTime = -1;
+		int bestFoundSolution = Integer.MAX_VALUE;
 
-		if (verbose) {
-			logger.info("=> Start GIPS init.");
-		}
+		final long timeLimitNano = 10l * 60 * 1_000_000_000;
+		while (System.nanoTime() <= startTime + timeLimitNano) {
+			//
+			// Initialize GIPS API
+			//
 
-		Observer.getInstance().setCurrentSeries("Eval");
-		final SoftcnstrtuningGipsAPI gipsApi = new SoftcnstrtuningGipsAPI();
-		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
-		final long gipsInitDoneTime = System.nanoTime();
-		if (verbose) {
-			logger.info("Runtime GIPS init: " + tickTockToElapsedSeconds(startTime, gipsInitDoneTime) + "s.");
-		}
+			if (verbose) {
+				logger.info("=> Start GIPS init.");
+			}
 
-		// Set GIPS configuration parameters from this object
-		setGipsConfig(gipsApi);
+			Observer.getInstance().setCurrentSeries("Eval");
+			gipsApi = new SoftcnstrtuningGipsAPI();
+			XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
+			final long gipsInitDoneTime = System.nanoTime();
+			if (verbose) {
+				logger.info("Runtime GIPS init: " + tickTockToElapsedSeconds(startTime, gipsInitDoneTime) + "s.");
+			}
 
-		//
-		// Run GIPS solution
-		//
+			// Set GIPS configuration parameters from this object
+			setGipsConfig(gipsApi);
 
-		buildAndSolve(gipsApi, verbose);
-		final long gipsSolvingDoneTime = System.nanoTime();
+			//
+			// Run GIPS solution
+			//
 
-		applySolution(gipsApi, verbose);
+			buildAndSolve(gipsApi, verbose);
+			final long gipsSolvingDoneTime = System.nanoTime();
 
-		final long solutionApplicationDoneTime = System.nanoTime();
-		if (verbose) {
-			logger.info("Runtime solution application: "
-					+ tickTockToElapsedSeconds(gipsSolvingDoneTime, solutionApplicationDoneTime) + "s.");
-		}
-		gipsSave(gipsApi, gipsOutputPath);
-		final long gipsSaveDoneTime = System.nanoTime();
-		if (verbose) {
-			logger.info("Runtime GIPS save: " + tickTockToElapsedSeconds(solutionApplicationDoneTime, gipsSaveDoneTime)
-					+ "s.");
+			applySolution(gipsApi, verbose);
+
+			final long solutionApplicationDoneTime = System.nanoTime();
+			if (verbose) {
+				logger.info("Runtime solution application: "
+						+ tickTockToElapsedSeconds(gipsSolvingDoneTime, solutionApplicationDoneTime) + "s.");
+			}
+			gipsSave(gipsApi, gipsOutputPath);
+			gipsSaveDoneTime = System.nanoTime();
+			if (verbose) {
+				logger.info("Runtime GIPS save: "
+						+ tickTockToElapsedSeconds(solutionApplicationDoneTime, gipsSaveDoneTime) + "s.");
+			}
+
+			gipsApi.terminate();
+
+			// Calculate cost and (potentially) update best found solution value
+			final Hospital solution = (Hospital) gipsApi.getEMoflonApp().getModel().getResources().get(0).getContents()
+					.get(0);
+			final ModelCostCalculator calc = new ModelCostCalculator();
+			int newSolution = calc.calculateTotalCost(solution);
+			if (newSolution < bestFoundSolution) {
+				bestFoundSolution = newSolution;
+				logger.info("Found a new best solution with obj: " + bestFoundSolution);
+			}
 		}
 
 		//
