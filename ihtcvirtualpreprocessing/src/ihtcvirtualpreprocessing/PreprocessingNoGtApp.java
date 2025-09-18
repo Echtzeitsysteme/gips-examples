@@ -304,19 +304,26 @@ public class PreprocessingNoGtApp {
 						int lastDay = 0;
 						// Genders of all occupants in the same room are equal
 						String allOccupantGenderInRoom = patient.getGender(); // To be overwritten if the Gender of occupants in the same room and time do not match
+						// Find earliest day a occupant leaves the room
+						int earliestDay = model.getPeriod();
 						for(final Patient p : occupantsInRoom) {
 							if(lastDay < p.getStayLength() - 1) {
 								lastDay = p.getStayLength() - 1;
 								allOccupantGenderInRoom = p.getGender();
 							}
+							if(earliestDay > p.getStayLength()) {
+								earliestDay = p.getStayLength();
+							}
 						}
-						
+						// If the room is already completely full with occupants -> don't create VSW
+						int occupantsPerRoom = occupantsInRoom.size();
+						final boolean roomFull = occupantsPerRoom == room.getBeds() && shift.getShiftNo() / 3 < earliestDay;
 						// Check if gender of the occupants does *not* match the gender of the patient
 						// ... latest occupant's stay is within the time frame
 						final boolean genderMix = !patient.getGender().equals(allOccupantGenderInRoom) && shift.getShiftNo() / 3 <= lastDay;
 						
 						// ... do/do not create virtual shift objects
-						if (!genderMix) {
+						if (!genderMix && !roomFull) {
 							// Check if the shift number / 3 matches any available OT's capacity object
 							final int day = shift.getShiftNo() / 3;
 							VirtualWorkloadToCapacity vfound = null;
