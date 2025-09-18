@@ -198,9 +198,9 @@ when nextVirtualShiftToWorkloadDoesNotExist
 // Pre-processing for existing (non-virtual) edges between `Shift` and `Workload`
 //
 
-rule preprocessOccupantsWorkload {
+rule preprocessOccupantsFirstWorkload {
 	p : Patient {
-		- workloads -> w
+		- firstWorkload -> w
 	}
 	
 	w : Workload {
@@ -222,6 +222,46 @@ rule preprocessOccupantsWorkload {
 		++ - shift -> s
 		.isSelected := false
 		.wasImported := true
+	}
+	
+	# p.isOccupant == true
+}
+
+rule preprocessOccupantsWorkload {
+	p : Patient {
+		- workloads -> w
+	}
+	
+	w : Workload {
+		-- - derivedShift -> s
+		- prev -> prevw
+	}
+	
+	prevw : Workload {
+		
+	}
+	
+	prevvstw : VirtualShiftToWorkload {
+		- workload -> prevw
+		++ - enables_virtualShiftToWorkload -> vnew
+	}
+	
+	s : Shift {
+		- room -> r
+		// Explicitly delete both edges
+		// (Maybe deleting one is sufficient)
+		-- - derivedWorkloads -> w
+		++ - virtualWorkload -> vnew
+	}
+	
+	r : Room
+	
+	++ vnew : VirtualShiftToWorkload {
+		++ - workload -> w
+		++ - shift -> s
+		.isSelected := false
+		.wasImported := true
+		++ - requires_virtualShiftToWorkload -> prevvstw
 	}
 	
 	# p.isOccupant == true
