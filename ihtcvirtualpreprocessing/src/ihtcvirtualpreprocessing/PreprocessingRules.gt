@@ -325,30 +325,31 @@ rule fixOperationDayOpTime {
 when noVirtualEdgeWorkloadToOpTime
 
 rule fixOperationDayCapacity {
-	p : Patient {
-		- firstWorkload -> w
+	c : Capacity {
+		- virtualOpTime -> vop
+		++ - virtualWorkload -> vnew2
+	}
+	
+	vop : VirtualOpTimeToCapacity {
+		- opTime -> opTime
+	}
+	
+	opTime : OpTime {
+		- virtualWorkload -> vw
+	}
+	
+	vw : VirtualWorkloadToOpTime {
+		- workload -> w
+		++ - enables_virtual_WorkloadToCapacity -> vnew2
 	}
 	
 	w : Workload
 	
-	c : Capacity {
-		++ - virtualWorkload -> vnew2
-	}
-	
-	vexist : VirtualWorkloadToOpTime {
-		- workload -> w
-		// Explicitly set the opposite edge
-		++ - enables_virtual_WorkloadToCapacity -> vnew2
-	}
-	
 	++ vnew2 : VirtualWorkloadToCapacity {
-		++ - capacity -> c
 		++ - workload -> w
+		++ - capacity -> c
 		.isSelected := false
-		++ - requires_virtualWorkloadToOpTime -> vexist
+		++ - requires_virtualWorkloadToOpTime -> vw
 	}
-	
-	# p.surgeryDuration <= c.maxCapacity
-	# p.isOccupant == false
 }
 when noVirtualEdgeWorkloadToCapacity
