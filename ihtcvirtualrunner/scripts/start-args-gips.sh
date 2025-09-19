@@ -6,7 +6,7 @@
 # load.
 #
 # Example:
-# `./start-args-gips.sh ./i01.json 0 /tmp/callback.json /tmp/parameter.json`
+# `./start-args-gips.sh ./i01.json ./i01_solution.json 0 /tmp/callback.json /tmp/parameter.json`
 #
 # If you have any questions, feel free to write us an email.
 #
@@ -34,13 +34,24 @@ export JAR="gips-ihtc.jar"
 setup
 
 # Example arguments:
-# ./i01.json
-# $1
+# ./i01.json ./i01_solution.json
+# $1         $2
+#
+# or
+#
+# ./i01.json ./i01_solution.json 0
+# $1         $2                  $2
+#
+# or
+#
+# ./i01.json ./i01_solution.json 0 ./callback.json ./parameter.json
+# $1         #$2                 $3 $4             $5
 
-export inputXmi=$1
-export randomSeed=$2
-export callback=$3
-export parameter=$4
+export inputJson=$1
+export outputJson=$2
+export randomSeed=$3
+export callback=$4
+export parameter=$5
 
 # Extract needed XMI files
 echo "=> Applying GIPS XMI workarounds."
@@ -53,13 +64,13 @@ unzip -qq -o $JAR "ihtcvirtualgipssolution/api/ibex-patterns.xmi"
 # Actual run
 export RUN_NAME=$(date +%Y-%m-%d"_"%H-%M-%S)
 if [ ! -z "$randomSeed" ]; then
-    if [ ! -z "$parameter" ]; then
-        export ARGS="-i $inputXmi --verbose --randomseed $randomSeed --callback $callback --parameter $parameter"
+    if [ ! -z "$parameter" ] && [ ! -z "$callback" ]; then
+        export ARGS="-i $inputJson -o $outputJson --verbose --randomseed $randomSeed --callback $callback --parameter $parameter"
     else
-        export ARGS="-i $inputXmi --verbose --randomseed $randomSeed"
+        export ARGS="-i $inputJson -o $outputJson --verbose --randomseed $randomSeed"
     fi
 else
-    export ARGS="-i $inputXmi --verbose"
+    export ARGS="-i $inputJson -o $outputJson --verbose"
 fi
 
 echo "#"

@@ -281,6 +281,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		final Resource loadedResource = FileUtils.loadModel(xmiOutputPath);
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
+		logger.info("Writing output JSON file to: " + outputPath);
 		exporter.modelToJson(jsonOutputPath, verbose);
 	}
 
@@ -300,6 +301,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		final Resource loadedResource = FileUtils.loadModel(xmiOutputPath);
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonNoPostProcExporter exporter = new ModelToJsonNoPostProcExporter(solvedHospital);
+		logger.info("Writing output JSON file to: " + outputPath);
 		exporter.modelToJson(jsonOutputPath, verbose);
 	}
 

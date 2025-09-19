@@ -134,7 +134,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	protected void gipsSave(final GipsEngineAPI<?, ?> gipsApi, final String path) {
 		Objects.requireNonNull(gipsApi);
 		Objects.requireNonNull(path);
-
+		logger.info("Saving GIPS output XMI file to: " + path);
 		try {
 			gipsApi.saveResult(path);
 		} catch (final IOException e) {
@@ -151,6 +151,8 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 	protected void writeXmiToFile(final String path, final ResourceSet rs) {
 		Objects.requireNonNull(path);
 		Objects.requireNonNull(rs);
+		
+		logger.info("Saving resource set <" + rs + "> to path: " + path);
 
 		// Workaround: Always use absolute path
 		final URI absPath = URI.createFileURI(path);
@@ -311,6 +313,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
+		logger.info("Writing output JSON file to: " + outputPath);
 		exporter.modelToJson(outputPath);
 	}
 
