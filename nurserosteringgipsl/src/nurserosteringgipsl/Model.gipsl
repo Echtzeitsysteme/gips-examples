@@ -20,6 +20,7 @@ config {
 pattern findNurseCompleteWeekendsWithSaturday {
 	root : Root {
 		- employees -> nurse
+		- days ->day
 	}
 	
 	nurse : Employee {
@@ -39,6 +40,9 @@ pattern findNurseCompleteWeekendsWithSaturday {
 }
 
 mapping nurseCompleteWeekendSaturday to findNurseCompleteWeekendsWithSaturday;
+function nurseCompleteWeekendFunc with nurseCompleteWeekendSaturday{
+	context.value * context.nodes.nurse.contract.completeWeekendsWeight
+}
 
 pattern findEmployeeDayCombinationWeekend {
 	root : Root {
@@ -53,7 +57,9 @@ pattern findEmployeeDayCombinationWeekend {
 }
 
 mapping employeeDayCombinationWeekend to findEmployeeDayCombinationWeekend;
-
+function employeeDayCombWeekendFunc with employeeDayCombinationWeekend{
+	context.value * context.nodes.employee.contract.maxNoOfWorkWeekendsInFourWeeksWeight
+}
 
 pattern findNurseNoNightShiftBeforeFreeWeekend{
 	root : Root {
@@ -79,9 +85,15 @@ pattern findNurseNoNightShiftBeforeFreeWeekend{
 	
 	// Day must be a Friday
 	# day.dayOfWeekNumeric == 5
+
 }
 
 mapping nurseNoNightShiftBeforeFreeWeekend to findNurseNoNightShiftBeforeFreeWeekend;
+function noNightShiftBeforeFreeWeekendFunc with nurseNoNightShiftBeforeFreeWeekend{
+	context.value * context.nodes.nurse.contract.noNightShiftBeforeFreeWeekendWeight
+}
+	
+
 
 pattern findNurseWeekendIdenticalShift {
 	root : Root {
@@ -111,7 +123,9 @@ pattern findNurseWeekendIdenticalShift {
 }
 
 mapping nurseWeekendIdenticalShift to findNurseWeekendIdenticalShift;
-
+function weekendIdenticalShiftFunc with nurseWeekendIdenticalShift{
+	context.value * context.nodes.nurse.contract.identicalShiftTypesDuringWeekendWeight
+}
 // This rule assigns an employee to a shift on a specific
 // day.
 rule assignEmployeeToShift {
@@ -169,18 +183,24 @@ pattern findNeededShiftSkill {
 	skill : Skill
 }
 
-pattern findEmployee {
+pattern findEmployeeMin {
 	emp : Employee
 }
 
-mapping findEmp to findEmployee;
-
-
-pattern findCoverRequirement{
-	cr : CoverRequirement
+mapping findEmpMin to findEmployeeMin;
+function minAssignmentsFunc with findEmpMin{
+	context.value * context.nodes.emp.contract.minNoOfAssignmentsWeight
 }
 
-mapping findCr to findCoverRequirement;
+pattern findEmployeeMax {
+	emp : Employee
+}
+
+mapping findEmpMax to findEmployeeMax;
+function maxAssignmentsFunc with findEmpMax{
+	context.value * context.nodes.emp.contract.maxNoOfAssignmentsWeight
+}
+
 
 pattern findViolatedDayOffRequest {
 	dayOffRequest : DayOffRequest{
@@ -272,24 +292,15 @@ mapping skillShiftAssignment to findShiftSkillEmployeeCombination;
 //every cover requirement has a number of preferred employees.
 // This constraint ensures that the shift connected to this cover requirement gets
 // as many employees mapped as this cover requirement's "preferred".
-constraint with CoverRequirement {
-	mappings.e2s->filter(element.nodes.shift == context.shift)->sum(element.value) == context.preferred // vorher == context.preferred
+constraint with CoverRequirement {	//hier
+	mappings.e2s->filter(element.nodes.shift == context.shift)->sum(element.value) == context.preferred // vorher >=1
 }
 
-//every cover requirement has a number of preferred employees.
-// This constraint ensures that the shift connected to this cover requirement gets
-// as many employees mapped as this cover requirement's "preferred".
-//constraint with findCr {
-//	mappings.e2s->filter(element.nodes.shift == context.nodes.cr.shift)->sum(element.value) == context.nodes.cr.preferred // >=1 instead ?
-//	
-//	<=>
-//	
-//	context.value == 1
-//}
+
 
 // "a nurse can only work one shift per day, i.e. no two shift can be assigned to the same nurse on a day."
 // GIPS interpretation: every combination of employee and day
-// must contain at most one selected mapping.
+// must contain at most one selected mapping.	//hier
 constraint with findEmployeeDayCombination {
 	mappings.e2s->filter(
 		element.nodes.employee == context.nodes.employee
@@ -311,17 +322,22 @@ constraint with findShiftSkillEmployeeCombination {
 		& element.nodes.skill == context.nodes.skill
 		& element.nodes.employee == context.nodes.employee
 	)->sum(element.value) == 1
-	// ^notice: the Boolean equivalence operator `<=>` is very expensive
-	// in terms of required compute power.
 }
 
-// TODO: This constraint is currently disabled. Otherwise, the solver
-// does not find a valid solution for `sprint01.xml` -> should be investigated.
+
 ////// Minimum/maximum number of shifts that can be assigned to an employee
-constraint with findEmp {
-		
+constraint with findEmpMin {		
+	
 	mappings.e2s->filter(element.nodes.employee == context.nodes.emp)->sum(element.value) < context.nodes.emp.contract.minimumNoOfAssignments
-	|
+			
+	<=>
+	
+	context.value == 1 
+
+}
+
+constraint with findEmpMax {		
+
 	mappings.e2s->filter(element.nodes.employee == context.nodes.emp)->sum(element.value) > context.nodes.emp.contract.maximumNoOfAssignments
 		
 	<=>
@@ -329,6 +345,7 @@ constraint with findEmp {
 	context.value == 1
 
 }
+
 
 //maxWorkingWeekendsInFourWeeks (soft constraint)
 //is automatically limited to four weeks
@@ -353,12 +370,15 @@ constraint with findNeededShiftSkill {
 		element.nodes.shift == context.nodes.shift
 		& element.nodes.skill == context.nodes.skill
 	)->sum(element.value) >= 1
+	
+
 }
 
-//// should probably be a soft constraint
+
+
 constraint with nurseCompleteWeekendSaturday {
-	// find all Saturdays
-![
+	
+[
 	[
 		mappings.e2s->filter( //
 			element.nodes.employee == context.nodes.nurse //
@@ -367,7 +387,7 @@ constraint with nurseCompleteWeekendSaturday {
 		== 1
 	]
 	
-	<=>
+	^
 
 	[
 		mappings.e2s->filter( //
@@ -383,10 +403,10 @@ constraint with nurseCompleteWeekendSaturday {
 	context.value == 1
 }
 
-//// should probably be a soft constraint
+
 constraint with nurseWeekendIdenticalShift {
 	
-![	
+[	
 	[
 		mappings.e2s->filter( //
 			// employee must match
@@ -415,14 +435,14 @@ constraint with nurseWeekendIdenticalShift {
 
   <=>
 
-    context.value == 1
-    
+    context.value == 0 
+     
 }
 
 
 
 constraint with nurseNoNightShiftBeforeFreeWeekend {
-![	
+[	
 	[
 			mappings.e2s->filter( //
 			element.nodes.employee == context.nodes.nurse //
@@ -459,19 +479,21 @@ constraint with nurseNoNightShiftBeforeFreeWeekend {
 	
 	<=>
 	
-	context.value == 1
+	context.value == 0
 }
 
 function violatedDaysFunc with violatedDaysOff {
-	context.value
+	context.value * context.nodes.dayOffRequest.weight
 }
 
 function violatedShiftsFunc with violatedShiftOff{
-	context.value
+	context.value * context.nodes.shiftOffRequest.weight
 }
 
 objective : min {
-	functions.violatedDaysFunc + functions.violatedShiftsFunc
+	functions.violatedDaysFunc + functions.violatedShiftsFunc + functions.employeeDayCombWeekendFunc
+	+ functions.noNightShiftBeforeFreeWeekendFunc + functions.nurseCompleteWeekendFunc + functions.weekendIdenticalShiftFunc
+	+ functions.maxAssignmentsFunc + functions.minAssignmentsFunc
 }
 
 

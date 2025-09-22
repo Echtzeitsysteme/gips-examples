@@ -209,7 +209,7 @@ public class NurseRosteringModelValidator {
 
 			// Check all cover requirements
 			for (final CoverRequirement cr : d.getRequirements()) {
-				if (cr.getPreferred() < 1) {
+				if (cr.getPreferred() < 1) { //muss angepasst werden weil in sprint_hidden04.xml gibt es preferred=0
 					return false;
 				}
 
