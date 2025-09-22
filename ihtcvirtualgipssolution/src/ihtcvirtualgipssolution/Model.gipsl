@@ -540,7 +540,7 @@ constraint with selectedOccupantNodes {
 	context.value == 1
 }
 
-// V2: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
+// V2.1: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
 constraint with selectShiftToFirstWorkload {
 	mappings.selectedShiftToFirstWorkload->filter(
@@ -559,6 +559,20 @@ constraint with selectShiftToFirstWorkload {
 //	mappings.selectedShiftToFirstWorkload->filter(
 //		element.nodes.vwc == context.nodes.vwc
 //	)->sum(element.value)
+}
+
+// V2.2:  The virtual Node "VirtualWorkloadToCapacity" can only be added to the final model if
+// the the corresponding patient is also assigned to a room
+constraint with selectedOperationDay{
+	mappings.selectedOperationDay->filter(
+		element.nodes.vwc == context.nodes.vwc &
+		element.nodes.vopc == context.nodes.vopc &
+		element.nodes.vwop == context.nodes.vwop
+	)->sum(element.value)
+	<=
+	mappings.selectedShiftToFirstWorkload->filter(
+		element.nodes.vwc == context.nodes.vwc
+	)->sum(element.value)
 }
 	
 // V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
