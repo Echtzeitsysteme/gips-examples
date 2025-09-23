@@ -10,7 +10,7 @@
 # `ihtc2024_competition_instances` containing all instance files.
 #
 # Example: `./start-eval-with-random-seed.sh 42`
-#           (one argument = random seed is neccessary)
+#           (one argument = random seed is necessary)
 #
 # If you have any questions, feel free to write us an email.
 #
@@ -33,11 +33,11 @@ rsync -a ./ihtc2024_competition_instances/* $folder
 for ((i=1;i<=30;i++));
 do
     if [ $i -lt 10 ]; then
-        echo "$folder/i0$i$.json"
-        ./start-args-gips.sh "$folder/i0$i.json" $randomSeed
+        echo "$folder/i0$i.json"
+        ./start-args-gips.sh "$folder/i0$i.json" "$folder/i0${i}_solution.json" $randomSeed
     else
-        echo "$folder/i$i$.json"
-        ./start-args-gips.sh "$folder/i$i.json" $randomSeed
+        echo "$folder/i$i.json"
+        ./start-args-gips.sh "$folder/i$i.json" "$folder/i${i}_solution.json" $randomSeed
     fi
 done
 
