@@ -5,7 +5,7 @@ config {
 	solver := GUROBI;
 	timeLimit := true [value := 300.0]; // 5 min
 	randomSeed := true [value := 0];
-	presolve := aggressive;
+	presolve := auto;
 	debugOutput := true;
 	threadCount := true [value := 0]; // 0 threads = Gurobi auto
 }
