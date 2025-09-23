@@ -123,16 +123,21 @@ public class IhtcGipsHeadlessRunner {
 	 * Parses the given arguments to configure the runner.
 	 * <ol>
 	 * <li>"i": input JSON file to load (required)</li>
-	 * <li>"o": output JSON file to store (required)</li>
+	 * <li>"o": output JSON file to store (optional)</li>
 	 * <li>"q": model input XMI file to store (optional)</li>
 	 * <li>"r": model output XMI file to store (optional)</li>
-	 * <li>"d": debug output flag (optional)</li>
-	 * <li>"s": split output JSON file flag (optional)</li>
+	 * <li>"v": if configured, `verbose` will be activated (optional)</li>
+	 * <li>"d": parameter JSON file path (optional)</li>
+	 * <li>"c": callback JSON file path (optional)</li>
 	 * <li>"n": random seed for the (M)ILP solver (optional)</li>
+	 * <li>"t": time limit of the (M)ILP solver in seconds (optional)</li>
+	 * <li>"p": number of threads to use for the ()M)ILP solver (optional)</li>
+	 * <li>"h": if true, only hard constraints will be used (optional)</li>
 	 * </ol>
 	 * 
 	 * @param args Arguments to parse.
 	 */
+	@SuppressWarnings("deprecation")
 	private static CliConfig parseArgs(final String[] args) {
 		Objects.requireNonNull(args);
 		final Options options = new Options();

@@ -1,5 +1,7 @@
 package org.emoflon.gips.ihtc.runner.utils;
 
+import java.util.Objects;
+
 import org.eclipse.emf.common.util.URI;
 import org.emoflon.gips.core.api.GipsEngineAPI;
 
@@ -75,6 +77,12 @@ public class XmiSetupUtil {
 	private static void setup(final GipsEngineAPI<?, ?> gipsApi, final String hipeNetworkXmiPath,
 			final String hipeEngineClassname, final String gipsModelXmiPath, final String modelPath,
 			final String ibexPatternXmiPath) {
+		Objects.requireNonNull(gipsApi);
+		Objects.requireNonNull(hipeNetworkXmiPath);
+		Objects.requireNonNull(hipeEngineClassname);
+		Objects.requireNonNull(gipsModelXmiPath);
+		Objects.requireNonNull(modelPath);
+		Objects.requireNonNull(ibexPatternXmiPath);
 		final boolean runAsJar = FileUtils.checkIfFileExists(gipsModelXmiPath) //
 				&& FileUtils.checkIfFileExists(ibexPatternXmiPath) //
 				&& FileUtils.checkIfFileExists(hipeNetworkXmiPath);

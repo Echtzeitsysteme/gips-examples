@@ -7,6 +7,13 @@ import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 
+/**
+ * This concrete runner contains utility methods to wrap a given GIPS API object
+ * in the context of the IHTC 2024 example. This implementation takes all hard
+ * constraints as well as three selected soft constraints into account.
+ * 
+ * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
+ */
 public class IhtcSoftCnstrTuningGipsRunner extends AbstractIhtcGipsRunner {
 
 	/**

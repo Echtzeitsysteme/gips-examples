@@ -44,7 +44,7 @@ public abstract class AbstractIhtcGipsRunner {
 	/**
 	 * The scenario (JSON) file to load.
 	 */
-	public String scenarioFileName = "test01.json";
+	public String scenarioFileName = "i01.json";
 
 	/**
 	 * Project folder location.
@@ -118,6 +118,9 @@ public abstract class AbstractIhtcGipsRunner {
 	 */
 	protected String parameterPath = projectFolder + "/../ihtcrunner/scripts/parameter.json";
 
+	/**
+	 * Constructor for creating a new object. Initializes the logging.
+	 */
 	public AbstractIhtcGipsRunner() {
 		// Configure logging
 		logger.setUseParentHandlers(false);

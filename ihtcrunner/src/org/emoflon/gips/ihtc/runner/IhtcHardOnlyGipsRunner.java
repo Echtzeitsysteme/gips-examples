@@ -7,6 +7,13 @@ import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 
+/**
+ * This concrete runner contains utility methods to wrap a given GIPS API object
+ * in the context of the IHTC 2024 example. This implementation only takes all
+ * hard constraints into account.
+ * 
+ * @author Maximilian Kratz (maximilian.kratz@es.tu-darmstadt.de)
+ */
 public class IhtcHardOnlyGipsRunner extends AbstractIhtcGipsRunner {
 
 	/**
