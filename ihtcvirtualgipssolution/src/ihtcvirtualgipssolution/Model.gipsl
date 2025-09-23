@@ -198,17 +198,6 @@ pattern genderRoomShift {
 	# s.shiftNo % 3 == 0
 }
 
-// Used in a mapping to save the information if a surgeon is operating in a specific OT for each day
-pattern surgeonOTForDay {
-	s : Surgeon {
-		- opTimes -> op
-	}
-	
-	op : OpTime 
-	
-	ot : OT
-}
-
 //
 // GIPSL 
 //
@@ -249,16 +238,8 @@ mapping assignedPatientsToRoom to patientForRoom;
 // Mapping that holds the information if a specific gender is assigned to a room on a specific day. 
 mapping assignedGenderToRoomOnShift to genderRoomShift;
 
-// Mapping that holds the information if a surgeon operates in a specific ot on a specific day
-mapping otForSurgeon to surgeonOTForDay;
-
-// mapping that counts how many ots a surgeon is assigned to on a specific day.
-// otCount: Amount of OTs a surgeon is operating in on a specific day
-// penalizedOTs: A penalty is applied if a surgeon has more than 1 assigned OT per day. Maximum of 0 and otCount - 1
-mapping otsPerSurgeon to surgeonOptimeTupel{
-	var otCount : EInt
-	var penalizedOTs : EInt
-};
+// Mapping that decides which ots are open on a specific day
+mapping openOTs to otCapacityTupel;
 
 //
 // Hard Constraints
@@ -602,43 +583,18 @@ constraint with countPatientsForRoom {
 
 /* --------------------------------------------------------------------------------------------------------------------- */
 
-// S6: The number of different OTs a surgeon is assigned to per working day should be minimized
-function calculateOtsPerSurgeon with otsPerSurgeon {
-	context.variables.penalizedOTs
+// S5: The number of OTs opened on each day should be minimized
+function calculateOPenOTs with Day {
+	mappings.openOTs->filter(element.nodes.c.day == context.number)->sum(element.value) 
 }
 
-// U5: sets the mapping to true if the surgeon operates in the ot on that day
-constraint with otForSurgeon {
+// U4: sets the mapping to true if there is at least one surgery assigned to the ot on that day
+constraint with openOTs {
 	mappings.selectedOperationDay->filter(
-		element.nodes.opTime == context.nodes.op &
-		element.nodes.vwc.capacity.ot == context.nodes.ot
-	)->sum(element.value)
-	<=
+		element.nodes.vwc.capacity == context.nodes.c
+	)->sum(element.value)	
+	<= 
 	context.value * 1000
-	
-	&
-
-	context.value
-	<=
-	mappings.selectedOperationDay->filter(
-		element.nodes.opTime == context.nodes.op &
-		element.nodes.vwc.capacity.ot == context.nodes.ot
-	)->sum(element.value)
-}
-
-// U6: counts the ots per surgeon for each day
-constraint with otsPerSurgeon {
-	context.variables.otCount
-	==
-	mappings.otForSurgeon->filter(
-		element.nodes.op == context.nodes.op 
-	)->sum(element.value)
-}
-
-// U7: calculates max(0, otCount) for each surgeon on each day
-constraint with otsPerSurgeon {
-	context.variables.penalizedOTs >= (context.variables.otCount - 1) &
-	context.variables.penalizedOTs >= 0
 }
 
 /* --------------------------------------------------------------------------------------------------------------------- */
@@ -659,7 +615,7 @@ function calculateNotAssignedOptionalPatients with optionalPatients {
 
 objective : min {
 	0
-	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
-	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
-	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
+	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater) // S5
+	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay) // S7
+	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional) // S8
 }
