@@ -30,6 +30,7 @@ import ihtcvirtualmetamodel.utils.FileUtils;
  * /home/mkratz/git/gips-examples/ihtcvirtualmetamodel/instances/test01_solved.xmi
  * --verbose --randomseed 0 --timelimit 300 --threads 4 --callback
  * /tmp/gurobi-callback.json --parameter /tmp/gurobi-parameter.json
+ * --preprocessing nogt
  * 
  * @author Maximilian Kratz {@literal <maximilian.kratz@es.tu-darmstadt.de>}
  */
@@ -88,6 +89,16 @@ public class IhtcVirtualGipsHeadlessRunner {
 		if (config.parameterPath != null) {
 			runner.setParameterPath(config.parameterPath);
 		}
+		if (config.preprocessing != null) {
+			if ("gt".equals(config.preprocessing)) {
+				runner.setPreProcessingApproach(false);
+			} else if ("nogt".equals(config.preprocessing)) {
+				runner.setPreProcessingApproach(true);
+			} else {
+				throw new IllegalArgumentException(
+						"Given pre-processing approach <" + config.preprocessing + "> is invalid.");
+			}
+		}
 
 		// Execute the runner
 		runner.run();
@@ -122,6 +133,7 @@ public class IhtcVirtualGipsHeadlessRunner {
 	 * <li>"p": number of threads to use for the (M)ILP solver (optional)</li>
 	 * <li>"c": callback configuration path for Gurobi (optional)</li>
 	 * <li>"d": parameter path for Gurobi (optional)</li>
+	 * <li>"k": pre-processing approach (optional)</li>
 	 * </ol>
 	 * 
 	 * @param args Arguments to parse.
@@ -180,6 +192,11 @@ public class IhtcVirtualGipsHeadlessRunner {
 		parameterPath.setRequired(false);
 		options.addOption(parameterPath);
 
+		// Pre-Processing option
+		final Option preprocessing = new Option("k", "preprocessing", true, "pre-processing approach: gt or notgt");
+		preprocessing.setRequired(false);
+		options.addOption(preprocessing);
+
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -208,7 +225,8 @@ public class IhtcVirtualGipsHeadlessRunner {
 				cmd.hasOption("timelimit") ? Integer.valueOf(cmd.getOptionValue("timelimit")) : -1, //
 				cmd.hasOption("threads") ? Integer.valueOf(cmd.getOptionValue("threads")) : 0, //
 				cmd.hasOption("callback") ? cmd.getOptionValue("callback") : null, //
-				cmd.hasOption("parameter") ? cmd.getOptionValue("parameter") : null //
+				cmd.hasOption("parameter") ? cmd.getOptionValue("parameter") : null, //
+				cmd.hasOption("preprocessing") ? cmd.getOptionValue("preprocessing") : null //
 		);
 	}
 
@@ -216,7 +234,8 @@ public class IhtcVirtualGipsHeadlessRunner {
 	 * Record to hold the parsed CLI configuration parameters.
 	 */
 	private record CliConfig(String inputJsonPath, String outputJsonPath, String inputXmiPath, String outputXmiPath,
-			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath) {
+			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath,
+			String preprocessing) {
 	}
 
 	/**
