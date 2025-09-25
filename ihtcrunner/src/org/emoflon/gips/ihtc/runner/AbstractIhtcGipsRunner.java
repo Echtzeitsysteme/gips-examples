@@ -193,16 +193,17 @@ public abstract class AbstractIhtcGipsRunner {
 	 */
 	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi, final boolean verbose) {
 		Objects.requireNonNull(gipsApi);
+		Objects.requireNonNull(verbose);
 
 		gipsApi.buildProblemTimed(true, true); // Second Parameter: sequential = false/default, parallel = true
-		final SolverOutput output = gipsApi.solveProblemTimed();
-		if (output.solutionCount() == 0) {
-			gipsApi.terminate();
-			logger.warning("No solution found. Aborting.");
-			throw new InternalError("No solution found!");
-		}
+//		final SolverOutput output = gipsApi.solveProblemTimed();
+//		if (output.solutionCount() == 0) {
+//			gipsApi.terminate();
+//			logger.warning("No solution found. Aborting.");
+//			throw new InternalError("No solution found!");
+//		}
 		if (verbose) {
-			logger.info("=> Objective value: " + output.objectiveValue());
+//			logger.info("=> Objective value: " + output.objectiveValue());
 			final Map<String, IMeasurement> measurements = new LinkedHashMap<>(
 					Observer.getInstance().getMeasurements("Eval"));
 			Observer.getInstance().getMeasurements("Eval").clear();
@@ -210,9 +211,10 @@ public abstract class AbstractIhtcGipsRunner {
 			logger.info("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds() + "s.");
 			logger.info("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds() + "s.");
 			logger.info("BUILD: " + measurements.get("BUILD").maxDurationSeconds() + "s.");
-			logger.info("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds() + "s.");
+//			logger.info("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds() + "s.");
 		}
-		return output.objectiveValue();
+//		return output.objectiveValue();
+		return -1; 
 	}
 
 	/**
