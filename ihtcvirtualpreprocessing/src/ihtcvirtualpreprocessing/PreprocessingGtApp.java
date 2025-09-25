@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.ibex.gt.api.GraphTransformationRule;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
+import hipe.engine.config.HiPEPathOptions;
 import ihtcvirtualmetamodel.IhtcvirtualmetamodelPackage;
 import ihtcvirtualmetamodel.Root;
 import ihtcvirtualmetamodel.utils.FileUtils;
@@ -115,7 +116,11 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 	 */
 	public void run() {
 		// Create the API object
-		final IhtcvirtualpreprocessingAPI api = this.initAPI();
+		final IhtcvirtualpreprocessingAPI api = setup( //
+				"./ihtcvirtualpreprocessing/hipe/engine/hipe-network.xmi", //
+				"ihtcvirtualpreprocessing.hipe.engine.HiPEEngine", //
+				"./ihtcvirtualpreprocessing/api/ibex-patterns.xmi" //
+		);
 
 		// Apply all GT rule matches until the specified limit hits
 		// New GT rules (that should be applied) must be added here
@@ -141,11 +146,43 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 
 		// Terminate the eMoflon::IBeX-GT (HiPE) API
 		api.terminate();
+		HiPEPathOptions.getInstance().resetNetworkPath();
+		HiPEPathOptions.getInstance().resetEngineClassName();
 	}
 
 	//
 	// Utility methods.
 	//
+
+	/**
+	 * Initializes the virtual pre-processing API depending on the context this
+	 * program runs in, which could either be as JAR file or within Eclipse.
+	 * 
+	 * @param hipeNetworkXmiPath  HiPE network XMI file path to load.
+	 * @param hipeEngineClassname HiPE engine class name to configure.
+	 * @param ibexPatternXmiPath  IBeX pattern XMI file path to load.
+	 * @return Initialized `IhtcvirtualpreprocessingAPI` eMoflon::IBeX-GT API.
+	 */
+	public IhtcvirtualpreprocessingAPI setup(final String hipeNetworkXmiPath, final String hipeEngineClassname,
+			final String ibexPatternXmiPath) {
+		Objects.requireNonNull(hipeNetworkXmiPath);
+		Objects.requireNonNull(hipeEngineClassname);
+		Objects.requireNonNull(ibexPatternXmiPath);
+
+		final boolean runAsJar = FileUtils.checkIfFileExists(ibexPatternXmiPath) //
+				&& FileUtils.checkIfFileExists(hipeNetworkXmiPath);
+		if (!runAsJar) {
+			return this.initAPI();
+		} else {
+			HiPEPathOptions.getInstance().setNetworkPath( //
+					URI.createFileURI(hipeNetworkXmiPath) //
+			);
+			HiPEPathOptions.getInstance().setEngineClassName( //
+					hipeEngineClassname //
+			);
+			return this.initAPI(URI.createFileURI(ibexPatternXmiPath));
+		}
+	}
 
 	/**
 	 * Applies the given GT rule until it either does not have any more matches or

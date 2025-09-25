@@ -362,6 +362,15 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	}
 
 	/**
+	 * Sets the pre-processing approach to the given value.
+	 * 
+	 * @param noGt If true, the Java-based pre-processing will be used.
+	 */
+	public void setPreProcessingApproach(final boolean noGt) {
+		this.preProcNoGt = noGt;
+	}
+
+	/**
 	 * Sets the private GIPS API configuration parameters from this object to the
 	 * actual GIPS API.
 	 * 
