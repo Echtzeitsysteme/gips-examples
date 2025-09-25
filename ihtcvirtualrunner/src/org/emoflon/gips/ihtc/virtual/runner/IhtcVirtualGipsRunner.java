@@ -41,11 +41,36 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	 * rule matches with eMoflon::IBeX-GT.
 	 */
 	private boolean applicationNoGt = false;
-	
+
 	/**
-	 * If true a timestamp will be added to the filename. 
+	 * If true a timestamp will be added to the filename.
 	 */
 	private boolean saveAllDebugFiles = true;
+
+	/**
+	 * Random seed for the (M)ILP solver.
+	 */
+	private int randomSeed = 0;
+
+	/**
+	 * Time limit for the (M)ILP solver.
+	 */
+	private int timeLimit = -1;
+
+	/**
+	 * Number of threads for the (M)ILP solver.
+	 */
+	private int threads = 0;
+
+	/**
+	 * Gurobi callback path.
+	 */
+	private String callbackPath = projectFolder + "/../ihtcvirtualrunner/scripts/callback.json";
+
+	/**
+	 * Gurobi parameter path.
+	 */
+	private String parameterPath = projectFolder + "/../ihtcvirtualrunner/scripts/parameter.json";
 
 	/**
 	 * Create a new instance of this class.
@@ -129,6 +154,9 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			logger.info("Runtime GIPS init: " + tickTockToElapsedSeconds(preProcDoneTime, gipsInitDoneTime) + "s.");
 		}
 
+		// Set GIPS configuration parameters from this object
+		setGipsConfig(gipsApi);
+
 		//
 		// Run GIPS solution
 		//
@@ -157,21 +185,21 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		//
 		// Model Validation
 		//
-		
+
 		if (verbose) {
 			logger.info("=> Start Model Validation");
 		}
 		validateModel(gipsOutputPath);
 		final long validateDoneTime = System.nanoTime();
 		if (verbose) {
-			logger.info("Runtime validate Model: "
-					+ tickTockToElapsedSeconds(gipsSaveDoneTime, validateDoneTime) + "s.");
+			logger.info(
+					"Runtime validate Model: " + tickTockToElapsedSeconds(gipsSaveDoneTime, validateDoneTime) + "s.");
 		}
-		
+
 		//
 		// Export
 		//
-		
+
 		if (verbose) {
 			logger.info("=> Start JSON export.");
 		}
@@ -216,7 +244,8 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	}
 
 	/**
-	 * Takes a XMI output path (of a GIPS-generated solution model) and validates the model
+	 * Takes a XMI output path (of a GIPS-generated solution model) and validates
+	 * the model
 	 * 
 	 * @param gipsOutputPath
 	 */
@@ -226,12 +255,13 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		final Resource loadedResource = FileUtils.loadModel(gipsOutputPath);
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final SolvedModelValidator validator = new SolvedModelValidator(solvedHospital, verbose);
-		if(saveAllDebugFiles) {
+		if (saveAllDebugFiles) {
 			LocalDateTime now = LocalDateTime.now();
 			String formatted = now.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-			String debugOutputPathTimeStamp = debugOutputPath.substring(0, debugOutputPath.lastIndexOf(".txt")) + "_" + formatted + ".txt";
+			String debugOutputPathTimeStamp = debugOutputPath.substring(0, debugOutputPath.lastIndexOf(".txt")) + "_"
+					+ formatted + ".txt";
 			validator.validate(debugOutputPathTimeStamp);
-		}else {
+		} else {
 			validator.validate(debugOutputPath);
 		}
 	}
@@ -251,6 +281,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		final Resource loadedResource = FileUtils.loadModel(xmiOutputPath);
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
+		logger.info("Writing output JSON file to: " + outputPath);
 		exporter.modelToJson(jsonOutputPath, verbose);
 	}
 
@@ -270,6 +301,7 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		final Resource loadedResource = FileUtils.loadModel(xmiOutputPath);
 		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
 		final ModelToJsonNoPostProcExporter exporter = new ModelToJsonNoPostProcExporter(solvedHospital);
+		logger.info("Writing output JSON file to: " + outputPath);
 		exporter.modelToJson(jsonOutputPath, verbose);
 	}
 
@@ -280,6 +312,85 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	 */
 	public void setVerbose(final boolean verbose) {
 		this.verbose = verbose;
+	}
+
+	/**
+	 * Sets the random seed to the given value.
+	 * 
+	 * @param seed Random seed to set.
+	 */
+	public void setRandomSeed(final int seed) {
+		this.randomSeed = seed;
+	}
+
+	/**
+	 * Sets the (M)ILP solver time limit to the given value.
+	 * 
+	 * @param timeLimit Time limit to set.
+	 */
+	public void setTimeLimit(final int timeLimit) {
+		this.timeLimit = timeLimit;
+	}
+
+	/**
+	 * Sets the number of threads to be used by the (M)ILP solver.
+	 * 
+	 * @param threads Number of threads to set.
+	 */
+	public void setThreads(final int threads) {
+		this.threads = threads;
+	}
+
+	/**
+	 * Sets the Gurobi callback path to the given value.
+	 * 
+	 * @param callbackPath Gurobi callback path to set.
+	 */
+	public void setCallbackPath(final String callbackPath) {
+		Objects.requireNonNull(callbackPath);
+		this.callbackPath = callbackPath;
+	}
+
+	/**
+	 * Sets the Gurobi parameter path to the given value.
+	 * 
+	 * @param parameterPath Gurobi parameter path to set.
+	 */
+	public void setParameterPath(final String parameterPath) {
+		Objects.requireNonNull(parameterPath);
+		this.parameterPath = parameterPath;
+	}
+
+	/**
+	 * Sets the pre-processing approach to the given value.
+	 * 
+	 * @param noGt If true, the Java-based pre-processing will be used.
+	 */
+	public void setPreProcessingApproach(final boolean noGt) {
+		this.preProcNoGt = noGt;
+	}
+
+	/**
+	 * Sets the private GIPS API configuration parameters from this object to the
+	 * actual GIPS API.
+	 * 
+	 * @param gipsApi GIPS API to set the configuration parameters for.
+	 */
+	private void setGipsConfig(final IhtcvirtualgipssolutionGipsAPI gipsApi) {
+		Objects.requireNonNull(gipsApi);
+
+		gipsApi.getSolverConfig().setRandomSeed(randomSeed);
+		if (timeLimit != -1) {
+			gipsApi.getSolverConfig().setTimeLimit(timeLimit);
+		}
+		gipsApi.getSolverConfig().setThreadCount(threads);
+		if (callbackPath != null) {
+			gipsApi.getSolverConfig().setEnableCallbackPath(true);
+			gipsApi.getSolverConfig().setCallbackPath(callbackPath);
+		}
+		if (parameterPath != null) {
+			gipsApi.getSolverConfig().setParameterPath(parameterPath);
+		}
 	}
 
 }

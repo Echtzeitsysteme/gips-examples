@@ -15,7 +15,7 @@ import architectureCRA.ArchitectureCRAPackage;
 import architectureCRA.Attribute;
 import architectureCRA.ClassModel;
 import architectureCRA.Feature;
-import architectureCRA.Method;
+import architectureCRA.Methodd;
 
 /**
  * This class stems from the TTC16 github repository
@@ -50,7 +50,7 @@ public class CRAIndexCalculator {
 		int nrMethods = 0;
 		int nrAttributes = 0;
 		for (Feature f : model.getFeatures()) {
-			if (f instanceof Method)
+			if (f instanceof Methodd)
 				nrMethods++;
 			if (f instanceof Attribute)
 				nrAttributes++;
@@ -204,18 +204,18 @@ public class CRAIndexCalculator {
 		return attributes;
 	}
 
-	static List<Method> getMethodsClass(architectureCRA.Clazz clazz) {
-		List<Method> methods = new ArrayList<Method>();
+	static List<Methodd> getMethodsClass(architectureCRA.Clazz clazz) {
+		List<Methodd> methods = new ArrayList<Methodd>();
 		for (Feature feature : clazz.getEncapsulates()) {
-			if (feature instanceof Method)
-				methods.add((Method) feature);
+			if (feature instanceof Methodd)
+				methods.add((Methodd) feature);
 		}
 		return methods;
 	}
 
 	static int mai(architectureCRA.Clazz classSource, architectureCRA.Clazz classTarget) {
 		int mai = 0;
-		for (Method method : getMethodsClass(classSource)) {
+		for (Methodd method : getMethodsClass(classSource)) {
 			for (Attribute attribute : getAttributesClass(classTarget)) {
 				if (method.getDataDependency().contains(attribute))
 					mai++;
@@ -226,8 +226,8 @@ public class CRAIndexCalculator {
 
 	static int mmi(architectureCRA.Clazz classSource, architectureCRA.Clazz classTarget) {
 		int mmi = 0;
-		for (Method methodSource : getMethodsClass(classSource)) {
-			for (Method methodTarget : getMethodsClass(classTarget)) {
+		for (Methodd methodSource : getMethodsClass(classSource)) {
+			for (Methodd methodTarget : getMethodsClass(classTarget)) {
 				if (methodSource.getFunctionalDependency().contains(methodTarget))
 					mmi++;
 			}

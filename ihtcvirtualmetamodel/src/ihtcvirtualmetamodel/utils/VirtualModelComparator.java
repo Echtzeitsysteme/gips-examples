@@ -12,12 +12,22 @@ import java.util.logging.Logger;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
+import ihtcvirtualmetamodel.Capacity;
+import ihtcvirtualmetamodel.Nurse;
+import ihtcvirtualmetamodel.OT;
+import ihtcvirtualmetamodel.OpTime;
+import ihtcvirtualmetamodel.Patient;
+import ihtcvirtualmetamodel.Room;
 import ihtcvirtualmetamodel.Root;
+import ihtcvirtualmetamodel.Roster;
+import ihtcvirtualmetamodel.Shift;
+import ihtcvirtualmetamodel.Surgeon;
 import ihtcvirtualmetamodel.VirtualOpTimeToCapacity;
 import ihtcvirtualmetamodel.VirtualShiftToRoster;
 import ihtcvirtualmetamodel.VirtualShiftToWorkload;
 import ihtcvirtualmetamodel.VirtualWorkloadToCapacity;
 import ihtcvirtualmetamodel.VirtualWorkloadToOpTime;
+import ihtcvirtualmetamodel.Workload;
 
 public class VirtualModelComparator {
 
@@ -39,12 +49,12 @@ public class VirtualModelComparator {
 	/**
 	 * First input model path.
 	 */
-	private String firstModelPath = datasetFolder + "test01_pre-proc_gt.xmi";
+	private String firstModelPath = datasetFolder + "i01_pre-proc_gt.xmi";
 
 	/**
 	 * Second input model path.
 	 */
-	private String secondModelPath = datasetFolder + "test01_pre-proc_nogt.xmi";
+	private String secondModelPath = datasetFolder + "i01_pre-proc_no-gt.xmi";
 
 	@SuppressWarnings("rawtypes")
 	private Map<String, List> class2ObjectM1 = new HashMap<>();
@@ -97,7 +107,7 @@ public class VirtualModelComparator {
 		traverseModelForVirtualElements(firstModel, class2ObjectM1);
 		traverseModelForVirtualElements(secondModel, class2ObjectM2);
 
-		// Compare the found virtual elements
+		// Check model sizes
 		logger.info("Checking model size: Model 1");
 		printStatsOfAllElements(class2ObjectM1);
 		logger.info("---");
@@ -105,16 +115,74 @@ public class VirtualModelComparator {
 		printStatsOfAllElements(class2ObjectM2);
 		logger.info("---");
 
+		// Check model for duplicate entries
 		logger.info("Checking for duplicates: Model 1");
 		findDuplicates(class2ObjectM1);
 		logger.info("---");
 		logger.info("Checking for duplicates: Model 2");
 		findDuplicates(class2ObjectM2);
+		logger.info("---");
+
+		// Compare the found virtual elements
+		logger.info("Comparing both models in depth.");
+		compare(class2ObjectM1, class2ObjectM2);
+		logger.info("---");
+		logger.info("Model comparation done.");
 	}
 
 	//
 	// Utility methods
 	//
+
+	@SuppressWarnings("rawtypes")
+	private void compare(final Map<String, List> class2ObjectM1, final Map<String, List> class2ObjectM2) {
+		Objects.requireNonNull(class2ObjectM1);
+		Objects.requireNonNull(class2ObjectM2);
+
+		if (class2ObjectM1.keySet().size() != class2ObjectM2.keySet().size()) {
+			logger.info("Key set of class names had different sizes.");
+			return;
+		}
+
+		for (final String key : class2ObjectM1.keySet()) {
+			if (class2ObjectM2.get(key) == null || class2ObjectM1.get(key).size() != class2ObjectM2.get(key).size()) {
+				logger.info("Value size for key <" + key + "> did not match between both models.");
+				return;
+			}
+
+			// For every instance in model 1, there must be exactly one "equal" instance in
+			// model 2
+			for (final Object o1 : class2ObjectM1.get(key)) {
+				int noOfEqualObjects = 0;
+				for (final Object o2 : class2ObjectM2.get(key)) {
+					if (isEqual(o1, o2)) {
+						noOfEqualObjects++;
+					}
+				}
+
+				if (noOfEqualObjects != 1) {
+					logger.info("Object <" + o1.toString() + "> has had a wrong number of matches in second model: "
+							+ noOfEqualObjects);
+				}
+			}
+
+//			// For every instance in model 2, there must be exactly one "equal" instance in
+//			// model 1
+//			for (final Object o1 : class2ObjectM2.get(key)) {
+//				int noOfEqualObjects = 0;
+//				for (final Object o2 : class2ObjectM1.get(key)) {
+//					if (isEqual(o1, o2)) {
+//						noOfEqualObjects++;
+//					}
+//				}
+//
+//				if (noOfEqualObjects != 1) {
+//					logger.info("Object <" + o1.toString() + "> has had a wrong number of matches in first model: "
+//							+ noOfEqualObjects);
+//				}
+//			}
+		}
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void findDuplicates(final Map<String, List> data) {
@@ -143,19 +211,53 @@ public class VirtualModelComparator {
 		});
 	}
 
-	private boolean isEqual(final VirtualWorkloadToOpTime a, final VirtualWorkloadToOpTime b) {
-		Objects.requireNonNull(a);
-		Objects.requireNonNull(b);
+	private boolean isEqual(final Object o1, final Object o2) {
+		if (o1 == o2) {
+			return true;
+		} else if (o1 == null && o2 != null || o1 != null && o2 == null) {
+			return false;
+		}
 
+		Objects.requireNonNull(o1);
+		Objects.requireNonNull(o2);
+
+		if (!o1.getClass().equals(o2.getClass())) {
+			return false;
+		}
+
+		if (o1 instanceof VirtualWorkloadToOpTime o1v) {
+			return isEqual(o1v, (VirtualWorkloadToOpTime) o2);
+		} else if (o1 instanceof VirtualShiftToRoster o1v) {
+			return isEqual(o1v, (VirtualShiftToRoster) o2);
+		} else if (o1 instanceof VirtualOpTimeToCapacity o1v) {
+			return isEqual(o1v, (VirtualOpTimeToCapacity) o2);
+		} else if (o1 instanceof VirtualWorkloadToCapacity o1v) {
+			return isEqual(o1v, (VirtualWorkloadToCapacity) o2);
+		} else if (o1 instanceof VirtualShiftToWorkload o1v) {
+			return isEqual(o1v, (VirtualShiftToWorkload) o2);
+		} else if (o1 instanceof VirtualShiftToRoster o1v) {
+			return isEqual(o1v, (VirtualShiftToRoster) o2);
+		} else {
+			throw new IllegalArgumentException(
+					"Both objects were of equal classes but the virtual type did not match in casting.");
+		}
+	}
+
+	private boolean isEqual(final VirtualWorkloadToOpTime a, final VirtualWorkloadToOpTime b) {
 		if (a == b) {
 			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
 		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
 
 		if (a.equals(b)) {
 			return true;
 		}
 
-		if (a.getOpTime().equals(b.getOpTime()) && a.getWorkload().equals(b.getWorkload())) {
+		if (isEqual(a.getOpTime(), b.getOpTime()) && isEqual(a.getWorkload(), b.getWorkload())) {
 			return true;
 		}
 
@@ -163,18 +265,21 @@ public class VirtualModelComparator {
 	}
 
 	private boolean isEqual(final VirtualShiftToRoster a, final VirtualShiftToRoster b) {
-		Objects.requireNonNull(a);
-		Objects.requireNonNull(b);
-
 		if (a == b) {
 			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
 		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
 
 		if (a.equals(b)) {
 			return true;
 		}
 
-		if (a.getShift().equals(b.getShift()) && a.getRoster().equals(b.getRoster())) {
+//		if (a.getShift().equals(b.getShift()) && a.getRoster().equals(b.getRoster())) {
+		if (isEqual(a.getShift(), b.getShift()) && isEqual(a.getRoster(), b.getRoster())) {
 			return true;
 		}
 
@@ -182,18 +287,21 @@ public class VirtualModelComparator {
 	}
 
 	private boolean isEqual(final VirtualOpTimeToCapacity a, final VirtualOpTimeToCapacity b) {
-		Objects.requireNonNull(a);
-		Objects.requireNonNull(b);
-
 		if (a == b) {
 			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
 		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
 
 		if (a.equals(b)) {
 			return true;
 		}
 
-		if (a.getOpTime().equals(b.getOpTime()) && a.getCapacity().equals(b.getCapacity())) {
+//		if (a.getOpTime().equals(b.getOpTime()) && a.getCapacity().equals(b.getCapacity())) {
+		if (isEqual(a.getOpTime(), b.getOpTime()) && isEqual(a.getCapacity(), b.getCapacity())) {
 			return true;
 		}
 
@@ -201,18 +309,21 @@ public class VirtualModelComparator {
 	}
 
 	private boolean isEqual(final VirtualWorkloadToCapacity a, final VirtualWorkloadToCapacity b) {
-		Objects.requireNonNull(a);
-		Objects.requireNonNull(b);
-
 		if (a == b) {
 			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
 		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
 
 		if (a.equals(b)) {
 			return true;
 		}
 
-		if (a.getWorkload().equals(b.getWorkload()) && a.getCapacity().equals(b.getCapacity())) {
+//		if (a.getWorkload().equals(b.getWorkload()) && a.getCapacity().equals(b.getCapacity())) {
+		if (isEqual(a.getWorkload(), b.getWorkload()) && isEqual(a.getCapacity(), b.getCapacity())) {
 			return true;
 		}
 
@@ -220,22 +331,276 @@ public class VirtualModelComparator {
 	}
 
 	private boolean isEqual(final VirtualShiftToWorkload a, final VirtualShiftToWorkload b) {
-		Objects.requireNonNull(a);
-		Objects.requireNonNull(b);
-
 		if (a == b) {
 			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
 		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
 
 		if (a.equals(b)) {
 			return true;
 		}
 
-		if (a.getShift().equals(b.getShift()) && a.getWorkload().equals(b.getWorkload())) {
+//		if (a.getShift().equals(b.getShift()) && a.getWorkload().equals(b.getWorkload())) {
+		if (a.isWasImported() == b.isWasImported() && isEqual(a.getShift(), b.getShift())
+				&& isEqual(a.getWorkload(), b.getWorkload()) && a.isIsSelected() == b.isIsSelected()
+				&& isEqual(a.getRequires_virtualShiftToWorkload(), b.getRequires_virtualShiftToWorkload())
+		// Break recursion loop; all instances will be checked individually anyway
+//				&& isEqual(a.getEnables_virtualShiftToWorkload(), b.getEnables_virtualShiftToWorkload())
+		) {
 			return true;
 		}
 
 		return false;
+	}
+
+	private boolean isEqual(final OpTime a, final OpTime b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getDay() == b.getDay());
+		equals = equals && (a.getMaxOpTime() == b.getMaxOpTime());
+		equals = equals && isEqual(a.getSurgeon(), b.getSurgeon());
+
+		// TODO: Collections are missing
+
+		return equals;
+	}
+
+	private boolean isEqual(final Workload a, final Workload b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getWorkloadValue() == b.getWorkloadValue());
+		equals = equals && (a.getMinNurseSkill() == b.getMinNurseSkill());
+		equals = equals && (isEqual(a.getPatient(), b.getPatient()));
+		equals = equals && (isEqual(a.getDerivedShift(), b.getDerivedShift()));
+		equals = equals && (isEqual(a.getDerivedCapacity(), b.getDerivedCapacity()));
+		equals = equals && (isEqual(a.getDerivedOpTimes(), b.getDerivedOpTimes()));
+
+		// TODO: Collections are missing
+
+		return equals;
+	}
+
+	private boolean isEqual(final Shift a, final Shift b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getShiftNo() == b.getShiftNo());
+		equals = equals && (isEqual(a.getRoom(), b.getRoom()));
+		equals = equals && (isEqual(a.getDerivedRoster(), b.getDerivedRoster()));
+
+		// TODO: Collections are missing
+
+		return equals;
+	}
+
+	private boolean isEqual(final Roster a, final Roster b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getShiftNo() == b.getShiftNo());
+		equals = equals && (a.getMaxWorkload() == b.getMaxWorkload());
+		equals = equals && (isEqual(a.getNurse(), b.getNurse()));
+
+		// TODO: Collections are missing
+
+		return equals;
+	}
+
+	private boolean isEqual(final Capacity a, final Capacity b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getDay() == b.getDay());
+		equals = equals && (a.getMaxCapacity() == b.getMaxCapacity());
+		equals = equals && (isEqual(a.getOt(), b.getOt()));
+
+		// TODO: Collections are missing
+
+		return equals;
+	}
+
+	private boolean isEqual(final Surgeon a, final Surgeon b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getName().equals(b.getName()));
+
+		// TODO: Collections are missing
+
+		return equals;
+	}
+
+	private boolean isEqual(final OT a, final OT b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getName().equals(b.getName()));
+
+		// TODO: Collections are missing
+
+		return equals;
+	}
+
+	private boolean isEqual(final Room a, final Room b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getBeds() == b.getBeds());
+		equals = equals && (a.getName().equals(b.getName()));
+
+		// TODO: Collections are missing
+
+		return equals;
+	}
+
+	private boolean isEqual(final Nurse a, final Nurse b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getSkillLevel() == b.getSkillLevel());
+		equals = equals && (a.getName().equals(b.getName()));
+
+		// TODO: Collections are missing
+
+		return equals;
+	}
+
+	private boolean isEqual(final Patient a, final Patient b) {
+		if (a == b) {
+			return true;
+		} else if (a == null && b != null || a != null && b == null) {
+			return false;
+		}
+
+		Objects.requireNonNull(a);
+		Objects.requireNonNull(b);
+
+		if (a.equals(b)) {
+			return true;
+		}
+
+		boolean equals = true;
+		equals = equals && (a.getEarliestDay() == b.getEarliestDay());
+		equals = equals && (a.getDueDay() == b.getDueDay());
+		equals = equals && (a.isMandatory() == b.isMandatory());
+		equals = equals && (a.getAgeGroup() == b.getAgeGroup());
+		equals = equals && (a.getGender().equals(b.getGender()));
+		equals = equals && (a.getStayLength() == b.getStayLength());
+		equals = equals && (a.getSurgeryDuration() == b.getSurgeryDuration());
+		// Skipping first workload to not create a recursive endless loop
+//		equals = equals && (isEqual(a.getFirstWorkload(), b.getFirstWorkload()));
+		equals = equals && (isEqual(a.getSurgeon(), b.getSurgeon()));
+		equals = equals && (a.isIsOccupant() == b.isIsOccupant());
+		equals = equals && (a.getName().equals(b.getName()));
+
+		// TODO: Collections are missing
+
+		return equals;
 	}
 
 	private void findDuplicatesVirtualShiftToWorkload(final List<VirtualShiftToWorkload> virtualElements) {

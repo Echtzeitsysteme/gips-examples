@@ -2,10 +2,10 @@
 
 #
 # This script can be used to execute our GIPS-based solution for
-# the IHTC 2024 with only one argument, i.e., the input model to
-# load.
+# the IHTC 2024 with the arguments as explained below.
 #
-# Example: `./start-args-gips.sh ./i01.json`
+# Example:
+# `./start-args-gips.sh ./i01.json ./i01_solution.json 0 /tmp/callback.json /tmp/parameter.json`
 #
 # If you have any questions, feel free to write us an email.
 #
@@ -33,11 +33,24 @@ export JAR="gips-ihtc.jar"
 setup
 
 # Example arguments:
-# ./i01.json
-# $1
+# ./i01.json ./i01_solution.json
+# $1         $2
+#
+# or
+#
+# ./i01.json ./i01_solution.json 0
+# $1         $2                  $2
+#
+# or
+#
+# ./i01.json ./i01_solution.json 0 ./callback.json ./parameter.json
+# $1         #$2                 $3 $4             $5
 
-export inputXmi=$1
-export randomSeed=$2
+export inputJson=$1
+export outputJson=$2
+export randomSeed=$3
+export callback=$4
+export parameter=$5
 
 # Extract needed XMI files
 echo "=> Applying GIPS XMI workarounds."
@@ -54,9 +67,13 @@ unzip -qq -o $JAR "ihtcgipssolution/softcnstrtuning/api/ibex-patterns.xmi"
 # Actual run
 export RUN_NAME=$(date +%Y-%m-%d"_"%H-%M-%S)
 if [ ! -z "$randomSeed" ]; then
-	export ARGS="-i $inputXmi --debug --randomseed $randomSeed"
+    if [ ! -z "$parameter" ] && [ ! -z "$callback" ]; then
+        export ARGS="-i $inputJson -o $outputJson --verbose --randomseed $randomSeed --callback $callback --parameter $parameter"
+    else
+        export ARGS="-i $inputJson -o $outputJson --verbose --randomseed $randomSeed"
+    fi
 else
-    export ARGS="-i $inputXmi --debug"
+    export ARGS="-i $inputJson -o $outputJson --verbose"
 fi
 
 echo "#"
@@ -66,7 +83,7 @@ run
 # Finished actual run
 
 # Clean up extracted files that are not relevant for the
-# procuded JSON solution file.
+# produced JSON solution file.
 rm -r ./ihtcgipssolution
 
 echo "#"
