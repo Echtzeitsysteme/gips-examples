@@ -187,11 +187,11 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 
 		gipsApi.buildProblemTimed(true, true); // Second Parameter: sequential = false/default, parallel = true
 		final SolverOutput output = gipsApi.solveProblemTimed();
-		if (output.solutionCount() == 0) {
+//		if (output.solutionCount() == 0) {
 			gipsApi.terminate();
-			logger.warning("No solution found. Aborting.");
-			throw new InternalError("No solution found!");
-		}
+//			logger.warning("No solution found. Aborting.");
+//			throw new InternalError("No solution found!");
+//		}
 		if (verbose) {
 			logger.info("=> Objective value: " + output.objectiveValue());
 			final Map<String, IMeasurement> measurements = new LinkedHashMap<>(
