@@ -195,7 +195,7 @@ pattern genderRoomShift {
 	
 	s : Shift
 	
-	# s.shiftNo % 3 == 0
+//	# s.shiftNo % 3 == 0
 }
 
 // Used in a mapping to calculate the workload for all nurses for each shift
