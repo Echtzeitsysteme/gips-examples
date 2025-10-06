@@ -65,12 +65,12 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	/**
 	 * Gurobi callback path.
 	 */
-	private String callbackPath = null;
+	private String callbackPath = projectFolder + "/../ihtcvirtualrunner/scripts/callback.json";
 
 	/**
 	 * Gurobi parameter path.
 	 */
-	private String parameterPath = null;
+	private String parameterPath = projectFolder + "/../ihtcvirtualrunner/scripts/parameter.json";
 
 	/**
 	 * Create a new instance of this class.
@@ -359,6 +359,15 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	public void setParameterPath(final String parameterPath) {
 		Objects.requireNonNull(parameterPath);
 		this.parameterPath = parameterPath;
+	}
+
+	/**
+	 * Sets the pre-processing approach to the given value.
+	 * 
+	 * @param noGt If true, the Java-based pre-processing will be used.
+	 */
+	public void setPreProcessingApproach(final boolean noGt) {
+		this.preProcNoGt = noGt;
 	}
 
 	/**

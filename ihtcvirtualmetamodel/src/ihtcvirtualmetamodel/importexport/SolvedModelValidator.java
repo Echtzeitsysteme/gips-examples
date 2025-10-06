@@ -234,6 +234,8 @@ public class SolvedModelValidator {
 				debug += "ERROR: " + patientDebug + "\n\t";
 			}
 			
+			checkSurgeryAssignment(patient, debug);
+			
 			debug += "Was assigned to room " + admissionShift.getRoom().getName() + " on shift " + admissionShift.getShiftNo() + ". \n\t"; 
 			debug += "The operation by surgeon " + selectedOpTime.getSurgeon().getName() + " is scheduled in OT " + scheduledOt.getName() + " on day " + selectedvwc.getCapacity().getDay() + ". \n";
 			
@@ -565,5 +567,33 @@ public class SolvedModelValidator {
 		}
 	this.continuityOfCare += nurses.size();
 	return virtualAdmissionShift;
+	}
+	
+	
+	private String checkSurgeryAssignment(final Patient patient, String debug){
+		final Collection<VirtualWorkloadToCapacity> possibleOTAssignments = patient.getFirstWorkload().getVirtualCapacity();
+		VirtualWorkloadToCapacity v = null;
+		boolean valid = false;
+		for(VirtualWorkloadToCapacity vwc : possibleOTAssignments) {
+			if(vwc.isIsSelected()) {
+				v = vwc;
+				break;
+			}
+		}
+		if(v != null) {
+			final Collection<VirtualShiftToWorkload> possibleShiftAssignments = patient.getFirstWorkload().getVirtualShift();
+			for(VirtualShiftToWorkload vws : possibleShiftAssignments) {
+				if(vws.isIsSelected()) {
+					valid = true;
+					break;
+				}
+			}
+			if(!valid) {
+				String patientDebug = "VirtualWorkloadToCapacity is selected but no VirtualShiftToWorkload Assignment is made!";
+				logger.warning(patientDebug);
+				debug += "ERROR: " + patientDebug + "\n\t";
+			}
+		}
+		return debug;
 	}
 }
