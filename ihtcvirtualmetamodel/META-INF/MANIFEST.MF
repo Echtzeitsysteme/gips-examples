@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ihtcvirtualmetamodel
+Bundle-SymbolicName: ihtcvirtualmetamodel;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: 
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Automatic-Module-Name: ihtcvirtualmetamodel
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.emf.ecore.xmi,
+ org.emoflon.smartemf,
+ gips.examples.dependencies;bundle-version="1.0.0"
+Export-Package: ihtcvirtualmetamodel,
+ ihtcvirtualmetamodel.impl,
+ ihtcvirtualmetamodel.importexport,
+ ihtcvirtualmetamodel.utils
+

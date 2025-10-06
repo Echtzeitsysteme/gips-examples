@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: ihtcvirtualpostprocessing
+Bundle-ManifestVersion: 2
+Bundle-Name: ihtcvirtualpostprocessing
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: ihtcvirtualpostprocessing; singleton:=true
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.log4j,
+ org.apache.commons.logging
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Require-Bundle: org.emoflon.ibex.common,
+ org.emoflon.ibex.gt,
+ org.emoflon.ibex.patternmodel,
+ org.emoflon.ibex.gt.democles,
+ org.emoflon.ibex.gt.hipe,
+ ihtcvirtualmetamodel;bundle-version="0.0.1"
+Export-Package: ihtcvirtualpostprocessing,
+ ihtcvirtualpostprocessing.api,
+ ihtcvirtualpostprocessing.api.matches,
+ ihtcvirtualpostprocessing.api.rules
+

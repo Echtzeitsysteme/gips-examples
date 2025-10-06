@@ -68,3 +68,19 @@ teachingassistant.uni.metamodel/instances/*.json
 !/teachingassistant.uni.metamodel/instances/uni_ta_allocation_total-replan.xmi
 
 **/problem.lp
+
+ihtcvirtualmetamodel/resources/loaded.xmi
+
+ihtcvirtualmetamodel/instances/loaded.xmi
+
+ihtcvirtualmetamodel/resources/ihtc2024_test_dataset/gips-export.json
+
+ihtcvirtualmetamodel/resources/runner/sol_test01_gips.json
+
+ihtcvirtualmetamodel/instances/test01_solved.xmi
+
+ihtcvirtualmetamodel/instances/test01.xmi
+
+ihtcvirtualrunner/scripts/gips-ihtc.jar
+
+ihtcvirtualrunner/scripts/ihtc2024_competition_instances/

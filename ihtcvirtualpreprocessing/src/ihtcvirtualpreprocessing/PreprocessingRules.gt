@@ -1,0 +1,395 @@
+import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore"
+
+//
+// GT rules for the pre-processing of a (virtual) model
+//
+
+//
+// Pre-processing for all virtual elements between `Roster` and `Shift`
+//
+
+// Finds an existing virtual roster shift object for a specific
+// roster and a specific shift.
+pattern findVirtualRoster {
+	roster: Roster
+
+	shift: Shift
+
+	v: VirtualShiftToRoster {
+		-roster -> roster
+		-shift -> shift
+	}
+}
+condition noVirtualRoster = forbid findVirtualRoster
+
+// Create a new virtual shift to roster object for a specific
+// shift and a specific roster. There must not be an existing
+// virtual shift to roster object connecting those two.
+rule assignNurseToRoom {
+	root: Root {
+		-nurses -> nurse
+		-rooms -> room
+	}
+
+	nurse: Nurse {
+		-rosters -> roster
+	}
+
+	roster: Roster
+
+	room: Room {
+		-shifts -> shift
+	}
+
+	shift: Shift {
+		++ - virtualRoster -> vnew
+	}
+
+	++ vnew: VirtualShiftToRoster {
+		++ -roster -> roster
+		++ -shift -> shift
+		.isSelected := false
+	}
+	
+	# roster.shiftNo == shift.shiftNo
+}
+when noVirtualRoster
+
+//
+// Pre-processing for all first virtual elements between `Shift` and `Workload`
+//
+
+// Pattern to find assigned first Shifts for Patients
+pattern patientFirstShiftIsAssigned {
+	w : Workload 
+	
+	vsw : VirtualShiftToWorkload {
+		- workload -> w
+		- shift -> s
+	}
+	
+	s : Shift 
+}
+condition patientFirstShiftIsNotAssigned = forbid patientFirstShiftIsAssigned
+
+// Pattern that finds incompatible rooms for patients
+pattern incompatibleRoomForPatient {
+	p : Patient {
+		- incompatibleRooms -> r
+	}
+	
+	r : Room
+}
+condition compatibleRoomForPatient = forbid incompatibleRoomForPatient
+
+condition compatibleRoomAndNotAssigned = compatibleRoomForPatient && patientFirstShiftIsNotAssigned
+
+// Pattern that creates a Virtual Node between Shift and Workload to assign a patient to a room 
+rule assignPatientToRoom {
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload
+	
+	c : Capacity
+	
+	vexist : VirtualWorkloadToCapacity {
+		- capacity -> c
+		- workload -> w
+		++ - enables_virtualShiftToWorkload -> vnew
+		// Explicitly set the opposite edge
+	}
+	
+	++ vnew : VirtualShiftToWorkload {
+		++ - workload -> w
+		++ - shift -> s
+		.isSelected := false
+		.wasImported := false
+		++ - requires_virtualWorkloadToCapacity -> vexist
+	}
+	
+	s : Shift {
+		- room -> r
+		++ - virtualWorkload -> vnew
+	}
+	
+	r : Room
+	
+	# s.shiftNo % 3 == 0
+	# p.isOccupant == false
+	
+	// Optimization: patient must be ready by the current day.
+	// I.e., it is never an option to set the admission day of a patient to
+	// a day before the patient's first possible admission day so we can
+	// already remove these matches using the PM.
+	# s.shiftNo / 3 >= p.earliestDay
+	
+	// Optimization: patient's due date must not be violated.
+	// I.e., it is never an option to set the admission day of a patient to
+	// a day after the patient's due day so we can already remove these
+	// matches using the PM.
+	# s.shiftNo / 3 <= p.dueDay
+	
+	// Day of the first assigned shift must match the day of the OT's
+	// capacity object.
+	# s.shiftNo / 3 == c.day
+}
+when compatibleRoomAndNotAssigned
+
+//
+// Pre-processing for succeeding first virtual elements between `Shift` and `Workload`
+//
+
+pattern nextVirtualShiftToWorkloadExists {
+	nextw : Workload
+	nexts : Shift
+	
+	nextvsw : VirtualShiftToWorkload {
+		- workload -> nextw
+		- shift -> nexts
+	}
+}
+condition nextVirtualShiftToWorkloadDoesNotExist = forbid nextVirtualShiftToWorkloadExists
+
+rule extendPatientStay {
+	p : Patient {
+		- workloads -> prevw
+	}
+	
+	prevw : Workload {
+		- next -> nextw
+	}
+	
+	nextw : Workload
+	
+	prevvsw : VirtualShiftToWorkload {
+		- workload -> prevw
+		- shift -> prevs
+		++ - enables_virtualShiftToWorkload -> vnew
+		// Explicitly set the opposite edge
+	}
+	
+	prevs : Shift {
+		- next -> nexts
+		- room -> r
+	}
+	
+	nexts : Shift {
+		- room -> r
+		++ - virtualWorkload -> vnew
+	}
+	
+	r : Room
+	
+	++ vnew : VirtualShiftToWorkload {
+		++ - workload -> nextw
+		++ - shift -> nexts
+		.isSelected := false
+		.wasImported := false
+		++ - requires_virtualShiftToWorkload -> prevvsw
+	}
+
+	# p.isOccupant == false
+}
+when nextVirtualShiftToWorkloadDoesNotExist
+
+//
+// Pre-processing for existing (non-virtual) edges between `Shift` and `Workload`
+//
+
+rule preprocessOccupantsFirstWorkload {
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload {
+		-- - derivedShift -> s
+	}
+	
+	s : Shift {
+		- room -> r
+		// Explicitly delete both edges
+		// (Maybe deleting one is sufficient)
+		-- - derivedWorkloads -> w
+		++ - virtualWorkload -> vnew
+	}
+	
+	r : Room
+	
+	++ vnew : VirtualShiftToWorkload {
+		++ - workload -> w
+		++ - shift -> s
+		.isSelected := false
+		.wasImported := true
+	}
+	
+	# p.isOccupant == true
+}
+
+rule preprocessOccupantsWorkload {
+	p : Patient {
+		- workloads -> w
+	}
+	
+	w : Workload {
+		-- - derivedShift -> s
+		- prev -> prevw
+	}
+	
+	prevw : Workload {
+		
+	}
+	
+	prevvstw : VirtualShiftToWorkload {
+		- workload -> prevw
+		++ - enables_virtualShiftToWorkload -> vnew
+	}
+	
+	s : Shift {
+		- room -> r
+		// Explicitly delete both edges
+		// (Maybe deleting one is sufficient)
+		-- - derivedWorkloads -> w
+		++ - virtualWorkload -> vnew
+	}
+	
+	r : Room
+	
+	++ vnew : VirtualShiftToWorkload {
+		++ - workload -> w
+		++ - shift -> s
+		.isSelected := false
+		.wasImported := true
+		++ - requires_virtualShiftToWorkload -> prevvstw
+	}
+	
+	# p.isOccupant == true
+}
+
+//
+// Pre-processing for surgeon and operating theaters
+//
+
+pattern findVirtualOpTimeToCapacity {
+	op : OpTime
+	c: Capacity
+	
+	v: VirtualOpTimeToCapacity {
+		- capacity -> c
+		- opTime -> op
+	}
+}
+condition noOpTimeToCapacity = forbid findVirtualOpTimeToCapacity
+
+rule assignSurgeonToOt {
+	op : OpTime
+	
+	c : Capacity {
+		++ - virtualOpTime -> vnew
+	}
+	
+	++ vnew : VirtualOpTimeToCapacity {
+		++ - opTime -> op
+		++ - capacity -> c
+		.isSelected := false
+	}
+	
+	# op.day == c.day
+	# c.maxCapacity > 0
+	# op.maxOpTime > 0
+}
+when noOpTimeToCapacity
+
+//
+// Pre-processing for workloads, OP time, and capacity
+//
+
+pattern findVirtualWorkloadToOpTime {
+	w: Workload
+	op: OpTime
+	
+	v : VirtualWorkloadToOpTime {
+		- opTime -> op
+		- workload -> w
+	}
+}
+condition noVirtualEdgeWorkloadToOpTime = forbid findVirtualWorkloadToOpTime
+
+pattern findVirtualWorkloadToCapacity {
+	w: Workload
+	c: Capacity
+	
+	v : VirtualWorkloadToCapacity {
+		- capacity -> c
+		- workload -> w
+	}
+}
+condition noVirtualEdgeWorkloadToCapacity = forbid findVirtualWorkloadToCapacity
+
+rule fixOperationDayOpTime {
+	p : Patient {
+		- firstWorkload -> w
+		- surgeon -> s
+	}
+	
+	w : Workload
+	
+	s : Surgeon {
+		- opTimes -> op
+	}
+	
+	op : OpTime {
+		++ - virtualWorkload -> vnew
+	}
+	
+	vexist : VirtualOpTimeToCapacity {
+		- opTime -> op
+		// Explicitly set the opposite edge
+		++ - enables_virtualWorkloadToOpTime -> vnew
+	}
+	
+	++ vnew : VirtualWorkloadToOpTime {
+		++ - opTime -> op
+		++ - workload -> w
+		.isSelected := false
+		++ - requires_virtualOpTimeToCapacity -> vexist
+	}
+	
+	# p.earliestDay <= op.day
+	# op.day <= p.dueDay
+	# p.surgeryDuration <= op.maxOpTime
+//	# p.isOccupant == false
+	// Already checked via the edge between `p` and `s`
+}
+when noVirtualEdgeWorkloadToOpTime
+
+rule fixOperationDayCapacity {
+	c : Capacity {
+		- virtualOpTime -> vop
+		++ - virtualWorkload -> vnew2
+	}
+	
+	vop : VirtualOpTimeToCapacity {
+		- opTime -> opTime
+	}
+	
+	opTime : OpTime {
+		- virtualWorkload -> vw
+	}
+	
+	vw : VirtualWorkloadToOpTime {
+		- workload -> w
+		++ - enables_virtual_WorkloadToCapacity -> vnew2
+	}
+	
+	w : Workload
+	
+	++ vnew2 : VirtualWorkloadToCapacity {
+		++ - workload -> w
+		++ - capacity -> c
+		.isSelected := false
+		++ - requires_virtualWorkloadToOpTime -> vw
+	}
+}
+when noVirtualEdgeWorkloadToCapacity

@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ihtcvirtualrunner
+Bundle-SymbolicName: ihtcvirtualrunner
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: ihtcvirtualgipssolution;bundle-version="1.0.0",
+ ihtcvirtualmetamodel;bundle-version="0.0.1",
+ org.emoflon.gips.core;bundle-version="1.5.0",
+ gips.examples.dependencies;bundle-version="1.0.0",
+ ihtcvirtualpreprocessing;bundle-version="1.0.0",
+ ihtcvirtualpostprocessing;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Automatic-Module-Name: ihtcvirtualrunner
+Import-Package: hipe.engine.config
