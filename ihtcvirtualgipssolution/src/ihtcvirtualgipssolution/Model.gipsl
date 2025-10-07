@@ -161,7 +161,7 @@ pattern patientForRoom {
 		- shifts -> s
 	}
 	
-//	# s.shiftNo % 3 == 0 // Nur für Variante mit 5 SC
+	# s.shiftNo % 3 == 0 // Geht nur durch den Trick bei S2 
 }
 
 // Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day
@@ -270,8 +270,12 @@ mapping countPatientsForRoom to roomForShift {
 // skillDiff: Calculated difference between the skill level of a nurse and the workload she is assigned to. Can be negative
 // penalizedSkillDiff: maximum of 0 and skillDiff used to ignore negative results for skillDiff
 mapping assignedPatientsToRoom to patientForRoom{
-	var skillDiff : EInt
-	var penalizedSkillDiff : EInt
+	var skillDiff1 : EInt
+	var skillDiff2 : EInt
+	var skillDiff3 : EInt
+	var penalizedSkillDiff1 : EInt
+	var penalizedSkillDiff2 : EInt
+	var penalizedSkillDiff3 : EInt
 };
  
 // Mapping that holds the information if a specific gender is assigned to a room on a specific day. 
@@ -794,12 +798,12 @@ constraint with ageGroupsInRoom {
 
 // S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
 function calculateUnqualifiedNurses with assignedPatientsToRoom {
-	context.variables.penalizedSkillDiff
+	context.variables.penalizedSkillDiff1 + context.variables.penalizedSkillDiff2 + context.variables.penalizedSkillDiff3
 }
 
 // U11: Sets the mapping variable to the difference in skill level
 constraint with assignedPatientsToRoom {
-	context.variables.skillDiff 
+	context.variables.skillDiff1
 	== 
 	mappings.assignedPatientsToRoom->filter(
 		element.nodes.vsw == context.nodes.vsw
@@ -808,12 +812,40 @@ constraint with assignedPatientsToRoom {
 	mappings.selectedShiftToRoster->filter(
 		element.nodes.vsr.shift == context.nodes.s
 	)->sum(element.value * element.nodes.vsr.roster.nurse.skillLevel)
+	
+	&
+	
+	context.variables.skillDiff2
+	== 
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.vsw == context.nodes.vsw.enables_virtualShiftToWorkload
+	)->sum(element.value * element.nodes.w.minNurseSkill)
+	-
+	mappings.selectedShiftToRoster->filter(
+		element.nodes.vsr.shift == context.nodes.s.next
+	)->sum(element.value * element.nodes.vsr.roster.nurse.skillLevel)
+	
+	&
+	
+	context.variables.skillDiff3
+	== 
+	mappings.assignedPatientsToRoom->filter(
+		element.nodes.vsw == context.nodes.vsw.enables_virtualShiftToWorkload.enables_virtualShiftToWorkload
+	)->sum(element.value * element.nodes.w.minNurseSkill)
+	-
+	mappings.selectedShiftToRoster->filter(
+		element.nodes.vsr.shift == context.nodes.s.next.next
+	)->sum(element.value * element.nodes.vsr.roster.nurse.skillLevel)
 }
 
 // U12: calculates the penalized difference between the skill levels. max(0, minLevel - nurseLevel) = max(0, skillDiff)
 constraint with assignedPatientsToRoom{
-	context.variables.penalizedSkillDiff >= context.variables.skillDiff &
-	context.variables.penalizedSkillDiff >= 0
+	context.variables.penalizedSkillDiff1 >= context.variables.skillDiff1 &
+	context.variables.penalizedSkillDiff1 >= 0 &
+	context.variables.penalizedSkillDiff2 >= context.variables.skillDiff2 &
+	context.variables.penalizedSkillDiff2 >= 0 &
+	context.variables.penalizedSkillDiff3 >= context.variables.skillDiff3 &
+	context.variables.penalizedSkillDiff3 >= 0
 }
 
 /* --------------------------------------------------------------------------------------------------------------------- */
