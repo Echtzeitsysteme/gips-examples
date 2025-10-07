@@ -161,7 +161,7 @@ pattern patientForRoom {
 		- shifts -> s
 	}
 	
-//	# s.shiftNo % 3 == 0 // Nur für Variante mit 5 SC
+	# s.shiftNo % 3 == 0 // Nur für Variante mit 5 SC
 }
 
 // Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day
@@ -269,10 +269,7 @@ mapping countPatientsForRoom to roomForShift {
 // Mapping for all assigned patients. (occupants and new patients for each workload (first + following))
 // skillDiff: Calculated difference between the skill level of a nurse and the workload she is assigned to. Can be negative
 // penalizedSkillDiff: maximum of 0 and skillDiff used to ignore negative results for skillDiff
-mapping assignedPatientsToRoom to patientForRoom{
-	var skillDiff : EInt
-	var penalizedSkillDiff : EInt
-};
+mapping assignedPatientsToRoom to patientForRoom;
  
 // Mapping that holds the information if a specific gender is assigned to a room on a specific day. 
 mapping assignedGenderToRoomOnShift to genderRoomShift;
@@ -792,32 +789,6 @@ constraint with ageGroupsInRoom {
 
 /* --------------------------------------------------------------------------------------------------------------------- */
 
-// S2: The nurse assigned to a room must have the minimum skill level required by patients in this room
-function calculateUnqualifiedNurses with assignedPatientsToRoom {
-	context.variables.penalizedSkillDiff
-}
-
-// U11: Sets the mapping variable to the difference in skill level
-constraint with assignedPatientsToRoom {
-	context.variables.skillDiff 
-	== 
-	mappings.assignedPatientsToRoom->filter(
-		element.nodes.vsw == context.nodes.vsw
-	)->sum(element.value * element.nodes.w.minNurseSkill)
-	-
-	mappings.selectedShiftToRoster->filter(
-		element.nodes.vsr.shift == context.nodes.s
-	)->sum(element.value * element.nodes.vsr.roster.nurse.skillLevel)
-}
-
-// U12: calculates the penalized difference between the skill levels. max(0, minLevel - nurseLevel) = max(0, skillDiff)
-constraint with assignedPatientsToRoom{
-	context.variables.penalizedSkillDiff >= context.variables.skillDiff &
-	context.variables.penalizedSkillDiff >= 0
-}
-
-/* --------------------------------------------------------------------------------------------------------------------- */
-
 // S5: The number of OTs opened on each day should be minimized
 function calculateOPenOTs with Day {
 	mappings.openOTs->filter(element.nodes.c.day == context.number)->sum(element.value) 
@@ -892,7 +863,6 @@ function calculateNotAssignedOptionalPatients with optionalPatients {
 objective : min {
 	0
 	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
-	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
 	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
 	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
 	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
