@@ -3,7 +3,7 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 
 config {  
 	solver := GUROBI;
-	timeLimit := true [value := 300.0]; // 5 min
+	timeLimit := true [value := 60.0]; // 5 min
 	randomSeed := true [value := 0];
 	presolve := auto;
 	debugOutput := true;
@@ -160,6 +160,8 @@ pattern patientForRoom {
 	r : Room {
 		- shifts -> s
 	}
+	
+//	# s.shiftNo % 3 == 0 // Nur für Variante mit 5 SC
 }
 
 // Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day
@@ -170,7 +172,6 @@ pattern otCapacityTupel{
 	}
 	
 	c : Capacity 
-//	# c.maxCapacity > 0
 }
 
 // Pattern used in a mapping to save the information if a Surgeon operates on a specific Day and used to make sure the operation time of a surgeon is not exceeded on each day
@@ -181,7 +182,6 @@ pattern surgeonOptimeTupel {
 	}
 	
 	op : OpTime
-//	# op.maxOpTime > 0
 }
 
 // Pattern used for a mapping to save the information which genders are present in a specific room for each shift
@@ -230,26 +230,6 @@ pattern ageGroupsRoomDay {
 pattern roomDayTupel {
 	r : Room 
 	d : Day
-}
-
-// Used in a mapping to calculate which nurse is assigned to which workload. 
-pattern nursetoWorkload {
-	vsr : VirtualShiftToRoster {
-		- shift -> s
-	}
-	
-	s : Shift {
-		- virtualWorkload -> vsw
-	}
-	
-	vsw : VirtualShiftToWorkload
-}
-
-// Used to filter for the amount of different nurses assigned to each patient
-pattern nursePatientTupel {
-	p : Patient 
-	
-	n : Nurse
 }
 
 //
@@ -324,19 +304,6 @@ mapping noGreaterAgeGroupInRoom to ageGroupsRoomDay;
 
 // minAgeGroup: True if the patient of the current Match has the smallest age group in that room 
 mapping noSmallerAgeGroupInRoom to ageGroupsRoomDay;
-
-// mapping that holds the information what workloads a roster is responsible for / assigned to 
-mapping assignedNursesToWorkload to nursetoWorkload;
-
-// mapping used to calculate the sum of workloads for a Roster
-// workloadDiff: Calculated workload of a nurse for a specific shift
-// excessiveWorkload: excessive workload of that nurse in comparison to her maximum workload
-mapping nurseWorkloadForDay to nurseRosterTupel{
-	var workloadDiff : EInt
-	var excessiveWorkload : EInt
-};
-
-mapping assignedNurseForPatient to nursePatientTupel;
 
 //
 // Hard Constraints
@@ -664,38 +631,6 @@ constraint with assignedPatientsToRoom {
 	)->sum(element.value)
 }
 
-// U13: Sets the mapping to true if the nurse is assigned to the workload
-// Used as primary mapping for the information which nurses are assigned to which workloads of patients
-// Needed for constraints: U14+U15(S4), U16(S3)
-constraint with assignedNursesToWorkload {
-	context.value
-	>=
-	mappings.assignedPatientsToRoom->filter(
-		element.nodes.vsw == context.nodes.vsw
-	)->sum(element.value)
-	+
-	mappings.selectedShiftToRoster->filter(
-		element.nodes.vsr == context.nodes.vsr
-	)->sum(element.value)
-	- 1
-	
-	&
-	
-	mappings.assignedPatientsToRoom->filter(
-		element.nodes.vsw == context.nodes.vsw
-	)->sum(element.value)
-	>= 
-	context.value
-	
-	&
-	
-	mappings.selectedShiftToRoster->filter(
-		element.nodes.vsr == context.nodes.vsr
-	)->sum(element.value) 
-	>= 
-	context.value
-}
-
 // U2: counts how many patients are currently assigned to each room 
 // Needed for constraints: H7, H8
 constraint with countPatientsForRoom {
@@ -883,58 +818,6 @@ constraint with assignedPatientsToRoom{
 
 /* --------------------------------------------------------------------------------------------------------------------- */
 
-// S3: The number of nurses taking care of a specific patient must be minimized
-function calculateContinuityOfCare with Patient {
-	mappings.assignedNurseForPatient->filter(
-		element.nodes.p == context
-	)->sum(element.value)
-}
-
-// U16: sets the mapping to true if the nurse is assigned to the patient
-constraint with assignedNurseForPatient {
-	context.value
-	<=
-	mappings.assignedNursesToWorkload->filter(
-		element.nodes.vsr.roster.nurse == context.nodes.n &
-		element.nodes.vsw.workload.patient == context.nodes.p
-	)->sum(element.value)
-	
-	&
-	
-	mappings.assignedNursesToWorkload->filter(
-		element.nodes.vsr.roster.nurse == context.nodes.n &
-		element.nodes.vsw.workload.patient == context.nodes.p
-	)->sum(element.value)
-	<= 
-	context.value * 1000
-}
-
-/* --------------------------------------------------------------------------------------------------------------------- */
-
-// S4: The workload of a nurse should not exceed the assigned maximum workload
-function calculateNurseWorkload with nurseWorkloadForDay {
-	context.variables.excessiveWorkload
-}
-
-// U14: Calculates the sum of workloads for one Roster 
-constraint with nurseWorkloadForDay {
-	context.variables.workloadDiff 
-	==
-	mappings.assignedNursesToWorkload->filter(
-		element.nodes.vsr.roster == context.nodes.ro
-	)->sum(element.value * element.nodes.vsw.workload.workloadValue)
-	- 
-	context.nodes.ro.maxWorkload
-}
-
-// U15: Calculates max(0, sumWorkload - nurseMaxWorkload) = max(0, excessiveWorkload)
-constraint with nurseWorkloadForDay{
-	context.variables.excessiveWorkload >= context.variables.workloadDiff &
-	context.variables.excessiveWorkload >= 0
-}
-
-/* --------------------------------------------------------------------------------------------------------------------- */
-
 // S5: The number of OTs opened on each day should be minimized
 function calculateOPenOTs with Day {
 	mappings.openOTs->filter(element.nodes.c.day == context.number)->sum(element.value) 
@@ -1010,8 +893,6 @@ objective : min {
 	0
 	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
 	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
-	+ functions.calculateContinuityOfCare * types.Weight->sum(element.continuityOfCare)
-	+ functions.calculateNurseWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
 	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
 	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
 	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
