@@ -1,0 +1,122 @@
+@GenModel(documentation="TODO: Add documentation for ihtcvirtualmetamodel. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ...")
+@namespace(uri="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore", prefix="ihtcvirtualmetamodel")
+package ihtcvirtualmetamodel;
+
+class Root {
+	val Nurse[*] nurses;
+	val Room[*] rooms;
+	val Surgeon[*] surgeons;
+	val OT[*] ots;
+	val Weight weight;
+	val Patient[*] patients;
+	attr int period;
+	val Gender[*] genders;
+	val Day[*] days;
+	val AgeGroup[*] ageGroups;
+}
+
+class Nurse extends NamedElement {
+	attr int skillLevel;
+	val Roster[*]#nurse rosters;
+}
+
+class Roster {
+	attr int shiftNo;
+	attr int maxWorkload;
+	ref Nurse#rosters nurse;
+	ref Shift[*]#derivedRoster derivedShifts;
+}
+
+class Room extends NamedElement {
+	attr int beds;
+	val Shift[*]#room shifts;
+	ref Patient[*]#incompatibleRooms incompatiblePatients;
+}
+
+class Shift extends Ordered {
+	attr int shiftNo;
+	ref Room#shifts room;
+	ref Roster#derivedShifts derivedRoster;
+	ref Workload[*]#derivedShift derivedWorkloads;
+}
+
+abstract class Ordered {
+	ref Ordered prev;
+	ref Ordered next;
+}
+
+class Patient extends NamedElement {
+	attr int earliestDay;
+	attr int dueDay;
+	attr boolean mandatory;
+	attr int ageGroup;
+	attr String gender;
+	attr int stayLength;
+	attr int surgeryDuration;
+	val Workload[*]#patient workloads;
+	ref Workload firstWorkload;
+	ref Surgeon#patients surgeon;
+	ref Room[*]#incompatiblePatients incompatibleRooms;
+	attr boolean isOccupant;
+}
+
+class Workload extends Ordered {
+	attr int workloadValue;
+	attr int minNurseSkill;
+	ref Patient#workloads patient;
+	ref Shift#derivedWorkloads derivedShift;
+	ref Capacity#derivedWorkloads derivedCapacity;
+	ref OpTime#derivedWorkloads derivedOpTimes;
+}
+
+class Surgeon extends NamedElement {
+	ref Patient[*]#surgeon patients;
+	val OpTime[*]#surgeon opTimes;
+}
+
+class OpTime {
+	attr int day;
+	attr int maxOpTime;
+	ref Surgeon#opTimes surgeon;
+	ref Capacity[*]#derivedOpTimes derivedCapacities;
+	ref Workload[*]#derivedOpTimes derivedWorkloads;
+}
+
+class OT extends NamedElement {
+	val Capacity[*]#ot capacities;
+}
+
+class Capacity {
+	attr int day;
+	attr int maxCapacity;
+	ref OT#capacities ot;
+	ref Workload[*]#derivedCapacity derivedWorkloads;
+	ref OpTime[*]#derivedCapacities derivedOpTimes;
+}
+
+abstract class NamedElement {
+	attr String name;
+}
+
+class Weight {
+	attr int roomMixedAge;
+	attr int roomNurseSkill;
+	attr int continuityOfCare;
+	attr int nurseExcessiveWorkload;
+	attr int openOperatingTheater;
+	attr int surgeonTransfer;
+	attr int patientDelay;
+	attr int unscheduledOptional;
+}
+
+class Gender extends NamedElement {
+}
+
+class Day extends NamedElement {
+	attr int number;
+}
+
+class AgeGroup {
+	attr int group;
+}
+
