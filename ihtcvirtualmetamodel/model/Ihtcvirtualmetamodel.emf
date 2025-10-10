@@ -1,7 +1,6 @@
 @GenModel(documentation="TODO: Add documentation for ihtcvirtualmetamodel. Hint: You may copy this element in the Ecore editor to add documentation to EClasses, EOperations, ...")
 @namespace(uri="platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore", prefix="ihtcvirtualmetamodel")
 package ihtcvirtualmetamodel;
-
 class Root {
 	val Nurse[*] nurses;
 	val Room[*] rooms;
@@ -14,12 +13,10 @@ class Root {
 	val Day[*] days;
 	val AgeGroup[*] ageGroups;
 }
-
 class Nurse extends NamedElement {
 	attr int skillLevel;
 	val Roster[*]#nurse rosters;
 }
-
 class Roster {
 	attr int shiftNo;
 	attr int maxWorkload;
@@ -27,13 +24,11 @@ class Roster {
 	ref Shift[*]#derivedRoster derivedShifts;
 	val VirtualShiftToRoster[*]#roster virtualShift;
 }
-
 class Room extends NamedElement {
 	attr int beds;
 	val Shift[*]#room shifts;
 	ref Patient[*]#incompatibleRooms incompatiblePatients;
 }
-
 class Shift extends Ordered {
 	attr int shiftNo;
 	ref Room#shifts room;
@@ -42,12 +37,10 @@ class Shift extends Ordered {
 	ref VirtualShiftToRoster[*]#shift virtualRoster;
 	val VirtualShiftToWorkload[*]#shift virtualWorkload;
 }
-
 abstract class Ordered {
 	ref Ordered prev;
 	ref Ordered next;
 }
-
 class Patient extends NamedElement {
 	attr int earliestDay;
 	attr int dueDay;
@@ -62,7 +55,6 @@ class Patient extends NamedElement {
 	ref Room[*]#incompatiblePatients incompatibleRooms;
 	attr boolean isOccupant;
 }
-
 class Workload extends Ordered {
 	attr int workloadValue;
 	attr int minNurseSkill;
@@ -74,12 +66,10 @@ class Workload extends Ordered {
 	ref VirtualWorkloadToOpTime[*]#workload virtualOpTime;
 	ref VirtualWorkloadToCapacity[*]#workload virtualCapacity;
 }
-
 class Surgeon extends NamedElement {
 	ref Patient[*]#surgeon patients;
 	val OpTime[*]#surgeon opTimes;
 }
-
 class OpTime {
 	attr int day;
 	attr int maxOpTime;
@@ -89,11 +79,9 @@ class OpTime {
 	val VirtualWorkloadToOpTime[*]#opTime virtualWorkload;
 	ref VirtualOpTimeToCapacity[*]#opTime virtualCapacity;
 }
-
 class OT extends NamedElement {
 	val Capacity[*]#ot capacities;
 }
-
 class Capacity {
 	attr int day;
 	attr int maxCapacity;
@@ -103,11 +91,9 @@ class Capacity {
 	val VirtualOpTimeToCapacity[*]#capacity virtualOpTime;
 	val VirtualWorkloadToCapacity[*]#capacity virtualWorkload;
 }
-
 abstract class NamedElement {
 	attr String name;
 }
-
 class Weight {
 	attr int roomMixedAge;
 	attr int roomNurseSkill;
@@ -118,7 +104,6 @@ class Weight {
 	attr int patientDelay;
 	attr int unscheduledOptional;
 }
-
 class VirtualShiftToWorkload {
 	attr boolean wasImported;
 	ref Shift#virtualWorkload shift;
@@ -128,13 +113,11 @@ class VirtualShiftToWorkload {
 	ref VirtualShiftToWorkload#requires_virtualShiftToWorkload enables_virtualShiftToWorkload;
 	ref VirtualWorkloadToCapacity[*]#enables_virtualShiftToWorkload requires_virtualWorkloadToCapacity;
 }
-
 class VirtualShiftToRoster {
 	ref Shift#virtualRoster shift;
 	ref Roster#virtualShift roster;
 	attr boolean isSelected;
 }
-
 class VirtualWorkloadToOpTime {
 	ref Workload#virtualOpTime workload;
 	ref OpTime#virtualWorkload opTime;
@@ -142,14 +125,12 @@ class VirtualWorkloadToOpTime {
 	ref VirtualOpTimeToCapacity[*]#enables_virtualWorkloadToOpTime requires_virtualOpTimeToCapacity;
 	ref VirtualWorkloadToCapacity[*]#requires_virtualWorkloadToOpTime enables_virtual_WorkloadToCapacity;
 }
-
 class VirtualOpTimeToCapacity {
 	ref OpTime#virtualCapacity opTime;
 	ref Capacity#virtualOpTime capacity;
 	attr boolean isSelected;
 	ref VirtualWorkloadToOpTime[*]#requires_virtualOpTimeToCapacity enables_virtualWorkloadToOpTime;
 }
-
 class VirtualWorkloadToCapacity {
 	ref Workload#virtualCapacity workload;
 	ref Capacity#virtualWorkload capacity;
@@ -157,15 +138,11 @@ class VirtualWorkloadToCapacity {
 	ref VirtualShiftToWorkload[*]#requires_virtualWorkloadToCapacity enables_virtualShiftToWorkload;
 	ref VirtualWorkloadToOpTime[*]#enables_virtual_WorkloadToCapacity requires_virtualWorkloadToOpTime;
 }
-
 class Gender extends NamedElement {
 }
-
 class Day extends NamedElement {
 	attr int number;
 }
-
 class AgeGroup {
 	attr int group;
 }
-
