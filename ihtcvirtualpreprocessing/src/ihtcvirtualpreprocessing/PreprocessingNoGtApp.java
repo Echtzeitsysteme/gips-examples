@@ -252,6 +252,8 @@ public class PreprocessingNoGtApp {
 
 						vnew.getRequires_virtualWorkloadToOpTime().add(vw);
 						vw.getEnables_virtual_WorkloadToCapacity().add(vnew);
+						
+						vnew.getRequires_virtualOpTimeToCapacity().add(vop);
 
 						c.getVirtualWorkload().add(vnew);
 					});
