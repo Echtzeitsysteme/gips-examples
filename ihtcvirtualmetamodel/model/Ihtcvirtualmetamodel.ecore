@@ -201,6 +201,8 @@
         upperBound="-1" eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/requires_virtualWorkloadToCapacity"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualWorkloadToOpTime"
         upperBound="-1" eType="#//VirtualWorkloadToOpTime" eOpposite="#//VirtualWorkloadToOpTime/enables_virtual_WorkloadToCapacity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualOpTimeToCapacity"
+        upperBound="-1" eType="#//VirtualOpTimeToCapacity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Gender" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Day" eSuperTypes="#//NamedElement">

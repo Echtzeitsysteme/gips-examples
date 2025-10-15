@@ -390,6 +390,7 @@ rule fixOperationDayCapacity {
 		++ - capacity -> c
 		.isSelected := false
 		++ - requires_virtualWorkloadToOpTime -> vw
+		++ - requires_virtualOpTimeToCapacity -> vop
 	}
 }
 when noVirtualEdgeWorkloadToCapacity
