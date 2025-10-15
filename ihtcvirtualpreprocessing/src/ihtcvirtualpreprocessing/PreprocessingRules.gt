@@ -393,3 +393,50 @@ rule fixOperationDayCapacity {
 	}
 }
 when noVirtualEdgeWorkloadToCapacity
+
+rule createMissingDepEdgesOperationDayOpTime {
+	op : OpTime {
+		- virtualWorkload -> vnew
+	}
+	
+	vexist : VirtualOpTimeToCapacity {
+		- opTime -> op
+		++ - enables_virtualWorkloadToOpTime -> vnew
+	}
+	
+	vnew : VirtualWorkloadToOpTime {
+		- opTime -> op
+		++ - requires_virtualOpTimeToCapacity -> vexist
+	}
+}
+// TODO: future improvement: NAC to not set the same edges twice
+
+//rule createMissingDepEdgesOperationDayCapacity {
+//	c : Capacity {
+//		- virtualOpTime -> vop
+//		- virtualWorkload -> vnew2
+//	}
+//	
+//	vop : VirtualOpTimeToCapacity {
+//		- opTime -> opTime
+//	}
+//	
+//	opTime : OpTime {
+//		- virtualWorkload -> vw
+//	}
+//	
+//	vw : VirtualWorkloadToOpTime {
+////		- opTime -> opTime
+//		- workload -> w
+//		++ - enables_virtual_WorkloadToCapacity -> vnew2
+//	}
+//	
+//	w : Workload
+//	
+//	vnew2 : VirtualWorkloadToCapacity {
+////		- capacity -> c
+//		- workload -> w
+//		++ - requires_virtualWorkloadToOpTime -> vw
+//	}
+//}
+//// TODO: future improvement: NAC to not set the same edges twice

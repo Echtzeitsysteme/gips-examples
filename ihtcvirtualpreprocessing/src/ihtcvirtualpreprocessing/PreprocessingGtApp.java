@@ -122,7 +122,7 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 				"./ihtcvirtualpreprocessing/api/ibex-patterns.xmi" //
 		);
 
-		// Apply all GT rule matches until the specified limit hits
+		// Apply all initial GT rule matches until the specified limit hits
 		// New GT rules (that should be applied) must be added here
 		applyMatches(api.preprocessOccupantsFirstWorkload(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.preprocessOccupantsWorkload(), GT_RULE_APPLICATION_LIMIT);
@@ -132,6 +132,25 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 		applyMatches(api.fixOperationDayCapacity(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.assignPatientToRoom(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.extendPatientStay(), GT_RULE_APPLICATION_LIMIT);
+
+		// Apply all GT rules to create missing dependency edges (TODO: once)
+		// Create missing dependency edges from operation day OP time
+		int counter = 0;
+		for (var match : api.createMissingDepEdgesOperationDayOpTime().findMatches()) {
+			api.createMissingDepEdgesOperationDayOpTime().apply(match);
+			counter++;
+		}
+		logger.info(this.getClass().getSimpleName() + ": I applied the GT rule "
+				+ api.createMissingDepEdgesOperationDayOpTime().getPatternName() + " " + counter + ".");
+
+//		// Create missing dependency edges from operation day capacity
+//		counter = 0;
+//		for (var match : api.createMissingDepEdgesOperationDayCapacity().findMatches()) {
+//			api.createMissingDepEdgesOperationDayCapacity().apply(match);
+//			counter++;
+//		}
+//		logger.info(this.getClass().getSimpleName() + ": I applied the GT rule "
+//				+ api.createMissingDepEdgesOperationDayCapacity().getPatternName() + " " + counter + ".");
 
 		// Persist model to XMI path
 		try {
