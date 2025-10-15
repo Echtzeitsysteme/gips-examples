@@ -61,42 +61,43 @@ rule virtualNodesForOccupant {
 // I. + II.: between the patient and opTime and between patient and capacity -> Selects a day and OT for the patient
 // III.: between opTime and Capacity to make sure the predefined surgeon of the patient is working in the correct OT on that day
 rule selectOperationDay {
-	p : Patient {
-		- firstWorkload -> w
-		- surgeon -> s
-	}
-	
-	s : Surgeon {
-		- opTimes -> opTime
-	}
-	
-	opTime : OpTime
-	
-	w : Workload {
-		- virtualCapacity -> vwc
-		- virtualOpTime -> vwop
-	}
+//	p : Patient {
+//		- firstWorkload -> w
+//		- surgeon -> s
+//	}
+//	
+//	s : Surgeon {
+//		- opTimes -> opTime
+//	}
+//	
+//	opTime : OpTime
+//	
+//	w : Workload {
+//		- virtualCapacity -> vwc
+//		- virtualOpTime -> vwop
+//	}
 	
 	vwc : VirtualWorkloadToCapacity {
 		- requires_virtualWorkloadToOpTime -> vwop
-		- capacity -> c
+//		- capacity -> c
 		.isSelected := true
+		- requires_virtualOpTimeToCapacity -> vopc
 	}
 	
 	vwop : VirtualWorkloadToOpTime {
 		- requires_virtualOpTimeToCapacity -> vopc
 		- enables_virtual_WorkloadToCapacity -> vwc
 		.isSelected := true
-		- opTime -> opTime
+//		- opTime -> opTime
 	}
 	
 	vopc : VirtualOpTimeToCapacity {
 		- enables_virtualWorkloadToOpTime -> vwop
-		- capacity -> c
+//		- capacity -> c
 		.isSelected := true
 	}
 	
-	c : Capacity 
+//	c : Capacity
 	
 }
 
@@ -389,7 +390,7 @@ constraint with assignedGenderToRoomOnShift {
 constraint with surgeonOptimeTupel {
 	mappings.selectedOperationDay->filter(
 		element.nodes.vwop.opTime == context.nodes.op
-	)->sum(element.nodes.p.surgeryDuration * element.value)
+	)->sum(element.nodes.vwc.workload.patient.surgeryDuration * element.value)
 	<=
 	context.nodes.op.maxOpTime
 }
@@ -402,7 +403,7 @@ constraint with otCapacityTupel {
 	mappings.selectedOperationDay->filter(
 		element.nodes.vopc.capacity.day == context.nodes.c.day &
 		element.nodes.vwc.capacity.ot == context.nodes.ot
-	)->sum(element.nodes.p.surgeryDuration * element.value)
+	)->sum(element.nodes.vwc.workload.patient.surgeryDuration * element.value)
 	<= 
 	context.nodes.c.maxCapacity
 }
@@ -415,7 +416,7 @@ constraint with otCapacityTupel {
 constraint with mandatoryPatients {
 	mappings.selectedShiftToFirstWorkload->filter(element.nodes.p == context.nodes.p)->sum(element.value)
 	+
-	mappings.selectedOperationDay->filter(element.nodes.p == context.nodes.p)->sum(element.value)
+	mappings.selectedOperationDay->filter(element.nodes.vwc.workload.patient == context.nodes.p)->sum(element.value)
 	== 2
 }
 
@@ -513,7 +514,7 @@ constraint with countPatientsForRoom {
 // C3: A patient is assigned to at most one operating time slot
 
 constraint with Patient {
-	mappings.selectedOperationDay->filter(element.nodes.p == context)->sum(element.value) <= 1
+	mappings.selectedOperationDay->filter(element.nodes.vwc.workload.patient == context)->sum(element.value) <= 1
 }
 
 // C4: A surgeon without any operations on a specific day is not assigned an operating theater on that day
@@ -959,7 +960,7 @@ function calculateOtsPerSurgeon with otsPerSurgeon {
 // U5: sets the mapping to true if the surgeon operates in the ot on that day
 constraint with otForSurgeon {
 	mappings.selectedOperationDay->filter(
-		element.nodes.opTime == context.nodes.op &
+		element.nodes.vopc.opTime == context.nodes.op &
 		element.nodes.vwc.capacity.ot == context.nodes.ot
 	)->sum(element.value)
 	<=
@@ -970,7 +971,7 @@ constraint with otForSurgeon {
 	context.value
 	<=
 	mappings.selectedOperationDay->filter(
-		element.nodes.opTime == context.nodes.op &
+		element.nodes.vopc.opTime == context.nodes.op &
 		element.nodes.vwc.capacity.ot == context.nodes.ot
 	)->sum(element.value)
 }
