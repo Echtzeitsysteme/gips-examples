@@ -84,3 +84,5 @@ ihtcvirtualmetamodel/instances/test01.xmi
 ihtcvirtualrunner/scripts/gips-ihtc.jar
 
 ihtcvirtualrunner/scripts/ihtc2024_competition_instances/
+
+*.ilp
