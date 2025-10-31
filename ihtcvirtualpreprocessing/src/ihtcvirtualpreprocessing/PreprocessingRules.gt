@@ -152,7 +152,16 @@ pattern nextVirtualShiftToWorkloadExists {
 }
 condition nextVirtualShiftToWorkloadDoesNotExist = forbid nextVirtualShiftToWorkloadExists
 
-rule extendPatientStay {
+pattern prevVirtualShiftToWorkloadIsNotFirst {
+	prevvsw : VirtualShiftToWorkload {
+		- requires_virtualShiftToWorkload -> othervsw
+	}
+	
+	othervsw : VirtualShiftToWorkload
+}
+condition prevVSWIsFirstAndNextExists = forbid prevVirtualShiftToWorkloadIsNotFirst && forbid nextVirtualShiftToWorkloadExists
+
+rule extendPatientStayFirst {
 	p : Patient {
 		- workloads -> prevw
 	}
@@ -188,6 +197,55 @@ rule extendPatientStay {
 		.isSelected := false
 		.wasImported := false
 		++ - requires_virtualShiftToWorkload -> prevvsw
+		++ - requires_root_virtualShiftToWorkload -> prevvsw
+	}
+
+	# p.isOccupant == false
+}
+when prevVSWIsFirstAndNextExists
+
+rule extendPatientStayLater {
+	p : Patient {
+		- workloads -> prevw
+	}
+	
+	prevw : Workload {
+		- next -> nextw
+	}
+	
+	nextw : Workload
+	
+	prevvsw : VirtualShiftToWorkload {
+		- workload -> prevw
+		- shift -> prevs
+		++ - enables_virtualShiftToWorkload -> vnew
+		// Explicitly set the opposite edge
+		- requires_root_virtualShiftToWorkload -> rootvsw
+	}
+	
+	rootvsw : VirtualShiftToWorkload {
+		
+	}
+	
+	prevs : Shift {
+		- next -> nexts
+		- room -> r
+	}
+	
+	nexts : Shift {
+		- room -> r
+		++ - virtualWorkload -> vnew
+	}
+	
+	r : Room
+	
+	++ vnew : VirtualShiftToWorkload {
+		++ - workload -> nextw
+		++ - shift -> nexts
+		.isSelected := false
+		.wasImported := false
+		++ - requires_virtualShiftToWorkload -> prevvsw
+		++ - requires_root_virtualShiftToWorkload -> rootvsw
 	}
 
 	# p.isOccupant == false

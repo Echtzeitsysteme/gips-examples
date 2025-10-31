@@ -131,7 +131,9 @@ public class PreprocessingGtApp extends IhtcvirtualpreprocessingHiPEApp {
 		applyMatches(api.fixOperationDayOpTime(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.fixOperationDayCapacity(), GT_RULE_APPLICATION_LIMIT);
 		applyMatches(api.assignPatientToRoom(), GT_RULE_APPLICATION_LIMIT);
-		applyMatches(api.extendPatientStay(), GT_RULE_APPLICATION_LIMIT);
+//		applyMatches(api.extendPatientStay(), GT_RULE_APPLICATION_LIMIT);
+		applyMatches(api.extendPatientStayFirst(), GT_RULE_APPLICATION_LIMIT);
+		applyMatches(api.extendPatientStayLater(), GT_RULE_APPLICATION_LIMIT);
 
 		// Persist model to XMI path
 		try {

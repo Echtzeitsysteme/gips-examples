@@ -163,6 +163,8 @@
         eType="#//VirtualShiftToWorkload" eOpposite="#//VirtualShiftToWorkload/requires_virtualShiftToWorkload"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requires_virtualWorkloadToCapacity"
         upperBound="-1" eType="#//VirtualWorkloadToCapacity" eOpposite="#//VirtualWorkloadToCapacity/enables_virtualShiftToWorkload"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requires_root_virtualShiftToWorkload"
+        eType="#//VirtualShiftToWorkload"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VirtualShiftToRoster">
     <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"
