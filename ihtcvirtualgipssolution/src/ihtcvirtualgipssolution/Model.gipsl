@@ -540,6 +540,9 @@ constraint with Patient {
 constraint with Patient {
 	mappings.selectedShiftToFirstWorkload->filter(context == element.nodes.vsw)->sum(element.value) <= 1
 }
+constraint with Patient {
+	mappings.selectedShiftToFirstWorkload->filter(element.nodes.vsw == context.firstWorkload)->sum(element.value) <= 1
+}
 constraint with selectShiftToFirstWorkload {
 	mappings.selectedShiftToFirstWorkload->filter(element.nodes.vsw.workload.patient == context.nodes.vsw)->sum(element.value) <= 1
 }
