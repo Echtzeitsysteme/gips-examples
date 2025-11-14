@@ -174,7 +174,7 @@ public class SolvedModelValidator {
 				selectedvwop = v;
 				final Collection<VirtualOpTimeToCapacity> possibleSurgeonOTAssignments = selectedOpTime.getVirtualCapacity();
 				for (final VirtualOpTimeToCapacity vopc : possibleSurgeonOTAssignments) {
-					if (vopc.isIsSelected()) {
+					if (vopc.isIsSelected() && selectedvwop.getRequires_virtualOpTimeToCapacity().contains(vopc)) {
 						selectedvopc = vopc;
 						break;
 					}
@@ -536,9 +536,9 @@ public class SolvedModelValidator {
 					// If the workload is outside of the scheduling period no shift can be assigned
 					break;
 				}
-				patientDebug = "For Workload " + workloadNumber + " there is no virtual Shift assigned!";
-				logger.warning(patientDebug); 
-				debug += "ERROR: " + patientDebug + "\n\t";
+//				patientDebug = "For Workload " + workloadNumber + " there is no virtual Shift assigned!";
+//				logger.warning(patientDebug); 
+//				debug += "ERROR: " + patientDebug + "\n\t";
 				return virtualAdmissionShift;
 			}
 			
