@@ -79,6 +79,7 @@ public class SolvedModelValidator {
 			}
 		});
 		logger.addHandler(handler);
+		this.setSelectedVSWNodes(model);
 	}
 	
 	
@@ -536,9 +537,9 @@ public class SolvedModelValidator {
 					// If the workload is outside of the scheduling period no shift can be assigned
 					break;
 				}
-//				patientDebug = "For Workload " + workloadNumber + " there is no virtual Shift assigned!";
-//				logger.warning(patientDebug); 
-//				debug += "ERROR: " + patientDebug + "\n\t";
+				patientDebug = "For Workload " + workloadNumber + " there is no virtual Shift assigned!";
+				logger.warning(patientDebug); 
+				debug += "ERROR: " + patientDebug + "\n\t";
 				return virtualAdmissionShift;
 			}
 			
@@ -595,5 +596,30 @@ public class SolvedModelValidator {
 			}
 		}
 		return debug;
+	}
+	
+	protected void setSelectedVSWNodes(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+		VirtualShiftToWorkload admissionShift = null;
+		VirtualShiftToWorkload nextVSW = null;
+		
+		for(Patient patient : model.getPatients()) {
+			admissionShift = null;
+			final Collection<VirtualShiftToWorkload> possibleShiftAssignments = patient.getFirstWorkload().getVirtualShift();
+			for(VirtualShiftToWorkload vsw : possibleShiftAssignments) {
+				if(vsw.isIsSelected()) {
+					admissionShift = vsw;
+					break;
+				}
+			}
+			if(admissionShift != null) {
+				nextVSW = admissionShift.getEnables_virtualShiftToWorkload();
+				while(nextVSW != null) {
+					nextVSW.setIsSelected(true);
+					nextVSW = nextVSW.getEnables_virtualShiftToWorkload();
+				}
+			}
+			
+		}
 	}
 }
