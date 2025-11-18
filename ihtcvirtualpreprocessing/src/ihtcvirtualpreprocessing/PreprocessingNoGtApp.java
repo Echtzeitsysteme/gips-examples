@@ -127,6 +127,7 @@ public class PreprocessingNoGtApp {
 	private void createVirtualShiftToWorkloadsOccupants() {
 		Objects.requireNonNull(model);
 		model.getPatients().stream().filter(patient -> patient.isIsOccupant()).forEach(occupant -> {
+			VirtualShiftToWorkload root = null;
 			VirtualShiftToWorkload vPrev = null;
 			for (final Workload workload : occupant.getWorkloads()) {
 				final Shift shift = workload.getDerivedShift();
@@ -143,6 +144,14 @@ public class PreprocessingNoGtApp {
 				}
 				shift.getVirtualWorkload().add(v);
 				vPrev = v;
+				
+				// Add root relation
+				if(occupant.getFirstWorkload() == workload) {
+					root = v;
+					v.setRequires_root_virtualShiftToWorkload(null);
+				} else {
+					v.setRequires_root_virtualShiftToWorkload(root);
+				}
 
 				// Delete derived edges
 				workload.setDerivedShift(null);
@@ -329,6 +338,10 @@ public class PreprocessingNoGtApp {
 												.forEach(vc -> {
 													vc.getEnables_virtualShiftToWorkload().add(v);
 										});
+										
+										// The root nodes relation must be null (only explicitly set for clarity)
+										v.setRequires_root_virtualShiftToWorkload(null);
+	
 										shift.getVirtualWorkload().add(v);
 									}
 								}
@@ -385,6 +398,7 @@ public class PreprocessingNoGtApp {
 		Workload w = (Workload) initWorkload.getNext();
 		Shift s = (Shift) initShift.getNext();
 		VirtualShiftToWorkload v = initV;
+		VirtualShiftToWorkload root = initV;
 
 		while (w != null && s != null) {
 			final VirtualShiftToWorkload vNew = IhtcvirtualmetamodelFactory.eINSTANCE.createVirtualShiftToWorkload();
@@ -394,6 +408,10 @@ public class PreprocessingNoGtApp {
 			vNew.setWorkload(w);
 			vNew.setRequires_virtualShiftToWorkload(v);
 			v.setEnables_virtualShiftToWorkload(vNew);
+			
+			// Add root relation
+			vNew.setRequires_root_virtualShiftToWorkload(root);
+
 			s.getVirtualWorkload().add(vNew);
 			w = (Workload) w.getNext();
 			s = (Shift) s.getNext();
