@@ -169,7 +169,7 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 	protected JsonArray convertModelToCostsJson(final Root model, final boolean verbose) {
 		Objects.requireNonNull(model);
 
-		final ModelCostNoPostProcCalculator calc = new ModelCostNoPostProcCalculator();
+		final ModelCostNoPostProcCalculator calc = new ModelCostNoPostProcCalculator(model);
 		final int unscheduled = calc.calculateUnscheduledPatientsCost(model);
 		final int delay = calc.calculateAdmissionDelayCost(model);
 		final int openOt = calc.calculateOpenOtCost(model);

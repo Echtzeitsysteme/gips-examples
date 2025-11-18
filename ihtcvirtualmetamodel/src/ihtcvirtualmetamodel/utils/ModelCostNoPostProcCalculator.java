@@ -1,5 +1,6 @@
 package ihtcvirtualmetamodel.utils;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,17 @@ import ihtcvirtualmetamodel.Workload;
  */
 public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 
+	/**
+	 * Calls a method to manually select all subsequent VirtualShiftToWorkload Nodes. This is necessary because when using only one MILP variable
+	 * only the first VirtualShiftToWorkload of a "ladder" is selected (isSelected == true)
+	 * 
+	 * @param model Hospital model 
+	 */
+	public ModelCostNoPostProcCalculator(final Root model) {
+		this.setSelectedVSWNodes(model);
+	}
+	
+	
 	/**
 	 * This method calculates the maximum age difference for a given room `r` on day
 	 * `d` for all new patients and all previously assigned occupants which are
@@ -411,4 +423,34 @@ public class ModelCostNoPostProcCalculator extends ModelCostCalculator {
 		return foundNurses.size();
 	}
 
+	/**
+	 * Manually selects all subsequent VirtualShiftToWorkload Nodes. This is necessary because when using only one MILP variable
+	 * only the first VirtualShiftToWorkload of a "ladder" is selected (isSelected == true)
+	 * 
+	 * @param model Hospital model
+	 */
+	protected void setSelectedVSWNodes(final Root model) {
+		Objects.requireNonNull(model, "Given hospital model was null.");
+		VirtualShiftToWorkload admissionShift = null;
+		VirtualShiftToWorkload nextVSW = null;
+		
+		for(Patient patient : model.getPatients()) {
+			admissionShift = null;
+			final Collection<VirtualShiftToWorkload> possibleShiftAssignments = patient.getFirstWorkload().getVirtualShift();
+			for(VirtualShiftToWorkload vsw : possibleShiftAssignments) {
+				if(vsw.isIsSelected()) {
+					admissionShift = vsw;
+					break;
+				}
+			}
+			if(admissionShift != null) {
+				nextVSW = admissionShift.getEnables_virtualShiftToWorkload();
+				while(nextVSW != null) {
+					nextVSW.setIsSelected(true);
+					nextVSW = nextVSW.getEnables_virtualShiftToWorkload();
+				}
+			}
+			
+		}
+	}
 }
