@@ -5,6 +5,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IdedElement" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TaAllocation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="modules" upperBound="-1"
         eType="#//Module" containment="true"/>
@@ -14,8 +17,12 @@
         eType="#//TimeTableEntry" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="weeks" upperBound="-1"
         eType="#//Week" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="campuses" upperBound="-1"
+        eType="#//Campus" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rooms" upperBound="-1"
+        eType="#//Room" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TeachingAssistant" eSuperTypes="#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="TeachingAssistant" eSuperTypes="#//NamedElement #//IdedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerWeek" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxHoursPerYear" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="unavailableBecauseLessons"
@@ -33,13 +40,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="previousSolutionTas" upperBound="-1"
         eType="#//TeachingAssistant"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Module" eSuperTypes="#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Module" eSuperTypes="#//NamedElement #//IdedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="approvals" upperBound="-1"
         eType="#//EmploymentApproval" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sessions" upperBound="-1"
         eType="#//TeachingSession" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TeachingSession" eSuperTypes="#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="TeachingSession" eSuperTypes="#//NamedElement #//IdedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="hoursPaidPerOccurrence"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numTasPerSession" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -69,5 +76,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Week">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Campus" eSuperTypes="#//IdedElement #//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Room" eSuperTypes="#//IdedElement #//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="campus" eType="#//Campus"/>
   </eClassifiers>
 </ecore:EPackage>

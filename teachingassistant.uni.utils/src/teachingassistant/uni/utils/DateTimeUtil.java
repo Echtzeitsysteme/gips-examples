@@ -1,5 +1,7 @@
 package teachingassistant.uni.utils;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
@@ -19,7 +21,7 @@ public class DateTimeUtil {
 	 */
 	public static int convertDateTimeToSeconds(final Date date) {
 		Objects.requireNonNull(date);
-		
+
 		int seconds = 0;
 		final Calendar cal = Calendar.getInstance();
 		Objects.requireNonNull(cal);
@@ -30,6 +32,18 @@ public class DateTimeUtil {
 		seconds += (cal.get(Calendar.HOUR_OF_DAY) * 60 * 60);
 
 		return seconds;
+	}
+
+	/**
+	 * TODO.
+	 * 
+	 * @param localDateTime
+	 * @return
+	 */
+	public static Date localDateTimeToDate(final LocalDateTime localDateTime) {
+		Objects.requireNonNull(localDateTime);
+
+		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
 
 }

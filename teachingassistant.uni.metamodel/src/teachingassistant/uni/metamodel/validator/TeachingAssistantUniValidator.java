@@ -36,7 +36,7 @@ public class TeachingAssistantUniValidator {
 	/**
 	 * Model file name to load.
 	 */
-	public final static String SCENARIO_FILE_NAME = "solved.xmi";
+	public static String SCENARIO_FILE_NAME = "solved.xmi";
 //	public final static String SCENARIO_FILE_NAME = "uni_ta_allocation.xmi";
 
 	/**
