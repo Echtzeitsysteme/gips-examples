@@ -33,7 +33,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		final BatchGipsAPI gipsApi = new BatchGipsAPI();
 		logger.info("GIPS init.");
 		gipsApi.init(URI.createFileURI(filePath));
-		enableTracing(gipsApi);
+//		enableTracing(gipsApi);
 
 		logger.info("GIPS update.");
 		gipsApi.update();

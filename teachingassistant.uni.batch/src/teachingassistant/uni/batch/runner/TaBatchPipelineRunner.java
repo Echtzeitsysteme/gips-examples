@@ -17,8 +17,8 @@ public class TaBatchPipelineRunner {
 	 */
 	protected final static Logger logger = Logger.getLogger(TaBatchPipelineRunner.class.getName());
 
-	public static String SCENARIO_FILE_NAME = "kcl_tiny_dataset";
-//	public static String SCENARIO_FILE_NAME = "kcl_semester_dataset";
+//	public static String SCENARIO_FILE_NAME = "kcl_tiny_dataset";
+	public static String SCENARIO_FILE_NAME = "kcl_semester_dataset";
 
 	public static void main(final String[] args) {
 		LoggingUtils.configureLogging(logger);
