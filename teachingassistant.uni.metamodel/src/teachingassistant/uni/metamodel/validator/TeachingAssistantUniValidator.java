@@ -589,7 +589,7 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
-		if (entry.getRoom() == null || entry.getRoom().isBlank()) {
+		if (entry.getRoom() == null || entry.getRoomName() == null || entry.getRoomName().isBlank()) {
 			return false;
 		}
 

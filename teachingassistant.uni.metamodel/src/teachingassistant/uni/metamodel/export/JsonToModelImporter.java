@@ -447,7 +447,8 @@ public class JsonToModelImporter {
 		entry.setEndEpoch(DateTimeUtil.convertDateTimeToSeconds(entry.getEndTime()));
 
 		// TODO: fix conversion later on
-		entry.setRoom(String.valueOf(roomId));
+		entry.setRoomName(String.valueOf(roomId));
+		entry.setRoom(getRoomById(roomId));
 		return entry;
 	}
 
@@ -471,15 +472,15 @@ public class JsonToModelImporter {
 		throw new UnsupportedOperationException("Campus with ID <" + id + "> not found.");
 	}
 
-//	private Room getRoomById(final int id) {
-//		for (final Room r : model.getRooms()) {
-//			if (r.getId() == id) {
-//				return r;
-//			}
-//		}
-//
-//		throw new UnsupportedOperationException("Room with ID <" + id + "> not found.");
-//	}
+	private Room getRoomById(final int id) {
+		for (final Room r : model.getRooms()) {
+			if (r.getId() == id) {
+				return r;
+			}
+		}
+
+		throw new UnsupportedOperationException("Room with ID <" + id + "> not found.");
+	}
 
 	private Week getWeekById(final int id) {
 		for (final Week w : model.getWeeks()) {

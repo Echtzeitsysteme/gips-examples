@@ -259,7 +259,7 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 					entry.getTimeTableWeeks().add(getWeek(chosenWeek));
 					session.getTimeTableWeeks().add(getWeek(chosenWeek));
 
-					entry.setRoom("Room" + getRandInt(1, 5));
+					entry.setRoomName("Room" + getRandInt(1, 5));
 
 					// Pick a day offset (0..4 => Mon..Fri)
 					final LocalDateTime dayTime = baseWeekMonday
