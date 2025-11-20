@@ -21,8 +21,15 @@ public class TaBatchPipelineRunner {
 	public static String SCENARIO_FILE_NAME = "kcl_semester_dataset";
 
 	public static void main(final String[] args) {
+//		try {
+//			Thread.sleep(20_000);
+//		} catch (final InterruptedException e) {
+//			e.printStackTrace();
+//		}
+
 		LoggingUtils.configureLogging(logger);
-		
+		final long start = System.nanoTime();
+
 //		SimpleTaUniGenerator.main(null);
 		final String projectFolder = System.getProperty("user.dir");
 		final String resourceFolder = projectFolder + "/../teachingassistant.uni.metamodel/resources/";
@@ -32,6 +39,8 @@ public class TaBatchPipelineRunner {
 
 		logger.info("Start JSON importer.");
 		JsonToModelImporter.main(new String[] { jsonFilePath, xmiFilePath });
+		final long afterImport = System.nanoTime();
+		logger.info("Elapsed time: " + 1.0 * (afterImport - start) / 1_000_0000_000F);
 		logger.info("Start GIPS batch runner.");
 		TaBatchRunner.scenarioFileName = SCENARIO_FILE_NAME + ".xmi";
 		TaBatchRunner.main(null);
