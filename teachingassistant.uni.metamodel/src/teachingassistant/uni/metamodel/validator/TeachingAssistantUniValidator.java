@@ -19,9 +19,9 @@ import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
+import teachingassistant.uni.metamodel.export.FileUtils;
 import teachingassistant.uni.utils.DateTimeUtil;
 import teachingassistant.uni.utils.LoggingUtils;
-import teachingassistant.uni.metamodel.export.FileUtils;
 
 /**
  * Model validator for the teaching assistant example.
@@ -494,6 +494,49 @@ public class TeachingAssistantUniValidator {
 				logger.warning("TA <" + ta.getName() + "> has conflicting assignments.");
 			}
 			return false;
+		}
+
+		// Check for inter-campus travel time
+		for (final TimeTableEntry entryA : allShifts) {
+			for (final TimeTableEntry entryB : allShifts) {
+				// If both entries are the same, continue to the next
+				if (entryA.equals(entryB)) {
+					continue;
+				}
+
+				// Check if campus does not match ...
+				if (!entryA.getRoom().getCampus().equals(entryB.getRoom().getCampus())) {
+					// ... check if time frames are at least 60 minutes apart from each other
+					// (Here, we must not check if the two time frames overlap since this will be
+					// checked elsewhere.)
+					// Find the time frame delta
+					long delta = 0;
+					if (entryA.getStartEpoch() < entryB.getStartEpoch()) {
+						delta = entryB.getStartEpoch() - entryA.getEndEpoch();
+					} else {
+						delta = entryA.getEndEpoch() - entryB.getStartEpoch();
+					}
+					// If delta is below 1h = 3600s, the check failed
+					if (delta < 3600) {
+						if (verbose) {
+							logger.warning("Assignments of TA <" + ta.getName() + "> in week <"
+									+ entryA.getTimeTableWeeks().get(0).getNumber() + "> on day <" + entryA.getWeekDay()
+									+ "> violates the 60 minutes inter-campus travel time.");
+						}
+						return false;
+					}
+				}
+			}
+		}
+
+		for (final TimeTableEntry unavailable : ta.getUnavailableBecauseLessons()) {
+			if (allShifts.contains(unavailable)) {
+				if (verbose) {
+					logger.warning("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable
+							+ "> but is blocked on this time frame.");
+				}
+				return false;
+			}
 		}
 
 		return true;

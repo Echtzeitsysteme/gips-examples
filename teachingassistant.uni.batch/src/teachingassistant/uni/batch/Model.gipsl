@@ -136,6 +136,39 @@ pattern findAmberTa {
 	# approval.ratingNumeric == 1
 }
 
+pattern findInterCampusTimeTableEntriesConflict {
+	ta : TeachingAssistant
+	
+	week : Week
+	
+	entryA : TimeTableEntry {
+		- timeTableWeeks -> week
+		- room -> roomA
+	}
+	roomA : Room {
+		- campus -> campusA
+	}
+	campusA : Campus
+	
+	entryB : TimeTableEntry {
+		- timeTableWeeks -> week
+		- room -> roomB
+	}
+	roomB : Room {
+		- campus -> campusB
+	}
+	campusB : Campus
+	
+	// Match day
+	# entryA.weekDay == entryB.weekDay
+	
+	// Time frame between A.end and B.start is < 3600
+	# entryB.startEpoch - entryA.endEpoch < 3600
+	
+	// No time conflict, A finished before B
+	# entryA.endEpoch <= entryB.startEpoch
+}
+
 //
 // GIPSL
 //
@@ -157,6 +190,23 @@ constraint with findSessionOccurrence {
 // GIPSL formulation: For any pair of conflicting session occurrences (in the
 // context of one TA), a maximum of one of these conflicting session can be chosen.
 constraint with findConflictingEntriesWithTa {
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryA //
+	)->sum(element.value)
+	+ mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.entry == context.nodes.entryB //
+	)->sum(element.value)
+	<= 1
+}
+
+// TAs must have at least 1h = 3600s to switch campus in between assignments.
+// GIPSL formulation: For any pair of time table entries that could be assigned
+// to a single TA, which require inter-campus travel, and which time window for
+// a switch is less than 1h = 3600s, a maximum of one of these sessions can be
+// chosen.
+constraint with findInterCampusTimeTableEntriesConflict {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
 		& element.nodes.entry == context.nodes.entryA //
