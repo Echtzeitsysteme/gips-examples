@@ -231,7 +231,8 @@ public class TeachingAssistantUniValidator {
 		}
 
 		if (m.getSessions().isEmpty()) {
-			return false;
+			logger.info("\tWarning: Module <" + m.getName() + "> does not have any sessions.");
+//			return false;
 		}
 
 		return true;
