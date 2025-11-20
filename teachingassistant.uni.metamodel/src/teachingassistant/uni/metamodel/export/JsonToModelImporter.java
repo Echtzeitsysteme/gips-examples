@@ -122,7 +122,7 @@ public class JsonToModelImporter {
 		Objects.requireNonNull(json);
 
 		for (final JsonElement ta : json) {
-			final int taId = ((JsonObject) ta).get("id").getAsInt();
+			final int taId = ((JsonObject) ta).get("id").getAsInt() - 1;
 			final String name = ((JsonObject) ta).get("name").getAsString();
 			final int maxHoursPerWeek = ((JsonObject) ta).get("maxHoursPerWeek").getAsInt();
 
@@ -133,10 +133,10 @@ public class JsonToModelImporter {
 			// Multi-dimensional array of weeks(days(slots)))
 			final JsonArray availability = ((JsonObject) ta).get("availability").getAsJsonArray();
 			// Iterate over all weeks
-			int weekCounter = 1;
+			int weekCounter = 0;
 			for (final JsonElement week : availability) {
 				// Iterate over all days
-				int dayCounter = 1;
+				int dayCounter = 0;
 				for (final JsonElement day : week.getAsJsonArray()) {
 					// Iterate over all slots
 					int slotCounter = 0;
@@ -185,7 +185,7 @@ public class JsonToModelImporter {
 			// Week matches
 			if (candidate.getTimeTableWeeks().contains(getWeekById(week))) {
 				// Day matches
-				if (candidate.getWeekDay().equals(String.valueOf(day))) {
+				if (candidate.getWeekDay().equals(convertDayIndexToName(day))) {
 					// Slot lays in between `start` and `end` of the candidate
 					final long startEntry = candidate.getStartEpoch();
 					final long endEntry = candidate.getEndEpoch();
@@ -219,8 +219,8 @@ public class JsonToModelImporter {
 		Objects.requireNonNull(json);
 
 		for (final JsonElement ea : json) {
-			final int taId = ((JsonObject) ea).get("ta").getAsInt();
-			final int moduleId = ((JsonObject) ea).get("module").getAsInt();
+			final int taId = ((JsonObject) ea).get("ta").getAsInt() - 1;
+			final int moduleId = ((JsonObject) ea).get("module").getAsInt() - 1;
 			final String ratingString = ((JsonObject) ea).get("rating").getAsString();
 			createEmploymentApproval(ratingString, taId, moduleId);
 		}
@@ -272,9 +272,9 @@ public class JsonToModelImporter {
 		Objects.requireNonNull(json);
 
 		for (final JsonElement r : json) {
-			final int id = ((JsonObject) r).get("id").getAsInt();
+			final int id = ((JsonObject) r).get("id").getAsInt() - 1;
 			final String name = ((JsonObject) r).get("name").getAsString();
-			final int campusId = ((JsonObject) r).get("campus").getAsInt();
+			final int campusId = ((JsonObject) r).get("campus").getAsInt() - 1;
 			createRoom(id, name, campusId);
 		}
 
@@ -294,7 +294,7 @@ public class JsonToModelImporter {
 		Objects.requireNonNull(json);
 
 		for (final JsonElement c : json) {
-			final int id = ((JsonObject) c).get("id").getAsInt();
+			final int id = ((JsonObject) c).get("id").getAsInt() - 1;
 			final String name = ((JsonObject) c).get("name").getAsString();
 			createCampus(id, name);
 		}
@@ -314,7 +314,7 @@ public class JsonToModelImporter {
 
 		for (final JsonElement m : json) {
 			// ID currently not needed
-			final int id = ((JsonObject) m).get("id").getAsInt();
+			final int id = ((JsonObject) m).get("id").getAsInt() - 1;
 			final String name = ((JsonObject) m).get("name").getAsString();
 			createModule(name, id);
 		}
@@ -333,7 +333,7 @@ public class JsonToModelImporter {
 		Objects.requireNonNull(json);
 
 		for (final JsonElement w : json) {
-			final int id = ((JsonObject) w).get("id").getAsInt();
+			final int id = ((JsonObject) w).get("id").getAsInt() - 1;
 			createWeek(id);
 		}
 	}
@@ -348,9 +348,9 @@ public class JsonToModelImporter {
 		Objects.requireNonNull(json);
 
 		for (final JsonElement s : json) {
-			final int id = ((JsonObject) s).get("id").getAsInt();
+			final int id = ((JsonObject) s).get("id").getAsInt() - 1;
 			final String name = ((JsonObject) s).get("name").getAsString();
-			final int moduleId = ((JsonObject) s).get("module").getAsInt();
+			final int moduleId = ((JsonObject) s).get("module").getAsInt() - 1;
 			final int numTasRequired = ((JsonObject) s).get("numTAsRequired").getAsInt();
 			final int hoursPaid = ((JsonObject) s).get("hoursPaid").getAsInt();
 			final JsonArray occurrences = ((JsonObject) s).get("occurrences").getAsJsonArray();
@@ -398,7 +398,7 @@ public class JsonToModelImporter {
 		final List<SessionOccurrence> occurrences = new ArrayList<SessionOccurrence>();
 
 		for (final JsonElement o : json) {
-			final int weekNumber = ((JsonObject) o).get("week").getAsInt();
+			final int weekNumber = ((JsonObject) o).get("week").getAsInt() - 1;
 			final SessionOccurrence so = createSessionOccurrence(weekNumber);
 			occurrences.add(so);
 		}
@@ -412,10 +412,10 @@ public class JsonToModelImporter {
 		final List<TimeTableEntry> timeTableEntries = new ArrayList<TimeTableEntry>();
 
 		for (final JsonElement o : json) {
-			final int weekNumber = ((JsonObject) o).get("week").getAsInt();
-			final int roomId = ((JsonObject) o).get("room").getAsInt();
+			final int weekNumber = ((JsonObject) o).get("week").getAsInt() - 1;
+			final int roomId = ((JsonObject) o).get("room").getAsInt() - 1;
 			final int start = ((JsonObject) o).get("start").getAsInt();
-			final int day = ((JsonObject) o).get("day").getAsInt();
+			final int day = ((JsonObject) o).get("day").getAsInt() - 1;
 			final int end = ((JsonObject) o).get("end").getAsInt();
 			final TimeTableEntry entry = createTimeTableEntry(weekNumber, day, start, end, roomId);
 			timeTableEntries.add(entry);
@@ -445,9 +445,7 @@ public class JsonToModelImporter {
 		entry.setEndTime(DateTimeUtil.localDateTimeToDate(endTime));
 		entry.setStartEpoch(DateTimeUtil.convertDateTimeToSeconds(entry.getStartTime()));
 		entry.setEndEpoch(DateTimeUtil.convertDateTimeToSeconds(entry.getEndTime()));
-
-		// TODO: fix conversion later on
-		entry.setRoomName(String.valueOf(roomId));
+		entry.setRoomName(getRoomById(roomId).getName());
 		entry.setRoom(getRoomById(roomId));
 		return entry;
 	}
@@ -510,6 +508,10 @@ public class JsonToModelImporter {
 		}
 
 		throw new UnsupportedOperationException("TA with ID <" + id + "> not found.");
+	}
+
+	private String convertDayIndexToName(final int day) {
+		return BASE_WEEK_MONDAY.plusDays(day).getDayOfWeek().name();
 	}
 
 }
