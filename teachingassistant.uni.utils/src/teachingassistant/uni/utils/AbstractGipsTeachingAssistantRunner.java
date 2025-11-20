@@ -95,7 +95,10 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 	 */
 	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi) {
 		Objects.requireNonNull(gipsApi);
-		gipsApi.buildProblem(true);
+		logger.info("Build GIPS problem.");
+		// Build problem in parallel
+		gipsApi.buildProblem(true, true);
+		logger.info("Solve MILP problem.");
 		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
 //			throw new InternalError("No solution found!");
@@ -114,6 +117,7 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 	 */
 	protected void applySolution(final GipsEngineAPI<?, ?> gipsApi) {
 		Objects.requireNonNull(gipsApi);
+		logger.info("Apply GIPS solution.");
 		// Apply found solution
 		gipsApi.applyAllNonZeroMappings();
 	}

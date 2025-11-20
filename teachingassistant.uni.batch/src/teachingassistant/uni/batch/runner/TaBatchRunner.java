@@ -2,8 +2,8 @@ package teachingassistant.uni.batch.runner;
 
 import org.eclipse.emf.common.util.URI;
 
-import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
 import teachingassistant.uni.batch.api.gips.BatchGipsAPI;
+import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
 
 public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 
@@ -31,8 +31,12 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		//
 
 		final BatchGipsAPI gipsApi = new BatchGipsAPI();
+		logger.info("GIPS init.");
 		gipsApi.init(URI.createFileURI(filePath));
 		enableTracing(gipsApi);
+
+		logger.info("GIPS update.");
+		gipsApi.update();
 
 		//
 		// Build and solve the ILP problem
