@@ -98,6 +98,9 @@ pattern findConflictingEntriesWithTa {
 	
 	# entryA.startEpoch < entryB.endEpoch
 	# entryA.endEpoch > entryB.startEpoch
+	
+	// The day must match
+	# entryA.weekDay == entryB.weekDay
 }
 
 // Find all possible combinations of TAs and weeks
@@ -264,6 +267,6 @@ function amberTas with findAmberTa {
 // amber TAs
 objective : max {
 	0
-	+ 5 * functions.greenTas
+	+ 2 * functions.greenTas
 	+ 1 * functions.amberTas
 }

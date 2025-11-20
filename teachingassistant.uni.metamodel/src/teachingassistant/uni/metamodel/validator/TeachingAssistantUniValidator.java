@@ -504,6 +504,16 @@ public class TeachingAssistantUniValidator {
 					continue;
 				}
 
+				// If the week does not match, continue to the next
+				if (entryA.getTimeTableWeeks().get(0).getNumber() != entryB.getTimeTableWeeks().get(0).getNumber()) {
+					continue;
+				}
+
+				// If the day does not match, continue to the next
+				if (!entryA.getWeekDay().equals(entryB.getWeekDay())) {
+					continue;
+				}
+
 				// Check if campus does not match ...
 				if (!entryA.getRoom().getCampus().equals(entryB.getRoom().getCampus())) {
 					// ... check if time frames are at least 60 minutes apart from each other
@@ -522,6 +532,17 @@ public class TeachingAssistantUniValidator {
 							logger.warning("Assignments of TA <" + ta.getName() + "> in week <"
 									+ entryA.getTimeTableWeeks().get(0).getNumber() + "> on day <" + entryA.getWeekDay()
 									+ "> violates the 60 minutes inter-campus travel time.");
+							logger.warning("\tSession A <" + entryA.getSession().getName() + "> in room < "
+									+ entryA.getRoomName() + "> on campus <" + entryA.getRoom().getCampus().getName()
+									+ ">." + System.lineSeparator() + "\tSession B <" + entryB.getSession().getName()
+									+ "> in room < " + entryB.getRoomName() + "> on campus <"
+									+ entryB.getRoom().getCampus().getName() + ">.");
+							logger.warning("\tSession A start <" + entryA.getStartTime().toLocaleString() + ">."
+									+ System.lineSeparator() + "\tSession B start <"
+									+ entryB.getStartTime().toLocaleString() + ">.");
+							logger.warning("\tSession A end <" + entryA.getEndTime().toLocaleString() + ">."
+									+ System.lineSeparator() + "\tSession B end <"
+									+ entryB.getEndTime().toLocaleString() + ">.");
 						}
 						return false;
 					}

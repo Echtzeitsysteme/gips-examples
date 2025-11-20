@@ -98,7 +98,8 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 		gipsApi.buildProblem(true);
 		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
-			throw new InternalError("No solution found!");
+//			throw new InternalError("No solution found!");
+			logger.warning("No solution found!");
 		}
 		logger.info("=> Objective value: " + output.objectiveValue());
 		return output.objectiveValue();
@@ -126,6 +127,7 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 		Objects.requireNonNull(gipsApi);
 		gipsApi.getTracer().enableTracing(true);
 		gipsApi.getEclipseIntegrationConfig().setSolutionValuesSynchronizationEnabled(true);
+		gipsApi.getSolverConfig().setEnableIIS(true);
 	}
 
 	/**
