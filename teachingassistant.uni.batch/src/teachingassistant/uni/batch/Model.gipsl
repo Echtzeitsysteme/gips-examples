@@ -7,7 +7,7 @@ config {
 	randomSeed := true [value := 0];
 	presolve := auto;
 	debugOutput := true;
-	lpOutput := true [path := "problem.lp"];
+//	lpOutput := true [path := "problem.lp"];
 }
 
 //
