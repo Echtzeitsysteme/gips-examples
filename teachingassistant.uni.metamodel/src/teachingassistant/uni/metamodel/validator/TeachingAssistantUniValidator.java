@@ -28,6 +28,8 @@ import teachingassistant.uni.utils.LoggingUtils;
  */
 public class TeachingAssistantUniValidator {
 
+	private final static String OUTPUT_PREFIX = "\t";
+
 	/**
 	 * Logger for system outputs.
 	 */
@@ -115,7 +117,7 @@ public class TeachingAssistantUniValidator {
 				weeksValid = weeksValid & validate(week);
 			}
 			weeksValid = weeksValid & validateWeekNumberUnique(allFoundWeeks);
-			logger.info("=> All weeks are valid: " + weeksValid);
+			logger.info(OUTPUT_PREFIX + "All weeks are valid: " + weeksValid);
 			valid = valid & weeksValid;
 		}
 
@@ -136,7 +138,7 @@ public class TeachingAssistantUniValidator {
 			for (final TimeTableEntry entry : allFoundTimeTableEntries) {
 				timeTableEntriesValid = timeTableEntriesValid & validate(entry);
 			}
-			logger.info("=> All time table entries are valid: " + timeTableEntriesValid);
+			logger.info(OUTPUT_PREFIX + "All time table entries are valid: " + timeTableEntriesValid);
 			valid = valid & timeTableEntriesValid;
 		}
 
@@ -146,7 +148,7 @@ public class TeachingAssistantUniValidator {
 			for (final TeachingAssistant ta : model.getTas()) {
 				tasValid = tasValid & validate(ta, model);
 			}
-			logger.info("=> All TAs are valid: " + tasValid);
+			logger.info(OUTPUT_PREFIX + "All TAs are valid: " + tasValid);
 			valid = valid & tasValid;
 		}
 
@@ -156,7 +158,7 @@ public class TeachingAssistantUniValidator {
 			for (final metamodel.Module m : model.getModules()) {
 				modulesValid = modulesValid & validate(m, model);
 			}
-			logger.info("=> All modules are valid: " + modulesValid);
+			logger.info(OUTPUT_PREFIX + "All modules are valid: " + modulesValid);
 			valid = valid & modulesValid;
 		}
 
@@ -172,7 +174,7 @@ public class TeachingAssistantUniValidator {
 				employmentApprovalsValid = employmentApprovalsValid & validate(ea);
 				employmentApprovalsValid = employmentApprovalsValid & model.getTas().contains(ea.getTa());
 			}
-			logger.info("=> All employment approvals are valid: " + employmentApprovalsValid);
+			logger.info(OUTPUT_PREFIX + "All employment approvals are valid: " + employmentApprovalsValid);
 			valid = valid & employmentApprovalsValid;
 		}
 
@@ -186,7 +188,7 @@ public class TeachingAssistantUniValidator {
 					}
 				}
 			}
-			logger.info("=> All session occurrences are valid: " + sessionOccurrencesValid);
+			logger.info(OUTPUT_PREFIX + "All session occurrences are valid: " + sessionOccurrencesValid);
 			valid = valid & sessionOccurrencesValid;
 		}
 
@@ -201,7 +203,7 @@ public class TeachingAssistantUniValidator {
 			for (final TeachingSession ts : allFoundTeachingSessions) {
 				teachingSessionsValid = teachingSessionsValid & validate(ts, model);
 			}
-			logger.info("=> All teaching sessions are valid: " + teachingSessionsValid);
+			logger.info(OUTPUT_PREFIX + "All teaching sessions are valid: " + teachingSessionsValid);
 			valid = valid & teachingSessionsValid;
 		}
 

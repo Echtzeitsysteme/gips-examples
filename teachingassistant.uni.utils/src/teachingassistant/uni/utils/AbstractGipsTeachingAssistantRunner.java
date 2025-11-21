@@ -97,9 +97,9 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 		Objects.requireNonNull(gipsApi);
 		logger.info("Build GIPS problem.");
 		// Build problem in parallel
-		gipsApi.buildProblem(true, true);
+		gipsApi.buildProblemTimed(true, true);
 		logger.info("Solve MILP problem.");
-		final SolverOutput output = gipsApi.solveProblem();
+		final SolverOutput output = gipsApi.solveProblemTimed();
 		if (output.solutionCount() == 0) {
 //			throw new InternalError("No solution found!");
 			logger.warning("No solution found!");
@@ -141,7 +141,7 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 	 * @param tock End epoch.
 	 * @return Elapsed time between tick and tock in seconds.
 	 */
-	protected double tickTockToSeconds(final long tick, final long tock) {
+	public static double tickTockToSeconds(final long tick, final long tock) {
 		if (tick < 0 || tock < 0) {
 			throw new IllegalArgumentException("tick or tock was smaller than zero.");
 		}
