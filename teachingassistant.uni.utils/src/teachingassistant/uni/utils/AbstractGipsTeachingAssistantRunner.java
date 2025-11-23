@@ -119,7 +119,7 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 		Objects.requireNonNull(gipsApi);
 		logger.info("Apply GIPS solution.");
 		// Apply found solution
-		gipsApi.applyAllNonZeroMappings();
+		gipsApi.applyAllNonZeroMappings(false);
 	}
 
 	/**
