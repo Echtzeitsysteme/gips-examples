@@ -74,6 +74,11 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		logger.info("Runtime GIPS save: " + tickTockToSeconds(gipsApplyDone, gipsSaveDone) + "s.");
 
 		//
+		// Verify continuity solution
+		//
+		new ContinuityVariableValdidator().verifyContinuity(gipsApi);
+
+		//
 		// The end
 		//
 
