@@ -71,7 +71,7 @@ public class ContinuityVariableValdidator {
 
 		// Objective statistics
 		final int continuity = gipsApi.getContinuity().getNonZeroVariableMappings().size() * beta;
-		logger.info("\tContinuity value: " + continuity);
+//		logger.info("\tContinuity value: " + continuity);
 		return continuity;
 	}
 

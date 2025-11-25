@@ -77,8 +77,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		// Verify continuity solution + print TA employment rating of the solution
 		//
 		final int continuity = new ContinuityVariableValdidator().verifyContinuity(gipsApi);
-		final int employmentRating = new TaApprovalObjectiveCalculator().print(gipsApi);
-		logger.info("\tOverall objective value: " + (continuity + employmentRating));
+		final int employmentRating = new TaApprovalObjectiveCalculator().calculate(gipsApi);
 
 		//
 		// The end
@@ -96,6 +95,14 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		logger.info("\tBUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds() + "s.");
 		logger.info("\tBUILD_TOTAL: " + measurements.get("BUILD").maxDurationSeconds() + "s.");
 		logger.info("\tSOLVE_MILP: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds() + "s.");
+
+		// Objective statistics
+		logger.info("---------------------------------------");
+		logger.info("=> Objective value(s):");
+		logger.info("\tEmployment rating value: " + employmentRating);
+		logger.info("\tContinuity value:        " + continuity);
+		logger.info("\tOverall objective value: " + (continuity + employmentRating));
+		logger.info("---------------------------------------");
 	}
 
 }
