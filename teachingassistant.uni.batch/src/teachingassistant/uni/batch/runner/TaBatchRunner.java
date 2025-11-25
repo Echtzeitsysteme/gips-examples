@@ -73,19 +73,6 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		final long gipsSaveDone = System.nanoTime();
 		logger.info("Runtime GIPS save: " + tickTockToSeconds(gipsApplyDone, gipsSaveDone) + "s.");
 
-		//
-		// Verify continuity solution + print TA employment rating of the solution
-		//
-		final int continuity = new ContinuityVariableValdidator().verifyContinuity(gipsApi);
-		final int employmentRating = new TaApprovalObjectiveCalculator().calculate(gipsApi);
-
-		//
-		// The end
-		//
-
-//		logger.info("Building + solving took " + tickTockToSeconds(tick, tock) + "s.");
-		gipsApi.terminate();
-
 		final Map<String, IMeasurement> measurements = new LinkedHashMap<>(
 				Observer.getInstance().getMeasurements("Eval"));
 		Observer.getInstance().getMeasurements("Eval").clear();
@@ -95,6 +82,19 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		logger.info("\tBUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds() + "s.");
 		logger.info("\tBUILD_TOTAL: " + measurements.get("BUILD").maxDurationSeconds() + "s.");
 		logger.info("\tSOLVE_MILP: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds() + "s.");
+
+		//
+		// Verify continuity solution + print TA employment rating of the solution
+		//
+		
+		final int continuity = new ContinuityVariableValdidator().verifyContinuity(gipsApi);
+		final int employmentRating = new TaApprovalObjectiveCalculator().calculate(gipsApi);
+
+		//
+		// The end
+		//
+		
+		gipsApi.terminate();
 
 		// Objective statistics
 		logger.info("---------------------------------------");
