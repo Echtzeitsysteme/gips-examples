@@ -172,6 +172,30 @@ pattern findInterCampusTimeTableEntriesConflict {
 	# entryA.endEpoch <= entryB.startEpoch
 }
 
+pattern findOccurrenceContinuity {
+	ta : TeachingAssistant
+	
+	module : Module {
+		- sessions -> session
+		- approvals -> approval
+	}
+	
+	session : TeachingSession {
+		- occurrences -> occurrenceA
+		- occurrences -> occurrenceB
+	}
+	
+	occurrenceA : SessionOccurrence
+	occurrenceB : SessionOccurrence
+	
+	approval : EmploymentApproval {
+		- ta -> ta
+	}
+	
+	# occurrenceA.timeTableWeek + 1 == occurrenceB.timeTableWeek
+	# approval.ratingNumeric > 0
+}
+
 //
 // GIPSL
 //
@@ -179,6 +203,10 @@ pattern findInterCampusTimeTableEntriesConflict {
 // If a mapping instance has a value of `1`, the respective TA must
 // be mapped to the respective session occurrence.
 mapping taToOccurrence to assignTa;
+
+// If a mapping instance has a value of `1`, the respective TA will be used
+// in the session occurrence of week `w` and in week `w + 1`
+mapping continuity to findOccurrenceContinuity;
 
 // Every session occurrence must have exactly `numTAsPerSession` TAs assigned.
 constraint with findSessionOccurrence {
@@ -262,11 +290,66 @@ function amberTas with findAmberTa {
 	)->sum(element.value)
 }
 
+// If (and only if) the same TA is used in a session occurrence in
+// week `w1` and in a session occurrence in week `w2`, set the respective
+// binary variable of the corresponding continuity mapping to `1`.
+constraint with continuity {
+//	[context.value == 1] //
+//
+//	<=>
+//	
+//	[mappings.taToOccurrence->filter( //
+//		element.nodes.ta == context.nodes.ta //
+//		& element.nodes.occurrence == context.nodes.occurrenceA //
+//	)->sum(element.value)
+//	+
+//	mappings.taToOccurrence->filter( //
+//		element.nodes.ta == context.nodes.ta //
+//		& element.nodes.occurrence == context.nodes.occurrenceB //
+//	)->sum(element.value)
+//	== 2]
+
+	// Faster replacement
+	2 * context.value
+	<=
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrenceA //
+	)->sum(element.value)
+	+
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrenceB //
+	)->sum(element.value)
+	
+	&
+	
+	context.value
+	>=
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrenceA //
+	)->sum(element.value)
+	+
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrenceB //
+	)->sum(element.value)
+	- 1
+}
+
+// Represents the number of selected continuity variables.
+function continuity with continuity {
+	context.value
+}
+
 // Global objective
-// We want to use a higher weight for green TAs compared to the
-// amber TAs
 objective : max {
 	0
+	// We want to use a higher weight for green TAs compared to the
+	// amber TAs
 	+ 2 * functions.greenTas
 	+ 1 * functions.amberTas
+	// Continuity weighted by a constant factor beta.
+	+ 1 * functions.continuity
 }
