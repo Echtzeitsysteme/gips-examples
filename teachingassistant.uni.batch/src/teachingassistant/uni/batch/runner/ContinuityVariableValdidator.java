@@ -40,8 +40,9 @@ public class ContinuityVariableValdidator {
 	 * to `1`).
 	 * 
 	 * @param gipsApi
+	 * @return Overall continuity value.
 	 */
-	public void verifyContinuity(final BatchGipsAPI gipsApi) {
+	public int verifyContinuity(final BatchGipsAPI gipsApi) {
 		Objects.requireNonNull(gipsApi);
 
 		logger.info("=> Start continuity verification.");
@@ -69,7 +70,9 @@ public class ContinuityVariableValdidator {
 		}
 
 		// Objective statistics
-		logger.info("\tContinuity value: " + gipsApi.getContinuity().getNonZeroVariableMappings().size() * beta);
+		final int continuity = gipsApi.getContinuity().getNonZeroVariableMappings().size() * beta;
+		logger.info("\tContinuity value: " + continuity);
+		return continuity;
 	}
 
 	/**
