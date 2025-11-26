@@ -79,9 +79,8 @@ public class TaBatchCliRunner {
 			runner.gipsOutputPath = config.outputXmiPath;
 		}
 		runner.setVerbose(config.verbose);
-		if (config.parameterPath != null) {
-			runner.setParameterPath(config.parameterPath);
-		}
+		runner.setCallbackPath(config.callbackPath);
+		runner.setParameterPath(config.parameterPath);
 
 		// Execute the runner
 		runner.run();

@@ -217,8 +217,16 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 	 * @param parameterPath Gurobi parameter path to set.
 	 */
 	public void setParameterPath(final String parameterPath) {
-		Objects.requireNonNull(parameterPath);
 		this.parameterPath = parameterPath;
+	}
+
+	/**
+	 * Sets the Gurobi callback path to the given value.
+	 * 
+	 * @param callbackPath Gurobi callback path to set.
+	 */
+	public void setCallbackPath(final String callbackPath) {
+		this.parameterPath = callbackPath;
 	}
 
 	protected void log(final String message) {
