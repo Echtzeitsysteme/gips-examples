@@ -150,16 +150,15 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 	 */
 	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi) {
 		Objects.requireNonNull(gipsApi);
-		logger.info("Build GIPS problem.");
+		log("Build GIPS problem.");
 		// Build problem in parallel
 		gipsApi.buildProblemTimed(true, true);
-		logger.info("Solve MILP problem.");
+		log("Solve MILP problem.");
 		final SolverOutput output = gipsApi.solveProblemTimed();
 		if (output.solutionCount() == 0) {
-//			throw new InternalError("No solution found!");
 			logger.warning("No solution found!");
 		}
-		logger.info("=> Objective value: " + output.objectiveValue());
+		log("Objective value: " + output.objectiveValue());
 		return output.objectiveValue();
 	}
 
@@ -172,7 +171,7 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 	 */
 	protected void applySolution(final GipsEngineAPI<?, ?> gipsApi) {
 		Objects.requireNonNull(gipsApi);
-		logger.info("Apply GIPS solution.");
+		log("Apply GIPS solution.");
 		// Apply found solution
 		gipsApi.applyAllNonZeroMappings(false);
 	}
@@ -220,6 +219,13 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 	public void setParameterPath(final String parameterPath) {
 		Objects.requireNonNull(parameterPath);
 		this.parameterPath = parameterPath;
+	}
+
+	protected void log(final String message) {
+		Objects.requireNonNull(message);
+		if (verbose) {
+			logger.info(message);
+		}
 	}
 
 }

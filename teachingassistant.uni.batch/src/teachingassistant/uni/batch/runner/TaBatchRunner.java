@@ -27,13 +27,6 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		super();
 	}
 
-	private void log(final String message) {
-		Objects.requireNonNull(message);
-		if (verbose) {
-			logger.info(message);
-		}
-	}
-
 	public void run() {
 		FileUtils.checkIfFileExists(inputPath);
 		final long start = System.nanoTime();
@@ -62,6 +55,10 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		// enableTracing(gipsApi);
 		final long gipsInitDone = System.nanoTime();
 		log("Runtime GIPS init: " + tickTockToSeconds(gipsStart, gipsInitDone) + "s.");
+
+		// Set GIPS configuration parameters from this object
+		setGurobiVerbose(gipsApi, verbose);
+		setGipsConfig(gipsApi);
 
 		log("Start GIPS update.");
 		gipsApi.update();
@@ -98,6 +95,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 
 		log("=> Start TA university validator.");
 		TeachingAssistantUniValidator.FILE_PATH = gipsOutputPath;
+		TeachingAssistantUniValidator.verbose = verbose;
 		TeachingAssistantUniValidator.main(null);
 		final long afterValidator = System.nanoTime();
 		log("Validator runtime: " + AbstractGipsTeachingAssistantRunner.tickTockToSeconds(gipsSaveDone, afterValidator)
@@ -137,6 +135,35 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		log("Total runtime: " + AbstractGipsTeachingAssistantRunner.tickTockToSeconds(start, end) + "s.");
 		log("=> Finished.");
 		System.exit(0);
+	}
+
+	/**
+	 * Sets the private GIPS API configuration parameters from this object to the
+	 * actual GIPS API.
+	 * 
+	 * @param gipsApi GIPS API to set the configuration parameters for.
+	 */
+	private void setGipsConfig(final BatchGipsAPI gipsApi) {
+		Objects.requireNonNull(gipsApi);
+
+		if (callbackPath != null) {
+			gipsApi.getSolverConfig().setEnableCallbackPath(true);
+			gipsApi.getSolverConfig().setCallbackPath(callbackPath);
+		}
+		if (parameterPath != null) {
+			gipsApi.getSolverConfig().setParameterPath(parameterPath);
+		}
+	}
+
+	/**
+	 * Enables/Disables the verbose flag for the Gurobi solver. Please notice that
+	 * this value might get overwritten by the Gurobi parameter loading.
+	 * 
+	 * @param gipsApi GIPS API to set the Gurobi verbose for.
+	 * @param verbose If true, the Gurobi solver will print verbose information.
+	 */
+	private void setGurobiVerbose(final BatchGipsAPI gipsApi, final boolean verbose) {
+		gipsApi.getSolverConfig().setEnableOutput(verbose);
 	}
 
 }
