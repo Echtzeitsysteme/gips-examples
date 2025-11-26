@@ -429,7 +429,7 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
-		if (ta.getMaxHoursPerYear() <= 0) {
+		if (ta.getMaxHoursTotal() <= 0) {
 			return false;
 		}
 
@@ -484,7 +484,7 @@ public class TeachingAssistantUniValidator {
 		for (final TimeTableEntry tte : allShifts) {
 			totalHoursPaid += tte.getSession().getHoursPaidPerOccurrence();
 		}
-		if (totalHoursPaid > ta.getMaxHoursPerYear()) {
+		if (totalHoursPaid > ta.getMaxHoursTotal()) {
 			if (verbose) {
 				logger.warning("TA <" + ta.getName() + "> total time limit violated.");
 			}

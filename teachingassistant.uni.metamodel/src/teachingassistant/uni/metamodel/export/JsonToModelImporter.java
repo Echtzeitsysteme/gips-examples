@@ -164,7 +164,7 @@ public class JsonToModelImporter {
 	}
 
 	private void createTeachingAssistant(final int id, final String name, final int maxHoursPerWeek,
-			final int maxHoursPerYear, final Set<TimeTableEntry> blockedEntries) {
+			final int maxHoursTotal, final Set<TimeTableEntry> blockedEntries) {
 		Objects.requireNonNull(name);
 		Objects.requireNonNull(blockedEntries);
 
@@ -172,7 +172,7 @@ public class JsonToModelImporter {
 		ta.setId(id);
 		ta.setName(name);
 		ta.setMaxHoursPerWeek(maxHoursPerWeek);
-		ta.setMaxHoursPerYear(maxHoursPerYear);
+		ta.setMaxHoursTotal(maxHoursTotal);
 		ta.getUnavailable().addAll(blockedEntries);
 
 		model.getTas().add(ta);

@@ -83,7 +83,8 @@ public class ModelToJsonExporter {
 		final JsonObject taJson = new JsonObject();
 		taJson.addProperty("name", ta.getName());
 		taJson.addProperty("maxHoursPerWeek", ta.getMaxHoursPerWeek());
-		taJson.addProperty("maxHoursPerYear", ta.getMaxHoursPerYear());
+		// TODO: Maybe this property's name has been changed
+		taJson.addProperty("maxHoursPerYear", ta.getMaxHoursTotal());
 		// Remove old references like setMinimumHoursPerWeek, setMaximumDaysPerWeek,
 		// etc.
 		return taJson;

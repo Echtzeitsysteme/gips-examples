@@ -145,7 +145,7 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 			final TeachingAssistant ta = factory.createTeachingAssistant();
 			ta.setName(taName);
 			ta.setMaxHoursPerWeek(maxWeeklyHours);
-			ta.setMaxHoursPerYear(TA_MAXIMUM_HOURS_PER_YEAR);
+			ta.setMaxHoursTotal(TA_MAXIMUM_HOURS_PER_YEAR);
 
 			tas.put(taName, ta);
 		}

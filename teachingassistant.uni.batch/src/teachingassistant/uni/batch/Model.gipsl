@@ -249,14 +249,14 @@ constraint with findInterCampusTimeTableEntriesConflict {
 	<= 1
 }
 
-// Ensure TAs max hours per year
+// Ensure TAs total max hours
 // GIPSL interpretation: the sum of all assigned working hours per TA
-// must not exceed their yearly hour limit
+// must not exceed their total hour limit
 constraint with TeachingAssistant {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context
 	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
-	<= context.maxHoursPerYear
+	<= context.maxHoursTotal
 }
 
 // Ensure TAs max hours per week
