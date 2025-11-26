@@ -513,7 +513,7 @@ public class TeachingAssistantUniValidator {
 				}
 
 				// If the day does not match, continue to the next
-				if (!entryA.getWeekDay().equals(entryB.getWeekDay())) {
+				if (!(entryA.getDay() == entryB.getDay())) {
 					continue;
 				}
 
@@ -533,7 +533,7 @@ public class TeachingAssistantUniValidator {
 					if (delta < 3600) {
 						if (verbose) {
 							logger.warning("Assignments of TA <" + ta.getName() + "> in week <"
-									+ entryA.getTimeTableWeeks().get(0).getId() + "> on day <" + entryA.getWeekDay()
+									+ entryA.getTimeTableWeeks().get(0).getId() + "> on day <" + entryA.getDay()
 									+ "> violates the 60 minutes inter-campus travel time.");
 							logger.warning("\tSession A <" + entryA.getSession().getName() + "> in room < "
 									+ entryA.getRoom().getName() + "> on campus <"
@@ -661,7 +661,7 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
-		if (entry.getWeekDay() == null || entry.getWeekDay().isBlank()) {
+		if (entry.getDay() < 0) {
 			return false;
 		}
 
@@ -740,7 +740,7 @@ public class TeachingAssistantUniValidator {
 
 				// If the weekday does not match, we do not have to check for an overlapping
 				// time frame
-				if (tte.getWeekDay() != null && !tte.getWeekDay().equals(other.getWeekDay())) {
+				if (tte.getDay() != other.getDay()) {
 					continue;
 				}
 

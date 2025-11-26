@@ -185,7 +185,7 @@ public class JsonToModelImporter {
 			// Week matches
 			if (candidate.getTimeTableWeeks().contains(getWeekById(week))) {
 				// Day matches
-				if (candidate.getWeekDay().equals(convertDayIndexToName(day))) {
+				if (candidate.getDay() == day) {
 					// Slot lays in between `start` and `end` of the candidate
 					final long startEntry = candidate.getStartEpoch();
 					final long endEntry = candidate.getEndEpoch();
@@ -433,7 +433,7 @@ public class JsonToModelImporter {
 		// Convert to week day name
 		// Pick a day offset (0..4 => Mon..Fri)
 		final LocalDateTime dayTime = BASE_WEEK_MONDAY.plusDays(week * 7 + day);
-		entry.setWeekDay(dayTime.getDayOfWeek().toString());
+		entry.setDay(day);
 
 		final Week w = getWeekById(week);
 		entry.getTimeTableWeeks().add(w);
@@ -507,10 +507,6 @@ public class JsonToModelImporter {
 		}
 
 		throw new UnsupportedOperationException("TA with ID <" + id + "> not found.");
-	}
-
-	private String convertDayIndexToName(final int day) {
-		return BASE_WEEK_MONDAY.plusDays(day).getDayOfWeek().name();
 	}
 
 }

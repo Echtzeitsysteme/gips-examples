@@ -267,7 +267,8 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 					final LocalDateTime dayTime = baseWeekMonday
 							.plusDays((chosenWeek - START_WEEK) * 7 + getRandInt(0, 4));
 
-					entry.setWeekDay(dayTime.getDayOfWeek().toString());
+					// TODO: This generator is broken here:
+//					entry.setWeekDay(dayTime.getDayOfWeek().toString());
 
 					// Convert LocalDateTime => Date
 					final Date startDate = Date.from(dayTime.atZone(ZoneId.systemDefault()).toInstant());

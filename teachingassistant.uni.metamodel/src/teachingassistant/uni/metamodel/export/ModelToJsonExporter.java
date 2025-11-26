@@ -224,7 +224,8 @@ public class ModelToJsonExporter {
 		entryJson.add("timeTableWeeks", weeksArr);
 
 		// day/room/time info
-		entryJson.addProperty("weekDay", entry.getWeekDay());
+		// TODO: This property's name may have changed
+		entryJson.addProperty("weekDay", entry.getDay());
 		entryJson.addProperty("room", entry.getRoom().getName());
 
 		// The Ecore uses Date for startTime/endTime, so we might format them as

@@ -100,7 +100,7 @@ pattern findConflictingEntriesWithTa {
 	# entryA.endEpoch > entryB.startEpoch
 	
 	// The day must match
-	# entryA.weekDay == entryB.weekDay
+	# entryA.day == entryB.day
 }
 
 // Find all possible combinations of TAs and weeks
@@ -163,7 +163,7 @@ pattern findInterCampusTimeTableEntriesConflict {
 	campusB : Campus
 	
 	// Match day
-	# entryA.weekDay == entryB.weekDay
+	# entryA.day == entryB.day
 	
 	// Time frame between A.end and B.start is < 3600
 	# entryB.startEpoch - entryA.endEpoch < 3600
