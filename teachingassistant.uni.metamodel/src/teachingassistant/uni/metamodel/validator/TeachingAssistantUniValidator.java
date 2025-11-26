@@ -132,7 +132,7 @@ public class TeachingAssistantUniValidator {
 				});
 			});
 			model.getTas().forEach(ta -> {
-				allFoundTimeTableEntries.addAll(ta.getUnavailableBecauseLessons());
+				allFoundTimeTableEntries.addAll(ta.getUnavailable());
 			});
 			boolean timeTableEntriesValid = true;
 			for (final TimeTableEntry entry : allFoundTimeTableEntries) {
@@ -435,7 +435,7 @@ public class TeachingAssistantUniValidator {
 
 		// Unavailable sessions
 		final Set<TimeTableEntry> allShifts = findAllShiftsOfTa(ta, model);
-		for (final TimeTableEntry unavailable : ta.getUnavailableBecauseLessons()) {
+		for (final TimeTableEntry unavailable : ta.getUnavailable()) {
 			if (allShifts.contains(unavailable)) {
 				if (verbose) {
 					logger.warning("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable
@@ -554,7 +554,7 @@ public class TeachingAssistantUniValidator {
 			}
 		}
 
-		for (final TimeTableEntry unavailable : ta.getUnavailableBecauseLessons()) {
+		for (final TimeTableEntry unavailable : ta.getUnavailable()) {
 			if (allShifts.contains(unavailable)) {
 				if (verbose) {
 					logger.warning("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable

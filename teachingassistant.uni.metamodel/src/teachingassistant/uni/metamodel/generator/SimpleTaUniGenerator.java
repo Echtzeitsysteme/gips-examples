@@ -299,7 +299,7 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 					break;
 				}
 				final int randomTteIndex = getRandInt(0, copiedTtes.size() - 1);
-				ta.getUnavailableBecauseLessons().add(copiedTtes.remove(randomTteIndex));
+				ta.getUnavailable().add(copiedTtes.remove(randomTteIndex));
 			}
 		}
 

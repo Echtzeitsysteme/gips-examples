@@ -27,7 +27,7 @@ pattern findSessionOccurrence {
 // is available (i.e., they have not blocked this session)
 pattern findTaUnavailableSession {
 	ta : TeachingAssistant {
-		- unavailableBecauseLessons -> entry
+		- unavailable -> entry
 	}
 	
 	session : TeachingSession {

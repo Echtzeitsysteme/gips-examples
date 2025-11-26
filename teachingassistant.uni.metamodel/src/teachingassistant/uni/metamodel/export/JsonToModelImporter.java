@@ -173,7 +173,7 @@ public class JsonToModelImporter {
 		ta.setName(name);
 		ta.setMaxHoursPerWeek(maxHoursPerWeek);
 		ta.setMaxHoursPerYear(maxHoursPerYear);
-		ta.getUnavailableBecauseLessons().addAll(blockedEntries);
+		ta.getUnavailable().addAll(blockedEntries);
 
 		model.getTas().add(ta);
 	}
