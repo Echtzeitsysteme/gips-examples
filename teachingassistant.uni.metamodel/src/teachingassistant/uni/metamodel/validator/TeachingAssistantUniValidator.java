@@ -289,7 +289,7 @@ public class TeachingAssistantUniValidator {
 		for (final SessionOccurrence se : ts.getOccurrences()) {
 			boolean contained = false;
 			for (final Week w : ts.getTimeTableWeeks()) {
-				if (w.getNumber() == se.getTimeTableWeek()) {
+				if (w.getId() == se.getTimeTableWeek()) {
 					contained = true;
 					break;
 				}
@@ -305,13 +305,13 @@ public class TeachingAssistantUniValidator {
 		for (final Week w : ts.getTimeTableWeeks()) {
 			int matchingOccurrences = 0;
 			for (final SessionOccurrence so : ts.getOccurrences()) {
-				if (so.getTimeTableWeek() == w.getNumber()) {
+				if (so.getTimeTableWeek() == w.getId()) {
 					matchingOccurrences++;
 				}
 			}
 
 			if (matchingOccurrences != 1) {
-				logVerbose(ts, "Did not have exactly one session occurence in time table week " + w.getNumber() + ".");
+				logVerbose(ts, "Did not have exactly one session occurence in time table week " + w.getId() + ".");
 				return false;
 			}
 		}
@@ -322,14 +322,14 @@ public class TeachingAssistantUniValidator {
 			int matchingOccurences = 0;
 			for (final TimeTableEntry tte : ts.getEntries()) {
 				for (final Week tteWeek : tte.getTimeTableWeeks()) {
-					if (tteWeek.getNumber() == w.getNumber()) {
+					if (tteWeek.getId() == w.getId()) {
 						matchingOccurences++;
 					}
 				}
 			}
 
 			if (matchingOccurences > 1) {
-				logVerbose(ts, "Did not have at most one associated time table entry week " + w.getNumber() + ".");
+				logVerbose(ts, "Did not have at most one associated time table entry week " + w.getId() + ".");
 				return false;
 			}
 		}
@@ -466,14 +466,14 @@ public class TeachingAssistantUniValidator {
 
 		// Check time limit per week
 		for (final Week w : model.getWeeks()) {
-			final Set<TimeTableEntry> weekShifts = findAllShiftsOfTaInWeek(ta, w.getNumber(), model);
+			final Set<TimeTableEntry> weekShifts = findAllShiftsOfTaInWeek(ta, w.getId(), model);
 			int hoursPaidInWeek = 0;
 			for (final TimeTableEntry tte : weekShifts) {
 				hoursPaidInWeek += tte.getSession().getHoursPaidPerOccurrence();
 			}
 			if (hoursPaidInWeek > ta.getMaxHoursPerWeek()) {
 				if (verbose) {
-					logger.warning("TA <" + ta.getName() + "> time limit violated in week <" + w.getNumber() + ">.");
+					logger.warning("TA <" + ta.getName() + "> time limit violated in week <" + w.getId() + ">.");
 				}
 				return false;
 			}
@@ -508,7 +508,7 @@ public class TeachingAssistantUniValidator {
 				}
 
 				// If the week does not match, continue to the next
-				if (entryA.getTimeTableWeeks().get(0).getNumber() != entryB.getTimeTableWeeks().get(0).getNumber()) {
+				if (entryA.getTimeTableWeeks().get(0).getId() != entryB.getTimeTableWeeks().get(0).getId()) {
 					continue;
 				}
 
@@ -533,7 +533,7 @@ public class TeachingAssistantUniValidator {
 					if (delta < 3600) {
 						if (verbose) {
 							logger.warning("Assignments of TA <" + ta.getName() + "> in week <"
-									+ entryA.getTimeTableWeeks().get(0).getNumber() + "> on day <" + entryA.getWeekDay()
+									+ entryA.getTimeTableWeeks().get(0).getId() + "> on day <" + entryA.getWeekDay()
 									+ "> violates the 60 minutes inter-campus travel time.");
 							logger.warning("\tSession A <" + entryA.getSession().getName() + "> in room < "
 									+ entryA.getRoom().getName() + "> on campus <"
@@ -619,7 +619,7 @@ public class TeachingAssistantUniValidator {
 
 		final Set<Integer> names = new HashSet<>();
 		for (final Week w : weeks) {
-			if (!names.add(w.getNumber())) {
+			if (!names.add(w.getId())) {
 				return false;
 			}
 		}
@@ -639,7 +639,7 @@ public class TeachingAssistantUniValidator {
 		}
 
 		// Number of the week must be between 1 and 52
-		if (week.getNumber() < 0 || week.getNumber() > 52) {
+		if (week.getId() < 0 || week.getId() > 52) {
 			return false;
 		}
 
@@ -801,8 +801,8 @@ public class TeachingAssistantUniValidator {
 		int firstWeek = Integer.MAX_VALUE;
 
 		for (final Week w : weeks) {
-			if (w.getNumber() < firstWeek) {
-				firstWeek = w.getNumber();
+			if (w.getId() < firstWeek) {
+				firstWeek = w.getId();
 			}
 		}
 
@@ -819,8 +819,8 @@ public class TeachingAssistantUniValidator {
 		int lastWeek = Integer.MIN_VALUE;
 
 		for (final Week w : weeks) {
-			if (w.getNumber() > lastWeek) {
-				lastWeek = w.getNumber();
+			if (w.getId() > lastWeek) {
+				lastWeek = w.getId();
 			}
 		}
 
@@ -863,7 +863,7 @@ public class TeachingAssistantUniValidator {
 						final Set<TimeTableEntry> matchingEntries = new HashSet<>();
 						session.getEntries().forEach(tte -> {
 							for (final Week w : tte.getTimeTableWeeks()) {
-								if (w.getNumber() == o.getTimeTableWeek()) {
+								if (w.getId() == o.getTimeTableWeek()) {
 									matchingEntries.add(tte);
 									break;
 								}
@@ -914,7 +914,7 @@ public class TeachingAssistantUniValidator {
 						session.getEntries().forEach(tte -> {
 							for (final Week w : tte.getTimeTableWeeks()) {
 								// Week number must match from occurrence to week but also to given week value
-								if (w.getNumber() == o.getTimeTableWeek() && w.getNumber() == week) {
+								if (w.getId() == o.getTimeTableWeek() && w.getId() == week) {
 									matchingEntries.add(tte);
 									break;
 								}

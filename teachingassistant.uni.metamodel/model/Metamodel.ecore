@@ -74,9 +74,7 @@
     <eLiterals name="AMBER" value="1"/>
     <eLiterals name="GREEN" value="2"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Week">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Week" eSuperTypes="#//IdedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Campus" eSuperTypes="#//IdedElement #//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Room" eSuperTypes="#//IdedElement #//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="campus" eType="#//Campus"/>

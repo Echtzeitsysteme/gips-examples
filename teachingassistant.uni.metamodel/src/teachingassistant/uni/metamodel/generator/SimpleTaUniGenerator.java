@@ -21,9 +21,9 @@ import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
+import teachingassistant.uni.metamodel.export.ModelToJsonExporter;
 import teachingassistant.uni.utils.DateTimeUtil;
 import teachingassistant.uni.utils.LoggingUtils;
-import teachingassistant.uni.metamodel.export.ModelToJsonExporter;
 
 /**
  * Generator that creates a TaAllocation model aligned with the updated
@@ -114,7 +114,7 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 		// 1.1) Create all weeks
 		for (int i = START_WEEK; i <= END_WEEK; i++) {
 			final Week week = factory.createWeek();
-			week.setNumber(i);
+			week.setId(i);
 			this.root.getWeeks().add(week);
 		}
 
@@ -312,7 +312,7 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 
 	private Week getWeek(final int weekNumber) {
 		for (final Week itW : this.root.getWeeks()) {
-			if (itW.getNumber() == weekNumber) {
+			if (itW.getId() == weekNumber) {
 				return itW;
 			}
 		}

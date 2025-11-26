@@ -68,7 +68,7 @@ rule assignTa {
 		- ta -> ta
 	}
 	
-	# occurrence.timeTableWeek == w.number
+	# occurrence.timeTableWeek == w.id
 	# approval.ratingNumeric > 0
 }
 when taAvailableInSession

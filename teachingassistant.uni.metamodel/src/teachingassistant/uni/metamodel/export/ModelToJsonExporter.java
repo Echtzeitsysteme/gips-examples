@@ -134,7 +134,7 @@ public class ModelToJsonExporter {
 					if (s.getTimeTableWeeks() != null) {
 						for (final Week week : s.getTimeTableWeeks()) {
 							if (week != null) {
-								weeksArr.add(week.getNumber());
+								weeksArr.add(week.getId());
 							}
 						}
 					}
@@ -216,7 +216,7 @@ public class ModelToJsonExporter {
 		if (entry.getTimeTableWeeks() != null) {
 			for (final Week w : entry.getTimeTableWeeks()) {
 				if (w != null) {
-					weeksArr.add(w.getNumber());
+					weeksArr.add(w.getId());
 				}
 			}
 		}

@@ -340,7 +340,7 @@ public class JsonToModelImporter {
 
 	private void createWeek(final int id) {
 		final Week week = MetamodelFactory.eINSTANCE.createWeek();
-		week.setNumber(id);
+		week.setId(id);
 		model.getWeeks().add(week);
 	}
 
@@ -481,7 +481,7 @@ public class JsonToModelImporter {
 
 	private Week getWeekById(final int id) {
 		for (final Week w : model.getWeeks()) {
-			if (w.getNumber() == id) {
+			if (w.getId() == id) {
 				return w;
 			}
 		}
