@@ -15,12 +15,67 @@ import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
 public abstract class AbstractGipsTeachingAssistantRunner {
 
-	public static String scenarioFileName = "uni_ta_allocation.xmi";
-
 	/**
 	 * Logger for system outputs.
 	 */
 	protected final Logger logger = Logger.getLogger(this.getClass().getName());
+
+	/**
+	 * The scenario (JSON) file to load.
+	 */
+	public String scenarioFileName = "kcl_tiny_dataset.json";
+
+	/**
+	 * Project folder location.
+	 */
+	public String projectFolder = System.getProperty("user.dir");
+
+	/**
+	 * Data set folder location.
+	 */
+	public String resourceFolder = projectFolder + "/../teachingassistant.uni.metamodel/resources/";
+
+	/**
+	 * Default input path.
+	 */
+	public String inputPath = resourceFolder + scenarioFileName;
+
+	/**
+	 * Default instance folder path.
+	 */
+	public String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";
+
+	/**
+	 * Default instance XMI path.
+	 */
+	public String instancePath = instanceFolder + scenarioFileName.replace(".json", ".xmi");
+
+	/**
+	 * Default instance solved XMI path.
+	 */
+	public String gipsOutputPath = instanceFolder + scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json"))
+			+ "_solved.xmi";
+
+	/**
+	 * Default output path.
+	 */
+	public String outputPath = resourceFolder + scenarioFileName.substring(0, scenarioFileName.lastIndexOf(".json"))
+			+ "_solved.json";
+
+	/**
+	 * If true, the runner will print more detailed information.
+	 */
+	protected boolean verbose = true;
+
+	/**
+	 * Gurobi callback path.
+	 */
+	protected String callbackPath = projectFolder + "/../teachingassistant.uni.batch/scripts/callback.json";
+
+	/**
+	 * Gurobi parameter path.
+	 */
+	protected String parameterPath = projectFolder + "/../teachingassistant.uni.batch/scripts/parameter.json";
 
 	/**
 	 * Constructor to setup the logging.
@@ -146,6 +201,25 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 			throw new IllegalArgumentException("tick or tock was smaller than zero.");
 		}
 		return 1.0 * (tock - tick) / 1_000_000_000;
+	}
+
+	/**
+	 * Sets the verbose flag to the given value.
+	 * 
+	 * @param verbose Verbose flag value.
+	 */
+	public void setVerbose(final boolean verbose) {
+		this.verbose = verbose;
+	}
+
+	/**
+	 * Sets the Gurobi parameter path to the given value.
+	 * 
+	 * @param parameterPath Gurobi parameter path to set.
+	 */
+	public void setParameterPath(final String parameterPath) {
+		Objects.requireNonNull(parameterPath);
+		this.parameterPath = parameterPath;
 	}
 
 }

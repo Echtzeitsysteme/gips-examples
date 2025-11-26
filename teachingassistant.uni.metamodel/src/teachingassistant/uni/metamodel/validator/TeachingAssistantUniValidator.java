@@ -38,8 +38,10 @@ public class TeachingAssistantUniValidator {
 	/**
 	 * Model file name to load.
 	 */
-	public static String SCENARIO_FILE_NAME = "solved.xmi";
+//	public static String SCENARIO_FILE_NAME = "solved.xmi";
 //	public final static String SCENARIO_FILE_NAME = "uni_ta_allocation.xmi";
+	public static String FILE_PATH = System.getProperty("user.dir") + "/../teachingassistant.uni.metamodel/instances/"
+			+ "solved.xmi";
 
 	/**
 	 * If true, the validator will output more detailed information for violated
@@ -63,12 +65,12 @@ public class TeachingAssistantUniValidator {
 		LoggingUtils.configureLogging(logger);
 
 		// Construct file path
-		final String projectFolder = System.getProperty("user.dir");
-		final String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";
-		final String filePath = instanceFolder + SCENARIO_FILE_NAME;
+//		final String projectFolder = System.getProperty("user.dir");
+//		final String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";
+//		final String filePath = instanceFolder + SCENARIO_FILE_NAME;
 
 		// Load model
-		final Resource r = FileUtils.loadModel(filePath);
+		final Resource r = FileUtils.loadModel(FILE_PATH);
 		final TaAllocation model = (TaAllocation) r.getContents().get(0);
 
 		// Validate
