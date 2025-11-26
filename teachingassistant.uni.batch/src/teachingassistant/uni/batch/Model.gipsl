@@ -96,8 +96,8 @@ pattern findConflictingEntriesWithTa {
 	
 	ta : TeachingAssistant
 	
-	# entryA.startEpoch < entryB.endEpoch
-	# entryA.endEpoch > entryB.startEpoch
+	# entryA.startMinutes < entryB.endMinutes
+	# entryA.endMinutes > entryB.startMinutes
 	
 	// The day must match
 	# entryA.day == entryB.day
@@ -165,11 +165,11 @@ pattern findInterCampusTimeTableEntriesConflict {
 	// Match day
 	# entryA.day == entryB.day
 	
-	// Time frame between A.end and B.start is < 3600
-	# entryB.startEpoch - entryA.endEpoch < 3600
+	// Time frame between A.end and B.start is < 60 minutes
+	# entryB.startMinutes - entryA.endMinutes < 60
 	
 	// No time conflict, A finished before B
-	# entryA.endEpoch <= entryB.startEpoch
+	# entryA.endMinutes <= entryB.startMinutes
 }
 
 pattern findOccurrenceContinuity {

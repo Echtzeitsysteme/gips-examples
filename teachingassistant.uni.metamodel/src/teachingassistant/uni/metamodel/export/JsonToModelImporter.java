@@ -1,8 +1,6 @@
 package teachingassistant.uni.metamodel.export;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,14 +22,16 @@ import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
-import teachingassistant.uni.utils.DateTimeUtil;
 
 public class JsonToModelImporter {
 
 	public final static int MAX_HOURS_PER_YEAR = 156;
 
-	// Transfered base week Monday from `SimpleTaUniGenerator`
-	private final static LocalDateTime BASE_WEEK_MONDAY = LocalDateTime.of(2024, Month.FEBRUARY, 12, 0, 0);
+	// Time slot start: 8 am (in minutes)
+	public final static int SLOT_TIME_START = 8 * 60;
+
+	// Minutes per slot
+	public final static int MINUTES_PER_SLOT = 30;
 
 	private TaAllocation model = null;
 
@@ -187,10 +187,10 @@ public class JsonToModelImporter {
 				// Day matches
 				if (candidate.getDay() == day) {
 					// Slot lays in between `start` and `end` of the candidate
-					final long startEntry = candidate.getStartEpoch();
-					final long endEntry = candidate.getEndEpoch();
-					final long startSlot = convertSlotStartToEpoch(week, day, slot);
-					final long endSlot = convertSlotStartToEnd(week, day, slot);
+					final long startEntry = candidate.getStartMinutes();
+					final long endEntry = candidate.getEndMinutes();
+					final long startSlot = convertSlotStartToEpoch(slot);
+					final long endSlot = convertSlotStartToEnd(slot);
 
 					// Check if the two time horizons overlap in some way
 					if (!(startEntry < endSlot && endEntry > startSlot)) {
@@ -203,16 +203,12 @@ public class JsonToModelImporter {
 		return matches;
 	}
 
-	private long convertSlotStartToEpoch(final int week, final int day, final int slot) {
-		final LocalDateTime dayTime = BASE_WEEK_MONDAY.plusDays(week * 7 + day);
-		final LocalDateTime specificSlotStartTime = dayTime.plusHours(8).plusMinutes(slot * 30);
-		return DateTimeUtil.convertDateTimeToSeconds(DateTimeUtil.localDateTimeToDate(specificSlotStartTime));
+	private int convertSlotStartToEpoch(final int slot) {
+		return SLOT_TIME_START + (slot * MINUTES_PER_SLOT);
 	}
 
-	private long convertSlotStartToEnd(final int week, final int day, final int slot) {
-		final LocalDateTime dayTime = BASE_WEEK_MONDAY.plusDays(week * 7 + day);
-		final LocalDateTime specificSlotStartTime = dayTime.plusHours(8).plusMinutes(slot * 30 + 30);
-		return DateTimeUtil.convertDateTimeToSeconds(DateTimeUtil.localDateTimeToDate(specificSlotStartTime));
+	private int convertSlotStartToEnd(final int slot) {
+		return SLOT_TIME_START + ((slot + 1) * MINUTES_PER_SLOT);
 	}
 
 	private void convertEmploymentApprovals(final JsonArray json) {
@@ -429,22 +425,11 @@ public class JsonToModelImporter {
 	private TimeTableEntry createTimeTableEntry(final int week, final int day, final int start, final int end,
 			final int roomId) {
 		final TimeTableEntry entry = MetamodelFactory.eINSTANCE.createTimeTableEntry();
-
-		// Convert to week day name
-		// Pick a day offset (0..4 => Mon..Fri)
-		final LocalDateTime dayTime = BASE_WEEK_MONDAY.plusDays(week * 7 + day);
 		entry.setDay(day);
-
 		final Week w = getWeekById(week);
 		entry.getTimeTableWeeks().add(w);
-
-		// Start and end epochs - to be checked later on
-		final LocalDateTime startTime = dayTime.plusMinutes(start);
-		final LocalDateTime endTime = dayTime.plusMinutes(end);
-		entry.setStartTime(DateTimeUtil.localDateTimeToDate(startTime));
-		entry.setEndTime(DateTimeUtil.localDateTimeToDate(endTime));
-		entry.setStartEpoch(DateTimeUtil.convertDateTimeToSeconds(entry.getStartTime()));
-		entry.setEndEpoch(DateTimeUtil.convertDateTimeToSeconds(entry.getEndTime()));
+		entry.setStartMinutes(start);
+		entry.setEndMinutes(end);
 		entry.setRoom(getRoomById(roomId));
 		return entry;
 	}

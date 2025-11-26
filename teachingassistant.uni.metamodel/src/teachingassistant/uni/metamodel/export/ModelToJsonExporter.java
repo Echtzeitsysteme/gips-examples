@@ -1,7 +1,5 @@
 package teachingassistant.uni.metamodel.export;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -225,24 +223,16 @@ public class ModelToJsonExporter {
 
 		// day/room/time info
 		// TODO: This property's name may have changed
-		entryJson.addProperty("weekDay", entry.getDay());
+		entryJson.addProperty("day", entry.getDay());
 		entryJson.addProperty("room", entry.getRoom().getName());
-
-		// The Ecore uses Date for startTime/endTime, so we might format them as
-		// strings:
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		entryJson.addProperty("startTime", formatIfNotNull(sdf, entry.getStartTime()));
-		entryJson.addProperty("endTime", formatIfNotNull(sdf, entry.getEndTime()));
+		entryJson.addProperty("startMinutes", entry.getStartMinutes());
+		entryJson.addProperty("endMinutes", entry.getEndMinutes());
 
 		// Link back to the session
 		entryJson.addProperty("sessionName", session.getName());
 		entryJson.addProperty("moduleName", module.getName());
 
 		return entryJson;
-	}
-
-	private String formatIfNotNull(final SimpleDateFormat sdf, final Date d) {
-		return (d == null) ? "" : sdf.format(d);
 	}
 
 	// --------------------------------------------------------------------------------

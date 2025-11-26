@@ -275,10 +275,8 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 					final Date endDate = Date
 							.from(dayTime.plusHours(durationHours).atZone(ZoneId.systemDefault()).toInstant());
 
-					entry.setStartTime(startDate);
-					entry.setEndTime(endDate);
-					entry.setStartEpoch(DateTimeUtil.convertDateTimeToSeconds(startDate));
-					entry.setEndEpoch(DateTimeUtil.convertDateTimeToSeconds(endDate));
+					entry.setStartMinutes(DateTimeUtil.convertDateTimeToMinutes(startDate));
+					entry.setEndMinutes(DateTimeUtil.convertDateTimeToMinutes(endDate));
 
 					// Link session <-> entry
 					entry.setSession(session);

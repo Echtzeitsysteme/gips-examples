@@ -35,6 +35,27 @@ public class DateTimeUtil {
 	}
 
 	/**
+	 * Converts the hours and minutes of the given date object to a sum of seconds.
+	 * All other date-specific parts (like day, week, month, year) will be ignored.
+	 * 
+	 * @param date Date object to extract the sum of seconds from.
+	 * @return Sum of the minutes constructed by hours and minutes.
+	 */
+	public static int convertDateTimeToMinutes(final Date date) {
+		Objects.requireNonNull(date);
+
+		int minutes = 0;
+		final Calendar cal = Calendar.getInstance();
+		Objects.requireNonNull(cal);
+		cal.setTime(date);
+
+		minutes += cal.get(Calendar.MINUTE);
+		minutes += (cal.get(Calendar.HOUR_OF_DAY) * 60);
+
+		return minutes;
+	}
+
+	/**
 	 * TODO.
 	 * 
 	 * @param localDateTime

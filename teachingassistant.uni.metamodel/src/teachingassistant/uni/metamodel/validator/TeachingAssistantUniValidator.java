@@ -1,8 +1,6 @@
 package teachingassistant.uni.metamodel.validator;
 
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,7 +18,6 @@ import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
 import teachingassistant.uni.metamodel.export.FileUtils;
-import teachingassistant.uni.utils.DateTimeUtil;
 import teachingassistant.uni.utils.LoggingUtils;
 
 /**
@@ -524,13 +521,13 @@ public class TeachingAssistantUniValidator {
 					// checked elsewhere.)
 					// Find the time frame delta
 					long delta = 0;
-					if (entryA.getStartEpoch() < entryB.getStartEpoch()) {
-						delta = entryB.getStartEpoch() - entryA.getEndEpoch();
+					if (entryA.getStartMinutes() < entryB.getStartMinutes()) {
+						delta = entryB.getStartMinutes() - entryA.getEndMinutes();
 					} else {
-						delta = entryA.getEndEpoch() - entryB.getStartEpoch();
+						delta = entryA.getEndMinutes() - entryB.getStartMinutes();
 					}
-					// If delta is below 1h = 3600s, the check failed
-					if (delta < 3600) {
+					// If delta is below 1h = 60 minutes, the check failed
+					if (delta < 60) {
 						if (verbose) {
 							logger.warning("Assignments of TA <" + ta.getName() + "> in week <"
 									+ entryA.getTimeTableWeeks().get(0).getId() + "> on day <" + entryA.getDay()
@@ -541,12 +538,8 @@ public class TeachingAssistantUniValidator {
 									+ "\tSession B <" + entryB.getSession().getName() + "> in room < "
 									+ entryB.getRoom().getName() + "> on campus <"
 									+ entryB.getRoom().getCampus().getName() + ">.");
-							logger.warning("\tSession A start <" + entryA.getStartTime().toLocaleString() + ">."
-									+ System.lineSeparator() + "\tSession B start <"
-									+ entryB.getStartTime().toLocaleString() + ">.");
-							logger.warning("\tSession A end <" + entryA.getEndTime().toLocaleString() + ">."
-									+ System.lineSeparator() + "\tSession B end <"
-									+ entryB.getEndTime().toLocaleString() + ">.");
+							logger.warning("\tSession A: " + timeTableEntryToString(entryA));
+							logger.warning("\tSession B: " + timeTableEntryToString(entryA));
 						}
 						return false;
 					}
@@ -565,6 +558,14 @@ public class TeachingAssistantUniValidator {
 		}
 
 		return true;
+	}
+
+	private String timeTableEntryToString(final TimeTableEntry entry) {
+		Objects.requireNonNull(entry);
+		String string = "";
+		string += "\tEntry start week <" + entry.getTimeTableWeeks().getFirst().getId() + ">, day <" + entry.getDay()
+				+ ">, start <" + entry.getStartMinutes() + "> and end <" + entry.getEndMinutes() + ">.";
+		return string;
 	}
 
 	/**
@@ -665,19 +666,11 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
-		if (entry.getStartTime() == null) {
+		if (entry.getStartMinutes() < 0) {
 			return false;
 		}
 
-		if (entry.getEndTime() == null) {
-			return false;
-		}
-
-		if (entry.getStartEpoch() < 0) {
-			return false;
-		}
-
-		if (entry.getEndEpoch() < 0) {
+		if (entry.getEndMinutes() < 0) {
 			return false;
 		}
 
@@ -696,14 +689,8 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
-		// startTime < endTime is required
-		// We ignore the date and only check for time
-		if (!startBeforeEndTimeOnly(entry.getStartTime(), entry.getEndTime())) {
-			return false;
-		}
-
 		// startEpoch < endEpoch is required
-		if (!(entry.getStartEpoch() < entry.getEndEpoch())) {
+		if (!(entry.getStartMinutes() < entry.getEndMinutes())) {
 			return false;
 		}
 
@@ -746,10 +733,10 @@ public class TeachingAssistantUniValidator {
 
 				// If there is at least one overlapping week check if the time frames overlaps
 				if (!overlappingWeeks.isEmpty()) {
-					final int firstStart = DateTimeUtil.convertDateTimeToSeconds(tte.getStartTime());
-					final int firstEnd = DateTimeUtil.convertDateTimeToSeconds(tte.getEndTime());
-					final int secondStart = DateTimeUtil.convertDateTimeToSeconds(other.getStartTime());
-					final int secondEnd = DateTimeUtil.convertDateTimeToSeconds(other.getEndTime());
+					final int firstStart = tte.getStartMinutes();
+					final int firstEnd = tte.getEndMinutes();
+					final int secondStart = other.getStartMinutes();
+					final int secondEnd = other.getEndMinutes();
 					if ((firstStart < secondEnd && firstEnd > secondStart)) {
 						return true;
 					}
@@ -758,36 +745,6 @@ public class TeachingAssistantUniValidator {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Compares the two given Date objects and returns true if the time of the start
-	 * object lays before the time of the end object. This method ignores the dates
-	 * completely, i.e., it only relies on the hours, minutes, and seconds.
-	 * 
-	 * @param start Date object that represents the start.
-	 * @param end   Date object that represents the end.
-	 * @return True if start.time < end.time (not respecting the date).
-	 */
-	private boolean startBeforeEndTimeOnly(final Date start, final Date end) {
-		final Calendar startCal = Calendar.getInstance();
-		startCal.setTime(start);
-		final Calendar endCal = Calendar.getInstance();
-		endCal.setTime(end);
-
-		if (startCal.get(Calendar.HOUR_OF_DAY) > endCal.get(Calendar.HOUR_OF_DAY)) {
-			return false;
-		} else if (startCal.get(Calendar.HOUR_OF_DAY) == endCal.get(Calendar.HOUR_OF_DAY)) {
-			if (startCal.get(Calendar.MINUTE) > endCal.get(Calendar.MINUTE)) {
-				return false;
-			} else if (startCal.get(Calendar.MINUTE) == endCal.get(Calendar.MINUTE)) {
-				if (startCal.get(Calendar.SECOND) > endCal.get(Calendar.SECOND)) {
-					return false;
-				}
-			}
-		}
-
-		return true;
 	}
 
 	/**
