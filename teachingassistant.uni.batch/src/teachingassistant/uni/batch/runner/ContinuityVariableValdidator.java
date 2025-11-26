@@ -45,8 +45,6 @@ public class ContinuityVariableValdidator {
 	public int verifyContinuity(final BatchGipsAPI gipsApi) {
 		Objects.requireNonNull(gipsApi);
 
-		logger.info("=> Start continuity verification.");
-
 		final Map<TeachingAssistant, Set<SessionOccurrence>> index = buildContinuityIndex(gipsApi);
 
 		// Continuity
