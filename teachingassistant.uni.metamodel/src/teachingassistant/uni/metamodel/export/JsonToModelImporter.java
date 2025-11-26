@@ -445,7 +445,6 @@ public class JsonToModelImporter {
 		entry.setEndTime(DateTimeUtil.localDateTimeToDate(endTime));
 		entry.setStartEpoch(DateTimeUtil.convertDateTimeToSeconds(entry.getStartTime()));
 		entry.setEndEpoch(DateTimeUtil.convertDateTimeToSeconds(entry.getEndTime()));
-		entry.setRoomName(getRoomById(roomId).getName());
 		entry.setRoom(getRoomById(roomId));
 		return entry;
 	}

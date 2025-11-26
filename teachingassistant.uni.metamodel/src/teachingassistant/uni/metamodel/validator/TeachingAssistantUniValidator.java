@@ -536,9 +536,10 @@ public class TeachingAssistantUniValidator {
 									+ entryA.getTimeTableWeeks().get(0).getNumber() + "> on day <" + entryA.getWeekDay()
 									+ "> violates the 60 minutes inter-campus travel time.");
 							logger.warning("\tSession A <" + entryA.getSession().getName() + "> in room < "
-									+ entryA.getRoomName() + "> on campus <" + entryA.getRoom().getCampus().getName()
-									+ ">." + System.lineSeparator() + "\tSession B <" + entryB.getSession().getName()
-									+ "> in room < " + entryB.getRoomName() + "> on campus <"
+									+ entryA.getRoom().getName() + "> on campus <"
+									+ entryA.getRoom().getCampus().getName() + ">." + System.lineSeparator()
+									+ "\tSession B <" + entryB.getSession().getName() + "> in room < "
+									+ entryB.getRoom().getName() + "> on campus <"
 									+ entryB.getRoom().getCampus().getName() + ">.");
 							logger.warning("\tSession A start <" + entryA.getStartTime().toLocaleString() + ">."
 									+ System.lineSeparator() + "\tSession B start <"
@@ -656,7 +657,7 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
-		if (entry.getRoom() == null || entry.getRoomName() == null || entry.getRoomName().isBlank()) {
+		if (entry.getRoom() == null) {
 			return false;
 		}
 
