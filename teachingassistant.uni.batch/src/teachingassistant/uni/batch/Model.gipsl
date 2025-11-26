@@ -27,14 +27,26 @@ pattern findSessionOccurrence {
 // is available (i.e., they have not blocked this session)
 pattern findTaUnavailableSession {
 	ta : TeachingAssistant {
-		- unavailable -> entry
+		- unavailable -> blocked
 	}
 	
 	session : TeachingSession {
 		- entries -> entry
 	}
 	
-	entry : TimeTableEntry
+	entry : TimeTableEntry {
+		- timeTableWeeks -> week
+	}
+	
+	blocked : TimeTableEntry {
+		- timeTableWeeks -> week
+	}
+	
+	week : Week
+	
+	# entry.day == blocked.day
+	# entry.startMinutes < blocked.endMinutes
+	# entry.endMinutes > blocked.startMinutes
 }
 condition taAvailableInSession = forbid findTaUnavailableSession
 

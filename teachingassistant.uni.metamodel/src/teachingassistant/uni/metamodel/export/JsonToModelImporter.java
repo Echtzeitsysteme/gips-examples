@@ -146,7 +146,7 @@ public class JsonToModelImporter {
 						if (available == 0) {
 							// Find all time table entries that would be affected
 							// Duplicates will not be added
-							blockedEntries.addAll(findTimeTableEntriesWithSlot(weekCounter, dayCounter, slotCounter));
+							blockedEntries.add(createBlockedEntry(weekCounter, dayCounter, slotCounter));
 						}
 						slotCounter++;
 					}
@@ -178,36 +178,21 @@ public class JsonToModelImporter {
 		model.getTas().add(ta);
 	}
 
-	private List<TimeTableEntry> findTimeTableEntriesWithSlot(final int week, final int day, final int slot) {
-		final List<TimeTableEntry> matches = new ArrayList<TimeTableEntry>();
-
-		for (final TimeTableEntry candidate : model.getTimetable()) {
-			// Week matches
-			if (candidate.getTimeTableWeeks().contains(getWeekById(week))) {
-				// Day matches
-				if (candidate.getDay() == day) {
-					// Slot lays in between `start` and `end` of the candidate
-					final long startEntry = candidate.getStartMinutes();
-					final long endEntry = candidate.getEndMinutes();
-					final long startSlot = convertSlotStartToEpoch(slot);
-					final long endSlot = convertSlotStartToEnd(slot);
-
-					// Check if the two time horizons overlap in some way
-					if (!(startEntry < endSlot && endEntry > startSlot)) {
-						matches.add(candidate);
-					}
-				}
-			}
-		}
-
-		return matches;
+	private TimeTableEntry createBlockedEntry(final int week, final int day, final int slot) {
+		final TimeTableEntry entry = MetamodelFactory.eINSTANCE.createTimeTableEntry();
+		entry.setDay(day);
+		final Week w = getWeekById(week);
+		entry.getTimeTableWeeks().add(w);
+		entry.setStartMinutes(convertSlotStartToMinutes(slot));
+		entry.setEndMinutes(convertSlotEndToMinutes(slot));
+		return entry;
 	}
 
-	private int convertSlotStartToEpoch(final int slot) {
+	private int convertSlotStartToMinutes(final int slot) {
 		return SLOT_TIME_START + (slot * MINUTES_PER_SLOT);
 	}
 
-	private int convertSlotStartToEnd(final int slot) {
+	private int convertSlotEndToMinutes(final int slot) {
 		return SLOT_TIME_START + ((slot + 1) * MINUTES_PER_SLOT);
 	}
 
