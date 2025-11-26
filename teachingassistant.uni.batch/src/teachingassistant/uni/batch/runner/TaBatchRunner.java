@@ -5,12 +5,15 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
-import org.emoflon.gips.core.util.FileUtils;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
 
+import metamodel.TaAllocation;
 import teachingassistant.uni.batch.api.gips.BatchGipsAPI;
+import teachingassistant.uni.metamodel.export.FileUtils;
 import teachingassistant.uni.metamodel.export.JsonToModelImporter;
+import teachingassistant.uni.metamodel.export.ModelToJsonExporter;
 import teachingassistant.uni.metamodel.validator.TeachingAssistantUniValidator;
 import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
 
@@ -99,6 +102,20 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		final long afterValidator = System.nanoTime();
 		log("Validator runtime: " + AbstractGipsTeachingAssistantRunner.tickTockToSeconds(gipsSaveDone, afterValidator)
 				+ "s.");
+
+		//
+		// Export
+		//
+
+		if (outputPath != null && !outputPath.isBlank()) {
+			log("=> Start JSON export.");
+			final Resource model = FileUtils.loadModel(gipsOutputPath);
+			final ModelToJsonExporter exporter = new ModelToJsonExporter((TaAllocation) model.getContents().get(0));
+			exporter.modelToJson(outputPath);
+			final long exportDone = System.nanoTime();
+			log("Export runtime: " + AbstractGipsTeachingAssistantRunner.tickTockToSeconds(afterValidator, exportDone)
+					+ "s.");
+		}
 
 		//
 		// The end
