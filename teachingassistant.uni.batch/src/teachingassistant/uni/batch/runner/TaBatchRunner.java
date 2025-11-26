@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
@@ -51,7 +50,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		final long gipsStart = System.nanoTime();
 		final BatchGipsAPI gipsApi = new BatchGipsAPI();
 		log("GIPS init.");
-		gipsApi.init(URI.createFileURI(instancePath));
+		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
 		// enableTracing(gipsApi);
 		final long gipsInitDone = System.nanoTime();
 		log("Runtime GIPS init: " + tickTockToSeconds(gipsStart, gipsInitDone) + "s.");
