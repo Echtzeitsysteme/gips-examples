@@ -35,8 +35,10 @@ public class TeachingAssistantUniValidator {
 	/**
 	 * Model file name to load.
 	 */
-	public static String SCENARIO_FILE_NAME = "solved.xmi";
+//	public static String SCENARIO_FILE_NAME = "solved.xmi";
 //	public final static String SCENARIO_FILE_NAME = "uni_ta_allocation.xmi";
+	public static String FILE_PATH = System.getProperty("user.dir") + "/../teachingassistant.uni.metamodel/instances/"
+			+ "solved.xmi";
 
 	/**
 	 * If true, the validator will output more detailed information for violated
@@ -60,21 +62,28 @@ public class TeachingAssistantUniValidator {
 		LoggingUtils.configureLogging(logger);
 
 		// Construct file path
-		final String projectFolder = System.getProperty("user.dir");
-		final String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";
-		final String filePath = instanceFolder + SCENARIO_FILE_NAME;
+//		final String projectFolder = System.getProperty("user.dir");
+//		final String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";
+//		final String filePath = instanceFolder + SCENARIO_FILE_NAME;
 
 		// Load model
-		final Resource r = FileUtils.loadModel(filePath);
+		final Resource r = FileUtils.loadModel(FILE_PATH);
 		final TaAllocation model = (TaAllocation) r.getContents().get(0);
 
 		// Validate
 		final boolean valid = new TeachingAssistantUniValidator().validate(model);
 
 		if (valid) {
-			logger.info("Result: Model is valid.");
+			log("Result: Model is valid.");
 		} else {
 			logger.warning("Result: Model is not valid.");
+		}
+	}
+
+	protected static void log(final String message) {
+		Objects.requireNonNull(message);
+		if (verbose) {
+			logger.info(message);
 		}
 	}
 
@@ -114,7 +123,7 @@ public class TeachingAssistantUniValidator {
 				weeksValid = weeksValid & validate(week);
 			}
 			weeksValid = weeksValid & validateWeekNumberUnique(allFoundWeeks);
-			logger.info(OUTPUT_PREFIX + "All weeks are valid: " + weeksValid);
+			log(OUTPUT_PREFIX + "All weeks are valid: " + weeksValid);
 			valid = valid & weeksValid;
 		}
 
@@ -135,7 +144,7 @@ public class TeachingAssistantUniValidator {
 			for (final TimeTableEntry entry : allFoundTimeTableEntries) {
 				timeTableEntriesValid = timeTableEntriesValid & validate(entry);
 			}
-			logger.info(OUTPUT_PREFIX + "All time table entries are valid: " + timeTableEntriesValid);
+			log(OUTPUT_PREFIX + "All time table entries are valid: " + timeTableEntriesValid);
 			valid = valid & timeTableEntriesValid;
 		}
 
@@ -145,7 +154,7 @@ public class TeachingAssistantUniValidator {
 			for (final TeachingAssistant ta : model.getTas()) {
 				tasValid = tasValid & validate(ta, model);
 			}
-			logger.info(OUTPUT_PREFIX + "All TAs are valid: " + tasValid);
+			log(OUTPUT_PREFIX + "All TAs are valid: " + tasValid);
 			valid = valid & tasValid;
 		}
 
@@ -155,7 +164,7 @@ public class TeachingAssistantUniValidator {
 			for (final metamodel.Module m : model.getModules()) {
 				modulesValid = modulesValid & validate(m, model);
 			}
-			logger.info(OUTPUT_PREFIX + "All modules are valid: " + modulesValid);
+			log(OUTPUT_PREFIX + "All modules are valid: " + modulesValid);
 			valid = valid & modulesValid;
 		}
 
@@ -171,7 +180,7 @@ public class TeachingAssistantUniValidator {
 				employmentApprovalsValid = employmentApprovalsValid & validate(ea);
 				employmentApprovalsValid = employmentApprovalsValid & model.getTas().contains(ea.getTa());
 			}
-			logger.info(OUTPUT_PREFIX + "All employment approvals are valid: " + employmentApprovalsValid);
+			log(OUTPUT_PREFIX + "All employment approvals are valid: " + employmentApprovalsValid);
 			valid = valid & employmentApprovalsValid;
 		}
 
@@ -185,7 +194,7 @@ public class TeachingAssistantUniValidator {
 					}
 				}
 			}
-			logger.info(OUTPUT_PREFIX + "All session occurrences are valid: " + sessionOccurrencesValid);
+			log(OUTPUT_PREFIX + "All session occurrences are valid: " + sessionOccurrencesValid);
 			valid = valid & sessionOccurrencesValid;
 		}
 
@@ -200,7 +209,7 @@ public class TeachingAssistantUniValidator {
 			for (final TeachingSession ts : allFoundTeachingSessions) {
 				teachingSessionsValid = teachingSessionsValid & validate(ts, model);
 			}
-			logger.info(OUTPUT_PREFIX + "All teaching sessions are valid: " + teachingSessionsValid);
+			log(OUTPUT_PREFIX + "All teaching sessions are valid: " + teachingSessionsValid);
 			valid = valid & teachingSessionsValid;
 		}
 
@@ -230,7 +239,7 @@ public class TeachingAssistantUniValidator {
 		}
 
 		if (m.getSessions().isEmpty()) {
-			logger.info("\tWarning: Module <" + m.getName() + "> does not have any sessions.");
+			log("\tWarning: Module <" + m.getName() + "> does not have any sessions.");
 //			return false;
 		}
 

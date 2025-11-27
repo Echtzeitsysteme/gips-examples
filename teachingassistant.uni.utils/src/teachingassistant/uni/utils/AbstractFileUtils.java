@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 /**
@@ -29,7 +30,9 @@ public abstract class AbstractFileUtils {
 			throw new IllegalArgumentException("Given path was blank.");
 		}
 
-		writeFile(path, json.toString());
+		// pretty print
+		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		writeFile(path, gson.toJson(json).toString());
 	}
 
 	/**
