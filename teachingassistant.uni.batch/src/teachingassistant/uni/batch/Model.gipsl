@@ -86,13 +86,6 @@ rule assignTa {
 }
 when taAvailableInSession
 
-// Find every possible combination of TAs
-// and time table entries
-pattern findTaEntryCombination {
-	ta : TeachingAssistant
-	entry : TimeTableEntry
-}
-
 // For a specific TA, find all conflicting time table
 // entries in the model.
 // This pattern does respect partly overlapping time
@@ -100,7 +93,7 @@ pattern findTaEntryCombination {
 pattern findConflictingEntriesWithTa {
 	week : Week
 	
-	entryA : TimeTableEntry {
+	entry : TimeTableEntry {
 		- timeTableWeeks -> week
 	}
 	entryB : TimeTableEntry {
@@ -109,12 +102,13 @@ pattern findConflictingEntriesWithTa {
 	
 	ta : TeachingAssistant
 	
-	# entryA.startMinutes < entryB.endMinutes
-	# entryA.endMinutes > entryB.startMinutes
+	# entry.startMinutes < entryB.endMinutes
+	# entry.endMinutes > entryB.startMinutes
 	
 	// The day must match
-	# entryA.day == entryB.day
+	# entry.day == entryB.day
 }
+when taAvailableInSessionAB
 
 // Find all possible combinations of TAs and weeks
 pattern findTaWeekCombination {
@@ -252,7 +246,7 @@ constraint with findSessionOccurrence {
 constraint with findConflictingEntriesWithTa {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
-		& element.nodes.entry == context.nodes.entryA //
+		& element.nodes.entry == context.nodes.entry //
 	)->sum(element.value)
 	+ mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
