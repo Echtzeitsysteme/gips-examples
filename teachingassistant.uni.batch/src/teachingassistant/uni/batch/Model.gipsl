@@ -38,6 +38,19 @@ pattern findTaUnavailableSession {
 }
 condition taAvailableInSession = forbid findTaUnavailableSession
 
+pattern findTaUnavailableSessionB {
+	ta : TeachingAssistant {
+		- unavailable -> entryB
+	}
+	
+	sessionB : TeachingSession {
+		- entries -> entryB
+	}
+	
+	entryB : TimeTableEntry
+}
+condition taAvailableInSessionAB = forbid findTaUnavailableSession && forbid findTaUnavailableSessionB
+
 // Rule to assign a TA to a specific session occurrence.
 // This rule respects the condition that the TA must not have
 // blocked the respective time table entry of the session occurrence.
@@ -144,14 +157,14 @@ pattern findInterCampusTimeTableEntriesConflict {
 	
 	week : Week
 	
-	entryA : TimeTableEntry {
+	entry : TimeTableEntry {
 		- timeTableWeeks -> week
-		- room -> roomA
+		- room -> room
 	}
-	roomA : Room {
-		- campus -> campusA
+	room : Room {
+		- campus -> campus
 	}
-	campusA : Campus
+	campus : Campus
 	
 	entryB : TimeTableEntry {
 		- timeTableWeeks -> week
@@ -163,14 +176,27 @@ pattern findInterCampusTimeTableEntriesConflict {
 	campusB : Campus
 	
 	// Match day
-	# entryA.day == entryB.day
+	# entry.day == entryB.day
 	
 	// Time frame between A.end and B.start is < 60 minutes
-	# entryB.startMinutes - entryA.endMinutes < 60
+	# entryB.startMinutes - entry.endMinutes < 60
 	
 	// No time conflict, A finished before B
-	# entryA.endMinutes <= entryB.startMinutes
+	# entry.endMinutes <= entryB.startMinutes
 }
+when taAvailableInSessionAB
+//when taAvailableConflict
+
+//pattern findTaUnavailableConflict {
+//	ta : TeachingAssistant {
+//		- unavailable -> entryA
+//		- unavailable -> entryB
+//	}
+//	
+//	entryA : TimeTableEntry
+//	entryB : TimeTableEntry
+//}
+//condition taAvailableConflict = forbid findTaUnavailableConflict
 
 pattern findOccurrenceContinuity {
 	ta : TeachingAssistant
@@ -183,6 +209,8 @@ pattern findOccurrenceContinuity {
 	session : TeachingSession {
 		- occurrences -> occurrenceA
 		- occurrences -> occurrenceB
+//		- entries -> entryA
+//		- entries -> entryB
 	}
 	
 	occurrenceA : SessionOccurrence
@@ -192,8 +220,20 @@ pattern findOccurrenceContinuity {
 		- ta -> ta
 	}
 	
+//	entryA : TimeTableEntry {
+//		- timeTableWeeks -> weekA
+//	}
+//	entryB : TimeTableEntry {
+//		- timeTableWeeks -> weekB
+//	}
+//	
+//	weekA : Week
+//	weekB : Week
+	
 	# occurrenceA.timeTableWeek + 1 == occurrenceB.timeTableWeek
 	# approval.ratingNumeric > 0
+//	# occurrenceA.timeTableWeek == weekA.id
+//	# occurrenceB.timeTableWeek == weekB.id
 }
 
 //
@@ -240,7 +280,7 @@ constraint with findConflictingEntriesWithTa {
 constraint with findInterCampusTimeTableEntriesConflict {
 	mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
-		& element.nodes.entry == context.nodes.entryA //
+		& element.nodes.entry == context.nodes.entry //
 	)->sum(element.value)
 	+ mappings.taToOccurrence->filter( //
 		element.nodes.ta == context.nodes.ta //
