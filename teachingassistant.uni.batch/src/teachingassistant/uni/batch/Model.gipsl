@@ -30,9 +30,9 @@ pattern findTaUnavailableSession {
 		- unavailable -> entry
 	}
 	
-	session : TeachingSession {
-		- entries -> entry
-	}
+//	session : TeachingSession {
+//		- entries -> entry
+//	}
 	
 	entry : TimeTableEntry
 }
@@ -43,9 +43,9 @@ pattern findTaUnavailableSessionB {
 		- unavailable -> entryB
 	}
 	
-	sessionB : TeachingSession {
-		- entries -> entryB
-	}
+//	sessionB : TeachingSession {
+//		- entries -> entryB
+//	}
 	
 	entryB : TimeTableEntry
 }
@@ -185,18 +185,6 @@ pattern findInterCampusTimeTableEntriesConflict {
 	# entry.endMinutes <= entryB.startMinutes
 }
 when taAvailableInSessionAB
-//when taAvailableConflict
-
-//pattern findTaUnavailableConflict {
-//	ta : TeachingAssistant {
-//		- unavailable -> entryA
-//		- unavailable -> entryB
-//	}
-//	
-//	entryA : TimeTableEntry
-//	entryB : TimeTableEntry
-//}
-//condition taAvailableConflict = forbid findTaUnavailableConflict
 
 pattern findOccurrenceContinuity {
 	ta : TeachingAssistant
@@ -209,8 +197,8 @@ pattern findOccurrenceContinuity {
 	session : TeachingSession {
 		- occurrences -> occurrenceA
 		- occurrences -> occurrenceB
-//		- entries -> entryA
-//		- entries -> entryB
+		- entries -> entry
+		- entries -> entryB
 	}
 	
 	occurrenceA : SessionOccurrence
@@ -220,21 +208,22 @@ pattern findOccurrenceContinuity {
 		- ta -> ta
 	}
 	
-//	entryA : TimeTableEntry {
-//		- timeTableWeeks -> weekA
-//	}
-//	entryB : TimeTableEntry {
-//		- timeTableWeeks -> weekB
-//	}
-//	
-//	weekA : Week
-//	weekB : Week
+	entry : TimeTableEntry {
+		- timeTableWeeks -> weekA
+	}
+	entryB : TimeTableEntry {
+		- timeTableWeeks -> weekB
+	}
+	
+	weekA : Week
+	weekB : Week
 	
 	# occurrenceA.timeTableWeek + 1 == occurrenceB.timeTableWeek
 	# approval.ratingNumeric > 0
-//	# occurrenceA.timeTableWeek == weekA.id
-//	# occurrenceB.timeTableWeek == weekB.id
+	# occurrenceA.timeTableWeek == weekA.id
+	# occurrenceB.timeTableWeek == weekB.id
 }
+when taAvailableInSessionAB
 
 //
 // GIPSL
