@@ -1,14 +1,15 @@
 package org.emoflon.gips.gipsl.examples.mdvne;
 
+import gips.examples.dependencies.GipsExamplesLogger;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
+import org.emoflon.gips.core.gt.PatternMatch2MappingSorterByURI;
+import org.emoflon.gips.core.milp.ConstraintSorterByName;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 
-import gips.examples.dependencies.GipsExamplesLogger;
-
-public class ExampleMdVNE extends GipsExamplesLogger {
+public class ExampleMdVNESorted extends GipsExamplesLogger {
 
 	public static void main(final String[] args) {
 		// Create new MdVNE Gips API and load a model
@@ -16,6 +17,12 @@ public class ExampleMdVNE extends GipsExamplesLogger {
 		api.init(URI.createFileURI("./resources/example-models/model-in.xmi"));
 		api.getTracer().enableTracing(true);
 		api.getEclipseIntegrationConfig().setSolutionValuesSynchronizationEnabled(true);
+
+		api.getSolverConfig().setEnableLpOutput(true);
+		api.getSolverConfig().setLpPath("output.lp");
+
+		api.setMatchSorter(new PatternMatch2MappingSorterByURI());
+		api.setConstraintSorter(new ConstraintSorterByName());
 
 		// Build the ILP problem (including updates)
 		api.buildProblem(true);
