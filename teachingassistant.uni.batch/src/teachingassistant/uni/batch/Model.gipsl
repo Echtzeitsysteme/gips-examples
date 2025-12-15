@@ -287,29 +287,17 @@ constraint with continuity {
 	// Faster replacement
 	2 * context.value
 	<=
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.occurrence == context.nodes.occurrenceA //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceA))->sum(element.value)
 	+
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.occurrence == context.nodes.occurrenceB //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceB))->sum(element.value)
 	
 	&
 	
 	context.value
 	>=
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.occurrence == context.nodes.occurrenceA //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceA))->sum(element.value)
 	+
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.occurrence == context.nodes.occurrenceB //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceB))->sum(element.value)
 	- 1
 }
 
