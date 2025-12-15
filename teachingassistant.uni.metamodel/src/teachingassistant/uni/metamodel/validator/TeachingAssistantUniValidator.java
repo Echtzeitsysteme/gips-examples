@@ -667,6 +667,12 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
+		// If the entry is contained in a TA (aka, it is a blocked entry), skip other
+		// checks
+		if (entry.eContainer() instanceof TeachingAssistant) {
+			return true;
+		}
+
 		if (entry.getRoom() == null) {
 			return false;
 		}
