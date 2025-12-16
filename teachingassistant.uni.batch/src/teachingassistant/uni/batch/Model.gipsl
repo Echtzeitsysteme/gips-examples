@@ -222,9 +222,7 @@ mapping continuity to findOccurrenceContinuity;
 
 // Every session occurrence must have exactly `numTAsPerSession` TAs assigned.
 constraint with findSessionOccurrence {
-	mappings.taToOccurrence->filter( //
-		element.nodes.occurrence == context.nodes.occurrence //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((occurrence, occurrence))->sum(element.value)
 	==
 	context.nodes.session.numTasPerSession
 }
@@ -233,14 +231,8 @@ constraint with findSessionOccurrence {
 // GIPSL formulation: For any pair of conflicting session occurrences (in the
 // context of one TA), a maximum of one of these conflicting session can be chosen.
 constraint with findConflictingEntriesWithTa {
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.entry == context.nodes.entryA //
-	)->sum(element.value)
-	+ mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.entry == context.nodes.entryB //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (entry, entryA))->sum(element.value)
+	+ mappings.taToOccurrence->join((ta, ta), (entry, entryB))->sum(element.value)
 	<= 1
 }
 
@@ -250,14 +242,8 @@ constraint with findConflictingEntriesWithTa {
 // a switch is less than 1h = 3600s, a maximum of one of these sessions can be
 // chosen.
 constraint with findInterCampusTimeTableEntriesConflict {
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.entry == context.nodes.entryA //
-	)->sum(element.value)
-	+ mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.entry == context.nodes.entryB //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (entry, entryA))->sum(element.value)
+	+ mappings.taToOccurrence->join((ta, ta), (entry, entryB))->sum(element.value)
 	<= 1
 }
 
@@ -265,9 +251,7 @@ constraint with findInterCampusTimeTableEntriesConflict {
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // must not exceed their total hour limit
 constraint with TeachingAssistant {
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context
-	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	mappings.taToOccurrence->join(ta)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
 	<= context.maxHoursTotal
 }
 
@@ -275,10 +259,7 @@ constraint with TeachingAssistant {
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // in a specific week must not exceed their weekly hour limit
 constraint with findTaWeekCombination {
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.w == context.nodes.w
-	)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
+	mappings.taToOccurrence->join((ta, ta), (w, w))->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
 	<= context.nodes.ta.maxHoursPerWeek
 }
 
@@ -286,20 +267,14 @@ constraint with findTaWeekCombination {
 // TA for a specific session (and the TA needs to have the green
 // employment rating for the respective module).
 function greenTas with findGreenTa {
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.module == context.nodes.mod
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (module, mod))->sum(element.value)
 }
 
 // Represents the number of assigned session occurrences to a specific
 // TA for a specific session (and the TA needs to have the amber
 // employment rating for the respective module).
 function amberTas with findAmberTa {
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.module == context.nodes.mod
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (module, mod))->sum(element.value)
 }
 
 // If (and only if) the same TA is used in a session occurrence in
@@ -324,29 +299,17 @@ constraint with continuity {
 	// Faster replacement
 	2 * context.value
 	<=
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.occurrence == context.nodes.occurrenceA //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceA))->sum(element.value)
 	+
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.occurrence == context.nodes.occurrenceB //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceB))->sum(element.value)
 	
 	&
 	
 	context.value
 	>=
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.occurrence == context.nodes.occurrenceA //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceA))->sum(element.value)
 	+
-	mappings.taToOccurrence->filter( //
-		element.nodes.ta == context.nodes.ta //
-		& element.nodes.occurrence == context.nodes.occurrenceB //
-	)->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceB))->sum(element.value)
 	- 1
 }
 

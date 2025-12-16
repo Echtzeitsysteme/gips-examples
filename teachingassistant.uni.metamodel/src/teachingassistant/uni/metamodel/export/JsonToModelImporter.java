@@ -25,7 +25,7 @@ import metamodel.Week;
 
 public class JsonToModelImporter {
 
-	public final static int MAX_HOURS_PER_YEAR = 156;
+	public final static int MAX_HOURS_PER_YEAR = 312;
 
 	// Time slot start: 8 am (in minutes)
 	public final static int SLOT_TIME_START = 8 * 60;
