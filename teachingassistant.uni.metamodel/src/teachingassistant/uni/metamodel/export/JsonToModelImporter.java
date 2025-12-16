@@ -28,7 +28,7 @@ import teachingassistant.uni.utils.DateTimeUtil;
 
 public class JsonToModelImporter {
 
-	public final static int MAX_HOURS_PER_YEAR = 156;
+	public final static int MAX_HOURS_PER_YEAR = 312;
 
 	// Transfered base week Monday from `SimpleTaUniGenerator`
 	private final static LocalDateTime BASE_WEEK_MONDAY = LocalDateTime.of(2024, Month.FEBRUARY, 12, 0, 0);
