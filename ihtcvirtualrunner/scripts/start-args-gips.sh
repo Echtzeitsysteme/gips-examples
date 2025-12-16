@@ -74,6 +74,7 @@ export RUN_NAME=$(date +%Y-%m-%d"_"%H-%M-%S)
 if [ ! -z "$randomSeed" ]; then
     if [ ! -z "$parameter" ] && [ ! -z "$callback" ] && [ ! -z "$preprocessing" ]; then
         export ARGS="-i $inputJson -o $outputJson --verbose --randomseed $randomSeed --callback $callback --parameter $parameter --preprocessing $preprocessing"
+    fi
     if [ ! -z "$parameter" ] && [ ! -z "$callback" ]; then
         export ARGS="-i $inputJson -o $outputJson --verbose --randomseed $randomSeed --callback $callback --parameter $parameter"
     else
