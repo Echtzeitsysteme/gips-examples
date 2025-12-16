@@ -1,11 +1,12 @@
 package org.emoflon.gips.gipsl.examples.mdvne;
 
-import gips.examples.dependencies.GipsExamplesLogger;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
+
+import gips.examples.dependencies.GipsExamplesLogger;
 
 public class ExampleMdVNE extends GipsExamplesLogger {
 
