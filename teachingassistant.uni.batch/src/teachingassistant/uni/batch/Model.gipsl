@@ -35,20 +35,20 @@ pattern findTaUnavailableSession {
 	}
 	
 	entry : TimeTableEntry {
-		- timeTableWeeks -> week
+		- timeTableWeeks -> w
 	}
 	
-	blocked : TimeTableEntry {
-		- timeTableWeeks -> week
+	blocked : BlockedTimeSlot {
+		- timeTableWeeks -> w
 	}
 	
-	week : Week
+	w : Week
 	
 	# entry.day == blocked.day
 	# entry.startMinutes < blocked.endMinutes
 	# entry.endMinutes > blocked.startMinutes
 }
-condition taAvailableInSession = forbid findTaUnavailableSession
+//condition taAvailableInSession = forbid findTaUnavailableSession
 
 // Rule to assign a TA to a specific session occurrence.
 // This rule respects the condition that the TA must not have
@@ -83,7 +83,8 @@ rule assignTa {
 	# occurrence.timeTableWeek == w.id
 	# approval.ratingNumeric > 0
 }
-when taAvailableInSession
+//when taAvailableInSession
+// TODO: ^this does not work properly and I don't know why.
 
 // Find every possible combination of TAs
 // and time table entries
@@ -211,6 +212,14 @@ pattern findOccurrenceContinuity {
 //
 // GIPSL
 //
+
+// Constraint that replaces the GT NAC. I.e., a mapping between a TA and an entry
+// must not be selected if the TA is blocked in the time frame.
+// GIPSL interpretation: for every unavailable time table entry of a TA, there must not be
+// a selection of the corresponding mapping (TA and entry must match).
+constraint with findTaUnavailableSession {
+	mappings.taToOccurrence->join((ta, ta), (entry, entry))->sum(element.value) == 0
+}
 
 // If a mapping instance has a value of `1`, the respective TA must
 // be mapped to the respective session occurrence.

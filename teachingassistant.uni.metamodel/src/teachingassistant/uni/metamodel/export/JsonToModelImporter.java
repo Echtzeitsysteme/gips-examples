@@ -11,6 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import metamodel.BlockedTimeSlot;
 import metamodel.Campus;
 import metamodel.EmploymentApproval;
 import metamodel.EmploymentRating;
@@ -128,7 +129,7 @@ public class JsonToModelImporter {
 
 			// Instead of "availability" we only have to mark blocked dates
 
-			final Set<TimeTableEntry> blockedEntries = new HashSet<TimeTableEntry>();
+			final Set<BlockedTimeSlot> blockedEntries = new HashSet<BlockedTimeSlot>();
 
 			// Multi-dimensional array of weeks(days(slots)))
 			final JsonArray availability = ((JsonObject) ta).get("availability").getAsJsonArray();
@@ -164,7 +165,7 @@ public class JsonToModelImporter {
 	}
 
 	private void createTeachingAssistant(final int id, final String name, final int maxHoursPerWeek,
-			final int maxHoursTotal, final Set<TimeTableEntry> blockedEntries) {
+			final int maxHoursTotal, final Set<BlockedTimeSlot> blockedEntries) {
 		Objects.requireNonNull(name);
 		Objects.requireNonNull(blockedEntries);
 
@@ -178,8 +179,8 @@ public class JsonToModelImporter {
 		model.getTas().add(ta);
 	}
 
-	private TimeTableEntry createBlockedEntry(final int week, final int day, final int slot) {
-		final TimeTableEntry entry = MetamodelFactory.eINSTANCE.createTimeTableEntry();
+	private BlockedTimeSlot createBlockedEntry(final int week, final int day, final int slot) {
+		final BlockedTimeSlot entry = MetamodelFactory.eINSTANCE.createBlockedTimeSlot();
 		entry.setDay(day);
 		final Week w = getWeekById(week);
 		entry.getTimeTableWeeks().add(w);

@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
+import metamodel.BlockedTimeSlot;
 import metamodel.EmploymentApproval;
 import metamodel.Module;
 import metamodel.NamedElement;
@@ -15,6 +16,7 @@ import metamodel.SessionOccurrence;
 import metamodel.TaAllocation;
 import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
+import metamodel.TimeSlot;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
 import teachingassistant.uni.metamodel.export.FileUtils;
@@ -137,9 +139,6 @@ public class TeachingAssistantUniValidator {
 					allFoundTimeTableEntries.addAll(session.getEntries());
 				});
 			});
-			model.getTas().forEach(ta -> {
-				allFoundTimeTableEntries.addAll(ta.getUnavailable());
-			});
 			boolean timeTableEntriesValid = true;
 			for (final TimeTableEntry entry : allFoundTimeTableEntries) {
 				timeTableEntriesValid = timeTableEntriesValid & validate(entry);
@@ -213,7 +212,66 @@ public class TeachingAssistantUniValidator {
 			valid = valid & teachingSessionsValid;
 		}
 
+		// BlockedTimeSlots
+		{
+			final Set<BlockedTimeSlot> allFoundBlockedTimeSlots = new HashSet<>();
+			model.getTas().forEach(ta -> {
+				allFoundBlockedTimeSlots.addAll(ta.getUnavailable());
+			});
+			boolean blockedTimeSlotsValid = true;
+			for (final BlockedTimeSlot blocked : allFoundBlockedTimeSlots) {
+				blockedTimeSlotsValid = blockedTimeSlotsValid & validate(blocked);
+			}
+			log(OUTPUT_PREFIX + "All blocked time slots are valid: " + blockedTimeSlotsValid);
+			valid = valid & blockedTimeSlotsValid;
+		}
+
 		return valid;
+	}
+
+	/**
+	 * Validates a given generic `TimeSlot` object.
+	 * 
+	 * @param entry `TimeSlot` object to validate.
+	 * @return True if the given `TimeSlot` object is valid.
+	 */
+	private boolean validateGenericTimeSlot(final TimeSlot genericTimeSlot) {
+		if (genericTimeSlot == null) {
+			return false;
+		}
+
+		if (genericTimeSlot.getDay() < 0) {
+			return false;
+		}
+
+		if (genericTimeSlot.getStartMinutes() < 0) {
+			return false;
+		}
+
+		if (genericTimeSlot.getEndMinutes() < 0) {
+			return false;
+		}
+
+		// startEpoch < endEpoch is required
+		if (!(genericTimeSlot.getStartMinutes() < genericTimeSlot.getEndMinutes())) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validates a given `BlockedTimeSlot` object.
+	 * 
+	 * @param entry `BlockedTimeSlot` object to validate.
+	 * @return True if the given `BlockedTimeSlot` object is valid.
+	 */
+	private boolean validate(final BlockedTimeSlot blocked) {
+		if (!(blocked.eContainer() instanceof TeachingAssistant)) {
+			return false;
+		}
+
+		return validateGenericTimeSlot(blocked);
 	}
 
 	/**
@@ -441,8 +499,8 @@ public class TeachingAssistantUniValidator {
 
 		// Unavailable sessions
 		final Set<TimeTableEntry> allShifts = findAllShiftsOfTa(ta, model);
-		for (final TimeTableEntry unavailable : ta.getUnavailable()) {
-			if (allShifts.contains(unavailable)) {
+		for (final BlockedTimeSlot unavailable : ta.getUnavailable()) {
+			if (checkIfBlockedTimeSlotIsViolated(unavailable, allShifts)) {
 				if (verbose) {
 					logger.warning("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable
 							+ "> but is blocked on this time frame.");
@@ -556,19 +614,68 @@ public class TeachingAssistantUniValidator {
 			}
 		}
 
-		for (final TimeTableEntry unavailable : ta.getUnavailable()) {
-			if (allShifts.contains(unavailable)) {
-				if (verbose) {
-					logger.warning("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable
-							+ "> but is blocked on this time frame.");
-				}
-				return false;
-			}
-		}
-
 		return true;
 	}
 
+	/**
+	 * Checks if the given blocked time slot is violated by at least one of the
+	 * given set of all time table entries.
+	 * 
+	 * @param unavailable Blocked time slot to check for.
+	 * @param allShifts   Assigned time table entries (shifts).
+	 * @return True if at least one assigned shifts has a collision with the blocked
+	 *         time slot.
+	 */
+	private boolean checkIfBlockedTimeSlotIsViolated(final BlockedTimeSlot unavailable,
+			final Set<TimeTableEntry> allShifts) {
+		Objects.requireNonNull(unavailable);
+		Objects.requireNonNull(allShifts);
+
+		if (allShifts.isEmpty()) {
+			return false;
+		}
+
+		for (final TimeTableEntry entry : allShifts) {
+			if (checkBlockedOverlap(unavailable, entry)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if the given blocked time slot is violated the given time table entry.
+	 * 
+	 * @param unavailable Blocked time slot to check for.
+	 * @param entry       Assigned time table entry (shift).
+	 * @return True if the single assigned shift has a collision with the blocked
+	 *         time slot.
+	 */
+	private boolean checkBlockedOverlap(final BlockedTimeSlot blocked, final TimeTableEntry entry) {
+		Objects.requireNonNull(blocked);
+		Objects.requireNonNull(entry);
+
+		if (blocked.getTimeTableWeeks().get(0).equals(entry.getTimeTableWeeks().get(0))) {
+			if (blocked.getDay() == entry.getDay()) {
+				if (blocked.getStartMinutes() < entry.getEndMinutes()) {
+					if (blocked.getEndMinutes() > entry.getStartMinutes()) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Utility method to convert a given time table entry to a nice string for
+	 * printing.
+	 * 
+	 * @param entry Time Table entry to convert to a string.
+	 * @return String representing the given time table entry.
+	 */
 	private String timeTableEntryToString(final TimeTableEntry entry) {
 		Objects.requireNonNull(entry);
 		String string = "";
@@ -667,25 +774,11 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
-		// If the entry is contained in a TA (aka, it is a blocked entry), skip other
-		// checks
-		if (entry.eContainer() instanceof TeachingAssistant) {
-			return true;
+		if (!validateGenericTimeSlot(entry)) {
+			return false;
 		}
 
 		if (entry.getRoom() == null) {
-			return false;
-		}
-
-		if (entry.getDay() < 0) {
-			return false;
-		}
-
-		if (entry.getStartMinutes() < 0) {
-			return false;
-		}
-
-		if (entry.getEndMinutes() < 0) {
 			return false;
 		}
 
@@ -701,11 +794,6 @@ public class TeachingAssistantUniValidator {
 		// timeTableWeeks
 		// all timeTableWeeks of the entry must be part of the session's timeTableWeeks
 		if (!entry.getSession().getTimeTableWeeks().containsAll(entry.getTimeTableWeeks())) {
-			return false;
-		}
-
-		// startEpoch < endEpoch is required
-		if (!(entry.getStartMinutes() < entry.getEndMinutes())) {
 			return false;
 		}
 

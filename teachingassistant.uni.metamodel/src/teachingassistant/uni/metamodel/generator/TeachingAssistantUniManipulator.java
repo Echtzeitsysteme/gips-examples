@@ -116,7 +116,9 @@ public class TeachingAssistantUniManipulator {
 		}
 
 		logger.info("Number of matched entries: " + foundEntries.size());
-		ta.getUnavailable().addAll(foundEntries);
+		foundEntries.forEach(entry -> {
+			ta.getUnavailable().add(SimpleTaUniGenerator.convertEntryToBlockedTimeSlot(entry));
+		});
 
 		// TODO: Future improvement: make sure occurrence is not in the past.
 	}

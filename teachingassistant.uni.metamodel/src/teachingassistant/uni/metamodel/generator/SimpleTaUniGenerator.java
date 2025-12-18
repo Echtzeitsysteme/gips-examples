@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import metamodel.BlockedTimeSlot;
 import metamodel.EmploymentApproval;
 import metamodel.EmploymentRating;
+import metamodel.MetamodelFactory;
 import metamodel.Module;
 import metamodel.SessionOccurrence;
 import metamodel.TaAllocation;
@@ -298,7 +301,7 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 					break;
 				}
 				final int randomTteIndex = getRandInt(0, copiedTtes.size() - 1);
-				ta.getUnavailable().add(copiedTtes.remove(randomTteIndex));
+				ta.getUnavailable().add(convertEntryToBlockedTimeSlot(copiedTtes.remove(randomTteIndex)));
 			}
 		}
 
@@ -307,6 +310,16 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 		root.getTas().addAll(tas.values());
 
 		return root;
+	}
+
+	public static BlockedTimeSlot convertEntryToBlockedTimeSlot(final TimeTableEntry entry) {
+		Objects.requireNonNull(entry);
+		final BlockedTimeSlot blocked = MetamodelFactory.eINSTANCE.createBlockedTimeSlot();
+		blocked.setDay(entry.getDay());
+		blocked.getTimeTableWeeks().addAll(entry.getTimeTableWeeks());
+		blocked.setStartMinutes(entry.getStartMinutes());
+		blocked.setEndMinutes(entry.getEndMinutes());
+		return blocked;
 	}
 
 	private Week getWeek(final int weekNumber) {
