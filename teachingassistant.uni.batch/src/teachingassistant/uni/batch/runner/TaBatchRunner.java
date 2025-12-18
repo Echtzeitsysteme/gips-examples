@@ -1,15 +1,24 @@
 package teachingassistant.uni.batch.runner;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.emoflon.gips.core.gt.GipsPatternMapper;
+import org.emoflon.gips.core.gt.PatternMatch2MappingSorter;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
+import org.emoflon.ibex.gt.api.GraphTransformationMatch;
 
 import metamodel.TaAllocation;
 import teachingassistant.uni.batch.api.gips.BatchGipsAPI;
+import teachingassistant.uni.batch.api.gips.mapper.TaToOccurrenceMapper;
+import teachingassistant.uni.batch.api.matches.AssignTaMatch;
+import teachingassistant.uni.batch.api.matches.FindTaUnavailableSessionMatch;
 import teachingassistant.uni.metamodel.export.FileUtils;
 import teachingassistant.uni.metamodel.export.JsonToModelImporter;
 import teachingassistant.uni.metamodel.export.ModelToJsonExporter;
@@ -58,6 +67,43 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		// Set GIPS configuration parameters from this object
 		setGurobiVerbose(gipsApi, verbose);
 		setGipsConfig(gipsApi);
+
+		// Workaround for broken NACs
+		gipsApi.setMatchSorter(new PatternMatch2MappingSorter() {
+			@Override
+			public <M extends GraphTransformationMatch<M, ?>> List<M> sort(GipsPatternMapper<?, M, ?> mapper,
+					List<M> matches) {
+				// If the mapper is not an instance of our mapper of interest, return its
+				// matches as they are.
+				if (!(mapper instanceof TaToOccurrenceMapper)) {
+					return matches;
+				}
+
+				// Get NAC matches
+				final Collection<FindTaUnavailableSessionMatch> nacs = gipsApi.getEMoflonAPI()
+						.findTaUnavailableSession().findMatches(false);
+
+				// Every match of the given mapper should be retained, if there is not a single
+				// corresponding NAC
+				final List<M> filteredMatches = new ArrayList<>();
+				for (final M match : matches) {
+					final AssignTaMatch typedMatch = (AssignTaMatch) match;
+					boolean isNotNacced = true;
+					for (final FindTaUnavailableSessionMatch nacCandidate : nacs) {
+						if (typedMatch.getTa().equals(nacCandidate.getTa())
+								&& typedMatch.getEntry().equals(nacCandidate.getEntry())) {
+							isNotNacced = false;
+//							logger.info("=> filtered match: " + typedMatch.getTa() + "; " + typedMatch.getEntry());
+							break;
+						}
+					}
+					if (isNotNacced) {
+						filteredMatches.add(match);
+					}
+				}
+				return filteredMatches;
+			}
+		});
 
 		log("Start GIPS update.");
 		gipsApi.update();
