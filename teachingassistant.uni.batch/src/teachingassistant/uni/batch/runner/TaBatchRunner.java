@@ -2,10 +2,13 @@ package teachingassistant.uni.batch.runner;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.emoflon.gips.core.gt.GipsPatternMapper;
@@ -79,27 +82,50 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 					return matches;
 				}
 
-				// Get NAC matches
+				// Get NAC matches from eMoflon
 				final Collection<FindTaUnavailableSessionMatch> nacs = gipsApi.getEMoflonAPI()
 						.findTaUnavailableSession().findMatches(false);
 
-				// Every match of the given mapper should be retained, if there is not a single
-				// corresponding NAC
+				// Build index for NAC matches (for faster look-ups). We only need to create an
+				// index for the `TA` and `entry` node of the NAC's matches.
+				final Map<Object, Set<FindTaUnavailableSessionMatch>> localIndex = new HashMap<>();
+				for (final FindTaUnavailableSessionMatch nacMatch : nacs) {
+					// TA
+					if (!localIndex.containsKey(nacMatch.getTa())) {
+						localIndex.put(nacMatch.getTa(), new HashSet<FindTaUnavailableSessionMatch>());
+					}
+					localIndex.get(nacMatch.getTa()).add(nacMatch);
+
+					// Entry
+					if (!localIndex.containsKey(nacMatch.getEntry())) {
+						localIndex.put(nacMatch.getEntry(), new HashSet<FindTaUnavailableSessionMatch>());
+					}
+					localIndex.get(nacMatch.getEntry()).add(nacMatch);
+				}
+
+				// Check for every match of the mapper in question, if there is at least one
+				// corresponding match of the NAC. If there is no NAC's match, the match of the
+				// mapper in question can be retained.
 				final List<M> filteredMatches = new ArrayList<>();
 				for (final M match : matches) {
 					final AssignTaMatch typedMatch = (AssignTaMatch) match;
-					boolean isNotNacced = true;
-					for (final FindTaUnavailableSessionMatch nacCandidate : nacs) {
-						if (typedMatch.getTa().equals(nacCandidate.getTa())
-								&& typedMatch.getEntry().equals(nacCandidate.getEntry())) {
-							isNotNacced = false;
-//							logger.info("=> filtered match: " + typedMatch.getTa() + "; " + typedMatch.getEntry());
-							break;
-						}
+					boolean noNacFound = true;
+					// NAC can only exist if both the TA and the entry were indexed beforehand
+					if (localIndex.containsKey(typedMatch.getTa()) && localIndex.containsKey(typedMatch.getEntry())) {
+						// Entry
+						final Set<FindTaUnavailableSessionMatch> nacCandidates = new HashSet<>();
+						nacCandidates.addAll(localIndex.get(typedMatch.getEntry()));
+						// TA
+						nacCandidates.retainAll(localIndex.get(typedMatch.getTa()));
+						noNacFound = nacCandidates.isEmpty();
 					}
-					if (isNotNacced) {
+
+					if (noNacFound) {
 						filteredMatches.add(match);
 					}
+//					else {
+//						logger.info("=> filtered match: " + typedMatch.getTa() + "; " + typedMatch.getEntry());
+//					}
 				}
 				return filteredMatches;
 			}
