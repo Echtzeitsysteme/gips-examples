@@ -1,4 +1,4 @@
-package utils;
+package pipeline.utils;
 
 import java.util.Objects;
 
@@ -58,34 +58,34 @@ public class XmiSetupUtil {
 	 * @param modelPath           Model path to load.
 	 * @param ibexPatternXmiPath  IBeX pattern XMI file path to load.
 	 */
-	private static void setup(final GipsEngineAPI<?, ?> gipsApi, final String hipeNetworkXmiPath,
-			final String hipeEngineClassname, final String gipsModelXmiPath, final String modelPath,
-			final String ibexPatternXmiPath) {
-		Objects.requireNonNull(gipsApi);
-		Objects.requireNonNull(hipeNetworkXmiPath);
-		Objects.requireNonNull(hipeEngineClassname);
-		Objects.requireNonNull(gipsModelXmiPath);
-		Objects.requireNonNull(modelPath);
-		Objects.requireNonNull(ibexPatternXmiPath);
-
-		final boolean runAsJar = FileUtils.checkIfFileExists(gipsModelXmiPath) //
-				&& FileUtils.checkIfFileExists(ibexPatternXmiPath) //
-				&& FileUtils.checkIfFileExists(hipeNetworkXmiPath);
-		if (!runAsJar) {
-			gipsApi.init(URI.createFileURI(modelPath));
-		} else {
-			HiPEPathOptions.getInstance().setNetworkPath( //
-					URI.createFileURI(hipeNetworkXmiPath) //
-			);
-			HiPEPathOptions.getInstance().setEngineClassName( //
-					hipeEngineClassname //
-			);
-			gipsApi.init( //
-					URI.createFileURI(gipsModelXmiPath), //
-					URI.createFileURI(modelPath), //
-					URI.createFileURI(ibexPatternXmiPath) //
-			);
-		}
-	}
+//	private static void setup(final GipsEngineAPI<?, ?> gipsApi, final String hipeNetworkXmiPath,
+//			final String hipeEngineClassname, final String gipsModelXmiPath, final String modelPath,
+//			final String ibexPatternXmiPath) {
+//		Objects.requireNonNull(gipsApi);
+//		Objects.requireNonNull(hipeNetworkXmiPath);
+//		Objects.requireNonNull(hipeEngineClassname);
+//		Objects.requireNonNull(gipsModelXmiPath);
+//		Objects.requireNonNull(modelPath);
+//		Objects.requireNonNull(ibexPatternXmiPath);
+//
+//		final boolean runAsJar = FileUtils.checkIfFileExists(gipsModelXmiPath) //
+//				&& FileUtils.checkIfFileExists(ibexPatternXmiPath) //
+//				&& FileUtils.checkIfFileExists(hipeNetworkXmiPath);
+//		if (!runAsJar) {
+//			gipsApi.init(URI.createFileURI(modelPath));
+//		} else {
+//			HiPEPathOptions.getInstance().setNetworkPath( //
+//					URI.createFileURI(hipeNetworkXmiPath) //
+//			);
+//			HiPEPathOptions.getInstance().setEngineClassName( //
+//					hipeEngineClassname //
+//			);
+//			gipsApi.init( //
+//					URI.createFileURI(gipsModelXmiPath), //
+//					URI.createFileURI(modelPath), //
+//					URI.createFileURI(ibexPatternXmiPath) //
+//			);
+//		}
+//	}
 
 }
