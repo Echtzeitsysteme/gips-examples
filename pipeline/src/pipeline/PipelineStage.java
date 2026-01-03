@@ -7,7 +7,7 @@ import org.emoflon.gips.core.api.GipsEngineAPI;
 /**
  * Record holding the individual configuration of a specific PipelineStage.
  */
-public record PipelineStage(GipsEngineAPI<?, ?> gipsApi, String inputPath, String outputPath, String parameterPath, String callbackPath) {
+public record PipelineStage(GipsEngineAPI<?, ?> gipsApi, String inputPath, String outputPath, String parameterPath, String callbackPath, Integer randomSeed, Integer timeLimit, Integer threads) {
 	
 //	/*
 //	 * Gips Api of the pipeline Stage 

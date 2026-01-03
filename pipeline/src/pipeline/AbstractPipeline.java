@@ -72,7 +72,7 @@ public abstract class AbstractPipeline{
 	/**
 	 * Time limit for the (M)ILP solver.
 	 */
-	protected int timeLimit = -1;
+	protected int timeLimit = 30;
 
 	/**
 	 * Number of threads for the (M)ILP solver.
@@ -85,16 +85,20 @@ public abstract class AbstractPipeline{
 	 * rule matches with eMoflon::IBeX-GT.
 	 * To use Java application the method applySolutionNoGt must be implemented
 	 */
-	private boolean applicationNoGt = false;
+	protected boolean applicationNoGt = false;
 	
 	/**
 	 * Logger for system outputs.
 	 */
 	protected final Logger logger = Logger.getLogger(AbstractPipeline.class.getName());
 	
-	protected AbstractPipeline(boolean verbose, boolean parallelBuild){
+	protected AbstractPipeline(String instancePath, boolean verbose, boolean parallelBuild){
 		this.verbose = verbose;
 		this.parallelBuild = parallelBuild;
+		
+		// Set paths from given instance
+		this.setupPaths(instancePath);
+		
 		pipelineStages = new ArrayList<PipelineStage>();
 		
 		// Configure logging
@@ -112,18 +116,33 @@ public abstract class AbstractPipeline{
 	}
 	
 	/**
-	 * Creates a new pipeline stage and calculates all necessary paths
+	 * Calculates both input and output folder for the pipeline stages.
+	 * If no default solution folder exists a new directory is created at the parent directory of the 
+	 * instance file named "pipeline_solutions".
+	 * @param instancePath the complete path of the problem instance
+	 */
+	public void setupPaths(String instancePath) {
+		this.instance = instancePath.substring(instancePath.lastIndexOf("/"));
+		this.instanceFolder = instancePath.substring(0, instancePath.lastIndexOf("/") + 1);
+		this.outputFolder = instanceFolder + "/../pipeline_solutions";
+		File solutionDirectory = new File(outputFolder);
+		solutionDirectory.mkdir();
+	}
+	
+	/**
+	 * Creates a new pipeline stage and calculates all necessary paths. 
+	 * The global milp configuration is used for the new stage.
 	 * @param gipsApi Api for the current stage, which specifies which specification is executed.
 	 * @return The index of the just created pipeline stage, by which it can be 
 	 * 		   further configured and executed
 	 */
 	public int setupNewStage(GipsEngineAPI<?, ?> gipsApi) {
-		return setupNewStage(gipsApi, "", "");
+		return setupNewStage(gipsApi, randomSeed, timeLimit, threads);
 	}
 	
 	
 	/**
-	 * Creates a new pipeline stage and calculates all necessary paths
+	 * Creates a new pipeline stage and calculates all necessary paths. 
 	 * @param gipsApi Api for the current stage, which specifies which specification is executed.
 	 * @param parameter Path of the parameter file, being the primary means to configure 
 	 * 	      Gurobi for the current stage
@@ -138,7 +157,30 @@ public abstract class AbstractPipeline{
 		String inputPath = calculateInputPathForNextStage(gipsApi);
 		String outputPath = calculateOutputPathForNextStage(gipsApi);
 		
-		PipelineStage stage = new PipelineStage(gipsApi, inputPath, parameterPath, callbackPath, outputPath);
+		PipelineStage stage = new PipelineStage(gipsApi, inputPath, parameterPath, callbackPath, outputPath, null, null, null);
+		
+		pipelineStages.add(stage);
+
+		return pipelineStages.size() - 1;
+	}
+	
+	/**
+	 * Creates a new pipeline stage and calculates all necessary paths. 
+	 * Directly takes the most relevant milp configurations instead of parameter and callback files.
+	 * @param gipsApi Api for the current stage, which specifies which specification is executed.
+	 * @param randomSeed Random seed for the MILP solver to be used for the new stage
+	 * @param timeLimit Time limit of the MILP solver for the new stage
+	 * @param threads Amount of threads to be used for the new stage
+	 * @return
+	 */
+	public int setupNewStage(GipsEngineAPI<?, ?> gipsApi, int randomSeed, int timeLimit, int threads) {
+		Objects.requireNonNull(gipsApi);
+		Objects.requireNonNull(instance);
+		
+		String inputPath = calculateInputPathForNextStage(gipsApi);
+		String outputPath = calculateOutputPathForNextStage(gipsApi);
+		
+		PipelineStage stage = new PipelineStage(gipsApi, inputPath, "", "", outputPath, randomSeed, timeLimit, threads);
 		
 		pipelineStages.add(stage);
 
@@ -196,12 +238,6 @@ public abstract class AbstractPipeline{
 	}
 	
 	/**
-	 * This method must be implemented and must set the instance variables 
-	 * instanceFolder and gipsOutputFolder.
-	 */
-	public abstract void setupFolder();
-	
-	/**
 	 * Calculates the input path 
 	 * @param gipsApi Api of the current Stage
 	 * @return The complete path of the input file for the pipeline stage. 
@@ -241,20 +277,20 @@ public abstract class AbstractPipeline{
 		}
 	}
 	
-	/**
-	 * Converts the two given time stamps (tick and tock) from nano seconds to
-	 * elapsed time in seconds.
-	 * 
-	 * @param tick First time stamp.
-	 * @param tock Second time stamp.
-	 * @return Elapsed time between tick and tock in seconds.
-	 */
-	protected double tickTockToElapsedSeconds(final long tick, final long tock) {
-		if (tick < 0 || tock < 0) {
-			throw new IllegalArgumentException("Given tick or tock was below zero.");
-		}
-		return 1.0 * (tock - tick) / 1_000_000_000;
-	}
+//	/**
+//	 * Converts the two given time stamps (tick and tock) from nano seconds to
+//	 * elapsed time in seconds.
+//	 * 
+//	 * @param tick First time stamp.
+//	 * @param tock Second time stamp.
+//	 * @return Elapsed time between tick and tock in seconds.
+//	 */
+//	protected double tickTockToElapsedSeconds(final long tick, final long tock) {
+//		if (tick < 0 || tock < 0) {
+//			throw new IllegalArgumentException("Given tick or tock was below zero.");
+//		}
+//		return 1.0 * (tock - tick) / 1_000_000_000;
+//	}
 	
 	/**
 	 * Applies the best found solution (i.e., all non-zero mappings) with a given
@@ -287,6 +323,7 @@ public abstract class AbstractPipeline{
 	 */
 	protected void applySolutionNoGt(final GipsEngineAPI<?, ?> gipsApi) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException();
+		// TODO
 	}
 	
 	/**
@@ -349,6 +386,7 @@ public abstract class AbstractPipeline{
 	 * @param modelPath Path to the instance model to load.
 	 */
 	public abstract void checkIfEclipseOrJarSetup(final GipsEngineAPI<?, ?> gipsApi, final String modelPath);
+	// TODO hier implementieren 
 	
 	/**
 	 * Sets the private GIPS API configuration parameters from this object to the
@@ -360,11 +398,11 @@ public abstract class AbstractPipeline{
 		Objects.requireNonNull(stage);
 		GipsEngineAPI<?, ?> gipsApi = stage.gipsApi();
 		
-		gipsApi.getSolverConfig().setRandomSeed(randomSeed);
+		gipsApi.getSolverConfig().setRandomSeed(stage.randomSeed());
 		if (timeLimit != -1) {
-			gipsApi.getSolverConfig().setTimeLimit(timeLimit);
+			gipsApi.getSolverConfig().setTimeLimit(stage.timeLimit());
 		}
-		gipsApi.getSolverConfig().setThreadCount(threads);
+		gipsApi.getSolverConfig().setThreadCount(stage.threads());
 		if (stage.callbackPath() != null) {
 			gipsApi.getSolverConfig().setEnableCallbackPath(true);
 			gipsApi.getSolverConfig().setCallbackPath(stage.callbackPath());
@@ -373,6 +411,39 @@ public abstract class AbstractPipeline{
 			gipsApi.getSolverConfig().setParameterPath(stage.parameterPath());
 		}
 	}
+	
+	/**
+	 * 
+	 * @param randomSeed New value for the default random seed
+	 */
+	public void setRandomSeed(int randomSeed) {
+		this.randomSeed = randomSeed;
+	}
+	
+	/**
+	 * 
+	 * @param timeLimit New value for the default time limit
+	 */
+	public void setTimeLimit(int timeLimit) {
+		this.timeLimit = timeLimit;
+	}
+	
+	/**
+	 * 
+	 * @param threads New value for the default amount of threads used
+	 */
+	public void setThreads(int threads) {
+		this.threads = threads;
+	}
+	
+	/**
+	 * 
+	 * @param outputFolder Folder where the solved xmis are saved
+	 */
+	public void setOutputFolder(String outputFolder) {
+		this.outputFolder = outputFolder;
+	}
+	
 	
 	// Erstellen von Pipelinestufen 
 		// Muss die Api Erstellung übernehmen 

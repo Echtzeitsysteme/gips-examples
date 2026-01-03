@@ -27,8 +27,8 @@ public class IhtcVirtualPipeline extends AbstractPipeline{
 	 */
 	private boolean applicationNoGt = true;
 
-	IhtcVirtualPipeline(boolean verbose, boolean parallelBuild) {
-		super(verbose, parallelBuild);
+	IhtcVirtualPipeline(String instancePath, boolean verbose, boolean parallelBuild) {
+		super(instancePath, verbose, parallelBuild);
 	}
 	
 //	public int setupNewStage(final GipsEngineAPI<?, ?> gipsApi, final String inputpath) {
@@ -45,23 +45,29 @@ public class IhtcVirtualPipeline extends AbstractPipeline{
 		Objects.requireNonNull(args);
 		boolean verbose = true;
 		boolean parallelBuild = true;
-		final IhtcVirtualPipeline pipeline = new IhtcVirtualPipeline(verbose, parallelBuild);
-		pipeline.setupFolder();
+	
+		String projectFolder = System.getProperty("user.dir");
+		String instanceFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_competition_instances/";
+		String instance = "i01.json"; // TODO must be xmi
+		String inputPath = instanceFolder + instance;
+		
+		final IhtcVirtualPipeline pipeline = new IhtcVirtualPipeline(inputPath, verbose, parallelBuild);
+//		pipeline.setupSolutionFolder();
 		pipeline.run();
 	}
 	
 	@Override
 	public void run() {
 		logger.info("Ihtcvirtual Pipeline instantiated!");
-		this.instance = "i01.json";
+//		this.instance = "i01.json";
 		
 	}
 
-	@Override
-	public void setupFolder() {
-		this.instanceFolder = projectFolder + "/../ihtcvirtualmetamodel/instances/";
-		this.outputFolder = instanceFolder;
-	}
+
+//	public void setupSolutionFolder() {
+//		this.instanceFolder = projectFolder + "/../ihtcvirtualmetamodel/instances/";
+//		this.outputFolder = instanceFolder;
+//	}
 
 	@Override
 	public void checkIfEclipseOrJarSetup(GipsEngineAPI<?, ?> gipsApi, String modelPath) {

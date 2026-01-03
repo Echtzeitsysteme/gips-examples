@@ -11,10 +11,10 @@ public class GenericPipeline extends AbstractPipeline {
 	
 	private String instance = "i01.json";
 	
-	GenericPipeline(boolean verbose, boolean parallelBuild) {
-		super(verbose, parallelBuild);
+	GenericPipeline(String instancePath, boolean verbose, boolean parallelBuild) {
+		super(instancePath, verbose, parallelBuild);
 	}
-
+	
 	/**
 	 * Main method to execute the runner. Arguments will be ignored.
 	 * 
@@ -24,7 +24,7 @@ public class GenericPipeline extends AbstractPipeline {
 		Objects.requireNonNull(args);
 		boolean verbose = true;
 		boolean parallelBuild = true;
-		final GenericPipeline pipeline = new GenericPipeline(verbose, parallelBuild);
+		final GenericPipeline pipeline = new GenericPipeline("", verbose, parallelBuild);
 		pipeline.run();
 	}
 	
@@ -32,12 +32,6 @@ public class GenericPipeline extends AbstractPipeline {
 	public void run() {
 		logger.info("Generic Pipeline instantiated!");
 		final SoftcnstrtuningGipsAPI gipsApi = new SoftcnstrtuningGipsAPI();
-		
-	}
-
-	@Override
-	public void setupFolder() {
-
 		
 	}
 
