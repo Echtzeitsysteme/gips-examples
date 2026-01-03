@@ -1,7 +1,8 @@
 package org.emoflon.gips.ihtc.virtual.runner;
-import pipeline.*;
 
 import java.util.Objects;
+
+import pipeline.*;
 
 import org.emoflon.gips.core.api.GipsEngineAPI;
 
