@@ -25,6 +25,8 @@ import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
+import pipeline.utils.*;
+
 public abstract class AbstractPipeline{
 
 	/**
@@ -125,8 +127,7 @@ public abstract class AbstractPipeline{
 		this.instance = instancePath.substring(instancePath.lastIndexOf("/"));
 		this.instanceFolder = instancePath.substring(0, instancePath.lastIndexOf("/") + 1);
 		this.outputFolder = instanceFolder + "/../pipeline_solutions";
-		File solutionDirectory = new File(outputFolder);
-		solutionDirectory.mkdir();
+		FileUtils.prepareFolder(this.outputFolder);
 	}
 	
 	/**
