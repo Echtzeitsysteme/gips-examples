@@ -29,14 +29,9 @@ public class IhtcVirtualPipeline extends AbstractPipeline{
 	 */
 	private boolean applicationNoGt = true;
 
-	IhtcVirtualPipeline(String instancePath, boolean verbose, boolean parallelBuild) {
-		super(instancePath, verbose, parallelBuild);
+	IhtcVirtualPipeline(boolean verbose, boolean parallelBuild) {
+		super(verbose, parallelBuild);
 	}
-	
-//	public int setupNewStage(final GipsEngineAPI<?, ?> gipsApi, final String inputpath) {
-//
-//		return 0;
-//	}
 
 	/**
 	 * Main method to execute the runner. Arguments will be ignored.
@@ -47,20 +42,13 @@ public class IhtcVirtualPipeline extends AbstractPipeline{
 		Objects.requireNonNull(args);
 		boolean verbose = true;
 		boolean parallelBuild = true;
-		final IhtcVirtualPipeline pipeline = new IhtcVirtualPipeline("", verbose, parallelBuild);
+		final IhtcVirtualPipeline pipeline = new IhtcVirtualPipeline(verbose, parallelBuild);
 		pipeline.run();
 	}
 	
 	@Override
 	public void run() {
 		logger.info("Test");
-		
-	}
-
-
-	@Override
-	public void checkIfEclipseOrJarSetup(GipsEngineAPI<?, ?> gipsApi, String modelPath) {
-		// TODO Auto-generated method stub
 		
 	}
 	

@@ -94,12 +94,9 @@ public abstract class AbstractPipeline{
 	 */
 	protected final Logger logger = Logger.getLogger(AbstractPipeline.class.getName());
 	
-	protected AbstractPipeline(String instancePath, boolean verbose, boolean parallelBuild){
+	public AbstractPipeline(boolean verbose, boolean parallelBuild){
 		this.verbose = verbose;
 		this.parallelBuild = parallelBuild;
-		
-		// Set paths from given instance
-		this.setupPaths(instancePath);
 		
 		pipelineStages = new ArrayList<PipelineStage>();
 		
@@ -118,13 +115,23 @@ public abstract class AbstractPipeline{
 	}
 	
 	/**
+	 * Needs to be called before creating any pipeline stages and sets the instance path.
 	 * Calculates both input and output folder for the pipeline stages.
 	 * If no default solution folder exists a new directory is created at the parent directory of the 
 	 * instance file named "pipeline_solutions".
-	 * @param instancePath the complete path of the problem instance
+	 * @param instancePath compete path to the xmi model instance.
 	 */
-	public void setupPaths(String instancePath) {
+	public void setInstancePath(String instancePath) {
+		if(!FileUtils.checkIfFileExists(instancePath)) {
+			throw new IllegalArgumentException("File <" + instancePath + "> could not be found.");
+		}
+		
 		this.instance = instancePath.substring(instancePath.lastIndexOf("/"));
+		
+		if(!this.instance.substring(this.instance.lastIndexOf(".")).equals("xmi")) {
+			throw new IllegalArgumentException("Specified file must be must be a valid xmi.");
+		}
+		
 		this.instanceFolder = instancePath.substring(0, instancePath.lastIndexOf("/") + 1);
 		this.outputFolder = instanceFolder + "/../pipeline_solutions";
 		FileUtils.prepareFolder(this.outputFolder);
@@ -201,7 +208,7 @@ public abstract class AbstractPipeline{
 			logger.info("=> Start Stage " + stage);
 			logger.info("=> Initializing GIPS Api: " + gipsApi.toString());
 		}
-		this.checkIfEclipseOrJarSetup(gipsApi, currentStage.inputPath());
+		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, currentStage.inputPath());
 		
 		// Set GIPS configuration parameters from this object
 		this.setGipsConfig(currentStage);
@@ -243,7 +250,7 @@ public abstract class AbstractPipeline{
 	 * @param gipsApi Api of the current Stage
 	 * @return The complete path of the input file for the pipeline stage. 
 	 */
-	public String calculateInputPathForNextStage(GipsEngineAPI<?, ?> gipsApi) {
+	private String calculateInputPathForNextStage(GipsEngineAPI<?, ?> gipsApi) {
 		String filename;
 		if(pipelineStages.size() > 0) {
 			filename = pipelineStages.getLast().outputPath();
@@ -259,7 +266,7 @@ public abstract class AbstractPipeline{
 	 * @param gipsApi Api of the current Stage
 	 * @return The complete path of the output file for the pipeline stage. 
 	 */
-	public String calculateOutputPathForNextStage(GipsEngineAPI<?, ?> gipsApi) {
+	private String calculateOutputPathForNextStage(GipsEngineAPI<?, ?> gipsApi) {
 		int stageNumber = this.pipelineStages.size() - 1;
 		return outputFolder + instance.substring(0, instance.lastIndexOf(".xmi")) + "_solved_stage_" + stageNumber + ".xmi";
 	}
@@ -269,7 +276,7 @@ public abstract class AbstractPipeline{
 	 * 
 	 * @param path Path to check the file existence for.
 	 */
-	protected void checkIfFileExists(final String path) {
+	private void checkIfFileExists(final String path) {
 		Objects.requireNonNull(path);
 
 		final File xmiInputFile = new File(path);
@@ -301,7 +308,7 @@ public abstract class AbstractPipeline{
 	 * @param verbose If true, the method will print some more information about the
 	 *                GT rule application.
 	 */
-	protected void applySolution(final GipsEngineAPI<?, ?> gipsApi) {
+	private void applySolution(final GipsEngineAPI<?, ?> gipsApi) {
 		Objects.requireNonNull(gipsApi);
 
 		// Apply found solution
@@ -312,9 +319,8 @@ public abstract class AbstractPipeline{
 	}
 	
 	/**
-	 * Applies the best found solution (i.e., all non-zero mappings) with a given
-	 * IHTC 2024 project GIPS API object. This method does not utilize the GT engine
-	 * built-in to GIPS but rather manipulates the model directly.
+	 * This method does not utilize the GT engine built-in to GIPS but rather 
+	 * manipulates the model directly.
 	 * 
 	 * @param gipsApi IHTC 2024 project GIPS API object to get all mapping
 	 *                information from.
@@ -322,9 +328,28 @@ public abstract class AbstractPipeline{
 	 *                GT rule application.
 	 * @throws OperationNotSupportedException 
 	 */
-	protected void applySolutionNoGt(final GipsEngineAPI<?, ?> gipsApi) throws OperationNotSupportedException {
+	private void applySolutionNoGt(final GipsEngineAPI<?, ?> gipsApi) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException();
 		// TODO
+	}
+	
+	/**
+	 * Loads the given problem instance from the given format (json, ...) if necessary and 
+	 * saves it as an xmi. 
+	 * Needs to be implemented if the problem is not given as an xmi.
+	 * @throws OperationNotSupportedException
+	 */
+	public void importXMI(final String inputJsonPath, final String outputXmiPath) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException();
+	}
+	
+	/**
+	 * Exports the xmi solution into the necessary format (json, ...) 
+	 * Needs to be implemented if the solution is required in a separate format.
+	 * @throws OperationNotSupportedException
+	 */
+	public void exportSolution(final String xmiOutputPath, final String jsonOutputPath) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException();
 	}
 	
 	/**
@@ -337,7 +362,7 @@ public abstract class AbstractPipeline{
 	 *                objective value.
 	 * @return Returns the objective value.
 	 */
-	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi) {
+	private double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi) {
 		Objects.requireNonNull(gipsApi);
 
 		gipsApi.buildProblemTimed(true, parallelBuild);
@@ -368,7 +393,7 @@ public abstract class AbstractPipeline{
 	 * @param gipsApi GIPS API to save results from.
 	 * @param path    (XMI) path to save the results to.
 	 */
-	protected void gipsSave(final PipelineStage stage) {
+	private void gipsSave(final PipelineStage stage) {
 		Objects.requireNonNull(stage);
 		logger.info("Saving GIPS output XMI file to: " + stage.outputPath());
 		try {
@@ -377,17 +402,6 @@ public abstract class AbstractPipeline{
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * Checks if XMI files exist and sets up the GIPS API accordingly.
-	 * This method must be implemented in the concrete classes and was moved from the existing XmiSetupUtil class
-	 * to gather all unique implementations for a specific pipeline in one file. 
-	 * 
-	 * @param gipsApi   GIPS API to set up.
-	 * @param modelPath Path to the instance model to load.
-	 */
-	public abstract void checkIfEclipseOrJarSetup(final GipsEngineAPI<?, ?> gipsApi, final String modelPath);
-	// TODO hier implementieren 
 	
 	/**
 	 * Sets the private GIPS API configuration parameters from this object to the
@@ -443,6 +457,15 @@ public abstract class AbstractPipeline{
 	 */
 	public void setOutputFolder(String outputFolder) {
 		this.outputFolder = outputFolder;
+	}
+	
+	/**
+	 * 
+	 * @param applicationNoGt If true, the application of the GT rules of 
+	 * the GIPSL specification will only be simulated by manually written Java code
+	 */
+	public void setapplicationNoGt(boolean applicationNoGt) {
+		this.applicationNoGt = applicationNoGt;
 	}
 	
 	

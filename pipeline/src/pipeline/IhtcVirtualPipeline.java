@@ -26,15 +26,14 @@ public class IhtcVirtualPipeline extends AbstractPipeline{
 	 * Only necessary for models with virtual nodes.
 	 */
 	private boolean applicationNoGt = true;
-
-	IhtcVirtualPipeline(String instancePath, boolean verbose, boolean parallelBuild) {
-		super(instancePath, verbose, parallelBuild);
-	}
 	
-//	public int setupNewStage(final GipsEngineAPI<?, ?> gipsApi, final String inputpath) {
-//
-//		return 0;
-//	}
+	private String instanceFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_competition_instances/";
+	private String instance = "i01.json";
+	private String inputPath = instanceFolder + instance;
+
+	IhtcVirtualPipeline(boolean verbose, boolean parallelBuild) {
+		super(verbose, parallelBuild);
+	}
 
 	/**
 	 * Main method to execute the runner. Arguments will be ignored.
@@ -43,36 +42,15 @@ public class IhtcVirtualPipeline extends AbstractPipeline{
 	 */
 	public static void main(final String[] args) {
 		Objects.requireNonNull(args);
-		boolean verbose = true;
-		boolean parallelBuild = true;
-	
-		String projectFolder = System.getProperty("user.dir");
-		String instanceFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_competition_instances/";
-		String instance = "i01.json"; // TODO must be xmi
-		String inputPath = instanceFolder + instance;
-		
-		final IhtcVirtualPipeline pipeline = new IhtcVirtualPipeline(inputPath, verbose, parallelBuild);
-//		pipeline.setupSolutionFolder();
+		final IhtcVirtualPipeline pipeline = new IhtcVirtualPipeline(true, true);
 		pipeline.run();
 	}
 	
 	@Override
 	public void run() {
-		logger.info("Ihtcvirtual Pipeline instantiated!");
-//		this.instance = "i01.json";
+		logger.info("Ihtcvirtual Pipeline instantiated!");	
 		
+		setInstancePath(inputPath);
 	}
 
-
-//	public void setupSolutionFolder() {
-//		this.instanceFolder = projectFolder + "/../ihtcvirtualmetamodel/instances/";
-//		this.outputFolder = instanceFolder;
-//	}
-
-	@Override
-	public void checkIfEclipseOrJarSetup(GipsEngineAPI<?, ?> gipsApi, String modelPath) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }
