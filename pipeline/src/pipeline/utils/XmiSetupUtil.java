@@ -37,8 +37,7 @@ public class XmiSetupUtil {
 		}
 		
 		String apiName = gipsApi.getClass().getName().toLowerCase();
-		
-		String baseFolder = apiName.substring(0, apiName.lastIndexOf("gipsapi"));
+		String baseFolder = apiName.substring(0, apiName.lastIndexOf(".api"));
 		
 		String hipeNetworkXmiPath = "./" + baseFolder + "/hipe/engine/hipe-network.xmi";
 		String hipeEngineClassname = baseFolder + ".hipe.engine.HiPEEngine";

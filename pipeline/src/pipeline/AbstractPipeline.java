@@ -126,9 +126,9 @@ public abstract class AbstractPipeline{
 			throw new IllegalArgumentException("File <" + instancePath + "> could not be found.");
 		}
 		
-		this.instance = instancePath.substring(instancePath.lastIndexOf("/"));
+		this.instance = instancePath.substring(instancePath.lastIndexOf("/") + 1);
 		
-		if(!this.instance.substring(this.instance.lastIndexOf(".")).equals("xmi")) {
+		if(!this.instance.substring(this.instance.lastIndexOf(".")).equals(".xmi")) {
 			throw new IllegalArgumentException("Specified file must be must be a valid xmi.");
 		}
 		
@@ -165,7 +165,7 @@ public abstract class AbstractPipeline{
 		String inputPath = calculateInputPathForNextStage(gipsApi);
 		String outputPath = calculateOutputPathForNextStage(gipsApi);
 		
-		PipelineStage stage = new PipelineStage(gipsApi, inputPath, parameterPath, callbackPath, outputPath, null, null, null);
+		PipelineStage stage = new PipelineStage(gipsApi, inputPath, outputPath, parameterPath, callbackPath, null, null, null);
 		
 		pipelineStages.add(stage);
 
@@ -188,7 +188,7 @@ public abstract class AbstractPipeline{
 		String inputPath = calculateInputPathForNextStage(gipsApi);
 		String outputPath = calculateOutputPathForNextStage(gipsApi);
 		
-		PipelineStage stage = new PipelineStage(gipsApi, inputPath, "", "", outputPath, randomSeed, timeLimit, threads);
+		PipelineStage stage = new PipelineStage(gipsApi, inputPath, outputPath, "", "", randomSeed, timeLimit, threads);
 		
 		pipelineStages.add(stage);
 
@@ -208,6 +208,7 @@ public abstract class AbstractPipeline{
 			logger.info("=> Start Stage " + stage);
 			logger.info("=> Initializing GIPS Api: " + gipsApi.toString());
 		}
+		Observer.getInstance().setCurrentSeries("Eval");
 		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, currentStage.inputPath());
 		
 		// Set GIPS configuration parameters from this object
@@ -267,8 +268,8 @@ public abstract class AbstractPipeline{
 	 * @return The complete path of the output file for the pipeline stage. 
 	 */
 	private String calculateOutputPathForNextStage(GipsEngineAPI<?, ?> gipsApi) {
-		int stageNumber = this.pipelineStages.size() - 1;
-		return outputFolder + instance.substring(0, instance.lastIndexOf(".xmi")) + "_solved_stage_" + stageNumber + ".xmi";
+		int stageNumber = this.pipelineStages.size();
+		return outputFolder + "/" + instance.substring(0, instance.lastIndexOf(".xmi")) + "_solved_stage_" + stageNumber + ".xmi";
 	}
 	
 	/**

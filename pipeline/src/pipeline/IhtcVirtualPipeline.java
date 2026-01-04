@@ -28,8 +28,8 @@ public class IhtcVirtualPipeline extends AbstractPipeline{
 	private boolean applicationNoGt = true;
 	
 	private String instanceFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_competition_instances/";
-	private String instance = "i01.json";
-	private String inputPath = instanceFolder + instance;
+	private String problemInstance = "i01.json";
+	private String inputPath = instanceFolder + problemInstance;
 
 	IhtcVirtualPipeline(boolean verbose, boolean parallelBuild) {
 		super(verbose, parallelBuild);

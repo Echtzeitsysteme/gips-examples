@@ -24,7 +24,7 @@ public class GenericPipeline extends AbstractPipeline {
 	
 	final private String outputXmiPath = projectFolder + "/../ihtcmetamodel/instances/" + instance.replace(".json", ".xmi");;
 	
-	final private String jsonOutputPath = projectFolder + "/../ihtcmetamodel/resources/" + "sol_"
+	final private String jsonOutputPath = projectFolder + "/../ihtcmetamodel/resources/" + "sol_pipeline_"
 			+ instance.substring(0, instance.lastIndexOf(".json")) + "_gips.json";
 	
 	GenericPipeline(boolean verbose, boolean parallelBuild) {
@@ -78,7 +78,7 @@ public class GenericPipeline extends AbstractPipeline {
 		logger.info("Generic Pipeline instantiated!");
 		
 		importXMI(inputJsonPath, outputXmiPath);
-		
+
 		setInstancePath(outputXmiPath);
 		
 		final SoftcnstrtuningGipsAPI gipsApi = new SoftcnstrtuningGipsAPI();
