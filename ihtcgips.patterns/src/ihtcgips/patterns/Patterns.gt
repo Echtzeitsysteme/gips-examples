@@ -1,0 +1,62 @@
+import "platform:/resource/ihtcmetamodel/model/Ihtcmetamodel.ecore"
+
+//
+// This file contains all "simple" patterns that I used in the
+// GIPSL specification to solve the IHTC 2024.
+//
+// Its purpose is to be compared to a native Java implementation
+// that does not utilize any pattern matching.
+//
+
+pattern dayRoomTuple {
+	h : Hospital {
+		- days -> d
+		- rooms -> r
+	}
+	
+	d : Day
+	r : Room
+}
+
+pattern daySurgeonTuple {
+	h : Hospital {
+		- days -> d
+		- surgeons -> s	
+	}
+	
+	d : Day
+	s : Surgeon
+}
+
+pattern dayOperatingTheaterTuple {
+	h : Hospital {
+		- days -> d
+		- operatingTheaters -> ot
+	}
+	
+	d : Day
+	
+	ot : OperatingTheater
+}
+
+pattern roomShiftTuple {
+	h : Hospital {
+		- rooms -> r
+		- shifts -> s
+	}
+	
+	r : Room
+	s : Shift
+}
+
+pattern dayRoomGender {
+	h : Hospital {
+		- days -> d
+		- rooms -> r
+		- genders -> g
+	}
+	
+	d : Day
+	r : Room
+	g : Gender
+}

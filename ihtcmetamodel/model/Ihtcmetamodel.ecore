@@ -88,6 +88,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRoom" eType="#//Room"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="surgeryAssignment" eType="#//SurgeryAssignment"
         eOpposite="#//SurgeryAssignment/patient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="admissionDays_virtual"
+        upperBound="-1" eType="#//Day"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedRooms_virtual"
+        upperBound="-1" eType="#//Room"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AgeGroup" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="Weight">
@@ -157,6 +161,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="shift" eType="#//Shift"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="nurse" eType="#//Nurse"
         eOpposite="#//Nurse/assignedRoomShifts"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="room_virtual" eType="#//Room"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="shift_virtual" eType="#//Shift"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nurse_virtual" eType="#//Nurse"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SurgeryAssignment">
     <eStructuralFeatures xsi:type="ecore:EReference" name="patient" eType="#//Patient"
@@ -166,6 +173,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="operationTheater" eType="#//OperatingTheater"
         eOpposite="#//OperatingTheater/surgeryAssignments"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="day" eType="#//Day"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patient_virtual" eType="#//Patient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="surgeon_virtual" eType="#//Surgeon"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operationTheater_virtual"
+        eType="#//OperatingTheater"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="day_virtual" eType="#//Day"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Gender" eSuperTypes="#//NamedElement"/>
 </ecore:EPackage>
