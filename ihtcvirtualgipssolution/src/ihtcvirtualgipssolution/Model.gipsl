@@ -244,7 +244,6 @@ pattern roomDayTupel {
 }
 
 // Used in a mapping to calculate which nurse is assigned to which workload. 
-// Used in a mapping to calculate which nurse is assigned to which workload. 
 pattern nursetoWorkload {
 	vsr : VirtualShiftToRoster {
 		- shift -> s
