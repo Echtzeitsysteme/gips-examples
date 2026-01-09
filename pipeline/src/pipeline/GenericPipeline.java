@@ -43,7 +43,7 @@ public class GenericPipeline extends AbstractPipeline {
 	}
 	
 	@Override
-	public void importXMI(final String inputJsonPath, final String outputXmiPath){
+	public void importIntoXMI(final String inputJsonPath, final String outputXmiPath){
 		Objects.requireNonNull(inputJsonPath);
 		Objects.requireNonNull(outputXmiPath);
 

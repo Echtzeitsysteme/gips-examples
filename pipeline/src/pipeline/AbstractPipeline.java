@@ -198,7 +198,6 @@ public abstract class AbstractPipeline{
 	
 	public String executeStage(final int stage) {
 		
-		// TODO auch schon methoden für preproc ... hinzufügen mit OperationNotSupportedException
 		PipelineStage currentStage = pipelineStages.get(stage);
 		GipsEngineAPI<?, ?> gipsApi = currentStage.gipsApi();
 		
@@ -277,7 +276,7 @@ public abstract class AbstractPipeline{
 	 * 
 	 * @param path Path to check the file existence for.
 	 */
-	private void checkIfFileExists(final String path) {
+	protected void checkIfFileExists(final String path) {
 		Objects.requireNonNull(path);
 
 		final File xmiInputFile = new File(path);
@@ -309,7 +308,7 @@ public abstract class AbstractPipeline{
 	 * @param verbose If true, the method will print some more information about the
 	 *                GT rule application.
 	 */
-	private void applySolution(final GipsEngineAPI<?, ?> gipsApi) {
+	protected void applySolution(final GipsEngineAPI<?, ?> gipsApi) {
 		Objects.requireNonNull(gipsApi);
 
 		// Apply found solution
@@ -329,9 +328,8 @@ public abstract class AbstractPipeline{
 	 *                GT rule application.
 	 * @throws OperationNotSupportedException 
 	 */
-	private void applySolutionNoGt(final GipsEngineAPI<?, ?> gipsApi) throws OperationNotSupportedException {
+	protected void applySolutionNoGt(final GipsEngineAPI<?, ?> gipsApi) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException();
-		// TODO
 	}
 	
 	/**
@@ -340,7 +338,7 @@ public abstract class AbstractPipeline{
 	 * Needs to be implemented if the problem is not given as an xmi.
 	 * @throws OperationNotSupportedException
 	 */
-	public void importXMI(final String inputJsonPath, final String outputXmiPath) throws OperationNotSupportedException {
+	public void importIntoXMI(final String inputJsonPath, final String outputXmiPath) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException();
 	}
 	
@@ -363,7 +361,7 @@ public abstract class AbstractPipeline{
 	 *                objective value.
 	 * @return Returns the objective value.
 	 */
-	private double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi) {
+	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi) {
 		Objects.requireNonNull(gipsApi);
 
 		gipsApi.buildProblemTimed(true, parallelBuild);
@@ -394,7 +392,7 @@ public abstract class AbstractPipeline{
 	 * @param gipsApi GIPS API to save results from.
 	 * @param path    (XMI) path to save the results to.
 	 */
-	private void gipsSave(final PipelineStage stage) {
+	protected void gipsSave(final PipelineStage stage) {
 		Objects.requireNonNull(stage);
 		logger.info("Saving GIPS output XMI file to: " + stage.outputPath());
 		try {
@@ -410,7 +408,7 @@ public abstract class AbstractPipeline{
 	 * 
 	 * @param gipsApi GIPS API to set the configuration parameters for.
 	 */
-	private void setGipsConfig(final PipelineStage stage) {
+	protected void setGipsConfig(final PipelineStage stage) {
 		Objects.requireNonNull(stage);
 		GipsEngineAPI<?, ?> gipsApi = stage.gipsApi();
 		
@@ -468,33 +466,6 @@ public abstract class AbstractPipeline{
 	public void setapplicationNoGt(boolean applicationNoGt) {
 		this.applicationNoGt = applicationNoGt;
 	}
-	
-	
-	// Erstellen von Pipelinestufen 
-		// Muss die Api Erstellung übernehmen 
-	
-	// Andere Möglichkeit als Interface 
-		// Am Ende dann 2 Implementierte Varianten (virtual) und allgemeine Form
-	
-	// Ziel: AM Ende im Runner nur noch Parameter initialisieren und an die Pipeline übergeben 
-	// Dann kann über einen Methodenaufruf eine Pipelinestufe ausgeführt werden. Diese muss die konkrete 
-	// GIPS Api übergeben bekommen 
-	// Die Pipeline übernimmt das Logging -> Erstellen im Konstruktor und intern mit der Stufe mitzählen
-	// Die Stufe bekommt die individuellen Konfigurationen und einen Eingabepfad. Das heißt das Model muss als xmi bereits vorliegen
-	// Preprocessing muss nur einmal pro Pipeline gemacht werden. Aber Regeln soerweitern dass schon Knoten selektiert sein können.
-	// Ca so: 
-	
-	
-	// inputpath = jsonToModel(...)
-	// Ihtcpipeline pipeline = new Ihtcpipeline(verbose, parallel); // Instanzname benötigt?
-	
-	// Key = pipeline.setupNewStage(Api, inputpath, preproc, postproc, gtapplication, callback, parameter) -> Muss aus der APi die ganzen Pfade berechnen
-	// Möglichkeit Parameter anzupassen
-	// outputPath = pipeline.runStage()
-	
-	// Wo die Eingabe dateien liegen muss konfiguriert werden 
-	
-	// Die Standart Variante hat keine Parameter für preproc / postproc / gtapplication, ...
 	
 	public abstract void run();
 	
