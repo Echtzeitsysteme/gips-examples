@@ -64,7 +64,7 @@ public abstract class AbstractVirtualPipeline  extends AbstractPipeline  {
 	 *                       to.
 	 * @throws OperationNotSupportedException 
 	 */
-	public void exportToJsonNoPostProc(final String xmiOutputPath, final String jsonOutputPath) throws OperationNotSupportedException {
+	public void exportSolutionNoPostProc(final String xmiOutputPath, final String jsonOutputPath) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException();
 	}
 	

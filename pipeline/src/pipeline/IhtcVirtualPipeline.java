@@ -1,37 +1,34 @@
 package pipeline;
 
+import java.io.IOException;
 import java.util.Objects;
 
-import org.emoflon.gips.core.api.GipsEngineAPI;
+import org.eclipse.emf.ecore.resource.Resource;
 
-public class IhtcVirtualPipeline extends AbstractPipeline{
-	
-	/**
-	 * If true, the post processing will be skipped and the JSON output will be
-	 * directly derived from the GIPS solution model (i.e., it will search for
-	 * `isSelected == true` virtual objects.
-	 */
-	private boolean postProc = false;
+import pipeline.utils.*;
 
-	/**
-	 * If true, the pre-processing will be executed with the Java-only (i.e., no GT)
-	 * implementation.
-	 */
-	private boolean preProcNoGt = true;
-	
-	/**
-	 * If true, the application of the GT rules of the GIPSL specification will only
-	 * be simulated by manually written Java code instead of actually applying GT
-	 * rule matches with eMoflon::IBeX-GT.
-	 * Only necessary for models with virtual nodes.
-	 */
-	private boolean applicationNoGt = true;
-	
-	private String instanceFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_competition_instances/";
-	private String problemInstance = "i01.json";
-	private String inputPath = instanceFolder + problemInstance;
 
-	IhtcVirtualPipeline(boolean verbose, boolean parallelBuild) {
+import ihtcvirtualgipssolution.api.gips.IhtcvirtualgipssolutionGipsAPI;
+import ihtcvirtualmetamodel.Root;
+import ihtcvirtualmetamodel.importexport.JsonToModelLoader;
+import ihtcvirtualmetamodel.importexport.ModelToJsonNoPostProcExporter;
+import ihtcvirtualpreprocessing.PreprocessingNoGtApp;
+
+
+public class IhtcVirtualPipeline extends AbstractVirtualPipeline {
+
+	final private String instance = "i01.json";
+	
+	final private String datasetFolder = projectFolder + "/../ihtcvirtualmetamodel/resources/ihtc2024_competition_instances/";
+	
+	final private String inputJsonPath = datasetFolder + instance;
+	
+	final private String outputXmiPath = projectFolder + "/../ihtcvirtualmetamodel/instances/" + instance.replace(".json", ".xmi");;
+	
+	final private String jsonOutputPath = projectFolder + "/../ihtcvirtualmetamodel/resources/runner/" + "sol_pipeline_"
+			+ instance.substring(0, instance.lastIndexOf(".json")) + "_gips.json";
+	
+	public IhtcVirtualPipeline(boolean verbose, boolean parallelBuild) {
 		super(verbose, parallelBuild);
 	}
 
@@ -48,9 +45,55 @@ public class IhtcVirtualPipeline extends AbstractPipeline{
 	
 	@Override
 	public void run() {
-		logger.info("Ihtcvirtual Pipeline instantiated!");	
+		logger.info("Ihtc virtual Pipeline instantiated!");
 		
-		setInstancePath(inputPath);
+		importIntoXMI(inputJsonPath, outputXmiPath);
+
+		setInstancePath(outputXmiPath);
+		
+		final IhtcvirtualgipssolutionGipsAPI gipsApi = new IhtcvirtualgipssolutionGipsAPI();
+		
+		int stage = setupNewStage(gipsApi);
+		String xmiOutputPath = executeStage(stage);
+		
+		exportSolutionNoPostProc(xmiOutputPath, jsonOutputPath);
+		
+	}
+	
+	@Override
+	public void importIntoXMI(final String inputJsonPath, final String outputXmiPath){
+		final JsonToModelLoader loader = new JsonToModelLoader();
+		loader.jsonToModel(inputJsonPath);
+		final Root model = loader.getModel();
+		try {
+			// Prepare folder if necessary
+			if (outputXmiPath.contains("/")) {
+				FileUtils.prepareFolder(outputXmiPath.substring(0, outputXmiPath.lastIndexOf("/")));
+			}
+			FileUtils.save(model, outputXmiPath);
+		} catch (final IOException e) {
+			throw new InternalError(e.getMessage());
+		}
+	}
+	
+	@Override
+	public void exportSolutionNoPostProc(final String xmiOutputPath, final String jsonOutputPath){
+		Objects.requireNonNull(xmiOutputPath);
+		Objects.requireNonNull(jsonOutputPath);
+
+		final Resource loadedResource = FileUtils.loadModelIhtcVirtual(xmiOutputPath);
+		final Root solvedHospital = (Root) loadedResource.getContents().get(0);
+		final ModelToJsonNoPostProcExporter exporter = new ModelToJsonNoPostProcExporter(solvedHospital);
+		logger.info("Writing output JSON file to: " + jsonOutputPath);
+		exporter.modelToJson(jsonOutputPath, verbose);
+	}
+	
+	@Override
+	public void preprocessNoGt(final String instancePath, final String outputPath){
+		Objects.requireNonNull(instancePath);
+
+		final PreprocessingNoGtApp app = new PreprocessingNoGtApp(instancePath, outputPath);
+		app.run();
 	}
 
 }

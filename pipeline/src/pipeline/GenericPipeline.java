@@ -4,15 +4,13 @@ import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
 import ihtcmetamodel.Hospital;
 import ihtcmetamodel.importexport.JsonToModelLoader;
 import ihtcmetamodel.importexport.ModelToJsonExporter;
-import ihtcmetamodel.utils.FileUtils;
+import pipeline.utils.FileUtils;
 
 import java.io.IOException;
 import java.util.Objects;
 
-import javax.naming.OperationNotSupportedException;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.emoflon.gips.core.api.GipsEngineAPI;
 
 public class GenericPipeline extends AbstractPipeline {
 	
@@ -66,7 +64,7 @@ public class GenericPipeline extends AbstractPipeline {
 		Objects.requireNonNull(xmiOutputPath);
 		Objects.requireNonNull(jsonOutputPath);
 
-		final Resource loadedResource = FileUtils.loadModel(xmiOutputPath);
+		final Resource loadedResource = FileUtils.loadModelIhtc(xmiOutputPath);
 		final Hospital solvedHospital = (Hospital) loadedResource.getContents().get(0);
 		final ModelToJsonExporter exporter = new ModelToJsonExporter(solvedHospital);
 		logger.info("Writing output JSON file to: " + jsonOutputPath);
@@ -77,7 +75,7 @@ public class GenericPipeline extends AbstractPipeline {
 	public void run() {
 		logger.info("Generic Pipeline instantiated!");
 		
-		importXMI(inputJsonPath, outputXmiPath);
+		importIntoXMI(inputJsonPath, outputXmiPath);
 
 		setInstancePath(outputXmiPath);
 		
