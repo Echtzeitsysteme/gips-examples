@@ -26,7 +26,10 @@ public class IhtcVirtualPipeline extends AbstractVirtualPipeline {
 	
 	final private String outputXmiPath = projectFolder + "/../ihtcvirtualmetamodel/instances/" + instance.replace(".json", ".xmi");;
 	
-	final private String jsonOutputPath = projectFolder + "/../ihtcvirtualmetamodel/resources/runner/" + "sol_pipeline_"
+	final private String jsonOutputPath0 = projectFolder + "/../ihtcvirtualmetamodel/resources/runner/" + "sol_pipeline_0_"
+			+ instance.substring(0, instance.lastIndexOf(".json")) + "_gips.json";
+	
+	final private String jsonOutputPath1 = projectFolder + "/../ihtcvirtualmetamodel/resources/runner/" + "sol_pipeline_1_"
 			+ instance.substring(0, instance.lastIndexOf(".json")) + "_gips.json";
 	
 	public IhtcVirtualPipeline(boolean verbose, boolean parallelBuild) {
@@ -57,13 +60,15 @@ public class IhtcVirtualPipeline extends AbstractVirtualPipeline {
 		final HardonlyGipsAPI gipsApiHardOnly = new HardonlyGipsAPI();
 		final IhtcvirtualgipssolutionGipsAPI gipsApiSoftConstraints = new IhtcvirtualgipssolutionGipsAPI();
 		
-		stage = setupNewStage(gipsApiHardOnly, 0, 10, 0);
+		stage = setupNewStage(gipsApiHardOnly, 0, 15, 0);
 		xmiOutputPath = executeStage(stage);
 		
-		stage = setupNewStage(gipsApiSoftConstraints, 0, 30, 0);
+		exportSolutionNoPostProc(xmiOutputPath, jsonOutputPath0);
+		
+		stage = setupNewStage(gipsApiSoftConstraints);
 		xmiOutputPath = executeStage(stage);
 		
-		exportSolutionNoPostProc(xmiOutputPath, jsonOutputPath);
+		exportSolutionNoPostProc(xmiOutputPath, jsonOutputPath1);
 		
 	}
 	
