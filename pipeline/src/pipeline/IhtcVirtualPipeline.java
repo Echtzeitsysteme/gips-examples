@@ -46,18 +46,22 @@ public class IhtcVirtualPipeline extends AbstractVirtualPipeline {
 	
 	@Override
 	public void run() {
+		int stage;
+		String xmiOutputPath;
 		logger.info("Ihtc virtual Pipeline instantiated!");
 		
 		importIntoXMI(inputJsonPath, outputXmiPath);
 
 		setInstancePath(outputXmiPath);
 		
-		// final IhtcvirtualgipssolutionGipsAPI gipsApi = new IhtcvirtualgipssolutionGipsAPI();
+		final HardonlyGipsAPI gipsApiHardOnly = new HardonlyGipsAPI();
+		final IhtcvirtualgipssolutionGipsAPI gipsApiSoftConstraints = new IhtcvirtualgipssolutionGipsAPI();
 		
-		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
+		stage = setupNewStage(gipsApiHardOnly, 0, 10, 0);
+		xmiOutputPath = executeStage(stage);
 		
-		int stage = setupNewStage(gipsApi, 0, 30, 0);
-		String xmiOutputPath = executeStage(stage);
+		stage = setupNewStage(gipsApiSoftConstraints, 0, 30, 0);
+		xmiOutputPath = executeStage(stage);
 		
 		exportSolutionNoPostProc(xmiOutputPath, jsonOutputPath);
 		

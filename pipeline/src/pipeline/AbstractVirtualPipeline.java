@@ -90,24 +90,33 @@ public abstract class AbstractVirtualPipeline  extends AbstractPipeline  {
 		
 		if (verbose) {
 			logger.info("=> Start Stage " + stage);
-			logger.info("=> Starting Preprocessing " + (preProcNoGt ? "without GT" : "with GT"));
 		}
 		
 		String preprocessingPath = outputFolder + "/" + instance.substring(0, instance.lastIndexOf(".xmi")) + "_preproc_stage_" + stage + ".xmi";
 		
-		if (preProcNoGt) {
-			try {
-				preprocessNoGt(currentStage.inputPath(), preprocessingPath);
-			} catch (OperationNotSupportedException e) {
-				logger.info("preprocessNoGt() is not implemented for stage " + stage + "!");
+		if (stage == 0) {
+			if (verbose) {
+				logger.info("=> Starting Preprocessing " + (preProcNoGt ? "without GT" : "with GT"));
 			}
-		} else {
-			try {
-				preprocess(currentStage.inputPath(), preprocessingPath);
-			} catch (Exception e) {
-				logger.info("preprocess() is not implemented for stage " + stage + "!");
+			
+			
+			
+			if (preProcNoGt) {
+				try {
+					preprocessNoGt(currentStage.inputPath(), preprocessingPath);
+				} catch (OperationNotSupportedException e) {
+					logger.info("preprocessNoGt() is not implemented for stage " + stage + "!");
+				}
+			} else {
+				try {
+					preprocess(currentStage.inputPath(), preprocessingPath);
+				} catch (Exception e) {
+					logger.info("preprocess() is not implemented for stage " + stage + "!");
+				}
+	
 			}
-
+		}else {
+			preprocessingPath = currentStage.inputPath();
 		}
 		
 		if (verbose) {
