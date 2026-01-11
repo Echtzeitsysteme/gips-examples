@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
+import ihtcvirtualgipssolution.hardonly.api.gips.HardonlyGipsAPI;
 import pipeline.utils.*;
 
 
@@ -51,9 +52,11 @@ public class IhtcVirtualPipeline extends AbstractVirtualPipeline {
 
 		setInstancePath(outputXmiPath);
 		
-		final IhtcvirtualgipssolutionGipsAPI gipsApi = new IhtcvirtualgipssolutionGipsAPI();
+		// final IhtcvirtualgipssolutionGipsAPI gipsApi = new IhtcvirtualgipssolutionGipsAPI();
 		
-		int stage = setupNewStage(gipsApi);
+		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
+		
+		int stage = setupNewStage(gipsApi, 0, 30, 0);
 		String xmiOutputPath = executeStage(stage);
 		
 		exportSolutionNoPostProc(xmiOutputPath, jsonOutputPath);

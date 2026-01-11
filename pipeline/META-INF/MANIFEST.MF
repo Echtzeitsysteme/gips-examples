@@ -11,7 +11,7 @@ Require-Bundle: org.emoflon.gips.core;bundle-version="1.5.0",
  ihtcvirtualmetamodel;bundle-version="0.0.1",
  ihtcvirtualpostprocessing;bundle-version="1.0.0",
  ihtcvirtualpreprocessing;bundle-version="1.0.0",
- ihtcvirtualrunner;bundle-version="1.0.0"
+ ihtcvirtualgipssolution.hardonly;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: pipeline
 Import-Package: hipe.engine.config
