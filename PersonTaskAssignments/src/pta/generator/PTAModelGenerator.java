@@ -313,7 +313,7 @@ public class PTAModelGenerator {
 	public Skill addSkill(String person, int level, String skillType) {
 		Person p = persons.get(person);
 		Skill s = p.getSkills().stream()
-				.filter(skill -> skill.getLevel() == level && skill.getType().getName().equals(skillType)).findAny()
+				.filter(skill -> skill.getLevel() == level && skill.getTypee().getName().equals(skillType)).findAny()
 				.orElseGet(() -> {
 					Skill skill = factory.createSkill();
 					SkillType type = skillTypes.get(skillType);
@@ -322,7 +322,7 @@ public class PTAModelGenerator {
 					}
 					skill.setName(type.getName());
 					skill.setId(id++);
-					skill.setType(type);
+					skill.setTypee(type);
 					skill.setLevel(level);
 					p.getSkills().add(skill);
 					return skill;
