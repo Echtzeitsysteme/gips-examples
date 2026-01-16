@@ -121,7 +121,7 @@ constraint with aom {
 }
 
 constraint with aom {
-	context.nodes.skill.type.id * context.value == context.nodes.requirement.skillType.id * context.value
+	context.nodes.skill.typee.id * context.value == context.nodes.requirement.skillType.id * context.value
 }
 
 // The sum of hours over all accepted offers must be at least as high as the requirement's hours, including overtime flexibility
