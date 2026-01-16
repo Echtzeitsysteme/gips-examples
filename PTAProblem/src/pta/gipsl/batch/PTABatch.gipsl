@@ -13,7 +13,7 @@ config {
 
 rule assignOffer {
 	skill: Skill {
-		-type -> skilltype
+		-typee -> skilltype
 	}
 
 	skilltype: SkillType
