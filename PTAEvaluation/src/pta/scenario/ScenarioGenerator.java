@@ -212,7 +212,7 @@ public class ScenarioGenerator extends PTAModelGenerator {
 				// type, to prevent a person having multiple skill of the same skill type.
 				List<Person> candidates = this.persons
 						.values().stream().filter(p -> p.getSalary() == salary).filter(p -> !p.getSkills().stream()
-								.filter(s -> s.getType().getName().equals(skillType)).findAny().isPresent())
+								.filter(s -> s.getTypee().getName().equals(skillType)).findAny().isPresent())
 						.collect(Collectors.toList());
 				// Case 2.2: No person with the requirement as described above exists -> spawn a
 				// new person.
