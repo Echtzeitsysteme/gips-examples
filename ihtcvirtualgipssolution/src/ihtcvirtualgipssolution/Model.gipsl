@@ -554,7 +554,11 @@ constraint with mandatoryPatients {
 // smaller or equal to the amount of available beds.
 
 constraint with countPatientsForRoom {
-	 context.variables.patientCount <= context.nodes.r.beds
+	
+	types.VirtualShiftToWorkload->filter(element.shift == context.s)->sum(element.isSelected)
+	<= context.nodes.r.beds
+	
+//	 context.variables.patientCount <= context.nodes.r.beds
 }
 
 /* --------------------------------------------------------------------------------------------------------------------- */
@@ -773,7 +777,8 @@ constraint with assignedNursesToWorkload {
 constraint with countPatientsForRoom {
 	context.variables.patientCount 
 	==
-	mappings.assignedPatientsToRoom->join((s, s))->sum(element.value)  
+	types.VirtualShiftToWorkload->filter(element.shift == context.s)->sum(element.isSelected)
+	// mappings.assignedPatientsToRoom->join((s, s))->sum(element.value)  
 }
 
 //
