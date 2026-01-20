@@ -498,7 +498,10 @@ constraint with assignedGenderToRoomOnShift {
 
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded. 
 constraint with surgeonOptimeTupel {
-	mappings.selectedOperationDay->join((opTime, op))->sum(element.nodes.p.surgeryDuration * element.value)
+	
+	pattern.findOperationDay->join((opTime, op))->sum((element.nodes.vwc.isSelected & element.nodes.vwop.isSelected & element.nodes.vopc.isSelected) * element.nodes.p.surgeryDuration)
+	
+//	mappings.selectedOperationDay->join((opTime, op))->sum(element.nodes.p.surgeryDuration * element.value)
 	<=
 	context.nodes.op.maxOpTime
 }
@@ -522,9 +525,13 @@ constraint with otCapacityTupel {
 // The addition only works because other constraints enforce that the individual sums have to be <= 1
 constraint with mandatoryPatients {
 	
-	mappings.selectedShiftToFirstWorkload->join((p, p))->sum(element.value)
+	pattern.findShiftToFirstWorkload->join((p, p))->sum(element.nodes.vsw.isSelected)
 	+
-	mappings.selectedOperationDay->join((p, p))->sum(element.value)
+	pattern.findOperationDay->join((p, p))->sum((element.nodes.vwc.isSelected & element.nodes.vwop.isSelected & element.nodes.vopc.isSelected))
+	
+//	mappings.selectedShiftToFirstWorkload->join((p, p))->sum(element.value)
+//	+
+//	mappings.selectedOperationDay->join((p, p))->sum(element.value)
 	== 2
 }
 
@@ -646,11 +653,9 @@ constraint with VirtualShiftToWorkload { // selectedOccupantNodes
 // V2.1: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
 constraint with selectShiftToFirstWorkload {
-	
 	mappings.selectedShiftToFirstWorkload->join((vsw, vsw), (vwc, vwc))->sum(element.value)
 	<=
 	mappings.selectedOperationDay->join((vwc, vwc))->sum(element.value)
-
 
 }
 
