@@ -312,7 +312,7 @@ public abstract class AbstractPipeline{
 		Objects.requireNonNull(gipsApi);
 
 		// Apply found solution
-		gipsApi.applyAllNonZeroMappings();
+		gipsApi.applyAllNonZeroMappings(false);
 
 		// Update the pattern matcher after all rule applications once
 		gipsApi.update();
