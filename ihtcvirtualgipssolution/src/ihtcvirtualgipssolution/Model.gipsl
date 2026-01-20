@@ -33,6 +33,23 @@ rule selectShiftToFirstWorkload {
 	}
 }
 
+pattern findShiftToFirstWorkload {
+	p : Patient {
+		- firstWorkload -> w
+	}
+	
+	w : Workload {
+		- virtualShift -> vsw
+		- virtualCapacity -> vwc
+	}
+	
+	vwc : VirtualWorkloadToCapacity
+	
+	vsw : VirtualShiftToWorkload {
+		- requires_virtualWorkloadToCapacity -> vwc
+	}
+}
+
 // PRA.2: Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model. 
 rule selectExtendingShiftToFirstWorkload {
 
@@ -42,6 +59,17 @@ rule selectExtendingShiftToFirstWorkload {
 	
 	nextvsw : VirtualShiftToWorkload {
 		.isSelected := true
+		- requires_virtualShiftToWorkload -> prevvsw
+	}
+}
+
+pattern findExtendingShiftToFirstWorkload {
+
+	prevvsw : VirtualShiftToWorkload {
+		- enables_virtualShiftToWorkload -> nextvsw
+	}
+	
+	nextvsw : VirtualShiftToWorkload {
 		- requires_virtualShiftToWorkload -> prevvsw
 	}
 }
@@ -94,6 +122,47 @@ rule selectOperationDay {
 		- enables_virtualWorkloadToOpTime -> vwop
 		- capacity -> c
 		.isSelected := true
+	}
+	
+	c : Capacity {
+		- ot -> ot
+	}
+	
+	ot : OT
+	
+}
+
+pattern findOperationDay {
+	p : Patient {
+		- firstWorkload -> w
+		- surgeon -> s
+	}
+	
+	s : Surgeon {
+		- opTimes -> opTime
+	}
+	
+	opTime : OpTime
+	
+	w : Workload {
+		- virtualCapacity -> vwc
+		- virtualOpTime -> vwop
+	}
+	
+	vwc : VirtualWorkloadToCapacity {
+		- requires_virtualWorkloadToOpTime -> vwop
+		- capacity -> c
+	}
+	
+	vwop : VirtualWorkloadToOpTime {
+		- requires_virtualOpTimeToCapacity -> vopc
+		- enables_virtual_WorkloadToCapacity -> vwc
+		- opTime -> opTime
+	}
+	
+	vopc : VirtualOpTimeToCapacity {
+		- enables_virtualWorkloadToOpTime -> vwop
+		- capacity -> c
 	}
 	
 	c : Capacity {
@@ -302,6 +371,30 @@ mapping selectedOperationDay to selectOperationDay;
 // SCP.1-3: Decides which nurses are assigned to a shift/room on a specific day.
 mapping selectedShiftToRoster to selectShiftToRoster;
 
+//
+// Types 
+// 
+
+type VirtualShiftToWorkload {
+	var isSelected : EBoolean bind to isSelected
+};
+
+type VirtualShiftToRoster {
+	var isSelected : EBoolean bind to isSelected
+};
+
+type VirtualOpTimeToCapacity {
+	var isSelected : EBoolean bind to isSelected
+};
+
+type VirtualWorkloadToCapacity {
+	var isSelected : EBoolean bind to isSelected
+};
+
+type VirtualWorkloadToOpTime {
+	var isSelected : EBoolean bind to isSelected
+};
+
 // 
 // Utility Mappings
 //
@@ -428,6 +521,7 @@ constraint with otCapacityTupel {
 // scheduling period, whereas optional patients may be postponed to future scheduling periods.
 // The addition only works because other constraints enforce that the individual sums have to be <= 1
 constraint with mandatoryPatients {
+	
 	mappings.selectedShiftToFirstWorkload->join((p, p))->sum(element.value)
 	+
 	mappings.selectedOperationDay->join((p, p))->sum(element.value)
@@ -515,7 +609,10 @@ constraint with countPatientsForRoom {
 // C3: A patient is assigned to at most one operating time slot
 
 constraint with Patient {
-	mappings.selectedOperationDay->join(p)->sum(element.value) <= 1
+	
+	context.firstWorkload.virtualOpTime->filter(element.patient == context)->sum(element.variables.isSelected) <= 1
+	
+//	mappings.selectedOperationDay->join(p)->sum(element.value) <= 1
 }
 
 // C4: A surgeon without any operations on a specific day is not assigned an operating theater on that day
@@ -530,31 +627,31 @@ constraint with Patient {
 
 // C7: A patient can't be assigned to more than one "first" shift
 constraint with Patient {
-	mappings.selectedShiftToFirstWorkload->join(p)->sum(element.value) <= 1
+	
+	context.firstWorkload.virtualShift->filter(element.patient == context)->sum(element.variables.isSelected) <= 1
+	
+//	mappings.selectedShiftToFirstWorkload->join(p)->sum(element.value) <= 1
 }
 //
 // Virtual Constraints
 //
 
 // V1: All virtual nodes of occupants are selected
-constraint with selectedOccupantNodes {
-	context.value == 1
+constraint with VirtualShiftToWorkload { // selectedOccupantNodes
+	context.wasImported => context.variables.isSelected 
+	
+	// context.value == 1
 }
 
 // V2.1: The virtual Node "VirtualWorkloadToShift" can only be added to the final model if
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
 constraint with selectShiftToFirstWorkload {
+	
 	mappings.selectedShiftToFirstWorkload->join((vsw, vsw), (vwc, vwc))->sum(element.value)
 	<=
 	mappings.selectedOperationDay->join((vwc, vwc))->sum(element.value)
-//	&
-//	mappings.selectedOperationDay->filter(
-//		element.nodes.vwc == context.nodes.vwc
-//	)->sum(element.value)
-//	<=
-//	mappings.selectedShiftToFirstWorkload->filter(
-//		element.nodes.vwc == context.nodes.vwc
-//	)->sum(element.value)
+
+
 }
 
 // V2.2:  The virtual Node "VirtualWorkloadToCapacity" can only be added to the final model if
@@ -611,47 +708,53 @@ constraint with selectExtendingShiftToFirstWorkload{
 // Used as primary mapping for the information on patients in rooms for every shift
 // Needed for constraints: U1(H1), U2(H7, H8), U8(S1), U11+U12(S2), U13
 constraint with assignedPatientsToRoom {
-	mappings.selectedShiftToFirstWorkload->join((vsw, vsw))->sum(element.value)
-	+
-	mappings.selectedExtendingShiftToFirstWorkload->join((nextvsw, vsw))->sum(element.value)
-	+
-	mappings.selectedOccupantNodes->join((vsw, vsw))->sum(element.value)
-	<=
-	context.value * 1000
 	
-	&
+	context.value == context.nodes.vsw.variables.isSelected
 	
-	context.value
-	<=
-	mappings.selectedShiftToFirstWorkload->join((vsw, vsw))->sum(element.value)
-	+
-	mappings.selectedExtendingShiftToFirstWorkload->join((nextvsw, vsw))->sum(element.value)
-	+
-	mappings.selectedOccupantNodes->join((vsw, vsw))->sum(element.value)
+//	mappings.selectedShiftToFirstWorkload->join((vsw, vsw))->sum(element.value)
+//	+
+//	mappings.selectedExtendingShiftToFirstWorkload->join((nextvsw, vsw))->sum(element.value)
+//	+
+//	mappings.selectedOccupantNodes->join((vsw, vsw))->sum(element.value)
+//	<=
+//	context.value * 1000
+//	
+//	&
+//	
+//	context.value
+//	<=
+//	mappings.selectedShiftToFirstWorkload->join((vsw, vsw))->sum(element.value)
+//	+
+//	mappings.selectedExtendingShiftToFirstWorkload->join((nextvsw, vsw))->sum(element.value)
+//	+
+//	mappings.selectedOccupantNodes->join((vsw, vsw))->sum(element.value)
 }
 
 // U13: Sets the mapping to true if the nurse is assigned to the workload
 // Used as primary mapping for the information which nurses are assigned to which workloads of patients
 // Needed for constraints: U14+U15(S4), U16(S3)
 constraint with assignedNursesToWorkload {
-	context.value
-	>=
-	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value)
-	+
-	mappings.selectedShiftToRoster->join((vsr, vsr))->sum(element.value)
-	- 1
 	
-	&
+	context.value == [context.nodes.vsw.variables.isSelected & context.nodes.vsr.variables.isSelected]
 	
-	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value)
-	>= 
-	context.value
-	
-	&
-	
-	mappings.selectedShiftToRoster->join((vsr, vsr))->sum(element.value) 
-	>= 
-	context.value
+//	context.value
+//	>=
+//	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value)
+//	+
+//	mappings.selectedShiftToRoster->join((vsr, vsr))->sum(element.value)
+//	- 1
+//	
+//	&
+//	
+//	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value)
+//	>= 
+//	context.value
+//	
+//	&
+//	
+//	mappings.selectedShiftToRoster->join((vsr, vsr))->sum(element.value) 
+//	>= 
+//	context.value
 }
 
 // U2: counts how many patients are currently assigned to each room 
