@@ -525,6 +525,12 @@ constraint with otCapacityTupel {
 // The addition only works because other constraints enforce that the individual sums have to be <= 1
 constraint with mandatoryPatients {
 	
+	types.VirtualShiftToWorkload->filter(element.workload.patient == context.p)->sum(element.isSelected)
+	+
+	// Für den zweiten Teil müsste auf 3 Typen zugegeriffen werden.
+	
+	// Oder 
+	
 	pattern.findShiftToFirstWorkload->join((p, p))->sum(element.nodes.vsw.isSelected)
 	+
 	pattern.findOperationDay->join((p, p))->sum((element.nodes.vwc.isSelected & element.nodes.vwop.isSelected & element.nodes.vopc.isSelected))
