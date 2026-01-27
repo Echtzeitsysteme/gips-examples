@@ -35,7 +35,6 @@ rule selectShiftToFirstWorkload {
 
 // PRA.2: Rule that selects an extending VirtualShiftToWorkload-Node to be adopted in the final model. 
 rule selectExtendingShiftToFirstWorkload {
-
 	prevvsw : VirtualShiftToWorkload {
 		- enables_virtualShiftToWorkload -> nextvsw
 	}
@@ -48,13 +47,11 @@ rule selectExtendingShiftToFirstWorkload {
 
 // PRA.3: Rule that selects all VirtualShiftToWorkload-Nodes to be adopted in the final model if they were imported (belong to an occupant) 
 rule virtualNodesForOccupant {
-
 	vsw : VirtualShiftToWorkload {
 		.isSelected := true
 	}
 	# vsw.wasImported == true
 }
-
 
 // SCP.1-3: Rule that selects an operation day for a patient. 
 // That includes three edges to be adopted in the final model.
@@ -101,12 +98,10 @@ rule selectOperationDay {
 	}
 	
 	ot : OT
-	
 }
 
 // NPA: Rule that selects an  VirtualShiftToRoster-Node to be adopted in the final model. 
 rule selectShiftToRoster {
-
 	vsr : VirtualShiftToRoster {
 		.isSelected := true
 		- shift -> s
@@ -142,7 +137,7 @@ pattern optionalPatients {
 // Pattern used to map which rooms are occupied on a specific shift.
 // Used for a mapping which counts the Patients over a specific room for a specific day -> enforce that the capacity of a room is not exceeded
 // Additionally used to make sure nurses are not assigned to empty rooms and each non-empty room has an assigned nurse
-pattern roomForShift{
+pattern roomForShift {
 	r : Room {
 		- shifts -> s
 	}
@@ -175,7 +170,7 @@ pattern patientForRoom {
 
 // Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day
 // c.maxCapacity > 0 is already enforced by the preprocessing because Capacity Objects with maxCapacity <= 0 are not created
-pattern otCapacityTupel{
+pattern otCapacityTupel {
 	ot : OT {
 		- capacities -> c
 	}
@@ -315,7 +310,7 @@ mapping countPatientsForRoom to roomForShift {
 // Mapping for all assigned patients. (occupants and new patients for each workload (first + following))
 // skillDiff: Calculated difference between the skill level of a nurse and the workload she is assigned to. Can be negative
 // penalizedSkillDiff: maximum of 0 and skillDiff used to ignore negative results for skillDiff
-mapping assignedPatientsToRoom to patientForRoom{
+mapping assignedPatientsToRoom to patientForRoom {
 	var skillDiff : EInt
 	var penalizedSkillDiff : EInt
 };
@@ -332,7 +327,7 @@ mapping otForSurgeon to surgeonOTForDay;
 // mapping that counts how many ots a surgeon is assigned to on a specific day.
 // otCount: Amount of OTs a surgeon is operating in on a specific day
 // penalizedOTs: A penalty is applied if a surgeon has more than 1 assigned OT per day. Maximum of 0 and otCount - 1
-mapping otsPerSurgeon to surgeonOptimeTupel{
+mapping otsPerSurgeon to surgeonOptimeTupel {
 	var otCount : EInt
 	var penalizedOTs : EInt
 };
@@ -340,7 +335,7 @@ mapping otsPerSurgeon to surgeonOptimeTupel{
 // mapping that holds the information if an age group is present in a room on a specific day
 // maxAgeGroup: True if the patient of the current Match has the highest age group in that room 
 // minAgeGroup: True if the patient of the current Match has the smallest age group in that room 
-mapping ageGroupsInRoom to ageGroupsRoomDay{
+mapping ageGroupsInRoom to ageGroupsRoomDay {
 	var maxAgeGroup : EBoolean
 	var minAgeGroup : EBoolean
 };
@@ -357,7 +352,7 @@ mapping assignedNursesToWorkload to nursetoWorkload;
 // mapping used to calculate the sum of workloads for a Roster
 // workloadDiff: Calculated workload of a nurse for a specific shift
 // excessiveWorkload: excessive workload of that nurse in comparison to her maximum workload
-mapping nurseWorkloadForDay to nurseRosterTupel{
+mapping nurseWorkloadForDay to nurseRosterTupel {
 	var workloadDiff : EInt
 	var excessiveWorkload : EInt
 };
@@ -532,6 +527,7 @@ constraint with Patient {
 constraint with Patient {
 	mappings.selectedShiftToFirstWorkload->join(p)->sum(element.value) <= 1
 }
+
 //
 // Virtual Constraints
 //
@@ -559,7 +555,7 @@ constraint with selectShiftToFirstWorkload {
 
 // V2.2:  The virtual Node "VirtualWorkloadToCapacity" can only be added to the final model if
 // the the corresponding patient is also assigned to a room
-constraint with selectedOperationDay{
+constraint with selectedOperationDay {
 	mappings.selectedOperationDay->join((vwc, vwc), (vopc, vopc), (vwop, vwop))->sum(element.value)
 	<=
 	mappings.selectedShiftToFirstWorkload->join((vwc, vwc))->sum(element.value)
@@ -568,7 +564,7 @@ constraint with selectedOperationDay{
 // V3: The stay of a patient can be extended by selecting a following Node "VirtualWorkloadToShift" 
 // that is connected to the previous links between the patients workloads to shifts.
 // The following node can only be selected if the previous is already set to true
-constraint with selectExtendingShiftToFirstWorkload{
+constraint with selectExtendingShiftToFirstWorkload {
 	mappings.selectedExtendingShiftToFirstWorkload->join((nextvsw, nextvsw))->sum(element.value)
 	<=
 	mappings.selectedExtendingShiftToFirstWorkload->join((nextvsw, prevvsw))->sum(element.value)
@@ -780,7 +776,7 @@ constraint with assignedPatientsToRoom {
 }
 
 // U12: calculates the penalized difference between the skill levels. max(0, minLevel - nurseLevel) = max(0, skillDiff)
-constraint with assignedPatientsToRoom{
+constraint with assignedPatientsToRoom {
 	context.variables.penalizedSkillDiff >= context.variables.skillDiff &
 	context.variables.penalizedSkillDiff >= 0
 }
@@ -791,7 +787,6 @@ constraint with assignedPatientsToRoom{
 function calculateContinuityOfCare with Patient {
 	mappings.assignedNurseForPatient->join(p)->sum(element.value)
 }
-
 
 // U16: sets the mapping to true if the nurse is assigned to the patient
 constraint with assignedNurseForPatient {
@@ -824,7 +819,7 @@ constraint with nurseWorkloadForDay {
 }
 
 // U15: Calculates max(0, sumWorkload - nurseMaxWorkload) = max(0, excessiveWorkload)
-constraint with nurseWorkloadForDay{
+constraint with nurseWorkloadForDay {
 	context.variables.excessiveWorkload >= context.variables.workloadDiff &
 	context.variables.excessiveWorkload >= 0
 }
