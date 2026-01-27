@@ -170,7 +170,7 @@ pattern patientForRoom {
 
 // Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day
 // c.maxCapacity > 0 is already enforced by the preprocessing because Capacity Objects with maxCapacity <= 0 are not created
-pattern otCapacityTupel {
+pattern otCapacityTuple {
 	ot : OT {
 		- capacities -> c
 	}
@@ -181,7 +181,7 @@ pattern otCapacityTupel {
 
 // Pattern used in a mapping to save the information if a Surgeon operates on a specific Day and used to make sure the operation time of a surgeon is not exceeded on each day
 // op.maxOpTime > 0 is already enforced by the preprocessing because OpTime Objects with maxOpTime <= 0 are not created
-pattern surgeonOptimeTupel {
+pattern surgeonOptimeTuple {
 	s : Surgeon {
 		- opTimes -> op
 	}
@@ -205,7 +205,7 @@ pattern genderRoomShift {
 }
 
 // Used in a mapping to calculate the workload for all nurses for each shift
-pattern nurseRosterTupel {
+pattern nurseRosterTuple {
 	n : Nurse {
 		- rosters -> ro
 	}
@@ -233,7 +233,7 @@ pattern ageGroupsRoomDay {
 }
 
 // Used in Softconstraint S1 to check the assigned age groups for each room on each day
-pattern roomDayTupel {
+pattern roomDayTuple {
 	r : Room 
 	d : Day
 }
@@ -267,7 +267,7 @@ pattern nursetoWorkload {
 }
 
 // Used to filter for the amount of different nurses assigned to each patient
-pattern nursePatientTupel {
+pattern nursePatientTuple {
 	p : Patient 
 	
 	n : Nurse
@@ -319,7 +319,7 @@ mapping assignedPatientsToRoom to patientForRoom {
 mapping assignedGenderToRoomOnShift to genderRoomShift;
 
 // Mapping that decides which ots are open on a specific day
-mapping openOTs to otCapacityTupel;
+mapping openOTs to otCapacityTuple;
 
 // Mapping that holds the information if a surgeon operates in a specific ot on a specific day
 mapping otForSurgeon to surgeonOTForDay;
@@ -327,7 +327,7 @@ mapping otForSurgeon to surgeonOTForDay;
 // mapping that counts how many ots a surgeon is assigned to on a specific day.
 // otCount: Amount of OTs a surgeon is operating in on a specific day
 // penalizedOTs: A penalty is applied if a surgeon has more than 1 assigned OT per day. Maximum of 0 and otCount - 1
-mapping otsPerSurgeon to surgeonOptimeTupel {
+mapping otsPerSurgeon to surgeonOptimeTuple {
 	var otCount : EInt
 	var penalizedOTs : EInt
 };
@@ -352,12 +352,12 @@ mapping assignedNursesToWorkload to nursetoWorkload;
 // mapping used to calculate the sum of workloads for a Roster
 // workloadDiff: Calculated workload of a nurse for a specific shift
 // excessiveWorkload: excessive workload of that nurse in comparison to her maximum workload
-mapping nurseWorkloadForDay to nurseRosterTupel {
+mapping nurseWorkloadForDay to nurseRosterTuple {
 	var workloadDiff : EInt
 	var excessiveWorkload : EInt
 };
 
-mapping assignedNurseForPatient to nursePatientTupel;
+mapping assignedNurseForPatient to nursePatientTuple;
 
 //
 // Hard Constraints
@@ -399,7 +399,7 @@ constraint with assignedGenderToRoomOnShift {
 /* --------------------------------------------------------------------------------------------------------------------- */
 
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded. 
-constraint with surgeonOptimeTupel {
+constraint with surgeonOptimeTuple {
 	mappings.selectedOperationDay->join((opTime, op))->sum(element.nodes.p.surgeryDuration * element.value)
 	<=
 	context.nodes.op.maxOpTime
@@ -409,7 +409,7 @@ constraint with surgeonOptimeTupel {
 
 // H4: OT overtime: The duration of all surgeries allocated to an OT on a day must not exceed 
 // its maximum capacity.
-constraint with otCapacityTupel {
+constraint with otCapacityTuple {
 	mappings.selectedOperationDay->join((ot, ot))->filter(
 		element.nodes.vopc.capacity.day == context.nodes.c.day
 	)->sum(element.nodes.p.surgeryDuration * element.value)
@@ -665,7 +665,7 @@ constraint with countPatientsForRoom {
 /* --------------------------------------------------------------------------------------------------------------------- */
 
 // S1: The maximum difference of age groups in one room for each day should be minimized
-function calculateAgeDifference with roomDayTupel {
+function calculateAgeDifference with roomDayTuple {
 	mappings.ageGroupsInRoom->join((r, r), (d,d))->sum(element.variables.maxAgeGroup * element.nodes.ag.group)
 	- 
 	mappings.ageGroupsInRoom->join((r, r), (d,d))->sum(element.variables.minAgeGroup * element.nodes.ag.group)
