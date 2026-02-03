@@ -777,8 +777,8 @@ constraint with assignedNursesToWorkload {
 constraint with countPatientsForRoom {
 	context.variables.patientCount 
 	==
-	types.VirtualShiftToWorkload->filter(element.shift == context.s)->sum(element.isSelected)
-	// mappings.assignedPatientsToRoom->join((s, s))->sum(element.value)  
+	types.VirtualShiftToWorkload->filter(element.shift == context.s)->sum(element.variables.isSelected)
+	// mappings.assignedPatientsToRoom->join((s, s))->sum(element.value)
 }
 
 //
@@ -796,6 +796,17 @@ function calculateAgeDifference with roomDayTupel {
 
 // U8: sets the mapping to true if the ageGroup is present in the room on a specific day
 constraint with ageGroupsInRoom {
+	
+	types.VirtualShiftToWorkload->filter(
+		element.nodes.room == context.nodes.room &
+		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
+		element.nodes.p.ageGroup == context.nodes.ag.group
+	)->sum(element.variables.isSelected)
+	<= 
+	context.value * 1000
+	
+	// Oder:
+	
 	mappings.assignedPatientsToRoom->join((r, r))->filter(
 		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
 		element.nodes.p.ageGroup == context.nodes.ag.group
