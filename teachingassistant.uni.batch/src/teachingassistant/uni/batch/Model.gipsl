@@ -114,6 +114,80 @@ pattern findConflictingEntriesWithTa {
 	// Break symmetry
 	# entryA.startMinutes <= entryB.startMinutes
 }
+//when taAvailableInSessionAB
+//when taQualifiedAB
+//condition taQualifiedAB = forbid nonApprovalEntryA && forbid nonApprovalEntryB
+//
+//pattern nonApprovalEntryA {
+//	entryA : TimeTableEntry
+//	ta : TeachingAssistant
+//	approval : EmploymentApproval {
+//		- ta -> ta
+//	}
+//	# approval.ratingNumeric == 0
+//	module : Module {
+//		- sessions -> session
+//		- approvals -> approval
+//	}
+//	session : TeachingSession {
+//		- entries -> entryA
+//	}
+//}
+//
+//pattern nonApprovalEntryB {
+//	entryB : TimeTableEntry
+//	ta : TeachingAssistant
+//	approval : EmploymentApproval {
+//		- ta -> ta
+//	}
+//	# approval.ratingNumeric == 0
+//	module : Module {
+//		- sessions -> session
+//		- approvals -> approval
+//	}
+//	session : TeachingSession {
+//		- entries -> entryB
+//	}
+//}
+//pattern findTaUnavailableSessionA {
+//	ta : TeachingAssistant {
+//		- unavailable -> blocked
+//	}
+//	
+//	entryA : TimeTableEntry {
+//		- timeTableWeeks -> week
+//	}
+//	
+//	blocked : BlockedTimeSlot {
+//		- timeTableWeeks -> week
+//	}
+//	
+//	week : Week
+//	
+//	# entryA.day == blocked.day
+//	# entryA.startMinutes < blocked.endMinutes
+//	# entryA.endMinutes > blocked.startMinutes
+//}
+//pattern findTaUnavailableSessionB {
+//	ta : TeachingAssistant {
+//		- unavailable -> blocked
+//	}
+//	
+//	entryB : TimeTableEntry {
+//		- timeTableWeeks -> week
+//	}
+//	
+//	blocked : BlockedTimeSlot {
+//		- timeTableWeeks -> week
+//	}
+//	
+//	week : Week
+//	
+//	# entryB.day == blocked.day
+//	# entryB.startMinutes < blocked.endMinutes
+//	# entryB.endMinutes > blocked.startMinutes
+//}
+//condition taAvailableInSessionAB = forbid findTaUnavailableSessionA && forbid findTaUnavailableSessionB
 
 // Find all possible combinations of TAs and weeks
 pattern findTaWeekCombination {
