@@ -110,6 +110,9 @@ pattern findConflictingEntriesWithTa {
 	
 	// The day must match
 	# entryA.day == entryB.day
+	
+	// Break symmetry
+	# entryA.startMinutes <= entryB.startMinutes
 }
 
 // Find all possible combinations of TAs and weeks
