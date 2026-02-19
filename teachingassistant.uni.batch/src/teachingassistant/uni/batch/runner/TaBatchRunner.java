@@ -11,8 +11,11 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.emoflon.gips.core.GipsConstraint;
 import org.emoflon.gips.core.gt.GipsPatternMapper;
 import org.emoflon.gips.core.gt.PatternMatch2MappingSorter;
+import org.emoflon.gips.core.milp.ConstraintSorter;
+import org.emoflon.gips.core.milp.model.Constraint;
 import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.ibex.gt.api.GraphTransformationMatch;
@@ -128,6 +131,48 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 //					}
 				}
 				return filteredMatches;
+			}
+		});
+
+		// Testing to remove duplicate constraints
+		gipsApi.setConstraintSorter(new ConstraintSorter() {
+			@Override
+			public List<GipsConstraint<?, ?, ?>> sort(final List<GipsConstraint<?, ?, ?>> constraints) {
+				// ---
+				int size = 0;
+				for (GipsConstraint<?, ?, ?> c : constraints) {
+					size += c.getConstraints().size();
+				}
+				System.out.println("Debug: input size = " + size);
+				// ---
+
+				final List<GipsConstraint<?, ?, ?>> filtered = new ArrayList<>();
+				final Set<Constraint> contained = new HashSet<Constraint>();
+				final Map<GipsConstraint<?, ?, ?>, Constraint> remove = new HashMap<>();
+
+				// For every specified GIPS constraint
+				for (final GipsConstraint<?, ?, ?> c : constraints) {
+					// Find removal candidates (=constraints that are already present)
+					final Set<Constraint> removalCandidates = new HashSet<>();
+					for (final Constraint milpCnstr : c.getConstraints()) {
+						if (!contained.add(milpCnstr)) {
+							removalCandidates.add(milpCnstr);
+						}
+					}
+					// Remove all duplicates
+					c.getConstraints().removeAll(removalCandidates);
+					filtered.add(c);
+				}
+
+				// ---
+				size = 0;
+				for (GipsConstraint<?, ?, ?> c : filtered) {
+					size += c.getConstraints().size();
+				}
+				System.out.println("Debug: output size = " + size);
+				// ---
+
+				return filtered;
 			}
 		});
 
