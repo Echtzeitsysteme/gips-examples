@@ -135,9 +135,11 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		});
 
 		// Testing to remove duplicate constraints
+
 		gipsApi.setConstraintSorter(new ConstraintSorter() {
 			@Override
 			public List<GipsConstraint<?, ?, ?>> sort(final List<GipsConstraint<?, ?, ?>> constraints) {
+				final long tick = System.nanoTime();
 				// ---
 				int size = 0;
 				for (GipsConstraint<?, ?, ?> c : constraints) {
@@ -171,6 +173,10 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 				}
 				System.out.println("Debug: output size = " + size);
 				// ---
+
+				final long tock = System.nanoTime();
+				System.out
+						.println("Debug: duplicate removal duration = " + (1.0 * (tock - tick) / 1_000_000_000) + "s.");
 
 				return filtered;
 			}
