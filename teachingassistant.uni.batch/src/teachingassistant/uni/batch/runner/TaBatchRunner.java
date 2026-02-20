@@ -134,8 +134,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 			}
 		});
 
-		// Testing to remove duplicate constraints
-
+		// Remove duplicate constraints
 		gipsApi.setConstraintSorter(new ConstraintSorter() {
 			@Override
 			public List<GipsConstraint<?, ?, ?>> sort(final List<GipsConstraint<?, ?, ?>> constraints) {
@@ -150,7 +149,6 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 
 				final List<GipsConstraint<?, ?, ?>> filtered = new ArrayList<>();
 				final Set<Constraint> contained = new HashSet<Constraint>();
-				final Map<GipsConstraint<?, ?, ?>, Constraint> remove = new HashMap<>();
 
 				// For every specified GIPS constraint
 				for (final GipsConstraint<?, ?, ?> c : constraints) {
@@ -177,7 +175,6 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 				final long tock = System.nanoTime();
 				System.out
 						.println("Debug: duplicate removal duration = " + (1.0 * (tock - tick) / 1_000_000_000) + "s.");
-
 				return filtered;
 			}
 		});
