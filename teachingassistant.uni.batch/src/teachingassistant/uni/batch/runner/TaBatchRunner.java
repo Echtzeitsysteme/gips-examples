@@ -167,13 +167,13 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		log("Runtime GIPS save: " + tickTockToSeconds(gipsApplyDone, gipsSaveDone) + "s.");
 
 		//
-		// Print statistics about blocked dates
+		// Print statistics about conflicting dates
 		//
 
-		// conflicting entries
-		System.out.println("=> Conflicting entries stats:");
 		try {
+			System.out.println("=> Conflicting entries stats:");
 			final BufferedWriter writer = new BufferedWriter(new FileWriter(conflictWritePath, true));
+			// conflicting entries
 			printAndWrite("findConflictingEntriesWithTa:", writer);
 			gipsApi.getEMoflonAPI().findConflictingEntriesWithTa().findMatches().forEach(m -> {
 				printAndWrite("\t" + entryToString(m.getEntryA()) + ";" + entryToString(m.getEntryB()) + ";"
@@ -312,15 +312,15 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 	 * @param writer BufferedWriter to write the contents to.
 	 */
 	private void printAndWrite(final String value, final BufferedWriter writer) {
-		Objects.requireNonNull(value);
-		Objects.requireNonNull(writer);
-		System.out.println(value);
-		try {
-			writer.write(value);
-			writer.newLine();
-		} catch (final IOException ex) {
-			ex.printStackTrace();
-		}
+//		Objects.requireNonNull(value);
+//		Objects.requireNonNull(writer);
+//		System.out.println(value);
+//		try {
+//			writer.write(value);
+//			writer.newLine();
+//		} catch (final IOException ex) {
+//			ex.printStackTrace();
+//		}
 	}
 
 }
