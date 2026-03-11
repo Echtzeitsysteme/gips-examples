@@ -815,7 +815,7 @@ constraint with nurseWorkloadForDay {
 /* --------------------------------------------------------------------------------------------------------------------- */
 
 // S5: The number of OTs opened on each day should be minimized
-function calculateOPenOTs with Day {
+function calculateOpenOTs with Day {
 	mappings.openOTs->filter(element.nodes.c.day == context.number)->sum(element.value) 
 }
 
@@ -879,7 +879,7 @@ objective : min {
 	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
 	+ functions.calculateContinuityOfCare * types.Weight->sum(element.continuityOfCare)
 	+ functions.calculateNurseWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
-	+ functions.calculateOPenOTs * types.Weight->sum(element.openOperatingTheater)
+	+ functions.calculateOpenOTs * types.Weight->sum(element.openOperatingTheater)
 	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
 	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
 	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
