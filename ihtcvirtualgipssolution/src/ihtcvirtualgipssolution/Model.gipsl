@@ -121,7 +121,6 @@ rule selectShiftToRoster {
 // Pattern to find all mandatory patients
 pattern mandatoryPatients {
 	p : Patient
-	
 	# p.mandatory == true
 	# p.isOccupant == false
 }
@@ -129,7 +128,6 @@ pattern mandatoryPatients {
 // Pattern to find all optional patients
 pattern optionalPatients {
 	p : Patient
-	
 	# p.mandatory == false
 	# p.isOccupant == false
 }
@@ -143,7 +141,6 @@ pattern roomForShift {
 	}
 	
 	s : Shift
-	
 	# s.shiftNo % 3 == 0
 }
 
@@ -200,7 +197,6 @@ pattern genderRoomShift {
 	}
 	
 	s : Shift
-	
 	# s.shiftNo % 3 == 0
 }
 
@@ -269,7 +265,6 @@ pattern nursetoWorkload {
 // Used to filter for the amount of different nurses assigned to each patient
 pattern nursePatientTuple {
 	p : Patient 
-	
 	n : Nurse
 }
 
