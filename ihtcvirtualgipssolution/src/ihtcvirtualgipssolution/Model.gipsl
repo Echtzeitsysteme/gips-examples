@@ -552,7 +552,7 @@ constraint with selectShiftToFirstWorkload {
 // V2.2:  The virtual Node "VirtualWorkloadToCapacity" can only be added to the final model if
 // the the corresponding patient is also assigned to a room
 constraint with selectedOperationDay {
-	mappings.selectedOperationDay->join((vwc, vwc), (vopc, vopc), (vwop, vwop))->sum(element.value)
+	context.value
 	<=
 	mappings.selectedShiftToFirstWorkload->join((vwc, vwc))->sum(element.value)
 }
