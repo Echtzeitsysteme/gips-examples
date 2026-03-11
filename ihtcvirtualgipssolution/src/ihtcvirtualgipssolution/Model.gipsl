@@ -312,13 +312,13 @@ mapping assignedPatientsToRoom to patientForRoom{
 // Mapping that holds the information if a specific gender is assigned to a room on a specific day. 
 mapping assignedGenderToRoomOnShift to genderRoomShift;
 
-// Mapping that decides which ots are open on a specific day
+// Mapping that decides which OTs are open on a specific day
 mapping openOTs to otCapacityTuple;
 
-// Mapping that holds the information if a surgeon operates in a specific ot on a specific day
+// Mapping that holds the information if a surgeon operates in a specific OT on a specific day
 mapping otForSurgeon to surgeonOTForDay;
 
-// mapping that counts how many ots a surgeon is assigned to on a specific day.
+// mapping that counts how many OTs a surgeon is assigned to on a specific day.
 // penalizedOTs: A penalty is applied if a surgeon has more than 1 assigned OT per day. Maximum of 0 and
 // amount of OTs a surgeon is operating in on a specific day -1
 mapping otsPerSurgeon to surgeonOptimeTuple {
@@ -342,7 +342,7 @@ mapping noSmallerAgeGroupInRoom to ageGroupsRoomDay;
 // mapping that holds the information what workloads a roster is responsible for / assigned to 
 mapping assignedNursesToWorkload to nursetoWorkload;
 
-// mapping used to calculate the sum of workloads for a Roster
+// mapping used to calculate the sum of workloads for a roster
 // excessiveWorkload: excessive workload of that nurse in comparison to her maximum workload
 mapping nurseWorkloadForDay to nurseRosterTuple {
 	var excessiveWorkload : EInt
@@ -798,7 +798,7 @@ function calculateNurseWorkload with nurseWorkloadForDay {
 	context.variables.excessiveWorkload
 }
 
-// U14: Calculates the sum of the excessive workloads for one Roster 
+// U14: Calculates the sum of the excessive workloads for one roster 
 constraint with nurseWorkloadForDay {
 	context.variables.excessiveWorkload 
 	>=
@@ -819,7 +819,7 @@ function calculateOPenOTs with Day {
 	mappings.openOTs->filter(element.nodes.c.day == context.number)->sum(element.value) 
 }
 
-// U4: sets the mapping to true if there is at least one surgery assigned to the ot on that day
+// U4: sets the mapping to true if there is at least one surgery assigned to the OT on that day
 constraint with openOTs {
 	mappings.selectedOperationDay->join((c, c))->sum(element.value)	
 	<= 
@@ -833,7 +833,7 @@ function calculateOtsPerSurgeon with otsPerSurgeon {
 	context.variables.penalizedOTs
 }
 
-// U5: sets the mapping to true if the surgeon operates in the ot on that day
+// U5: sets the mapping to true if the surgeon operates in the OT on that day
 constraint with otForSurgeon {
 	mappings.selectedOperationDay->join((opTime, op), (ot, ot))->sum(element.value)
 	<=
@@ -846,7 +846,7 @@ constraint with otForSurgeon {
 	mappings.selectedOperationDay->join((opTime, op), (ot, ot))->sum(element.value)
 }
 
-// U6: counts the penalized ots per surgeon for each day, which must be at greater or equal to 0
+// U6: counts the penalized OTs per surgeon for each day, which must be at greater or equal to 0
 constraint with otsPerSurgeon {
 	context.variables.penalizedOTs
 	>=
