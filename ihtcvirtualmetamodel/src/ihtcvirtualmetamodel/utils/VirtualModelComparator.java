@@ -473,7 +473,7 @@ public class VirtualModelComparator {
 		boolean equals = true;
 		equals = equals && (a.getDay() == b.getDay());
 		equals = equals && (a.getMaxCapacity() == b.getMaxCapacity());
-		equals = equals && (isEqual(a.getOt(), b.getOt()));
+		equals = equals && (isEqual(a.getOT(), b.getOT()));
 
 		// TODO: Collections are missing
 
@@ -727,7 +727,7 @@ public class VirtualModelComparator {
 		});
 
 		// Capacity (2x)
-		model.getOts().forEach(ot -> {
+		model.getOTs().forEach(ot -> {
 			ot.getCapacities().forEach(capacity -> {
 				data.get(VirtualOpTimeToCapacity.class.getSimpleName()).addAll(capacity.getVirtualOpTime());
 				data.get(VirtualWorkloadToCapacity.class.getSimpleName()).addAll(capacity.getVirtualWorkload());

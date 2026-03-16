@@ -12,7 +12,7 @@
         eType="#//Room" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="surgeons" upperBound="-1"
         eType="#//Surgeon" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ots" upperBound="-1" eType="#//OT"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="OTs" upperBound="-1" eType="#//OT"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="weight" eType="#//Weight"
         containment="true"/>
@@ -121,12 +121,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OT" eSuperTypes="#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="capacities" upperBound="-1"
-        eType="#//Capacity" containment="true" eOpposite="#//Capacity/ot"/>
+        eType="#//Capacity" containment="true" eOpposite="#//Capacity/OT"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Capacity">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxCapacity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ot" eType="#//OT" eOpposite="#//OT/capacities"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="OT" eType="#//OT" eOpposite="#//OT/capacities"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedWorkloads" upperBound="-1"
         eType="#//Workload" eOpposite="#//Workload/derivedCapacity"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="derivedOpTimes" upperBound="-1"

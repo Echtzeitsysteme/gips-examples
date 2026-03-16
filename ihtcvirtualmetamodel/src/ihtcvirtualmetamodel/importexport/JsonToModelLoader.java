@@ -478,7 +478,7 @@ public class JsonToModelLoader {
 			c.setMaxCapacity(a.getAsInt());
 			ot.getCapacities().add(c);
 		}
-		this.model.getOts().add(ot);
+		this.model.getOTs().add(ot);
 	}
 
 	/**

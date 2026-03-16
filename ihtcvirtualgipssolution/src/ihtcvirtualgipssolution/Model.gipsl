@@ -94,10 +94,10 @@ rule selectOperationDay {
 	}
 
 	c : Capacity {
-		- ot -> ot
+		- OT -> OT
 	}
 
-	ot : OT
+	OT : OT
 }
 
 // NPA: Rule that selects an  VirtualShiftToRoster-Node to be adopted in the final model.
@@ -167,8 +167,8 @@ pattern patientForRoom {
 
 // Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day.
 // c.maxCapacity > 0 is already enforced by the preprocessing because Capacity Objects with maxCapacity <= 0 are not created.
-pattern otCapacityTuple {
-	ot : OT {
+pattern OTCapacityTuple {
+	OT : OT {
 		- capacities -> c
 	}
 
@@ -178,7 +178,7 @@ pattern otCapacityTuple {
 
 // Pattern used in a mapping to save the information if a Surgeon operates on a specific Day and used to make sure the operation time of a surgeon is not exceeded on each day.
 // op.maxOpTime > 0 is already enforced by the preprocessing because OpTime Objects with maxOpTime <= 0 are not created.
-pattern surgeonOptimeTuple {
+pattern surgeonOpTimeTuple {
 	s : Surgeon {
 		- opTimes -> op
 	}
@@ -217,7 +217,7 @@ pattern surgeonOTForDay {
 
 	op : OpTime
 
-	ot : OT
+	OT : OT
 }
 
 // Pattern used for a Mapping to calculate what age groups are present in a specific room for all shifts.
@@ -235,7 +235,7 @@ pattern roomDayTuple {
 }
 
 // Used in a mapping to calculate which nurse is assigned to which workload.
-pattern nursetoWorkload {
+pattern nurseToWorkload {
 	vsr : VirtualShiftToRoster {
 		- shift -> s
 		- roster -> ro
@@ -313,15 +313,15 @@ mapping assignedPatientsToRoom to patientForRoom{
 mapping assignedGenderToRoomOnShift to genderRoomShift;
 
 // Mapping that decides which OTs are open on a specific day.
-mapping openOTs to otCapacityTuple;
+mapping openOTs to OTCapacityTuple;
 
 // Mapping that holds the information if a surgeon operates in a specific OT on a specific day.
-mapping otForSurgeon to surgeonOTForDay;
+mapping OTForSurgeon to surgeonOTForDay;
 
 // mapping that counts how many OTs a surgeon is assigned to on a specific day.
 // penalizedOTs: A penalty is applied if a surgeon has more than 1 assigned OT per day. Maximum of 0 and
 // amount of OTs a surgeon is operating in on a specific day -1.
-mapping otsPerSurgeon to surgeonOptimeTuple {
+mapping OTsPerSurgeon to surgeonOpTimeTuple {
 	var penalizedOTs : EInt
 };
 
@@ -340,7 +340,7 @@ mapping noGreaterAgeGroupInRoom to ageGroupsRoomDay;
 mapping noSmallerAgeGroupInRoom to ageGroupsRoomDay;
 
 // mapping that holds the information what workloads a roster is responsible for / assigned to.
-mapping assignedNursesToWorkload to nursetoWorkload;
+mapping assignedNursesToWorkload to nurseToWorkload;
 
 // mapping used to calculate the sum of workloads for a roster.
 // excessiveWorkload: excessive workload of that nurse in comparison to her maximum workload.
@@ -390,7 +390,7 @@ constraint with assignedGenderToRoomOnShift {
 /* --------------------------------------------------------------------------------------------------------------------- */
 
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded.
-constraint with surgeonOptimeTuple {
+constraint with surgeonOpTimeTuple {
 	mappings.selectedOperationDay->join((opTime, op))->sum(element.nodes.p.surgeryDuration * element.value)
 	<=
 	context.nodes.op.maxOpTime
@@ -400,8 +400,8 @@ constraint with surgeonOptimeTuple {
 
 // H4: OT overtime: The duration of all surgeries allocated to an OT on a day must not exceed
 // its maximum capacity.
-constraint with otCapacityTuple {
-	mappings.selectedOperationDay->join((ot, ot))->filter(
+constraint with OTCapacityTuple {
+	mappings.selectedOperationDay->join((OT, OT))->filter(
 		element.nodes.vopc.capacity.day == context.nodes.c.day
 	)->sum(element.nodes.p.surgeryDuration * element.value)
 	<=
@@ -828,13 +828,13 @@ constraint with openOTs {
 /* --------------------------------------------------------------------------------------------------------------------- */
 
 // S6: The number of different OTs a surgeon is assigned to per working day should be minimized.
-function calculateOtsPerSurgeon with otsPerSurgeon {
+function calculateOTsPerSurgeon with OTsPerSurgeon {
 	context.variables.penalizedOTs
 }
 
 // U5: sets the mapping to true if the surgeon operates in the OT on that day.
-constraint with otForSurgeon {
-	mappings.selectedOperationDay->join((opTime, op), (ot, ot))->sum(element.value)
+constraint with OTForSurgeon {
+	mappings.selectedOperationDay->join((opTime, op), (OT, OT))->sum(element.value)
 	<=
 	context.value * 1000
 
@@ -842,14 +842,14 @@ constraint with otForSurgeon {
 
 	context.value
 	<=
-	mappings.selectedOperationDay->join((opTime, op), (ot, ot))->sum(element.value)
+	mappings.selectedOperationDay->join((opTime, op), (OT, OT))->sum(element.value)
 }
 
 // U6: counts the penalized OTs per surgeon for each day, which must be at greater or equal to 0.
-constraint with otsPerSurgeon {
+constraint with OTsPerSurgeon {
 	context.variables.penalizedOTs
 	>=
-	mappings.otForSurgeon->join((op, op))->sum(element.value) - 1
+	mappings.OTForSurgeon->join((op, op))->sum(element.value) - 1
 
 	&
 
@@ -879,7 +879,7 @@ objective : min {
 	+ functions.calculateContinuityOfCare * types.Weight->sum(element.continuityOfCare)
 	+ functions.calculateNurseWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
 	+ functions.calculateOpenOTs * types.Weight->sum(element.openOperatingTheater)
-	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
+	+ functions.calculateOTsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
 	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
 	+ functions.calculateNotAssignedOptionalPatients * types.Weight->sum(element.unscheduledOptional)
 }

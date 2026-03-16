@@ -107,7 +107,7 @@ public class SolvedModelValidator {
 			validateSurgeon(s);
 		}
 		
-		for (final OT ot : this.model.getOts()) {
+		for (final OT ot : this.model.getOTs()) {
 			validateOt(ot);
 		}
 
@@ -157,7 +157,7 @@ public class SolvedModelValidator {
 		VirtualWorkloadToCapacity selectedvwc = null;
 		for (final VirtualWorkloadToCapacity v : possibleOtAssignments) {
 			if (v.isIsSelected()) {
-				scheduledOt = v.getCapacity().getOt();
+				scheduledOt = v.getCapacity().getOT();
 				selectedvwc = v;
 				break;
 			}
@@ -426,8 +426,8 @@ public class SolvedModelValidator {
 			final Collection<VirtualOpTimeToCapacity> possibleCapacitys = op.getVirtualCapacity();
 			for(VirtualOpTimeToCapacity v : possibleCapacitys) {
 				if(v.isIsSelected()) {
-					if(!ots.contains(v.getCapacity().getOt())) {
-						ots.add(v.getCapacity().getOt());
+					if(!ots.contains(v.getCapacity().getOT())) {
+						ots.add(v.getCapacity().getOT());
 					}
 				}
 			}

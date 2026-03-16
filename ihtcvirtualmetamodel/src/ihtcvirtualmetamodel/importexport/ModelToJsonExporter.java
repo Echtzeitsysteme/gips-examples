@@ -139,7 +139,7 @@ public class ModelToJsonExporter {
 			}
 
 			patientJson.addProperty("operating_theater",
-					patient.getFirstWorkload().getDerivedCapacity().getOt().getName());
+					patient.getFirstWorkload().getDerivedCapacity().getOT().getName());
 		} else {
 			patientJson.addProperty("admission_day", "none");
 		}

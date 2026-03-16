@@ -91,7 +91,7 @@ public class ModelToJsonNoPostProcExporter extends ModelToJsonExporter {
 		OT scheduledOt = null;
 		for (final VirtualWorkloadToCapacity v : possibleOtAssignments) {
 			if (v.isIsSelected()) {
-				scheduledOt = v.getCapacity().getOt();
+				scheduledOt = v.getCapacity().getOT();
 				break;
 			}
 		}

@@ -195,7 +195,7 @@ public class ModelCostCalculator {
 
 		int openOtCost = 0;
 
-		for (final OT ot : model.getOts()) {
+		for (final OT ot : model.getOTs()) {
 			// This assumes that there is at most one `Capacity` object per day per OT
 			for (final Capacity c : ot.getCapacities()) {
 				if (c.getDerivedOpTimes().size() > 0 || c.getDerivedWorkloads().size() > 0) {

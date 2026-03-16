@@ -238,7 +238,7 @@ public class PreprocessingNoGtApp {
 		});
 
 		// Create virtual edges between Workload and Capacity
-		model.getOts().forEach(ot -> {
+		model.getOTs().forEach(ot -> {
 			ot.getCapacities().forEach(c -> {
 				// This ensures we only look at OpTime, Capacity tuples on the same day.
 				c.getVirtualOpTime().forEach(vop -> {
@@ -466,7 +466,7 @@ public class PreprocessingNoGtApp {
 
 		final List<Capacity> allCapacities = new LinkedList<Capacity>();
 
-		for (final OT ot : model.getOts()) {
+		for (final OT ot : model.getOTs()) {
 			try {
 				allCapacities.add(getCapacityForRoomOnDay(ot, day));
 			} catch (final UnsupportedOperationException ex) {
