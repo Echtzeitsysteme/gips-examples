@@ -236,11 +236,13 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		// Do not update the pattern matcher on purpose
 		gipsApi.getSelectedOperationDay().applyNonZeroMappings(false);
 		gipsApi.getSelectedShiftToRoster().applyNonZeroMappings(false);
-		gipsApi.getSelectedShiftToFirstWorkload().applyNonZeroMappings(false);
-		gipsApi.getSelectedExtendingShiftToFirstWorkload().applyNonZeroMappings(false);
-		gipsApi.getSelectedOccupantNodes().applyNonZeroMappings(false);
+//		gipsApi.getSelectedShiftToFirstWorkload().applyNonZeroMappings(false);
+//		gipsApi.getSelectedExtendingShiftToFirstWorkload().applyNonZeroMappings(false);
+//		gipsApi.getSelectedOccupantNodes().applyNonZeroMappings(false);
 		// Alternative:
 //		gipsApi.applyAllNonZeroMappings();
+		
+		gipsApi.applyAllBoundVariables();
 
 		// Update the pattern matcher after all rule applications once
 		gipsApi.update();
@@ -269,15 +271,17 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		gipsApi.getSelectedShiftToRoster().getNonZeroVariableMappings().forEach(m -> {
 			m.getMatch().getVsr().setIsSelected(true);
 		});
-		gipsApi.getSelectedShiftToFirstWorkload().getNonZeroVariableMappings().forEach(m -> {
-			m.getMatch().getVsw().setIsSelected(true);
-		});
-		gipsApi.getSelectedExtendingShiftToFirstWorkload().getNonZeroVariableMappings().forEach(m -> {
-			m.getMatch().getNextvsw().setIsSelected(true);
-		});
-		gipsApi.getSelectedOccupantNodes().getNonZeroVariableMappings().forEach(m -> {
-			m.getMatch().getVsw().setIsSelected(true);
-		});
+//		gipsApi.getSelectedShiftToFirstWorkload().getNonZeroVariableMappings().forEach(m -> {
+//			m.getMatch().getVsw().setIsSelected(true);
+//		});
+//		gipsApi.getSelectedExtendingShiftToFirstWorkload().getNonZeroVariableMappings().forEach(m -> {
+//			m.getMatch().getNextvsw().setIsSelected(true);
+//		});
+//		gipsApi.getSelectedOccupantNodes().getNonZeroVariableMappings().forEach(m -> {
+//			m.getMatch().getVsw().setIsSelected(true);
+//		});
+		
+		gipsApi.applyAllBoundVariables();
 
 		final long tock = System.nanoTime();
 		if (verbose) {
