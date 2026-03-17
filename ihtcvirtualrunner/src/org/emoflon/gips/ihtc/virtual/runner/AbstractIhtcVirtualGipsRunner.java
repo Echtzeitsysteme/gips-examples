@@ -235,7 +235,7 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 		// Apply found solution
 		// Do not update the pattern matcher on purpose
 		gipsApi.getSelectedOperationDay().applyNonZeroMappings(false);
-		gipsApi.getSelectedShiftToRoster().applyNonZeroMappings(false);
+//		gipsApi.getSelectedShiftToRoster().applyNonZeroMappings(false);
 //		gipsApi.getSelectedShiftToFirstWorkload().applyNonZeroMappings(false);
 //		gipsApi.getSelectedExtendingShiftToFirstWorkload().applyNonZeroMappings(false);
 //		gipsApi.getSelectedOccupantNodes().applyNonZeroMappings(false);
@@ -268,9 +268,9 @@ public abstract class AbstractIhtcVirtualGipsRunner {
 			m.getMatch().getVopc().setIsSelected(true);
 			m.getMatch().getVwc().setIsSelected(true);
 		});
-		gipsApi.getSelectedShiftToRoster().getNonZeroVariableMappings().forEach(m -> {
-			m.getMatch().getVsr().setIsSelected(true);
-		});
+//		gipsApi.getSelectedShiftToRoster().getNonZeroVariableMappings().forEach(m -> {
+//			m.getMatch().getVsr().setIsSelected(true);
+//		});
 //		gipsApi.getSelectedShiftToFirstWorkload().getNonZeroVariableMappings().forEach(m -> {
 //			m.getMatch().getVsw().setIsSelected(true);
 //		});
