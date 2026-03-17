@@ -129,24 +129,24 @@ pattern roomForShift {
 
 // Pattern that finds all patients that are assigned to a room -> first and following workloads.
 // Also holds the information which workload of a patient is assigned to which shift.
-pattern patientForRoom {
-	p : Patient {
-		- workloads -> w
-	}
-
-	s : Shift
-
-	w : Workload
-
-	vsw : VirtualShiftToWorkload {
-		- shift -> s
-		- workload -> w
-	}
-
-	r : Room {
-		- shifts -> s
-	}
-}
+//pattern patientForRoom {
+//	p : Patient {
+//		- workloads -> w
+//	}
+//
+//	s : Shift
+//
+//	w : Workload
+//
+//	vsw : VirtualShiftToWorkload {
+//		- shift -> s
+//		- workload -> w
+//	}
+//
+//	r : Room {
+//		- shifts -> s
+//	}
+//}
 
 // Pattern used in a mapping to save the information if an OT is used on a specific Day and used to make sure the Capacity of an OT is not exceeded on each day.
 // c.maxCapacity > 0 is already enforced by the preprocessing because Capacity Objects with maxCapacity <= 0 are not created.
@@ -260,6 +260,7 @@ pattern nursePatientTuple {
 // Replaces the rules: selectShiftToFirstWorkload, selectExtendingShiftToFirstWorkload and virtualNodesForOccupant
 type VirtualShiftToWorkload {
 	var isSelected : EBoolean bind to isSelected
+	var penalizedSkillDiff : EInt
 };
 
 // Replaces the rule selectShiftToRoster
@@ -287,9 +288,9 @@ mapping countPatientsForRoom to roomForShift {
 // Mapping for all assigned patients. (occupants and new patients for each workload (first + following)).
 // penalizedSkillDiff: maximum of 0 and the calculated difference between the skill level of a nurse and
 // the workload she is assigned to.
-mapping assignedPatientsToRoom to patientForRoom{
-	var penalizedSkillDiff : EInt
-};
+//mapping assignedPatientsToRoom to patientForRoom{
+//	var penalizedSkillDiff : EInt
+//};
 
 // Mapping that holds the information if a specific gender is assigned to a room on a specific day.
 mapping assignedGenderToRoomOnShift to genderRoomShift;
@@ -346,11 +347,12 @@ constraint with roomForShift {
 constraint with assignedGenderToRoomOnShift {
 	context.value
 	<=
-	mappings.assignedPatientsToRoom->join((s, s))->filter(element.nodes.p.gender == context.nodes.g.name)->sum(element.value)
+	types.VirtualShiftToWorkload->filter(element.shift == context.nodes.s & element.workload.patient.gender == context.nodes.g.name)->sum(element.variables.isSelected)
+//	mappings.assignedPatientsToRoom->join((s, s))->filter(element.nodes.p.gender == context.nodes.g.name)->sum(element.value)
 
 	&
-
-	mappings.assignedPatientsToRoom->join((s, s))->filter(element.nodes.p.gender == context.nodes.g.name)->sum(element.value)
+	types.VirtualShiftToWorkload->filter(element.shift == context.nodes.s & element.workload.patient.gender == context.nodes.g.name)->sum(element.variables.isSelected)
+//	mappings.assignedPatientsToRoom->join((s, s))->filter(element.nodes.p.gender == context.nodes.g.name)->sum(element.value)
 	<=
 	context.value * 1000
 }
@@ -530,9 +532,9 @@ constraint with findExtendingShiftToFirstWorkload {
 // U1: Sets the mapping variable to 1 if a patient is assigned to a specific room for a specific day.
 // Used as primary mapping for the information on patients in rooms for every shift.
 // Needed for constraints: U1(H1), U2(H7, H8), U8(S1), U11+U12(S2), U13.
-constraint with assignedPatientsToRoom {
-	context.value == context.nodes.vsw.variables.isSelected
-}
+//constraint with assignedPatientsToRoom {
+//	context.value == context.nodes.vsw.variables.isSelected
+//}
 
 // U13: Sets the mapping to true if the nurse is assigned to the workload.
 // Used as primary mapping for the information which nurses are assigned to which workloads of patients.
@@ -540,14 +542,16 @@ constraint with assignedPatientsToRoom {
 constraint with assignedNursesToWorkload {
 	context.value
 	>=
-	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value)
+	context.nodes.vsw.variables.isSelected
+//	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value)
 	+
 	context.nodes.vsr.variables.isSelected
 	- 1
 
 	&
 
-	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value)
+	context.nodes.vsw.variables.isSelected
+//	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value)
 	>=
 	context.value
 	
@@ -561,7 +565,10 @@ constraint with assignedNursesToWorkload {
 // U2: counts how many patients are currently assigned to each room.
 // Needed for constraints: H7, H8.
 constraint with countPatientsForRoom {
-	context.variables.patientCount == mappings.assignedPatientsToRoom->join((s, s))->sum(element.value)
+	context.variables.patientCount 
+	== 
+	types.VirtualShiftToWorkload->filter(element.shift == context.nodes.s)->sum(element.variables.isSelected)
+//	mappings.assignedPatientsToRoom->join((s, s))->sum(element.value)
 }
 
 //
@@ -579,10 +586,15 @@ function calculateAgeDifference with roomDayTuple {
 
 // U8: sets the mapping to true if the ageGroup is present in the room on a specific day.
 constraint with ageGroupsInRoom {
-	mappings.assignedPatientsToRoom->join((r, r))->filter(
-		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
-		element.nodes.p.ageGroup == context.nodes.ag.group
-	)->sum(element.value)
+//	mappings.assignedPatientsToRoom->join((r, r))->filter(
+//		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
+//		element.nodes.p.ageGroup == context.nodes.ag.group
+//	)->sum(element.value)
+	types.VirtualShiftToWorkload->filter(
+		element.shift.room == context.nodes.r &
+		element.shift.shiftNo == context.nodes.d.number * 3 &
+		element.workload.patient.ageGroup == context.nodes.ag.group
+	)->sum(element.variables.isSelected)
 	<=
 	context.value * 1000
 
@@ -590,10 +602,15 @@ constraint with ageGroupsInRoom {
 
 	context.value
 	<=
-	mappings.assignedPatientsToRoom->join((r, r))->filter(
-		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
-		element.nodes.p.ageGroup == context.nodes.ag.group
-	)->sum(element.value)
+//	mappings.assignedPatientsToRoom->join((r, r))->filter(
+//		element.nodes.s.shiftNo == context.nodes.d.number * 3 &
+//		element.nodes.p.ageGroup == context.nodes.ag.group
+//	)->sum(element.value)
+	types.VirtualShiftToWorkload->filter(
+		element.shift.room == context.nodes.r &
+		element.shift.shiftNo == context.nodes.d.number * 3 &
+		element.workload.patient.ageGroup == context.nodes.ag.group
+	)->sum(element.variables.isSelected)
 }
 
 // U17: Sets a auxiliary mapping for expressing U9 without a boolean equivalence.
@@ -668,21 +685,22 @@ constraint with ageGroupsInRoom {
 /* --------------------------------------------------------------------------------------------------------------------- */
 
 // S2: The nurse assigned to a room must have the minimum skill level required by patients in this room.
-function calculateUnqualifiedNurses with assignedPatientsToRoom {
+function calculateUnqualifiedNurses with VirtualShiftToWorkload {
 	context.variables.penalizedSkillDiff
 }
 
 // U11: Sets the mapping variable to the difference in skill level.
-constraint with assignedPatientsToRoom {
+constraint with VirtualShiftToWorkload {
 	context.variables.penalizedSkillDiff
 	>=
-	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value * element.nodes.w.minNurseSkill)
+	context.variables.isSelected * context.workload.minNurseSkill
+//	mappings.assignedPatientsToRoom->join((vsw, vsw))->sum(element.value * element.nodes.w.minNurseSkill)
 	-
-	types.VirtualShiftToRoster->filter(element.shift == context.nodes.s)->sum(element.variables.isSelected * element.roster.nurse.skillLevel)
+	types.VirtualShiftToRoster->filter(element.shift == context.shift)->sum(element.variables.isSelected * element.roster.nurse.skillLevel)
 }
 
 // U12: calculates the penalized difference between the skill levels. max(0, minLevel - nurseLevel) = max(0, skillDiff).
-constraint with assignedPatientsToRoom {
+constraint with VirtualShiftToWorkload {
 	context.variables.penalizedSkillDiff >= 0
 }
 
