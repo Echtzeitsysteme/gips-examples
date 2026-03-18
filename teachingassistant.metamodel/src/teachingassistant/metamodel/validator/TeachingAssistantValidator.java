@@ -212,7 +212,7 @@ public class TeachingAssistantValidator {
 				// SkillType of the tutorial must be matched by the assistant
 				boolean skillTypeMatched = false;
 				for (final Skill s : assistant.getSkills()) {
-					if (tutorial.getType().equals(s.getType())) {
+					if (tutorial.getSkillType().equals(s.getSkillType())) {
 						skillTypeMatched = true;
 					}
 				}
@@ -254,7 +254,7 @@ public class TeachingAssistantValidator {
 
 		// Tutorial types
 		for (final Tutorial t : lecturer.getTutorials()) {
-			if (!t.getType().equals(lecturer.getType())) {
+			if (!t.getSkillType().equals(lecturer.getType())) {
 				return false;
 			}
 		}

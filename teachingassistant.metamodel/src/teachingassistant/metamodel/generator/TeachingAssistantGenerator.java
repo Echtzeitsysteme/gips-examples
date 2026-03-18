@@ -58,7 +58,7 @@ public class TeachingAssistantGenerator {
 		final Tutorial t = factory.createTutorial();
 		t.setName(name);
 		t.setDuration(duration);
-		t.setType(type);
+		t.setSkillType(type);
 		this.tutorials.put(name, t);
 	}
 
@@ -105,7 +105,7 @@ public class TeachingAssistantGenerator {
 		checkNotNull(type, "SkillType");
 
 		final Skill s = factory.createSkill();
-		s.setType(type);
+		s.setSkillType(type);
 		s.setPreference(preference);
 		return s;
 	}
@@ -137,7 +137,7 @@ public class TeachingAssistantGenerator {
 	public void populateTutorialsToLecturers() {
 		for (final Tutorial t : tutorials.values()) {
 			final List<Lecturer> filteredLecturers = lecturers.values().stream() //
-					.filter(l -> l.getType().equals(t.getType())) //
+					.filter(l -> l.getType().equals(t.getSkillType())) //
 					.collect(Collectors.toList());
 			final Lecturer randomLecturer = filteredLecturers.get(getRandInt(0, filteredLecturers.size() - 1));
 			randomLecturer.getTutorials().add(t);

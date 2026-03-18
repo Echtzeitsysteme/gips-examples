@@ -25,14 +25,14 @@
         eType="#//Skill" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Tutorial" eSuperTypes="#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SkillType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillType" eType="#//SkillType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="givenBy" eType="#//Assistant"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="timeslot" eType="#//Timeslot"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lecturer" eType="#//Lecturer"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Skill">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SkillType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="skillType" eType="#//SkillType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="preference" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="SkillType">

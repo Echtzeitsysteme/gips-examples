@@ -52,7 +52,7 @@ rule assignAssistantToTutorial {
 	s: Skill
 
 	// SkillType must match
-	# t.type == s.type
+	# t.skillType == s.skillType
 	
 	// preference must be at least 1
 	# s.preference >= 1
@@ -76,7 +76,7 @@ pattern findAssistantContentOverlap {
 	t1: Tutorial
 
 	t2: Tutorial
-	# t1.type == t2.type
+	# t1.skillType == t2.skillType
 }
 
 // Finds assistant `a` that has the highest possible
@@ -91,7 +91,7 @@ pattern findSkilledAssistant {
 
 	t: Tutorial
 	# s.preference == 2
-	# s.type == t.type
+	# s.skillType == t.skillType
 }
 
 // Find all possible combinations of lecturer `l`
