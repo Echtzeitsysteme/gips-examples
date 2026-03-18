@@ -11,11 +11,11 @@ import "platform:/resource/ihtcvirtualmetamodel/model/Ihtcvirtualmetamodel.ecore
 // Finds an existing virtual roster shift object for a specific
 // roster and a specific shift.
 pattern findVirtualRoster {
-	roster: Roster
+	roster : Roster
 
-	shift: Shift
+	shift : Shift
 
-	v: VirtualShiftToRoster {
+	v : VirtualShiftToRoster {
 		-roster -> roster
 		-shift -> shift
 	}
@@ -26,26 +26,26 @@ condition noVirtualRoster = forbid findVirtualRoster
 // shift and a specific roster. There must not be an existing
 // virtual shift to roster object connecting those two.
 rule assignNurseToRoom {
-	root: Root {
+	root : Root {
 		-nurses -> nurse
 		-rooms -> room
 	}
 
-	nurse: Nurse {
+	nurse : Nurse {
 		-rosters -> roster
 	}
 
-	roster: Roster
+	roster : Roster
 
-	room: Room {
+	room : Room {
 		-shifts -> shift
 	}
 
-	shift: Shift {
+	shift : Shift {
 		++ - virtualRoster -> vnew
 	}
 
-	++ vnew: VirtualShiftToRoster {
+	++ vnew : VirtualShiftToRoster {
 		++ -roster -> roster
 		++ -shift -> shift
 		.isSelected := false
@@ -273,9 +273,9 @@ rule preprocessOccupantsWorkload {
 
 pattern findVirtualOpTimeToCapacity {
 	op : OpTime
-	c: Capacity
+	c : Capacity
 	
-	v: VirtualOpTimeToCapacity {
+	v : VirtualOpTimeToCapacity {
 		- capacity -> c
 		- opTime -> op
 	}
@@ -306,8 +306,8 @@ when noOpTimeToCapacity
 //
 
 pattern findVirtualWorkloadToOpTime {
-	w: Workload
-	op: OpTime
+	w : Workload
+	op : OpTime
 	
 	v : VirtualWorkloadToOpTime {
 		- opTime -> op
@@ -317,8 +317,8 @@ pattern findVirtualWorkloadToOpTime {
 condition noVirtualEdgeWorkloadToOpTime = forbid findVirtualWorkloadToOpTime
 
 pattern findVirtualWorkloadToCapacity {
-	w: Workload
-	c: Capacity
+	w : Workload
+	c : Capacity
 	
 	v : VirtualWorkloadToCapacity {
 		- capacity -> c

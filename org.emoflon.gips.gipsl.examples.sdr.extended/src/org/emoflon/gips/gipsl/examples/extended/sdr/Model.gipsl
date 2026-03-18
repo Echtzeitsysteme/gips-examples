@@ -87,7 +87,7 @@ rule flow2thread {
 	thread: Thread
 }
 
-rule thread(complexity: EDouble, diff: EDouble, absDiff: EDouble) {
+rule updateThread(complexity: EDouble, diff: EDouble, absDiff: EDouble) {
 	cpu: CPU {
 		-cores -> core
 	}
@@ -113,7 +113,7 @@ mapping f2i to flow2intercom;
 
 mapping f2t to flow2thread;
 
-mapping usedThread to thread {
+mapping usedThread to updateThread {
 	var complexity : EDouble bind complexity
 	var diff : EDouble bind diff
 	var absDiff : EDouble bind absDiff
