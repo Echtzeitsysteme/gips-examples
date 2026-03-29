@@ -203,50 +203,52 @@ public class SolvedModelValidator {
 				patientDebug = "Was assigned an admissionshift but no Surgeon!";
 				logger.warning(patientDebug);
 				debug += "ERROR: " + patientDebug + "\n\t";
+			} else {
+				if(selectedvopc == null) {
+					patientDebug = "Was assigned an admissionshift but the Surgeon is not assigned to an OT!";
+					logger.warning(patientDebug);
+					debug += "ERROR: " + patientDebug + "\n\t";
+				} else {
+	
+					// Check required Edges
+					if(!selectedvwop.getRequires_virtualOpTimeToCapacity().contains(selectedvopc)) {
+						patientDebug = "VirtualWorkloadToOpTime is selected but not enabled by a VirtualOpTimeToCapacity-Object!";
+						logger.warning(patientDebug);
+						debug += "ERROR: " + patientDebug + "\n\t";
+					}
+					if(!selectedvwc.getRequires_virtualWorkloadToOpTime().contains(selectedvwop)) {
+						patientDebug = "VirtualWorkloadToCapacity is selected but not enabled by a VirtualWorkloadToOpTime-Object!";
+						logger.warning(patientDebug);
+						debug += "ERROR: " + patientDebug + "\n\t";
+					}
+					if(!selectedvsw.getRequires_virtualWorkloadToCapacity().contains(selectedvwc)) {
+						patientDebug = "VirtualShiftToWorkload is selected but not enabled by a VirtualWorkloadToCapacity-Object!";
+						logger.warning(patientDebug);
+						debug += "ERROR: " + patientDebug + "\n\t";
+					}
+					
+					// Check correct Assignments 
+					if((admissionShift.getShiftNo() / 3 != selectedvwc.getCapacity().getDay()) | 
+							(admissionShift.getShiftNo() / 3 != selectedOpTime.getDay()) |
+							(selectedvwc.getCapacity().getDay() != selectedOpTime.getDay())) {
+						patientDebug = "The selected virtual Nodes are not on the same day! shift: " + admissionShift.getShiftNo() + " capacity.day = " + selectedvwc.getCapacity().getDay() + " opTime.day = " + selectedOpTime.getDay();
+						logger.warning(patientDebug);
+						debug += "ERROR: " + patientDebug + "\n\t";
+					}
+					if(patient.getSurgeon() != selectedvwop.getOpTime().getSurgeon()) {
+						patientDebug = "Not assigned to the correct surgeon! Expected: " + patient.getSurgeon().getName() + " Assigned: " + selectedvwop.getOpTime().getSurgeon().getName();
+						logger.warning(patientDebug); 
+						debug += "ERROR: " + patientDebug + "\n\t";
+					}
+					
+					checkSurgeryAssignment(patient, debug);
+					
+					debug += "Was assigned to room " + admissionShift.getRoom().getName() + " on shift " + admissionShift.getShiftNo() + ". \n\t"; 
+					debug += "The operation by surgeon " + selectedOpTime.getSurgeon().getName() + " is scheduled in OT " + scheduledOt.getName() + " on day " + selectedvwc.getCapacity().getDay() + ". \n";
+					
+					this.patientDelay += (admissionShift.getShiftNo() / 3) - patient.getEarliestDay();
+				}
 			}
-			if(selectedvwop == null) {
-				patientDebug = "Was assigned an admissionshift but the Surgeon is not assigned to an OT!";
-				logger.warning(patientDebug);
-				debug += "ERROR: " + patientDebug + "\n\t";
-			}
-
-			// Check required Edges
-			if(!selectedvwop.getRequires_virtualOpTimeToCapacity().contains(selectedvopc)) {
-				patientDebug = "VirtualWorkloadToOpTime is selected but not enabled by a VirtualOpTimeToCapacity-Object!";
-				logger.warning(patientDebug);
-				debug += "ERROR: " + patientDebug + "\n\t";
-			}
-			if(!selectedvwc.getRequires_virtualWorkloadToOpTime().contains(selectedvwop)) {
-				patientDebug = "VirtualWorkloadToCapacity is selected but not enabled by a VirtualWorkloadToOpTime-Object!";
-				logger.warning(patientDebug);
-				debug += "ERROR: " + patientDebug + "\n\t";
-			}
-			if(!selectedvsw.getRequires_virtualWorkloadToCapacity().contains(selectedvwc)) {
-				patientDebug = "VirtualShiftToWorkload is selected but not enabled by a VirtualWorkloadToCapacity-Object!";
-				logger.warning(patientDebug);
-				debug += "ERROR: " + patientDebug + "\n\t";
-			}
-			
-			// Check correct Assignments 
-			if((admissionShift.getShiftNo() / 3 != selectedvwc.getCapacity().getDay()) | 
-					(admissionShift.getShiftNo() / 3 != selectedOpTime.getDay()) |
-					(selectedvwc.getCapacity().getDay() != selectedOpTime.getDay())) {
-				patientDebug = "The selected virtual Nodes are not on the same day! shift: " + admissionShift.getShiftNo() + " capacity.day = " + selectedvwc.getCapacity().getDay() + " opTime.day = " + selectedOpTime.getDay();
-				logger.warning(patientDebug);
-				debug += "ERROR: " + patientDebug + "\n\t";
-			}
-			if(patient.getSurgeon() != selectedvwop.getOpTime().getSurgeon()) {
-				patientDebug = "Not assigned to the correct surgeon! Expected: " + patient.getSurgeon().getName() + " Assigned: " + selectedvwop.getOpTime().getSurgeon().getName();
-				logger.warning(patientDebug); 
-				debug += "ERROR: " + patientDebug + "\n\t";
-			}
-			
-			checkSurgeryAssignment(patient, debug);
-			
-			debug += "Was assigned to room " + admissionShift.getRoom().getName() + " on shift " + admissionShift.getShiftNo() + ". \n\t"; 
-			debug += "The operation by surgeon " + selectedOpTime.getSurgeon().getName() + " is scheduled in OT " + scheduledOt.getName() + " on day " + selectedvwc.getCapacity().getDay() + ". \n";
-			
-			this.patientDelay += (admissionShift.getShiftNo() / 3) - patient.getEarliestDay();
 		}else {
 			debug += "Was not scheduled. \n";
 			this.electiveUnscheduledPatients++;
