@@ -740,9 +740,7 @@ constraint with assignedPatientsToRoomDaily {
 	
 	context.variables.skillDiff2
 	== 
-	mappings.assignedPatientsToRoomDaily->filter(
-		element.nodes.vsw == context.nodes.vsw.enables_virtualShiftToWorkload
-	)->sum(element.value * element.nodes.w.minNurseSkill)
+	types.Workload->filter(element == context.nodes.w.next)->sum(context.value * element.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
 		element.nodes.vsr.shift == context.nodes.s.next
@@ -752,9 +750,7 @@ constraint with assignedPatientsToRoomDaily {
 	
 	context.variables.skillDiff3
 	== 
-	mappings.assignedPatientsToRoomDaily->filter(
-		element.nodes.vsw == context.nodes.vsw.enables_virtualShiftToWorkload.enables_virtualShiftToWorkload
-	)->sum(element.value * element.nodes.w.minNurseSkill)
+	types.Workload->filter(element == context.nodes.w.next.next)->sum(context.value * element.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
 		element.nodes.vsr.shift == context.nodes.s.next.next
