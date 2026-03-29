@@ -54,7 +54,7 @@ pattern findVirtualNodesForOccupant {
 // That includes three edges to be adopted in the final model.
 // I. + II.: between the patient and opTime and between patient and capacity -> Selects a day and OT for the patient.
 // III.: between opTime and Capacity to make sure the predefined surgeon of the patient is working in the correct OT on that day.
-rule selectOperationDay {
+pattern findOperationDay {
 	p : Patient {
 		- firstWorkload -> w
 		- surgeon -> s
@@ -74,20 +74,20 @@ rule selectOperationDay {
 	vwc : VirtualWorkloadToCapacity {
 		- requires_virtualWorkloadToOpTime -> vwop
 		- capacity -> c
-		.isSelected := true
+//		.isSelected := true
 	}
 
 	vwop : VirtualWorkloadToOpTime {
 		- requires_virtualOpTimeToCapacity -> vopc
 		- enables_virtual_WorkloadToCapacity -> vwc
-		.isSelected := true
+//		.isSelected := true
 		- opTime -> opTime
 	}
 
 	vopc : VirtualOpTimeToCapacity {
 		- enables_virtualWorkloadToOpTime -> vwop
 		- capacity -> c
-		.isSelected := true
+//		.isSelected := true
 	}
 
 	c : Capacity {
@@ -248,12 +248,43 @@ type VirtualShiftToRoster {
 	var isSelected : EBoolean bind to isSelected
 };
 
+// Replaces the rule selectShiftToRoster
+type VirtualOpTimeToCapacity {
+	var isSelected : EBoolean bind to isSelected
+};
+
+// Replaces the rule selectShiftToRoster
+type VirtualWorkloadToCapacity {
+	var isSelected : EBoolean bind to isSelected
+};
+
+// Replaces the rule selectShiftToRoster
+type VirtualWorkloadToOpTime {
+	var isSelected : EBoolean bind to isSelected
+};
+
+mapping selectedOperationDay to findOperationDay;
+
+constraint with selectedOperationDay {
+	context.value == 1 <=>
+	context.nodes.vopc.variables.isSelected == 1 &
+	context.nodes.vwc.variables.isSelected == 1 &
+	context.nodes.vwop.variables.isSelected == 1
+//	context.value >= context.nodes.vopc.variables.isSelected + context.nodes.vwc.variables.isSelected + context.nodes.vwop.variables.isSelected - 2
+//	&
+//	context.value <= context.nodes.vopc.variables.isSelected
+//	&
+//	context.value <= context.nodes.vwc.variables.isSelected
+//	&
+//	context.value <= context.nodes.vwop.variables.isSelected
+}
+
 //
 // Rule Mappings
 //
 
 // SCP.1-3: Decides on what day and in which OT a patient is operated on.
-mapping selectedOperationDay to selectOperationDay;
+//mapping selectedOperationDay to selectOperationDay;
 
 //
 // Utility Mappings
