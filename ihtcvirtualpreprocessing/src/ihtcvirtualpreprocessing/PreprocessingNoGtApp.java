@@ -148,7 +148,7 @@ public class PreprocessingNoGtApp {
 				// Add root relation
 				if(occupant.getFirstWorkload() == workload) {
 					root = v;
-					v.setRequires_root_virtualShiftToWorkload(null);
+					v.setRequires_root_virtualShiftToWorkload(v);
 				} else {
 					v.setRequires_root_virtualShiftToWorkload(root);
 				}
@@ -340,7 +340,7 @@ public class PreprocessingNoGtApp {
 										});
 										
 										// The root nodes relation must be null (only explicitly set for clarity)
-										v.setRequires_root_virtualShiftToWorkload(null);
+										v.setRequires_root_virtualShiftToWorkload(v);
 	
 										shift.getVirtualWorkload().add(v);
 									}

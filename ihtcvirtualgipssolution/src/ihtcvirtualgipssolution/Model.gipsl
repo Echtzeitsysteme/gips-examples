@@ -14,7 +14,7 @@ config {
 // GT
 //
 
-// PRA.1: Rule that selects a VirtualShiftToWorkload-Node to be adopted in the final model. 
+// PRA.1: Pattern that finds the VirtualShiftToWorkload-Node for each first Workload
 pattern findShiftToFirstWorkload {
 	p : Patient {
 		- firstWorkload -> w
@@ -22,15 +22,9 @@ pattern findShiftToFirstWorkload {
 	
 	w : Workload {
 		- virtualShift -> vsw
-//		- virtualCapacity -> vwc
 	}
-	
-//	vwc : VirtualWorkloadToCapacity
-	
-	vsw : VirtualShiftToWorkload {
-//		- requires_virtualWorkloadToCapacity -> vwc
-//		.isSelected := true
-	}
+
+	vsw : VirtualShiftToWorkload
 	
 	# p.isOccupant == false
 }
@@ -285,16 +279,6 @@ type VirtualShiftToWorkload {
 // Rule Mappings
 //
 
-// PRA.1: Decides in which room a patient is admitted -> Connects the first workload to a shift
-//mapping selectedShiftToFirstWorkload to selectShiftToFirstWorkload;
-
-//// PRA.2: Decides which following shifts are assigned to a patient (dependent on the room that was assigned to the first workload) 
-//// -> Connects all following workloads to a shift (The room is always the same and equal to the one selected in selectedShiftToFirstWorkload)
-//mapping selectedExtendingShiftToFirstWorkload to selectExtendingShiftToFirstWorkload;
-
-// PRA.3: Adds all imported Virtual Nodes of Occupants to the model
-//mapping selectedOccupantNodes to virtualNodesForOccupant;
-
 // NPA: Decides on what day and in which OT a patient is operated on.
 mapping selectedOperationDay to selectOperationDay;
 
@@ -415,10 +399,6 @@ constraint with otCapacityTupel {
 // The addition only works because other constraints enforce that the individual sums have to be <= 1
 constraint with mandatoryPatients {
 	types.VirtualShiftToWorkload->filter(element.workload == context.nodes.p.firstWorkload)->sum(element.variables.isSelected) == 1
-//	mappings.selectedShiftToFirstWorkload->join((p, p))->sum(element.value)
-//	+
-//	mappings.selectedOperationDay->join((p, p))->sum(element.value)
-//	== 2
 }
 
 /* --------------------------------------------------------------------------------------------------------------------- */
@@ -518,7 +498,6 @@ constraint with Patient {
 // C7: A patient can't be assigned to more than one "first" shift
 constraint with Patient {
 	types.VirtualShiftToWorkload->filter(element.workload == context.firstWorkload)->sum(element.variables.isSelected) <= 1
-//	mappings.selectedShiftToFirstWorkload->join(p)->sum(element.value) <= 1
 }
 
 //
@@ -534,9 +513,7 @@ constraint with findVirtualNodesForOccupant {
 // the required Node "VirtualWorkloadToCapacity" is also selected (isSelected = true) 
 constraint with findShiftToFirstWorkload {
 	context.nodes.vsw.variables.isSelected
-//	mappings.selectedShiftToFirstWorkload->join((vsw, vsw), (vwc, vwc))->sum(element.value)
 	<=
-//	mappings.selectedOperationDay->join((vwc, vwc))->sum(element.value)
 	mappings.selectedOperationDay->filter(element.nodes.w == context.nodes.w)->sum(element.value) 
 }
 
@@ -546,7 +523,6 @@ constraint with selectedOperationDay{
 	context.value
 	<=
 	types.VirtualShiftToWorkload->filter(element.workload == context.nodes.w & element.shift.shiftNo / 3 == context.nodes.c.day)->sum(element.variables.isSelected) 
-//	mappings.selectedShiftToFirstWorkload->join((vwc, vwc))->sum(element.value)
 }
 
 pattern laterWorkloads {
@@ -574,54 +550,34 @@ constraint with laterWorkloads {
 
 // U1-alternative: Sets the mapping variable to 1 if a patient is assigned to a specific room for a specific day
 constraint with assignedPatientsToRoomDaily {
-	context.nodes.vsw.variables.isSelected
-	+
 	types.VirtualShiftToWorkload->filter(element == context.nodes.vsw.requires_root_virtualShiftToWorkload)->sum(element.variables.isSelected)
-	<=
-	context.value * 1000
+	==
+	context.value
 }
 
-//// U13: Sets the mapping to true if the nurse is assigned to the workload
-//// Used as primary mapping for the information which nurses are assigned to which workloads of patients
-//// Needed for constraints: U14+U15(S4), U16(S3)
-//constraint with assignedNursesToWorkload {
-//	context.value
-//	>=
-////	mappings.selectedShiftToFirstWorkload->join((vsw, vsw))->sum(element.value)
-////	+
-////	mappings.selectedShiftToFirstWorkload->filter(
-////		element.nodes.vsw == context.nodes.vsw.requires_root_virtualShiftToWorkload
-////	)->sum(element.value)
-////	+
-////	mappings.selectedOccupantNodes->join((vsw, vsw))->sum(element.value)
-//	context.nodes.vsw.variables.isSelected
-//	+
-//	types.VirtualShiftToWorkload->filter(element == context.nodes.vsw.requires_root_virtualShiftToWorkload)->sum(element.variables.isSelected)
-//	+
-//	mappings.selectedShiftToRoster->join((vsr, vsr))->sum(element.value)
-//	- 1
-//	
-//	&
-//	
-////	mappings.selectedShiftToFirstWorkload->join((vsw, vsw))->sum(element.value)
-////	+
-////	mappings.selectedShiftToFirstWorkload->filter(
-////		element.nodes.vsw == context.nodes.vsw.requires_root_virtualShiftToWorkload
-////	)->sum(element.value)
-////	+
-////	mappings.selectedOccupantNodes->join((vsw, vsw))->sum(element.value)
-//	context.nodes.vsw.variables.isSelected
-//	+
-//	types.VirtualShiftToWorkload->filter(element == context.nodes.vsw.requires_root_virtualShiftToWorkload)->sum(element.variables.isSelected)
-//	>= 
-//	context.value
-//	
-//	&
-//	
-//	mappings.selectedShiftToRoster->join((vsr, vsr))->sum(element.value) 
-//	>= 
-//	context.value
-//}
+// U13: Sets the mapping to true if the nurse is assigned to the workload
+// Used as primary mapping for the information which nurses are assigned to which workloads of patients
+// Needed for constraints: U14+U15(S4), U16(S3)
+constraint with assignedNursesToWorkload {
+	context.value
+	>=
+	types.VirtualShiftToWorkload->filter(element == context.nodes.vsw.requires_root_virtualShiftToWorkload)->sum(element.variables.isSelected)
+	+
+	mappings.selectedShiftToRoster->join((vsr, vsr))->sum(element.value)
+	- 1
+	
+	&
+
+	types.VirtualShiftToWorkload->filter(element == context.nodes.vsw.requires_root_virtualShiftToWorkload)->sum(element.variables.isSelected)
+	>= 
+	context.value
+	
+	&
+	
+	mappings.selectedShiftToRoster->join((vsr, vsr))->sum(element.value) 
+	>= 
+	context.value
+}
 
 // U2: counts how many patients are currently assigned to each room 
 // Needed for constraints: H7, H8
@@ -777,43 +733,43 @@ constraint with assignedPatientsToRoomDaily {
 
 /* --------------------------------------------------------------------------------------------------------------------- */
 
-//// S3: The number of nurses taking care of a specific patient must be minimized
-//function calculateContinuityOfCare with Patient {
-//	mappings.assignedNurseForPatient->join(p)->sum(element.value)
-//}
-//
-//// U16: sets the mapping to true if the nurse is assigned to the patient
-//constraint with assignedNurseForPatient {
-//	context.value
-//	<=
-//	mappings.assignedNursesToWorkload->join((n, n), (p, p))->sum(element.value)
-//	
-//	&
-//	
-//	mappings.assignedNursesToWorkload->join((n, n), (p, p))->sum(element.value)
-//	<= 
-//	context.value * 1000
-//}
+// S3: The number of nurses taking care of a specific patient must be minimized
+function calculateContinuityOfCare with Patient {
+	mappings.assignedNurseForPatient->join(p)->sum(element.value)
+}
+
+// U16: sets the mapping to true if the nurse is assigned to the patient
+constraint with assignedNurseForPatient {
+	context.value
+	<=
+	mappings.assignedNursesToWorkload->join((n, n), (p, p))->sum(element.value)
+	
+	&
+	
+	mappings.assignedNursesToWorkload->join((n, n), (p, p))->sum(element.value)
+	<= 
+	context.value * 1000
+}
 
 /* --------------------------------------------------------------------------------------------------------------------- */
 
-//// S4: The workload of a nurse should not exceed the assigned maximum workload
-//function calculateNurseWorkload with nurseWorkloadForDay {
-//	context.variables.excessiveWorkload
-//}
-//
-//// U14: Calculates the sum of workloads for one Roster 
-//constraint with nurseWorkloadForDay {
-//	context.variables.excessiveWorkload 
-//	>=
-//	mappings.assignedNursesToWorkload->join((ro, ro))->sum(element.value * element.nodes.vsw.workload.workloadValue)
-//	- 
-//	context.nodes.ro.maxWorkload
-//	
-//	&
-//	
-//	context.variables.excessiveWorkload >= 0
-//}
+// S4: The workload of a nurse should not exceed the assigned maximum workload
+function calculateNurseWorkload with nurseWorkloadForDay {
+	context.variables.excessiveWorkload
+}
+
+// U14: Calculates the sum of workloads for one Roster 
+constraint with nurseWorkloadForDay {
+	context.variables.excessiveWorkload 
+	>=
+	mappings.assignedNursesToWorkload->join((ro, ro))->sum(element.value * element.nodes.vsw.workload.workloadValue)
+	- 
+	context.nodes.ro.maxWorkload
+	
+	&
+	
+	context.variables.excessiveWorkload >= 0
+}
 
 /* --------------------------------------------------------------------------------------------------------------------- */
 
@@ -880,8 +836,8 @@ objective : min {
 	0
 	+ functions.calculateAgeDifference * types.Weight->sum(element.roomMixedAge)
 	+ functions.calculateUnqualifiedNurses * types.Weight->sum(element.roomNurseSkill)
-//	+ functions.calculateContinuityOfCare * types.Weight->sum(element.continuityOfCare)
-//	+ functions.calculateNurseWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
+	+ functions.calculateContinuityOfCare * types.Weight->sum(element.continuityOfCare)
+	+ functions.calculateNurseWorkload * types.Weight->sum(element.nurseExcessiveWorkload)
 	+ functions.calculateOpenOTs * types.Weight->sum(element.openOperatingTheater)
 	+ functions.calculateOtsPerSurgeon * types.Weight->sum(element.surgeonTransfer)
 	+ functions.calculateWaitTime * types.Weight->sum(element.patientDelay)
