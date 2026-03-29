@@ -298,13 +298,9 @@ mapping countPatientsForRoom to roomForShift {
 	var patientCount : EInt
 };
 
-// Mapping for all assigned patients per first shift of each day (occupants and new patients for each workload (first + following))
-// skillDiff: Calculated difference between the skill level of a nurse and the workload she is assigned to. Can be negative
-// penalizedSkillDiff: maximum of 0 and skillDiff used to ignore negative results for skillDiff
+// Mapping for all assigned patients for the first shift of each day (occupants and new patients for each workload (first + following))
+// penalizedSkillDiff: max(0, skilldiff)
 mapping assignedPatientsToRoomDaily to patientForRoomDaily{
-	var skillDiff1 : EInt
-	var skillDiff2 : EInt
-	var skillDiff3 : EInt
 	var penalizedSkillDiff1 : EInt
 	var penalizedSkillDiff2 : EInt
 	var penalizedSkillDiff3 : EInt
@@ -320,10 +316,8 @@ mapping openOTs to otCapacityTupel;
 mapping otForSurgeon to surgeonOTForDay;
 
 // mapping that counts how many ots a surgeon is assigned to on a specific day.
-// otCount: Amount of OTs a surgeon is operating in on a specific day
-// penalizedOTs: A penalty is applied if a surgeon has more than 1 assigned OT per day. Maximum of 0 and otCount - 1
+// penalizedOTs: A penalty is applied if a surgeon has more than 1 assigned OT per day.
 mapping otsPerSurgeon to surgeonOptimeTupel{
-	var otCount : EInt
 	var penalizedOTs : EInt
 };
 
@@ -345,10 +339,8 @@ mapping noSmallerAgeGroupInRoom to ageGroupsRoomDay;
 mapping assignedNursesToWorkload to nursetoWorkload;
 
 // mapping used to calculate the sum of workloads for a Roster
-// workloadDiff: Calculated workload of a nurse for a specific shift
 // excessiveWorkload: excessive workload of that nurse in comparison to her maximum workload
 mapping nurseWorkloadForDay to nurseRosterTupel{
-	var workloadDiff : EInt
 	var excessiveWorkload : EInt
 };
 
@@ -730,16 +722,16 @@ function calculateUnqualifiedNurses with assignedPatientsToRoomDaily {
 
 // U11: Sets the mapping variable to the difference in skill level
 constraint with assignedPatientsToRoomDaily {
-	context.variables.skillDiff1
-	== 
+	context.variables.penalizedSkillDiff1
+	>= 
 	mappings.assignedPatientsToRoomDaily->join((vsw, vsw))->sum(element.value * element.nodes.w.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->join((s, s))->sum(element.value * element.nodes.vsr.roster.nurse.skillLevel)
 	
 	&
 	
-	context.variables.skillDiff2
-	== 
+	context.variables.penalizedSkillDiff2
+	>=
 	types.Workload->filter(element == context.nodes.w.next)->sum(context.value * element.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
@@ -748,22 +740,20 @@ constraint with assignedPatientsToRoomDaily {
 	
 	&
 	
-	context.variables.skillDiff3
-	== 
+	context.variables.penalizedSkillDiff3
+	>= 
 	types.Workload->filter(element == context.nodes.w.next.next)->sum(context.value * element.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
 		element.nodes.vsr.shift == context.nodes.s.next.next
 	)->sum(element.value * element.nodes.vsr.roster.nurse.skillLevel)
-}
-
-// U12: calculates the penalized difference between the skill levels. max(0, minLevel - nurseLevel) = max(0, skillDiff)
-constraint with assignedPatientsToRoomDaily{
-	context.variables.penalizedSkillDiff1 >= context.variables.skillDiff1 &
-	context.variables.penalizedSkillDiff1 >= 0 &
-	context.variables.penalizedSkillDiff2 >= context.variables.skillDiff2 &
-	context.variables.penalizedSkillDiff2 >= 0 &
-	context.variables.penalizedSkillDiff3 >= context.variables.skillDiff3 &
+	
+	&
+	
+	context.variables.penalizedSkillDiff1 >= 0
+	&
+	context.variables.penalizedSkillDiff2 >= 0
+	&
 	context.variables.penalizedSkillDiff3 >= 0
 }
 
@@ -796,16 +786,14 @@ function calculateNurseWorkload with nurseWorkloadForDay {
 
 // U14: Calculates the sum of workloads for one Roster 
 constraint with nurseWorkloadForDay {
-	context.variables.workloadDiff 
-	==
+	context.variables.excessiveWorkload 
+	>=
 	mappings.assignedNursesToWorkload->join((ro, ro))->sum(element.value * element.nodes.vsw.workload.workloadValue)
 	- 
 	context.nodes.ro.maxWorkload
-}
-
-// U15: Calculates max(0, sumWorkload - nurseMaxWorkload) = max(0, excessiveWorkload)
-constraint with nurseWorkloadForDay{
-	context.variables.excessiveWorkload >= context.variables.workloadDiff &
+	
+	&
+	
 	context.variables.excessiveWorkload >= 0
 }
 
@@ -845,14 +833,12 @@ constraint with otForSurgeon {
 
 // U6: counts the ots per surgeon for each day
 constraint with otsPerSurgeon {
-	context.variables.otCount
-	==
-	mappings.otForSurgeon->join((op, op))->sum(element.value)
-}
+	context.variables.penalizedOTs
+	>=
+	mappings.otForSurgeon->join((op, op))->sum(element.value) - 1
 
-// U7: calculates max(0, otCount) for each surgeon on each day
-constraint with otsPerSurgeon {
-	context.variables.penalizedOTs >= (context.variables.otCount - 1) &
+	&
+
 	context.variables.penalizedOTs >= 0
 }
 
