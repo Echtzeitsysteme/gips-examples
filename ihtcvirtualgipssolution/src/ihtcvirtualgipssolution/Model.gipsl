@@ -269,9 +269,7 @@ mapping selectedOperationDay to findOperationDay;
 
 constraint with selectedOperationDay {
 //	context.value == 1 <=> 
-//	[
-//	context.nodes.vopc.variables.isSelected == 1 & context.nodes.vwc.variables.isSelected == 1 & context.nodes.vwop.variables.isSelected == 1
-//	]
+//	[ context.nodes.vopc.variables.isSelected == 1 & context.nodes.vwc.variables.isSelected == 1 & context.nodes.vwop.variables.isSelected == 1 ]
 	context.value >= context.nodes.vopc.variables.isSelected + context.nodes.vwc.variables.isSelected + context.nodes.vwop.variables.isSelected - 2
 	&
 	context.value <= context.nodes.vopc.variables.isSelected
@@ -284,9 +282,6 @@ constraint with selectedOperationDay {
 //
 // Rule Mappings
 //
-
-// SCP.1-3: Decides on what day and in which OT a patient is operated on.
-//mapping selectedOperationDay to selectOperationDay;
 
 //
 // Utility Mappings
@@ -370,8 +365,6 @@ constraint with assignedGenderToRoomOnShift {
 
 // H3: Surgeon overtime: The maximum daily surgery time of a surgeon must not be exceeded.
 constraint with surgeonOptimeTuple {
-	
-//	mappings.selectedOperationDay->join((opTime, op))->sum(element.nodes.p.surgeryDuration * element.value)
 	types.VirtualWorkloadToOpTime->join((opTime, op))->sum(element.workload.patient.surgeryDuration * element.variables.isSelected)
 	<=
 	context.nodes.op.maxOpTime
@@ -382,9 +375,6 @@ constraint with surgeonOptimeTuple {
 // H4: OT overtime: The duration of all surgeries allocated to an OT on a day must not exceed
 // its maximum capacity.
 constraint with otCapacityTuple {
-//	mappings.selectedOperationDay->join((ot, ot))->filter(
-//		element.nodes.vopc.capacity.day == context.nodes.c.day
-//	)->sum(element.nodes.p.surgeryDuration * element.value)
 	types.VirtualWorkloadToCapacity->filter(
 		element.capacity.ot == context.nodes.ot &
 		element.capacity.day == context.nodes.c.day 
@@ -399,11 +389,7 @@ constraint with otCapacityTuple {
 // scheduling period, whereas optional patients may be postponed to future scheduling periods.
 // The addition only works because other constraints enforce that the individual sums have to be <= 1.
 constraint with mandatoryPatients {
-	types.VirtualShiftToWorkload->filter(element.workload == context.nodes.p.firstWorkload)->sum(element.variables.isSelected)
-	+
-	types.VirtualWorkloadToOpTime->filter(element.workload.patient == context.nodes.p)->sum(element.variables.isSelected)
-//	mappings.selectedOperationDay->join((p, p))->sum(element.value)
-	== 2
+	types.VirtualShiftToWorkload->filter(element.workload == context.nodes.p.firstWorkload)->sum(element.variables.isSelected) == 1
 }
 
 /* --------------------------------------------------------------------------------------------------------------------- */
@@ -486,7 +472,6 @@ constraint with countPatientsForRoom {
 
 // C3: A patient is assigned to at most one operating time slot.
 constraint with Patient {
-//	mappings.selectedOperationDay->join(p)->sum(element.value) <= 1
 	types.VirtualWorkloadToOpTime->filter(element.workload.patient == context)->sum(element.variables.isSelected) <= 1
 }
 
@@ -519,19 +504,12 @@ constraint with findVirtualNodesForOccupant {
 constraint with findShiftToFirstWorkload {
 	context.nodes.vsw.variables.isSelected
 	<=
-//	context.nodes.vwc.variables.isSelected
-//	types.VirtualWorkloadToCapacity->filter(element.workload == context.nodes.w)->sum(element.variables.isSelected) == 1
-//	&
-//	context.nodes.vsw.variables.isSelected
-//	<=
-//	types.VirtualWorkloadToOpTime->filter(element.workload == context.nodes.w & element.opTime.day == context.nodes.vsw.shift.shiftNo / 3)->sum(element.variables.isSelected)
 	mappings.selectedOperationDay->filter(element.nodes.w == context.nodes.w)->sum(element.value)
 }
 
 // V2.2:  The virtual Node "VirtualWorkloadToCapacity" can only be added to the final model if
 // the the corresponding patient is also assigned to a room.
 constraint with selectedOperationDay {
-//	context.nodes.vwc.variables.isSelected
 	context.value
 	<=
 	types.VirtualShiftToWorkload->filter(element.workload == context.nodes.w & element.shift.shiftNo / 3 == context.nodes.c.day)->sum(element.variables.isSelected) 
@@ -753,7 +731,6 @@ function calculateOpenOTs with Day {
 // U4: sets the mapping to true if there is at least one surgery assigned to the OT on that day.
 constraint with openOTs {
 	types.VirtualOpTimeToCapacity->filter(element.capacity == context.nodes.c)->sum(element.variables.isSelected)
-//	mappings.selectedOperationDay->join((c, c))->sum(element.value)
 	<=
 	context.value * 1000
 }
@@ -771,7 +748,6 @@ constraint with otForSurgeon {
 		element.opTime == context.nodes.op &
 		element.capacity.ot == context.nodes.ot
 	)->sum(element.variables.isSelected)
-//	mappings.selectedOperationDay->join((opTime, op), (ot, ot))->sum(element.value)
 	<=
 	context.value * 1000
 
@@ -783,7 +759,6 @@ constraint with otForSurgeon {
 		element.opTime == context.nodes.op &
 		element.capacity.ot == context.nodes.ot
 	)->sum(element.variables.isSelected)
-//	mappings.selectedOperationDay->join((opTime, op), (ot, ot))->sum(element.value)
 }
 
 // U6: counts the penalized OTs per surgeon for each day, which must be at greater or equal to 0.
