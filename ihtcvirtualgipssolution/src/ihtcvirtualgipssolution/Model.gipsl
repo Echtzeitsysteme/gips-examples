@@ -32,9 +32,8 @@ pattern findShiftToFirstWorkload {
 // PRA.3: Rule that selects all VirtualShiftToWorkload-Nodes to be adopted in the final model if they were imported (belong to an occupant) 
 pattern findVirtualNodesForOccupant {
 
-	vsw : VirtualShiftToWorkload {
-//		.isSelected := true
-	}
+	vsw : VirtualShiftToWorkload
+	
 	# vsw.wasImported == true
 }
 
@@ -525,16 +524,6 @@ constraint with selectedOperationDay{
 	types.VirtualShiftToWorkload->filter(element.workload == context.nodes.w & element.shift.shiftNo / 3 == context.nodes.c.day)->sum(element.variables.isSelected) 
 }
 
-pattern laterWorkloads {
-	w : Workload
-	
-	# w.workloadValue > 0
-}
-
-constraint with laterWorkloads {
-	types.VirtualShiftToWorkload->filter(element.workload == context)->sum(element.variables.isSelected) == 0
-}
-
 //
 // Utility constraints needed in multiple places
 //
@@ -706,7 +695,7 @@ constraint with assignedPatientsToRoomDaily {
 	
 	context.variables.penalizedSkillDiff2
 	>=
-	types.Workload->filter(element == context.nodes.w.next)->sum(context.value * element.minNurseSkill)
+	context.nodes.p.workloads->filter(element == context.nodes.w.next)->sum(context.value * element.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
 		element.nodes.vsr.shift == context.nodes.s.next
@@ -716,7 +705,7 @@ constraint with assignedPatientsToRoomDaily {
 	
 	context.variables.penalizedSkillDiff3
 	>= 
-	types.Workload->filter(element == context.nodes.w.next.next)->sum(context.value * element.minNurseSkill)
+	context.nodes.p.workloads->filter(element == context.nodes.w.next.next)->sum(context.value * element.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
 		element.nodes.vsr.shift == context.nodes.s.next.next
