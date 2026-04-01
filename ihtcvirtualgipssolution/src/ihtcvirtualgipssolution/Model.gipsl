@@ -695,7 +695,7 @@ constraint with assignedPatientsToRoomDaily {
 	
 	context.variables.penalizedSkillDiff2
 	>=
-	context.nodes.p.workloads->filter(element == context.nodes.w.next)->sum(context.value * element.minNurseSkill)
+	context.nodes.w.next->selectType(Workload)->sum(context.value * element.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
 		element.nodes.vsr.shift == context.nodes.s.next
@@ -705,7 +705,7 @@ constraint with assignedPatientsToRoomDaily {
 	
 	context.variables.penalizedSkillDiff3
 	>= 
-	context.nodes.p.workloads->filter(element == context.nodes.w.next.next)->sum(context.value * element.minNurseSkill)
+	context.nodes.w.next.next->selectType(Workload)->sum(context.value * element.minNurseSkill)
 	-
 	mappings.selectedShiftToRoster->filter(
 		element.nodes.vsr.shift == context.nodes.s.next.next
