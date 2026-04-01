@@ -312,15 +312,15 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 	 * @param writer BufferedWriter to write the contents to.
 	 */
 	private void printAndWrite(final String value, final BufferedWriter writer) {
-//		Objects.requireNonNull(value);
-//		Objects.requireNonNull(writer);
-//		System.out.println(value);
-//		try {
-//			writer.write(value);
-//			writer.newLine();
-//		} catch (final IOException ex) {
-//			ex.printStackTrace();
-//		}
+		Objects.requireNonNull(value);
+		Objects.requireNonNull(writer);
+		System.out.println(value);
+		try {
+			writer.write(value);
+			writer.newLine();
+		} catch (final IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 }
