@@ -175,8 +175,15 @@ public class SolvedModelValidator {
 				final Collection<VirtualOpTimeToCapacity> possibleSurgeonOTAssignments = selectedOpTime.getVirtualCapacity();
 				for (final VirtualOpTimeToCapacity vopc : possibleSurgeonOTAssignments) {
 					if (vopc.isIsSelected()) {
-						selectedvopc = vopc;
-						break;
+						// Not only must the `VirtualOpTimeToCapacity` be selected, but also the respective `VirtualWorkloadToCapacity`.
+						// Otherwise, there could be multiple `VirtualOpTimeToCapacity` objects if the surgeon in question
+						// operates in multiple OTs at the corresponding day.
+						for (final VirtualWorkloadToCapacity vwc : selectedvwop.getEnables_virtual_WorkloadToCapacity()) {
+							if (vwc.getCapacity().equals(vopc.getCapacity()) && vwc.isIsSelected()) {
+								selectedvopc = vopc;
+								break;
+							}
+						}						
 					}
 				}
 				break;

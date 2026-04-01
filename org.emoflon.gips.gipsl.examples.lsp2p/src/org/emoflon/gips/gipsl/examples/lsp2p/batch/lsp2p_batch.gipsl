@@ -48,7 +48,7 @@ rule addClient(hasRoot: EInt, bw: EDouble, tt: EDouble) {
 }
 when clientIsWaiting
 
-rule node {
+rule assignNode {
 	node: Node {
 		++ -configuration -> cfg
 	}
@@ -64,7 +64,7 @@ mapping relay2Client to addClient {
 	var transferTime : EDouble bind tt // Gibt die Zeit an, die es braucht um das File bis zum Client zu transportieren.
 };
 
-mapping node2Cfg to node;
+mapping node2Cfg to assignNode;
 
 /*	Setzt die Konfluenzbedingung für die Einbettung: Es darf maximal und es muss mindestens eine Mappingvariable ausgewählt werden.	
  */
@@ -99,19 +99,19 @@ constraint with Node {
 	mappings.node2Cfg->filter(element.nodes.node == context)->sum(element.value) <= 1
 }
 
-constraint with node {
+constraint with assignNode {
 	mappings.relay2Client->filter(element.nodes.relay == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 =>
 	[mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) <= 1 &
 		mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1]
 }
 
-constraint with node {
+constraint with assignNode {
 	mappings.relay2Client->filter(element.nodes.relay == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) <= 0 =>
 	[mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) <= 0 &
 		mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 0]
 }
 
-constraint with node {
+constraint with assignNode {
 	mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) >= 1 =>
 	[mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.nodes.cfg.clients) <=
 		mappings.relay2Client->filter(element.nodes.relay == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) &
@@ -119,7 +119,7 @@ constraint with node {
 		mappings.relay2Client->filter(element.nodes.relay == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value)]
 }
 
-constraint with node {
+constraint with assignNode {
 	mappings.node2Cfg->filter(element.nodes.node == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) <= 0 =>
 	mappings.relay2Client->filter(element.nodes.relay == context.nodes.node & element.nodes.cfg == context.nodes.cfg)->sum(element.value) <= 0
 }

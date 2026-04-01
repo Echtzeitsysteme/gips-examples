@@ -314,7 +314,7 @@ pattern nurseShiftRoomMaxLoad {
 	r: Room
 }
 
-pattern nurseShiftMaxLoad {
+pattern findNurseShiftMaxLoad {
 	h: Hospital {
 		-nurses -> n
 		-shifts -> s
@@ -424,7 +424,7 @@ mapping nurseShiftRoomLoad to nurseShiftRoomMaxLoad {
 // Mapping that holds the `overload` of nurse `n` in shift `s`
 // `overload` = 0 if the cumulative load of `n` does not exceed the maximum workload
 // `overload` = cumulative_load - n_maximum_workload otherwise
-mapping nurseShiftOverload to nurseShiftMaxLoad {
+mapping nurseShiftOverload to findNurseShiftMaxLoad {
 	var overload : EInt
 };
 

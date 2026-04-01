@@ -85,7 +85,7 @@ rule flow2thread {
 	thread: Thread
 }
 
-pattern thread {
+pattern findThread {
 	thread: Thread
 }
 
@@ -100,7 +100,7 @@ mapping f2i to flow2intercom;
 mapping f2t to flow2thread;
 
 // Utility mapping that must be 1 if the corresponding thread will be used, 0 otherwise
-mapping usedThread to thread;
+mapping usedThread to findThread;
 
 //
 // General remarks for the two following constraints:
