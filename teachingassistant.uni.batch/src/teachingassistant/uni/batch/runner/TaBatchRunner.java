@@ -20,7 +20,6 @@ import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.ibex.gt.api.GraphTransformationMatch;
 
-import metamodel.SessionOccurrence;
 import metamodel.TaAllocation;
 import metamodel.TimeTableEntry;
 import teachingassistant.uni.batch.api.gips.BatchGipsAPI;
@@ -35,7 +34,7 @@ import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
 
 public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 
-	final String conflictWritePath = "./conflicts.txt";
+	final String exportsWritePath = "./exports.txt";
 
 	public static void main(final String[] args) {
 		new TaBatchRunner().run();
@@ -173,7 +172,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 
 		try {
 			System.out.println("=> Conflicting entries stats:");
-			final BufferedWriter writer = new BufferedWriter(new FileWriter(conflictWritePath, true));
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(exportsWritePath, false));
 			// conflicting entries
 			printAndWrite("findConflictingEntriesWithTa:", writer);
 			gipsApi.getEMoflonAPI().findConflictingEntriesWithTa().findMatches().forEach(m -> {
@@ -187,11 +186,11 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 						+ m.getTa().getName(), writer);
 			});
 			// continuity
-			printAndWrite("continuity:", writer);
+			printAndWrite("findOccurrenceContinuity:", writer);
 			gipsApi.getEMoflonAPI().findOccurrenceContinuity().findMatches().forEach(m -> {
-				printAndWrite("\t" + "session=" + m.getSession().getName() + ";" //
-						+ occurrenceToString(m.getOccurrenceA()) + ";" //
-						+ occurrenceToString(m.getOccurrenceB()) + ";" //
+				printAndWrite("\t" + m.getSession().getName() + ";" //
+						+ m.getOccurrenceA().getTimeTableWeek() + ";" //
+						+ m.getOccurrenceB().getTimeTableWeek() + ";" //
 						+ m.getTa().getName(), writer);
 			});
 
@@ -310,21 +309,6 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		ret += entry.getDay();
 		ret += "@";
 		ret += entry.getRoom().getName();
-		return ret;
-	}
-
-	/**
-	 * Converts a given session occurrence to a nice printout string.
-	 * 
-	 * @param occurrence Session occurrence to convert.
-	 * @return String representation of the session occurrence.
-	 */
-	private String occurrenceToString(final SessionOccurrence occurrence) {
-		Objects.requireNonNull(occurrence);
-		String ret = "";
-		ret += occurrence.getName();
-		ret += "@week";
-		ret += occurrence.getTimeTableWeek();
 		return ret;
 	}
 
