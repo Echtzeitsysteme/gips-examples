@@ -20,6 +20,7 @@ import org.emoflon.gips.core.util.IMeasurement;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.ibex.gt.api.GraphTransformationMatch;
 
+import metamodel.SessionOccurrence;
 import metamodel.TaAllocation;
 import metamodel.TimeTableEntry;
 import teachingassistant.uni.batch.api.gips.BatchGipsAPI;
@@ -167,7 +168,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		log("Runtime GIPS save: " + tickTockToSeconds(gipsApplyDone, gipsSaveDone) + "s.");
 
 		//
-		// Print statistics about conflicting dates
+		// Print statistics about conflicting dates and continuity
 		//
 
 		try {
@@ -183,6 +184,14 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 			printAndWrite("findInterCampusTimeTableEntriesConflict:", writer);
 			gipsApi.getEMoflonAPI().findInterCampusTimeTableEntriesConflict().findMatches().forEach(m -> {
 				printAndWrite("\t" + entryToString(m.getEntryA()) + ";" + entryToString(m.getEntryB()) + ";"
+						+ m.getTa().getName(), writer);
+			});
+			// continuity
+			printAndWrite("continuity:", writer);
+			gipsApi.getEMoflonAPI().findOccurrenceContinuity().findMatches().forEach(m -> {
+				printAndWrite("\t" + "session=" + m.getSession().getName() + ";" //
+						+ occurrenceToString(m.getOccurrenceA()) + ";" //
+						+ occurrenceToString(m.getOccurrenceB()) + ";" //
 						+ m.getTa().getName(), writer);
 			});
 
@@ -291,7 +300,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 	 * Converts a given time table entry to a nice printout string.
 	 * 
 	 * @param entry Time table entry to convert.
-	 * @return String representing the time table entry.
+	 * @return String representing of the time table entry.
 	 */
 	private String entryToString(final TimeTableEntry entry) {
 		Objects.requireNonNull(entry);
@@ -301,6 +310,21 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		ret += entry.getDay();
 		ret += "@";
 		ret += entry.getRoom().getName();
+		return ret;
+	}
+
+	/**
+	 * Converts a given session occurrence to a nice printout string.
+	 * 
+	 * @param occurrence Session occurrence to convert.
+	 * @return String representation of the session occurrence.
+	 */
+	private String occurrenceToString(final SessionOccurrence occurrence) {
+		Objects.requireNonNull(occurrence);
+		String ret = "";
+		ret += occurrence.getName();
+		ret += "@week";
+		ret += occurrence.getTimeTableWeek();
 		return ret;
 	}
 
