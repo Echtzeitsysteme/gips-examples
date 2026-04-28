@@ -14,11 +14,13 @@ rule virtualShiftToWorkload_to_derived {
 
 	s : Shift {
 		++ -derivedWorkloads -> w
+		-- -virtualWorkload -> v
 	}
 
 	w :  Workload {
 		++ -derivedShift -> s
-	// Explicitly set the opposite edge
+		// Explicitly set the opposite edge
+		-- -virtualShift -> v
 	}
 	
 	# v.isSelected == true
@@ -40,11 +42,13 @@ rule virtualShiftToRoster_to_derived {
 
 	s : Shift {
 		++ -derivedRoster -> r
+		-- -virtualRoster -> v
 	}
 
 	r : Roster {
 		++ -derivedShifts -> s
-	// Explicitly set the opposite edge
+		// Explicitly set the opposite edge
+		-- -virtualShift -> v
 	}
 	
 	# v.isSelected == true
@@ -66,11 +70,13 @@ rule virtualWorkloadToOpTime_to_derived {
 
 	w : Workload {
 		++ -derivedOpTimes -> op
+		-- -virtualOpTime -> v
 	}
 
 	op : OpTime {
 		++ -derivedWorkloads -> w
-	// Explicitly set the opposite edge
+		// Explicitly set the opposite edge
+		-- -virtualWorkload -> v
 	}
 	
 	# v.isSelected == true
@@ -92,11 +98,13 @@ rule virtualOpTimeToCapacity_to_derived {
 
 	op : OpTime {
 		++ -derivedCapacities -> c
+		-- -virtualCapacity -> v
 	}
 
 	c : Capacity {
 		++ -derivedOpTimes -> op
-	// Explicitly set the opposite edge
+		// Explicitly set the opposite edge
+		-- -virtualOpTime -> v
 	}
 	
 	# v.isSelected == true
@@ -118,11 +126,13 @@ rule virtualWorkloadToCapacity {
 
 	w : Workload {
 		++ -derivedCapacity -> c
+		-- -virtualCapacity -> v
 	}
 
 	c : Capacity {
 		++ -derivedWorkloads -> w
-	// Explicitly set the opposite edge
+		// Explicitly set the opposite edge
+		-- -virtualWorkload -> v
 	}
 	
 	# v.isSelected == true

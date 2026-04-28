@@ -25,7 +25,9 @@ rule selectShiftToFirstWorkload {
 		- virtualCapacity -> vwc
 	}
 
-	vwc : VirtualWorkloadToCapacity
+	vwc : VirtualWorkloadToCapacity {
+		- enables_virtualShiftToWorkload -> vsw
+	}
 
 	vsw : VirtualShiftToWorkload {
 		- requires_virtualWorkloadToCapacity -> vwc
@@ -305,7 +307,7 @@ mapping countPatientsForRoom to roomForShift {
 // Mapping for all assigned patients. (occupants and new patients for each workload (first + following)).
 // penalizedSkillDiff: maximum of 0 and the calculated difference between the skill level of a nurse and
 // the workload she is assigned to.
-mapping assignedPatientsToRoom to patientForRoom{
+mapping assignedPatientsToRoom to patientForRoom {
 	var penalizedSkillDiff : EInt
 };
 
@@ -328,16 +330,14 @@ mapping surgeonPenalizedOTs to surgeonOpTimeTuple {
 // mapping that holds the information if an age group is present in a room on a specific day.
 // maxAgeGroup: True if the patient of the current Match has the highest age group in that room.
 // minAgeGroup: True if the patient of the current Match has the smallest age group in that room.
+// noSmallerAgeGroup: True if there is no smaller age group in this constellation.
+// noGreaterAgeGroup: True if there is no greater age group in this constellation.
 mapping ageGroupsInRoom to ageGroupsRoomDay {
 	var maxAgeGroup : EBoolean
 	var minAgeGroup : EBoolean
+	var noSmallerAgeGroup : EBoolean
+	var noGreaterAgeGroup : EBoolean
 };
-
-// maxAgeGroup: True if the patient of the current Match has the largest age group in that room.
-mapping noGreaterAgeGroupInRoom to ageGroupsRoomDay;
-
-// minAgeGroup: True if the patient of the current Match has the smallest age group in that room.
-mapping noSmallerAgeGroupInRoom to ageGroupsRoomDay;
 
 // mapping that holds the information what workloads a roster is responsible for / assigned to.
 mapping assignedNursesToWorkload to nurseToWorkload;
@@ -681,28 +681,27 @@ constraint with ageGroupsInRoom {
 }
 
 // U17: Sets a auxiliary mapping for expressing U9 without a boolean equivalence.
-constraint with noSmallerAgeGroupInRoom {
+constraint with ageGroupsInRoom {
 	mappings.ageGroupsInRoom->join((r, r), (d, d))->filter(
 		element.nodes.ag.group < context.nodes.ag.group
 	)->sum(element.value)
 	>=
-	1 - context.value
+	1 - context.variables.noSmallerAgeGroup
 
 	&
 
-	(1 - context.value) * 1000
+	(1 - context.variables.noSmallerAgeGroup) * 1000
 	>=
 	mappings.ageGroupsInRoom->join((r, r), (d, d))->filter(
 		element.nodes.ag.group < context.nodes.ag.group
 	)->sum(element.value)
-
 }
 
 // U9: Sets the variable to true if the age group is the smallest in the room on that day.
 constraint with ageGroupsInRoom {
 	context.value
 	+
-	mappings.noSmallerAgeGroupInRoom->join((r, r), (d, d), (ag, ag))->sum(element.value)
+	context.variables.noSmallerAgeGroup
   	<=
  	1 + context.variables.minAgeGroup
 
@@ -710,22 +709,22 @@ constraint with ageGroupsInRoom {
 
  	context.value
 	+
-	mappings.noSmallerAgeGroupInRoom->join((r, r), (d, d), (ag, ag))->sum(element.value)
+	context.variables.noSmallerAgeGroup
 	>=
 	2 * context.variables.minAgeGroup
 }
 
 // U18: Sets a auxiliary mapping for expressing U10 without a boolean equivalence.
-constraint with noGreaterAgeGroupInRoom {
+constraint with ageGroupsInRoom {
 	mappings.ageGroupsInRoom->join((r, r), (d, d))->filter(
 		element.nodes.ag.group > context.nodes.ag.group
 	)->sum(element.value)
 	>=
-	1 - context.value
+	1 - context.variables.noGreaterAgeGroup
 
 	&
 
-	(1 - context.value) * 1000
+	(1 - context.variables.noGreaterAgeGroup) * 1000
 	>=
 	mappings.ageGroupsInRoom->join((r, r), (d, d))->filter(
 		element.nodes.ag.group > context.nodes.ag.group
@@ -736,7 +735,7 @@ constraint with noGreaterAgeGroupInRoom {
 constraint with ageGroupsInRoom {
 	context.value
 	+
-	mappings.noGreaterAgeGroupInRoom->join((r, r), (d, d), (ag, ag))->sum(element.value)
+	context.variables.noGreaterAgeGroup
   	<=
  	1 + context.variables.maxAgeGroup
 
@@ -744,7 +743,7 @@ constraint with ageGroupsInRoom {
 
  	context.value
 	+
-	mappings.noGreaterAgeGroupInRoom->join((r, r), (d, d), (ag, ag))->sum(element.value)
+	context.variables.noGreaterAgeGroup
   	>=
  	2 * context.variables.maxAgeGroup
 }
