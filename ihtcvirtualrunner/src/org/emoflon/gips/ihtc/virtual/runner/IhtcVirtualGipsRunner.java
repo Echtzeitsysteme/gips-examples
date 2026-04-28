@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.emoflon.gips.core.GipsMapper;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.virtual.runner.utils.FileUtils;
 import org.emoflon.gips.ihtc.virtual.runner.utils.XmiSetupUtil;
@@ -170,6 +171,33 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			applySolution(gipsApi, verbose);
 		}
 
+		// Print variable statistics for all mappers
+		if (verbose) {
+			logger.info("=> Print variable statistics (estimation): ");
+			int totalVars = 0;
+
+			// GT rule-based mappings
+			totalVars += logVarStats(gipsApi.getSelectedShiftToFirstWorkload());
+			totalVars += logVarStats(gipsApi.getSelectedExtendingShiftToWorkload());
+			totalVars += logVarStats(gipsApi.getSelectedOccupantNodes());
+			totalVars += logVarStats(gipsApi.getSelectedOperationDay());
+			totalVars += logVarStats(gipsApi.getSelectedShiftToRoster());
+
+			// utility mappings
+			totalVars += logVarStats(gipsApi.getCountPatientsForRoom());
+			totalVars += logVarStats(gipsApi.getAssignedPatientsToRoom());
+			totalVars += logVarStats(gipsApi.getAssignedGenderToRoomOnShift());
+			totalVars += logVarStats(gipsApi.getOpenOTs());
+			totalVars += logVarStats(gipsApi.getSurgeonInOT());
+			totalVars += logVarStats(gipsApi.getSurgeonPenalizedOTs());
+			totalVars += logVarStats(gipsApi.getAgeGroupsInRoom());
+			totalVars += logVarStats(gipsApi.getAssignedNursesToWorkload());
+			totalVars += logVarStats(gipsApi.getNurseWorkloadForDay());
+			totalVars += logVarStats(gipsApi.getAssignedNurseForPatient());
+
+			logger.info("Total estimated number of variables: " + totalVars);
+		}
+
 		final long solutionApplicationDoneTime = System.nanoTime();
 		if (verbose) {
 			logger.info("Runtime solution application: "
@@ -241,6 +269,24 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		if (verbose) {
 			logger.info("Runtime total: " + tickTockToElapsedSeconds(startTime, System.nanoTime()) + "s.");
 		}
+	}
+
+	/**
+	 * Prints the estimated number of variables to be created by the given GIPS
+	 * mapper.
+	 * 
+	 * @param mapper GIPS mapper to print the estimates number of variables for.
+	 * @return Returns the total estimated number of variables.
+	 */
+	private int logVarStats(final GipsMapper<?> mapper) {
+		Objects.requireNonNull(mapper);
+		final int implicitVars = mapper.getMappings().size();
+		logger.info(mapper.getMapping().getName() + ": " + implicitVars);
+		final int additionalVars = mapper.getMapping().getFreeVariables().size();
+		if (additionalVars > 0) {
+			logger.info(mapper.getMapping().getName() + "_additional" + ": " + additionalVars * implicitVars);
+		}
+		return implicitVars + (additionalVars * implicitVars);
 	}
 
 	/**
