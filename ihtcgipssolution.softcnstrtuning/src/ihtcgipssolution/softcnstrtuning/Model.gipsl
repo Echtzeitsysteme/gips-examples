@@ -229,7 +229,7 @@ mapping openOTOnDay to dayOperatingTheaterTuple;
 // Constraints
 //
 
-// This constraints sets the respective `openedOTDAy` mapping to 1 if and
+// This constraints sets the respective `openedOTOnDAy` mapping to 1 if and
 // only if at least one operation takes place in `relatedOT` on day `d`.
 constraint with openOTOnDay {
 	mappings.assignedSurgeryToPatient->join((d, d), (relatedOT, relatedOT))
@@ -243,7 +243,7 @@ constraint with openOTOnDay {
 	context.value
 }
 
-// This constraint sets the respective `roomDayGender` mapping to 1
+// This constraint sets the respective `genderIsInRoomOnDay` mapping to 1
 // if and only if the gender `g` is present in room `r` on day `d`.
 constraint with genderIsInRoomOnDay {
 	mappings.patientIsInRoomOnDay->join((d, d), (r, r))->filter( //
