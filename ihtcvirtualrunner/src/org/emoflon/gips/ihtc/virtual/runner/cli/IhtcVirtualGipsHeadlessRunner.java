@@ -105,6 +105,7 @@ public class IhtcVirtualGipsHeadlessRunner {
 						"Given pre-processing approach <" + config.preprocessing + "> is invalid.");
 			}
 		}
+		runner.setDisableUselessConstraintRemoval(config.disableUselessConstraintRemoval);
 
 		// Execute the runner
 		runner.run();
@@ -140,6 +141,8 @@ public class IhtcVirtualGipsHeadlessRunner {
 	 * <li>"c": callback configuration path for Gurobi (optional)</li>
 	 * <li>"d": parameter path for Gurobi (optional)</li>
 	 * <li>"k": pre-processing approach (optional)</li>
+	 * <li>"u": if configured, GIPS will *not* remove redundant/useless
+	 * constraints</li>
 	 * </ol>
 	 * 
 	 * @param args Arguments to parse.
@@ -203,6 +206,12 @@ public class IhtcVirtualGipsHeadlessRunner {
 		preprocessing.setRequired(false);
 		options.addOption(preprocessing);
 
+		// (Non-)Removal of redundant/useless constraints
+		final Option uselessConstraints = new Option("u", "disableconstraintcleanup", false,
+				"disable removal of redundant/useless constraints");
+		uselessConstraints.setRequired(false);
+		options.addOption(uselessConstraints);
+
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -232,7 +241,8 @@ public class IhtcVirtualGipsHeadlessRunner {
 				cmd.hasOption("threads") ? Integer.valueOf(cmd.getOptionValue("threads")) : 0, //
 				cmd.hasOption("callback") ? cmd.getOptionValue("callback") : null, //
 				cmd.hasOption("parameter") ? cmd.getOptionValue("parameter") : null, //
-				cmd.hasOption("preprocessing") ? cmd.getOptionValue("preprocessing") : null //
+				cmd.hasOption("preprocessing") ? cmd.getOptionValue("preprocessing") : null, //
+				cmd.hasOption("disableconstraintcleanup") //
 		);
 	}
 
@@ -241,7 +251,7 @@ public class IhtcVirtualGipsHeadlessRunner {
 	 */
 	private record CliConfig(String inputJsonPath, String outputJsonPath, String inputXmiPath, String outputXmiPath,
 			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath,
-			String preprocessing) {
+			String preprocessing, boolean disableUselessConstraintRemoval) {
 	}
 
 	/**

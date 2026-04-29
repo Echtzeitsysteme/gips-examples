@@ -74,6 +74,11 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 	private String parameterPath = projectFolder + "/../ihtcvirtualrunner/scripts/parameter.json";
 
 	/**
+	 * If true, the removal of redundant/useless constraints will be disabled.
+	 */
+	private boolean disableUselessConstraintRemoval = false;
+
+	/**
 	 * Create a new instance of this class.
 	 */
 	public IhtcVirtualGipsRunner() {
@@ -437,6 +442,19 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 		if (parameterPath != null) {
 			gipsApi.getSolverConfig().setParameterPath(parameterPath);
 		}
+		gipsApi.getSolverConfig().setEnableOutput(verbose);
+		gipsApi.getConfig().setPrintUselessConstraintsStats(true);
+		gipsApi.getConfig().setUselessDuplicateConstraints(!disableUselessConstraintRemoval);
+	}
+
+	/**
+	 * Sets the disabling of redundant/useless constraints to the given value.
+	 * 
+	 * @param disable If true, the removal of redundant/useless constraints will be
+	 *                disabled.
+	 */
+	public void setDisableUselessConstraintRemoval(final boolean disable) {
+		this.disableUselessConstraintRemoval = disable;
 	}
 
 }
