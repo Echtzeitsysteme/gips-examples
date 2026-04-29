@@ -14,7 +14,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.emoflon.gips.core.util.Observer;
-import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
 import org.emoflon.gips.ihtc.runner.IhtcSoftCnstrTuningGipsRunner;
 
 import ihtcmetamodel.utils.FileUtils;
@@ -64,7 +63,7 @@ public class IhtcGipsHeadlessRunner {
 		// Create a new IHTC GIPS runner
 		Observer.getInstance().setCurrentSeries("Eval");
 		logger.info("=> Using the SOFT-CNSTR-TUNING implementation.");
-		AbstractIhtcGipsRunner runner = new IhtcSoftCnstrTuningGipsRunner();
+		final IhtcSoftCnstrTuningGipsRunner runner = new IhtcSoftCnstrTuningGipsRunner();
 
 		// Set parameters
 		if (config.inputJsonPath != null) {
@@ -91,6 +90,7 @@ public class IhtcGipsHeadlessRunner {
 		if (config.parameterPath != null) {
 			runner.setParameterPath(config.parameterPath);
 		}
+		runner.setDisableUselessConstraintRemoval(config.disableUselessConstraintRemoval);
 
 		// Execute the runner
 		runner.run();
@@ -120,11 +120,13 @@ public class IhtcGipsHeadlessRunner {
 	 * <li>"q": model input XMI file to store (optional)</li>
 	 * <li>"r": model output XMI file to store (optional)</li>
 	 * <li>"v": if configured, `verbose` will be activated (optional)</li>
-	 * <li>"d": parameter JSON file path (optional)</li>
-	 * <li>"c": callback JSON file path (optional)</li>
 	 * <li>"n": random seed for the (M)ILP solver (optional)</li>
 	 * <li>"t": time limit of the (M)ILP solver in seconds (optional)</li>
 	 * <li>"p": number of threads to use for the ()M)ILP solver (optional)</li>
+	 * <li>"c": callback JSON file path (optional)</li>
+	 * <li>"d": parameter JSON file path (optional)</li>
+	 * <li>"u": if configured, GIPS will *not* remove redundant/useless
+	 * constraints</li>
 	 * </ol>
 	 * 
 	 * @param args Arguments to parse.
@@ -184,6 +186,12 @@ public class IhtcGipsHeadlessRunner {
 		parameterPath.setRequired(false);
 		options.addOption(parameterPath);
 
+		// (Non-)Removal of redundant/useless constraints
+		final Option uselessConstraints = new Option("u", "disableconstraintcleanup", false,
+				"disable removal of redundant/useless constraints");
+		uselessConstraints.setRequired(false);
+		options.addOption(uselessConstraints);
+
 		final CommandLineParser parser = new DefaultParser();
 		final HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd = null;
@@ -212,7 +220,8 @@ public class IhtcGipsHeadlessRunner {
 				cmd.hasOption("timelimit") ? Integer.valueOf(cmd.getOptionValue("timelimit")) : -1, //
 				cmd.hasOption("threads") ? Integer.valueOf(cmd.getOptionValue("threads")) : 0, //
 				cmd.hasOption("callback") ? cmd.getOptionValue("callback") : null, //
-				cmd.hasOption("parameter") ? cmd.getOptionValue("parameter") : null //
+				cmd.hasOption("parameter") ? cmd.getOptionValue("parameter") : null, //
+				cmd.hasOption("disableconstraintcleanup") //
 		);
 	}
 
@@ -220,7 +229,8 @@ public class IhtcGipsHeadlessRunner {
 	 * Record to hold the parsed CLI configuration parameters.
 	 */
 	private record CliConfig(String inputJsonPath, String outputJsonPath, String inputXmiPath, String outputXmiPath,
-			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath) {
+			boolean verbose, int randomSeed, int timeLimit, int threads, String callbackPath, String parameterPath,
+			boolean disableUselessConstraintRemoval) {
 	}
 
 	/**
