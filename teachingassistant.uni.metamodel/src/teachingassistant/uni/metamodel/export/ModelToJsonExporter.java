@@ -1,7 +1,5 @@
 package teachingassistant.uni.metamodel.export;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -83,7 +81,8 @@ public class ModelToJsonExporter {
 		final JsonObject taJson = new JsonObject();
 		taJson.addProperty("name", ta.getName());
 		taJson.addProperty("maxHoursPerWeek", ta.getMaxHoursPerWeek());
-		taJson.addProperty("maxHoursPerYear", ta.getMaxHoursPerYear());
+		// TODO: Maybe this property's name has been changed
+		taJson.addProperty("maxHoursPerYear", ta.getMaxHoursTotal());
 		// Remove old references like setMinimumHoursPerWeek, setMaximumDaysPerWeek,
 		// etc.
 		return taJson;
@@ -134,7 +133,7 @@ public class ModelToJsonExporter {
 					if (s.getTimeTableWeeks() != null) {
 						for (final Week week : s.getTimeTableWeeks()) {
 							if (week != null) {
-								weeksArr.add(week.getNumber());
+								weeksArr.add(week.getId());
 							}
 						}
 					}
@@ -216,31 +215,24 @@ public class ModelToJsonExporter {
 		if (entry.getTimeTableWeeks() != null) {
 			for (final Week w : entry.getTimeTableWeeks()) {
 				if (w != null) {
-					weeksArr.add(w.getNumber());
+					weeksArr.add(w.getId());
 				}
 			}
 		}
 		entryJson.add("timeTableWeeks", weeksArr);
 
 		// day/room/time info
-		entryJson.addProperty("weekDay", entry.getWeekDay());
-		entryJson.addProperty("room", entry.getRoom());
-
-		// The Ecore uses Date for startTime/endTime, so we might format them as
-		// strings:
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		entryJson.addProperty("startTime", formatIfNotNull(sdf, entry.getStartTime()));
-		entryJson.addProperty("endTime", formatIfNotNull(sdf, entry.getEndTime()));
+		// TODO: This property's name may have changed
+		entryJson.addProperty("day", entry.getDay());
+		entryJson.addProperty("room", entry.getRoom().getName());
+		entryJson.addProperty("startMinutes", entry.getStartMinutes());
+		entryJson.addProperty("endMinutes", entry.getEndMinutes());
 
 		// Link back to the session
 		entryJson.addProperty("sessionName", session.getName());
 		entryJson.addProperty("moduleName", module.getName());
 
 		return entryJson;
-	}
-
-	private String formatIfNotNull(final SimpleDateFormat sdf, final Date d) {
-		return (d == null) ? "" : sdf.format(d);
 	}
 
 	// --------------------------------------------------------------------------------
