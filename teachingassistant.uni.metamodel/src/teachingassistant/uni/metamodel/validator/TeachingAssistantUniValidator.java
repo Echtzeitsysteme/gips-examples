@@ -1,8 +1,6 @@
 package teachingassistant.uni.metamodel.validator;
 
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
+import metamodel.BlockedTimeSlot;
 import metamodel.EmploymentApproval;
 import metamodel.Module;
 import metamodel.NamedElement;
@@ -17,16 +16,18 @@ import metamodel.SessionOccurrence;
 import metamodel.TaAllocation;
 import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
+import metamodel.TimeSlot;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
-import teachingassistant.uni.utils.DateTimeUtil;
-import teachingassistant.uni.utils.LoggingUtils;
 import teachingassistant.uni.metamodel.export.FileUtils;
+import teachingassistant.uni.utils.LoggingUtils;
 
 /**
  * Model validator for the teaching assistant example.
  */
 public class TeachingAssistantUniValidator {
+
+	private final static String OUTPUT_PREFIX = "\t";
 
 	/**
 	 * Logger for system outputs.
@@ -36,8 +37,10 @@ public class TeachingAssistantUniValidator {
 	/**
 	 * Model file name to load.
 	 */
-	public final static String SCENARIO_FILE_NAME = "solved.xmi";
+//	public static String SCENARIO_FILE_NAME = "solved.xmi";
 //	public final static String SCENARIO_FILE_NAME = "uni_ta_allocation.xmi";
+	public static String FILE_PATH = System.getProperty("user.dir") + "/../teachingassistant.uni.metamodel/instances/"
+			+ "solved.xmi";
 
 	/**
 	 * If true, the validator will output more detailed information for violated
@@ -61,21 +64,28 @@ public class TeachingAssistantUniValidator {
 		LoggingUtils.configureLogging(logger);
 
 		// Construct file path
-		final String projectFolder = System.getProperty("user.dir");
-		final String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";
-		final String filePath = instanceFolder + SCENARIO_FILE_NAME;
+//		final String projectFolder = System.getProperty("user.dir");
+//		final String instanceFolder = projectFolder + "/../teachingassistant.uni.metamodel/instances/";
+//		final String filePath = instanceFolder + SCENARIO_FILE_NAME;
 
 		// Load model
-		final Resource r = FileUtils.loadModel(filePath);
+		final Resource r = FileUtils.loadModel(FILE_PATH);
 		final TaAllocation model = (TaAllocation) r.getContents().get(0);
 
 		// Validate
 		final boolean valid = new TeachingAssistantUniValidator().validate(model);
 
 		if (valid) {
-			logger.info("Result: Model is valid.");
+			log("Result: Model is valid.");
 		} else {
 			logger.warning("Result: Model is not valid.");
+		}
+	}
+
+	protected static void log(final String message) {
+		Objects.requireNonNull(message);
+		if (verbose) {
+			logger.info(message);
 		}
 	}
 
@@ -115,7 +125,7 @@ public class TeachingAssistantUniValidator {
 				weeksValid = weeksValid & validate(week);
 			}
 			weeksValid = weeksValid & validateWeekNumberUnique(allFoundWeeks);
-			logger.info("=> All weeks are valid: " + weeksValid);
+			log(OUTPUT_PREFIX + "All weeks are valid: " + weeksValid);
 			valid = valid & weeksValid;
 		}
 
@@ -129,14 +139,11 @@ public class TeachingAssistantUniValidator {
 					allFoundTimeTableEntries.addAll(session.getEntries());
 				});
 			});
-			model.getTas().forEach(ta -> {
-				allFoundTimeTableEntries.addAll(ta.getUnavailableBecauseLessons());
-			});
 			boolean timeTableEntriesValid = true;
 			for (final TimeTableEntry entry : allFoundTimeTableEntries) {
 				timeTableEntriesValid = timeTableEntriesValid & validate(entry);
 			}
-			logger.info("=> All time table entries are valid: " + timeTableEntriesValid);
+			log(OUTPUT_PREFIX + "All time table entries are valid: " + timeTableEntriesValid);
 			valid = valid & timeTableEntriesValid;
 		}
 
@@ -146,7 +153,7 @@ public class TeachingAssistantUniValidator {
 			for (final TeachingAssistant ta : model.getTas()) {
 				tasValid = tasValid & validate(ta, model);
 			}
-			logger.info("=> All TAs are valid: " + tasValid);
+			log(OUTPUT_PREFIX + "All TAs are valid: " + tasValid);
 			valid = valid & tasValid;
 		}
 
@@ -156,7 +163,7 @@ public class TeachingAssistantUniValidator {
 			for (final metamodel.Module m : model.getModules()) {
 				modulesValid = modulesValid & validate(m, model);
 			}
-			logger.info("=> All modules are valid: " + modulesValid);
+			log(OUTPUT_PREFIX + "All modules are valid: " + modulesValid);
 			valid = valid & modulesValid;
 		}
 
@@ -172,7 +179,7 @@ public class TeachingAssistantUniValidator {
 				employmentApprovalsValid = employmentApprovalsValid & validate(ea);
 				employmentApprovalsValid = employmentApprovalsValid & model.getTas().contains(ea.getTa());
 			}
-			logger.info("=> All employment approvals are valid: " + employmentApprovalsValid);
+			log(OUTPUT_PREFIX + "All employment approvals are valid: " + employmentApprovalsValid);
 			valid = valid & employmentApprovalsValid;
 		}
 
@@ -186,7 +193,7 @@ public class TeachingAssistantUniValidator {
 					}
 				}
 			}
-			logger.info("=> All session occurrences are valid: " + sessionOccurrencesValid);
+			log(OUTPUT_PREFIX + "All session occurrences are valid: " + sessionOccurrencesValid);
 			valid = valid & sessionOccurrencesValid;
 		}
 
@@ -201,11 +208,70 @@ public class TeachingAssistantUniValidator {
 			for (final TeachingSession ts : allFoundTeachingSessions) {
 				teachingSessionsValid = teachingSessionsValid & validate(ts, model);
 			}
-			logger.info("=> All teaching sessions are valid: " + teachingSessionsValid);
+			log(OUTPUT_PREFIX + "All teaching sessions are valid: " + teachingSessionsValid);
 			valid = valid & teachingSessionsValid;
 		}
 
+		// BlockedTimeSlots
+		{
+			final Set<BlockedTimeSlot> allFoundBlockedTimeSlots = new HashSet<>();
+			model.getTas().forEach(ta -> {
+				allFoundBlockedTimeSlots.addAll(ta.getUnavailable());
+			});
+			boolean blockedTimeSlotsValid = true;
+			for (final BlockedTimeSlot blocked : allFoundBlockedTimeSlots) {
+				blockedTimeSlotsValid = blockedTimeSlotsValid & validate(blocked);
+			}
+			log(OUTPUT_PREFIX + "All blocked time slots are valid: " + blockedTimeSlotsValid);
+			valid = valid & blockedTimeSlotsValid;
+		}
+
 		return valid;
+	}
+
+	/**
+	 * Validates a given generic `TimeSlot` object.
+	 * 
+	 * @param entry `TimeSlot` object to validate.
+	 * @return True if the given `TimeSlot` object is valid.
+	 */
+	private boolean validateGenericTimeSlot(final TimeSlot genericTimeSlot) {
+		if (genericTimeSlot == null) {
+			return false;
+		}
+
+		if (genericTimeSlot.getDay() < 0) {
+			return false;
+		}
+
+		if (genericTimeSlot.getStartMinutes() < 0) {
+			return false;
+		}
+
+		if (genericTimeSlot.getEndMinutes() < 0) {
+			return false;
+		}
+
+		// startEpoch < endEpoch is required
+		if (!(genericTimeSlot.getStartMinutes() < genericTimeSlot.getEndMinutes())) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validates a given `BlockedTimeSlot` object.
+	 * 
+	 * @param entry `BlockedTimeSlot` object to validate.
+	 * @return True if the given `BlockedTimeSlot` object is valid.
+	 */
+	private boolean validate(final BlockedTimeSlot blocked) {
+		if (!(blocked.eContainer() instanceof TeachingAssistant)) {
+			return false;
+		}
+
+		return validateGenericTimeSlot(blocked);
 	}
 
 	/**
@@ -231,7 +297,8 @@ public class TeachingAssistantUniValidator {
 		}
 
 		if (m.getSessions().isEmpty()) {
-			return false;
+			log("\tWarning: Module <" + m.getName() + "> does not have any sessions.");
+//			return false;
 		}
 
 		return true;
@@ -286,7 +353,7 @@ public class TeachingAssistantUniValidator {
 		for (final SessionOccurrence se : ts.getOccurrences()) {
 			boolean contained = false;
 			for (final Week w : ts.getTimeTableWeeks()) {
-				if (w.getNumber() == se.getTimeTableWeek()) {
+				if (w.getId() == se.getTimeTableWeek()) {
 					contained = true;
 					break;
 				}
@@ -302,13 +369,13 @@ public class TeachingAssistantUniValidator {
 		for (final Week w : ts.getTimeTableWeeks()) {
 			int matchingOccurrences = 0;
 			for (final SessionOccurrence so : ts.getOccurrences()) {
-				if (so.getTimeTableWeek() == w.getNumber()) {
+				if (so.getTimeTableWeek() == w.getId()) {
 					matchingOccurrences++;
 				}
 			}
 
 			if (matchingOccurrences != 1) {
-				logVerbose(ts, "Did not have exactly one session occurence in time table week " + w.getNumber() + ".");
+				logVerbose(ts, "Did not have exactly one session occurence in time table week " + w.getId() + ".");
 				return false;
 			}
 		}
@@ -319,14 +386,14 @@ public class TeachingAssistantUniValidator {
 			int matchingOccurences = 0;
 			for (final TimeTableEntry tte : ts.getEntries()) {
 				for (final Week tteWeek : tte.getTimeTableWeeks()) {
-					if (tteWeek.getNumber() == w.getNumber()) {
+					if (tteWeek.getId() == w.getId()) {
 						matchingOccurences++;
 					}
 				}
 			}
 
 			if (matchingOccurences > 1) {
-				logVerbose(ts, "Did not have at most one associated time table entry week " + w.getNumber() + ".");
+				logVerbose(ts, "Did not have at most one associated time table entry week " + w.getId() + ".");
 				return false;
 			}
 		}
@@ -426,14 +493,14 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
-		if (ta.getMaxHoursPerYear() <= 0) {
+		if (ta.getMaxHoursTotal() <= 0) {
 			return false;
 		}
 
 		// Unavailable sessions
 		final Set<TimeTableEntry> allShifts = findAllShiftsOfTa(ta, model);
-		for (final TimeTableEntry unavailable : ta.getUnavailableBecauseLessons()) {
-			if (allShifts.contains(unavailable)) {
+		for (final BlockedTimeSlot unavailable : ta.getUnavailable()) {
+			if (checkIfBlockedTimeSlotIsViolated(unavailable, allShifts)) {
 				if (verbose) {
 					logger.warning("TA <" + ta.getName() + "> did get a session on time table entry <" + unavailable
 							+ "> but is blocked on this time frame.");
@@ -463,14 +530,14 @@ public class TeachingAssistantUniValidator {
 
 		// Check time limit per week
 		for (final Week w : model.getWeeks()) {
-			final Set<TimeTableEntry> weekShifts = findAllShiftsOfTaInWeek(ta, w.getNumber(), model);
+			final Set<TimeTableEntry> weekShifts = findAllShiftsOfTaInWeek(ta, w.getId(), model);
 			int hoursPaidInWeek = 0;
 			for (final TimeTableEntry tte : weekShifts) {
 				hoursPaidInWeek += tte.getSession().getHoursPaidPerOccurrence();
 			}
 			if (hoursPaidInWeek > ta.getMaxHoursPerWeek()) {
 				if (verbose) {
-					logger.warning("TA <" + ta.getName() + "> time limit violated in week <" + w.getNumber() + ">.");
+					logger.warning("TA <" + ta.getName() + "> time limit violated in week <" + w.getId() + ">.");
 				}
 				return false;
 			}
@@ -481,7 +548,7 @@ public class TeachingAssistantUniValidator {
 		for (final TimeTableEntry tte : allShifts) {
 			totalHoursPaid += tte.getSession().getHoursPaidPerOccurrence();
 		}
-		if (totalHoursPaid > ta.getMaxHoursPerYear()) {
+		if (totalHoursPaid > ta.getMaxHoursTotal()) {
 			if (verbose) {
 				logger.warning("TA <" + ta.getName() + "> total time limit violated.");
 			}
@@ -496,7 +563,125 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
+		// Check for inter-campus travel time
+		for (final TimeTableEntry entryA : allShifts) {
+			for (final TimeTableEntry entryB : allShifts) {
+				// If both entries are the same, continue to the next
+				if (entryA.equals(entryB)) {
+					continue;
+				}
+
+				// If the week does not match, continue to the next
+				if (entryA.getTimeTableWeeks().get(0).getId() != entryB.getTimeTableWeeks().get(0).getId()) {
+					continue;
+				}
+
+				// If the day does not match, continue to the next
+				if (!(entryA.getDay() == entryB.getDay())) {
+					continue;
+				}
+
+				// Check if campus does not match ...
+				if (!entryA.getRoom().getCampus().equals(entryB.getRoom().getCampus())) {
+					// ... check if time frames are at least 60 minutes apart from each other
+					// (Here, we must not check if the two time frames overlap since this will be
+					// checked elsewhere.)
+					// Find the time frame delta
+					long delta = 0;
+					if (entryA.getStartMinutes() < entryB.getStartMinutes()) {
+						delta = entryB.getStartMinutes() - entryA.getEndMinutes();
+					} else {
+						delta = entryA.getEndMinutes() - entryB.getStartMinutes();
+					}
+					// If delta is below 1h = 60 minutes, the check failed
+					if (delta < 60) {
+						if (verbose) {
+							logger.warning("Assignments of TA <" + ta.getName() + "> in week <"
+									+ entryA.getTimeTableWeeks().get(0).getId() + "> on day <" + entryA.getDay()
+									+ "> violates the 60 minutes inter-campus travel time.");
+							logger.warning("\tSession A <" + entryA.getSession().getName() + "> in room < "
+									+ entryA.getRoom().getName() + "> on campus <"
+									+ entryA.getRoom().getCampus().getName() + ">." + System.lineSeparator()
+									+ "\tSession B <" + entryB.getSession().getName() + "> in room < "
+									+ entryB.getRoom().getName() + "> on campus <"
+									+ entryB.getRoom().getCampus().getName() + ">.");
+							logger.warning("\tSession A: " + timeTableEntryToString(entryA));
+							logger.warning("\tSession B: " + timeTableEntryToString(entryA));
+						}
+						return false;
+					}
+				}
+			}
+		}
+
 		return true;
+	}
+
+	/**
+	 * Checks if the given blocked time slot is violated by at least one of the
+	 * given set of all time table entries.
+	 * 
+	 * @param unavailable Blocked time slot to check for.
+	 * @param allShifts   Assigned time table entries (shifts).
+	 * @return True if at least one assigned shifts has a collision with the blocked
+	 *         time slot.
+	 */
+	private boolean checkIfBlockedTimeSlotIsViolated(final BlockedTimeSlot unavailable,
+			final Set<TimeTableEntry> allShifts) {
+		Objects.requireNonNull(unavailable);
+		Objects.requireNonNull(allShifts);
+
+		if (allShifts.isEmpty()) {
+			return false;
+		}
+
+		for (final TimeTableEntry entry : allShifts) {
+			if (checkBlockedOverlap(unavailable, entry)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if the given blocked time slot is violated the given time table entry.
+	 * 
+	 * @param unavailable Blocked time slot to check for.
+	 * @param entry       Assigned time table entry (shift).
+	 * @return True if the single assigned shift has a collision with the blocked
+	 *         time slot.
+	 */
+	private boolean checkBlockedOverlap(final BlockedTimeSlot blocked, final TimeTableEntry entry) {
+		Objects.requireNonNull(blocked);
+		Objects.requireNonNull(entry);
+
+		if (blocked.getTimeTableWeeks().get(0).equals(entry.getTimeTableWeeks().get(0))) {
+			if (blocked.getDay() == entry.getDay()) {
+				if (blocked.getStartMinutes() < entry.getEndMinutes()) {
+					if (blocked.getEndMinutes() > entry.getStartMinutes()) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Utility method to convert a given time table entry to a nice string for
+	 * printing.
+	 * 
+	 * @param entry Time Table entry to convert to a string.
+	 * @return String representing the given time table entry.
+	 */
+	private String timeTableEntryToString(final TimeTableEntry entry) {
+		Objects.requireNonNull(entry);
+		String string = "";
+		string += "\tEntry start week <" + entry.getTimeTableWeeks().getFirst().getId() + ">, day <" + entry.getDay()
+				+ ">, start <" + entry.getStartMinutes() + "> and end <" + entry.getEndMinutes() + ">.";
+		return string;
 	}
 
 	/**
@@ -551,7 +736,7 @@ public class TeachingAssistantUniValidator {
 
 		final Set<Integer> names = new HashSet<>();
 		for (final Week w : weeks) {
-			if (!names.add(w.getNumber())) {
+			if (!names.add(w.getId())) {
 				return false;
 			}
 		}
@@ -571,7 +756,7 @@ public class TeachingAssistantUniValidator {
 		}
 
 		// Number of the week must be between 1 and 52
-		if (week.getNumber() < 0 || week.getNumber() > 52) {
+		if (week.getId() < 0 || week.getId() > 52) {
 			return false;
 		}
 
@@ -589,27 +774,11 @@ public class TeachingAssistantUniValidator {
 			return false;
 		}
 
-		if (entry.getRoom() == null || entry.getRoom().isBlank()) {
+		if (!validateGenericTimeSlot(entry)) {
 			return false;
 		}
 
-		if (entry.getWeekDay() == null || entry.getWeekDay().isBlank()) {
-			return false;
-		}
-
-		if (entry.getStartTime() == null) {
-			return false;
-		}
-
-		if (entry.getEndTime() == null) {
-			return false;
-		}
-
-		if (entry.getStartEpoch() < 0) {
-			return false;
-		}
-
-		if (entry.getEndEpoch() < 0) {
+		if (entry.getRoom() == null) {
 			return false;
 		}
 
@@ -625,17 +794,6 @@ public class TeachingAssistantUniValidator {
 		// timeTableWeeks
 		// all timeTableWeeks of the entry must be part of the session's timeTableWeeks
 		if (!entry.getSession().getTimeTableWeeks().containsAll(entry.getTimeTableWeeks())) {
-			return false;
-		}
-
-		// startTime < endTime is required
-		// We ignore the date and only check for time
-		if (!startBeforeEndTimeOnly(entry.getStartTime(), entry.getEndTime())) {
-			return false;
-		}
-
-		// startEpoch < endEpoch is required
-		if (!(entry.getStartEpoch() < entry.getEndEpoch())) {
 			return false;
 		}
 
@@ -672,16 +830,16 @@ public class TeachingAssistantUniValidator {
 
 				// If the weekday does not match, we do not have to check for an overlapping
 				// time frame
-				if (tte.getWeekDay() != null && !tte.getWeekDay().equals(other.getWeekDay())) {
+				if (tte.getDay() != other.getDay()) {
 					continue;
 				}
 
 				// If there is at least one overlapping week check if the time frames overlaps
 				if (!overlappingWeeks.isEmpty()) {
-					final int firstStart = DateTimeUtil.convertDateTimeToSeconds(tte.getStartTime());
-					final int firstEnd = DateTimeUtil.convertDateTimeToSeconds(tte.getEndTime());
-					final int secondStart = DateTimeUtil.convertDateTimeToSeconds(other.getStartTime());
-					final int secondEnd = DateTimeUtil.convertDateTimeToSeconds(other.getEndTime());
+					final int firstStart = tte.getStartMinutes();
+					final int firstEnd = tte.getEndMinutes();
+					final int secondStart = other.getStartMinutes();
+					final int secondEnd = other.getEndMinutes();
 					if ((firstStart < secondEnd && firstEnd > secondStart)) {
 						return true;
 					}
@@ -690,36 +848,6 @@ public class TeachingAssistantUniValidator {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Compares the two given Date objects and returns true if the time of the start
-	 * object lays before the time of the end object. This method ignores the dates
-	 * completely, i.e., it only relies on the hours, minutes, and seconds.
-	 * 
-	 * @param start Date object that represents the start.
-	 * @param end   Date object that represents the end.
-	 * @return True if start.time < end.time (not respecting the date).
-	 */
-	private boolean startBeforeEndTimeOnly(final Date start, final Date end) {
-		final Calendar startCal = Calendar.getInstance();
-		startCal.setTime(start);
-		final Calendar endCal = Calendar.getInstance();
-		endCal.setTime(end);
-
-		if (startCal.get(Calendar.HOUR_OF_DAY) > endCal.get(Calendar.HOUR_OF_DAY)) {
-			return false;
-		} else if (startCal.get(Calendar.HOUR_OF_DAY) == endCal.get(Calendar.HOUR_OF_DAY)) {
-			if (startCal.get(Calendar.MINUTE) > endCal.get(Calendar.MINUTE)) {
-				return false;
-			} else if (startCal.get(Calendar.MINUTE) == endCal.get(Calendar.MINUTE)) {
-				if (startCal.get(Calendar.SECOND) > endCal.get(Calendar.SECOND)) {
-					return false;
-				}
-			}
-		}
-
-		return true;
 	}
 
 	/**
@@ -733,8 +861,8 @@ public class TeachingAssistantUniValidator {
 		int firstWeek = Integer.MAX_VALUE;
 
 		for (final Week w : weeks) {
-			if (w.getNumber() < firstWeek) {
-				firstWeek = w.getNumber();
+			if (w.getId() < firstWeek) {
+				firstWeek = w.getId();
 			}
 		}
 
@@ -751,8 +879,8 @@ public class TeachingAssistantUniValidator {
 		int lastWeek = Integer.MIN_VALUE;
 
 		for (final Week w : weeks) {
-			if (w.getNumber() > lastWeek) {
-				lastWeek = w.getNumber();
+			if (w.getId() > lastWeek) {
+				lastWeek = w.getId();
 			}
 		}
 
@@ -795,7 +923,7 @@ public class TeachingAssistantUniValidator {
 						final Set<TimeTableEntry> matchingEntries = new HashSet<>();
 						session.getEntries().forEach(tte -> {
 							for (final Week w : tte.getTimeTableWeeks()) {
-								if (w.getNumber() == o.getTimeTableWeek()) {
+								if (w.getId() == o.getTimeTableWeek()) {
 									matchingEntries.add(tte);
 									break;
 								}
@@ -846,7 +974,7 @@ public class TeachingAssistantUniValidator {
 						session.getEntries().forEach(tte -> {
 							for (final Week w : tte.getTimeTableWeeks()) {
 								// Week number must match from occurrence to week but also to given week value
-								if (w.getNumber() == o.getTimeTableWeek() && w.getNumber() == week) {
+								if (w.getId() == o.getTimeTableWeek() && w.getId() == week) {
 									matchingEntries.add(tte);
 									break;
 								}

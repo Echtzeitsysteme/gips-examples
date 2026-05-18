@@ -15,8 +15,8 @@ import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
-import teachingassistant.uni.utils.LoggingUtils;
 import teachingassistant.uni.metamodel.export.FileUtils;
+import teachingassistant.uni.utils.LoggingUtils;
 
 public class TeachingAssistantUniManipulator {
 
@@ -108,7 +108,7 @@ public class TeachingAssistantUniManipulator {
 		final Set<TimeTableEntry> foundEntries = new HashSet<TimeTableEntry>();
 		for (final TimeTableEntry entry : session.getEntries()) {
 			for (final Week week : entry.getTimeTableWeeks()) {
-				if (week.getNumber() == occ.getTimeTableWeek()) {
+				if (week.getId() == occ.getTimeTableWeek()) {
 					foundEntries.add(entry);
 					break;
 				}
@@ -116,7 +116,9 @@ public class TeachingAssistantUniManipulator {
 		}
 
 		logger.info("Number of matched entries: " + foundEntries.size());
-		ta.getUnavailableBecauseLessons().addAll(foundEntries);
+		foundEntries.forEach(entry -> {
+			ta.getUnavailable().add(SimpleTaUniGenerator.convertEntryToBlockedTimeSlot(entry));
+		});
 
 		// TODO: Future improvement: make sure occurrence is not in the past.
 	}

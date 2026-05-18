@@ -1,5 +1,6 @@
 package teachingassistant.uni.metamodel.export;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -77,6 +78,20 @@ public class FileUtils extends AbstractFileUtils {
 		resourceSet.getPackageRegistry().put(MetamodelPackage.eNS_URI, MetamodelPackage.eINSTANCE);
 		resourceSet.getResource(pathUri, true);
 		return resourceSet.getResources().getFirst();
+	}
+
+	/**
+	 * Deletes the file with the given file path if it is not a directory.
+	 * 
+	 * @param path File path to delete file on.
+	 */
+	public static void deleteFile(final String path) {
+		Objects.requireNonNull(path);
+		final File toDelete = new File(path);
+		if (toDelete.isDirectory()) {
+			throw new IllegalArgumentException("Given path is not a file but a directory.");
+		}
+		toDelete.delete();
 	}
 
 }

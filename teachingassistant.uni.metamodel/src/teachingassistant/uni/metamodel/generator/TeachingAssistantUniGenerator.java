@@ -113,7 +113,7 @@ public class TeachingAssistantUniGenerator {
 		// maxHoursPerYear
 		ta.setName(name);
 		ta.setMaxHoursPerWeek(maxHoursPerWeek);
-		ta.setMaxHoursPerYear(maxHoursPerYear);
+		ta.setMaxHoursTotal(maxHoursPerYear);
 
 		tas.put(name, ta);
 	}

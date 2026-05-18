@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import metamodel.BlockedTimeSlot;
 import metamodel.EmploymentApproval;
 import metamodel.EmploymentRating;
+import metamodel.MetamodelFactory;
 import metamodel.Module;
 import metamodel.SessionOccurrence;
 import metamodel.TaAllocation;
@@ -21,9 +24,9 @@ import metamodel.TeachingAssistant;
 import metamodel.TeachingSession;
 import metamodel.TimeTableEntry;
 import metamodel.Week;
+import teachingassistant.uni.metamodel.export.ModelToJsonExporter;
 import teachingassistant.uni.utils.DateTimeUtil;
 import teachingassistant.uni.utils.LoggingUtils;
-import teachingassistant.uni.metamodel.export.ModelToJsonExporter;
 
 /**
  * Generator that creates a TaAllocation model aligned with the updated
@@ -114,7 +117,7 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 		// 1.1) Create all weeks
 		for (int i = START_WEEK; i <= END_WEEK; i++) {
 			final Week week = factory.createWeek();
-			week.setNumber(i);
+			week.setId(i);
 			this.root.getWeeks().add(week);
 		}
 
@@ -145,7 +148,7 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 			final TeachingAssistant ta = factory.createTeachingAssistant();
 			ta.setName(taName);
 			ta.setMaxHoursPerWeek(maxWeeklyHours);
-			ta.setMaxHoursPerYear(TA_MAXIMUM_HOURS_PER_YEAR);
+			ta.setMaxHoursTotal(TA_MAXIMUM_HOURS_PER_YEAR);
 
 			tas.put(taName, ta);
 		}
@@ -259,23 +262,24 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 					entry.getTimeTableWeeks().add(getWeek(chosenWeek));
 					session.getTimeTableWeeks().add(getWeek(chosenWeek));
 
-					entry.setRoom("Room" + getRandInt(1, 5));
+//					entry.setRoomName("Room" + getRandInt(1, 5));
+					// TODO: This generator's implementation is currently broken because it does not
+					// create the necessary adapted room objects.
 
 					// Pick a day offset (0..4 => Mon..Fri)
 					final LocalDateTime dayTime = baseWeekMonday
 							.plusDays((chosenWeek - START_WEEK) * 7 + getRandInt(0, 4));
 
-					entry.setWeekDay(dayTime.getDayOfWeek().toString());
+					// TODO: This generator is broken here:
+//					entry.setWeekDay(dayTime.getDayOfWeek().toString());
 
 					// Convert LocalDateTime => Date
 					final Date startDate = Date.from(dayTime.atZone(ZoneId.systemDefault()).toInstant());
 					final Date endDate = Date
 							.from(dayTime.plusHours(durationHours).atZone(ZoneId.systemDefault()).toInstant());
 
-					entry.setStartTime(startDate);
-					entry.setEndTime(endDate);
-					entry.setStartEpoch(DateTimeUtil.convertDateTimeToSeconds(startDate));
-					entry.setEndEpoch(DateTimeUtil.convertDateTimeToSeconds(endDate));
+					entry.setStartMinutes(DateTimeUtil.convertDateTimeToMinutes(startDate));
+					entry.setEndMinutes(DateTimeUtil.convertDateTimeToMinutes(endDate));
 
 					// Link session <-> entry
 					entry.setSession(session);
@@ -297,7 +301,7 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 					break;
 				}
 				final int randomTteIndex = getRandInt(0, copiedTtes.size() - 1);
-				ta.getUnavailableBecauseLessons().add(copiedTtes.remove(randomTteIndex));
+				ta.getUnavailable().add(convertEntryToBlockedTimeSlot(copiedTtes.remove(randomTteIndex)));
 			}
 		}
 
@@ -308,9 +312,19 @@ public class SimpleTaUniGenerator extends TeachingAssistantUniGenerator {
 		return root;
 	}
 
+	public static BlockedTimeSlot convertEntryToBlockedTimeSlot(final TimeTableEntry entry) {
+		Objects.requireNonNull(entry);
+		final BlockedTimeSlot blocked = MetamodelFactory.eINSTANCE.createBlockedTimeSlot();
+		blocked.setDay(entry.getDay());
+		blocked.getTimeTableWeeks().addAll(entry.getTimeTableWeeks());
+		blocked.setStartMinutes(entry.getStartMinutes());
+		blocked.setEndMinutes(entry.getEndMinutes());
+		return blocked;
+	}
+
 	private Week getWeek(final int weekNumber) {
 		for (final Week itW : this.root.getWeeks()) {
-			if (itW.getNumber() == weekNumber) {
+			if (itW.getId() == weekNumber) {
 				return itW;
 			}
 		}
