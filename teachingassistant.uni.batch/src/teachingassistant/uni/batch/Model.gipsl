@@ -289,36 +289,17 @@ function amberTas with findAmberTa {
 // week `w1` and in a session occurrence in week `w2`, set the respective
 // binary variable of the corresponding continuity mapping to `1`.
 constraint with continuity {
-//	[context.value == 1] //
-//
-//	<=>
-//	
-//	[mappings.taToOccurrence->filter( //
-//		element.nodes.ta == context.nodes.ta //
-//		& element.nodes.occurrence == context.nodes.occurrenceA //
-//	)->sum(element.value)
-//	+
-//	mappings.taToOccurrence->filter( //
-//		element.nodes.ta == context.nodes.ta //
-//		& element.nodes.occurrence == context.nodes.occurrenceB //
-//	)->sum(element.value)
-//	== 2]
-
-	// Faster replacement
-	2 * context.value
-	<=
-	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceA))->sum(element.value)
-	+
-	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceB))->sum(element.value)
-	
+	context.value == 1
+	<==>
+	[mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrenceA //
+	)->sum(element.value) == 1
 	&
-	
-	context.value
-	>=
-	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceA))->sum(element.value)
-	+
-	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceB))->sum(element.value)
-	- 1
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrenceB //
+	)->sum(element.value) == 1]
 }
 
 // Represents the number of selected continuity variables.
