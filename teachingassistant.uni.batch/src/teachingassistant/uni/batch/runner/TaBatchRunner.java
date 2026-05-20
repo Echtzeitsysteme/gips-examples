@@ -1,8 +1,5 @@
 package teachingassistant.uni.batch.runner;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,7 +18,6 @@ import org.emoflon.gips.core.util.Observer;
 import org.emoflon.ibex.gt.api.GraphTransformationMatch;
 
 import metamodel.TaAllocation;
-import metamodel.TimeTableEntry;
 import teachingassistant.uni.batch.api.gips.BatchGipsAPI;
 import teachingassistant.uni.batch.api.gips.mapper.TaToOccurrenceMapper;
 import teachingassistant.uni.batch.api.matches.AssignTaMatch;
@@ -29,7 +25,6 @@ import teachingassistant.uni.batch.api.matches.FindTaUnavailableSessionMatch;
 import teachingassistant.uni.metamodel.export.FileUtils;
 import teachingassistant.uni.metamodel.export.JsonToModelImporter;
 import teachingassistant.uni.metamodel.export.ModelToJsonExporter;
-import teachingassistant.uni.metamodel.validator.TeachingAssistantUniValidator;
 import teachingassistant.uni.utils.AbstractGipsTeachingAssistantRunner;
 
 public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
@@ -129,9 +124,6 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 					if (noNacFound) {
 						filteredMatches.add(match);
 					}
-//					else {
-//						logger.info("=> filtered match: " + typedMatch.getTa() + "; " + typedMatch.getEntry());
-//					}
 				}
 				return filteredMatches;
 			}
@@ -165,51 +157,6 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		gipsSave(gipsApi, gipsOutputPath);
 		final long gipsSaveDone = System.nanoTime();
 		log("Runtime GIPS save: " + tickTockToSeconds(gipsApplyDone, gipsSaveDone) + "s.");
-
-		//
-		// Print statistics about conflicting dates and continuity
-		//
-
-		try {
-			System.out.println("=> Conflicting entries stats:");
-			final BufferedWriter writer = new BufferedWriter(new FileWriter(exportsWritePath, false));
-			// conflicting entries
-			printAndWrite("findConflictingEntriesWithTa:", writer);
-			gipsApi.getEMoflonAPI().findConflictingEntriesWithTa().findMatches().forEach(m -> {
-				printAndWrite("\t" + entryToString(m.getEntryA()) + ";" + entryToString(m.getEntryB()) + ";"
-						+ m.getTa().getName(), writer);
-			});
-			// inter-campus travel time
-			printAndWrite("findInterCampusTimeTableEntriesConflict:", writer);
-			gipsApi.getEMoflonAPI().findInterCampusTimeTableEntriesConflict().findMatches().forEach(m -> {
-				printAndWrite("\t" + entryToString(m.getEntryA()) + ";" + entryToString(m.getEntryB()) + ";"
-						+ m.getTa().getName(), writer);
-			});
-			// continuity
-			printAndWrite("findOccurrenceContinuity:", writer);
-			gipsApi.getEMoflonAPI().findOccurrenceContinuity().findMatches().forEach(m -> {
-				printAndWrite("\t" + m.getSession().getName() + ";" //
-						+ m.getOccurrenceA().getTimeTableWeek() + ";" //
-						+ m.getOccurrenceB().getTimeTableWeek() + ";" //
-						+ m.getTa().getName(), writer);
-			});
-
-			// close file
-			writer.flush();
-			writer.close();
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-
-		//
-		// Model Validation
-		//
-
-		log("=> Start TA university validator.");
-		TeachingAssistantUniValidator.FILE_PATH = gipsOutputPath;
-		TeachingAssistantUniValidator.verbose = verbose;
-		TeachingAssistantUniValidator.main(null);
-
 		//
 		// Verify continuity solution + print TA employment rating of the solution
 		//
@@ -293,42 +240,6 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 	 */
 	private void setGurobiVerbose(final BatchGipsAPI gipsApi, final boolean verbose) {
 		gipsApi.getSolverConfig().setEnableOutput(verbose);
-	}
-
-	/**
-	 * Converts a given time table entry to a nice printout string.
-	 * 
-	 * @param entry Time table entry to convert.
-	 * @return String representing of the time table entry.
-	 */
-	private String entryToString(final TimeTableEntry entry) {
-		Objects.requireNonNull(entry);
-		String ret = "";
-		ret += entry.getSession().getName();
-		ret += "@day";
-		ret += entry.getDay();
-		ret += "@";
-		ret += entry.getRoom().getName();
-		return ret;
-	}
-
-	/**
-	 * The given String will be written to the given buffered writer and it will be
-	 * printed to the console.
-	 * 
-	 * @param value  String to be processed.
-	 * @param writer BufferedWriter to write the contents to.
-	 */
-	private void printAndWrite(final String value, final BufferedWriter writer) {
-		Objects.requireNonNull(value);
-		Objects.requireNonNull(writer);
-		System.out.println(value);
-		try {
-			writer.write(value);
-			writer.newLine();
-		} catch (final IOException ex) {
-			ex.printStackTrace();
-		}
 	}
 
 }

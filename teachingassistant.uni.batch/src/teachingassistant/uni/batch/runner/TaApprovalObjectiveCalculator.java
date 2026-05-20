@@ -29,12 +29,10 @@ public class TaApprovalObjectiveCalculator {
 	 */
 	public int calculate(final BatchGipsAPI gipsApi) {
 		Objects.requireNonNull(gipsApi);
-
 		int sum = 0;
 		for (final var m : gipsApi.getTaToOccurrence().getNonZeroVariableMappings()) {
 			sum += m.getApproval().getRatingNumeric();
 		}
-//		logger.info("\tEmployment rating value: " + sum);
 		return sum;
 	}
 
