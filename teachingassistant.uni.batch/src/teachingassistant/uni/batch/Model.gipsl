@@ -4,10 +4,10 @@ import "platform:/resource/teachingassistant.uni.metamodel/model/Metamodel.ecore
 config {
 	solver := GUROBI;
 	timeLimit := true [value := 120.0];
-	randomSeed := true [value := 0];
+//	randomSeed := true [value := 0];
 	presolve := auto;
 	debugOutput := true;
-	lpOutput := true [path := "problem.lp"];
+//	lpOutput := true [path := "problem.lp"];
 }
 
 //
@@ -80,7 +80,7 @@ rule assignTa {
 	# approval.ratingNumeric > 0
 }
 when taAvailableInSession
-// TODO: ^this does not work properly and I don't know why.
+// TODO: ^this does not work properly because of a bug in eMoflon::IBeX/HiPE.
 
 // Find every possible combination of TAs
 // and time table entries
@@ -212,12 +212,15 @@ pattern findOccurrenceContinuity {
 // GIPSL
 //
 
-//// Constraint that replaces the GT NAC. I.e., a mapping between a TA and an entry
-//// must not be selected if the TA is blocked in the time frame.
-//// GIPSL interpretation: for every unavailable time table entry of a TA, there must not be
-//// a selection of the corresponding mapping (TA and entry must match).
+//// Constraint that replaces the GT NAC. I.e., a mapping between a TA and an
+//// entry must not be selected if the TA is blocked in the time frame.
+//// GIPSL interpretation: for every unavailable time table entry of a TA, there
+//// must not be a selection of the corresponding mapping (TA and entry must
+//// match).
+//// ^Not necessary anymore, since we filter the matches programmatically.
 //constraint with findTaUnavailableSession {
-//	mappings.taToOccurrence->join((ta, ta), (entry, entry))->sum(element.value) == 0
+//	mappings.taToOccurrence->join((ta, ta), (entry, entry))->sum(element.value)
+// 	== 0
 //}
 
 // If a mapping instance has a value of `1`, the respective TA must
@@ -231,16 +234,17 @@ mapping continuity to findOccurrenceContinuity;
 // Every session occurrence must have exactly `numTAsPerSession` TAs assigned.
 constraint with findSessionOccurrence {
 	mappings.taToOccurrence->join((occurrence, occurrence))->sum(element.value)
-	==
-	context.nodes.session.numTasPerSession
+	== context.nodes.session.numTasPerSession
 }
 
 // TAs must not have conflicting assignments.
 // GIPSL formulation: For any pair of conflicting session occurrences (in the
-// context of one TA), a maximum of one of these conflicting session can be chosen.
+// context of one TA), a maximum of one of these conflicting session can be
+// chosen.
 constraint with findConflictingEntriesWithTa {
 	mappings.taToOccurrence->join((ta, ta), (entry, entryA))->sum(element.value)
-	+ mappings.taToOccurrence->join((ta, ta), (entry, entryB))->sum(element.value)
+	+
+	mappings.taToOccurrence->join((ta, ta), (entry, entryB))->sum(element.value)
 	<= 1
 }
 
@@ -251,7 +255,8 @@ constraint with findConflictingEntriesWithTa {
 // chosen.
 constraint with findInterCampusTimeTableEntriesConflict {
 	mappings.taToOccurrence->join((ta, ta), (entry, entryA))->sum(element.value)
-	+ mappings.taToOccurrence->join((ta, ta), (entry, entryB))->sum(element.value)
+	+
+	mappings.taToOccurrence->join((ta, ta), (entry, entryB))->sum(element.value)
 	<= 1
 }
 
@@ -259,16 +264,18 @@ constraint with findInterCampusTimeTableEntriesConflict {
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // must not exceed their total hour limit
 constraint with TeachingAssistant {
-	mappings.taToOccurrence->join(ta)->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
-	<= context.maxHoursTotal
+	mappings.taToOccurrence->join(ta)->sum( //
+		element.value * element.nodes.session.hoursPaidPerOccurrence //
+	) <= context.maxHoursTotal
 }
 
 // Ensure TAs max hours per week
 // GIPSL interpretation: the sum of all assigned working hours per TA
 // in a specific week must not exceed their weekly hour limit
 constraint with findTaWeekCombination {
-	mappings.taToOccurrence->join((ta, ta), (w, w))->sum(element.value * element.nodes.session.hoursPaidPerOccurrence)
-	<= context.nodes.ta.maxHoursPerWeek
+	mappings.taToOccurrence->join((ta, ta), (w, w))->sum( //
+		element.value * element.nodes.session.hoursPaidPerOccurrence //
+	) <= context.nodes.ta.maxHoursPerWeek
 }
 
 // Represents the number of assigned session occurrences to a specific
@@ -289,36 +296,17 @@ function amberTas with findAmberTa {
 // week `w1` and in a session occurrence in week `w2`, set the respective
 // binary variable of the corresponding continuity mapping to `1`.
 constraint with continuity {
-//	[context.value == 1] //
-//
-//	<=>
-//	
-//	[mappings.taToOccurrence->filter( //
-//		element.nodes.ta == context.nodes.ta //
-//		& element.nodes.occurrence == context.nodes.occurrenceA //
-//	)->sum(element.value)
-//	+
-//	mappings.taToOccurrence->filter( //
-//		element.nodes.ta == context.nodes.ta //
-//		& element.nodes.occurrence == context.nodes.occurrenceB //
-//	)->sum(element.value)
-//	== 2]
-
-	// Faster replacement
-	2 * context.value
-	<=
-	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceA))->sum(element.value)
-	+
-	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceB))->sum(element.value)
-	
+	context.value == 1
+	<==>
+	[mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrenceA //
+	)->sum(element.value) == 1
 	&
-	
-	context.value
-	>=
-	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceA))->sum(element.value)
-	+
-	mappings.taToOccurrence->join((ta, ta), (occurrence, occurrenceB))->sum(element.value)
-	- 1
+	mappings.taToOccurrence->filter( //
+		element.nodes.ta == context.nodes.ta //
+		& element.nodes.occurrence == context.nodes.occurrenceB //
+	)->sum(element.value) == 1]
 }
 
 // Represents the number of selected continuity variables.
@@ -328,11 +316,9 @@ function continuity with continuity {
 
 // Global objective
 objective : max {
-	0
-	// We want to use a higher weight for green TAs compared to the
-	// amber TAs
-	+ 2 * functions.greenTas
+	// We want to use a higher weight for green TAs compared to the amber TAs
+	2 * functions.greenTas
 	+ 1 * functions.amberTas
-	// Continuity weighted by a constant factor beta.
+	// Continuity weighted by a constant factor beta = 1.
 	+ 1 * functions.continuity
 }
