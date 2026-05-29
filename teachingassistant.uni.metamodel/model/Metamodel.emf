@@ -1,0 +1,65 @@
+package metamodel;
+abstract class NamedElement {
+	attr String name;
+}
+abstract class IdedElement {
+	attr int ~id;
+}
+class TaAllocation {
+	val Module[*] modules;
+	val TeachingAssistant[*] tas;
+	val TimeTableEntry[*] timetable;
+	val Week[*] weeks;
+	val Campus[*] campuses;
+	val Room[*] rooms;
+}
+class TeachingAssistant extends NamedElement, IdedElement {
+	attr int maxHoursPerWeek;
+	attr int maxHoursTotal;
+	val BlockedTimeSlot[*] unavailable;
+}
+class EmploymentApproval {
+	attr EmploymentRating rating;
+	ref TeachingAssistant[1] ta;
+	attr int ratingNumeric;
+}
+class SessionOccurrence extends NamedElement {
+	attr int timeTableWeek;
+	ref TeachingAssistant[+] tas;
+	ref TeachingAssistant[*] previousSolutionTas;
+}
+class Module extends NamedElement, IdedElement {
+	val EmploymentApproval[*] approvals;
+	val TeachingSession[*] sessions;
+}
+class TeachingSession extends NamedElement, IdedElement {
+	attr int hoursPaidPerOccurrence;
+	attr int numTasPerSession;
+	val SessionOccurrence[*] occurrences;
+	ref TimeTableEntry[*]#session entries;
+	ref Week[*] timeTableWeeks;
+}
+class TimeTableEntry extends TimeSlot {
+	ref TeachingSession[1]#entries session;
+	ref Room room;
+}
+enum EmploymentRating {
+	RED = 0;
+	AMBER = 1;
+	GREEN = 2;
+}
+class Week extends IdedElement {
+}
+class Campus extends IdedElement, NamedElement {
+}
+class Room extends IdedElement, NamedElement {
+	ref Campus campus;
+}
+class BlockedTimeSlot extends TimeSlot {
+}
+class TimeSlot {
+	attr int day;
+	ref Week[*] timeTableWeeks;
+	attr int startMinutes;
+	attr int endMinutes;
+}
