@@ -1,7 +1,7 @@
 package teachingassistant.uni.batch.runner;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
+//import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -170,36 +170,36 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		// Print statistics about conflicting dates and continuity
 		//
 
-		try {
-			System.out.println("=> Conflicting entries stats:");
-			final BufferedWriter writer = new BufferedWriter(new FileWriter(exportsWritePath, false));
-			// conflicting entries
-			printAndWrite("findConflictingEntriesWithTa:", writer);
-			gipsApi.getEMoflonAPI().findConflictingEntriesWithTa().findMatches().forEach(m -> {
-				printAndWrite("\t" + entryToString(m.getEntryA()) + ";" + entryToString(m.getEntryB()) + ";"
-						+ m.getTa().getName(), writer);
-			});
-			// inter-campus travel time
-			printAndWrite("findInterCampusTimeTableEntriesConflict:", writer);
-			gipsApi.getEMoflonAPI().findInterCampusTimeTableEntriesConflict().findMatches().forEach(m -> {
-				printAndWrite("\t" + entryToString(m.getEntryA()) + ";" + entryToString(m.getEntryB()) + ";"
-						+ m.getTa().getName(), writer);
-			});
-			// continuity
-			printAndWrite("findOccurrenceContinuity:", writer);
-			gipsApi.getEMoflonAPI().findOccurrenceContinuity().findMatches().forEach(m -> {
-				printAndWrite("\t" + m.getSession().getName() + ";" //
-						+ m.getOccurrenceA().getTimeTableWeek() + ";" //
-						+ m.getOccurrenceB().getTimeTableWeek() + ";" //
-						+ m.getTa().getName(), writer);
-			});
-
-			// close file
-			writer.flush();
-			writer.close();
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			System.out.println("=> Conflicting entries stats:");
+//			final BufferedWriter writer = new BufferedWriter(new FileWriter(exportsWritePath, false));
+//			// conflicting entries
+//			printAndWrite("findConflictingEntriesWithTa:", writer);
+//			gipsApi.getEMoflonAPI().findConflictingEntriesWithTa().findMatches().forEach(m -> {
+//				printAndWrite("\t" + entryToString(m.getEntryA()) + ";" + entryToString(m.getEntryB()) + ";"
+//						+ m.getTa().getName(), writer);
+//			});
+//			// inter-campus travel time
+//			printAndWrite("findInterCampusTimeTableEntriesConflict:", writer);
+//			gipsApi.getEMoflonAPI().findInterCampusTimeTableEntriesConflict().findMatches().forEach(m -> {
+//				printAndWrite("\t" + entryToString(m.getEntryA()) + ";" + entryToString(m.getEntryB()) + ";"
+//						+ m.getTa().getName(), writer);
+//			});
+//			// continuity
+//			printAndWrite("findOccurrenceContinuity:", writer);
+//			gipsApi.getEMoflonAPI().findOccurrenceContinuity().findMatches().forEach(m -> {
+//				printAndWrite("\t" + m.getSession().getName() + ";" //
+//						+ m.getOccurrenceA().getTimeTableWeek() + ";" //
+//						+ m.getOccurrenceB().getTimeTableWeek() + ";" //
+//						+ m.getTa().getName(), writer);
+//			});
+//
+//			// close file
+//			writer.flush();
+//			writer.close();
+//		} catch (final IOException e) {
+//			e.printStackTrace();
+//		}
 
 		//
 		// Model Validation
