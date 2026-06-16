@@ -261,19 +261,19 @@ constraint with findInterCampusTimeTableEntriesConflict {
 }
 
 // Ensure TAs total max hours
-// GIPSL interpretation: the sum of all assigned working hours per TA
+// GIPSL interpretation: the sum of all assigned working hours per TA times two
 // must not exceed their total hour limit
 constraint with TeachingAssistant {
-	mappings.taToOccurrence->join(ta)->sum( //
+	2 * mappings.taToOccurrence->join(ta)->sum( //
 		element.value * element.nodes.session.hoursPaidPerOccurrence //
 	) <= context.maxHoursTotal
 }
 
 // Ensure TAs max hours per week
 // GIPSL interpretation: the sum of all assigned working hours per TA
-// in a specific week must not exceed their weekly hour limit
+// in a specific week times two must not exceed their weekly hour limit
 constraint with findTaWeekCombination {
-	mappings.taToOccurrence->join((ta, ta), (w, w))->sum( //
+	2 * mappings.taToOccurrence->join((ta, ta), (w, w))->sum( //
 		element.value * element.nodes.session.hoursPaidPerOccurrence //
 	) <= context.nodes.ta.maxHoursPerWeek
 }
