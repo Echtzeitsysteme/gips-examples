@@ -1,7 +1,6 @@
 package org.emoflon.gips.gipsl.examples.mdvne;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -11,6 +10,7 @@ import org.emoflon.gips.core.GipsMapper;
 import org.emoflon.gips.core.gt.GipsGTMapping;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.ObservableStage;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 import org.emoflon.ibex.common.operational.IMatch;
@@ -129,9 +129,6 @@ public class MdvneGipsIflyeAdapter extends GipsExamplesLogger {
 			throw new IllegalArgumentException("Model resource set was null or empty.");
 		}
 
-		final Observer obs = Observer.getInstance();
-		obs.setCurrentSeries("Eval");
-
 		// Initialize the API, if necessary
 		if (!init) {
 			api = new MdvneGipsAPI();
@@ -154,26 +151,30 @@ public class MdvneGipsIflyeAdapter extends GipsExamplesLogger {
 	 * @return true, if a valid solution could be found.
 	 */
 	private MdvneIflyeOutput buildAndSolve() {
-		final Observer obs = Observer.getInstance();
-		obs.setCurrentSeries("Eval");
-
 		// Build the ILP problem (including updates)
-		api.buildProblemTimed(true);
+		api.buildProblem(true);
 
 		// Solve the ILP problem
-		final SolverOutput output = api.solveProblemTimed();
+		final SolverOutput output = api.solveProblem();
 
 		// TODO: Remove system outputs
 		logger.info("=> GIPS iflye adapter: Solver status: " + output.status());
 		logger.info("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
 
-		final Map<String, IMeasurement> measurements = new LinkedHashMap<>(obs.getMeasurements("Eval"));
-		obs.getMeasurements("Eval").clear();
-		logger.info("PM: " + measurements.get("PM").maxDurationSeconds());
-		logger.info("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
-		logger.info("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
-		logger.info("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
-		logger.info("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
+		final Observer measurements = api.getLatestMetrics().measurements();
+		final Map<String, IMeasurement> measurementBuild = measurements.getStageMeasurements(ObservableStage.BUILD);
+		final Map<String, IMeasurement> measurementSolve = measurements.getStageMeasurements(ObservableStage.SOLVE);
+
+		logger.info(String.format("PM: %s", //
+				measurementBuild.get("PM").maxDurationSeconds()));
+		logger.info(String.format("BUILD_GIPS: %s", //
+				measurementBuild.get("BUILD_GIPS").maxDurationSeconds()));
+		logger.info(String.format("BUILD_SOLVER: %s", //
+				measurementBuild.get("BUILD_SOLVER").maxDurationSeconds()));
+		logger.info(String.format("BUILD: %s", //
+				measurementBuild.get("BUILD").maxDurationSeconds()));
+		logger.info(String.format("SOLVE_PROBLEM: %s", //
+				measurementSolve.get("SOLVE_PROBLEM").maxDurationSeconds()));
 
 		final Map<String, String> matches = extractMatchedNodes(api.getMappers().values());
 
@@ -184,7 +185,7 @@ public class MdvneGipsIflyeAdapter extends GipsExamplesLogger {
 		api.getL2s().applyNonZeroMappings();
 		api.getNet2net().applyNonZeroMappings();
 
-		return new MdvneIflyeOutput(output, matches, measurements);
+		return new MdvneIflyeOutput(output, matches, measurements.mergeAllStages());
 	}
 
 	protected Map<String, String> extractMatchedNodes(final Collection<GipsMapper<?>> mappers) {
@@ -196,25 +197,19 @@ public class MdvneGipsIflyeAdapter extends GipsExamplesLogger {
 	}
 
 	protected <T extends IMatch> Map.Entry<String, String> extractMatchedNodes(final T m) {
-		switch (m.getPatternName()) {
-		case "serverMatchPositive":
-			return Map.entry(((model.Element) m.get("virtualNode")).getName(),
-					((model.Element) m.get("substrateServer")).getName());
-		case "switchNodeMatchPositive":
-			return Map.entry(((model.Element) m.get("virtualSwitch")).getName(),
-					((model.Element) m.get("substrateNode")).getName());
-		case "networkRule":
-			return Map.entry(((model.Element) m.get("virtualNetwork")).getName(),
-					((model.Element) m.get("substrateNetwork")).getName());
-		case "linkPathMatchPositive":
-			return Map.entry(((model.Element) m.get("virtualLink")).getName(),
-					((model.Element) m.get("substratePath")).getName());
-		case "linkServerMatchPositive":
-			return Map.entry(((model.Element) m.get("virtualLink")).getName(),
-					((model.Element) m.get("substrateServer")).getName());
-		default:
-			return null;
-		}
+		return switch (m.getPatternName()) {
+		case "serverMatchPositive" -> Map.entry(((model.Element) m.get("virtualNode")).getName(),
+				((model.Element) m.get("substrateServer")).getName());
+		case "switchNodeMatchPositive" -> Map.entry(((model.Element) m.get("virtualSwitch")).getName(),
+				((model.Element) m.get("substrateNode")).getName());
+		case "networkRule" -> Map.entry(((model.Element) m.get("virtualNetwork")).getName(),
+				((model.Element) m.get("substrateNetwork")).getName());
+		case "linkPathMatchPositive" -> Map.entry(((model.Element) m.get("virtualLink")).getName(),
+				((model.Element) m.get("substratePath")).getName());
+		case "linkServerMatchPositive" -> Map.entry(((model.Element) m.get("virtualLink")).getName(),
+				((model.Element) m.get("substrateServer")).getName());
+		default -> null;
+		};
 	}
 
 	/**

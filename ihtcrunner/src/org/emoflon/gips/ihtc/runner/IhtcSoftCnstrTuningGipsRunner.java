@@ -2,7 +2,6 @@ package org.emoflon.gips.ihtc.runner;
 
 import java.util.Objects;
 
-import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
 import ihtcgipssolution.softcnstrtuning.api.gips.SoftcnstrtuningGipsAPI;
@@ -62,7 +61,6 @@ public class IhtcSoftCnstrTuningGipsRunner extends AbstractIhtcGipsRunner {
 			logger.info("=> Start GIPS init.");
 		}
 
-		Observer.getInstance().setCurrentSeries("Eval");
 		final SoftcnstrtuningGipsAPI gipsApi = new SoftcnstrtuningGipsAPI();
 		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
 		final long gipsInitDoneTime = System.nanoTime();

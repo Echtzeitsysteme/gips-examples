@@ -2,7 +2,6 @@ package org.emoflon.gips.ihtc.runner;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.ConsoleHandler;
@@ -17,6 +16,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.gips.core.api.GipsEngineAPI;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.ObservableStage;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
@@ -194,8 +194,8 @@ public abstract class AbstractIhtcGipsRunner {
 	protected double buildAndSolve(final GipsEngineAPI<?, ?> gipsApi, final boolean verbose) {
 		Objects.requireNonNull(gipsApi);
 
-		gipsApi.buildProblemTimed(true, true); // Second Parameter: sequential = false/default, parallel = true
-		final SolverOutput output = gipsApi.solveProblemTimed();
+		gipsApi.buildProblem(true, true); // Second Parameter: sequential = false/default, parallel = true
+		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
 			gipsApi.terminate();
 			logger.warning("No solution found. Aborting.");
@@ -203,14 +203,20 @@ public abstract class AbstractIhtcGipsRunner {
 		}
 		if (verbose) {
 			logger.info("=> Objective value: " + output.objectiveValue());
-			final Map<String, IMeasurement> measurements = new LinkedHashMap<>(
-					Observer.getInstance().getMeasurements("Eval"));
-			Observer.getInstance().getMeasurements("Eval").clear();
-			logger.info("PM: " + measurements.get("PM").maxDurationSeconds() + "s.");
-			logger.info("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds() + "s.");
-			logger.info("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds() + "s.");
-			logger.info("BUILD: " + measurements.get("BUILD").maxDurationSeconds() + "s.");
-			logger.info("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds() + "s.");
+			final Observer measurements = gipsApi.getLatestMetrics().measurements();
+			final Map<String, IMeasurement> measurementBuild = measurements.getStageMeasurements(ObservableStage.BUILD);
+			final Map<String, IMeasurement> measurementSolve = measurements.getStageMeasurements(ObservableStage.SOLVE);
+
+			logger.info(String.format("PM: %s s.", //
+					measurementBuild.get("PM").maxDurationSeconds()));
+			logger.info(String.format("BUILD_GIPS: %s s.", //
+					measurementBuild.get("BUILD_GIPS").maxDurationSeconds()));
+			logger.info(String.format("BUILD_SOLVER: %s s.", //
+					measurementBuild.get("BUILD_SOLVER").maxDurationSeconds()));
+			logger.info(String.format("BUILD: %s s.", //
+					measurementBuild.get("BUILD").maxDurationSeconds()));
+			logger.info(String.format("SOLVE_PROBLEM: %s s.", //
+					measurementSolve.get("SOLVE_PROBLEM").maxDurationSeconds()));
 		}
 		return output.objectiveValue();
 	}

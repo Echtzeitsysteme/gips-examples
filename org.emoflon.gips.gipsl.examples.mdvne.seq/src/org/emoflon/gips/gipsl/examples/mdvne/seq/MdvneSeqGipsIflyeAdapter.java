@@ -1,7 +1,6 @@
 package org.emoflon.gips.gipsl.examples.mdvne.seq;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -11,6 +10,7 @@ import org.emoflon.gips.core.gt.GipsGTMapping;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.milp.model.IntegerVariable;
 import org.emoflon.gips.core.util.IMeasurement;
+import org.emoflon.gips.core.util.ObservableStage;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapter;
 import org.emoflon.gips.gipsl.examples.mdvne.MdvneGipsIflyeAdapterUtil;
@@ -109,9 +109,6 @@ public class MdvneSeqGipsIflyeAdapter extends MdvneGipsIflyeAdapter {
 			throw new IllegalArgumentException("Model resource set was null or empty.");
 		}
 
-		final Observer obs = Observer.getInstance();
-		obs.setCurrentSeries("Eval");
-
 		// Initialize the API, if necessary
 		if (!init) {
 			api = new SeqGipsAPI();
@@ -131,26 +128,30 @@ public class MdvneSeqGipsIflyeAdapter extends MdvneGipsIflyeAdapter {
 	 * @return true, if a valid solution could be found.
 	 */
 	private MdvneGipsIflyeAdapter.MdvneIflyeOutput buildAndSolve() {
-		final Observer obs = Observer.getInstance();
-		obs.setCurrentSeries("Eval");
-
 		// Build the ILP problem (including updates)
-		api.buildProblemTimed(true);
+		api.buildProblem(true);
 
 		// Solve the ILP problem
-		final SolverOutput output = api.solveProblemTimed();
+		final SolverOutput output = api.solveProblem();
 
 		// TODO: Remove system outputs
 		logger.info("=> GIPS iflye adapter: Solver status: " + output.status());
 		logger.info("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
 
-		final Map<String, IMeasurement> measurements = new LinkedHashMap<>(obs.getMeasurements("Eval"));
-		obs.getMeasurements("Eval").clear();
-		logger.info("PM: " + measurements.get("PM").maxDurationSeconds());
-		logger.info("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
-		logger.info("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
-		logger.info("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
-		logger.info("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
+		final Observer measurements = api.getLatestMetrics().measurements();
+		final Map<String, IMeasurement> measurementBuild = measurements.getStageMeasurements(ObservableStage.BUILD);
+		final Map<String, IMeasurement> measurementSolve = measurements.getStageMeasurements(ObservableStage.SOLVE);
+
+		logger.info(String.format("PM: %s s.", //
+				measurementBuild.get("PM").maxDurationSeconds()));
+		logger.info(String.format("BUILD_GIPS: %s", //
+				measurementBuild.get("BUILD_GIPS").maxDurationSeconds()));
+		logger.info(String.format("BUILD_SOLVER: %s", //
+				measurementBuild.get("BUILD_SOLVER").maxDurationSeconds()));
+		logger.info(String.format("BUILD: %s", //
+				measurementBuild.get("BUILD").maxDurationSeconds()));
+		logger.info(String.format("SOLVE_PROBLEM: %s", //
+				measurementSolve.get("SOLVE_PROBLEM").maxDurationSeconds()));
 
 		@SuppressWarnings("rawtypes")
 		final var allSelectedMappings = new ArrayList<GipsGTMapping>();
@@ -208,7 +209,7 @@ public class MdvneSeqGipsIflyeAdapter extends MdvneGipsIflyeAdapter {
 				.map(this::extractMatchedNodes).filter((m) -> m != null)
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-		return new MdvneIflyeOutput(output, matches, measurements);
+		return new MdvneIflyeOutput(output, matches, measurements.mergeAllStages());
 	}
 
 	/**
