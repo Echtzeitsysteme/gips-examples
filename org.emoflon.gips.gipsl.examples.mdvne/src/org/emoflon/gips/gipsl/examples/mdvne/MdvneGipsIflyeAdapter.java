@@ -196,19 +196,25 @@ public class MdvneGipsIflyeAdapter extends GipsExamplesLogger {
 	}
 
 	protected <T extends IMatch> Map.Entry<String, String> extractMatchedNodes(final T m) {
-		return switch (m.getPatternName()) {
-		case "serverMatchPositive" -> Map.entry(((model.Element) m.get("virtualNode")).getName(),
-				((model.Element) m.get("substrateServer")).getName());
-		case "switchNodeMatchPositive" -> Map.entry(((model.Element) m.get("virtualSwitch")).getName(),
-				((model.Element) m.get("substrateNode")).getName());
-		case "networkRule" -> Map.entry(((model.Element) m.get("virtualNetwork")).getName(),
-				((model.Element) m.get("substrateNetwork")).getName());
-		case "linkPathMatchPositive" -> Map.entry(((model.Element) m.get("virtualLink")).getName(),
-				((model.Element) m.get("substratePath")).getName());
-		case "linkServerMatchPositive" -> Map.entry(((model.Element) m.get("virtualLink")).getName(),
-				((model.Element) m.get("substrateServer")).getName());
-		default -> null;
-		};
+		switch (m.getPatternName()) {
+		case "serverMatchPositive":
+			return Map.entry(((model.Element) m.get("virtualNode")).getName(),
+					((model.Element) m.get("substrateServer")).getName());
+		case "switchNodeMatchPositive":
+			return Map.entry(((model.Element) m.get("virtualSwitch")).getName(),
+					((model.Element) m.get("substrateNode")).getName());
+		case "networkRule":
+			return Map.entry(((model.Element) m.get("virtualNetwork")).getName(),
+					((model.Element) m.get("substrateNetwork")).getName());
+		case "linkPathMatchPositive":
+			return Map.entry(((model.Element) m.get("virtualLink")).getName(),
+					((model.Element) m.get("substratePath")).getName());
+		case "linkServerMatchPositive":
+			return Map.entry(((model.Element) m.get("virtualLink")).getName(),
+					((model.Element) m.get("substrateServer")).getName());
+		default:
+			return null;
+		}
 	}
 
 	/**
