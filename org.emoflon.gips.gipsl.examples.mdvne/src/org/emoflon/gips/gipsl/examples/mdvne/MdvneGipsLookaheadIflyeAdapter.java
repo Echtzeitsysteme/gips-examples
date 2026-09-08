@@ -6,7 +6,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
-import org.emoflon.gips.core.util.ObservableStage;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.gipsl.examples.mdvne.api.gips.MdvneGipsAPI;
 
@@ -149,8 +148,8 @@ public class MdvneGipsLookaheadIflyeAdapter extends MdvneGipsIflyeAdapter {
 		logger.info("=> GIPS iflye adapter: Objective value: " + output.objectiveValue());
 
 		final Observer measurements = api.getLatestMetrics().measurements();
-		final Map<String, IMeasurement> measurementBuild = measurements.getStageMeasurements(ObservableStage.BUILD);
-		final Map<String, IMeasurement> measurementSolve = measurements.getStageMeasurements(ObservableStage.SOLVE);
+		final Map<String, IMeasurement> measurementBuild = measurements.getStageMeasurements(Observer.STAGE_BUILD);
+		final Map<String, IMeasurement> measurementSolve = measurements.getStageMeasurements(Observer.STAGE_SOLVE);
 
 		logger.info(String.format("PM: %s", //
 				measurementBuild.get("PM").maxDurationSeconds()));
@@ -192,7 +191,7 @@ public class MdvneGipsLookaheadIflyeAdapter extends MdvneGipsIflyeAdapter {
 			}
 		});
 
-		return new MdvneIflyeOutput(output, matches, measurements.mergeAllStages());
+		return new MdvneIflyeOutput(output, matches, measurements.getAllStagesMerged());
 	}
 
 	/**

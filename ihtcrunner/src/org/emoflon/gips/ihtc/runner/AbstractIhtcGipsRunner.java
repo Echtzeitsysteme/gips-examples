@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emoflon.gips.core.api.GipsEngineAPI;
 import org.emoflon.gips.core.milp.SolverOutput;
 import org.emoflon.gips.core.util.IMeasurement;
-import org.emoflon.gips.core.util.ObservableStage;
 import org.emoflon.gips.core.util.Observer;
 import org.emoflon.smartemf.persistence.SmartEMFResourceFactoryImpl;
 
@@ -204,8 +203,8 @@ public abstract class AbstractIhtcGipsRunner {
 		if (verbose) {
 			logger.info("=> Objective value: " + output.objectiveValue());
 			final Observer measurements = gipsApi.getLatestMetrics().measurements();
-			final Map<String, IMeasurement> measurementBuild = measurements.getStageMeasurements(ObservableStage.BUILD);
-			final Map<String, IMeasurement> measurementSolve = measurements.getStageMeasurements(ObservableStage.SOLVE);
+			final Map<String, IMeasurement> measurementBuild = measurements.getStageMeasurements(Observer.STAGE_BUILD);
+			final Map<String, IMeasurement> measurementSolve = measurements.getStageMeasurements(Observer.STAGE_SOLVE);
 
 			logger.info(String.format("PM: %s s.", //
 					measurementBuild.get("PM").maxDurationSeconds()));
