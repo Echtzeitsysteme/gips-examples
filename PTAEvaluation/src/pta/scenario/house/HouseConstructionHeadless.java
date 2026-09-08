@@ -131,24 +131,16 @@ public class HouseConstructionHeadless {
 	}
 
 	public static ScenarioRunner<?> createRunner(String type, String id) {
-		switch (type) {
-		case HouseConstructionBatchA.TYPE:
-			return new HouseConstructionBatchA(id);
-		case HouseConstructionBatchB.TYPE:
-			return new HouseConstructionBatchB(id);
-		case HouseConstructionBatchC.TYPE:
-			return new HouseConstructionBatchC(id);
-		case HouseConstructionBatchD.TYPE:
-			return new HouseConstructionBatchD(id);
-		case HouseConstructionBatchE.TYPE:
-			return new HouseConstructionBatchE(id);
-		case HouseConstructionIncF.TYPE:
-			return new HouseConstructionIncF(id);
-		case HouseConstructionIncG.TYPE:
-			return new HouseConstructionIncG(id);
-		default:
-			throw new IllegalArgumentException("Unknown runner type: " + type);
-		}
+		return switch (type) {
+		case HouseConstructionBatchA.TYPE -> new HouseConstructionBatchA(id);
+		case HouseConstructionBatchB.TYPE -> new HouseConstructionBatchB(id);
+		case HouseConstructionBatchC.TYPE -> new HouseConstructionBatchC(id);
+		case HouseConstructionBatchD.TYPE -> new HouseConstructionBatchD(id);
+		case HouseConstructionBatchE.TYPE -> new HouseConstructionBatchE(id);
+		case HouseConstructionIncF.TYPE -> new HouseConstructionIncF(id);
+		case HouseConstructionIncG.TYPE -> new HouseConstructionIncG(id);
+		default -> throw new IllegalArgumentException("Unknown runner type: " + type);
+		};
 	}
 
 	/**
@@ -298,13 +290,18 @@ public class HouseConstructionHeadless {
 		// checkIfFileExists(xmiOutputPath);
 		// checkIfFileExists(csvOutputPath);
 		ScenarioRunner<?> runner = createRunner(runnerType, scenarioID);
-		Observer obs = Observer.getInstance();
-		obs.setCurrentSeries(scenarioID);
-		obs.observe("INIT", () -> runner.init(runner.getGipsModelPath(), xmiInputPath, runner.getIbexModelPath(),
-				runner.getHiPEModelPath(), runner.getHiPEEngineFQN()));
-		EvaluationResult result = runner.run(xmiOutputPath);
-		if (printSolution)
+		Observer obs = new Observer();
+
+		obs.singleMeasurement("RUN", "INIT", () -> runner.init(runner.getGipsModelPath(), xmiInputPath,
+				runner.getIbexModelPath(), runner.getHiPEModelPath(), runner.getHiPEEngineFQN()) //
+		);
+
+		EvaluationResult result = runner.run(scenarioID, xmiOutputPath);
+		result.measurements().putAll(obs.getAllStagesMerged());
+
+		if (printSolution) {
 			System.out.println(result);
+		}
 
 		resultToCSV(csvOutputPath, result, runner);
 	}

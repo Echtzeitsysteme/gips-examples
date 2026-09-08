@@ -26,7 +26,7 @@ public class HouseConstructionBatchA extends HouseConstructionGeneric<PTAConstra
 		runner.init(model);
 		EvaluationResult result;
 		try {
-			result = runner.run();
+			result = runner.run("test");
 			System.out.println(result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
