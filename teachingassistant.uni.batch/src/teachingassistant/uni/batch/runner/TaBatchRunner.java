@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -64,7 +63,7 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 		//
 
 		log("=> Start GIPS.");
-		Observer.getInstance().setCurrentSeries("Eval");
+
 		final long gipsStart = System.nanoTime();
 		final BatchGipsAPI gipsApi = new BatchGipsAPI();
 		log("GIPS init.");
@@ -250,15 +249,20 @@ public class TaBatchRunner extends AbstractGipsTeachingAssistantRunner {
 
 		gipsApi.terminate();
 
-		final Map<String, IMeasurement> measurements = new LinkedHashMap<>(
-				Observer.getInstance().getMeasurements("Eval"));
-		Observer.getInstance().getMeasurements("Eval").clear();
+		final Observer measurements = gipsApi.getLatestMetrics().measurements();
+		final Map<String, IMeasurement> measurementBuild = measurements.getStageMeasurements(Observer.STAGE_BUILD);
+		final Map<String, IMeasurement> measurementSolve = measurements.getStageMeasurements(Observer.STAGE_SOLVE);
 		log("=> GIPS observer measurements:");
-		log("\tPM: " + measurements.get("PM").maxDurationSeconds() + "s.");
-		log("\tBUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds() + "s.");
-		log("\tBUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds() + "s.");
-		log("\tBUILD_TOTAL: " + measurements.get("BUILD").maxDurationSeconds() + "s.");
-		log("\tSOLVE_MILP: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds() + "s.");
+		log(String.format("\tPM: %s s.", //
+				measurementBuild.get("PM").maxDurationSeconds()));
+		log(String.format("\tBUILD_GIPS: %s s.", //
+				measurementBuild.get("BUILD_GIPS").maxDurationSeconds()));
+		log(String.format("\tBUILD_SOLVER: %s s.", //
+				measurementBuild.get("BUILD_SOLVER").maxDurationSeconds()));
+		log(String.format("\tBUILD_TOTAL: %s s.", //
+				measurementBuild.get("BUILD").maxDurationSeconds()));
+		log(String.format("\tSOLVE_MILP: %s s.", //
+				measurementSolve.get("SOLVE_PROBLEM").maxDurationSeconds()));
 
 		final long end = System.nanoTime();
 		log("Total runtime: " + AbstractGipsTeachingAssistantRunner.tickTockToSeconds(start, end) + "s.");
