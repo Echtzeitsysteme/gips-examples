@@ -54,12 +54,14 @@ public class HouseConstructionTest {
 			String runId = runner.getType() + "-inc-" + scale + "-" + run;
 
 			System.out.println("##########\tRunning " + runId + " ...\t##########");
-			Observer obs = Observer.getInstance();
-			obs.setCurrentSeries(runId);
-			obs.observe("INIT", () -> runner.init(model));
+			Observer obs = new Observer();
+
+			obs.singleMeasurement("INIT", "INIT", () -> runner.init(model));
 			EvaluationResult result;
 			try {
-				result = runner.run();
+				result = runner.run(runId);
+				result.measurements().putAll(obs.getAllStagesMerged());
+
 				System.out.println(result);
 				results.put(runner.name, result);
 				HouseConstructionHeadless.resultToCSV("./inc-eval-2024-11-13-1.csv", result, runner);

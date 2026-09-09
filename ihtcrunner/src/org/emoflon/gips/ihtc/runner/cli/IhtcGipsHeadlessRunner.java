@@ -13,7 +13,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.runner.AbstractIhtcGipsRunner;
 import org.emoflon.gips.ihtc.runner.IhtcHardOnlyGipsRunner;
 import org.emoflon.gips.ihtc.runner.IhtcSoftCnstrTuningGipsRunner;
@@ -63,7 +62,6 @@ public class IhtcGipsHeadlessRunner {
 		logger.info("Using CLI config: " + config.toString());
 
 		// Create a new IHTC GIPS runner
-		Observer.getInstance().setCurrentSeries("Eval");
 		AbstractIhtcGipsRunner runner = null;
 		if (config.hardOnly) {
 			logger.info("=> Using the HARD-ONLY implementation.");

@@ -49,9 +49,6 @@ public class CraExampleRunner extends AbstractCraRunner {
 		// Initialize GIPS API
 		//
 
-		final Observer obs = Observer.getInstance();
-		obs.setCurrentSeries("Eval");
-
 		GipssolutionGipsAPI gipsApi = new GipssolutionGipsAPI();
 		gipsApi.init(URI.createFileURI(preprocessedPath));
 
@@ -87,12 +84,20 @@ public class CraExampleRunner extends AbstractCraRunner {
 		// The end
 		//
 
-		final Map<String, IMeasurement> measurements = obs.getMeasurements("Eval");
-		System.out.println("PM: " + measurements.get("PM").maxDurationSeconds());
-		System.out.println("BUILD_GIPS: " + measurements.get("BUILD_GIPS").maxDurationSeconds());
-		System.out.println("BUILD_SOLVER: " + measurements.get("BUILD_SOLVER").maxDurationSeconds());
-		System.out.println("BUILD: " + measurements.get("BUILD").maxDurationSeconds());
-		System.out.println("SOLVE_PROBLEM: " + measurements.get("SOLVE_PROBLEM").maxDurationSeconds());
+		final Observer measurements = gipsApi.getLatestMetrics().measurements();
+		final Map<String, IMeasurement> measurementBuild = measurements.getStageMeasurements(Observer.STAGE_BUILD);
+		final Map<String, IMeasurement> measurementSolve = measurements.getStageMeasurements(Observer.STAGE_SOLVE);
+
+		System.out.println(String.format("PM: %s", //
+				measurementBuild.get("PM").maxDurationSeconds()));
+		System.out.println(String.format("BUILD_GIPS: %s", //
+				measurementBuild.get("BUILD_GIPS").maxDurationSeconds()));
+		System.out.println(String.format("BUILD_SOLVER: %s", //
+				measurementBuild.get("BUILD_SOLVER").maxDurationSeconds()));
+		System.out.println(String.format("BUILD: %s", //
+				measurementBuild.get("BUILD").maxDurationSeconds()));
+		System.out.println(String.format("SOLVE_PROBLEM: %s", //
+				measurementSolve.get("SOLVE_PROBLEM").maxDurationSeconds()));
 
 		gipsApi.terminate();
 		java.lang.System.exit(0);

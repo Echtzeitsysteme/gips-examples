@@ -2,7 +2,6 @@ package org.emoflon.gips.ihtc.runner;
 
 import java.util.Objects;
 
-import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.runner.utils.XmiSetupUtil;
 
 import ihtcgipssolution.hardonly.api.gips.HardonlyGipsAPI;
@@ -62,7 +61,6 @@ public class IhtcHardOnlyGipsRunner extends AbstractIhtcGipsRunner {
 			logger.info("=> Start GIPS init.");
 		}
 
-		Observer.getInstance().setCurrentSeries("Eval");
 		final HardonlyGipsAPI gipsApi = new HardonlyGipsAPI();
 		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, instancePath);
 		final long gipsInitDoneTime = System.nanoTime();

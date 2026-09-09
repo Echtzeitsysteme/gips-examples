@@ -17,17 +17,18 @@ public abstract class HouseConstructionGeneric<API extends GipsEngineAPI<?, ?>> 
 	}
 
 	@Override
-	public EvaluationResult run() throws IOException {
-		return run("");
+	public EvaluationResult run(String evalId) throws IOException {
+		return run(evalId, "");
 	}
 
 	@Override
-	public EvaluationResult run(String outputFile) throws IOException {
-		Observer obs = Observer.getInstance();
-		api.buildProblemTimed(true);
-		org.emoflon.gips.core.milp.SolverOutput output = api.solveProblemTimed();
+	public EvaluationResult run(String evalId, String outputFile) throws IOException {
+		Observer observer = new Observer();
+
+		api.buildProblem(true);
+		org.emoflon.gips.core.milp.SolverOutput output = api.solveProblem();
 		if (output.status() == org.emoflon.gips.core.milp.SolverStatus.OPTIMAL) {
-			obs.observe("APPLY", () -> executeGT());
+			observer.singleMeasurement("APPLY", "APPLY", () -> executeGT());
 		}
 
 		PersonTaskAssignmentModel model = (PersonTaskAssignmentModel) api.getEMoflonAPI().getModel().getResources()
@@ -41,9 +42,10 @@ public abstract class HouseConstructionGeneric<API extends GipsEngineAPI<?, ?>> 
 			api.saveResult(outputFile);
 		}
 
+		observer.merge(api.getLatestMetrics().measurements());
+
 		api.terminate();
-		return new EvaluationResult(obs.getCurrentSeries(), validator, new SolverOutput(output),
-				obs.getMeasurements(obs.getCurrentSeries()));
+		return new EvaluationResult(evalId, validator, new SolverOutput(output), observer.getAllStagesMerged());
 	}
 
 	public abstract void executeGT();

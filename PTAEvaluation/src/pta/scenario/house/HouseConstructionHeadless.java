@@ -298,13 +298,18 @@ public class HouseConstructionHeadless {
 		// checkIfFileExists(xmiOutputPath);
 		// checkIfFileExists(csvOutputPath);
 		ScenarioRunner<?> runner = createRunner(runnerType, scenarioID);
-		Observer obs = Observer.getInstance();
-		obs.setCurrentSeries(scenarioID);
-		obs.observe("INIT", () -> runner.init(runner.getGipsModelPath(), xmiInputPath, runner.getIbexModelPath(),
-				runner.getHiPEModelPath(), runner.getHiPEEngineFQN()));
-		EvaluationResult result = runner.run(xmiOutputPath);
-		if (printSolution)
+		Observer obs = new Observer();
+
+		obs.singleMeasurement("RUN", "INIT", () -> runner.init(runner.getGipsModelPath(), xmiInputPath,
+				runner.getIbexModelPath(), runner.getHiPEModelPath(), runner.getHiPEEngineFQN()) //
+		);
+
+		EvaluationResult result = runner.run(scenarioID, xmiOutputPath);
+		result.measurements().putAll(obs.getAllStagesMerged());
+
+		if (printSolution) {
 			System.out.println(result);
+		}
 
 		resultToCSV(csvOutputPath, result, runner);
 	}

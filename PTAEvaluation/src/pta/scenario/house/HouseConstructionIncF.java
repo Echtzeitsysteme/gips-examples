@@ -25,11 +25,13 @@ public class HouseConstructionIncF extends HouseConstructionGeneric<PTAConstrain
 	}
 
 	@Override
-	public EvaluationResult run(String outputFile) throws IOException {
-		Observer obs = Observer.getInstance();
+	public EvaluationResult run(String evalId, String outputFile) throws IOException {
+		Observer obs = new Observer();
+
 		PersonTaskAssignmentModel model = (PersonTaskAssignmentModel) api.getEMoflonAPI().getModel().getResources()
 				.get(0).getContents().get(0);
 		SolverOutput output = new SolverOutput();
+
 		for (Project p : model.getProjects()) {
 			p.setSumSalary(0.0);
 			api.getAom().getGTRule().bindProject(p);
@@ -37,11 +39,15 @@ public class HouseConstructionIncF extends HouseConstructionGeneric<PTAConstrain
 			api.getEMoflonAPI().taskToRequirement().bindProject(p);
 			api.getEMoflonAPI().taskSequence().bindProject(p);
 			api.getEMoflonAPI().finalTaskSequence().bindProject(p);
-			api.buildProblemTimed(true);
-			org.emoflon.gips.core.milp.SolverOutput out = api.solveProblemTimed();
+			api.buildProblem(true);
+			org.emoflon.gips.core.milp.SolverOutput out = api.solveProblem();
+
 			if (out.status() == org.emoflon.gips.core.milp.SolverStatus.OPTIMAL) {
-				obs.observe("APPLY", () -> executeGT());
+				obs.multiMeasurement("APPLY", "APPLY", () -> executeGT());
 			}
+
+			obs.merge(api.getLatestMetrics().measurements());
+
 			output.addOutput(p, out);
 		}
 
@@ -53,10 +59,10 @@ public class HouseConstructionIncF extends HouseConstructionGeneric<PTAConstrain
 		if (outputFile != null && !outputFile.isBlank() && !outputFile.isEmpty()) {
 			api.saveResult(outputFile);
 		}
+
 		api.terminate();
 
-		return new EvaluationResult(obs.getCurrentSeries(), validator, output,
-				obs.getMeasurements(obs.getCurrentSeries()));
+		return new EvaluationResult(evalId, validator, output, obs.getAllStagesMerged());
 	}
 
 	@Override

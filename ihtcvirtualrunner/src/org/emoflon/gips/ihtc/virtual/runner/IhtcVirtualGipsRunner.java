@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.emoflon.gips.core.util.Observer;
 import org.emoflon.gips.ihtc.virtual.runner.utils.FileUtils;
 import org.emoflon.gips.ihtc.virtual.runner.utils.XmiSetupUtil;
 
@@ -146,7 +145,6 @@ public class IhtcVirtualGipsRunner extends AbstractIhtcVirtualGipsRunner {
 			logger.info("=> Start GIPS init.");
 		}
 
-		Observer.getInstance().setCurrentSeries("Eval");
 		final IhtcvirtualgipssolutionGipsAPI gipsApi = new IhtcvirtualgipssolutionGipsAPI();
 		XmiSetupUtil.checkIfEclipseOrJarSetup(gipsApi, preprocessingPath);
 		final long gipsInitDoneTime = System.nanoTime();
