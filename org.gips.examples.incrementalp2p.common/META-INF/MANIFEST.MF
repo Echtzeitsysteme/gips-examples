@@ -4,6 +4,6 @@ Bundle-Name: Common
 Bundle-SymbolicName: org.gips.examples.incrementalp2p.common
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.gips.examples.incrementalp2p.common
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Export-Package: org.gips.examples.incrementalp2p.common,
  org.gips.examples.incrementalp2p.common.models

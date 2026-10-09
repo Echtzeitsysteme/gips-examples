@@ -4,7 +4,7 @@
     modelDirectory="/SoftwareSystem/src-gen" creationIcons="false"
     editDirectory="/SoftwareSystem.edit/src-gen" editorDirectory="/SoftwareSystem.editor/src-gen"
     modelPluginID="SoftwareSystem" modelName="SoftwareSystem" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
-    codeFormatting="true" importerID="org.eclipse.emf.importer.ecore" complianceLevel="21.0"
+    codeFormatting="true" importerID="org.eclipse.emf.importer.ecore" complianceLevel="25.0"
     copyrightFields="false" operationReflection="true" importOrganizing="true">
   <foreignModel>softwareSystem.ecore</foreignModel>
   <testsDirectory xsi:nil="true"/>

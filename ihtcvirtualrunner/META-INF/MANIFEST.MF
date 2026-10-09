@@ -9,6 +9,6 @@ Require-Bundle: ihtcvirtualgipssolution;bundle-version="1.0.0",
  gips.examples.dependencies;bundle-version="1.0.0",
  ihtcvirtualpreprocessing;bundle-version="1.0.0",
  ihtcvirtualpostprocessing;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Automatic-Module-Name: ihtcvirtualrunner
 Import-Package: hipe.engine.config

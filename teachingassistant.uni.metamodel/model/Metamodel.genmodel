@@ -2,7 +2,7 @@
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/teachingassistant.uni.metamodel/gen" editDirectory="/teachingassistant.uni.metamodel.edit/src"
     modelPluginID="teachingassistant.uni.metamodel" modelName="Metamodel" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
-    importerID="org.eclipse.emf.importer.ecore" complianceLevel="21.0" copyrightFields="false"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="25.0" copyrightFields="false"
     operationReflection="true" importOrganizing="true">
   <foreignModel>Metamodel.ecore</foreignModel>
   <genPackages prefix="Metamodel" disposableProviderFactory="true" ecorePackage="Metamodel.ecore#/">
@@ -14,16 +14,21 @@
     <genClasses image="false" ecoreClass="Metamodel.ecore#//NamedElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//NamedElement/name"/>
     </genClasses>
+    <genClasses image="false" ecoreClass="Metamodel.ecore#//IdedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//IdedElement/id"/>
+    </genClasses>
     <genClasses ecoreClass="Metamodel.ecore#//TaAllocation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TaAllocation/modules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TaAllocation/tas"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TaAllocation/timetable"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TaAllocation/weeks"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TaAllocation/campuses"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TaAllocation/rooms"/>
     </genClasses>
     <genClasses ecoreClass="Metamodel.ecore#//TeachingAssistant">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TeachingAssistant/maxHoursPerWeek"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TeachingAssistant/maxHoursPerYear"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TeachingAssistant/unavailableBecauseLessons"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TeachingAssistant/maxHoursTotal"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TeachingAssistant/unavailable"/>
     </genClasses>
     <genClasses ecoreClass="Metamodel.ecore#//EmploymentApproval">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//EmploymentApproval/rating"/>
@@ -47,17 +52,20 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TeachingSession/timeTableWeeks"/>
     </genClasses>
     <genClasses ecoreClass="Metamodel.ecore#//TimeTableEntry">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TimeTableEntry/room"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TimeTableEntry/weekDay"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TimeTableEntry/startTime"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TimeTableEntry/endTime"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TimeTableEntry/session"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TimeTableEntry/timeTableWeeks"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TimeTableEntry/startEpoch"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TimeTableEntry/endEpoch"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference Metamodel.ecore#//TimeTableEntry/room"/>
     </genClasses>
-    <genClasses ecoreClass="Metamodel.ecore#//Week">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//Week/number"/>
+    <genClasses ecoreClass="Metamodel.ecore#//Week"/>
+    <genClasses ecoreClass="Metamodel.ecore#//Campus"/>
+    <genClasses ecoreClass="Metamodel.ecore#//Room">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Metamodel.ecore#//Room/campus"/>
+    </genClasses>
+    <genClasses ecoreClass="Metamodel.ecore#//BlockedTimeSlot"/>
+    <genClasses ecoreClass="Metamodel.ecore#//TimeSlot">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TimeSlot/day"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Metamodel.ecore#//TimeSlot/timeTableWeeks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TimeSlot/startMinutes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Metamodel.ecore#//TimeSlot/endMinutes"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

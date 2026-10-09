@@ -6,7 +6,7 @@ Bundle-Version: 0.0.3.qualifier
 Bundle-Vendor: Real-Time Systems Lab - TU Darmstadt
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Automatic-Module-Name: network.model
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,

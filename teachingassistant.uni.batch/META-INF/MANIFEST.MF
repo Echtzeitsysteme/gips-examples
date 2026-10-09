@@ -7,7 +7,7 @@ Bundle-Version: 1.0.0.qualifier
 Export-Package: teachingassistant.uni.batch.runner
 Bundle-SymbolicName: teachingassistant.uni.batch; singleton:=true
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt,
  org.emoflon.gips.core,

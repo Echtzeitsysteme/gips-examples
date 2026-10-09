@@ -5,7 +5,7 @@ Bundle-SymbolicName: ihtcvirtualmetamodel;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: 
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Automatic-Module-Name: ihtcvirtualmetamodel
 Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
