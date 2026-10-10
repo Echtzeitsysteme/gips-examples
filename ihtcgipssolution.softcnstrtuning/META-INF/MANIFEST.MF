@@ -7,7 +7,7 @@ Bundle-Version: 1.0.0.qualifier
 Export-Package: ihtcgipssolution.softcnstrtuning.api.gips
 Bundle-SymbolicName: ihtcgipssolution.softcnstrtuning; singleton:=true
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Require-Bundle: org.emoflon.ibex.common,
  org.emoflon.ibex.gt,
  org.emoflon.gips.core,

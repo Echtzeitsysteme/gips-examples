@@ -7,7 +7,7 @@ Bundle-Version: 0.1.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: Real-Time Systems Lab - TU Darmstadt
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Export-Package: testmetamodel,
  testmetamodel.impl
 Require-Bundle: org.eclipse.emf.ecore,

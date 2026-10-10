@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.emoflon.smartemf,
  org.eclipse.emf.ecore.xmi
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Export-Package: architecture.util,
  architectureCRA,
  architectureCRA.impl

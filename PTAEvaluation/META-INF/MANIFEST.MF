@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: PTAEvaluation
 Bundle-SymbolicName: PTAEvaluation
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Export-Package: .,
  pta.scenario,
  pta.scenario.house,
@@ -19,7 +19,8 @@ Require-Bundle: PersonTaskAssignments,
  gips.examples.dependencies,
  hipe.engine,
  PTAConstraintConfigF,
- PTAConstraintConfigG;bundle-version="1.0.0"
+ PTAConstraintConfigG;bundle-version="1.0.0",
+ org.eclipse.xtext.xbase
 Import-Package: org.emoflon.gips.core,
  org.emoflon.gips.core.api,
  org.emoflon.gips.core.gt,
