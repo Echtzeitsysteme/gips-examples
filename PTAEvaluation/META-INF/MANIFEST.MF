@@ -19,7 +19,8 @@ Require-Bundle: PersonTaskAssignments,
  gips.examples.dependencies,
  hipe.engine,
  PTAConstraintConfigF,
- PTAConstraintConfigG;bundle-version="1.0.0"
+ PTAConstraintConfigG;bundle-version="1.0.0",
+ org.eclipse.xtext.xbase
 Import-Package: org.emoflon.gips.core,
  org.emoflon.gips.core.api,
  org.emoflon.gips.core.gt,
