@@ -152,9 +152,9 @@ public abstract class AbstractGipsTeachingAssistantRunner {
 		Objects.requireNonNull(gipsApi);
 		log("Build GIPS problem.");
 		// Build problem in parallel
-		gipsApi.buildProblemTimed(true, true);
+		gipsApi.buildProblem(true, true);
 		log("Solve MILP problem.");
-		final SolverOutput output = gipsApi.solveProblemTimed();
+		final SolverOutput output = gipsApi.solveProblem();
 		if (output.solutionCount() == 0) {
 			logger.warning("No solution found!");
 		}
