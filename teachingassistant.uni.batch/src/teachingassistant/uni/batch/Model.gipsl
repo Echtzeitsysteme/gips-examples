@@ -4,17 +4,15 @@ import "platform:/resource/teachingassistant.uni.metamodel/model/Metamodel.ecore
 config {
 	solver := GUROBI;
 	timeLimit := true [value := 120.0];
-//	randomSeed := true [value := 0];
 	presolve := auto;
 	debugOutput := true;
-//	lpOutput := true [path := "problem.lp"];
 }
 
 //
 // GT
 //
 
-// Find session occurrence
+// Find session occurrence.
 pattern findSessionOccurrence {
 	session : TeachingSession {
 		- occurrences -> occurrence
@@ -23,8 +21,8 @@ pattern findSessionOccurrence {
 	occurrence : SessionOccurrence
 }
 
-// Construct a condition for a session that a specific TA
-// is available (i.e., they have not blocked this session)
+// Construct a condition for a session that a specific TA is
+// available (i.e., they have not blocked this session).
 pattern findTaUnavailableSession {
 	ta : TeachingAssistant {
 		- unavailable -> blocked
@@ -48,7 +46,8 @@ condition taAvailableInSession = forbid findTaUnavailableSession
 
 // Rule to assign a TA to a specific session occurrence.
 // This rule respects the condition that the TA must not have
-// blocked the respective time table entry of the session occurrence.
+// blocked the respective time table entry of the session
+// occurrence.
 rule assignTa {
 	ta : TeachingAssistant
 	
@@ -80,19 +79,19 @@ rule assignTa {
 	# approval.ratingNumeric > 0
 }
 when taAvailableInSession
-// TODO: ^this does not work properly because of a bug in eMoflon::IBeX/HiPE.
+// TODO: ^this does not work properly because of a bug in
+// eMoflon::IBeX/HiPE.
 
-// Find every possible combination of TAs
-// and time table entries
+// Find every possible combination of TAs and time table entries.
 pattern findTaEntryCombination {
 	ta : TeachingAssistant
 	entry : TimeTableEntry
 }
 
-// For a specific TA, find all conflicting time table
-// entries in the model.
-// This pattern does respect partly overlapping time
-// table entries.
+// For a specific TA, find all conflicting time table entries in
+// the model.
+// This pattern does respect partly overlapping time table
+// entries.
 pattern findConflictingEntriesWithTa {
 	week : Week
 	
@@ -115,14 +114,14 @@ pattern findConflictingEntriesWithTa {
 	# entryA.startMinutes <= entryB.startMinutes
 }
 
-// Find all possible combinations of TAs and weeks
+// Find all possible combinations of TAs and weeks.
 pattern findTaWeekCombination {
 	w : Week
 	ta : TeachingAssistant
 }
 
-// Find a TA with a green employment approval status
-// for a specific module.
+// Find a TA with a green employment approval status for a
+// specific module.
 pattern findGreenTa {
 	ta : TeachingAssistant
 	
@@ -136,8 +135,8 @@ pattern findGreenTa {
 	# approval.ratingNumeric == 2
 }
 
-// Find a TA with an amber employment approval status
-// for a specific module.
+// Find a TA with an amber employment approval status for a
+// specific module.
 pattern findAmberTa {
 	ta : TeachingAssistant
 	
@@ -212,89 +211,106 @@ pattern findOccurrenceContinuity {
 // GIPSL
 //
 
-//// Constraint that replaces the GT NAC. I.e., a mapping between a TA and an
-//// entry must not be selected if the TA is blocked in the time frame.
-//// GIPSL interpretation: for every unavailable time table entry of a TA, there
-//// must not be a selection of the corresponding mapping (TA and entry must
-//// match).
-//// ^Not necessary anymore, since we filter the matches programmatically.
+//// Constraint that replaces the GT NAC. I.e., a mapping between
+//// a TA and an entry must not be selected if the TA is blocked
+//// in the time frame.
+//// GIPSL interpretation: for every unavailable time table entry
+//// of a TA, there must not be a selection of the corresponding
+// mapping (TA and entry must match).
+//// ^Not necessary anymore, since we filter the matches
+//// programmatically.
 //constraint with findTaUnavailableSession {
-//	mappings.taToOccurrence->join((ta, ta), (entry, entry))->sum(element.value)
+//	mappings.taToOccurrence->join((ta, ta), (entry, entry))
+//    ->sum(element.value)
 // 	== 0
 //}
 
-// If a mapping instance has a value of `1`, the respective TA must
-// be mapped to the respective session occurrence.
+// If a mapping instance has a value of `1`, the respective TA
+// must be mapped to the respective session occurrence.
 mapping taToOccurrence to assignTa;
 
-// If a mapping instance has a value of `1`, the respective TA will be used
-// in the session occurrence of week `w` and in week `w + 1`
+// If a mapping instance has a value of `1`, the respective TA
+// will be used in the session occurrence of week `w` and in week
+// `w + 1`
 mapping continuity to findOccurrenceContinuity;
 
-// Every session occurrence must have exactly `numTAsPerSession` TAs assigned.
+// Every session occurrence must have exactly `numTAsPerSession`
+// TAs assigned.
 constraint with findSessionOccurrence {
-	mappings.taToOccurrence->join((occurrence, occurrence))->sum(element.value)
+	mappings.taToOccurrence->join((occurrence, occurrence)) //
+		->sum(element.value)
 	== context.nodes.session.numTasPerSession
 }
 
 // TAs must not have conflicting assignments.
-// GIPSL formulation: For any pair of conflicting session occurrences (in the
-// context of one TA), a maximum of one of these conflicting session can be
-// chosen.
+// GIPSL formulation: For any pair of conflicting session
+// occurrences (in the context of one TA), a maximum of one of
+// these conflicting session can be chosen.
 constraint with findConflictingEntriesWithTa {
-	mappings.taToOccurrence->join((ta, ta), (entry, entryA))->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (entry, entryA)) //
+		->sum(element.value)
 	+
-	mappings.taToOccurrence->join((ta, ta), (entry, entryB))->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (entry, entryB)) //
+		->sum(element.value)
 	<= 1
 }
 
-// TAs must have at least 1h = 3600s to switch campus in between assignments.
-// GIPSL formulation: For any pair of time table entries that could be assigned
-// to a single TA, which require inter-campus travel, and which time window for
-// a switch is less than 1h = 3600s, a maximum of one of these sessions can be
-// chosen.
+// TAs must have at least 1h = 3600s to switch campus in between
+// assignments.
+// GIPSL formulation: For any pair of time table entries that
+// could be assigned to a single TA, which require inter-campus
+// travel, and which time window for a switch is less than
+// 1h = 3600s, a maximum of one of these sessions can be chosen.
 constraint with findInterCampusTimeTableEntriesConflict {
-	mappings.taToOccurrence->join((ta, ta), (entry, entryA))->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (entry, entryA)) //
+		->sum(element.value)
 	+
-	mappings.taToOccurrence->join((ta, ta), (entry, entryB))->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (entry, entryB)) //
+		->sum(element.value)
 	<= 1
 }
 
 // Ensure TAs total max hours
-// GIPSL interpretation: the sum of all assigned working hours per TA times two
-// must not exceed their total hour limit
+// GIPSL interpretation: the sum of all assigned working hours per
+// TA times two must not exceed their total hour limit
 constraint with TeachingAssistant {
 	2 * mappings.taToOccurrence->join(ta)->sum( //
-		element.value * element.nodes.session.hoursPaidPerOccurrence //
+		element.value //
+			* element.nodes.session.hoursPaidPerOccurrence //
 	) <= context.maxHoursTotal
 }
 
 // Ensure TAs max hours per week
-// GIPSL interpretation: the sum of all assigned working hours per TA
-// in a specific week times two must not exceed their weekly hour limit
+// GIPSL interpretation: the sum of all assigned working hours per
+// TA in a specific week times two must not exceed their weekly
+// hour limit
 constraint with findTaWeekCombination {
 	2 * mappings.taToOccurrence->join((ta, ta), (w, w))->sum( //
-		element.value * element.nodes.session.hoursPaidPerOccurrence //
+		element.value //
+			* element.nodes.session.hoursPaidPerOccurrence //
 	) <= context.nodes.ta.maxHoursPerWeek
 }
 
-// Represents the number of assigned session occurrences to a specific
-// TA for a specific session (and the TA needs to have the green
-// employment rating for the respective module).
+// Represents the number of assigned session occurrences to a
+// specific TA for a specific session (and the TA needs to have
+// the green employment rating for the respective module).
 function greenTas with findGreenTa {
-	mappings.taToOccurrence->join((ta, ta), (module, mod))->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (module, mod)) //
+		->sum(element.value)
 }
 
-// Represents the number of assigned session occurrences to a specific
-// TA for a specific session (and the TA needs to have the amber
-// employment rating for the respective module).
+// Represents the number of assigned session occurrences to a
+// specific TA for a specific session (and the TA needs to have
+// the amber employment rating for the respective module).
 function amberTas with findAmberTa {
-	mappings.taToOccurrence->join((ta, ta), (module, mod))->sum(element.value)
+	mappings.taToOccurrence->join((ta, ta), (module, mod)) //
+		->sum(element.value)
 }
 
 // If (and only if) the same TA is used in a session occurrence in
-// week `w1` and in a session occurrence in week `w2`, set the respective
-// binary variable of the corresponding continuity mapping to `1`.
+// week `w1` and in a session occurrence in week `w2`, set the
+// respective binary variable of the corresponding continuity
+// mapping to `1`.
 constraint with continuity {
 	context.value == 1
 	<==>
@@ -316,7 +332,8 @@ function continuity with continuity {
 
 // Global objective
 objective : max {
-	// We want to use a higher weight for green TAs compared to the amber TAs
+	// We want to use a higher weight for green TAs compared to
+	// the amber TAs
 	2 * functions.greenTas
 	+ 1 * functions.amberTas
 	// Continuity weighted by a constant factor beta = 1.
